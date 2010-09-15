@@ -7,6 +7,7 @@ gem 'rails', '3.0.0'
 
 gem 'pg'
 gem 'authlogic'
+gem 'will_paginate', "~> 3.0.pre2"
 
 # Use unicorn as the web server
 # gem 'unicorn'
@@ -29,3 +30,7 @@ gem 'authlogic'
 # group :development, :test do
 #   gem 'webrat'
 # end
+
+group :test do
+  gem 'ruby-prof'
+end

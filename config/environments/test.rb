@@ -32,4 +32,7 @@ PrintHub::Application.configure do
 
   # Print deprecation notices to the stderr
   config.active_support.deprecation = :stderr
+
+  # TODO: eliminar cuando se corrija https://rails.lighthouseapp.com/projects/8994-ruby-on-rails/tickets/5145-i18n-locale-may-be-reset-to-en-if-called-from-a-plugingem
+  I18n.config.default_locale = config.i18n.default_locale
 end

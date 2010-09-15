@@ -1,0 +1,7 @@
+<div id="alert">
+  <p><%= flash.alert %></p>
+  <div id="close_alert"><%= link_to_function 'X', "$('alert').fade()",
+    :title => t(:'label.close') %></div>
+</div>
+<%= javascript_tag "Element.fade.delay(7, 'alert');" %>
+<% flash.alert = nil # Para evitar un problema ocasional de Rails -%>
