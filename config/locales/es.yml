@@ -33,6 +33,7 @@
       # will translate User model name to 'Dude'
     models:
       user: 'Usuario'
+      user_session: 'Sesión'
 
     # Translate model attribute names. Used in Model.human_attribute_name(attribute).
     #attributes:
@@ -50,6 +51,9 @@
         password: 'Contraseña'
         password_confirmation: 'Confirmación'
         enable: 'Habilitado'
+      user_session:
+        username: 'Usuario'
+        password: 'Contraseña'
 
   app_name: 'Central de Impresión'
 
@@ -202,9 +206,13 @@
 
   menu:
     users: 'Usuarios'
+    actions:
+      logout: 'Salir'
 
   messages:
     confirmation: '¿Está seguro?'
+    must_be_logged_in: 'Debe ingresar para poder ver el contenido requerido'
+    must_be_logged_out: 'Debe salir para poder ver el contenido requerido'
     
   # Action View
   number:
@@ -324,3 +332,7 @@
       correctly_created: 'Usuario agregado correctamente.'
       correctly_updated: 'Usuario actualizado correctamente.'
       stale_object_error: 'El usuario no pudo ser actualizado, intente nuevamente.'
+    user_session:
+      new_title: 'Iniciar sesión'
+      correctly_created: 'Bienvenido a Central de Impresión.'
+      correctly_destroyed: 'Sesión cerrada correctamente.'

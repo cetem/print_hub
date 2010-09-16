@@ -1,4 +1,10 @@
 PrintHubApp::Application.routes.draw do
+  resources :user_sessions, :only => [:new, :create] do
+    collection do
+      delete :destroy
+    end
+  end
+
   resources :users
 
   # The priority is based upon order of creation:
@@ -50,7 +56,7 @@ PrintHubApp::Application.routes.draw do
 
   # You can have the root of your site routed with "root"
   # just remember to delete public/index.html.
-  # root :to => "welcome#index"
+  root :to => 'user_sessions#new'
 
   # See how all your routes lay out with "rake routes"
 

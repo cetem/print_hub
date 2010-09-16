@@ -54,7 +54,7 @@ class UsersController < ApplicationController
     respond_to do |format|
       if @user.save
         format.html { redirect_to(users_url, :notice => t(:'view.users.correctly_created')) }
-        format.xml  { render :xml => @user, :status => :created, :location => @user }
+        format.xml  { render :xml => @user, :status => :created, :location => users_url }
       else
         format.html { render :action => :new }
         format.xml  { render :xml => @user.errors, :status => :unprocessable_entity }

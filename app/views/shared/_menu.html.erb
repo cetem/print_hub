@@ -1,3 +1,13 @@
-<ul>
-  <li><%= link_to t(:users, :scope => :menu), users_path %></li>
-</ul>
+<% if current_user %>
+  <nav id="menu_links">
+    <ul>
+      <li><%= link_to t(:users, :scope => :menu), users_path %></li>
+    </ul>
+  </nav>
+  <nav id="user_actions">
+    <ul>
+      <li><%= link_to t(:logout, :scope => [:menu, :actions]),
+        user_sessions_path, :method => :delete %></li>
+    </ul>
+  </nav>
+<% end %>
