@@ -4,4 +4,4 @@
 require File.expand_path('../config/application', __FILE__)
 require 'rake'
 
-PrintHub::Application.load_tasks
+PrintHubApp::Application.load_tasks
