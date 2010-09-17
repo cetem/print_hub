@@ -1,13 +1,14 @@
 class TagsController < ApplicationController
-  before_filter :require_user
+  before_filter :require_user, :get_parent
+  hide_action :get_parent
 
   # GET /tags
   # GET /tags.xml
   def index
     @title = t :'view.tags.index_title'
     @tags = Tag.paginate(
-      :conditions => params[:parent] ?
-        {:parent_id => params[:parent]} : 'parent_id IS NULL',
+      :conditions => @parent_tag ?
+        {:parent_id => @parent_tag.id} : 'parent_id IS NULL',
       :page => params[:page],
       :per_page => APP_LINES_PER_PAGE,
       :order => "#{Tag.table_name}.name ASC"
@@ -35,7 +36,7 @@ class TagsController < ApplicationController
   # GET /tags/new.xml
   def new
     @title = t :'view.tags.new_title'
-    @tag = Tag.new
+    @tag = Tag.new(:parent_id => params[:parent])
 
     respond_to do |format|
       format.html # new.html.erb
@@ -57,7 +58,7 @@ class TagsController < ApplicationController
 
     respond_to do |format|
       if @tag.save
-        format.html { redirect_to(tags_url, :notice => t(:'view.tags.correctly_created')) }
+        format.html { redirect_to(tags_path(:parent => @tag.parent), :notice => t(:'view.tags.correctly_created')) }
         format.xml  { render :xml => @tag, :status => :created, :location => @tag }
       else
         format.html { render :action => :new }
@@ -74,7 +75,7 @@ class TagsController < ApplicationController
 
     respond_to do |format|
       if @tag.update_attributes(params[:tag])
-        format.html { redirect_to(tags_url, :notice => t(:'view.tags.correctly_updated')) }
+        format.html { redirect_to(tags_path(:parent => @tag.parent), :notice => t(:'view.tags.correctly_updated')) }
         format.xml  { head :ok }
       else
         format.html { render :action => :edit }
@@ -94,8 +95,14 @@ class TagsController < ApplicationController
     @tag.destroy
 
     respond_to do |format|
-      format.html { redirect_to(tags_url) }
+      format.html { redirect_to(tags_path(:parent => @parent_tag)) }
       format.xml  { head :ok }
     end
+  end
+
+  private
+
+  def get_parent
+    @parent_tag = Tag.find(params[:parent]) if params[:parent]
   end
 end

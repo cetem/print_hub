@@ -19,6 +19,7 @@
     <%= f.text_field :name, :autofocus => true, :maxlength => 255 %>
   </div>
   <div class="actions">
+    <%= f.hidden_field :parent_id %>
     <%= f.hidden_field :lock_version %>
     <%= f.submit %>
   </div>

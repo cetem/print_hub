@@ -10,6 +10,17 @@ class TagsControllerTest < ActionController::TestCase
     get :index
     assert_response :success
     assert_not_nil assigns(:tags)
+    assert_select 'nav.path', false
+    assert_select '#error_body', false
+    assert_template 'tags/index'
+  end
+
+  test 'should get nested index' do
+    UserSession.create(users(:administrator))
+    get :index, :parent => tags(:notes)
+    assert_response :success
+    assert_not_nil assigns(:tags)
+    assert_select 'nav.path'
     assert_select '#error_body', false
     assert_template 'tags/index'
   end

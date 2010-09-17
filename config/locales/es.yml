@@ -337,6 +337,7 @@
       correctly_created: 'Etiqueta agregado correctamente.'
       correctly_updated: 'Etiqueta actualizado correctamente.'
       stale_object_error: 'La etiqueta no pudo ser actualizada, intente nuevamente.'
+      root_tag: 'Raiz'
     users:
       index_title: 'Listado de usuarios'
       show_title: 'Detalle de usuario'

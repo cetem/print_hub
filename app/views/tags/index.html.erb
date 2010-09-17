@@ -1,3 +1,11 @@
+<% if @parent_tag %>
+  <nav class="path">
+    <ul>
+      <%= show_tag_path(@parent_tag) %>
+    </ul>
+  </nav>
+<% end %>
+
 <table class="list">
   <thead>
     <tr>
@@ -9,7 +17,7 @@
   <tbody>
     <% @tags.each do |tag| %>
       <tr>
-        <td><%= tag.name %></td>
+        <td><%= link_to tag.name, tags_path(:parent => tag) %></td>
         <td><%= link_to t(:'label.show'), tag %></td>
         <td><%= link_to t(:'label.edit'), edit_tag_path(tag) %></td>
         <td><%= button_to t(:'label.delete'), tag,
@@ -21,5 +29,5 @@
 
 <nav class="links">
   <%= pagination_links(@tags) %>
-  <%= link_to t(:'label.new'), new_tag_path %>
+  <%= link_to t(:'label.new'), new_tag_path(:parent => params[:parent]) %>
 </nav>
