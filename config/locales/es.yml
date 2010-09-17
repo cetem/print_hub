@@ -32,6 +32,7 @@
       #   user: 'Dude'
       # will translate User model name to 'Dude'
     models:
+      tag: 'Etiqueta'
       user: 'Usuario'
       user_session: 'Sesión'
 
@@ -42,6 +43,9 @@
       #     login: 'Handle'
       # will translate User attribute 'login' as 'Handle'
     attributes:
+      tag:
+        name: 'Nombre'
+        parent_id: 'Padre'
       user:
         name: 'Nombre'
         last_name: 'Apellido'
@@ -205,6 +209,7 @@
     show: 'Ver'
 
   menu:
+    tags: 'Etiquetas'
     users: 'Usuarios'
     actions:
       logout: 'Salir'
@@ -324,9 +329,17 @@
     pm: 'pm'
 
   view:
+    tags:
+      index_title: 'Listado de etiquetas'
+      show_title: 'Detalle de etiqueta'
+      new_title: 'Nueva etiqueta'
+      edit_title: 'Modificar etiqueta'
+      correctly_created: 'Etiqueta agregado correctamente.'
+      correctly_updated: 'Etiqueta actualizado correctamente.'
+      stale_object_error: 'La etiqueta no pudo ser actualizada, intente nuevamente.'
     users:
       index_title: 'Listado de usuarios'
-      show_title: 'Detalle usuario'
+      show_title: 'Detalle de usuario'
       new_title: 'Nuevo usuario'
       edit_title: 'Modificar usuario'
       correctly_created: 'Usuario agregado correctamente.'

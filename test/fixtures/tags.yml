@@ -1,0 +1,9 @@
+notes:
+  name: Notes
+
+books:
+  name: Books
+
+physics:
+  name: Physics
+  parent_id: <%= Fixtures.identify(:notes) %>

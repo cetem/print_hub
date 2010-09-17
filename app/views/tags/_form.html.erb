@@ -1,0 +1,25 @@
+<%= form_for(@tag) do |f| %>
+  <% if @tag.errors.any? %>
+    <div id="error_explanation">
+      <h2>
+        <%= t(:header, :scope => [:errors, :template],
+          :model => User.model_name.human, :count => @tag.errors.count) %>
+      </h2>
+
+      <ul>
+        <% @tag.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :name %>
+    <%= f.text_field :name, :autofocus => true, :maxlength => 255 %>
+  </div>
+  <div class="actions">
+    <%= f.hidden_field :lock_version %>
+    <%= f.submit %>
+  </div>
+<% end %>

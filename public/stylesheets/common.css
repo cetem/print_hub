@@ -163,6 +163,11 @@ nav#menu_links {
 nav#menu_links ul, nav#menu_links li, nav#user_actions ul, nav#user_actions li {
     display: inline;
     list-style: none;
+    margin: 0em .5em;
+}
+
+nav#menu_links a {
+    text-decoration: none;
 }
 
 nav#user_actions {

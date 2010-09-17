@@ -1,4 +1,6 @@
 PrintHubApp::Application.routes.draw do
+  resources :tags
+
   resources :user_sessions, :only => [:new, :create] do
     collection do
       delete :destroy

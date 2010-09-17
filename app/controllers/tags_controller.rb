@@ -1,0 +1,101 @@
+class TagsController < ApplicationController
+  before_filter :require_user
+
+  # GET /tags
+  # GET /tags.xml
+  def index
+    @title = t :'view.tags.index_title'
+    @tags = Tag.paginate(
+      :conditions => params[:parent] ?
+        {:parent_id => params[:parent]} : 'parent_id IS NULL',
+      :page => params[:page],
+      :per_page => APP_LINES_PER_PAGE,
+      :order => "#{Tag.table_name}.name ASC"
+    )
+
+    respond_to do |format|
+      format.html # index.html.erb
+      format.xml  { render :xml => @tags }
+    end
+  end
+
+  # GET /tags/1
+  # GET /tags/1.xml
+  def show
+    @title = t :'view.tags.show_title'
+    @tag = Tag.find(params[:id])
+
+    respond_to do |format|
+      format.html # show.html.erb
+      format.xml  { render :xml => @tag }
+    end
+  end
+
+  # GET /tags/new
+  # GET /tags/new.xml
+  def new
+    @title = t :'view.tags.new_title'
+    @tag = Tag.new
+
+    respond_to do |format|
+      format.html # new.html.erb
+      format.xml  { render :xml => @tag }
+    end
+  end
+
+  # GET /tags/1/edit
+  def edit
+    @title = t :'view.tags.edit_title'
+    @tag = Tag.find(params[:id])
+  end
+
+  # POST /tags
+  # POST /tags.xml
+  def create
+    @title = t :'view.tags.new_title'
+    @tag = Tag.new(params[:tag])
+
+    respond_to do |format|
+      if @tag.save
+        format.html { redirect_to(tags_url, :notice => t(:'view.tags.correctly_created')) }
+        format.xml  { render :xml => @tag, :status => :created, :location => @tag }
+      else
+        format.html { render :action => :new }
+        format.xml  { render :xml => @tag.errors, :status => :unprocessable_entity }
+      end
+    end
+  end
+
+  # PUT /tags/1
+  # PUT /tags/1.xml
+  def update
+    @title = t :'view.tags.edit_title'
+    @tag = Tag.find(params[:id])
+
+    respond_to do |format|
+      if @tag.update_attributes(params[:tag])
+        format.html { redirect_to(tags_url, :notice => t(:'view.tags.correctly_updated')) }
+        format.xml  { head :ok }
+      else
+        format.html { render :action => :edit }
+        format.xml  { render :xml => @tag.errors, :status => :unprocessable_entity }
+      end
+    end
+
+  rescue ActiveRecord::StaleObjectError
+    flash.alert = t :'view.tags.stale_object_error'
+    redirect_to edit_user_url(@user)
+  end
+
+  # DELETE /tags/1
+  # DELETE /tags/1.xml
+  def destroy
+    @tag = Tag.find(params[:id])
+    @tag.destroy
+
+    respond_to do |format|
+      format.html { redirect_to(tags_url) }
+      format.xml  { head :ok }
+    end
+  end
+end

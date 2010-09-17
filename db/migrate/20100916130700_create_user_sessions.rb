@@ -5,6 +5,7 @@ class CreateUserSessions < ActiveRecord::Migration
       t.string :current_login_ip
       t.datetime :current_login_at
       t.datetime :last_request_at
+      t.integer :lock_version, :default => 0
 
       t.timestamps
     end

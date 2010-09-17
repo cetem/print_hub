@@ -56,7 +56,7 @@ class UsersController < ApplicationController
     respond_to do |format|
       if @user.save
         format.html { redirect_to(users_url, :notice => t(:'view.users.correctly_created')) }
-        format.xml  { render :xml => @user, :status => :created, :location => users_url }
+        format.xml  { render :xml => @user, :status => :created, :location => @user }
       else
         format.html { render :action => :new }
         format.xml  { render :xml => @user.errors, :status => :unprocessable_entity }
@@ -81,7 +81,7 @@ class UsersController < ApplicationController
     end
 
   rescue ActiveRecord::StaleObjectError
-    flash[:alert] = t :'view.users.stale_object_error'
+    flash.alert = t :'view.users.stale_object_error'
     redirect_to edit_user_url(@user)
   end
 

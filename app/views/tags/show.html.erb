@@ -1,0 +1,9 @@
+<p>
+  <b><%= Tag.human_attribute_name :name %></b>:
+  <%= @tag.name %>
+</p>
+
+<nav class="links">
+  <%= link_to t(:'label.edit'), edit_tag_path(@tag) %> |
+  <%= link_to t(:'label.list'), tags_path %>
+</nav>

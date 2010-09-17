@@ -10,13 +10,25 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20100916130700) do
+ActiveRecord::Schema.define(:version => 20100917145100) do
+
+  create_table "tags", :force => true do |t|
+    t.string   "name",                        :null => false
+    t.integer  "parent_id"
+    t.integer  "lock_version", :default => 0
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "tags", ["name"], :name => "index_tags_on_name"
+  add_index "tags", ["parent_id"], :name => "index_tags_on_parent_id"
 
   create_table "user_sessions", :force => true do |t|
-    t.string   "session_id",       :null => false
+    t.string   "session_id",                      :null => false
     t.string   "current_login_ip"
     t.datetime "current_login_at"
     t.datetime "last_request_at"
+    t.integer  "lock_version",     :default => 0
     t.datetime "created_at"
     t.datetime "updated_at"
   end
