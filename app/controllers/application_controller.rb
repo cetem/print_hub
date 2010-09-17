@@ -21,6 +21,8 @@ class ApplicationController < ActionController::Base
       redirect_to new_user_session_url
 
       return false
+    else
+      expires_now
     end
   end
 

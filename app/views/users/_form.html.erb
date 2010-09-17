@@ -16,7 +16,7 @@
 
   <div class="field">
     <%= f.label :name %>
-    <%= f.text_field :name %>
+    <%= f.text_field :name, :autofocus => true %>
   </div>
   <div class="field">
     <%= f.label :last_name %>
@@ -43,8 +43,8 @@
     <%= f.password_field :password_confirmation %>
   </div>
   <div class="field">
-    <%= f.label :enable %>
     <%= f.check_box :enable %>
+    <%= f.label :enable %>
   </div>
   <div class="actions">
     <%= f.submit %>

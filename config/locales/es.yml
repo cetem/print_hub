@@ -332,7 +332,8 @@
       correctly_created: 'Usuario agregado correctamente.'
       correctly_updated: 'Usuario actualizado correctamente.'
       stale_object_error: 'El usuario no pudo ser actualizado, intente nuevamente.'
-    user_session:
+    user_sessions:
+      login: 'Ingresar'
       new_title: 'Iniciar sesión'
       correctly_created: 'Bienvenido a Central de Impresión.'
       correctly_destroyed: 'Sesión cerrada correctamente.'

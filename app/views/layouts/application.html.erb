@@ -8,9 +8,11 @@
   <%= csrf_meta_tag %>
 </head>
 <body>
-  <div id="main_menu">
-    <%= render :partial => 'shared/menu' %>
-  </div>
+  <% if current_user %>
+    <div id="main_menu">
+      <%= render :partial => 'shared/menu' %>
+    </div>
+  <% end %>
   <div id="main_container">
     <%= yield %>
   </div>

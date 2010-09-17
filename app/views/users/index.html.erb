@@ -1,4 +1,4 @@
-<table>
+<table class="list">
   <thead>
     <tr>
       <th><%= User.human_attribute_name :name %></th>
@@ -11,7 +11,7 @@
 
   <tbody>
     <% @users.each do |user| %>
-      <tr>
+      <tr class="<%= cycle(:even, :odd) %>">
         <td><%= [user.name, user.last_name].join(' ') %></td>
         <td><%= user.username %></td>
         <td><%= user.email %></td>
@@ -26,5 +26,6 @@
 </table>
 
 <nav class="links">
+  <%= pagination_links(@users) %>
   <%= link_to t(:'label.new'), new_user_path %>
 </nav>
