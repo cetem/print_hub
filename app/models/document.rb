@@ -1,5 +1,7 @@
 class Document < ActiveRecord::Base
-  has_attached_file :file
+  has_attached_file :file,
+    :path => ':rails_root/private/:attachment/:id/:style/:basename.:extension',
+    :url => '/documents/:id.:extension'
 
   # Restricciones
   validates :name, :code, :presence => true

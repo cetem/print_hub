@@ -13,6 +13,11 @@
   <%= @document.description %>
 </p>
 
+<p>
+  <b><%= Document.human_attribute_name :file %></b>:
+  <%= link_to_if @document.file.file?, t(:'label.download'), @document.file.url %>
+</p>
+
 <nav class="links">
   <%= link_to t(:'label.edit'), edit_document_path(@document) %> |
   <%= link_to t(:'label.list'), documents_path %>

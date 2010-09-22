@@ -5,7 +5,7 @@ class DocumentsControllerTest < ActionController::TestCase
     @document = documents(:math_book)
   end
 
-  test "should get index" do
+  test 'should get index' do
     UserSession.create(users(:administrator))
     get :index
     assert_response :success
@@ -14,7 +14,7 @@ class DocumentsControllerTest < ActionController::TestCase
     assert_template 'documents/index'
   end
 
-  test "should get new" do
+  test 'should get new' do
     UserSession.create(users(:administrator))
     get :new
     assert_response :success
@@ -22,20 +22,21 @@ class DocumentsControllerTest < ActionController::TestCase
     assert_template 'documents/new'
   end
 
-  test "should create document" do
+  test 'should create document' do
     UserSession.create(users(:administrator))
     assert_difference('Document.count') do
       post :create, :document => {
         :code => '0001234',
         :name => 'New Name',
-        :description => 'New description'
+        :description => 'New description',
+        :file => fixture_file_upload('/files/test.pdf', 'application/pdf')
       }
     end
 
     assert_redirected_to documents_path
   end
 
-  test "should show document" do
+  test 'should show document' do
     UserSession.create(users(:administrator))
     get :show, :id => @document.to_param
     assert_response :success
@@ -43,7 +44,26 @@ class DocumentsControllerTest < ActionController::TestCase
     assert_template 'documents/show'
   end
 
-  test "should get edit" do
+  test 'should not download document' do
+    UserSession.create(users(:administrator))
+    get :show, :id => @document.to_param, :format => :pdf
+    assert_redirected_to :action => :index
+    assert_equal I18n.t(:'view.documents.non_existent'), flash.notice
+  end
+
+  test 'should download document' do
+    UserSession.create(users(:administrator))
+    put :update, :id => @document.to_param, :document => {
+      :file => fixture_file_upload('/files/test.pdf', 'application/pdf')
+    }
+    assert_redirected_to documents_path
+
+    get :show, :id => @document.to_param, :format => :pdf
+    assert_response :success
+    assert_equal File.open(@document.reload.file.path).read, @response.body
+  end
+
+  test 'should get edit' do
     UserSession.create(users(:administrator))
     get :edit, :id => @document.to_param
     assert_response :success
@@ -51,18 +71,19 @@ class DocumentsControllerTest < ActionController::TestCase
     assert_template 'documents/edit'
   end
 
-  test "should update document" do
+  test 'should update document' do
     UserSession.create(users(:administrator))
     put :update, :id => @document.to_param, :document => {
       :code => '003456',
       :name => 'Updated name',
-      :description => 'Updated description'
+      :description => 'Updated description',
+      :file => fixture_file_upload('/files/test.pdf', 'application/pdf')
     }
     assert_redirected_to documents_path
     assert_equal 'Updated name', @document.reload.name
   end
 
-  test "should destroy document" do
+  test 'should destroy document' do
     UserSession.create(users(:administrator))
     assert_difference('Document.count', -1) do
       delete :destroy, :id => @document.to_param

@@ -26,6 +26,13 @@ class DocumentsController < ApplicationController
     respond_to do |format|
       format.html # show.html.erb
       format.xml  { render :xml => @document }
+      format.pdf {
+        if @document.file.file?
+          send_file @document.file.path, :type => @document.file.content_type
+        else
+          redirect_to documents_path, :notice => t(:'view.documents.non_existent')
+        end
+      }
     end
   end
 

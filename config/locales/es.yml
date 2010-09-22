@@ -207,6 +207,7 @@
     back: 'Volver'
     close: 'Cerrar'
     delete: 'Eliminar'
+    download: 'Descargar'
     edit: 'Modificar'
     list: 'Listado'
     new: 'Nuevo'
@@ -344,6 +345,7 @@
       correctly_created: 'Documento agregado correctamente.'
       correctly_updated: 'Documento actualizado correctamente.'
       stale_object_error: 'El documento no pudo ser actualizado, intente nuevamente.'
+      non_existent: 'Archivo inexistente'
     tags:
       index_title: 'Listado de etiquetas'
       show_title: 'Detalle de etiqueta'
