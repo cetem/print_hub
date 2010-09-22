@@ -6,9 +6,8 @@ class TagsController < ApplicationController
   # GET /tags.xml
   def index
     @title = t :'view.tags.index_title'
-    @tags = Tag.paginate(
-      :conditions => @parent_tag ?
-        {:parent_id => @parent_tag.id} : 'parent_id IS NULL',
+    @tags = (@parent_tag.try(:children) || Tag).paginate(
+      :conditions => ('parent_id IS NULL' unless @parent_tag),
       :page => params[:page],
       :per_page => APP_LINES_PER_PAGE,
       :order => "#{Tag.table_name}.name ASC"
@@ -85,7 +84,7 @@ class TagsController < ApplicationController
 
   rescue ActiveRecord::StaleObjectError
     flash.alert = t :'view.tags.stale_object_error'
-    redirect_to edit_user_url(@user)
+    redirect_to edit_tag_url(@tag)
   end
 
   # DELETE /tags/1

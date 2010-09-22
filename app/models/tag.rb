@@ -1,6 +1,7 @@
 class Tag < ActiveRecord::Base
   acts_as_tree
 
+  # Restricciones
   validates :name, :presence => true
   validates :name, :uniqueness => { :scope => :parent_id }, :allow_nil => true,
     :allow_blank => true

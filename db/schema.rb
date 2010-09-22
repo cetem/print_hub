@@ -10,7 +10,23 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20100917145100) do
+ActiveRecord::Schema.define(:version => 20100922140808) do
+
+  create_table "documents", :force => true do |t|
+    t.string   "code",                             :null => false
+    t.string   "name",                             :null => false
+    t.text     "description"
+    t.integer  "lock_version",      :default => 0
+    t.string   "file_file_name"
+    t.string   "file_content_type"
+    t.integer  "file_file_size"
+    t.datetime "file_updated_at"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "documents", ["code"], :name => "index_documents_on_code", :unique => true
+  add_index "documents", ["name"], :name => "index_documents_on_name"
 
   create_table "tags", :force => true do |t|
     t.string   "name",                        :null => false

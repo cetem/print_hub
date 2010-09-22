@@ -1,0 +1,38 @@
+<%= form_for(@document, :html => { :multipart => true }) do |f| %>
+  <% if @document.errors.any? %>
+    <div id="error_explanation">
+      <h2>
+        <%= t(:header, :scope => [:errors, :template],
+          :model => Document.model_name.human,
+          :count => @document.errors.count) %>
+      </h2>
+
+      <ul>
+        <% @document.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :code %>
+    <%= f.text_field :code, :autofocus => true, :maxlength => 255 %>
+  </div>
+  <div class="field">
+    <%= f.label :name %>
+    <%= f.text_field :name, :maxlength => 255 %>
+  </div>
+  <div class="field">
+    <%= f.label :description %>
+    <%= f.text_area :description %>
+  </div>
+  <div class="field">
+    <%= f.label :file %>
+    <%= f.file_field :file %>
+  </div>
+  <div class="actions">
+    <%= f.hidden_field :lock_version %>
+    <%= f.submit %>
+  </div>
+<% end %>

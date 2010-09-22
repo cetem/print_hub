@@ -1,0 +1,9 @@
+math_notes:
+  code: 001
+  name: Math Notes
+  description: Math Notes description
+
+math_book:
+  code: 002
+  name: Math Book
+  description: Math Book description

@@ -8,6 +8,7 @@ gem 'rails', '3.0.0'
 gem 'pg'
 gem 'authlogic', :git => 'http://github.com/binarylogic/authlogic.git'
 gem 'will_paginate', '~> 3.0.pre2'
+gem 'paperclip'
 
 # Use unicorn as the web server
 # gem 'unicorn'

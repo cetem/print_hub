@@ -32,6 +32,7 @@
       #   user: 'Dude'
       # will translate User model name to 'Dude'
     models:
+      document: 'Documento'
       tag: 'Etiqueta'
       user: 'Usuario'
       user_session: 'Sesión'
@@ -43,6 +44,11 @@
       #     login: 'Handle'
       # will translate User attribute 'login' as 'Handle'
     attributes:
+      document:
+        code: 'Código'
+        name: 'Nombre'
+        description: 'Descripción'
+        file: 'Archivo'
       tag:
         name: 'Nombre'
         parent_id: 'Padre'
@@ -209,6 +215,7 @@
     show: 'Ver'
 
   menu:
+    documents: 'Documentos'
     tags: 'Etiquetas'
     users: 'Usuarios'
     actions:
@@ -329,6 +336,14 @@
     pm: 'pm'
 
   view:
+    documents:
+      index_title: 'Listado de documentos'
+      show_title: 'Detalle de documento'
+      new_title: 'Nuevo documento'
+      edit_title: 'Modificar documento'
+      correctly_created: 'Documento agregado correctamente.'
+      correctly_updated: 'Documento actualizado correctamente.'
+      stale_object_error: 'El documento no pudo ser actualizado, intente nuevamente.'
     tags:
       index_title: 'Listado de etiquetas'
       show_title: 'Detalle de etiqueta'

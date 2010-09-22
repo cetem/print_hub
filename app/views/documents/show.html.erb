@@ -1,0 +1,19 @@
+<p>
+  <b><%= Document.human_attribute_name :code %></b>:
+  <%= @document.code %>
+</p>
+
+<p>
+  <b><%= Document.human_attribute_name :name %></b>:
+  <%= @document.name %>
+</p>
+
+<p>
+  <b><%= Document.human_attribute_name :description %></b>:
+  <%= @document.description %>
+</p>
+
+<nav class="links">
+  <%= link_to t(:'label.edit'), edit_document_path(@document) %> |
+  <%= link_to t(:'label.list'), documents_path %>
+</nav>
