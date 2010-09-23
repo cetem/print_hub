@@ -224,6 +224,7 @@
 
   messages:
     confirmation: '¿Está seguro?'
+    loading: 'Cargando'
     must_be_logged_in: 'Debe ingresar para poder ver el contenido requerido'
     must_be_logged_out: 'Debe salir para poder ver el contenido requerido'
     

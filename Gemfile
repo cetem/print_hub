@@ -9,6 +9,9 @@ gem 'pg'
 gem 'authlogic', :git => 'http://github.com/binarylogic/authlogic.git'
 gem 'will_paginate', '~> 3.0.pre2'
 gem 'paperclip'
+# Previo sudo apt-get install libcupsys2-dev
+gem 'cups'
+gem 'simple_autocomplete'
 
 # Use unicorn as the web server
 # gem 'unicorn'

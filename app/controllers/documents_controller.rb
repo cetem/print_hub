@@ -1,5 +1,13 @@
 class DocumentsController < ApplicationController
   before_filter :require_user
+  autocomplete_for :tag, :name, :limit => 10, :order => 'name ASC' do |tags|
+    tag_list_items = tags.map do |tag|
+      "<li id=\"auto_tag_#{tag.id}\">#{tag.name}" +
+        "<span class=\"informal\">#{tag.to_s}</span></li>"
+    end
+
+    "<ul>#{tag_list_items.join}</ul>"
+  end
 
   # GET /documents
   # GET /documents.xml
@@ -58,6 +66,7 @@ class DocumentsController < ApplicationController
   # POST /documents.xml
   def create
     @title = t :'view.documents.new_title'
+    params[:document][:tag_ids] ||= []
     @document = Document.new(params[:document])
 
     respond_to do |format|
@@ -76,6 +85,7 @@ class DocumentsController < ApplicationController
   def update
     @title = t :'view.documents.edit_title'
     @document = Document.find(params[:id])
+    params[:document][:tag_ids] ||= []
 
     respond_to do |format|
       if @document.update_attributes(params[:document])

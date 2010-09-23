@@ -1,5 +1,9 @@
 PrintHubApp::Application.routes.draw do
-  resources :documents
+  resources :documents do
+    collection do
+      get :autocomplete_for_tag_name
+    end
+  end
 
   resources :tags
 

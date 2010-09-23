@@ -27,6 +27,29 @@
     <%= f.label :description %>
     <%= f.text_area :description %>
   </div>
+  <section class="tags">
+    <h2><%= t(:'menu.tags') %></h2>
+    <% unless @document.tags.empty? %>
+      <ul class="raw">
+        <% @document.tags.each do |tag| %>
+          <li id="tag_<%= tag.id %>">
+            <%= tag %>
+            <%= hidden_field_tag 'document[tag_ids][]', tag.id,
+              :id => "document_tag_#{tag.id}" %>
+            <%= link_to 'X', '#', :'data-remove' => "tag_#{tag.id}" %>
+          </li>
+        <% end %>
+      </ul>
+    <% end %>
+
+    <div class="field">
+      <%= f.text_field :add_by_auto_tag_name, :class => :autocomplete,
+        :'data-autocomplete-url' => autocomplete_for_tag_name_documents_path %>
+      <%= hidden_field_tag 'document[tag_ids][]', nil, :id => 'new_tag_id',
+        :class => :autocomplete_id %>
+      <div class="autocomplete" style="display: none;"></div>
+    </div>
+  </section>
   <div class="field">
     <%= f.label :file %>
     <%= f.file_field :file %>

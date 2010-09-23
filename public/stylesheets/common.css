@@ -23,6 +23,18 @@ a:hover {
     background-color:#000000;
 }
 
+a[data-remove] {
+    font-size: 12px;
+    font-weight: bold;
+    padding: 1px 3px;
+    text-decoration: none;
+}
+
+a[data-remove]:hover {
+    background: #aa0000;
+    color: #ffffff;
+}
+
 div#alert {
     background: #aa0000;
     color: #ffffff;
@@ -86,6 +98,13 @@ div#error_explanation ul li {
   list-style: square;
 }
 
+div#loading {
+    position: fixed;
+    top: .5em;
+    right: 1em;
+    padding: 1px 5px;
+}
+
 div#login {
     font-size: 1.2em;
     width: 20em;
@@ -125,11 +144,44 @@ div.actions, div.field {
   margin-bottom: 1em;
 }
 
+div.autocomplete {
+    position: absolute;
+    top: 0px;
+    background-color: white;
+    border: 1px solid #888888;
+}
+
+div.autocomplete ul {
+    list-style-type: none;
+}
+
+div.autocomplete ul li.selected {
+    background-color: #ffffbb;
+}
+
+div.autocomplete ul li {
+    list-style-type: none;
+    display: block;
+    padding: .1em;
+    height: 2.5em;
+    cursor: pointer;
+}
+
+div.autocomplete ul li span.informal {
+    display: block;
+    font-size: .8em;
+    color: #cecece;
+}
+
 div.field input[type="text"], div.field input[type="password"],
-div.field select, div.field text_area {
+div.field select, div.field textarea {
     font-size: inherit;
     font-family: inherit;
     width: 30em;
+}
+
+div.field textarea {
+    height: 7em;
 }
 
 div.field > label {
@@ -227,6 +279,11 @@ nav.path ul, nav.path ul li {
     margin-right: .5em;
 }
 
+section.tags {
+    display: block;
+    margin: 1em 0em;
+}
+
 table.list {
     width: 100%;
     border: 2px solid #333333;
@@ -249,6 +306,10 @@ table.list tbody tr.odd {
 
 table.list tbody tr.odd:hover, table.list tbody tr.even:hover {
     background: #cecece;
+}
+
+ul.raw {
+    margin: 1em 0em 1em 3em;
 }
 
 .bold {

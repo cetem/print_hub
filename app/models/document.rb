@@ -10,4 +10,8 @@ class Document < ActiveRecord::Base
     :allow_blank => true
   validates_attachment_content_type :file, :content_type => /pdf/i,
     :allow_nil => true, :allow_blank => true
+
+  # Relaciones
+  has_and_belongs_to_many :tags, :order => 'name ASC'
+  add_by_autocomplete :tag, :name
 end

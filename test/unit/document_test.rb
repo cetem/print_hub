@@ -23,9 +23,12 @@ class DocumentTest < ActiveSupport::TestCase
       @document = Document.create(
         :code => '00001234',
         :name => 'New name',
-        :description => 'New description'
+        :description => 'New description',
+        :tags => [tags(:books), tags(:notes)]
       )
     end
+
+    assert_equal 2, @document.tags.count
   end
 
   # Prueba de actualización de un usuario

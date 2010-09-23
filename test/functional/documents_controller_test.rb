@@ -29,11 +29,13 @@ class DocumentsControllerTest < ActionController::TestCase
         :code => '0001234',
         :name => 'New Name',
         :description => 'New description',
+        :tag_ids => [tags(:books).id, tags(:notes).id],
         :file => fixture_file_upload('/files/test.pdf', 'application/pdf')
       }
     end
 
     assert_redirected_to documents_path
+    assert_equal 2, Document.find_by_code('0001234').tags.count
   end
 
   test 'should show document' do
@@ -90,5 +92,20 @@ class DocumentsControllerTest < ActionController::TestCase
     end
 
     assert_redirected_to documents_path
+  end
+
+  test 'should get autocomplete list' do
+    UserSession.create(users(:administrator))
+    get :autocomplete_for_tag_name, :q => 'o'
+    assert_response :success
+    assert_select 'li', 2
+
+    get :autocomplete_for_tag_name, :q => 'bo'
+    assert_response :success
+    assert_select 'li', 1
+
+    get :autocomplete_for_tag_name, :q => 'boxyz'
+    assert_response :success
+    assert_select 'li', false
   end
 end

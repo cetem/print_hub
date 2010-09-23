@@ -2,8 +2,10 @@ math_notes:
   code: 001
   name: Math Notes
   description: Math Notes description
+  tags: notes
 
 math_book:
   code: 002
   name: Math Book
   description: Math Book description
+  tags: book

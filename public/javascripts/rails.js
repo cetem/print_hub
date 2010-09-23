@@ -92,9 +92,9 @@
       parameters: params,
       evalScripts: true,
 
-      onComplete:    function(request) { element.fire("ajax:complete", request); },
-      onSuccess:     function(request) { element.fire("ajax:success",  request); },
-      onFailure:     function(request) { element.fire("ajax:failure",  request); }
+      onComplete:    function(request) {element.fire("ajax:complete", request);},
+      onSuccess:     function(request) {element.fire("ajax:success",  request);},
+      onFailure:     function(request) {element.fire("ajax:failure",  request);}
     });
 
     element.fire("ajax:after");
@@ -106,18 +106,18 @@
         csrf_param = $$('meta[name=csrf-param]')[0],
         csrf_token = $$('meta[name=csrf-token]')[0];
 
-    var form = new Element('form', { method: "POST", action: url, style: "display: none;" });
+    var form = new Element('form', {method: "POST", action: url, style: "display: none;"});
     element.parentNode.insert(form);
 
     if (method !== 'post') {
-      var field = new Element('input', { type: 'hidden', name: '_method', value: method });
+      var field = new Element('input', {type: 'hidden', name: '_method', value: method});
       form.insert(field);
     }
 
     if (csrf_param) {
       var param = csrf_param.readAttribute('content'),
           token = csrf_token.readAttribute('content'),
-          field = new Element('input', { type: 'hidden', name: param, value: token });
+          field = new Element('input', {type: 'hidden', name: param, value: token});
       form.insert(field);
     }
 
@@ -173,3 +173,40 @@
     });
   });
 })();
+
+var AutoComplete = {
+    observeAll: function() {
+        $$('input.autocomplete').each(function(input) {
+            if(!input.retrieve('observed')) {
+                new Ajax.Autocompleter(
+                    input,
+                    input.adjacent('.autocomplete').first(),
+                    input.readAttribute('data-autocomplete-url'),
+                    {
+                        paramName: 'q',
+                        indicator: 'loading',
+                        method: 'get',
+                        afterUpdateElement: function(text, li) {
+                            var objectId = $(li).id.strip().match(/(\d+)$/)[1];
+                            var idField = input.adjacent('input.autocomplete_id');
+
+                            idField.first().setValue(objectId);
+                        }
+                    }
+                );
+
+                input.store('observed', true);
+            }
+        });
+    }
+};
+
+Event.observe(window, 'load', function() {
+    document.on('click', 'a[data-remove]', function(event, element) {
+        if (event.stopped) return;
+        $(element.readAttribute('data-remove')).remove();
+        event.stop();
+    });
+
+    AutoComplete.observeAll();
+});
