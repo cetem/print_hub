@@ -21,7 +21,7 @@ class UserSessionsControllerTest < ActionController::TestCase
 
     assert user_session = UserSession.find
     assert_equal @user, user_session.user
-    assert_redirected_to users_url
+    assert_redirected_to documents_url
   end
 
   test 'should destroy user session' do

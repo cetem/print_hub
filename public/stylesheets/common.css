@@ -35,12 +35,12 @@ a[data-remove]:hover {
     color: #ffffff;
 }
 
-div#alert {
+div#alert, div#login_error {
     background: #aa0000;
     color: #ffffff;
 }
 
-div#alert, div#notice {
+div#alert, div#notice, div#login_error {
     position: fixed;
     bottom: .5em;
     left: 5%;
@@ -52,7 +52,9 @@ div#alert, div#notice {
     border: 4px solid #c2bfb7;
 }
 
-div#alert div#close_alert, div#notice div#close_notice {
+div#alert div#close_alert,
+div#notice div#close_notice,
+div#login_error div#close_login_error {
     position: absolute;
     top: .5em;
     right: 1em;
@@ -61,7 +63,9 @@ div#alert div#close_alert, div#notice div#close_notice {
     border: 2px solid #c2bfb7;
 }
 
-div#alert div#close_alert a, div#notice div#close_notice a {
+div#alert div#close_alert a,
+div#notice div#close_notice a,
+div#login_error div#close_login_error a {
     background: inherit;
     color: #c2bfb7;
     text-decoration: none;
@@ -111,6 +115,10 @@ div#login {
     margin: 5em auto;
     padding: 1em 2em;
     border: 2px solid #333333;
+}
+
+div#login div.field > label {
+    width: 100%;
 }
 
 div#login input[type="text"], div#login input[type="password"] {
@@ -204,6 +212,7 @@ input.field_with_errors, select.field_with_errors, text_area.field_with_errors {
 
 label.field_with_errors {
     color: #ffffff;
+    font-weight: bold;
     background-color: #cc0000;
     border: 2px solid #cc0000;
 }

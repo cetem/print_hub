@@ -1,21 +1,5 @@
 <div id="login">
   <%= form_for(@user_session) do |f| %>
-    <% if @user_session.errors.any? %>
-      <div id="error_explanation">
-        <h2>
-          <%= t(:header, :scope => [:errors, :template],
-            :model => UserSession.model_name.human,
-            :count => @user_session.errors.count) %>
-        </h2>
-
-        <ul>
-          <% @user_session.errors.full_messages.each do |msg| %>
-            <li><%= msg %></li>
-          <% end %>
-        </ul>
-      </div>
-    <% end %>
-
     <div class="field">
       <%= f.label :username %>
       <%= f.text_field :username, :autofocus => true %>
@@ -32,3 +16,11 @@
     </div>
   <% end %>
 </div>
+
+<% if @user_session.errors.any? %>
+  <div id="login_error">
+    <p><%= @user_session.errors.full_messages.join('; ') %></p>
+    <div id="close_login_error"><%= link_to_function 'X',
+      "$('login_error').fade()", :title => t(:'label.close') %></div>
+  </div>
+<% end %>
