@@ -1,11 +1,18 @@
+<% current_controller = controller.controller_name.to_sym %>
 <nav id="menu_links">
   <ul>
-    <li><%= link_to t(:users, :scope => :menu), users_path %></li>
-    <li><%= link_to t(:documents, :scope => :menu), documents_path %></li>
-    <li><%= link_to t(:tags, :scope => :menu), tags_path %></li>
+    <% if current_user.admin %>
+      <%= content_tag(:li, link_to(t(:users, :scope => :menu), users_path),
+        :class => (:selected if current_controller == :users)) %>
+    <% end %>
+    <%= content_tag(:li, link_to(t(:documents, :scope => :menu), documents_path),
+      :class => (:selected if current_controller == :documents)) %>
+    <%= content_tag(:li, link_to(t(:tags, :scope => :menu), tags_path),
+      :class => (:selected if current_controller == :tags)) %>
   </ul>
 </nav>
 <nav id="user_actions">
+  <div id="username">| <%= current_user.username %> |</div>
   <ul>
     <li><%= link_to t(:logout, :scope => [:menu, :actions]),
       user_sessions_path, :method => :delete %></li>

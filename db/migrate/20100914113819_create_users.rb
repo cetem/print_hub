@@ -9,6 +9,7 @@ class CreateUsers < ActiveRecord::Migration
       t.string :crypted_password, :null => false
       t.string :password_salt, :null => false
       t.string :persistence_token, :null => false
+      t.boolean :admin, :null => false, :default => false
       t.boolean :enable
       t.integer :lock_version, :default => 0
 

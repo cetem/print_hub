@@ -57,14 +57,15 @@ ActiveRecord::Schema.define(:version => 20100922184708) do
   end
 
   create_table "users", :force => true do |t|
-    t.string   "name",                             :null => false
-    t.string   "last_name",                        :null => false
-    t.string   "language",                         :null => false
-    t.string   "email",                            :null => false
-    t.string   "username",                         :null => false
-    t.string   "crypted_password",                 :null => false
-    t.string   "password_salt",                    :null => false
-    t.string   "persistence_token",                :null => false
+    t.string   "name",                                 :null => false
+    t.string   "last_name",                            :null => false
+    t.string   "language",                             :null => false
+    t.string   "email",                                :null => false
+    t.string   "username",                             :null => false
+    t.string   "crypted_password",                     :null => false
+    t.string   "password_salt",                        :null => false
+    t.string   "persistence_token",                    :null => false
+    t.boolean  "admin",             :default => false, :null => false
     t.boolean  "enable"
     t.integer  "lock_version",      :default => 0
     t.datetime "created_at"

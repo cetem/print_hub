@@ -18,6 +18,7 @@ class UserTest < ActiveSupport::TestCase
     assert_equal users(:administrator).email, @user.email
     assert_equal users(:administrator).username, @user.username
     assert_equal users(:administrator).crypted_password, @user.crypted_password
+    assert_equal users(:administrator).admin, @user.admin
     assert_equal users(:administrator).enable, @user.enable
   end
 
@@ -32,6 +33,7 @@ class UserTest < ActiveSupport::TestCase
         :username => 'new_user',
         :password => 'new_password',
         :password_confirmation => 'new_password',
+        :admin => true,
         :enable => true
       )
     end

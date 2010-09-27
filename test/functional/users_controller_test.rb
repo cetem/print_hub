@@ -34,6 +34,7 @@ class UsersControllerTest < ActionController::TestCase
         :username => 'new_user',
         :password => 'new_password',
         :password_confirmation => 'new_password',
+        :admin => '1',
         :enable => '1'
       }
     end
@@ -68,6 +69,7 @@ class UsersControllerTest < ActionController::TestCase
       :language => 'es',
       :password => 'updated_password',
       :password_confirmation => 'updated_password',
+      :admin => '1',
       :enable => '1'
     }
     assert_redirected_to users_path

@@ -20,7 +20,7 @@ class ApplicationController < ActionController::Base
       store_location
       redirect_to new_user_session_url
 
-      return false
+      false
     else
       expires_now
     end
@@ -31,9 +31,24 @@ class ApplicationController < ActionController::Base
       flash.notice = t(:'messages.must_be_logged_out')
 
       store_location
-      redirect_to users_url
+      redirect_to documents_url
 
-      return false
+      false
+    else
+      true
+    end
+  end
+
+  def require_admin_user
+    unless current_user.try(:admin) == true
+      flash.alert = t(:'messages.must_be_admin')
+
+      store_location
+      redirect_to(current_user ? documents_url : new_user_session_url)
+
+      false
+    else
+      expires_now
     end
   end
 

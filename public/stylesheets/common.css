@@ -221,20 +221,29 @@ nav#menu_links {
     margin-left: 1em;
 }
 
+nav#menu_links a {
+    text-decoration: none;
+}
+
+nav#menu_links li.selected a {
+    color: #151215;
+    font-weight: bold;
+}
+
 nav#menu_links ul, nav#menu_links li, nav#user_actions ul, nav#user_actions li {
     display: inline;
     list-style: none;
     margin: 0em .5em;
 }
 
-nav#menu_links a {
-    text-decoration: none;
-}
-
 nav#user_actions {
     position: absolute;
     right: 1em;
     top: .5em;
+}
+
+nav#user_actions div#username {
+    display: inline;
 }
 
 nav.links {
