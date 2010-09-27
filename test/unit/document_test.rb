@@ -97,5 +97,11 @@ class DocumentTest < ActiveSupport::TestCase
     assert_equal 1, @document.errors.count
     assert_equal [error_message_from_model(@document, :pages, :not_an_integer)],
       @document.errors[:pages]
+
+    @document.pages = '0'
+    assert @document.invalid?
+    assert_equal 1, @document.errors.count
+    assert_equal [error_message_from_model(@document, :pages, :greater_than,
+        :count => 0)], @document.errors[:pages]
   end
 end

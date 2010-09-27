@@ -13,4 +13,10 @@ class User < ActiveRecord::Base
     :allow_nil => true, :allow_blank => true
   validates :language, :length => { :maximum => 10 }, :allow_nil => true,
     :allow_blank => true
+  validates :language, :inclusion => { :in => LANGUAGES.map(&:to_s) },
+    :allow_nil => true, :allow_blank => true
+
+  def to_s
+    [self.name, self.last_name].join(' ')
+  end
 end

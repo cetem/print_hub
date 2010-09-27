@@ -1,0 +1,14 @@
+<p>
+  <b><%= Print.human_attribute_name :printer %></b>:
+  <%= @print.printer %>
+</p>
+
+<p>
+  <b><%= Print.human_attribute_name :user_id %></b>:
+  <%= @print.user %>
+</p>
+
+<nav class="links">
+  <%= link_to t(:'label.edit'), edit_print_path(@print) %> |
+  <%= link_to t(:'label.list'), prints_path %>
+</nav>

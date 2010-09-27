@@ -1,7 +1,7 @@
 administrator:
   name: Administrator
   last_name: Administrator
-  language: es
+  language: <%= LANGUAGES.first.to_s %>
   email: admin@printhub.com
   username: admin
   password_salt: <%= salt = Authlogic::Random.hex_token %>
@@ -13,7 +13,7 @@ administrator:
 operator:
   name: Operator
   last_name: Operator
-  language: es
+  language: <%= LANGUAGES.first.to_s %>
   email: operator@printhub.com
   username: operator
   password_salt: <%= salt = Authlogic::Random.hex_token %>

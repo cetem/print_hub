@@ -1,0 +1,29 @@
+<table class="list">
+  <thead>
+    <tr>
+      <th><%= Print.human_attribute_name :created_at %></th>
+      <th><%= Print.human_attribute_name :printer %></th>
+      <th><%= Print.human_attribute_name :user_id %></th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @prints.each do |print| %>
+      <tr>
+        <td><%= l print.created_at, :format => :short if print.created_at %></td>
+        <td><%= print.printer %></td>
+        <td><%= print.user %></td>
+        <td><%= link_to t(:'label.show'), print %></td>
+        <td><%= link_to t(:'label.edit'), edit_print_path(print) %></td>
+        <td><%= button_to t(:'label.delete'), print,
+          :confirm => t(:'messages.confirmation'), :method => :delete %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<nav class="links">
+  <%= pagination_links(@prints) %>
+  <%= link_to t(:'label.new'), new_print_path %>
+</nav>

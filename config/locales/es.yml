@@ -33,6 +33,7 @@
       # will translate User model name to 'Dude'
     models:
       document: 'Documento'
+      print: 'Impresión'
       tag: 'Etiqueta'
       user: 'Usuario'
       user_session: 'Sesión'
@@ -50,6 +51,9 @@
         pages: 'Páginas'
         description: 'Descripción'
         file: 'Archivo'
+      print:
+        printer: 'Impresora'
+        user_id: 'Usuario'
       tag:
         name: 'Nombre'
         parent_id: 'Padre'
@@ -218,8 +222,12 @@
     previous: 'Anterior'
     show: 'Ver'
 
+  lang:
+    es: 'Español'
+
   menu:
     documents: 'Documentos'
+    prints: 'Impresiones'
     tags: 'Etiquetas'
     users: 'Usuarios'
     actions:
@@ -351,6 +359,14 @@
       correctly_updated: 'Documento actualizado correctamente.'
       stale_object_error: 'El documento no pudo ser actualizado, intente nuevamente.'
       non_existent: 'Archivo inexistente'
+    prints:
+      index_title: 'Listado de impresiones'
+      show_title: 'Detalle de impresión'
+      new_title: 'Nueva impresión'
+      edit_title: 'Modificar impresión'
+      correctly_created: 'Impresión agregada correctamente.'
+      correctly_updated: 'Impresión actualizada correctamente.'
+      stale_object_error: 'La impresión no pudo ser actualizada, intente nuevamente.'
     tags:
       index_title: 'Listado de etiquetas'
       show_title: 'Detalle de etiqueta'

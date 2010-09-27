@@ -1,0 +1,7 @@
+math_notes:
+  printer: <%= Cups.default_printer || 'default' %>
+  user: operator
+
+physics_notes:
+  printer: <%= Cups.default_printer || 'default' %>
+  user: operator

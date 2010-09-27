@@ -5,6 +5,8 @@
       <%= content_tag(:li, link_to(t(:users, :scope => :menu), users_path),
         :class => (:selected if current_controller == :users)) %>
     <% end %>
+    <%= content_tag(:li, link_to(t(:prints, :scope => :menu), prints_path),
+      :class => (:selected if current_controller == :prints)) %>
     <%= content_tag(:li, link_to(t(:documents, :scope => :menu), documents_path),
       :class => (:selected if current_controller == :documents)) %>
     <%= content_tag(:li, link_to(t(:tags, :scope => :menu), tags_path),

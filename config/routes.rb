@@ -1,4 +1,6 @@
 PrintHubApp::Application.routes.draw do
+  resources :prints
+
   resources :documents do
     collection do
       get :autocomplete_for_tag_name

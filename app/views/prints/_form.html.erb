@@ -1,0 +1,24 @@
+<%= form_for(@print) do |f| %>
+  <% if @print.errors.any? %>
+    <div id="error_explanation">
+      <h2>
+        <%= t(:header, :scope => [:errors, :template],
+          :model => Print.model_name.human, :count => @print.errors.count) %>
+      </h2>
+
+      <ul>
+        <% @print.errors.full_messages.each do |msg| %>
+          <li><%= msg %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div class="field">
+    <%= f.label :printer %>
+    <%= print_destinations_field(f) %>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>

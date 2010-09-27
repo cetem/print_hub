@@ -29,7 +29,7 @@ class UserTest < ActiveSupport::TestCase
         :name => 'New name',
         :last_name => 'New last name',
         :email => 'new_user@printhub.com',
-        :language => 'es',
+        :language => LANGUAGES.first.to_s,
         :username => 'new_user',
         :password => 'new_password',
         :password_confirmation => 'new_password',
@@ -128,7 +128,7 @@ class UserTest < ActiveSupport::TestCase
     @user.email = "#{'abcde' * 21}@email.com"
     @user.language = 'abcde' * 3
     assert @user.invalid?
-    assert_equal 7, @user.errors.count
+    assert_equal 8, @user.errors.count
     assert_equal [error_message_from_model(@user, :username, :too_long,
       :count => 100)], @user.errors[:username]
     assert_equal [error_message_from_model(@user, :name, :too_long,
@@ -137,7 +137,17 @@ class UserTest < ActiveSupport::TestCase
       :count => 100)], @user.errors[:last_name]
     assert_equal [error_message_from_model(@user, :email, :too_long,
       :count => 100)], @user.errors[:email]
-    assert_equal [error_message_from_model(@user, :language, :too_long,
-      :count => 10)], @user.errors[:language]
+    assert_equal [error_message_from_model(@user, :language, :inclusion),
+      error_message_from_model(@user, :language, :too_long, :count => 10)].sort,
+      @user.errors[:language].sort
+  end
+
+  # Prueba que las validaciones del modelo se cumplan como es esperado
+  test 'validates included attributes' do
+    @user.language = 'wrong_lang'
+    assert @user.invalid?
+    assert_equal 1, @user.errors.count
+    assert_equal [error_message_from_model(@user, :language, :inclusion)],
+      @user.errors[:language]
   end
 end

@@ -8,7 +8,8 @@ class Document < ActiveRecord::Base
   validates :code, :uniqueness => true, :allow_nil => true, :allow_blank => true
   validates :name, :code, :length => { :maximum => 255 }, :allow_nil => true,
     :allow_blank => true
-  validates :pages, :numericality => { :only_integer => true },
+  validates :pages,
+    :numericality => { :only_integer => true, :greater_than => 0 },
     :allow_nil => true, :allow_blank => true
   validates_attachment_content_type :file, :content_type => /pdf/i,
     :allow_nil => true, :allow_blank => true

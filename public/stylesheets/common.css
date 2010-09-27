@@ -244,6 +244,7 @@ nav#user_actions {
 
 nav#user_actions div#username {
     display: inline;
+    font-weight: bold;
 }
 
 nav.links {
