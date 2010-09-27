@@ -4,6 +4,7 @@ class CreateDocuments < ActiveRecord::Migration
       t.string :code, :null => false
       t.string :name, :null => false
       t.text :description
+      t.integer :pages, :null => false
       t.integer :lock_version, :default => 0
       # Atributos pra PaperClip
       t.string :file_file_name

@@ -14,6 +14,7 @@ class DocumentTest < ActiveSupport::TestCase
     assert_kind_of Document, @document
     assert_equal documents(:math_book).code, @document.code
     assert_equal documents(:math_book).name, @document.name
+    assert_equal documents(:math_book).pages, @document.pages
     assert_equal documents(:math_book).description, @document.description
   end
 
@@ -23,6 +24,7 @@ class DocumentTest < ActiveSupport::TestCase
       @document = Document.create(
         :code => '00001234',
         :name => 'New name',
+        :pages => '5',
         :description => 'New description',
         :tags => [tags(:books), tags(:notes)]
       )
@@ -50,12 +52,15 @@ class DocumentTest < ActiveSupport::TestCase
   test 'validates blank attributes' do
     @document.code = '  '
     @document.name = '  '
+    @document.pages = nil
     assert @document.invalid?
-    assert_equal 2, @document.errors.count
+    assert_equal 3, @document.errors.count
     assert_equal [error_message_from_model(@document, :code, :blank)],
       @document.errors[:code]
     assert_equal [error_message_from_model(@document, :name, :blank)],
       @document.errors[:name]
+    assert_equal [error_message_from_model(@document, :pages, :blank)],
+      @document.errors[:pages]
   end
 
   # Prueba que las validaciones del modelo se cumplan como es esperado
@@ -77,5 +82,20 @@ class DocumentTest < ActiveSupport::TestCase
       :count => 255)], @document.errors[:code]
     assert_equal [error_message_from_model(@document, :name, :too_long,
       :count => 255)], @document.errors[:name]
+  end
+
+  # Prueba que las validaciones del modelo se cumplan como es esperado
+  test 'validates formatted attributes' do
+    @document.pages = '?xx'
+    assert @document.invalid?
+    assert_equal 1, @document.errors.count
+    assert_equal [error_message_from_model(@document, :pages, :not_a_number)],
+      @document.errors[:pages]
+
+    @document.pages = '1.23'
+    assert @document.invalid?
+    assert_equal 1, @document.errors.count
+    assert_equal [error_message_from_model(@document, :pages, :not_an_integer)],
+      @document.errors[:pages]
   end
 end

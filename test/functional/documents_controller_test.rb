@@ -28,6 +28,7 @@ class DocumentsControllerTest < ActionController::TestCase
       post :create, :document => {
         :code => '0001234',
         :name => 'New Name',
+        :pages => '1',
         :description => 'New description',
         :tag_ids => [tags(:books).id, tags(:notes).id],
         :file => fixture_file_upload('/files/test.pdf', 'application/pdf')
@@ -78,6 +79,7 @@ class DocumentsControllerTest < ActionController::TestCase
     put :update, :id => @document.to_param, :document => {
       :code => '003456',
       :name => 'Updated name',
+      :pages => '1',
       :description => 'Updated description',
       :file => fixture_file_upload('/files/test.pdf', 'application/pdf')
     }

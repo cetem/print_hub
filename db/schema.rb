@@ -16,6 +16,7 @@ ActiveRecord::Schema.define(:version => 20100922184708) do
     t.string   "code",                             :null => false
     t.string   "name",                             :null => false
     t.text     "description"
+    t.integer  "pages",                            :null => false
     t.integer  "lock_version",      :default => 0
     t.string   "file_file_name"
     t.string   "file_content_type"

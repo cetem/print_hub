@@ -1,11 +1,13 @@
 math_notes:
   code: 001
   name: Math Notes
+  pages: 12
   description: Math Notes description
   tags: notes
 
 math_book:
   code: 002
   name: Math Book
+  pages: 350
   description: Math Book description
   tags: book

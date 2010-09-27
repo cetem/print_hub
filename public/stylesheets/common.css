@@ -95,7 +95,7 @@ div#error_explanation h2 {
 }
 
 div#error_explanation ul {
-    margin-left: 3em;
+    margin: 1em 1em 1em 3em;
 }
 
 div#error_explanation ul li {
