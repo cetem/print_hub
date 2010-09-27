@@ -41,7 +41,7 @@ class ApplicationControllerTest < ActionController::TestCase
 
     UserSession.create(users(:administrator))
     assert !@controller.send(:require_no_user)
-    assert_redirected_to documents_url
+    assert_redirected_to prints_url
     assert_equal I18n.t(:'messages.must_be_logged_out'),
       @controller.send(:flash)[:notice]
   end
@@ -54,7 +54,7 @@ class ApplicationControllerTest < ActionController::TestCase
   test 'require admin with a non admin user' do
     UserSession.create(users(:operator))
     assert !@controller.send(:require_admin_user)
-    assert_redirected_to documents_url
+    assert_redirected_to prints_url
     assert_equal I18n.t(:'messages.must_be_admin'),
       @controller.send(:flash)[:alert]
   end

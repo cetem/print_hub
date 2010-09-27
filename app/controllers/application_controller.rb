@@ -31,7 +31,7 @@ class ApplicationController < ActionController::Base
       flash.notice = t(:'messages.must_be_logged_out')
 
       store_location
-      redirect_to documents_url
+      redirect_to prints_url
 
       false
     else
@@ -44,7 +44,7 @@ class ApplicationController < ActionController::Base
       flash.alert = t(:'messages.must_be_admin')
 
       store_location
-      redirect_to(current_user ? documents_url : new_user_session_url)
+      redirect_to(current_user ? prints_url : new_user_session_url)
 
       false
     else

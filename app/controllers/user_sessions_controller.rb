@@ -15,8 +15,8 @@ class UserSessionsController < ApplicationController
     
     respond_to do |format|
       if @user_session.save
-        format.html { redirect_to(documents_url, :notice => t(:'view.user_sessions.correctly_created')) }
-        format.xml  { render :xml => @user_session, :status => :created, :location => documents_url }
+        format.html { redirect_to(prints_url, :notice => t(:'view.user_sessions.correctly_created')) }
+        format.xml  { render :xml => @user_session, :status => :created, :location => prints_url }
       else
         format.html { render :action => :new }
         format.xml  { render :xml => @user_session.errors, :status => :unprocessable_entity }
