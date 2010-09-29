@@ -21,16 +21,22 @@ class DocumentTest < ActiveSupport::TestCase
   # Prueba la creación de un usuario
   test 'create' do
     assert_difference 'Document.count' do
-      @document = Document.create(
+      @document = Document.new(
         :code => '00001234',
         :name => 'New name',
         :pages => '5',
         :description => 'New description',
         :tags => [tags(:books), tags(:notes)]
       )
+
+      @document.file = Rack::Test::UploadedFile.new(
+        File.join(Rails.root, 'test', 'fixtures', 'files', 'test.pdf'),
+        'application/pdf')
+      assert @document.save
     end
 
     assert_equal 2, @document.tags.count
+    assert_equal 1, @document.pages
   end
 
   # Prueba de actualización de un usuario
@@ -53,14 +59,17 @@ class DocumentTest < ActiveSupport::TestCase
     @document.code = '  '
     @document.name = '  '
     @document.pages = nil
+    @document.file = nil
     assert @document.invalid?
-    assert_equal 3, @document.errors.count
+    assert_equal 4, @document.errors.count
     assert_equal [error_message_from_model(@document, :code, :blank)],
       @document.errors[:code]
     assert_equal [error_message_from_model(@document, :name, :blank)],
       @document.errors[:name]
     assert_equal [error_message_from_model(@document, :pages, :blank)],
       @document.errors[:pages]
+    # No se puede probar el mensaje porque funciona mal authlogic en modo test
+    assert_equal 1, @document.errors[:file_file_name].size
   end
 
   # Prueba que las validaciones del modelo se cumplan como es esperado

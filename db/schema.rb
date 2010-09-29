@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20100927140333) do
+ActiveRecord::Schema.define(:version => 20100928152434) do
 
   create_table "documents", :force => true do |t|
     t.string   "code",                             :null => false
@@ -35,6 +35,18 @@ ActiveRecord::Schema.define(:version => 20100927140333) do
   end
 
   add_index "documents_tags", ["document_id", "tag_id"], :name => "index_documents_tags_on_document_id_and_tag_id", :unique => true
+
+  create_table "print_jobs", :force => true do |t|
+    t.integer  "copies"
+    t.integer  "document_id"
+    t.integer  "print_id"
+    t.integer  "lock_version", :default => 0
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "print_jobs", ["document_id"], :name => "index_print_jobs_on_document_id"
+  add_index "print_jobs", ["print_id"], :name => "index_print_jobs_on_print_id"
 
   create_table "prints", :force => true do |t|
     t.string   "printer",                     :null => false

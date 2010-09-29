@@ -12,6 +12,8 @@ gem 'paperclip'
 # Previo sudo apt-get install libcupsys2-dev
 gem 'cups'
 gem 'simple_autocomplete'
+gem 'mongrel'
+gem 'pdf-reader'
 
 # Use unicorn as the web server
 # gem 'unicorn'

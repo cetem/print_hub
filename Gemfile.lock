@@ -8,6 +8,7 @@ GIT
 GEM
   remote: http://rubygems.org/
   specs:
+    Ascii85 (1.0.0)
     abstract (1.0.0)
     actionmailer (3.0.0)
       actionpack (= 3.0.0)
@@ -38,18 +39,29 @@ GEM
     arel (1.0.1)
       activesupport (~> 3.0.0)
     builder (2.1.2)
+    cgi_multipart_eof_fix (2.5.0)
     cups (0.0.6)
+    daemons (1.1.0)
     erubis (2.6.6)
       abstract (>= 1.0.0)
+    fastthread (1.0.7)
+    gem_plugin (0.2.3)
     i18n (0.4.1)
     mail (2.2.6.1)
       activesupport (>= 2.3.6)
       mime-types
       treetop (>= 1.4.5)
     mime-types (1.16)
+    mongrel (1.1.5)
+      cgi_multipart_eof_fix (>= 2.4)
+      daemons (>= 1.0.3)
+      fastthread (>= 1.0.1)
+      gem_plugin (>= 0.2.3)
     paperclip (2.3.3)
       activerecord
       activesupport
+    pdf-reader (0.8.6)
+      Ascii85 (>= 0.9)
     pg (0.9.0)
     polyglot (0.3.1)
     rack (1.2.1)
@@ -85,7 +97,9 @@ PLATFORMS
 DEPENDENCIES
   authlogic!
   cups
+  mongrel
   paperclip
+  pdf-reader
   pg
   rails (= 3.0.0)
   ruby-prof

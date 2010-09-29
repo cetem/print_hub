@@ -51,6 +51,7 @@
         pages: 'Páginas'
         description: 'Descripción'
         file: 'Archivo'
+        file_file_name: 'Archivo'
       print:
         printer: 'Impresora'
         user_id: 'Usuario'

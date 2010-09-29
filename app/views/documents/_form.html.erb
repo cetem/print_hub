@@ -25,7 +25,7 @@
   </div>
   <div class="field">
     <%= f.label :pages %>
-    <%= f.text_field :pages, :maxlength => 5 %>
+    <%= f.text_field :pages, :maxlength => 5, :readonly => true %>
   </div>
   <div class="field">
     <%= f.label :description %>
@@ -55,8 +55,10 @@
     </div>
   </section>
   <div class="field">
-    <%= f.label :file %>
-    <%= f.file_field :file %>
+    <%= f.label :file,
+      :class => (:field_with_errors unless @document.errors[:file_file_name].blank?) %>
+    <%= f.file_field :file,
+      :class => (:field_with_errors unless @document.errors[:file_file_name].blank?) %>
   </div>
   <div class="actions">
     <%= f.hidden_field :lock_version %>

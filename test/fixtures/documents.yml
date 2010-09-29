@@ -3,6 +3,7 @@ math_notes:
   name: Math Notes
   pages: 12
   description: Math Notes description
+  file_file_name: math_notes.pdf
   tags: notes
 
 math_book:
@@ -10,4 +11,5 @@ math_book:
   name: Math Book
   pages: 350
   description: Math Book description
+  file_file_name: math_book.pdf
   tags: book
