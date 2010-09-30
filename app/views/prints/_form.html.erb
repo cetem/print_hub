@@ -1,4 +1,7 @@
 <%= form_for(@print) do |f| %>
+  <%= content_for :js_extra do -%>
+    <%= raw "var print_job='#{generate_template(f, :print_jobs)}';" %>
+  <% end -%>
   <% if @print.errors.any? %>
     <div id="error_explanation">
       <h2>
@@ -17,6 +20,28 @@
   <div class="field">
     <%= f.label :printer %>
     <%= print_destinations_field(f) %>
+  </div>
+  <section class="nested_items">
+    <h2><%= t :print_jobs, :scope => [:view, :prints] %></h2>
+    
+    <div id="print_jobs_headers" class="headers">
+      <h3><%= PrintJob.human_attribute_name :document_id %></h3>
+      <h3><%= PrintJob.human_attribute_name :copies %></h3>
+      <br />
+    </div>
+    
+    <div id="print_jobs" class="items">
+      <%= f.fields_for :print_jobs do |pj_f| %>
+        <%= render :partial => 'print_job',
+          :locals => {:f => pj_f, :is_dynamic => false} %>
+      <% end %>
+    </div>
+  </section>
+
+  <div class="add_nested_item">
+    <%= link_to t(:'view.prints.add_print_job'), '#',
+      :'data-template' => :print_job, :'data-container' => :print_jobs,
+      :'data-event' => :add_nested_item %>
   </div>
   <div class="actions">
     <%= f.hidden_field :lock_version %>

@@ -104,7 +104,7 @@ class DocumentsControllerTest < ActionController::TestCase
     assert_redirected_to documents_path
   end
 
-  test 'should get autocomplete list' do
+  test 'should get autocomplete tag list' do
     UserSession.create(users(:administrator))
     get :autocomplete_for_tag_name, :q => 'o'
     assert_response :success

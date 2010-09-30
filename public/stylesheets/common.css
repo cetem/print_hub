@@ -23,14 +23,14 @@ a:hover {
     background-color:#000000;
 }
 
-a[data-remove] {
+a[data-event="remove_item"], a[data-event="hide_item"] {
     font-size: 12px;
     font-weight: bold;
     padding: 1px 3px;
     text-decoration: none;
 }
 
-a[data-remove]:hover {
+a[data-event="remove_item"]:hover, a[data-event="hide_item"]:hover {
     background: #aa0000;
     color: #ffffff;
 }
@@ -150,6 +150,12 @@ div.actions input[type="submit"] {
 
 div.actions, div.field {
   margin-bottom: 1em;
+}
+
+div.add_nested_item {
+    clear: both;
+    font-weight: bold;
+    margin: 1em 0em;
 }
 
 div.autocomplete {
@@ -298,6 +304,45 @@ nav.path ul, nav.path ul li {
     margin-right: .5em;
 }
 
+section.nested_items div.headers {
+    clear: both;
+    padding: .5em 0em;
+    border-bottom: 2px dotted #333333;
+}
+
+section.nested_items div.headers h3 {
+    font-size: 1em;
+    float: left;
+    margin-right: 1em;
+}
+
+section.nested_items div.items {
+    clear: both;
+    padding: .5em 0em;
+}
+
+section.nested_items div.nested_item {
+    clear: both;
+}
+
+section.nested_items div.items div.nested_item_field,
+section.nested_items div.items div.nested_item_actions {
+    float: left;
+    margin-right: 1em;
+}
+
+section.nested_items h2 {
+    font-size: 1.2em;
+    margin: .5em 0em;
+}
+
+section.nested_items input[type="text"],
+section.nested_items input[type="password"],
+section.nested_items select,
+section.nested_items textarea {
+    width: 98%;
+}
+
 section.tags {
     display: block;
     margin: 1em 0em;
@@ -333,4 +378,20 @@ ul.raw {
 
 .bold {
     font-weight: bold;
+}
+
+/* Estilo de los "Trabajos de impresión" dentro de "Impresiones" */
+section.nested_items div#print_jobs_headers h3:nth-child(1),
+section.nested_items div.print_job div.nested_item_field:nth-child(1) {
+    width: 70%;
+}
+
+section.nested_items div#print_jobs_headers h3:nth-child(2),
+section.nested_items div.print_job div.nested_item_field:nth-child(2) {
+    width: 20%;
+}
+
+section.nested_items div#print_jobs_headers h3:nth-child(3),
+section.nested_items div.print_job div.nested_item_actions {
+    width: 5%;
 }

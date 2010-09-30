@@ -1,5 +1,16 @@
 class PrintsController < ApplicationController
   before_filter :require_user
+  autocomplete_for :document, :name,
+    :match => ["#{Document.table_name}.name", "#{Tag.table_name}.name"],
+    :include => :tags, :limit => 10, :order => "#{Document.table_name}.name ASC" do |docs|
+    doc_list_items = docs.map do |doc|
+        "<li id=\"auto_tag_#{doc.id}\">#{doc.name}" +
+        "<span class=\"informal\">#{doc.tags.map(&:to_s).join(' ## ')}</span>"+
+        "</li>"
+    end
+
+    "<ul>#{doc_list_items.join}</ul>"
+  end
 
   # GET /prints
   # GET /prints.xml

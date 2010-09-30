@@ -6,14 +6,14 @@ class PrintTest < ActiveSupport::TestCase
 
   # Función para inicializar las variables utilizadas en las pruebas
   def setup
-    @print = Print.find prints(:math_notes).id
+    @print = Print.find prints(:math_print).id
   end
 
   # Prueba que se realicen las búsquedas como se espera
   test 'find' do
     assert_kind_of Print, @print
-    assert_equal prints(:math_notes).printer, @print.printer
-    assert_equal prints(:math_notes).user_id, @print.user_id
+    assert_equal prints(:math_print).printer, @print.printer
+    assert_equal prints(:math_print).user_id, @print.user_id
   end
 
   # Prueba la creación de una impresión

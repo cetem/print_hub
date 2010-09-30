@@ -1,0 +1,25 @@
+<% id = dynamic_object_id('print_job', f) %>
+<% hide = is_dynamic || f.object.marked_for_destruction? %>
+<div class="print_job nested_item" id="<%= id %>" <%= raw 'style="display: none;"' if hide %>>
+  <div>
+    <div class="nested_item_field">
+      <%= f.text_field :auto_document_name, :class => :autocomplete,
+        :'data-autocomplete-url' => autocomplete_for_document_name_prints_path %>
+      <%= f.hidden_field :document_id, :class => :autocomplete_id %>
+      <div class="autocomplete" style="display: none;"></div>
+    </div>
+    <div class="nested_item_field">
+      <%= f.text_field :copies %>
+    </div>
+    <div class="nested_item_actions">
+      <%= link_to_remove_nested_item(f) %>
+    </div>
+    <br />
+  </div>
+</div>
+<% if is_dynamic %>
+  <script type="text/javascript">
+    Helper.show('<%= id %>');
+    AutoComplete.observeAll();
+  </script>
+<% end -%>

@@ -2,7 +2,9 @@ class Document < ActiveRecord::Base
   has_attached_file :file,
     :path => ':rails_root/private/:attachment/:id/:style/:basename.:extension',
     :url => '/documents/:id.:extension'
+  find_by_autocomplete :name
 
+  # Callbacks
   after_file_post_process :extract_page_count
 
   attr_protected :pages
@@ -21,7 +23,7 @@ class Document < ActiveRecord::Base
     :message => ::I18n.t(:'errors.messages.blank')
 
   # Relaciones
-  #has_many :print_jobs
+  has_many :print_jobs
   has_and_belongs_to_many :tags, :order => 'name ASC'
   add_by_autocomplete :tag, :name
 
@@ -39,5 +41,8 @@ class Document < ActiveRecord::Base
   def extract_page_count
     ::PDF::Reader.file(self.file.queued_for_write[:original].path, self,
       :pages => false)
+
+  rescue PDF::Reader::MalformedPDFError
+    false
   end
 end

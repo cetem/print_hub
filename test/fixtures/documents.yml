@@ -13,3 +13,11 @@ math_book:
   description: Math Book description
   file_file_name: math_book.pdf
   tags: book
+
+physics_notes:
+  code: 003
+  name: Physics Notes
+  pages: 14
+  description: Physics Notes description
+  file_file_name: physics_notes.pdf
+  tags: notes, physics

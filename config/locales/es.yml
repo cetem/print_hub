@@ -34,6 +34,7 @@
     models:
       document: 'Documento'
       print: 'Impresión'
+      print_job: 'Trabajo de impresión'
       tag: 'Etiqueta'
       user: 'Usuario'
       user_session: 'Sesión'
@@ -55,6 +56,12 @@
       print:
         printer: 'Impresora'
         user_id: 'Usuario'
+        print_jobs:
+          copies: 'Copias'
+          document_id: 'Documento'
+      print_job:
+        copies: 'Copias'
+        document_id: 'Documento'
       tag:
         name: 'Nombre'
         parent_id: 'Padre'
@@ -368,6 +375,8 @@
       correctly_created: 'Impresión agregada correctamente.'
       correctly_updated: 'Impresión actualizada correctamente.'
       stale_object_error: 'La impresión no pudo ser actualizada, intente nuevamente.'
+      print_jobs: 'Trabajos de impresión'
+      add_print_job: 'Agregar trabajo de impresión'
     tags:
       index_title: 'Listado de etiquetas'
       show_title: 'Detalle de etiqueta'

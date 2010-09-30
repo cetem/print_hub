@@ -36,11 +36,12 @@
     <% unless @document.tags.empty? %>
       <ul class="raw">
         <% @document.tags.each do |tag| %>
-          <li id="tag_<%= tag.id %>">
+          <li class="tag">
             <%= tag %>
             <%= hidden_field_tag 'document[tag_ids][]', tag.id,
               :id => "document_tag_#{tag.id}" %>
-            <%= link_to 'X', '#', :'data-remove' => "tag_#{tag.id}" %>
+            <%= link_to 'X', '#', :'data-event' => :remove_item,
+              :'data-target' => "li.tag" %>
           </li>
         <% end %>
       </ul>

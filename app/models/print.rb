@@ -6,6 +6,9 @@ class Print < ActiveRecord::Base
 
   # Relaciones
   belongs_to :user
+  has_many :print_jobs, :dependent => :destroy
+
+  accepts_nested_attributes_for :print_jobs, :allow_destroy => true
 
   def initialize(attributes = nil)
     super(attributes)
