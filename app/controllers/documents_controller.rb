@@ -1,12 +1,8 @@
 class DocumentsController < ApplicationController
   before_filter :require_user
   autocomplete_for :tag, :name, :limit => 10, :order => 'name ASC' do |tags|
-    tag_list_items = tags.map do |tag|
-      "<li id=\"auto_tag_#{tag.id}\">#{tag.name}" +
-        "<span class=\"informal\">#{tag.to_s}</span></li>"
-    end
-
-    "<ul>#{tag_list_items.join}</ul>"
+    render_to_string :partial => 'autocomplete_for_tag_name',
+      :locals => { :tags => tags }
   end
 
   # GET /documents

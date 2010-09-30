@@ -21,6 +21,7 @@ var AutoComplete = {
                             var objectId = $(li).id.strip().match(/(\d+)$/)[1];
                             var idField = input.adjacent('input.autocomplete_id');
 
+                            text.setValue(text.getValue().strip());
                             idField.first().setValue(objectId);
                         }
                     }

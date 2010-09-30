@@ -1,0 +1,8 @@
+<ul>
+  <% tags.each do |tag| %>
+    <li id="auto_tag_<%= tag.id %>">
+      <%= tag.name %>
+      <span class="informal"><%= tag.to_s %></span>
+    </li>
+  <% end %>
+</ul>
