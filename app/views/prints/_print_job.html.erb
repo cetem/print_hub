@@ -3,10 +3,10 @@
 <div class="print_job nested_item" id="<%= id %>" <%= raw 'style="display: none;"' if hide %>>
   <div>
     <div class="nested_item_field">
-      <%= f.text_field :auto_document_name, :class => :autocomplete,
+      <%= f.text_field :auto_document_name, :class => :autocomplete_field,
         :'data-autocomplete-url' => autocomplete_for_document_name_prints_path %>
-      <%= f.hidden_field :document_id, :class => :autocomplete_id %>
       <div class="autocomplete" style="display: none;"></div>
+      <%= f.hidden_field :document_id, :class => :autocomplete_id %>
     </div>
     <div class="nested_item_field">
       <%= f.text_field :copies %>

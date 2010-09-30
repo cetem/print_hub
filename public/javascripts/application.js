@@ -7,7 +7,7 @@ var State = {
 // Funciones de autocompletado
 var AutoComplete = {
     observeAll: function() {
-        $$('input.autocomplete').each(function(input) {
+        $$('input.autocomplete_field').each(function(input) {
             if(!input.retrieve('observed')) {
                 new Ajax.Autocompleter(
                     input,

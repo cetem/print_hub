@@ -48,11 +48,11 @@
     <% end %>
 
     <div class="field">
-      <%= f.text_field :add_by_auto_tag_name, :class => :autocomplete,
+      <%= f.text_field :add_by_auto_tag_name, :class => :autocomplete_field,
         :'data-autocomplete-url' => autocomplete_for_tag_name_documents_path %>
+      <div class="autocomplete" style="display: none;"></div>
       <%= hidden_field_tag 'document[tag_ids][]', nil, :id => 'new_tag_id',
         :class => :autocomplete_id %>
-      <div class="autocomplete" style="display: none;"></div>
     </div>
   </section>
   <div class="field">

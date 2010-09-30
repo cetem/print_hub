@@ -1,5 +1,3 @@
-// script.aculo.us effects.js v1.8.3, Thu Oct 08 11:23:33 +0200 2009
-
 // Copyright (c) 2005-2009 Thomas Fuchs (http://script.aculo.us, http://mir.aculo.us)
 // Contributors:
 //  Justin Palmer (http://encytemedia.com/)
@@ -150,7 +148,7 @@ var Effect = {
   toggle: function(element, effect, options) {
     element = $(element);
     effect  = (effect || 'appear').toLowerCase();
-
+    
     return Effect[ Effect.PAIRS[ effect ][ element.visible() ? 1 : 0 ] ](element, Object.extend({
       queue: { position:'end', scope:(element.id || 'global'), limit: 1 }
     }, options || {}));
