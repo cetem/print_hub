@@ -1,14 +1,17 @@
 math_job_1:
   copies: 3
+  job_id: 3
   document: math_notes
   print: math_print
 
 math_job_2:
   copies: 1
+  job_id: 1
   document: math_book
   print: math_print
 
 physics_job_1:
   copies: 2
+  job_id: 2
   document: physics_notes
   print: physics_print

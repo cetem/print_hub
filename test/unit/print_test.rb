@@ -7,6 +7,11 @@ class PrintTest < ActiveSupport::TestCase
   # Función para inicializar las variables utilizadas en las pruebas
   def setup
     @print = Print.find prints(:math_print).id
+    @printer = Cups.show_destinations.select {|p| p =~ /pdf/i}.first
+
+    raise "Can't find a PDF printer to run tests with." unless @printer
+
+    prepare_document_files
   end
 
   # Prueba que se realicen las búsquedas como se espera
@@ -20,7 +25,7 @@ class PrintTest < ActiveSupport::TestCase
   test 'create' do
     assert_difference ['Print.count', 'PrintJob.count'] do
       @print = Print.create(
-        :printer => Cups.default_printer || 'default',
+        :printer => @printer,
         :user => users(:administrator),
         :print_jobs_attributes => {
           :new_1 => {
@@ -35,11 +40,11 @@ class PrintTest < ActiveSupport::TestCase
   # Prueba de actualización de una impresión
   test 'update' do
     assert_no_difference 'Print.count' do
-      assert @print.update_attributes(:printer => 'Updated printer'),
+      assert @print.update_attributes(:user => users(:administrator)),
         @print.errors.full_messages.join('; ')
     end
 
-    assert_equal 'Updated printer', @print.reload.printer
+    assert_equal users(:administrator).id, @print.reload.user_id
   end
 
   # Prueba de eliminación de impresiones

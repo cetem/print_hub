@@ -3,6 +3,11 @@ require 'test_helper'
 class PrintsControllerTest < ActionController::TestCase
   setup do
     @print = prints(:math_print)
+    @printer = Cups.show_destinations.select {|p| p =~ /pdf/i}.first
+    
+    raise "Can't find a PDF printer to run tests with." unless @printer
+
+    prepare_document_files
   end
 
   test 'should get index' do
@@ -27,7 +32,7 @@ class PrintsControllerTest < ActionController::TestCase
     UserSession.create(users(:administrator))
     assert_difference ['Print.count', 'PrintJob.count'] do
       post :create, :print => {
-        :printer => Cups.default_printer || 'default',
+        :printer => @printer,
         :print_jobs_attributes => {
           :new_1 => {
             :copies => '1',
@@ -66,7 +71,8 @@ class PrintsControllerTest < ActionController::TestCase
     assert_no_difference 'Print.count' do
       assert_difference 'PrintJob.count' do
         put :update, :id => @print.to_param, :print => {
-          :printer => 'Updated printer',
+          :printer => @printer,
+          :user_id => users(:administrator).id,
           :print_jobs_attributes => {
             print_jobs(:math_job_1).id => {
               :id => print_jobs(:math_job_1).id,
@@ -88,7 +94,7 @@ class PrintsControllerTest < ActionController::TestCase
     end
 
     assert_redirected_to prints_path
-    assert_equal 'Updated printer', @print.reload.printer
+    assert_equal users(:administrator).id, @print.reload.user_id
     assert_equal 123, @print.print_jobs.find_by_document_id(
       documents(:math_notes).id).copies
   end

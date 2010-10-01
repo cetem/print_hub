@@ -4,7 +4,7 @@ class DocumentsControllerTest < ActionController::TestCase
   setup do
     @document = documents(:math_book)
 
-    FileUtils.touch @document.file.path unless File.exists?(@document.file.path)
+    prepare_document_files
   end
 
   test 'should get index' do

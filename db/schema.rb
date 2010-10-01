@@ -37,9 +37,10 @@ ActiveRecord::Schema.define(:version => 20100928152434) do
   add_index "documents_tags", ["document_id", "tag_id"], :name => "index_documents_tags_on_document_id_and_tag_id", :unique => true
 
   create_table "print_jobs", :force => true do |t|
-    t.integer  "copies"
-    t.integer  "document_id"
-    t.integer  "print_id"
+    t.integer  "copies",                      :null => false
+    t.integer  "job_id",                      :null => false
+    t.integer  "document_id",                 :null => false
+    t.integer  "print_id",                    :null => false
     t.integer  "lock_version", :default => 0
     t.datetime "created_at"
     t.datetime "updated_at"

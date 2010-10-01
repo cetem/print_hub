@@ -15,6 +15,16 @@ class ActiveSupport::TestCase
   def error_message_from_model(model, attribute, message, extra = {})
     ::ActiveModel::Errors.new(model).generate_message(attribute, message, extra)
   end
+
+  def prepare_document_files
+    Document.all.each do |document|
+      unless File.exists?(document.file.path)
+        FileUtils.mkdir_p File.dirname(document.file.path)
+        FileUtils.cp File.join(Rails.root, 'test', 'fixtures', 'files', 'test.pdf'),
+          document.file.path
+      end
+    end
+  end
 end
 
 class ActionController::TestCase

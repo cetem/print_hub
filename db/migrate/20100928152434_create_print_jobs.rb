@@ -1,9 +1,10 @@
 class CreatePrintJobs < ActiveRecord::Migration
   def self.up
     create_table :print_jobs do |t|
-      t.integer :copies
-      t.references :document
-      t.references :print
+      t.integer :copies, :null => false
+      t.integer :job_id, :null => false
+      t.references :document, :null => false
+      t.references :print, :null => false
       t.integer :lock_version, :default => 0
 
       t.timestamps
