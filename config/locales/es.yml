@@ -25,6 +25,11 @@
       # Will define custom blank validation message for User model and
       # custom blank validation message for login attribute of User model.
       #models:
+      models:
+        print:
+          attributes:
+            print_jobs:
+              blank: ' al menos debe haber uno'
 
     # Translate model names. Used in Model.human_name().
     #models:
@@ -57,6 +62,8 @@
         printer: 'Impresora'
         user_id: 'Usuario'
         print_jobs:
+          one: 'Trabajo de impresión'
+          other: 'Trabajos de impresión'
           copies: 'Copias'
           document_id: 'Documento'
       print_job:

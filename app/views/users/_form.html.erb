@@ -16,11 +16,11 @@
 
   <div class="field">
     <%= f.label :name %>
-    <%= f.text_field :name, :autofocus => true %>
+    <%= f.text_field :name, :autofocus => true, :maxlength => 255 %>
   </div>
   <div class="field">
     <%= f.label :last_name %>
-    <%= f.text_field :last_name %>
+    <%= f.text_field :last_name, :maxlength => 255 %>
   </div>
   <div class="field">
     <%= f.label :language %>
@@ -28,19 +28,19 @@
   </div>
   <div class="field">
     <%= f.label :email %>
-    <%= f.text_field :email %>
+    <%= f.text_field :email, :maxlength => 255 %>
   </div>
   <div class="field">
     <%= f.label :username %>
-    <%= f.text_field :username %>
+    <%= f.text_field :username, :maxlength => 255 %>
   </div>
   <div class="field">
     <%= f.label :password %>
-    <%= f.password_field :password %>
+    <%= f.password_field :password, :maxlength => 255 %>
   </div>
   <div class="field">
     <%= f.label :password_confirmation %>
-    <%= f.password_field :password_confirmation %>
+    <%= f.password_field :password_confirmation, :maxlength => 255 %>
   </div>
   <div class="field">
     <%= f.check_box :admin %>

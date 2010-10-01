@@ -18,10 +18,16 @@ class PrintTest < ActiveSupport::TestCase
 
   # Prueba la creación de una impresión
   test 'create' do
-    assert_difference 'Print.count' do
+    assert_difference ['Print.count', 'PrintJob.count'] do
       @print = Print.create(
         :printer => Cups.default_printer || 'default',
-        :user => users(:administrator)
+        :user => users(:administrator),
+        :print_jobs_attributes => {
+          :new_1 => {
+            :copies => 1,
+            :document => documents(:math_book)
+          }
+        }
       )
     end
   end
@@ -44,10 +50,13 @@ class PrintTest < ActiveSupport::TestCase
   # Prueba que las validaciones del modelo se cumplan como es esperado
   test 'validates blank attributes' do
     @print.printer = '   '
+    @print.print_jobs.clear
     assert @print.invalid?
-    assert_equal 1, @print.errors.count
+    assert_equal 2, @print.errors.count
     assert_equal [error_message_from_model(@print, :printer, :blank)],
       @print.errors[:printer]
+    assert_equal [error_message_from_model(@print, :print_jobs, :blank)],
+      @print.errors[:print_jobs]
   end
 
   # Prueba que las validaciones del modelo se cumplan como es esperado
