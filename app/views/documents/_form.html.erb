@@ -1,4 +1,8 @@
 <%= form_for(@document, :html => { :multipart => true }) do |f| %>
+  <%= content_for :js_extra do -%>
+    <%= raw "var tag='#{escape_javascript render(:partial => 'tag',
+      :locals => {:is_dynamic => true, :f => f, :tag => nil})}';" %>
+  <% end -%>
   <% if @document.errors.any? %>
     <div id="error_explanation">
       <h2>
@@ -31,30 +35,25 @@
     <%= f.label :description %>
     <%= f.text_area :description %>
   </div>
-  <section class="tags">
+  <section class="nested_items">
     <h2><%= t(:'menu.tags') %></h2>
-    <% unless @document.tags.empty? %>
-      <ul class="raw">
-        <% @document.tags.each do |tag| %>
-          <li class="tag">
-            <%= tag %>
-            <%= hidden_field_tag 'document[tag_ids][]', tag.id,
-              :id => "document_tag_#{tag.id}" %>
-            <%= link_to 'X', '#', :'data-event' => :remove_item,
-              :'data-target' => "li.tag" %>
-          </li>
-        <% end %>
-      </ul>
-    <% end %>
 
-    <div class="field">
-      <%= f.text_field :add_by_auto_tag_name, :class => :autocomplete_field,
-        :'data-autocomplete-url' => autocomplete_for_tag_name_documents_path %>
-      <div class="autocomplete" style="display: none;"></div>
-      <%= hidden_field_tag 'document[tag_ids][]', nil, :id => 'new_tag_id',
-        :class => :autocomplete_id %>
+    <div id="tags" class="items">
+      <% @document.tags.each do |tag| %>
+        <%= render :partial => 'tag',
+          :locals => { :is_dynamic => false, :f => f, :tag => tag } %>
+      <% end %>
+      <%= render :partial => 'tag',
+        :locals => { :is_dynamic => false, :f => f, :tag => nil } %>
     </div>
   </section>
+
+  <div class="add_nested_item">
+    <%= link_to t(:'view.documents.add_tag'), '#',
+      :'data-template' => :tag, :'data-container' => :tags,
+      :'data-event' => :add_nested_item %>
+  </div>
+
   <div class="field">
     <%= f.label :file,
       :class => (:field_with_errors unless @document.errors[:file_file_name].blank?) %>

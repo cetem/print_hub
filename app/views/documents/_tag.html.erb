@@ -1,0 +1,27 @@
+<% id = "tag_#{tag.try(:id) || 'NEW_RECORD'}" %>
+<div class="tag nested_item" id="<%= id %>" <%= raw 'style="display: none;"' if is_dynamic %>>
+  <div>
+    <div class="nested_item_field">
+      <% unless tag %>
+        <%= f.text_field :add_by_auto_tag_name, :class => :autocomplete_field,
+          :'data-autocomplete-url' => autocomplete_for_tag_name_documents_path,
+          :id => "autocomplete_tag_#{id}" %>
+        <div class="autocomplete" style="display: none;"></div>
+      <% else %>
+        <%= tag %>
+      <% end %>
+      <%= hidden_field_tag 'document[tag_ids][]', tag.try(:id),
+        :id => "new_tag_#{id}", :class => :autocomplete_id %>
+    </div>
+    <div class="nested_item_actions">
+      <%= link_to_remove_nested_item(nil, 'tag') %>
+    </div>
+    <br />
+  </div>
+</div>
+<% if is_dynamic %>
+  <script type="text/javascript">
+    Helper.show('<%= id %>');
+    AutoComplete.observeAll();
+  </script>
+<% end -%>

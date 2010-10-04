@@ -395,3 +395,8 @@ section.nested_items div#print_jobs_headers h3:nth-child(3),
 section.nested_items div.print_job div.nested_item_actions {
     width: 5%;
 }
+
+/* Estilo de "Etiquetas" dentro de "Documentos" */
+div#tags {
+    margin-left: 1em;
+}

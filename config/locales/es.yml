@@ -374,6 +374,7 @@
       correctly_updated: 'Documento actualizado correctamente.'
       stale_object_error: 'El documento no pudo ser actualizado, intente nuevamente.'
       non_existent: 'Archivo inexistente'
+      add_tag: 'Agregar etiqueta'
     prints:
       index_title: 'Listado de impresiones'
       show_title: 'Detalle de impresión'
