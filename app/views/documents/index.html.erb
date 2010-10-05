@@ -10,7 +10,7 @@
 
   <tbody>
     <% @documents.each do |document| %>
-      <tr>
+      <tr class="<%= cycle(:even, :odd) %>">
         <td><%= document.code %></td>
         <td><%= document.name %></td>
         <td><%= document.pages %></td>

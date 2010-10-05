@@ -10,7 +10,7 @@
 
   <tbody>
     <% @prints.each do |print| %>
-      <tr>
+      <tr class="<%= cycle(:even, :odd) %>">
         <td><%= l print.created_at, :format => :short if print.created_at %></td>
         <td><%= print.printer %></td>
         <td><%= print.user %></td>

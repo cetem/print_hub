@@ -16,7 +16,7 @@
 
   <tbody>
     <% @tags.each do |tag| %>
-      <tr>
+      <tr class="<%= cycle(:even, :odd) %>">
         <td><%= link_to tag.name, tags_path(:parent => tag) %></td>
         <td><%= link_to t(:'label.show'), tag %></td>
         <td><%= link_to t(:'label.edit'), edit_tag_path(tag) %></td>
