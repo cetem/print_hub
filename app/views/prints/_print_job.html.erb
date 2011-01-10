@@ -7,7 +7,9 @@
       <% field_classes << :field_with_errors unless f.object.errors[:document_id].blank? %>
       <%= f.text_field :auto_document_name, :class => field_classes.join(' '),
         :'data-autocomplete-url' => autocomplete_for_document_name_prints_path %>
-      <div class="autocomplete" style="display: none;"></div>
+      <div class="autocomplete_container">
+        <div class="autocomplete" style="display: none;"></div>
+      </div>
       <%= f.hidden_field :document_id, :class => :autocomplete_id %>
     </div>
     <div class="nested_item_field">

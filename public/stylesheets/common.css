@@ -158,9 +158,14 @@ div.add_nested_item {
     margin: 1em 0em;
 }
 
+div.autocomplete_container {
+    position: relative;
+}
+
 div.autocomplete {
     position: absolute;
-    top: 0px;
+    top: 0px !important;
+    left: 0px !important;
     background-color: white;
     border: 1px solid #888888;
 }

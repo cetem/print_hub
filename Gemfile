@@ -1,13 +1,13 @@
 source 'http://rubygems.org'
 
-gem 'rails', '3.0.1'
+gem 'rails', '3.0.3'
 
 # Bundle edge Rails instead:
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
 
 gem 'pg'
 gem 'authlogic', :git => 'http://github.com/binarylogic/authlogic.git'
-gem 'will_paginate', '~> 3.0.pre2'
+gem 'will_paginate', '~> 3.0.beta'
 gem 'paperclip'
 # Previo sudo apt-get install libcupsys2-dev
 gem 'cups'
@@ -37,6 +37,11 @@ gem 'pdf-reader'
 #   gem 'webrat'
 # end
 
+group :development do
+  gem 'mongrel'
+end
+
 group :test do
+  gem 'turn'
   gem 'ruby-prof'
 end

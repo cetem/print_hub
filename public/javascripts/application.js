@@ -35,12 +35,6 @@ var AutoComplete = {
 
 // Manejadores de eventos
 var EventHandler = {
-    eventList: $A([
-        'addNestedItem',
-        'hideItem',
-        'removeItem'
-    ]),
-
     /**
      * Agrega un ítem anidado
      */
@@ -140,19 +134,15 @@ var Util = {
     }
 }
 
-Event.observe(window, 'load', function() {
-    document.on('click', 'a[data-remove]', function(event, element) {
-        if (event.stopped) return;
-        Helper.remove($(element.readAttribute('data-remove')));
-        event.stop();
-    });
+var eventList = $H(EventHandler).keys();
 
+Event.observe(window, 'load', function() {
     document.on('click', 'a[data-event]', function(event, element) {
         if (event.stopped) return;
         var eventName =
             element.readAttribute('data-event').dasherize().camelize();
 
-        if(EventHandler.eventList.include(eventName)) {
+        if(eventList.include(eventName)) {
             EventHandler[eventName](element);
             Event.stop(event);
         }
