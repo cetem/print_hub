@@ -1,18 +1,5 @@
 <%= form_for(@tag) do |f| %>
-  <% if @tag.errors.any? %>
-    <div id="error_explanation">
-      <h2>
-        <%= t(:header, :scope => [:errors, :template],
-          :model => Tag.model_name.human, :count => @tag.errors.count) %>
-      </h2>
-
-      <ul>
-        <% @tag.errors.full_messages.each do |msg| %>
-          <li><%= msg %></li>
-        <% end %>
-      </ul>
-    </div>
-  <% end %>
+  <%= show_error_messages(@tag) %>
 
   <div class="field">
     <%= f.label :name %>

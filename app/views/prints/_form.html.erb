@@ -2,20 +2,7 @@
   <%= content_for :js_extra do -%>
     <%= raw "var print_job='#{generate_template(f, :print_jobs)}';" %>
   <% end -%>
-  <% if @print.errors.any? %>
-    <div id="error_explanation">
-      <h2>
-        <%= t(:header, :scope => [:errors, :template],
-          :model => Print.model_name.human, :count => @print.errors.count) %>
-      </h2>
-
-      <ul>
-        <% @print.errors.full_messages.each do |msg| %>
-          <li><%= msg %></li>
-        <% end %>
-      </ul>
-    </div>
-  <% end %>
+  <%= show_error_messages(@print) %>
 
   <div class="field">
     <%= f.label :printer %>

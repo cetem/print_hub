@@ -3,21 +3,7 @@
     <%= raw "var tag='#{escape_javascript render(:partial => 'tag',
       :locals => {:is_dynamic => true, :f => f, :tag => nil})}';" %>
   <% end -%>
-  <% if @document.errors.any? %>
-    <div id="error_explanation">
-      <h2>
-        <%= t(:header, :scope => [:errors, :template],
-          :model => Document.model_name.human,
-          :count => @document.errors.count) %>
-      </h2>
-
-      <ul>
-        <% @document.errors.full_messages.each do |msg| %>
-          <li><%= msg %></li>
-        <% end %>
-      </ul>
-    </div>
-  <% end %>
+  <%= show_error_messages(@document) %>
 
   <div class="field">
     <%= f.label :code %>

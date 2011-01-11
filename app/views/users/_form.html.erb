@@ -1,18 +1,5 @@
 <%= form_for(@user) do |f| %>
-  <% if @user.errors.any? %>
-    <div id="error_explanation">
-      <h2>
-        <%= t(:header, :scope => [:errors, :template],
-          :model => User.model_name.human, :count => @user.errors.count) %>
-      </h2>
-
-      <ul>
-        <% @user.errors.full_messages.each do |msg| %>
-          <li><%= msg %></li>
-        <% end %>
-      </ul>
-    </div>
-  <% end %>
+  <%= show_error_messages(@user) %>
 
   <div class="field">
     <%= f.label :name %>

@@ -5,6 +5,13 @@ module ApplicationHelper
     "#{prefix}_#{form_builder.object_name.to_s.gsub(/[_\]\[]+/, '_')}"
   end
 
+  # Devuelve los mensajes de error con etiquetas HTML
+  def show_error_messages(model)
+    unless model.errors.blank?
+      render :partial => 'shared/error_messages', :locals => { :model => model }
+    end
+  end
+
   # Devuelve el HTML necesario para insertar un nuevo ítem en un nested form
   #
   # * _form_builder_::  Formulario "Padre" de la relación anidada
