@@ -1,8 +1,9 @@
 class CreatePrintJobs < ActiveRecord::Migration
   def self.up
     create_table :print_jobs do |t|
-      t.integer :copies, :null => false
       t.integer :job_id, :null => false
+      t.integer :copies, :null => false
+      t.decimal :price_per_copy, :null => false, :precision => 15, :scale => 2
       t.references :document, :null => false
       t.references :print, :null => false
       t.integer :lock_version, :default => 0

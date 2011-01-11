@@ -36,6 +36,7 @@ class PrintsControllerTest < ActionController::TestCase
         :print_jobs_attributes => {
           :new_1 => {
             :copies => '1',
+            :price_per_copy => '0.1',
             :document_id => documents(:math_book).id
           }
         }
@@ -77,16 +78,19 @@ class PrintsControllerTest < ActionController::TestCase
             print_jobs(:math_job_1).id => {
               :id => print_jobs(:math_job_1).id,
               :document_id => documents(:math_notes).id,
-              :copies => 123
+              :copies => '123',
+              :price_per_copy => '0.1'
             },
             print_jobs(:math_job_2).id => {
               :id => print_jobs(:math_job_2).id,
               :document_id => documents(:math_book).id,
-              :copies => 234
+              :copies => '234',
+              :price_per_copy => '0.2'
             },
             :new_1 => {
               :document_id => documents(:math_book).id,
-              :copies => 1
+              :copies => '1',
+              :price_per_copy => '0.3'
             }
           }
         }

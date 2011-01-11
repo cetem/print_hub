@@ -30,6 +30,7 @@ class PrintTest < ActiveSupport::TestCase
         :print_jobs_attributes => {
           :new_1 => {
             :copies => 1,
+            :price_per_copy => 0.10,
             :document => documents(:math_book)
           }
         }

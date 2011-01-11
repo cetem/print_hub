@@ -69,9 +69,11 @@
           one: 'Trabajo de impresión'
           other: 'Trabajos de impresión'
           copies: 'Copias'
+          price_per_copy: 'Precio por copia'
           document_id: 'Documento'
       print_job:
         copies: 'Copias'
+        price_per_copy: 'Precio por copia'
         document_id: 'Documento'
       tag:
         name: 'Nombre'

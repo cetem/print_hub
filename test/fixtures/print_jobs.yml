@@ -1,17 +1,20 @@
 math_job_1:
-  copies: 3
   job_id: 3
+  copies: 3
+  price_per_copy: <%= Setting.price_per_copy %>
   document: math_notes
   print: math_print
 
 math_job_2:
-  copies: 1
   job_id: 1
+  copies: 1
+  price_per_copy: <%= Setting.price_per_copy %>
   document: math_book
   print: math_print
 
 physics_job_1:
-  copies: 2
   job_id: 2
+  copies: 2
+  price_per_copy: <%= Setting.price_per_copy %>
   document: physics_notes
   print: physics_print

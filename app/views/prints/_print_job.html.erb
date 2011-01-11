@@ -15,6 +15,9 @@
     <div class="nested_item_field">
       <%= f.text_field :copies, :maxlength => 5 %>
     </div>
+    <div class="nested_item_field">
+      <%= f.text_field :price_per_copy, :maxlength => 7 %>
+    </div>
     <div class="nested_item_actions">
       <%= link_to_remove_nested_item(f) %>
     </div>

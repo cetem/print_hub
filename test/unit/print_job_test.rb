@@ -12,8 +12,10 @@ class PrintJobTest < ActiveSupport::TestCase
   # Prueba que se realicen las búsquedas como se espera
   test 'find' do
     assert_kind_of PrintJob, @print_job
-    assert_equal print_jobs(:math_job_1).copies, @print_job.copies
     assert_equal print_jobs(:math_job_1).job_id, @print_job.job_id
+    assert_equal print_jobs(:math_job_1).copies, @print_job.copies
+    assert_equal print_jobs(:math_job_1).price_per_copy,
+      @print_job.price_per_copy
     assert_equal print_jobs(:math_job_1).document_id, @print_job.document_id
     assert_equal print_jobs(:math_job_1).print_id, @print_job.print_id
   end
@@ -23,6 +25,7 @@ class PrintJobTest < ActiveSupport::TestCase
     assert_difference 'PrintJob.count' do
       @print_job = PrintJob.create(
         :copies => 1,
+        :price_per_copy => 0.1,
         :job_id => 1,
         :print => prints(:math_print),
         :document => documents(:math_book)
@@ -47,46 +50,57 @@ class PrintJobTest < ActiveSupport::TestCase
 
   # Prueba que las validaciones del modelo se cumplan como es esperado
   test 'validates blank attributes' do
-    @print_job.copies = '  '
     @print_job.job_id = nil
+    @print_job.copies = '  '
+    @print_job.price_per_copy = '  '
     @print_job.document_id = nil
     assert @print_job.invalid?
-    assert_equal 3, @print_job.errors.count
-    assert_equal [error_message_from_model(@print_job, :copies, :blank)],
-      @print_job.errors[:copies]
+    assert_equal 4, @print_job.errors.count
     assert_equal [error_message_from_model(@print_job, :job_id, :blank)],
       @print_job.errors[:job_id]
+    assert_equal [error_message_from_model(@print_job, :copies, :blank)],
+      @print_job.errors[:copies]
+    assert_equal [error_message_from_model(@print_job, :price_per_copy,
+        :blank)], @print_job.errors[:price_per_copy]
     assert_equal [error_message_from_model(@print_job, :document_id, :blank)],
       @print_job.errors[:document_id]
   end
 
   # Prueba que las validaciones del modelo se cumplan como es esperado
   test 'validates well formated attributes' do
-    @print_job.copies = '?xx'
     @print_job.job_id = '?xx'
+    @print_job.copies = '?xx'
+    @print_job.price_per_copy = '?xx'
     assert @print_job.invalid?
-    assert_equal 2, @print_job.errors.count
-    assert_equal [error_message_from_model(@print_job, :copies, :not_a_number)],
-      @print_job.errors[:copies]
+    assert_equal 3, @print_job.errors.count
     assert_equal [error_message_from_model(@print_job, :job_id, :not_a_number)],
       @print_job.errors[:job_id]
+    assert_equal [error_message_from_model(@print_job, :copies, :not_a_number)],
+      @print_job.errors[:copies]
+    assert_equal [error_message_from_model(@print_job, :price_per_copy,
+        :not_a_number)], @print_job.errors[:price_per_copy]
 
-    @print_job.copies = '1.23'
     @print_job.job_id = '1.23'
+    @print_job.copies = '1.23'
+    @print_job.price_per_copy = '1.23'
     assert @print_job.invalid?
     assert_equal 2, @print_job.errors.count
-    assert_equal [error_message_from_model(@print_job, :copies, :not_an_integer)],
-      @print_job.errors[:copies]
     assert_equal [error_message_from_model(@print_job, :job_id, :not_an_integer)],
       @print_job.errors[:job_id]
+    assert_equal [error_message_from_model(@print_job, :copies, :not_an_integer)],
+      @print_job.errors[:copies]
 
     @print_job.copies = '0'
     @print_job.job_id = '0'
+    @print_job.price_per_copy = '-0.01'
     assert @print_job.invalid?
-    assert_equal 2, @print_job.errors.count
-    assert_equal [error_message_from_model(@print_job, :copies, :greater_than,
-        :count => 0)], @print_job.errors[:copies]
+    assert_equal 3, @print_job.errors.count
     assert_equal [error_message_from_model(@print_job, :job_id, :greater_than,
         :count => 0)], @print_job.errors[:job_id]
+    assert_equal [error_message_from_model(@print_job, :copies, :greater_than,
+        :count => 0)], @print_job.errors[:copies]
+    assert_equal [error_message_from_model(@print_job, :price_per_copy,
+        :greater_than_or_equal_to, :count => 0)],
+      @print_job.errors[:price_per_copy]
   end
 end

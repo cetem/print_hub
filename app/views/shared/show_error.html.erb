@@ -1,32 +1,30 @@
 <div id="unexpected_error" style="margin-bottom: 1em;">
   <div id="error_header">
-    <h1>
-      <%= t(:'errors.header_message') %>
-    </h1>
+    <h1><%= t(:'errors.header_message') %></h1>
   </div>
 
   <div id="error_body">
-    <p>
-      <%= t(:'errors.apologies_for_the_inconvenience') %>
-    </p>
+    <p><%= t(:'errors.apologies_for_the_inconvenience') %></p>
   </div>
 </div>
 
 <% unless Rails.env.production? %>
   <%= link_to_function t(:'errors.show_details'),
-    "Effect.SlideDown('error_details'); this.hide();", :id => 'show_link' %>
+    "Effect.SlideDown('error_details'); this.hide()", :id => 'show_link' %>
   <div style="display: none;" id="error_details">
-    <%= link_to_function t(:'errors.hide_details'),
-      "Effect.SlideUp('error_details'); $('show_link').appear();" %>
-    <!-- Final -->
-    <h2 style="margin: 1em 0em;"><%=h error.message %></h2>
-    <h3>Backtrace:</h3>
-    <pre style="margin-top: .5em;"><%=h error.backtrace.join("\n") %></pre>
+    <div>
+      <%= link_to_function t(:'errors.hide_details'),
+        "Effect.SlideUp('error_details'); $('show_link').appear()" %>
+      <!-- Final -->
+      <h2 style="margin: 1em 0em;"><%= error.message %></h2>
+      <h3>Backtrace:</h3>
+      <pre style="margin-top: .5em;"><%= error.backtrace.join("\n") %></pre>
 
-    <% unless params.empty? %>
-    <h3 style="margin-top: 1em;">Parameters:</h3>
-    <pre style="margin-top: .5em;"><%=h params.inspect %></pre>
-    <% end %>
-    <div style="clear: both;"></div>
+      <% unless params.empty? %>
+      <h3 style="margin-top: 1em;">Parameters:</h3>
+      <pre style="margin-top: .5em;"><%= params.inspect %></pre>
+      <% end %>
+      <div style="clear: both;"></div>
+    </div>
   </div>
 <% end %>
