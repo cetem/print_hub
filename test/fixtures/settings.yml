@@ -1,0 +1,3 @@
+price_per_copy:
+  var: 'price_per_copy'
+  value: <%= '0.10'.to_yaml.inspect %>

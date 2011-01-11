@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20100928152434) do
+ActiveRecord::Schema.define(:version => 20110111131347) do
 
   create_table "documents", :force => true do |t|
     t.string   "code",                             :null => false
@@ -59,6 +59,18 @@ ActiveRecord::Schema.define(:version => 20100928152434) do
 
   add_index "prints", ["created_at"], :name => "index_prints_on_created_at"
   add_index "prints", ["user_id"], :name => "index_prints_on_user_id"
+
+  create_table "settings", :force => true do |t|
+    t.string   "var",                         :null => false
+    t.text     "value"
+    t.integer  "thing_id"
+    t.string   "thing_type"
+    t.integer  "lock_version", :default => 0
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "settings", ["thing_type", "thing_id", "var"], :name => "index_settings_on_thing_type_and_thing_id_and_var", :unique => true
 
   create_table "tags", :force => true do |t|
     t.string   "name",                        :null => false

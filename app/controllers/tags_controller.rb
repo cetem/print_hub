@@ -6,11 +6,11 @@ class TagsController < ApplicationController
   # GET /tags.xml
   def index
     @title = t :'view.tags.index_title'
-    @tags = (@parent_tag.try(:children) || Tag).paginate(
-      :conditions => ('parent_id IS NULL' unless @parent_tag),
+    @tags = (@parent_tag.try(:children) || Tag).where(
+      ('parent_id IS NULL' unless @parent_tag)
+    ).order("#{Tag.table_name}.name ASC").paginate(
       :page => params[:page],
-      :per_page => APP_LINES_PER_PAGE,
-      :order => "#{Tag.table_name}.name ASC"
+      :per_page => APP_LINES_PER_PAGE
     )
 
     respond_to do |format|

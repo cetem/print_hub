@@ -1,0 +1,24 @@
+<table class="list">
+  <thead>
+    <tr>
+      <th><%= Setting.human_attribute_name :name %></th>
+      <th><%= Setting.human_attribute_name :value %></th>
+      <th colspan="2"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @settings.each do |setting| %>
+      <tr class="<%= cycle(:even, :odd) %>">
+        <td><%= setting.name %></td>
+        <td><%= setting.value %></td>
+        <td><%= link_to t(:'label.show'), setting %></td>
+        <td><%= link_to t(:'label.edit'), edit_setting_path(setting) %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<nav class="links">
+  <%= pagination_links(@settings) %>
+</nav>

@@ -214,7 +214,13 @@ div.field input[type="checkbox"] + label {
 }
 
 form.button_to input[type="submit"] {
+    font-size: inherit;
     padding: 0em .5em;
+}
+
+h2.title {
+    font-size: 1.5em;
+    margin-bottom: 1em;
 }
 
 input.field_with_errors, select.field_with_errors, text_area.field_with_errors {

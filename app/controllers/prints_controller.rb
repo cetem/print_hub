@@ -12,10 +12,9 @@ class PrintsController < ApplicationController
   # GET /prints.xml
   def index
     @title = t :'view.prints.index_title'
-    @prints = Print.paginate(
+    @prints = Print.order('created_at DESC').paginate(
       :page => params[:page],
-      :per_page => APP_LINES_PER_PAGE,
-      :order => 'created_at DESC'
+      :per_page => APP_LINES_PER_PAGE
     )
 
     respond_to do |format|

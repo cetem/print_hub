@@ -1,0 +1,1 @@
+Setting.defaults[:price_per_copy] = '0.10'

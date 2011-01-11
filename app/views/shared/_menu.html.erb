@@ -4,6 +4,8 @@
     <% if current_user.admin %>
       <%= content_tag(:li, link_to(t(:users, :scope => :menu), users_path),
         :class => (:selected if current_controller == :users)) %>
+      <%= content_tag(:li, link_to(t(:settings, :scope => :menu), settings_path),
+        :class => (:selected if current_controller == :settings)) %>
     <% end %>
     <%= content_tag(:li, link_to(t(:prints, :scope => :menu), prints_path),
       :class => (:selected if current_controller == :prints)) %>

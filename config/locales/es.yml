@@ -37,6 +37,7 @@
       #   user: 'Dude'
       # will translate User model name to 'Dude'
     models:
+      setting: 'Configuración'
       document: 'Documento'
       print: 'Impresión'
       print_job: 'Trabajo de impresión'
@@ -51,6 +52,9 @@
       #     login: 'Handle'
       # will translate User attribute 'login' as 'Handle'
     attributes:
+      setting:
+        name: 'Nombre'
+        value: 'Valor'
       document:
         code: 'Código'
         name: 'Nombre'
@@ -179,6 +183,12 @@
 
   # Active Model
   errors:
+    title: 'Error'
+    header_message: 'Se ha encontrado un problema'
+    hide_details: 'Ocultar detalles'
+    show_details: 'Ver detalles'
+    apologies_for_the_inconvenience: 'Disculpe las molestias'
+    
     # The default format to use in full error messages.
     format: '%{attribute} %{message}'
 
@@ -241,6 +251,7 @@
     es: 'Español'
 
   menu:
+    settings: 'Configuración'
     documents: 'Documentos'
     prints: 'Impresiones'
     tags: 'Etiquetas'
@@ -365,6 +376,14 @@
     pm: 'pm'
 
   view:
+    settings:
+      index_title: 'Listado de configuraciones'
+      show_title: 'Detalle de configuración'
+      edit_title: 'Modificar configuración'
+      correctly_updated: 'Configuración actualizada correctamente.'
+      stale_object_error: 'La configuración no pudo ser actualizada, intente nuevamente.'
+      names:
+        price_per_copy: 'Precio por copia'
     documents:
       index_title: 'Listado de documentos'
       show_title: 'Detalle de documento'

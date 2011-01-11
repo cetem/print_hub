@@ -9,10 +9,9 @@ class DocumentsController < ApplicationController
   # GET /documents.xml
   def index
     @title = t :'view.documents.index_title'
-    @documents = Document.paginate(
+    @documents = Document.order("#{Document.table_name}.code ASC").paginate(
       :page => params[:page],
-      :per_page => APP_LINES_PER_PAGE,
-      :order => "#{Document.table_name}.code ASC"
+      :per_page => APP_LINES_PER_PAGE
     )
 
     respond_to do |format|

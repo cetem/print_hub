@@ -1,4 +1,6 @@
 PrintHubApp::Application.routes.draw do
+  resources :settings, :only => [:index, :show, :edit, :update]
+
   resources :prints do
     collection do
       get :autocomplete_for_document_name

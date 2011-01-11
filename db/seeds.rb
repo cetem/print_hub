@@ -1,3 +1,4 @@
+# Usuario por defecto
 user = User.new(
   :name => 'Administrator',
   :last_name => 'Administrator',
@@ -11,3 +12,12 @@ user = User.new(
 )
 
 puts(user.save ? 'User [OK]' : user.errors.full_messages.join("\n"))
+
+# Configuración por defecto
+begin
+  Setting.price_per_copy = '0.10'
+rescue => ex
+  p ex
+else
+  puts 'Setting [OK]'
+end

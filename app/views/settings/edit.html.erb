@@ -1,0 +1,19 @@
+<%= form_for(@setting) do |f| %>
+  <%= show_error_messages(@setting) %>
+
+  <h2 class="title"><%= @setting.name %></h2>
+  
+  <div class="field">
+    <%= f.text_field :value, :value => @setting.value, :autofocus => true,
+      :maxlength => 255 %>
+  </div>
+  <div class="actions">
+    <%= f.hidden_field :lock_version %>
+    <%= f.submit %>
+  </div>
+<% end %>
+
+<nav class="links">
+  <%= link_to t(:'label.show'), @setting %> |
+  <%= link_to t(:'label.list'), settings_path %>
+</nav>

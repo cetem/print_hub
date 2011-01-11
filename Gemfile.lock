@@ -1,5 +1,12 @@
 GIT
-  remote: http://github.com/binarylogic/authlogic.git
+  remote: https://github.com/100hz/rails-settings.git
+  revision: 330b958bc6a4a196a35ab190eec0ba917b411060
+  specs:
+    rails-settings (0.1.1)
+      rails (>= 3.0.0)
+
+GIT
+  remote: https://github.com/binarylogic/authlogic.git
   revision: 66ed79515919fe13016911b10ebe734cf8718dc7
   specs:
     authlogic (2.1.6)
@@ -105,6 +112,7 @@ DEPENDENCIES
   pdf-reader
   pg
   rails (= 3.0.3)
+  rails-settings!
   ruby-prof
   simple_autocomplete
   turn
