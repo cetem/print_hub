@@ -18,11 +18,13 @@ var AutoComplete = {
                         indicator: 'loading',
                         method: 'get',
                         afterUpdateElement: function(text, li) {
-                            var objectId = $(li).id.strip().match(/(\d+)$/)[1];
+                            var objectId = $(li).readAttribute('data-id');
                             var idField = input.adjacent('input.autocomplete_id');
 
                             text.setValue(text.getValue().strip());
                             idField.first().setValue(objectId);
+
+                            $(li).fire('autocomplete:update', li);
                         }
                     }
                 );

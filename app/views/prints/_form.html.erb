@@ -37,3 +37,39 @@
     <%= f.submit %>
   </div>
 <% end %>
+<script type="text/javascript">
+  document.on('autocomplete:update', 'form', function(event) {
+    var element = $(event.memo);
+    var pages = element.readAttribute('data-pages');
+
+    element.up('.print_job').down('input.document_pages').setValue(pages);
+  });
+
+  document.on('keyup', '.print_job_range', function(event, element) {
+    var validRanges = true, maxPage = undefined;
+    var pages = parseInt(
+      element.up('.print_job').down('input.document_pages').getValue()
+    );
+    var ranges = element.getValue().trim().split(/\s*,\s*/).sortBy(function(r) {
+      return parseInt(r.match(/^\d+/)) || 0;
+    });
+
+    ranges.each(function(r) {
+      var data = r.match(/^(\d+)(-(\d+))?$/);
+      var n1 = Try.these(function() { return parseInt(data[1]); });
+      var n2 = Try.these(function() { return parseInt(data[3]); });
+      
+      validRanges = validRanges && n1 && n1 > 0 && (!n2 || n1 < n2);
+      validRanges = validRanges && (!maxPage || maxPage < n1);
+
+      maxPage = n2 || n1;
+    });
+
+    if((element.getValue().blank() || validRanges) &&
+      (!pages || !maxPage || pages >= maxPage)) {
+      element.removeClassName('field_with_errors');
+    } else {
+      element.addClassName('field_with_errors');
+    }
+  });
+</script>

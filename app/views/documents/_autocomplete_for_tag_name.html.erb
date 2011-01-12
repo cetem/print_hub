@@ -1,6 +1,6 @@
 <ul>
   <% tags.each do |tag| %>
-    <li id="auto_tag_<%= tag.id %>">
+    <li data-id="<%= tag.id %>">
       <%= highlight tag.name, params[:q] %>
       <span class="informal"><%= highlight tag.to_s, params[:q] %></span>
     </li>

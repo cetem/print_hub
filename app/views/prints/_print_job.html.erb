@@ -19,9 +19,11 @@
       <%= f.text_field :price_per_copy, :maxlength => 7 %>
     </div>
     <div class="nested_item_field">
-      <%= f.text_field :range, :maxlength => 255 %>
+      <%= f.text_field :range, :maxlength => 255, :class => :print_job_range %>
     </div>
     <div class="nested_item_actions">
+      <%= hidden_field_tag :pages, f.object.document.try(:pages),
+        :class => :document_pages, :id => "document_pages_#{id}" %>
       <%= link_to_remove_nested_item(f) %>
     </div>
     <br />
