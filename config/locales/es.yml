@@ -30,6 +30,11 @@
           attributes:
             print_jobs:
               blank: ' al menos debe haber uno'
+        print_job:
+          attributes:
+            range:
+              overlapped: 'no debe estar solapado'
+              too_long: 'excede la cantidad de páginas del documento (%{count})'
 
     # Translate model names. Used in Model.human_name().
     #models:
@@ -69,11 +74,13 @@
           one: 'Trabajo de impresión'
           other: 'Trabajos de impresión'
           copies: 'Copias'
-          price_per_copy: 'Precio por copia'
+          price_per_copy: 'Precio por hoja'
+          range: 'Rango'
           document_id: 'Documento'
       print_job:
         copies: 'Copias'
-        price_per_copy: 'Precio por copia'
+        price_per_copy: 'Precio por hoja'
+        range: 'Rango'
         document_id: 'Documento'
       tag:
         name: 'Nombre'
@@ -385,7 +392,7 @@
       correctly_updated: 'Configuración actualizada correctamente.'
       stale_object_error: 'La configuración no pudo ser actualizada, intente nuevamente.'
       names:
-        price_per_copy: 'Precio por copia'
+        price_per_copy: 'Precio por hoja'
     documents:
       index_title: 'Listado de documentos'
       show_title: 'Detalle de documento'

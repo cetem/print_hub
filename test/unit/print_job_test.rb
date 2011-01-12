@@ -26,6 +26,7 @@ class PrintJobTest < ActiveSupport::TestCase
       @print_job = PrintJob.create(
         :copies => 1,
         :price_per_copy => 0.1,
+        :range => nil,
         :job_id => 1,
         :print => prints(:math_print),
         :document => documents(:math_book)
@@ -102,5 +103,44 @@ class PrintJobTest < ActiveSupport::TestCase
     assert_equal [error_message_from_model(@print_job, :price_per_copy,
         :greater_than_or_equal_to, :count => 0)],
       @print_job.errors[:price_per_copy]
+  end
+
+  # Prueba que las validaciones del modelo se cumplan como es esperado
+  test 'validates ranges' do
+    @print_job.range = '1x'
+    assert @print_job.invalid?
+    assert_equal 1, @print_job.errors.count
+    assert_equal [error_message_from_model(@print_job, :range, :invalid)],
+      @print_job.errors[:range]
+
+    @print_job.range = '0'
+    assert @print_job.invalid?
+    assert_equal 1, @print_job.errors.count
+    assert_equal [error_message_from_model(@print_job, :range, :invalid)],
+      @print_job.errors[:range]
+
+    @print_job.range = '1-'
+    assert @print_job.invalid?
+    assert_equal 1, @print_job.errors.count
+    assert_equal [error_message_from_model(@print_job, :range, :invalid)],
+      @print_job.errors[:range]
+  end
+
+  # Prueba que las validaciones del modelo se cumplan como es esperado
+  test 'validates ranges overlap' do
+    @print_job.range = '1,2-4,4-5'
+    assert @print_job.invalid?
+    assert_equal 1, @print_job.errors.count
+    assert_equal [error_message_from_model(@print_job, :range, :overlapped)],
+      @print_job.errors[:range]
+  end
+
+  # Prueba que las validaciones del modelo se cumplan como es esperado
+  test 'validates too long ranges' do
+    @print_job.range = '1,15'
+    assert @print_job.invalid?
+    assert_equal 1, @print_job.errors.count
+    assert_equal [error_message_from_model(@print_job, :range, :too_long,
+        :count => @print_job.document.pages)], @print_job.errors[:range]
   end
 end

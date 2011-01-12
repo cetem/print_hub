@@ -40,6 +40,7 @@ ActiveRecord::Schema.define(:version => 20110111131347) do
     t.integer  "job_id",                                                       :null => false
     t.integer  "copies",                                                       :null => false
     t.decimal  "price_per_copy", :precision => 15, :scale => 2,                :null => false
+    t.string   "range"
     t.integer  "document_id",                                                  :null => false
     t.integer  "print_id",                                                     :null => false
     t.integer  "lock_version",                                  :default => 0
