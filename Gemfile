@@ -8,6 +8,7 @@ gem 'rails', '3.0.3'
 gem 'pg'
 gem 'authlogic', :git => 'https://github.com/binarylogic/authlogic.git'
 gem 'rails-settings', :git => 'https://github.com/100hz/rails-settings.git'
+gem 'rghost'
 gem 'will_paginate', '~> 3.0.beta'
 gem 'paperclip'
 # Previo sudo apt-get install libcupsys2-dev

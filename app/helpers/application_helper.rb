@@ -7,7 +7,7 @@ module ApplicationHelper
 
   # Devuelve los mensajes de error con etiquetas HTML
   def show_error_messages(model)
-    unless model.errors.blank?
+    unless model.errors.empty?
       render :partial => 'shared/error_messages', :locals => { :model => model }
     end
   end
