@@ -37,6 +37,13 @@ class DocumentTest < ActiveSupport::TestCase
 
     assert_equal 2, @document.tags.count
     assert_equal 1, @document.pages
+
+    thumbs_dir = Pathname.new(@document.file.path).dirname
+    # PDF original y 2 miñaturas
+    assert_equal 3, thumbs_dir.entries.reject(&:directory?).size
+    # Asegurar que las 2 miñaturas son imágenes y no están vacías
+    assert_equal 2,
+      thumbs_dir.entries.select { |f| f.extname == '.png' && !f.zero? }.size
   end
 
   # Prueba de actualización de un usuario
