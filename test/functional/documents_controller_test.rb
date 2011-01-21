@@ -51,27 +51,6 @@ class DocumentsControllerTest < ActionController::TestCase
     assert_template 'documents/show'
   end
 
-  test 'should not download document' do
-    UserSession.create(users(:administrator))
-    FileUtils.rm @document.file.path if File.exists?(@document.file.path)
-
-    get :show, :id => @document.to_param, :format => :pdf
-    assert_redirected_to :action => :index
-    assert_equal I18n.t(:'view.documents.non_existent'), flash.notice
-  end
-
-  test 'should download document' do
-    UserSession.create(users(:administrator))
-    put :update, :id => @document.to_param, :document => {
-      :file => fixture_file_upload('/files/test.pdf', 'application/pdf')
-    }
-    assert_redirected_to documents_path
-
-    get :show, :id => @document.to_param, :format => :pdf
-    assert_response :success
-    assert_equal File.open(@document.reload.file.path).read, @response.body
-  end
-
   test 'should get edit' do
     UserSession.create(users(:administrator))
     get :edit, :id => @document.to_param
@@ -102,6 +81,40 @@ class DocumentsControllerTest < ActionController::TestCase
     end
 
     assert_redirected_to documents_path
+  end
+
+  test 'should not download document' do
+    UserSession.create(users(:administrator))
+    FileUtils.rm @document.file.path if File.exists?(@document.file.path)
+
+    get :download, :id => @document.to_param, :style => :original
+    assert_redirected_to :action => :index
+    assert_equal I18n.t(:'view.documents.non_existent'), flash.notice
+  end
+
+  test 'should download document' do
+    UserSession.create(users(:administrator))
+    put :update, :id => @document.to_param, :document => {
+      :file => fixture_file_upload('/files/test.pdf', 'application/pdf')
+    }
+    assert_redirected_to documents_path
+
+    get :download, :id => @document.to_param, :style => :original
+    assert_response :success
+    assert_equal File.open(@document.reload.file.path).read, @response.body
+  end
+
+  test 'should download document thumb' do
+    UserSession.create(users(:administrator))
+    put :update, :id => @document.to_param, :document => {
+      :file => fixture_file_upload('/files/test.pdf', 'application/pdf')
+    }
+    assert_redirected_to documents_path
+
+    get :download, :id => @document.to_param, :style => :pdf_thumb
+    assert_response :success
+    assert_equal File.open(@document.reload.file.path(:pdf_thumb)).read,
+      @response.body
   end
 
   test 'should get autocomplete tag list' do

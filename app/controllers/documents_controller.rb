@@ -29,13 +29,6 @@ class DocumentsController < ApplicationController
     respond_to do |format|
       format.html # show.html.erb
       format.xml  { render :xml => @document }
-      format.pdf {
-        if File.exists?(@document.file.path)
-          send_file @document.file.path, :type => @document.file.content_type
-        else
-          redirect_to documents_path, :notice => t(:'view.documents.non_existent')
-        end
-      }
     end
   end
 
@@ -106,6 +99,20 @@ class DocumentsController < ApplicationController
     respond_to do |format|
       format.html { redirect_to(documents_url) }
       format.xml  { head :ok }
+    end
+  end
+
+  # GET /documents/1/pdf_thumb/download
+  def download
+    @document = Document.find(params[:id])
+    file = @document.file.path(params[:style].try(:to_sym))
+
+    if File.exists?(file)
+      mime_type = Mime::Type.lookup_by_extension(File.extname(file)[1..-1])
+
+      send_file file, :type => mime_type
+    else
+      redirect_to documents_path, :notice => t(:'view.documents.non_existent')
     end
   end
 end

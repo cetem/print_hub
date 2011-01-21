@@ -1,7 +1,7 @@
 class Document < ActiveRecord::Base
   has_attached_file :file,
     :path => ':rails_root/private/:attachment/:id_partition/:basename_:style.:extension',
-    :url => '/documents/:id.:extension',
+    :url => '/documents/:id/:style/download',
     :styles => {
       :pdf_thumb => {:resolution => 48, :format => :png},
       :pdf_mini_thumb => {:resolution => 24, :format => :png}

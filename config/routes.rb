@@ -13,6 +13,12 @@ PrintHubApp::Application.routes.draw do
     collection do
       get :autocomplete_for_tag_name
     end
+
+    member do
+      scope ':style' do
+        get :download
+      end
+    end
   end
 
   resources :tags
