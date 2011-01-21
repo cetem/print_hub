@@ -15,6 +15,7 @@ class Print < ActiveRecord::Base
 
   # Relaciones
   belongs_to :user
+  belongs_to :customer
   has_many :print_jobs, :dependent => :destroy
 
   accepts_nested_attributes_for :print_jobs, :allow_destroy => true

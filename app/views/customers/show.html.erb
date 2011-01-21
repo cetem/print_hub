@@ -1,0 +1,24 @@
+<p>
+  <b><%= Customer.human_attribute_name :name %>:</b>
+  <%= @customer.name %>
+</p>
+
+<p>
+  <b><%= Customer.human_attribute_name :lastname %>:</b>
+  <%= @customer.lastname %>
+</p>
+
+<p>
+  <b><%= Customer.human_attribute_name :identification %>:</b>
+  <%= @customer.identification %>
+</p>
+
+<p>
+  <b><%= Customer.human_attribute_name :free_monthly_copies %>:</b>
+  <%= @customer.free_monthly_copies %>
+</p>
+
+<nav class="links">
+  <%= link_to t(:'label.edit'), edit_customer_path(@customer) %> |
+  <%= link_to t(:'label.list'), customers_path %>
+</nav>

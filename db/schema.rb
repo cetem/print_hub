@@ -10,7 +10,19 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110111131347) do
+ActiveRecord::Schema.define(:version => 20110121003651) do
+
+  create_table "customers", :force => true do |t|
+    t.string   "name",                               :null => false
+    t.string   "lastname"
+    t.string   "identification",                     :null => false
+    t.integer  "free_monthly_copies"
+    t.integer  "lock_version",        :default => 0
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "customers", ["identification"], :name => "index_customers_on_identification", :unique => true
 
   create_table "documents", :force => true do |t|
     t.string   "code",                             :null => false
@@ -54,12 +66,14 @@ ActiveRecord::Schema.define(:version => 20110111131347) do
   create_table "prints", :force => true do |t|
     t.string   "printer",                     :null => false
     t.integer  "user_id"
+    t.integer  "customer_id"
     t.integer  "lock_version", :default => 0
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
   add_index "prints", ["created_at"], :name => "index_prints_on_created_at"
+  add_index "prints", ["customer_id"], :name => "index_prints_on_customer_id"
   add_index "prints", ["user_id"], :name => "index_prints_on_user_id"
 
   create_table "settings", :force => true do |t|

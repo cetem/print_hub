@@ -13,6 +13,8 @@
       :class => (:selected if current_controller == :documents)) %>
     <%= content_tag(:li, link_to(t(:tags, :scope => :menu), tags_path),
       :class => (:selected if current_controller == :tags)) %>
+    <%= content_tag(:li, link_to(t(:customers, :scope => :menu), customers_path),
+      :class => (:selected if current_controller == :customers)) %>
   </ul>
 </nav>
 <nav id="user_actions">

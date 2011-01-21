@@ -42,10 +42,11 @@
       #   user: 'Dude'
       # will translate User model name to 'Dude'
     models:
-      setting: 'Configuración'
+      customer: 'Cliente'
       document: 'Documento'
       print: 'Impresión'
       print_job: 'Trabajo de impresión'
+      setting: 'Configuración'
       tag: 'Etiqueta'
       user: 'Usuario'
       user_session: 'Sesión'
@@ -57,9 +58,11 @@
       #     login: 'Handle'
       # will translate User attribute 'login' as 'Handle'
     attributes:
-      setting:
+      customer:
         name: 'Nombre'
-        value: 'Valor'
+        lastname: 'Apellido'
+        identification: 'Identificación (DNI, CUIT, Legajo, etc.)'
+        free_monthly_copies: 'Copias por mes sin cargo'
       document:
         code: 'Código'
         name: 'Nombre'
@@ -82,6 +85,9 @@
         price_per_copy: 'Precio por hoja'
         range: 'Rango'
         document_id: 'Documento'
+      setting:
+        name: 'Nombre'
+        value: 'Valor'
       tag:
         name: 'Nombre'
         parent_id: 'Padre'
@@ -260,9 +266,10 @@
     es: 'Español'
 
   menu:
-    settings: 'Configuración'
+    customers: 'Clientes'
     documents: 'Documentos'
     prints: 'Impresiones'
+    settings: 'Configuración'
     tags: 'Etiquetas'
     users: 'Usuarios'
     actions:
@@ -385,14 +392,14 @@
     pm: 'pm'
 
   view:
-    settings:
-      index_title: 'Listado de configuraciones'
-      show_title: 'Detalle de configuración'
-      edit_title: 'Modificar configuración'
-      correctly_updated: 'Configuración actualizada correctamente.'
-      stale_object_error: 'La configuración no pudo ser actualizada, intente nuevamente.'
-      names:
-        price_per_copy: 'Precio por hoja'
+    customers:
+      index_title: 'Listado de clientes'
+      show_title: 'Detalle de cliente'
+      new_title: 'Nuevo cliente'
+      edit_title: 'Modificar cliente'
+      correctly_created: 'Cliente agregado correctamente.'
+      correctly_updated: 'Cliente actualizado correctamente.'
+      stale_object_error: 'El cliente no pudo ser actualizado, intente nuevamente.'
     documents:
       index_title: 'Listado de documentos'
       show_title: 'Detalle de documento'
@@ -413,6 +420,14 @@
       stale_object_error: 'La impresión no pudo ser actualizada, intente nuevamente.'
       print_jobs: 'Trabajos de impresión'
       add_print_job: 'Agregar trabajo de impresión'
+    settings:
+      index_title: 'Listado de configuraciones'
+      show_title: 'Detalle de configuración'
+      edit_title: 'Modificar configuración'
+      correctly_updated: 'Configuración actualizada correctamente.'
+      stale_object_error: 'La configuración no pudo ser actualizada, intente nuevamente.'
+      names:
+        price_per_copy: 'Precio por hoja'
     tags:
       index_title: 'Listado de etiquetas'
       show_title: 'Detalle de etiqueta'

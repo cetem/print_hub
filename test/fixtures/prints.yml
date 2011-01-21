@@ -1,7 +1,9 @@
 math_print:
   printer: <%= Cups.show_destinations.select {|p| p =~ /pdf/i}.first %>
   user: operator
+  customer: student
 
 physics_print:
   printer: <%= Cups.show_destinations.select {|p| p =~ /pdf/i}.first %>
   user: operator
+  customer: teacher

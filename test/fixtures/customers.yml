@@ -1,0 +1,11 @@
+student:
+  name: Anakin
+  lastname: Skywalker
+  identification: 123
+  free_monthly_copies: 100
+
+teacher:
+  name: Obi Wan
+  lastname: Kenobi
+  identification: 321
+  free_monthly_copies: 10
