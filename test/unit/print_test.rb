@@ -40,12 +40,14 @@ class PrintTest < ActiveSupport::TestCase
 
   # Prueba de actualización de una impresión
   test 'update' do
+    assert_not_equal customers(:teacher).id, @print.customer_id
+
     assert_no_difference 'Print.count' do
-      assert @print.update_attributes(:user => users(:administrator)),
+      assert @print.update_attributes(:customer => customers(:teacher)),
         @print.errors.full_messages.join('; ')
     end
 
-    assert_equal users(:administrator).id, @print.reload.user_id
+    assert_equal customers(:teacher).id, @print.reload.customer_id
   end
 
   # Prueba de eliminación de impresiones

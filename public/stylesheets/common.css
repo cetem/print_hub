@@ -23,14 +23,16 @@ a:hover {
     background-color:#000000;
 }
 
-a[data-event="remove_item"], a[data-event="hide_item"] {
+a.remove, a[data-event="remove_item"], a[data-event="hide_item"] {
     font-size: 12px;
     font-weight: bold;
     padding: 1px 3px;
     text-decoration: none;
 }
 
-a[data-event="remove_item"]:hover, a[data-event="hide_item"]:hover {
+a.remove:hover,
+a[data-event="remove_item"]:hover,
+a[data-event="hide_item"]:hover {
     background: #aa0000;
     color: #ffffff;
 }

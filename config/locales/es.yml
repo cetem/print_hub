@@ -72,6 +72,9 @@
         file_file_name: 'Archivo'
       print:
         printer: 'Impresora'
+        customer: 'Cliente'
+        customer_id: 'Cliente'
+        user: 'Usuario'
         user_id: 'Usuario'
         print_jobs:
           one: 'Trabajo de impresión'

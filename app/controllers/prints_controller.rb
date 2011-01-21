@@ -7,6 +7,12 @@ class PrintsController < ApplicationController
     render_to_string :partial => 'autocomplete_for_document_name',
       :locals => { :docs => docs }
   end
+  autocomplete_for :customer, :name,
+    :match => ['name', 'lastname', 'identification'], :limit => 10,
+    :order => 'lastname ASC, name ASC' do |customers|
+    render_to_string :partial => 'autocomplete_for_customer_name',
+      :locals => { :customers => customers }
+  end
 
   # GET /prints
   # GET /prints.xml

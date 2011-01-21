@@ -30,9 +30,14 @@ class PrintsControllerTest < ActionController::TestCase
 
   test 'should create print' do
     UserSession.create(users(:administrator))
-    assert_difference ['Print.count', 'PrintJob.count'] do
+
+    counts_array = ['Print.count', 'PrintJob.count', 'customer.prints.count']
+    customer = Customer.find customers(:student).id
+
+    assert_difference counts_array do
       post :create, :print => {
         :printer => @printer,
+        :customer_id => customer.id,
         :print_jobs_attributes => {
           :new_1 => {
             :copies => '1',
@@ -68,13 +73,19 @@ class PrintsControllerTest < ActionController::TestCase
   end
 
   test 'should update print' do
-    UserSession.create(users(:administrator))
+    user = User.find users(:administrator).id
+    customer = Customer.find customers(:teacher).id
 
-    assert_no_difference 'Print.count' do
-      assert_difference 'PrintJob.count' do
+    UserSession.create(user)
+
+    assert_not_equal customer.id, @print.customer_id
+
+    assert_no_difference 'user.prints.count' do
+      assert_difference ['PrintJob.count', 'customer.prints.count'] do
         put :update, :id => @print.to_param, :print => {
           :printer => @printer,
-          :user_id => users(:administrator).id,
+          :customer_id => customer.id,
+          :user_id => user.id,
           :print_jobs_attributes => {
             print_jobs(:math_job_1).id => {
               :id => print_jobs(:math_job_1).id,
@@ -102,7 +113,9 @@ class PrintsControllerTest < ActionController::TestCase
     end
 
     assert_redirected_to prints_path
-    assert_equal users(:administrator).id, @print.reload.user_id
+    # No se puede cambiar el usuario que creo una impresión
+    assert_not_equal user.id, @print.reload.user_id
+    assert_equal customer.id, @print.reload.customer_id
     assert_equal 123, @print.print_jobs.find_by_document_id(
       documents(:math_notes).id).copies
   end
@@ -122,14 +135,29 @@ class PrintsControllerTest < ActionController::TestCase
     UserSession.create(users(:administrator))
     get :autocomplete_for_document_name, :q => 'note'
     assert_response :success
-    assert_select 'li', 2
+    assert_select 'li[data-id]', 2
 
     get :autocomplete_for_document_name, :q => 'phy'
     assert_response :success
-    assert_select 'li', 1
+    assert_select 'li[data-id]', 1
 
     get :autocomplete_for_document_name, :q => 'phyxyz'
     assert_response :success
-    assert_select 'li', false
+    assert_select 'li[data-id]', false
+  end
+
+  test 'should get autocomplete customer list' do
+    UserSession.create(users(:administrator))
+    get :autocomplete_for_customer_name, :q => 'wa'
+    assert_response :success
+    assert_select 'li[data-id]', 2
+
+    get :autocomplete_for_customer_name, :q => 'kin'
+    assert_response :success
+    assert_select 'li[data-id]', 1
+
+    get :autocomplete_for_customer_name, :q => 'phyxyz'
+    assert_response :success
+    assert_select 'li[data-id]', false
   end
 end

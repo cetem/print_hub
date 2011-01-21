@@ -16,6 +16,9 @@ class User < ActiveRecord::Base
   validates :language, :inclusion => { :in => LANGUAGES.map(&:to_s) },
     :allow_nil => true, :allow_blank => true
 
+  # Relaciones
+  has_many :prints
+
   def to_s
     [self.name, self.last_name].join(' ')
   end

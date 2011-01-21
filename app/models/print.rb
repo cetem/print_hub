@@ -3,6 +3,9 @@ class Print < ActiveRecord::Base
   before_validation :assign_fake_job_ids
   before_save :print_all_jobs
 
+  # Restricciones en los atributos
+  attr_readonly :user_id
+
   # Restricciones
   validates :printer, :presence => true
   validates :printer, :length => { :maximum => 255 }, :allow_nil => true,
@@ -17,6 +20,7 @@ class Print < ActiveRecord::Base
   belongs_to :user
   belongs_to :customer
   has_many :print_jobs, :dependent => :destroy
+  autocomplete_for :customer, :name
 
   accepts_nested_attributes_for :print_jobs, :allow_destroy => true
 

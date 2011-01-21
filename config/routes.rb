@@ -5,6 +5,7 @@ PrintHubApp::Application.routes.draw do
 
   resources :prints do
     collection do
+      get :autocomplete_for_customer_name
       get :autocomplete_for_document_name
     end
   end

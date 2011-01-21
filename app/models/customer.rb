@@ -1,4 +1,6 @@
 class Customer < ActiveRecord::Base
+  find_by_autocomplete :name
+  
   # Restricciones
   validates :name, :identification, :presence => true
   validates :identification, :uniqueness => true, :allow_nil => true,
