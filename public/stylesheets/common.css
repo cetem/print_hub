@@ -215,6 +215,24 @@ div.field input[type="checkbox"] + label {
     margin-left: .5em;
 }
 
+div.image_container {
+    float: left;
+    margin: 0em 2em 2em 0em;
+    padding: .5em;
+    border: 2px solid #666666;
+    -moz-border-radius: .5em;
+    border-radius: .5em;
+    -moz-box-shadow: .5em .5em .5em #999999;
+    -webkit-box-shadow: .5em .5em .5em #999999;
+    box-shadow: .5em .5em .5em #999999;
+}
+
+dl.details dt {
+    font-weight: bold;
+    float: left;
+    margin-right: .5em;
+}
+
 form.button_to input[type="submit"] {
     font-size: inherit;
     padding: 0em .5em;
@@ -268,6 +286,7 @@ nav#user_actions div#username {
 
 nav.links {
     display: block;
+    clear: both;
     margin: 1em 0em;
 }
 

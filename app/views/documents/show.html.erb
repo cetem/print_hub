@@ -1,27 +1,20 @@
-<p>
-  <b><%= Document.human_attribute_name :code %></b>:
-  <%= @document.code %>
-</p>
+<%= show_document_thumb(@document) %> 
+<dl class="details">
+  <dt><%= Document.human_attribute_name :code %>:</dt>
+  <dd><%= @document.code %></dd>
 
-<p>
-  <b><%= Document.human_attribute_name :name %></b>:
-  <%= @document.name %>
-</p>
+  <dt><%= Document.human_attribute_name :name %>:</dt>
+  <dd><%= @document.name %></dd>
 
-<p>
-  <b><%= Document.human_attribute_name :pages %></b>:
-  <%= @document.pages %>
-</p>
+  <dt><%= Document.human_attribute_name :pages %>:</dt>
+  <dd><%= @document.pages %></dd>
 
-<p>
-  <b><%= Document.human_attribute_name :description %></b>:
-  <%= @document.description %>
-</p>
+  <dt><%= Document.human_attribute_name :description %>:</dt>
+  <dd><%= @document.description %>&nbsp;</dd>
 
-<p>
-  <b><%= Document.human_attribute_name :file %></b>:
-  <%= link_to_if @document.file.file?, t(:'label.download'), @document.file.url %>
-</p>
+  <dt><%= Document.human_attribute_name :file %>:</dt>
+  <dd><%= link_to_if @document.file.file?, t(:'label.download'), @document.file.url %></dd>
+</dl>
 
 <nav class="links">
   <%= link_to t(:'label.edit'), edit_document_path(@document) %> |
