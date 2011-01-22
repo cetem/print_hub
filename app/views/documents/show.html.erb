@@ -1,22 +1,28 @@
-<%= show_document_thumb(@document) %> 
-<dl class="details">
-  <dt><%= Document.human_attribute_name :code %>:</dt>
-  <dd><%= @document.code %></dd>
+<div class="document_details">
+  <%= show_document_thumb(@document) %>
+  <dl class="details">
+    <dt><%= Document.human_attribute_name :code %>:</dt>
+    <dd><%= @document.code %></dd>
 
-  <dt><%= Document.human_attribute_name :name %>:</dt>
-  <dd><%= @document.name %></dd>
+    <dt><%= Document.human_attribute_name :name %>:</dt>
+    <dd><%= @document.name %></dd>
 
-  <dt><%= Document.human_attribute_name :pages %>:</dt>
-  <dd><%= @document.pages %></dd>
+    <dt><%= Document.human_attribute_name :pages %>:</dt>
+    <dd><%= @document.pages %></dd>
 
-  <dt><%= Document.human_attribute_name :description %>:</dt>
-  <dd><%= @document.description %>&nbsp;</dd>
+    <dt><%= Document.human_attribute_name :description %>:</dt>
+    <dd><%= @document.description %>&nbsp;</dd>
 
-  <dt><%= Document.human_attribute_name :file %>:</dt>
-  <dd><%= link_to_if @document.file.file?, t(:'label.download'), @document.file.url %></dd>
-</dl>
+    <dt><%= Document.human_attribute_name :file %>:</dt>
+    <dd><%= link_to_if @document.file.file?, t(:'label.download'), @document.file.url %></dd>
+  </dl>
 
-<nav class="links">
-  <%= link_to t(:'label.edit'), edit_document_path(@document) %> |
-  <%= link_to t(:'label.list'), documents_path %>
-</nav>
+  <nav class="links">
+    <% unless request.xhr? %>
+      <%= link_to t(:'label.edit'), edit_document_path(@document) %> |
+      <%= link_to t(:'label.list'), documents_path %>
+    <% else %>
+      <%= link_to_function t(:'label.hide'), "this.up('.document_details').hide()" %>
+    <% end %>
+  </nav>
+</div>

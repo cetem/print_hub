@@ -194,6 +194,11 @@ div.autocomplete ul li span.informal {
     color: #cecece;
 }
 
+div.dynamic_details {
+    clear: both;
+    padding: .5em 0em;
+}
+
 div.field input[type="text"], div.field input[type="password"],
 div.field select, div.field textarea {
     font-size: inherit;

@@ -25,10 +25,14 @@
       <%= hidden_field_tag :pages, f.object.document.try(:pages),
         :class => :document_pages, :id => "document_pages_#{id}" %>
       <%= link_to_remove_nested_item(f) %>
+      <%= link_to t(:'view.prints.document_details'), f.object.document || '#',
+        :class => :details_link, :remote => true,
+        :'data-update' => "document_details_#{id}",
+        :style => ('display: none;' unless f.object.document) %>
     </div>
-    <br />
   </div>
 </div>
+<div class="dynamic_details" id="<%= "document_details_#{id}" %>"></div>
 <% if is_dynamic %>
   <script type="text/javascript">
     Helper.show('<%= id %>');

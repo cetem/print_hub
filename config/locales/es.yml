@@ -259,6 +259,7 @@
     delete: 'Eliminar'
     download: 'Descargar'
     edit: 'Modificar'
+    hide: 'Ocultar'
     list: 'Listado'
     new: 'Nuevo'
     next: 'Siguiente'
@@ -423,6 +424,7 @@
       stale_object_error: 'La impresión no pudo ser actualizada, intente nuevamente.'
       print_jobs: 'Trabajos de impresión'
       add_print_job: 'Agregar trabajo de impresión'
+      document_details: '[+]'
     settings:
       index_title: 'Listado de configuraciones'
       show_title: 'Detalle de configuración'

@@ -58,8 +58,13 @@
   document.on('autocomplete:update', 'form', function(event) {
     var element = $(event.memo);
     var pages = element.readAttribute('data-pages');
+    var printJob = element.up('.print_job');
 
-    element.up('.print_job').down('input.document_pages').setValue(pages);
+    printJob.down('input.document_pages').setValue(pages);
+    printJob.down('a.details_link').writeAttribute('href',
+      element.readAttribute('data-url'));
+    printJob.down('a.details_link').show();
+    printJob.next('.dynamic_details').update('')
   });
 
   document.on('keyup', '.print_job_range', function(event, element) {
