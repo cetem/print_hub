@@ -82,11 +82,13 @@
           copies: 'Copias'
           price_per_copy: 'Precio por hoja'
           range: 'Rango'
+          two_sided: 'Doble faz'
           document_id: 'Documento'
       print_job:
         copies: 'Copias'
         price_per_copy: 'Precio por hoja'
         range: 'Rango'
+        two_sided: 'Doble faz'
         document_id: 'Documento'
       setting:
         name: 'Nombre'
@@ -424,7 +426,7 @@
       stale_object_error: 'La impresión no pudo ser actualizada, intente nuevamente.'
       print_jobs: 'Trabajos de impresión'
       add_print_job: 'Agregar trabajo de impresión'
-      document_details: '[+]'
+      document_details: '...'
     settings:
       index_title: 'Listado de configuraciones'
       show_title: 'Detalle de configuración'

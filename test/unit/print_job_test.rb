@@ -16,6 +16,8 @@ class PrintJobTest < ActiveSupport::TestCase
     assert_equal print_jobs(:math_job_1).copies, @print_job.copies
     assert_equal print_jobs(:math_job_1).price_per_copy,
       @print_job.price_per_copy
+    assert_equal print_jobs(:math_job_1).range, @print_job.range
+    assert_equal print_jobs(:math_job_1).two_sided, @print_job.two_sided
     assert_equal print_jobs(:math_job_1).document_id, @print_job.document_id
     assert_equal print_jobs(:math_job_1).print_id, @print_job.print_id
   end
@@ -27,11 +29,14 @@ class PrintJobTest < ActiveSupport::TestCase
         :copies => 1,
         :price_per_copy => 0.1,
         :range => nil,
+        :two_sided => false,
         :job_id => 1,
         :print => prints(:math_print),
         :document => documents(:math_book)
       )
     end
+
+    assert @print_job.reload.two_sided == false
   end
 
   # Prueba de actualización de un trabajo de impresión
@@ -142,5 +147,21 @@ class PrintJobTest < ActiveSupport::TestCase
     assert_equal 1, @print_job.errors.count
     assert_equal [error_message_from_model(@print_job, :range, :too_long,
         :count => @print_job.document.pages)], @print_job.errors[:range]
+  end
+
+  test 'options' do
+    @print_job.copies = 100
+    @print_job.range = '1'
+    @print_job.two_sided = true
+
+    assert_equal '100', @print_job.options['n']
+    assert_equal '1', @print_job.options['page-ranges']
+    assert_equal 'two-sided-long-edge', @print_job.options['sides']
+
+    @print_job.range = ''
+    @print_job.two_sided = false
+
+    assert_nil @print_job.options['page-ranges']
+    assert_equal 'one-sided', @print_job.options['sides']
   end
 end

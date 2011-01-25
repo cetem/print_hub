@@ -44,5 +44,17 @@ class PrintJob < ActiveRecord::Base
 
     self.copies ||= 1
     self.price_per_copy ||= Setting.price_per_copy
+    self.two_sided = true if self.two_sided.nil?
+  end
+
+  def options
+    options = {
+      'n' => self.copies.to_s,
+      'sides' => self.two_sided ? 'two-sided-long-edge' : 'one-sided'
+    }
+
+    options['page-ranges'] = self.range unless self.range.blank?
+
+    options
   end
 end

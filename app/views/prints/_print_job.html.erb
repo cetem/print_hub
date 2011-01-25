@@ -21,12 +21,15 @@
     <div class="nested_item_field">
       <%= f.text_field :range, :maxlength => 255, :class => :print_job_range %>
     </div>
+    <div class="nested_item_field">
+      <%= f.check_box :two_sided %>
+    </div>
     <div class="nested_item_actions">
       <%= hidden_field_tag :pages, f.object.document.try(:pages),
         :class => :document_pages, :id => "document_pages_#{id}" %>
       <%= link_to_remove_nested_item(f) %>
       <%= link_to t(:'view.prints.document_details'), f.object.document || '#',
-        :class => :details_link, :remote => true,
+        :class => 'details_link action_link', :remote => true,
         :'data-update' => "document_details_#{id}",
         :style => ('display: none;' unless f.object.document) %>
     </div>

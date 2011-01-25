@@ -38,8 +38,8 @@ class Print < ActiveRecord::Base
 
   def print_all_jobs
     self.print_jobs.each do |pj|
-      job = Cups::PrintJob.new(pj.document.file.path, self.printer)
-
+      job = Cups::PrintJob.new(pj.document.file.path, self.printer, pj.options)
+      
       job.print
       
       pj.job_id = job.job_id

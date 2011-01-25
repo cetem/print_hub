@@ -5,6 +5,7 @@ class CreatePrintJobs < ActiveRecord::Migration
       t.integer :copies, :null => false
       t.decimal :price_per_copy, :null => false, :precision => 15, :scale => 2
       t.string :range, :null => true
+      t.boolean :two_sided, :default => true
       t.references :document, :null => false
       t.references :print, :null => false
       t.integer :lock_version, :default => 0

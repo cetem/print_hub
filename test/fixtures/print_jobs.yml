@@ -3,6 +3,7 @@ math_job_1:
   copies: 3
   price_per_copy: <%= Setting.price_per_copy %>
   range: ''
+  two_sided: true
   document: math_notes
   print: math_print
 
@@ -11,6 +12,7 @@ math_job_2:
   copies: 1
   price_per_copy: <%= Setting.price_per_copy %>
   range: ''
+  two_sided: true
   document: math_book
   print: math_print
 
@@ -19,5 +21,6 @@ physics_job_1:
   copies: 2
   price_per_copy: <%= Setting.price_per_copy %>
   range: ''
+  two_sided: true
   document: physics_notes
   print: physics_print

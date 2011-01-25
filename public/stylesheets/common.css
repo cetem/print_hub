@@ -23,11 +23,19 @@ a:hover {
     background-color:#000000;
 }
 
-a.remove, a[data-event="remove_item"], a[data-event="hide_item"] {
+a.action_link,
+a.remove,
+a[data-event="remove_item"],
+a[data-event="hide_item"] {
     font-size: 12px;
     font-weight: bold;
     padding: 1px 3px;
     text-decoration: none;
+}
+
+a.action_link:hover {
+    background: #333333;
+    color: #ffffff;
 }
 
 a.remove:hover,
@@ -130,6 +138,8 @@ div#login input[type="text"], div#login input[type="password"] {
 div#main_container {
     margin: 4em auto;
     width: 95%;
+    min-width: 750px;
+    max-width: 1250px;
 }
 
 div#main_menu {
@@ -139,6 +149,7 @@ div#main_menu {
     top: 0px;
     left: 0px;
     padding: .5em 0em;
+    min-width: 750px;
 }
 
 div#notice {
@@ -386,7 +397,7 @@ section.tags {
 }
 
 table.list {
-    width: 100%;
+    width: 98%;
     border: 2px solid #333333;
     border-collapse: collapse;
 }
@@ -420,17 +431,17 @@ ul.raw {
 /* Estilo de los "Trabajos de impresión" dentro de "Impresiones" */
 section.nested_items div#print_jobs_headers h3:nth-child(1),
 section.nested_items div.print_job div.nested_item_field:nth-child(1) {
-    width: 45%;
+    width: 40%;
 }
 
 section.nested_items div#print_jobs_headers h3:nth-child(2),
 section.nested_items div.print_job div.nested_item_field:nth-child(2) {
-    width: 15%;
+    width: 10%;
 }
 
 section.nested_items div#print_jobs_headers h3:nth-child(3),
 section.nested_items div.print_job div.nested_item_field:nth-child(3) {
-    width: 15%;
+    width: 10%;
 }
 
 section.nested_items div#print_jobs_headers h3:nth-child(4),
@@ -439,6 +450,11 @@ section.nested_items div.print_job div.nested_item_field:nth-child(4) {
 }
 
 section.nested_items div#print_jobs_headers h3:nth-child(5),
+section.nested_items div.print_job div.nested_item_field:nth-child(5) {
+    width: 10%;
+}
+
+section.nested_items div#print_jobs_headers h3:nth-child(6),
 section.nested_items div.print_job div.nested_item_actions {
     width: 5%;
 }
