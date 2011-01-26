@@ -129,6 +129,18 @@ class PrintJobTest < ActiveSupport::TestCase
     assert_equal 1, @print_job.errors.count
     assert_equal [error_message_from_model(@print_job, :range, :invalid)],
       @print_job.errors[:range]
+
+    @print_job.range = '1, 2-'
+    assert @print_job.invalid?
+    assert_equal 1, @print_job.errors.count
+    assert_equal [error_message_from_model(@print_job, :range, :invalid)],
+      @print_job.errors[:range]
+
+    @print_job.range = '2x, 10'
+    assert @print_job.invalid?
+    assert_equal 1, @print_job.errors.count
+    assert_equal [error_message_from_model(@print_job, :range, :invalid)],
+      @print_job.errors[:range]
   end
 
   # Prueba que las validaciones del modelo se cumplan como es esperado
@@ -163,5 +175,53 @@ class PrintJobTest < ActiveSupport::TestCase
 
     assert_nil @print_job.options['page-ranges']
     assert_equal 'one-sided', @print_job.options['sides']
+  end
+
+  test 'extract ranges' do
+    @print_job.range = ' '
+    assert @print_job.valid?
+    assert_equal [], @print_job.extract_ranges
+
+    @print_job.range = '1'
+    assert @print_job.valid?
+    assert_equal [1], @print_job.extract_ranges
+
+    @print_job.range = '1,2-7'
+    assert @print_job.valid?
+    assert_equal [1, [2, 7]], @print_job.extract_ranges
+
+    @print_job.range = '1,3-7,2,10'
+    assert @print_job.valid?
+    assert_equal [1, 2, [3, 7], 10], @print_job.extract_ranges
+  end
+
+  test 'range pages' do
+    @print_job.range = ' '
+    assert @print_job.valid?
+    assert_equal @print_job.document.pages, @print_job.range_pages
+
+    @print_job.range = '1'
+    assert @print_job.valid?
+    assert_equal 1, @print_job.range_pages
+
+    @print_job.range = '1,2'
+    assert @print_job.valid?
+    assert_equal 2, @print_job.range_pages
+
+    @print_job.range = '1,2-7'
+    assert @print_job.valid?
+    assert_equal 7, @print_job.range_pages
+
+    @print_job.range = '2-7'
+    assert @print_job.valid?
+    assert_equal 6, @print_job.range_pages
+
+    @print_job.range = '2-7,8-9'
+    assert @print_job.valid?
+    assert_equal 8, @print_job.range_pages
+
+    @print_job.range = '1,2-7,8-9,10'
+    assert @print_job.valid?
+    assert_equal 10, @print_job.range_pages
   end
 end

@@ -1,4 +1,7 @@
 class PrintJob < ActiveRecord::Base
+  # Atributos no persistentes
+  attr_writer :range_pages
+
   # Restricciones
   validates :copies, :price_per_copy, :job_id, :document_id, :presence => true
   validates :copies, :job_id,
@@ -13,10 +16,12 @@ class PrintJob < ActiveRecord::Base
     ranges = (value || '').strip.split(/\s*,\s*/).sort do |r1, r2|
       r1.match(/^\d+/).to_s.to_i <=> r2.match(/^\d+/).to_s.to_i
     end
+
+    record.send(:"#{attr}=", ranges.join(','))
     
-    ranges.each do |r|
-      data = r.match(/^(\d+)(-(\d+))?$/).to_a
-      n1, n2 = data[1].try(:to_i), data[3].try(:to_i)
+    record.extract_ranges.each do |r|
+      n1 = r.kind_of?(Array) ? r[0] : r
+      n2 = r[1] if r.kind_of?(Array)
 
       valid_ranges &&= n1 && n1 > 0 && (n2.blank? || n1 < n2)
       ranges_overlapped ||= max_page && valid_ranges && max_page >= n1
@@ -30,8 +35,6 @@ class PrintJob < ActiveRecord::Base
     if record.document && max_page && max_page > record.document.pages
       record.errors.add attr, :too_long, :count => record.document.pages
     end
-
-    record.send(:"#{attr}=", ranges.join(','))
   end
 
   # Relaciones
@@ -57,6 +60,29 @@ class PrintJob < ActiveRecord::Base
     options['page-ranges'] = self.range unless self.range.blank?
 
     options
+  end
+
+  def extract_ranges
+    self.range.blank? ? [] : self.range.split(/,/).map do |r|
+      numbers = r.match(/^(\d+)(-(\d+))?$/).to_a
+      n1, n2 = numbers[1].try(:to_i), numbers[3].try(:to_i)
+
+      n2 ? [n1, n2] : n1
+    end
+  end
+
+  def range_pages
+    pages = 0
+
+    if self.range.blank?
+      pages = self.document.try(:pages)
+    else
+      self.extract_ranges.each do |r|
+        pages += r.kind_of?(Array) ? r[1].next - r[0] : 1
+      end
+    end
+
+    pages
   end
 
   def price_per_one_sided_copy
