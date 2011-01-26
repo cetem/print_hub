@@ -22,7 +22,9 @@
       <%= f.text_field :range, :maxlength => 255, :class => :print_job_range %>
     </div>
     <div class="nested_item_field">
-      <%= f.check_box :two_sided %>
+      <%= f.check_box :two_sided,
+        :'data-price-per-one-sided' => f.object.price_per_one_sided_copy,
+        :'data-price-per-two-sided' => f.object.price_per_two_sided_copy %>
     </div>
     <div class="nested_item_actions">
       <%= hidden_field_tag :pages, f.object.document.try(:pages),

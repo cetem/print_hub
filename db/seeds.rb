@@ -15,7 +15,8 @@ puts(user.save ? 'User [OK]' : user.errors.full_messages.join("\n"))
 
 # Configuración por defecto
 begin
-  Setting.price_per_copy = '0.10'
+  Setting.price_per_one_sided_copy = '0.10'
+  Setting.price_per_two_sided_copy = '0.07'
 rescue => ex
   p ex
 else

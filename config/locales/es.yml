@@ -434,7 +434,8 @@
       correctly_updated: 'Configuración actualizada correctamente.'
       stale_object_error: 'La configuración no pudo ser actualizada, intente nuevamente.'
       names:
-        price_per_copy: 'Precio por hoja'
+        price_per_one_sided_copy: 'Precio por hoja simple faz'
+        price_per_two_sided_copy: 'Precio por hoja doble faz'
     tags:
       index_title: 'Listado de etiquetas'
       show_title: 'Detalle de etiqueta'

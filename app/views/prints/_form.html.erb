@@ -95,4 +95,15 @@
       element.addClassName('field_with_errors');
     }
   });
+
+  document.on('change', 'input[name$="[two_sided]"]', function(event, element) {
+    var priceElement = element.up('.print_job').down(
+      'input[name$="[price_per_copy]"]');
+
+    if(element.checked) {
+      priceElement.setValue(element.readAttribute('data-price-per-two-sided'));
+    } else {
+      priceElement.setValue(element.readAttribute('data-price-per-one-sided'));
+    }
+  });
 </script>

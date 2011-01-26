@@ -42,9 +42,10 @@ class PrintJob < ActiveRecord::Base
   def initialize(attributes = nil)
     super(attributes)
 
-    self.copies ||= 1
-    self.price_per_copy ||= Setting.price_per_copy
     self.two_sided = true if self.two_sided.nil?
+    self.copies ||= 1
+    self.price_per_copy ||= self.two_sided? ?
+      Setting.price_per_two_sided_copy : Setting.price_per_one_sided_copy
   end
 
   def options
@@ -56,5 +57,13 @@ class PrintJob < ActiveRecord::Base
     options['page-ranges'] = self.range unless self.range.blank?
 
     options
+  end
+
+  def price_per_one_sided_copy
+    Setting.price_per_one_sided_copy
+  end
+
+  def price_per_two_sided_copy
+    Setting.price_per_two_sided_copy
   end
 end

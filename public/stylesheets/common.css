@@ -114,8 +114,8 @@ div#error_explanation ul li {
 
 div#loading {
     position: fixed;
-    top: .5em;
-    right: 1em;
+    bottom: .5em;
+    left: 1em;
     padding: 1px 5px;
 }
 
