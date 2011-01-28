@@ -45,4 +45,8 @@ class Print < ActiveRecord::Base
       pj.job_id = job.job_id
     end
   end
+
+  def price
+    self.print_jobs.to_a.sum(&:price)
+  end
 end

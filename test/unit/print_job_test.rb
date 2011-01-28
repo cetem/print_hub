@@ -224,4 +224,27 @@ class PrintJobTest < ActiveSupport::TestCase
     assert @print_job.valid?
     assert_equal 10, @print_job.range_pages
   end
+
+  test 'price' do
+    @print_job.copies = 1
+    @print_job.price_per_copy = 0.10
+    @print_job.range = ''
+    assert @print_job.valid?
+    assert_equal 12, @print_job.range_pages
+    assert_equal '1.20', '%.2f' % @print_job.price
+
+    @print_job.copies = 1
+    @print_job.price_per_copy = 0.00
+    @print_job.range = ''
+    assert @print_job.valid?
+    assert_equal 12, @print_job.range_pages
+    assert_equal '0.00', '%.2f' % @print_job.price
+
+    @print_job.copies = 15
+    @print_job.price_per_copy = 0.10
+    @print_job.range = '1'
+    assert @print_job.valid?
+    assert_equal 1, @print_job.range_pages
+    assert_equal '1.50', '%.2f' % @print_job.price
+  end
 end

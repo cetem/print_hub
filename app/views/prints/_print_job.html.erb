@@ -13,13 +13,16 @@
       <%= f.hidden_field :document_id, :class => :autocomplete_id %>
     </div>
     <div class="nested_item_field">
-      <%= f.text_field :copies, :maxlength => 5 %>
+      <%= f.text_field :copies, :maxlength => 5, :class => :price_modifier,
+        :autocomplete => :off %>
     </div>
     <div class="nested_item_field">
-      <%= f.text_field :price_per_copy, :maxlength => 7 %>
+      <%= f.text_field :price_per_copy, :maxlength => 7,
+        :class => :price_modifier, :autocomplete => :off %>
     </div>
     <div class="nested_item_field">
-      <%= f.text_field :range, :maxlength => 255, :class => :print_job_range %>
+      <%= f.text_field :range, :maxlength => 255, :class => :price_modifier,
+        :autocomplete => :off %>
     </div>
     <div class="nested_item_field">
       <%= f.check_box :two_sided,
@@ -38,9 +41,11 @@
   </div>
 </div>
 <div class="dynamic_details" id="<%= "document_details_#{id}" %>"></div>
-<% if is_dynamic %>
-  <script type="text/javascript">
+<script type="text/javascript">
+  <% if is_dynamic %>
     Helper.show('<%= id %>');
     AutoComplete.observeAll();
-  </script>
-<% end -%>
+  <% else %>
+    $('<%= id %>').store('price', <%= f.object.price %>);
+  <% end -%>
+</script>

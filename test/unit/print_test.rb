@@ -75,4 +75,10 @@ class PrintTest < ActiveSupport::TestCase
     assert_equal [error_message_from_model(@print, :printer, :too_long,
       :count => 255)], @print.errors[:printer]
   end
+
+  test 'price' do
+    assert @print.print_jobs.any? { |j| j.price > 0 }
+    assert @print.price > 0
+    assert_equal @print.price, @print.print_jobs.inject(0) {|t, j| t + j.price}
+  end
 end

@@ -85,6 +85,10 @@ class PrintJob < ActiveRecord::Base
     pages
   end
 
+  def price
+    (self.copies || 0) * (self.price_per_copy || 0) * (self.range_pages || 0)
+  end
+
   def price_per_one_sided_copy
     Setting.price_per_one_sided_copy
   end

@@ -50,9 +50,11 @@
       :'data-template' => :print_job, :'data-container' => :print_jobs,
       :'data-event' => :add_nested_item %>
   </div>
+
   <div class="actions">
     <%= f.hidden_field :lock_version %>
     <%= f.submit %>
+    <%= text_field_tag :price, ('%.2f' % @print.price), :id => :price %>
   </div>
 <% end %>
 <script type="text/javascript">
@@ -68,8 +70,8 @@
     printJob.next('.dynamic_details').update('')
   });
 
-  document.on('keyup', '.print_job_range', function(event, element) {
-    var validRanges = true, maxPage = undefined;
+  document.on('keyup', 'input[name$="[range]"]', function(event, element) {
+    var validRanges = true, maxPage = undefined, rangePages = 0;
     var pages = parseInt(
       element.up('.print_job').down('input.document_pages').getValue()
     );
@@ -86,14 +88,40 @@
       validRanges = validRanges && (!maxPage || maxPage < n1);
 
       maxPage = n2 || n1;
+      rangePages += n2 ? n2.succ() - n1 : 1
     });
 
     if((element.getValue().blank() || validRanges) &&
       (!pages || !maxPage || pages >= maxPage)) {
       element.removeClassName('field_with_errors');
+
+      if(element.getValue().blank() && pages) {
+        element.store('range_pages', pages);
+        console.log('pages: ' + pages);
+      } else if(!element.getValue().blank() && validRanges) {
+        element.store('range_pages', rangePages);
+      }
     } else {
       element.addClassName('field_with_errors');
     }
+  });
+
+  document.on('change', '.price_modifier', function(event, element) {
+    var totalPrice = 0.0;
+    var job = element.up('.print_job');
+    var copies = parseInt(job.down('input[name$="[copies]"]').getValue());
+    var pricePerCopy = parseFloat(
+      job.down('input[name$="[price_per_copy]"]').getValue()
+    );
+    var rangePages = parseInt(
+      job.down('input[name$="[range]"]').retrieve('range_pages')
+    );
+
+    job.store('price', copies * pricePerCopy * rangePages);
+
+    $$('.print_job').each(function(e) { totalPrice += e.retrieve('price'); });
+
+    if(totalPrice) { $('price').setValue(totalPrice.toFixed(2)); }
   });
 
   document.on('change', 'input[name$="[two_sided]"]', function(event, element) {
