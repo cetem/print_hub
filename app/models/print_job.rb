@@ -47,7 +47,7 @@ class PrintJob < ActiveRecord::Base
 
     self.two_sided = true if self.two_sided.nil?
     self.copies ||= 1
-    self.price_per_copy ||= self.two_sided? ?
+    self.price_per_copy ||= self.two_sided ?
       Setting.price_per_two_sided_copy : Setting.price_per_one_sided_copy
   end
 

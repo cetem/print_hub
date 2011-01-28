@@ -420,6 +420,22 @@ table.list tbody tr.odd:hover, table.list tbody tr.even:hover {
     background: #cecece;
 }
 
+table.summary {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1em 0em;
+}
+
+table.summary td {
+    padding: .4em .5em;
+}
+
+table.summary th {
+    text-align: left;
+    padding: .4em .5em;
+    border-bottom: 1px dotted #333333;
+}
+
 ul.raw {
     margin: 1em 0em 1em 3em;
 }

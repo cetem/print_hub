@@ -426,7 +426,8 @@
       stale_object_error: 'La impresión no pudo ser actualizada, intente nuevamente.'
       print_jobs: 'Trabajos de impresión'
       add_print_job: 'Agregar trabajo de impresión'
-      document_details: '...'
+      document_details: 'Ver detalles del documento'
+      print: 'Imprimir'
     settings:
       index_title: 'Listado de configuraciones'
       show_title: 'Detalle de configuración'

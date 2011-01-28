@@ -46,6 +46,8 @@ var EventHandler = {
         $(e.readAttribute('data-container')).insert({
             bottom: Util.replaceIds(template, /NEW_RECORD/)
         });
+
+        e.fire('item:added');
     },
 
     /**
@@ -60,12 +62,16 @@ var EventHandler = {
         var hiddenInput = e.previous('input[type=hidden].destroy');
 
         if(hiddenInput) {hiddenInput.setValue('1');}
+
+        e.fire('item:hidden');
     },
 
     removeItem: function(e) {
-        var target = e.readAttribute('data-target');
+        var target = e.up(e.readAttribute('data-target'));
         
-        Helper.remove(e.up(target));
+        Helper.remove(target);
+
+        target.fire('item:removed');
     }
 }
 

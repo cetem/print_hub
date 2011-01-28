@@ -51,13 +51,56 @@
       :'data-event' => :add_nested_item %>
   </div>
 
+  <table class="summary">
+    <thead>
+      <tr>
+        <th><%= 'Total' %></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>
+          <%= text_field_tag :price, ('%.2f' % @print.price), :id => :price,
+            :readonly => true %>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
   <div class="actions">
     <%= f.hidden_field :lock_version %>
-    <%= f.submit %>
-    <%= text_field_tag :price, ('%.2f' % @print.price), :id => :price %>
+    <%= f.submit t(:'view.prints.print') %>
   </div>
 <% end %>
 <script type="text/javascript">
+  function updateTotalPrice() {
+    var totalPrice = $$('.print_job').inject(0.0, function(total, pj) {
+      return total + (parseFloat(pj.readAttribute('data-price')) || 0);
+    });
+
+    $('price').setValue(totalPrice.toFixed(2));
+  }
+
+  function updatePrintJobPrice(printJob) {
+    var copies = parseInt(printJob.down('input[name$="[copies]"]').getValue());
+    var pricePerCopy = parseFloat(
+      printJob.down('input[name$="[price_per_copy]"]').getValue()
+    );
+    var rangePages = parseInt(
+      printJob.down('input[name$="[range]"]').readAttribute('data-range-pages')
+    );
+
+    printJob.writeAttribute('data-price', copies * pricePerCopy * rangePages);
+
+    updateTotalPrice();
+  }
+
+  document.on('item:removed', '.print_job', function(event, element) {
+    element.removeClassName('print_job');
+    
+    updateTotalPrice();
+  });
+
   document.on('autocomplete:update', 'form', function(event) {
     var element = $(event.memo);
     var pages = element.readAttribute('data-pages');
@@ -67,7 +110,11 @@
     printJob.down('a.details_link').writeAttribute('href',
       element.readAttribute('data-url'));
     printJob.down('a.details_link').show();
-    printJob.next('.dynamic_details').update('')
+    printJob.next('.dynamic_details').update('');
+    printJob.down('input[name$="[range]"]').setValue('').writeAttribute(
+      'data-range-pages', pages);
+
+    updatePrintJobPrice(printJob);
   });
 
   document.on('keyup', 'input[name$="[range]"]', function(event, element) {
@@ -96,32 +143,13 @@
       element.removeClassName('field_with_errors');
 
       if(element.getValue().blank() && pages) {
-        element.store('range_pages', pages);
-        console.log('pages: ' + pages);
+        element.writeAttribute('data-range-pages', pages);
       } else if(!element.getValue().blank() && validRanges) {
-        element.store('range_pages', rangePages);
+        element.writeAttribute('data-range-pages', rangePages);
       }
     } else {
       element.addClassName('field_with_errors');
     }
-  });
-
-  document.on('change', '.price_modifier', function(event, element) {
-    var totalPrice = 0.0;
-    var job = element.up('.print_job');
-    var copies = parseInt(job.down('input[name$="[copies]"]').getValue());
-    var pricePerCopy = parseFloat(
-      job.down('input[name$="[price_per_copy]"]').getValue()
-    );
-    var rangePages = parseInt(
-      job.down('input[name$="[range]"]').retrieve('range_pages')
-    );
-
-    job.store('price', copies * pricePerCopy * rangePages);
-
-    $$('.print_job').each(function(e) { totalPrice += e.retrieve('price'); });
-
-    if(totalPrice) { $('price').setValue(totalPrice.toFixed(2)); }
   });
 
   document.on('change', 'input[name$="[two_sided]"]', function(event, element) {
@@ -133,5 +161,9 @@
     } else {
       priceElement.setValue(element.readAttribute('data-price-per-one-sided'));
     }
+  });
+
+  document.on('change', '.price_modifier', function(event, element) {
+    updatePrintJobPrice(element.up('.print_job'));
   });
 </script>
