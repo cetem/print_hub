@@ -1,0 +1,17 @@
+<table class="list">
+  <thead>
+    <tr>
+      <th><%= Payment.human_attribute_name :amount %></th>
+      <th><%= Payment.human_attribute_name :paid %></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @payments.each do |payment| %>
+      <tr>
+        <td><%= number_to_currency(payment.amount) %></td>
+        <td><%= number_to_currency(payment.paid) %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

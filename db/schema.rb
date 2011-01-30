@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110121003651) do
+ActiveRecord::Schema.define(:version => 20110130230356) do
 
   create_table "customers", :force => true do |t|
     t.string   "name",                               :null => false
@@ -47,6 +47,14 @@ ActiveRecord::Schema.define(:version => 20110121003651) do
   end
 
   add_index "documents_tags", ["document_id", "tag_id"], :name => "index_documents_tags_on_document_id_and_tag_id", :unique => true
+
+  create_table "payments", :force => true do |t|
+    t.decimal  "amount",       :precision => 15, :scale => 2,                :null => false
+    t.decimal  "paid",         :precision => 15, :scale => 2,                :null => false
+    t.integer  "lock_version",                                :default => 0
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "print_jobs", :force => true do |t|
     t.integer  "job_id",                                                          :null => false

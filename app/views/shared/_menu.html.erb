@@ -6,6 +6,8 @@
         :class => (:selected if current_controller == :users)) %>
       <%= content_tag(:li, link_to(t(:settings, :scope => :menu), settings_path),
         :class => (:selected if current_controller == :settings)) %>
+      <%= content_tag(:li, link_to(t(:payments, :scope => :menu), payments_path),
+        :class => (:selected if current_controller == :payments)) %>
     <% end %>
     <%= content_tag(:li, link_to(t(:prints, :scope => :menu), prints_path),
       :class => (:selected if current_controller == :prints)) %>

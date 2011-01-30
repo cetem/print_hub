@@ -44,6 +44,7 @@
     models:
       customer: 'Cliente'
       document: 'Documento'
+      payment: 'Pago'
       print: 'Impresión'
       print_job: 'Trabajo de impresión'
       setting: 'Configuración'
@@ -70,6 +71,9 @@
         description: 'Descripción'
         file: 'Archivo'
         file_file_name: 'Archivo'
+      payment:
+        amount: 'Monto'
+        paid: 'Pagado'
       print:
         printer: 'Impresora'
         customer: 'Cliente'
@@ -272,14 +276,15 @@
     es: 'Español'
 
   menu:
+    actions:
+      logout: 'Salir'
     customers: 'Clientes'
     documents: 'Documentos'
+    payments: 'Pagos'
     prints: 'Impresiones'
     settings: 'Configuración'
     tags: 'Etiquetas'
     users: 'Usuarios'
-    actions:
-      logout: 'Salir'
 
   messages:
     confirmation: '¿Está seguro?'
@@ -416,6 +421,8 @@
       stale_object_error: 'El documento no pudo ser actualizado, intente nuevamente.'
       non_existent: 'Archivo inexistente'
       add_tag: 'Agregar etiqueta'
+    payments:
+      index_title: 'Listado de pagos'
     prints:
       index_title: 'Listado de impresiones'
       show_title: 'Detalle de impresión'

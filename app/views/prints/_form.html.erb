@@ -110,7 +110,7 @@
     printJob.down('a.details_link').writeAttribute('href',
       element.readAttribute('data-url'));
     printJob.down('a.details_link').show();
-    printJob.next('.dynamic_details').update('');
+    printJob.down('.dynamic_details').update('');
     printJob.down('input[name$="[range]"]').setValue('').writeAttribute(
       'data-range-pages', pages);
 

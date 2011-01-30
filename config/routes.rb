@@ -1,4 +1,6 @@
 PrintHubApp::Application.routes.draw do
+  resources :payments, :only => [:index]
+
   resources :customers
 
   resources :settings, :only => [:index, :show, :edit, :update]

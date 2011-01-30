@@ -1,0 +1,7 @@
+big_and_cancelled:
+  amount: 2000.00
+  paid: 2000.00
+
+small_and_pending:
+  amount: 10.00
+  paid: 7.50
