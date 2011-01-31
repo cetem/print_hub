@@ -77,4 +77,30 @@ class ApplicationControllerTest < ActionController::TestCase
 
     assert_redirected_to new_user_session_url
   end
+
+  test 'make date range' do
+    from_datetime = Time.now.at_beginning_of_day
+    to_datetime = Time.now
+
+    assert_equal [from_datetime.to_s(:db), to_datetime.to_s(:db)],
+      @controller.send(:make_datetime_range).map { |d| d.to_s(:db) }
+
+    # Fechas inválidas
+    assert_equal [from_datetime.to_s(:db), to_datetime.to_s(:db)],
+      @controller.send(
+        :make_datetime_range,
+        {:from => 'wrong date', :to => 'another wrong date'}
+      ).map { |d| d.to_s(:db) }
+
+    from_datetime = Time.parse '2011-10-09 10:00'
+    to_datetime = Time.parse '2000-10-09 11:50'
+
+    generated_range = @controller.send(:make_datetime_range, {
+        :from => '2011-10-09 10:00', :to => '2000-10-09 11:50'
+      }).map { |d| d.to_s(:db) }
+
+    # Fechas válidas con el orden invertido
+    assert_equal [to_datetime.to_s(:db), from_datetime.to_s(:db)],
+      generated_range
+  end
 end

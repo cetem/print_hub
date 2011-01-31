@@ -9,3 +9,11 @@ physics_payment:
   paid: 7.50
   payable_id: <%= Fixtures.identify(:physics_print) %>
   payable_type: 'Print'
+
+os_print:
+  amount: 15.00
+  paid: 14.00
+  payable_id: <%= Fixtures.identify(:os_print) %>
+  payable_type: 'Print'
+  created_at: <%= 2.days.ago.to_datetime.to_s(:db) %>
+  updated_at: <%= 2.days.ago.to_datetime.to_s(:db) %>

@@ -1,0 +1,1 @@
+CalendarDateSelect.format = :italian

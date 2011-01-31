@@ -352,6 +352,10 @@ nav.path ul, nav.path ul li {
     margin-right: .5em;
 }
 
+p.note {
+    margin: 1em 0em;
+}
+
 section.nested_items div.headers {
     clear: both;
     padding: .5em 0em;

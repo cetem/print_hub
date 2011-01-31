@@ -9,10 +9,12 @@ class CreatePayments < ActiveRecord::Migration
       t.timestamps
     end
 
+    add_index :payments, :created_at
     add_index :payments, [:payable_id, :payable_type]
   end
 
   def self.down
+    remove_index :payments, :column => :created_at
     remove_index :payments, :column => [:payable_id, :payable_type]
 
     drop_table :payments

@@ -402,6 +402,7 @@
       default: '%A, %e de %B de %Y %H:%M:%S %z'
       short: '%e de %b %H:%M'
       long: '%e de %B de %Y %H:%M'
+      minimal: '%e/%m/%Y %H:%M'
     am: 'am'
     pm: 'pm'
 
@@ -425,6 +426,13 @@
       non_existent: 'Archivo inexistente'
       add_tag: 'Agregar etiqueta'
     payments:
+      count:
+        one: 'Suma de un pago'
+        other: 'Suma de %{count} pagos'
+      date_filter:
+        start: 'Inicio'
+        end: 'Fin'
+        apply: 'Aplicar'
       index_title: 'Listado de pagos'
     prints:
       index_title: 'Listado de impresiones'

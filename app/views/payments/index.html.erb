@@ -1,3 +1,24 @@
+<%= form_for :interval, :html => {:method => :get} do |f| %>
+  <table class="summary">
+    <thead>
+      <tr>
+        <th><%= t(:'view.payments.date_filter.start') %></th>
+        <th><%= t(:'view.payments.date_filter.end') %></th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr>
+        <td><%= f.calendar_date_select :from, :value => l(@from_date, :format => :minimal), :time => true %></td>
+        <td><%= f.calendar_date_select :to, :value => l(@to_date, :format => :minimal), :time => true %></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="actions">
+    <%= f.submit t(:'view.payments.date_filter.apply') %>
+  </div>
+<% end %>
 <table class="list">
   <thead>
     <tr>
@@ -7,11 +28,12 @@
   </thead>
 
   <tbody>
-    <% @payments.each do |payment| %>
-      <tr>
-        <td><%= number_to_currency(payment.amount) %></td>
-        <td><%= number_to_currency(payment.paid) %></td>
-      </tr>
-    <% end %>
+    <tr>
+      <td><%= number_to_currency(@payments.sum('amount')) %></td>
+      <td><%= number_to_currency(@payments.sum('paid')) %></td>
+    </tr>
   </tbody>
 </table>
+<p class="note">
+  <%= t(:'view.payments.count', :count => @payments.count) %>
+</p>

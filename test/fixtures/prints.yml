@@ -7,3 +7,8 @@ physics_print:
   printer: <%= Cups.show_destinations.select {|p| p =~ /pdf/i}.first %>
   user: operator
   customer: teacher
+
+os_print:
+  printer: <%= Cups.show_destinations.select {|p| p =~ /pdf/i}.first %>
+  user: operator
+  customer: teacher

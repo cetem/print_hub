@@ -1,4 +1,22 @@
 module ApplicationHelper
+  def default_stylesheets
+    sheets = ['common']
+    sheets |= calendar_date_select_stylesheets(:style => 'silver').to_a
+    sheets << {:cache => 'main'}
+
+    stylesheet_link_tag *sheets
+  end
+
+  def default_javascripts
+    libs = [:defaults]
+    libs |= calendar_date_select_javascripts(
+      :locale => (current_user.language if current_user) || :es
+    ).to_a
+    libs << {:cache => 'main'}
+
+    javascript_include_tag *libs
+  end
+
   # Devuelve una etiqueta con el mismo nombre que el del objeto para que sea
   # reemplazado con un ID único por la rutina que reemplaza todo en el navegador
   def dynamic_object_id(prefix, form_builder)

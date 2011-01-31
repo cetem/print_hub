@@ -12,6 +12,13 @@ GIT
     authlogic (2.1.6)
       activesupport
 
+GIT
+  remote: https://github.com/paneq/calendar_date_select.git
+  revision: 8e7ec79435a68665df40b14bd90f47e6ac5e9135
+  branch: rails3test
+  specs:
+    calendar_date_select (1.16.1)
+
 GEM
   remote: http://rubygems.org/
   specs:
@@ -95,11 +102,14 @@ GEM
     ruby-prof (0.9.2)
     simple_autocomplete (0.3.6)
     thor (0.14.6)
+    timeliness (0.3.3)
     treetop (1.4.9)
       polyglot (>= 0.3.1)
     turn (0.8.1)
       ansi (>= 1.2.2)
     tzinfo (0.3.24)
+    validates_timeliness (3.0.5)
+      timeliness (~> 0.3.2)
     will_paginate (3.0.pre2)
 
 PLATFORMS
@@ -107,6 +117,7 @@ PLATFORMS
 
 DEPENDENCIES
   authlogic!
+  calendar_date_select!
   cups
   mongrel
   paperclip
@@ -118,4 +129,5 @@ DEPENDENCIES
   ruby-prof
   simple_autocomplete
   turn
+  validates_timeliness (~> 3.0)
   will_paginate (~> 3.0.beta)

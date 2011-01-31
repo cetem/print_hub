@@ -5,7 +5,9 @@ class PaymentsController < ApplicationController
   # GET /payments.xml
   def index
     @title = t :'view.payments.index_title'
-    @payments = Payment.all
+    @from_date, @to_date = *make_datetime_range(params[:interval])
+    @payments = Payment.where('created_at BETWEEN :start AND :end',
+      :start => @from_date, :end => @to_date)
 
     respond_to do |format|
       format.html # index.html.erb
