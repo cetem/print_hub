@@ -1,7 +1,11 @@
-big_and_cancelled:
+math_payment:
   amount: 2000.00
   paid: 2000.00
+  payable_id: <%= Fixtures.identify(:math_print) %>
+  payable_type: 'Print'
 
-small_and_pending:
+physics_payment:
   amount: 10.00
   paid: 7.50
+  payable_id: <%= Fixtures.identify(:physics_print) %>
+  payable_type: 'Print'

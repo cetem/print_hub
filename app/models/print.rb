@@ -19,16 +19,19 @@ class Print < ActiveRecord::Base
   # Relaciones
   belongs_to :user
   belongs_to :customer
+  has_one :payment, :as => :payable, :dependent => :destroy
   has_many :print_jobs, :dependent => :destroy
   autocomplete_for :customer, :name
 
   accepts_nested_attributes_for :print_jobs, :allow_destroy => true
+  accepts_nested_attributes_for :payment, :allow_destroy => false
 
   def initialize(attributes = nil)
     super(attributes)
 
     self.user = UserSession.find.try(:user) || self.user rescue self.user
     self.print_jobs.build if self.print_jobs.empty?
+    self.build_payment unless self.payment
   end
 
   def assign_fake_job_ids

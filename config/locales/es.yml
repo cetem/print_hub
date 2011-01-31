@@ -72,14 +72,17 @@
         file: 'Archivo'
         file_file_name: 'Archivo'
       payment:
-        amount: 'Monto'
-        paid: 'Pagado'
+        amount: 'Monto total'
+        paid: 'Monto abonado'
       print:
         printer: 'Impresora'
         customer: 'Cliente'
         customer_id: 'Cliente'
         user: 'Usuario'
         user_id: 'Usuario'
+        payment:
+          amount: 'Monto total'
+          paid: 'Monto abonado'
         print_jobs:
           one: 'Trabajo de impresión'
           other: 'Trabajos de impresión'

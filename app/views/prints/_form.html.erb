@@ -51,21 +51,28 @@
       :'data-event' => :add_nested_item %>
   </div>
 
-  <table class="summary">
-    <thead>
-      <tr>
-        <th><%= 'Total' %></th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td>
-          <%= text_field_tag :price, ('%.2f' % @print.price), :id => :price,
-            :readonly => true %>
-        </td>
-      </tr>
-    </tbody>
-  </table>
+  <%= f.fields_for :payment do |p_f| %>
+    <table class="summary">
+      <thead>
+        <tr>
+          <th><%= Payment.human_attribute_name :amount %></th>
+          <th><%= Payment.human_attribute_name :paid %></th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>
+            <%= p_f.text_field :amount, :id => :payment_amount,
+              :maxlength => 15, :readonly => true %>
+          </td>
+          <td>
+            <%= p_f.text_field :paid, :id => :payment_paid, :maxlength => 15 %>
+            <%= p_f.hidden_field :lock_version %>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  <% end %>
 
   <div class="actions">
     <%= f.hidden_field :lock_version %>
@@ -75,10 +82,13 @@
 <script type="text/javascript">
   function updateTotalPrice() {
     var totalPrice = $$('.print_job').inject(0.0, function(total, pj) {
-      return total + (parseFloat(pj.readAttribute('data-price')) || 0);
+      var pjPrice = (pj.retrieve('exclude_from_total') ?
+        0 : (parseFloat(pj.readAttribute('data-price')) || 0));
+      
+      return total + pjPrice;
     });
 
-    $('price').setValue(totalPrice.toFixed(2));
+    $('payment_amount').setValue(totalPrice.toFixed(2));
   }
 
   function updatePrintJobPrice(printJob) {
@@ -96,7 +106,7 @@
   }
 
   document.on('item:removed', '.print_job', function(event, element) {
-    element.removeClassName('print_job');
+    element.store('exclude_from_total', true);
     
     updateTotalPrice();
   });

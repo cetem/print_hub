@@ -31,7 +31,8 @@ class PrintsControllerTest < ActionController::TestCase
   test 'should create print' do
     UserSession.create(users(:administrator))
 
-    counts_array = ['Print.count', 'PrintJob.count', 'customer.prints.count']
+    counts_array = ['Print.count', 'PrintJob.count', 'Payment.count',
+      'customer.prints.count']
     customer = Customer.find customers(:student).id
 
     assert_difference counts_array do
@@ -45,6 +46,10 @@ class PrintsControllerTest < ActionController::TestCase
             :range => '',
             :document_id => documents(:math_book).id
           }
+        },
+        :payment_attributes => {
+          :amount => '10.0',
+          :paid => '7.50'
         }
       }
     end
@@ -80,8 +85,8 @@ class PrintsControllerTest < ActionController::TestCase
 
     assert_not_equal customer.id, @print.customer_id
 
-    assert_no_difference 'user.prints.count' do
-      assert_difference ['PrintJob.count', 'customer.prints.count'] do
+    assert_no_difference ['user.prints.count', 'Payment.count'] do
+      assert_difference ['@print.print_jobs.count', 'customer.prints.count'] do
         put :update, :id => @print.to_param, :print => {
           :printer => @printer,
           :customer_id => customer.id,
@@ -107,6 +112,11 @@ class PrintsControllerTest < ActionController::TestCase
               :price_per_copy => '0.3',
               :range => ''
             }
+          },
+          :payment_attributes => {
+            :id => payments(:math_payment).id,
+            :amount => '10.0',
+            :paid => '7.50'
           }
         }
       end

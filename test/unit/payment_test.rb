@@ -6,14 +6,16 @@ class PaymentTest < ActiveSupport::TestCase
 
   # Función para inicializar las variables utilizadas en las pruebas
   def setup
-    @payment = Payment.find payments(:big_and_cancelled).id
+    @payment = Payment.find payments(:math_payment).id
   end
 
   # Prueba que se realicen las búsquedas como se espera
   test 'find' do
     assert_kind_of Payment, @payment
-    assert_equal payments(:big_and_cancelled).amount, @payment.amount
-    assert_equal payments(:big_and_cancelled).paid, @payment.paid
+    assert_equal payments(:math_payment).amount, @payment.amount
+    assert_equal payments(:math_payment).paid, @payment.paid
+    assert_equal payments(:math_payment).payable_id, @payment.payable_id
+    assert_equal payments(:math_payment).payable_type, @payment.payable_type
   end
 
   # Prueba la creación de un usuario
@@ -21,7 +23,8 @@ class PaymentTest < ActiveSupport::TestCase
     assert_difference 'Payment.count' do
       @payment = Payment.create(
         :amount => '10.50',
-        :paid => '10.00'
+        :paid => '10.00',
+        :payable => prints(:math_print)
       )
     end
   end

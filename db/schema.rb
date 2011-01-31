@@ -51,10 +51,14 @@ ActiveRecord::Schema.define(:version => 20110130230356) do
   create_table "payments", :force => true do |t|
     t.decimal  "amount",       :precision => 15, :scale => 2,                :null => false
     t.decimal  "paid",         :precision => 15, :scale => 2,                :null => false
+    t.integer  "payable_id"
+    t.string   "payable_type"
     t.integer  "lock_version",                                :default => 0
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  add_index "payments", ["payable_id", "payable_type"], :name => "index_payments_on_payable_id_and_payable_type"
 
   create_table "print_jobs", :force => true do |t|
     t.integer  "job_id",                                                          :null => false
