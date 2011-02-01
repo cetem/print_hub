@@ -106,4 +106,38 @@ class CustomerTest < ActiveSupport::TestCase
         :greater_than_or_equal_to, :count => 0)],
       @customer.errors[:free_monthly_bonus]
   end
+
+  test 'free credit' do
+    assert_equal '500.0', @customer.free_credit.to_s
+
+    assert_difference '@customer.bonuses.count' do
+      @customer.bonuses.create(:amount => 100.0)
+    end
+
+    assert_equal '600.0', @customer.free_credit.to_s
+  end
+
+  test 'use credit' do
+    # Usa el crédito de la bonificación que tiene disponible
+    assert_equal '0', @customer.use_credit(100).to_s
+    assert_equal '400.0', @customer.free_credit.to_s
+
+    assert_difference '@customer.bonuses.count' do
+      @customer.bonuses.create(
+        :amount => 1000.0,
+        :valid_until => 10.years.from_now.to_date
+      )
+    end
+
+    # Usa primero la bonificación más próxima a vencer
+    assert_equal '0', @customer.use_credit(200).to_s
+    assert_equal '1200.0', @customer.free_credit.to_s
+    assert_equal ['200.0', '1000.0'],
+      @customer.bonuses.valids.map(&:remaining).map(&:to_s)
+    # Pagar más de lo que se puede con bonificaciones
+    assert_equal '300.0', @customer.use_credit(1500).to_s
+    assert_equal '0.0', @customer.free_credit.to_s
+    # Intentar pagar sin bonificaciones
+    assert_equal '100.0', @customer.use_credit(100).to_s
+  end
 end

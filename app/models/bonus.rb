@@ -1,6 +1,17 @@
 class Bonus < ActiveRecord::Base
   set_table_name 'bonuses'
 
+  # Named scopes
+  scope :valids, lambda {
+    where(
+      [
+        'remaining > :zero',
+        ['valid_until IS NULL', 'valid_until >= :today'].join(' OR ')
+      ].join(' AND '),
+      :today => Date.today, :zero => 0
+    )
+  }
+
   # Restricciones
   validates :amount, :presence => true, :numericality => {
     :greater_than_or_equal_to => 0 }
