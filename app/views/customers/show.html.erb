@@ -14,8 +14,8 @@
 </p>
 
 <p>
-  <b><%= Customer.human_attribute_name :free_monthly_copies %>:</b>
-  <%= @customer.free_monthly_copies %>
+  <b><%= Customer.human_attribute_name :free_monthly_bonus %>:</b>
+  <%= number_to_currency(@customer.free_monthly_bonus) %>
 </p>
 
 <nav class="links">

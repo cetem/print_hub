@@ -2,10 +2,10 @@ student:
   name: Anakin
   lastname: Skywalker
   identification: 123
-  free_monthly_copies: 100
+  free_monthly_bonus: 100.00
 
 teacher:
   name: Obi Wan
   lastname: Kenobi
   identification: 321
-  free_monthly_copies: 10
+  free_monthly_bonus: 10.00

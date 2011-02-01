@@ -10,14 +10,25 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110130230356) do
+ActiveRecord::Schema.define(:version => 20110201005700) do
+
+  create_table "bonuses", :force => true do |t|
+    t.decimal  "amount",      :precision => 15, :scale => 2, :null => false
+    t.decimal  "remaining",   :precision => 15, :scale => 2, :null => false
+    t.date     "valid_until"
+    t.integer  "customer_id"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "bonuses", ["customer_id"], :name => "index_bonuses_on_customer_id"
 
   create_table "customers", :force => true do |t|
-    t.string   "name",                               :null => false
+    t.string   "name",                                                             :null => false
     t.string   "lastname"
-    t.string   "identification",                     :null => false
-    t.integer  "free_monthly_copies"
-    t.integer  "lock_version",        :default => 0
+    t.string   "identification",                                                   :null => false
+    t.decimal  "free_monthly_bonus", :precision => 15, :scale => 2
+    t.integer  "lock_version",                                      :default => 0
     t.datetime "created_at"
     t.datetime "updated_at"
   end

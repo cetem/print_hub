@@ -4,7 +4,7 @@ class CreateCustomers < ActiveRecord::Migration
       t.string :name, :null => false
       t.string :lastname
       t.string :identification, :null => false
-      t.integer :free_monthly_copies
+      t.decimal :free_monthly_bonus, :precision => 15, :scale => 2
       t.integer :lock_version, :default => 0
 
       t.timestamps

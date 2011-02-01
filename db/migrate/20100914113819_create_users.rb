@@ -21,7 +21,7 @@ class CreateUsers < ActiveRecord::Migration
   end
 
   def self.down
-    remove_index :users, :column => :user
+    remove_index :users, :column => :username
     remove_index :users, :column => :email
     
     drop_table :users

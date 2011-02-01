@@ -30,7 +30,7 @@ class CustomersControllerTest < ActionController::TestCase
         :name => 'Jar Jar',
         :lastname => 'Binks',
         :identification => '111',
-        :free_monthly_copies => 0
+        :free_monthly_bonus => 0.0
       }
     end
 
@@ -63,7 +63,7 @@ class CustomersControllerTest < ActionController::TestCase
         :name => 'Updated name',
         :lastname => 'Updated lastname',
         :identification => '111x',
-        :free_monthly_copies => 0
+        :free_monthly_bonus => 0.0
       }
     end
 

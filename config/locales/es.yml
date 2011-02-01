@@ -42,6 +42,7 @@
       #   user: 'Dude'
       # will translate User model name to 'Dude'
     models:
+      bonus: 'Bonificación'
       customer: 'Cliente'
       document: 'Documento'
       payment: 'Pago'
@@ -59,11 +60,15 @@
       #     login: 'Handle'
       # will translate User attribute 'login' as 'Handle'
     attributes:
+      bonus:
+        amount: 'Monto'
+        remaining: 'Restante'
+        valid_until: 'Válido hasta'
       customer:
         name: 'Nombre'
         lastname: 'Apellido'
         identification: 'Identificación (DNI, CUIT, Legajo, etc.)'
-        free_monthly_copies: 'Copias por mes sin cargo'
+        free_monthly_bonus: 'Bonificación mensual'
       document:
         code: 'Código'
         name: 'Nombre'

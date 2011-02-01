@@ -15,8 +15,8 @@ class CustomerTest < ActiveSupport::TestCase
     assert_equal customers(:student).name, @customer.name
     assert_equal customers(:student).lastname, @customer.lastname
     assert_equal customers(:student).identification, @customer.identification
-    assert_equal customers(:student).free_monthly_copies,
-      @customer.free_monthly_copies
+    assert_equal customers(:student).free_monthly_bonus,
+      @customer.free_monthly_bonus
   end
 
   # Prueba la creación de un usuario
@@ -26,7 +26,7 @@ class CustomerTest < ActiveSupport::TestCase
         :name => 'Jar Jar',
         :lastname => 'Binks',
         :identification => '111',
-        :free_monthly_copies => 0
+        :free_monthly_bonus => 0.0
       )
     end
   end
@@ -43,7 +43,9 @@ class CustomerTest < ActiveSupport::TestCase
 
   # Prueba de eliminación de usuarios
   test 'destroy' do
-    assert_difference('Customer.count', -1) { @customer.destroy }
+    assert_difference(['Customer.count', '@customer.bonuses.count'], -1) do
+      @customer.destroy
+    end
   end
 
   # Prueba que las validaciones del modelo se cumplan como es esperado
@@ -88,20 +90,20 @@ class CustomerTest < ActiveSupport::TestCase
 
   # Prueba que las validaciones del modelo se cumplan como es esperado
   test 'validates well formated attributes' do
-    @customer.free_monthly_copies = '1.2'
+    @customer.free_monthly_bonus = '1.2x'
     assert @customer.invalid?
     assert_equal 1, @customer.errors.count
-    assert_equal [error_message_from_model(@customer, :free_monthly_copies,
-        :not_an_integer)], @customer.errors[:free_monthly_copies]
+    assert_equal [error_message_from_model(@customer, :free_monthly_bonus,
+        :not_a_number)], @customer.errors[:free_monthly_bonus]
   end
 
   # Prueba que las validaciones del modelo se cumplan como es esperado
   test 'validates boundaries of attributes' do
-    @customer.free_monthly_copies = '-1'
+    @customer.free_monthly_bonus = '-0.01'
     assert @customer.invalid?
     assert_equal 1, @customer.errors.count
-    assert_equal [error_message_from_model(@customer, :free_monthly_copies,
+    assert_equal [error_message_from_model(@customer, :free_monthly_bonus,
         :greater_than_or_equal_to, :count => 0)],
-      @customer.errors[:free_monthly_copies]
+      @customer.errors[:free_monthly_bonus]
   end
 end
