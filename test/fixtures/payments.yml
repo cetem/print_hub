@@ -1,18 +1,21 @@
 math_payment:
-  amount: 2000.00
-  paid: 2000.00
+  amount: 38.60
+  paid: 20.00
+  paid_with: <%= Payment::PAID_WITH[:cash] %>
   payable_id: <%= Fixtures.identify(:math_print) %>
   payable_type: 'Print'
 
 physics_payment:
-  amount: 10.00
-  paid: 7.50
+  amount: 2.80
+  paid: 2.50
+  paid_with: <%= Payment::PAID_WITH[:cash] %>
   payable_id: <%= Fixtures.identify(:physics_print) %>
   payable_type: 'Print'
 
 os_print:
-  amount: 15.00
-  paid: 14.00
+  amount: 1.40
+  paid: 1.40
+  paid_with: <%= Payment::PAID_WITH[:cash] %>
   payable_id: <%= Fixtures.identify(:os_print) %>
   payable_type: 'Print'
   created_at: <%= 2.days.ago.to_datetime.to_s(:db) %>

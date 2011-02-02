@@ -38,6 +38,10 @@ class Document < ActiveRecord::Base
     self.pages ||= 1
   end
 
+  def to_s
+    "[#{self.code}] #{self.name}"
+  end
+
   # Invocado por PDF::Reader para establecer la cantidad de páginas del PDF
   def page_count(pages)
     self.pages = pages

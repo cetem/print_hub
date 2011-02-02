@@ -6,16 +6,16 @@ gem 'rails', '3.0.3'
 # gem 'rails', :git => 'git://github.com/rails/rails.git'
 
 gem 'pg'
-gem 'authlogic', :git => 'https://github.com/binarylogic/authlogic.git'
+gem 'authlogic', :git => 'https://github.com/francocatena/authlogic.git'
 gem 'rails-settings', :git => 'https://github.com/100hz/rails-settings.git'
 gem 'calendar_date_select', :git => 'https://github.com/paneq/calendar_date_select.git', :branch => 'rails3test'
+gem 'simple_autocomplete', :git => 'https://github.com/francocatena/simple_auto_complete.git'
 gem 'validates_timeliness', '~> 3.0'
 gem 'rghost'
 gem 'will_paginate', '~> 3.0.beta'
 gem 'paperclip'
 # Previo sudo apt-get install libcupsys2-dev
 gem 'cups'
-gem 'simple_autocomplete'
 gem 'mongrel'
 gem 'pdf-reader'
 

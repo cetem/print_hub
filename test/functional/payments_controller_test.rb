@@ -19,8 +19,8 @@ class PaymentsControllerTest < ActionController::TestCase
     assert_response :success
     assert_not_nil assigns(:payments)
     assert_equal 2, assigns(:payments).count
-    assert_equal '2010.0', assigns(:payments).sum('amount').to_s
-    assert_equal '2007.5', assigns(:payments).sum('paid').to_s
+    assert_equal '41.4', assigns(:payments).sum('amount').to_s
+    assert_equal '22.5', assigns(:payments).sum('paid').to_s
     assert_select '#error_body', false
     assert_template 'payments/index'
   end

@@ -1,6 +1,7 @@
 class PrintJob < ActiveRecord::Base
   # Atributos no persistentes
   attr_writer :range_pages
+  attr_accessor :auto_document_name
 
   # Restricciones
   validates :copies, :price_per_copy, :job_id, :document_id, :presence => true
@@ -40,7 +41,7 @@ class PrintJob < ActiveRecord::Base
   # Relaciones
   belongs_to :print
   belongs_to :document
-  autocomplete_for :document, :name
+  autocomplete_for :document, :name, :name => :auto_document
 
   def initialize(attributes = nil)
     super(attributes)

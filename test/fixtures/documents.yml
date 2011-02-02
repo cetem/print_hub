@@ -1,13 +1,13 @@
 math_notes:
-  code: 001
-  name: Math Notes
+  code: '001'
+  name: Math
   pages: 12
   description: Math Notes description
   file_file_name: math_notes.pdf
   tags: notes
 
 math_book:
-  code: 002
+  code: '002'
   name: Math Book
   pages: 350
   description: Math Book description
@@ -15,8 +15,8 @@ math_book:
   tags: book
 
 physics_notes:
-  code: 003
-  name: Physics Notes
+  code: '003'
+  name: Physics
   pages: 14
   description: Physics Notes description
   file_file_name: physics_notes.pdf

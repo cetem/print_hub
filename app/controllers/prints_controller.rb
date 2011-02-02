@@ -1,18 +1,19 @@
 class PrintsController < ApplicationController
   before_filter :require_user
-  autocomplete_for :document, :name,
-    :match => ["#{Document.table_name}.name", "#{Tag.table_name}.name"],
-    :include => :tags, :limit => 10,
-    :order => "#{Document.table_name}.name ASC" do |docs|
-    render_to_string :partial => 'autocomplete_for_document_name',
-      :locals => { :docs => docs }
-  end
-  autocomplete_for :customer, :name,
+  autocomplete_for(:document, :name,
+    :match => ["#{Document.table_name}.code", "#{Document.table_name}.name",
+      "#{Tag.table_name}.name"],
+    :include => { :tags => :parent }, :limit => 10,
+    :order => "#{Document.table_name}.name ASC") do |docs|
+      render_to_string :partial => 'autocomplete_for_document_name',
+        :locals => { :docs => docs }
+    end
+  autocomplete_for(:customer, :name,
     :match => ['name', 'lastname', 'identification'], :limit => 10,
-    :order => 'lastname ASC, name ASC' do |customers|
-    render_to_string :partial => 'autocomplete_for_customer_name',
-      :locals => { :customers => customers }
-  end
+    :order => ['lastname ASC', 'name ASC']) do |customers|
+      render_to_string :partial => 'autocomplete_for_customer_name',
+        :locals => { :customers => customers }
+    end
 
   # GET /prints
   # GET /prints.xml

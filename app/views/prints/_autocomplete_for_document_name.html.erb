@@ -1,7 +1,7 @@
 <ul>
   <% docs.each do |doc| %>
     <li data-id="<%= doc.id %>" data-pages="<%= doc.pages %>" data-url="<%= document_path(doc) %>">
-      <%= highlight doc.name, params[:q] %>
+      <%= highlight doc.to_s, params[:q] %>
       <span class="informal">
         <%= highlight doc.tags.map(&:to_s).join(' ## '), params[:q] %>
       </span>

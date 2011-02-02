@@ -44,12 +44,13 @@ class PrintsControllerTest < ActionController::TestCase
             :copies => '1',
             :price_per_copy => '0.1',
             :range => '',
-            :document_id => documents(:math_book).id
+            :document_id => documents(:math_book).id.to_s
           }
-        },
-        :payment_attributes => {
-          :amount => '10.0',
-          :paid => '7.50'
+        }, :payments_attributes => {
+          :new_1 => {
+            :amount => '35.00',
+            :paid => '35.00'
+          }
         }
       }
     end
@@ -94,29 +95,31 @@ class PrintsControllerTest < ActionController::TestCase
           :print_jobs_attributes => {
             print_jobs(:math_job_1).id => {
               :id => print_jobs(:math_job_1).id,
-              :document_id => documents(:math_notes).id,
+              :document_id => documents(:math_notes).id.to_s,
               :copies => '123',
               :price_per_copy => '0.1',
               :range => ''
             },
             print_jobs(:math_job_2).id => {
               :id => print_jobs(:math_job_2).id,
-              :document_id => documents(:math_book).id,
+              :document_id => documents(:math_book).id.to_s,
               :copies => '234',
               :price_per_copy => '0.2',
               :range => ''
             },
             :new_1 => {
-              :document_id => documents(:math_book).id,
+              :document_id => documents(:math_book).id.to_s,
               :copies => '1',
               :price_per_copy => '0.3',
               :range => ''
             }
           },
-          :payment_attributes => {
-            :id => payments(:math_payment).id,
-            :amount => '10.0',
-            :paid => '7.50'
+          :payments_attributes => {
+            payments(:math_payment).id => {
+              :id => payments(:math_payment).id.to_s,
+              :amount => '16632.6',
+              :paid => '7.50'
+            }
           }
         }
       end
@@ -143,9 +146,18 @@ class PrintsControllerTest < ActionController::TestCase
 
   test 'should get autocomplete document list' do
     UserSession.create(users(:administrator))
+    get :autocomplete_for_document_name, :q => '00'
+    assert_response :success
+    assert_select 'li[data-id]', 3
+
+    # TODO: revisar por que estos test no funcionan
     get :autocomplete_for_document_name, :q => 'note'
     assert_response :success
     assert_select 'li[data-id]', 2
+
+    get :autocomplete_for_document_name, :q => '001'
+    assert_response :success
+    assert_select 'li[data-id]', 1
 
     get :autocomplete_for_document_name, :q => 'phy'
     assert_response :success

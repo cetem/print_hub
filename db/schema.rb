@@ -60,16 +60,18 @@ ActiveRecord::Schema.define(:version => 20110201005700) do
   add_index "documents_tags", ["document_id", "tag_id"], :name => "index_documents_tags_on_document_id_and_tag_id", :unique => true
 
   create_table "payments", :force => true do |t|
-    t.decimal  "amount",       :precision => 15, :scale => 2,                :null => false
-    t.decimal  "paid",         :precision => 15, :scale => 2,                :null => false
+    t.decimal  "amount",                    :precision => 15, :scale => 2,                :null => false
+    t.decimal  "paid",                      :precision => 15, :scale => 2,                :null => false
+    t.string   "paid_with",    :limit => 1,                                               :null => false
     t.integer  "payable_id"
     t.string   "payable_type"
-    t.integer  "lock_version",                                :default => 0
+    t.integer  "lock_version",                                             :default => 0
     t.datetime "created_at"
     t.datetime "updated_at"
   end
 
   add_index "payments", ["created_at"], :name => "index_payments_on_created_at"
+  add_index "payments", ["paid_with"], :name => "index_payments_on_paid_with"
   add_index "payments", ["payable_id", "payable_type"], :name => "index_payments_on_payable_id_and_payable_type"
 
   create_table "print_jobs", :force => true do |t|

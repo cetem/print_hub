@@ -23,7 +23,7 @@ class PrintTest < ActiveSupport::TestCase
 
   # Prueba la creación de una impresión
   test 'create' do
-    assert_difference ['Print.count', 'PrintJob.count'] do
+    assert_difference ['Print.count', 'PrintJob.count', 'Payment.count'] do
       @print = Print.create(
         :printer => @printer,
         :user => users(:administrator),
@@ -33,9 +33,95 @@ class PrintTest < ActiveSupport::TestCase
             :price_per_copy => 0.10,
             :document => documents(:math_book)
           }
+        }, :payments_attributes => {
+          :new_1 => {
+            :amount => 35.00,
+            :paid => 35.00
+          }
         }
       )
     end
+
+    assert_equal 1, @print.reload.payments.size
+
+    payment = @print.payments.first
+
+    assert payment.cash?
+    assert_equal '35.0', payment.amount.to_s
+    assert_equal '35.0', payment.paid.to_s
+  end
+
+  test 'create with free credit' do
+    assert_difference ['Print.count', 'PrintJob.count', 'Payment.count'] do
+      @print = Print.create(
+        :printer => @printer,
+        :user => users(:administrator),
+        :customer => customers(:student),
+        :print_jobs_attributes => {
+          :new_1 => {
+            :copies => 1,
+            :price_per_copy => 0.10,
+            :document => documents(:math_book)
+          } # 350 páginas = $35.00
+        }, :payments_attributes => {
+          :new_1 => {
+            :amount => 35.00,
+            :paid => 35.00,
+            :paid_with => Payment::PAID_WITH[:bonus]
+          }
+        }
+      )
+    end
+
+    assert_equal 1, @print.reload.payments.size
+
+    payment = @print.payments.first
+
+    assert payment.bonus?
+    assert_equal '35.0', payment.amount.to_s
+    assert_equal '35.0', payment.paid.to_s
+    assert_equal '465.0', Customer.find(customers(:student).id).free_credit.to_s
+  end
+
+  test 'create with free credit and cash' do
+    assert_difference ['Print.count', 'PrintJob.count'] do
+      assert_difference 'Payment.count', 2 do
+        @print = Print.create(
+          :printer => @printer,
+          :user => users(:administrator),
+          :customer => customers(:student),
+          :print_jobs_attributes => {
+            :new_1 => {
+              :copies => 100,
+              :price_per_copy => 0.10,
+              :document => documents(:math_book)
+            } # 35000 páginas = $3500.00
+          }, :payments_attributes => {
+            :new_1 => {
+              :amount => 3000.00,
+              :paid => 3000.00
+            },
+            :new_2 => {
+              :amount => 500.00,
+              :paid => 500.00,
+              :paid_with => Payment::PAID_WITH[:bonus]
+            }
+          }
+        )
+      end
+    end
+
+    assert_equal 2, @print.reload.payments.size
+
+    bonus_payment = @print.payments.detect(&:bonus?)
+
+    assert_equal '500.0', bonus_payment.amount.to_s
+    assert_equal '500.0', bonus_payment.paid.to_s
+
+    cash_payment = @print.payments.detect(&:cash?)
+
+    assert_equal '3000.0', cash_payment.amount.to_s
+    assert_equal '3000.0', cash_payment.paid.to_s
   end
 
   # Prueba de actualización de una impresión
@@ -59,6 +145,7 @@ class PrintTest < ActiveSupport::TestCase
   test 'validates blank attributes' do
     @print.printer = '   '
     @print.print_jobs.clear
+    @print.payments.clear
     assert @print.invalid?
     assert_equal 2, @print.errors.count
     assert_equal [error_message_from_model(@print, :printer, :blank)],

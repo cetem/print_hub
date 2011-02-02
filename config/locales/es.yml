@@ -29,7 +29,7 @@
         print:
           attributes:
             print_jobs:
-              blank: ' al menos debe haber uno'
+              blank: 'al menos debe haber uno'
         print_job:
           attributes:
             range:
@@ -77,17 +77,21 @@
         file: 'Archivo'
         file_file_name: 'Archivo'
       payment:
-        amount: 'Monto total'
+        amount: 'Monto'
         paid: 'Monto abonado'
+        paid_with: 'Tipo de pago'
       print:
         printer: 'Impresora'
         customer: 'Cliente'
         customer_id: 'Cliente'
         user: 'Usuario'
         user_id: 'Usuario'
-        payment:
-          amount: 'Monto total'
+        payments:
+          one: 'Pago'
+          other: 'Pagos'
+          amount: 'Monto'
           paid: 'Monto abonado'
+          paid_with: 'Tipo de pago'
         print_jobs:
           one: 'Trabajo de impresión'
           other: 'Trabajos de impresión'
@@ -407,7 +411,7 @@
       default: '%A, %e de %B de %Y %H:%M:%S %z'
       short: '%e de %b %H:%M'
       long: '%e de %B de %Y %H:%M'
-      minimal: '%e/%m/%Y %H:%M'
+      minimal: '%d/%m/%Y %H:%M'
     am: 'am'
     pm: 'pm'
 
@@ -438,6 +442,9 @@
         start: 'Inicio'
         end: 'Fin'
         apply: 'Aplicar'
+      paid_with:
+        cash: 'Efectivo'
+        bonus: 'Bonificado'
       index_title: 'Listado de pagos'
     prints:
       index_title: 'Listado de impresiones'

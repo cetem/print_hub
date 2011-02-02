@@ -115,6 +115,9 @@ class CustomerTest < ActiveSupport::TestCase
     end
 
     assert_equal '600.0', @customer.free_credit.to_s
+
+    # Un cliente nuevo no debería tener crédito
+    assert_equal '0.0', Customer.new.free_credit.to_s
   end
 
   test 'use credit' do

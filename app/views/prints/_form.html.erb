@@ -24,6 +24,8 @@
       <div class="autocomplete" style="display: none;"></div>
     </div>
     <%= f.hidden_field :customer_id, :class => :autocomplete_id %>
+    <%= hidden_field_tag :customer_free_credit,
+      @print.customer.try(:free_credit), :id => :customer_free_credit %>
   </div>
   <section class="nested_items">
     <h2><%= t :print_jobs, :scope => [:view, :prints] %></h2>
@@ -51,28 +53,36 @@
       :'data-event' => :add_nested_item %>
   </div>
 
-  <%= f.fields_for :payment do |p_f| %>
-    <table class="summary">
-      <thead>
-        <tr>
-          <th><%= Payment.human_attribute_name :amount %></th>
-          <th><%= Payment.human_attribute_name :paid %></th>
-        </tr>
-      </thead>
-      <tbody>
+  <table class="summary">
+    <thead>
+      <tr>
+        <th><%= Payment.human_attribute_name :amount %></th>
+        <th><%= Payment.human_attribute_name :paid %></th>
+        <th><%= Payment.human_attribute_name :paid_with %></th>
+      </tr>
+    </thead>
+    <tbody>
+      <%= f.fields_for :payments do |p_f| %>
         <tr>
           <td>
-            <%= p_f.text_field :amount, :id => :payment_amount,
-              :maxlength => 15, :readonly => true %>
+            <%= p_f.text_field :amount,
+              :id => "payment_#{p_f.object.paid_with}_amount", :maxlength => 15,
+              :readonly => true %>
           </td>
           <td>
-            <%= p_f.text_field :paid, :id => :payment_paid, :maxlength => 15 %>
+            <%= p_f.text_field :paid,
+              :id => "payment_#{p_f.object.paid_with}_paid", :maxlength => 15,
+              :readonly => p_f.object.bonus? %>
+          </td>
+          <td>
+            <%= p_f.object.paid_with_text %>
+            <%= p_f.hidden_field :paid_with %>
             <%= p_f.hidden_field :lock_version %>
           </td>
         </tr>
-      </tbody>
-    </table>
-  <% end %>
+      <% end %>
+    </tbody>
+  </table>
 
   <div class="actions">
     <%= f.hidden_field :lock_version %>
@@ -81,14 +91,29 @@
 <% end %>
 <script type="text/javascript">
   function updateTotalPrice() {
+    var cashPrefix = 'payment_<%= Payment::PAID_WITH[:cash] %>';
+    var bonusPrefix = 'payment_<%= Payment::PAID_WITH[:bonus] %>';
+    var freeCredit = parseFloat($('customer_free_credit').getValue()) || 0.0;
     var totalPrice = $$('.print_job').inject(0.0, function(total, pj) {
       var pjPrice = (pj.retrieve('exclude_from_total') ?
         0 : (parseFloat(pj.readAttribute('data-price')) || 0));
       
       return total + pjPrice;
     });
+    var payWithCash = 0.0, payWithBonus = 0.0;
+    
+    if(freeCredit > totalPrice) {
+      payWithCash = 0.0;
+      payWithBonus = totalPrice;
+    } else {
+      payWithCash = totalPrice - freeCredit;
+      payWithBonus = freeCredit;
+    }
 
-    $('payment_amount').setValue(totalPrice.toFixed(2));
+    $(cashPrefix + '_amount').setValue(payWithCash.toFixed(2));
+    $(cashPrefix + '_paid').setValue(payWithCash.toFixed(2));
+    $(bonusPrefix + '_amount').setValue(payWithBonus.toFixed(2));
+    $(bonusPrefix + '_paid').setValue(payWithBonus.toFixed(2));
   }
 
   function updatePrintJobPrice(printJob) {
@@ -113,18 +138,27 @@
 
   document.on('autocomplete:update', 'form', function(event) {
     var element = $(event.memo);
-    var pages = element.readAttribute('data-pages');
-    var printJob = element.up('.print_job');
+    
+    if(element.readAttribute('data-pages')) {
+      var pages = element.readAttribute('data-pages');
+      var printJob = element.up('.print_job');
 
-    printJob.down('input.document_pages').setValue(pages);
-    printJob.down('a.details_link').writeAttribute('href',
-      element.readAttribute('data-url'));
-    printJob.down('a.details_link').show();
-    printJob.down('.dynamic_details').update('');
-    printJob.down('input[name$="[range]"]').setValue('').writeAttribute(
-      'data-range-pages', pages);
+      printJob.down('input.document_pages').setValue(pages);
+      printJob.down('a.details_link').writeAttribute('href',
+        element.readAttribute('data-url'));
+      printJob.down('a.details_link').show();
+      printJob.down('.dynamic_details').update('');
+      printJob.down('input[name$="[range]"]').setValue('').writeAttribute(
+        'data-range-pages', pages);
 
-    updatePrintJobPrice(printJob);
+      updatePrintJobPrice(printJob);
+    } else if (element.readAttribute('data-free-credit')) {
+      $('customer_free_credit').setValue(
+        element.readAttribute('data-free-credit')
+      );
+
+      updateTotalPrice();
+    }
   });
 
   document.on('keyup', 'input[name$="[range]"]', function(event, element) {

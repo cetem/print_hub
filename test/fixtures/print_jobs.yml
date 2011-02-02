@@ -1,7 +1,7 @@
 math_job_1:
   job_id: 3
   copies: 3
-  price_per_copy: <%= Setting.price_per_copy %>
+  price_per_copy: 0.10
   range: ''
   two_sided: true
   document: math_notes
@@ -10,7 +10,7 @@ math_job_1:
 math_job_2:
   job_id: 1
   copies: 1
-  price_per_copy: <%= Setting.price_per_copy %>
+  price_per_copy: 0.10
   range: ''
   two_sided: true
   document: math_book
@@ -19,8 +19,17 @@ math_job_2:
 physics_job_1:
   job_id: 2
   copies: 2
-  price_per_copy: <%= Setting.price_per_copy %>
+  price_per_copy: 0.10
   range: ''
   two_sided: true
   document: physics_notes
   print: physics_print
+
+os_job_1:
+  job_id: 1
+  copies: 1
+  price_per_copy: 0.10
+  range: ''
+  two_sided: true
+  document: physics_notes
+  print: os_print

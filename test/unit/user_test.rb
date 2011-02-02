@@ -69,7 +69,8 @@ class UserTest < ActiveSupport::TestCase
     assert_equal [error_message_from_model(@user, :language, :blank)],
       @user.errors[:language]
     assert_equal [error_message_from_model(@user, :email, :too_short,
-        :count => 6), 'should look like an email address.'].sort,
+        :count => 6), I18n.t(:email_invalid,
+        :scope => [:authlogic, :error_messages])].sort,
       @user.errors[:email].sort
   end
 
@@ -79,9 +80,12 @@ class UserTest < ActiveSupport::TestCase
     @user.email = 'incorrect@format'
     assert @user.invalid?
     assert_equal 2, @user.errors.count
-    assert_equal ['should use only letters, numbers, spaces, and .-_@ please.'],
+    assert_equal [I18n.t(:login_invalid,
+        :scope => [:authlogic, :error_messages])],
       @user.errors[:username]
-    assert_equal ['should look like an email address.'], @user.errors[:email]
+    assert_equal [I18n.t(:email_invalid,
+        :scope => [:authlogic, :error_messages])],
+      @user.errors[:email]
   end
 
   # Prueba que las validaciones del modelo se cumplan como es esperado
