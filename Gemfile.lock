@@ -13,12 +13,6 @@ GIT
       activesupport
 
 GIT
-  remote: https://github.com/francocatena/simple_auto_complete.git
-  revision: 716f8b419862c90b410fb133be541b60fae68798
-  specs:
-    simple_autocomplete (0.3.6)
-
-GIT
   remote: https://github.com/paneq/calendar_date_select.git
   revision: 8e7ec79435a68665df40b14bd90f47e6ac5e9135
   branch: rails3test
@@ -106,6 +100,7 @@ GEM
     rake (0.8.7)
     rghost (0.8.7.4)
     ruby-prof (0.9.2)
+    simple_autocomplete (0.3.7)
     thor (0.14.6)
     timeliness (0.3.3)
     treetop (1.4.9)
@@ -132,7 +127,7 @@ DEPENDENCIES
   rails-settings!
   rghost
   ruby-prof
-  simple_autocomplete!
+  simple_autocomplete
   turn
   validates_timeliness (~> 3.0)
   will_paginate (~> 3.0.beta)

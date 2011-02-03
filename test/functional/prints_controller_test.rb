@@ -44,6 +44,7 @@ class PrintsControllerTest < ActionController::TestCase
             :copies => '1',
             :price_per_copy => '0.1',
             :range => '',
+            :auto_document_name => 'Some name given in autocomplete',
             :document_id => documents(:math_book).id.to_s
           }
         }, :payments_attributes => {
@@ -95,6 +96,7 @@ class PrintsControllerTest < ActionController::TestCase
           :print_jobs_attributes => {
             print_jobs(:math_job_1).id => {
               :id => print_jobs(:math_job_1).id,
+              :auto_document_name => 'Some name given in autocomplete',
               :document_id => documents(:math_notes).id.to_s,
               :copies => '123',
               :price_per_copy => '0.1',
@@ -102,12 +104,14 @@ class PrintsControllerTest < ActionController::TestCase
             },
             print_jobs(:math_job_2).id => {
               :id => print_jobs(:math_job_2).id,
+              :auto_document_name => 'Some name given in autocomplete',
               :document_id => documents(:math_book).id.to_s,
               :copies => '234',
               :price_per_copy => '0.2',
               :range => ''
             },
             :new_1 => {
+              :auto_document_name => 'Some name given in autocomplete',
               :document_id => documents(:math_book).id.to_s,
               :copies => '1',
               :price_per_copy => '0.3',
