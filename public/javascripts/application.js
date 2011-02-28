@@ -67,7 +67,7 @@ var EventHandler = {
 
   removeItem: function(e) {
     var target = e.up(e.readAttribute('data-target'));
-        
+
     Helper.remove(target);
 
     target.fire('item:removed');

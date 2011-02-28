@@ -1,5 +1,5 @@
 PrintHubApp::Application.configure do
-  # Settings specified here will take precedence over those in config/environment.rb
+  # Settings specified here will take precedence over those in config/application.rb
 
   # The test environment is used exclusively to run your application's
   # test suite.  You never need to work with it otherwise.  Remember that
@@ -32,7 +32,4 @@ PrintHubApp::Application.configure do
 
   # Print deprecation notices to the stderr
   config.active_support.deprecation = :stderr
-
-  # TODO: eliminar cuando se corrija https://rails.lighthouseapp.com/projects/8994-ruby-on-rails/tickets/5145-i18n-locale-may-be-reset-to-en-if-called-from-a-plugingem
-  I18n.config.default_locale = config.i18n.default_locale
 end

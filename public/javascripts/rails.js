@@ -26,7 +26,7 @@
   }
 
   var submitBubbles = isEventSupported('submit'),
-      changeBubbles = isEventSupported('change')
+  changeBubbles = isEventSupported('change')
 
   if (!submitBubbles || !changeBubbles) {
     // augment the Event.Handler class to observe custom events when needed
@@ -35,12 +35,12 @@
         init(element, eventName, selector, callback)
         // is the handler being attached to an element that doesn't support this event?
         if ( (!submitBubbles && this.eventName == 'submit' && !isForm(this.element)) ||
-             (!changeBubbles && this.eventName == 'change' && !isInput(this.element)) ) {
+          (!changeBubbles && this.eventName == 'change' && !isInput(this.element)) ) {
           // "submit" => "emulated:submit"
           this.eventName = 'emulated:' + this.eventName
         }
       }
-    )
+      )
   }
 
   if (!submitBubbles) {
@@ -73,47 +73,47 @@
 
   function handleRemote(element) {
     if(!element.readAttribute('data-condition') ||
-        eval(element.readAttribute('data-condition'))) {
-        var method, url, params;
+      eval(element.readAttribute('data-condition'))) {
+      var method, url, params;
 
-        var event = element.fire("ajax:before");
-        if (event.stopped) return false;
+      var event = element.fire("ajax:before");
+      if (event.stopped) return false;
 
-        if (element.tagName.toLowerCase() === 'form') {
-          method = element.readAttribute('method') || 'post';
-          url    = element.readAttribute('action');
-          params = element.serialize();
-        } else {
-          method = element.readAttribute('data-method') || 'get';
-          url    = element.readAttribute('href');
-          params = eval(element.readAttribute('data-params')) || {};
-        }
+      if (element.tagName.toLowerCase() === 'form') {
+        method = element.readAttribute('method') || 'post';
+        url    = element.readAttribute('action');
+        params = element.serialize();
+      } else {
+        method = element.readAttribute('data-method') || 'get';
+        url    = element.readAttribute('href');
+        params = eval(element.readAttribute('data-params')) || {};
+      }
 
-        var options = {
-          method: method,
-          parameters: params,
-          evalScripts: true,
+      var options = {
+        method: method,
+        parameters: params,
+        evalScripts: true,
 
-          onComplete: function(request) {element.fire("ajax:complete", request);},
-          onSuccess:  function(request) {element.fire("ajax:success",  request);},
-          onFailure:  function(request) {element.fire("ajax:failure",  request);}
-        }
+        onComplete: function(request) {element.fire("ajax:complete", request);},
+        onSuccess:  function(request) {element.fire("ajax:success",  request);},
+        onFailure:  function(request) {element.fire("ajax:failure",  request);}
+      }
 
-        if(element.readAttribute('data-update')) {
-            new Ajax.Updater(element.readAttribute('data-update'), url, options);
-        } else {
-            new Ajax.Request(url, options);
-        }
+      if(element.readAttribute('data-update')) {
+        new Ajax.Updater(element.readAttribute('data-update'), url, options);
+      } else {
+        new Ajax.Request(url, options);
+      }
 
-        element.fire("ajax:after");
+      element.fire("ajax:after");
     }
   }
 
   function handleMethod(element) {
     var method = element.readAttribute('data-method'),
-        url = element.readAttribute('href'),
-        csrf_param = $$('meta[name=csrf-param]')[0],
-        csrf_token = $$('meta[name=csrf-token]')[0];
+    url = element.readAttribute('href'),
+    csrf_param = $$('meta[name=csrf-param]')[0],
+    csrf_token = $$('meta[name=csrf-token]')[0];
 
     var form = new Element('form', {method: "POST", action: url, style: "display: none;"});
     element.parentNode.insert(form);
@@ -125,8 +125,8 @@
 
     if (csrf_param) {
       var param = csrf_param.readAttribute('content'),
-          token = csrf_token.readAttribute('content'),
-          field = new Element('input', {type: 'hidden', name: param, value: token});
+      token = csrf_token.readAttribute('content'),
+      field = new Element('input', {type: 'hidden', name: param, value: token});
       form.insert(field);
     }
 
@@ -159,7 +159,7 @@
 
   document.on("submit", function(event) {
     var element = event.findElement(),
-        message = element.readAttribute('data-confirm');
+    message = element.readAttribute('data-confirm');
     if (message && !confirm(message)) {
       event.stop();
       return false;
@@ -186,5 +186,21 @@
       input.removeAttribute('data-original-value');
       input.disabled = false;
     });
+  });
+
+  Ajax.Responders.register({
+    onCreate: function(request) {
+      var csrf_meta_tag = $$('meta[name=csrf-token]')[0];
+
+      if (csrf_meta_tag) {
+        var header = 'X-CSRF-Token',
+        token = csrf_meta_tag.readAttribute('content');
+
+        if (!request.options.requestHeaders) {
+          request.options.requestHeaders = {};
+        }
+        request.options.requestHeaders[header] = token;
+      }
+    }
   });
 })();
