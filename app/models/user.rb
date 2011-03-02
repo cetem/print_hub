@@ -22,4 +22,8 @@ class User < ActiveRecord::Base
   def to_s
     [self.name, self.last_name].join(' ')
   end
+
+  def active?
+    self.enable
+  end
 end

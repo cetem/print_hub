@@ -24,6 +24,21 @@ class UserSessionsControllerTest < ActionController::TestCase
     assert_redirected_to prints_url
   end
 
+  test 'should not create a user session' do
+    disabled_user = users(:disabled_operator)
+
+    post :create, :user_session => {
+      :username => disabled_user.username,
+      :password => 'disabled_operator123'
+    }
+
+    assert_nil user_session = UserSession.find
+    assert_response :success
+    assert_not_nil assigns(:user_session)
+    assert_select '#error_body', false
+    assert_template 'user_sessions/new'
+  end
+
   test 'should destroy user session' do
     delete :destroy
 
