@@ -6,7 +6,7 @@
       <th><%= User.human_attribute_name :email %></th>
       <th><%= User.human_attribute_name :admin %></th>
       <th><%= User.human_attribute_name :enable %></th>
-      <th colspan="3"></th>
+      <th colspan="2"></th>
     </tr>
   </thead>
 
@@ -20,8 +20,6 @@
         <td><%= t(user.enable ? :yes : :no, :scope => [:label]) %></td>
         <td><%= link_to t(:'label.show'), user %></td>
         <td><%= link_to t(:'label.edit'), edit_user_path(user) %></td>
-        <td><%= button_to t(:'label.delete'), user,
-          :confirm => t(:'messages.confirmation'), :method => :delete %></td>
       </tr>
     <% end %>
   </tbody>

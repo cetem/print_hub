@@ -32,7 +32,7 @@ PrintHubApp::Application.routes.draw do
     end
   end
 
-  resources :users
+  resources :users, :except => [:destroy]
 
   # The priority is based upon order of creation:
   # first created -> highest priority.

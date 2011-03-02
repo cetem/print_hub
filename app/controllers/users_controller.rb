@@ -83,16 +83,4 @@ class UsersController < ApplicationController
     flash.alert = t :'view.users.stale_object_error'
     redirect_to edit_user_url(@user)
   end
-
-  # DELETE /users/1
-  # DELETE /users/1.xml
-  def destroy
-    @user = User.find(params[:id])
-    @user.destroy
-
-    respond_to do |format|
-      format.html { redirect_to(users_url) }
-      format.xml  { head :ok }
-    end
-  end
 end
