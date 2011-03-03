@@ -19,21 +19,38 @@ class CustomerTest < ActiveSupport::TestCase
       @customer.free_monthly_bonus
   end
 
-  # Prueba la creación de un usuario
-  test 'create' do
+  # Prueba la creación de un cliente
+  test 'create without bonus' do
     assert_difference 'Customer.count' do
+      assert_no_difference 'Bonus.count' do
+        @customer = Customer.create(
+          :name => 'Jar Jar',
+          :lastname => 'Binks',
+          :identification => '111',
+          :free_monthly_bonus => 0.0
+        )
+      end
+    end
+  end
+
+  test 'create with bonus' do
+    assert_difference ['Customer.count', 'Bonus.count'] do
       @customer = Customer.create(
         :name => 'Jar Jar',
         :lastname => 'Binks',
         :identification => '111',
-        :free_monthly_bonus => 0.0
+        :free_monthly_bonus => 10.0
       )
     end
+
+    assert_equal 10.0, @customer.bonuses.first.amount
+    assert_equal 10.0, @customer.bonuses.first.remaining
+    assert_equal Date.today.at_end_of_month, @customer.bonuses.first.valid_until
   end
 
-  # Prueba de actualización de un usuario
+  # Prueba de actualización de un cliente
   test 'update' do
-    assert_no_difference 'Customer.count' do
+    assert_no_difference ['Customer.count', 'Bonus.count'] do
       assert @customer.update_attributes(:name => 'Updated name'),
         @customer.errors.full_messages.join('; ')
     end
@@ -41,7 +58,7 @@ class CustomerTest < ActiveSupport::TestCase
     assert_equal 'Updated name', @customer.reload.name
   end
 
-  # Prueba de eliminación de usuarios
+  # Prueba de eliminación de clientes
   test 'destroy' do
     assert_difference(['Customer.count', '@customer.bonuses.count'], -1) do
       @customer.destroy
@@ -142,5 +159,21 @@ class CustomerTest < ActiveSupport::TestCase
     assert_equal '0.0', @customer.free_credit.to_s
     # Intentar pagar sin bonificaciones
     assert_equal '100.0', @customer.use_credit(100).to_s
+  end
+
+  test 'create monthly bonuses' do
+    assert_difference 'Bonus.count', 2 do
+      Customer.create_monthly_bonuses
+    end
+
+    valid_until = Date.today.at_end_of_month
+    student = Customer.find(customers(:student).id)
+    teacher = Customer.find(customers(:teacher).id)
+
+    assert_equal 2, student.bonuses.count
+    assert_equal 2, teacher.bonuses.count
+    assert Customer.find(customers(:student_without_bonus).id).bonuses.empty?
+    assert student.bonuses.any? { |b| b.valid_until == valid_until }
+    assert teacher.bonuses.any? { |b| b.valid_until == valid_until }
   end
 end

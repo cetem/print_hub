@@ -9,3 +9,9 @@ teacher:
   lastname: Kenobi
   identification: 321
   free_monthly_bonus: 10.00
+
+student_without_bonus:
+  name: Darth
+  lastname: Vader
+  identification: 666
+  free_monthly_bonus: 0.00

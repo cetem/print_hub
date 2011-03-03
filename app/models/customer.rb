@@ -1,5 +1,10 @@
 class Customer < ActiveRecord::Base
   find_by_autocomplete :name
+
+  scope :with_monthly_bonus, where('free_monthly_bonus > :zero', :zero => 0)
+
+  # Callbacks
+  before_create :build_monthly_bonus
   
   # Restricciones
   validates :name, :identification, :presence => true
@@ -19,6 +24,15 @@ class Customer < ActiveRecord::Base
 
   def to_s
     [self.name, self.lastname].compact.join(' ')
+  end
+
+  def build_monthly_bonus
+    if self.free_monthly_bonus > 0
+      self.bonuses.build(
+        :amount => self.free_monthly_bonus,
+        :valid_until => Date.today.at_end_of_month
+      )
+    end
   end
 
   def free_credit
@@ -47,5 +61,19 @@ class Customer < ActiveRecord::Base
     end
 
     to_pay
+  end
+
+  def self.create_monthly_bonuses
+    User.transaction do
+      begin
+        Customer.with_monthly_bonus.each do |customer|
+          customer.build_monthly_bonus
+          customer.save!
+        end
+
+      rescue RecordInvalid
+        raise ActiveRecord::Rollback
+      end
+    end
   end
 end
