@@ -15,11 +15,17 @@ class CreatePrintJobs < ActiveRecord::Migration
 
     add_index :print_jobs, :document_id
     add_index :print_jobs, :print_id
+
+    add_foreign_key :print_jobs, :documents, :dependent => :restrict
+    add_foreign_key :print_jobs, :prints, :dependent => :restrict
   end
 
   def self.down
     remove_index :print_jobs, :column => :document_id
     remove_index :print_jobs, :column => :print_id
+
+    remove_foreign_key :print_jobs, :column => :document_id
+    remove_foreign_key :print_jobs, :column => :print_id
 
     drop_table :print_jobs
   end

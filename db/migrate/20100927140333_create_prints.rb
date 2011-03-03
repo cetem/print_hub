@@ -12,12 +12,18 @@ class CreatePrints < ActiveRecord::Migration
     add_index :prints, :user_id
     add_index :prints, :customer_id
     add_index :prints, :created_at
+
+    add_foreign_key :prints, :users, :dependent => :restrict
+    add_foreign_key :prints, :customers, :dependent => :restrict
   end
 
   def self.down
     remove_index :prints, :column => :user_id
     remove_index :prints, :column => :customer_id
     remove_index :prints, :column => :created_at
+
+    remove_foreign_key :prints, :column => :user_id
+    remove_foreign_key :prints, :column => :customer_id
 
     drop_table :prints
   end

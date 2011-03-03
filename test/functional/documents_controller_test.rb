@@ -75,8 +75,19 @@ class DocumentsControllerTest < ActionController::TestCase
   end
 
   test 'should destroy document' do
+    document = Document.find(documents(:unused_book).id)
+
     UserSession.create(users(:administrator))
     assert_difference('Document.count', -1) do
+      delete :destroy, :id => document.to_param
+    end
+
+    assert_redirected_to documents_path
+  end
+
+  test 'should not destroy document' do
+    UserSession.create(users(:administrator))
+    assert_no_difference('Document.count') do
       delete :destroy, :id => @document.to_param
     end
 

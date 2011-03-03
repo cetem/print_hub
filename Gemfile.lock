@@ -66,6 +66,7 @@ GEM
     erubis (2.6.6)
       abstract (>= 1.0.0)
     fastthread (1.0.7)
+    foreigner (0.9.1)
     gem_plugin (0.2.3)
     highline (1.6.1)
     i18n (0.5.0)
@@ -141,6 +142,7 @@ DEPENDENCIES
   calendar_date_select!
   capistrano
   cups
+  foreigner
   mongrel
   paperclip
   pdf-reader

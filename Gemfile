@@ -14,6 +14,7 @@ gem 'validates_timeliness', '~> 3.0'
 gem 'rghost'
 gem 'will_paginate', '~> 3.0.beta'
 gem 'paperclip'
+gem 'foreigner'
 # Previo sudo apt-get install libcupsys2-dev
 gem 'cups'
 gem 'pdf-reader'

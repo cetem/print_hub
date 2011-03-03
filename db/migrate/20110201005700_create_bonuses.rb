@@ -10,10 +10,14 @@ class CreateBonuses < ActiveRecord::Migration
     end
 
     add_index :bonuses, :customer_id
+
+    add_foreign_key :bonuses, :customers, :dependent => :restrict
   end
 
   def self.down
     remove_index :bonuses, :column => :customer_id
+
+    remove_foreign_key :bonuses, :column => :customer_id
 
     drop_table :bonuses
   end

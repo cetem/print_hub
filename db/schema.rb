@@ -155,4 +155,12 @@ ActiveRecord::Schema.define(:version => 20110201005700) do
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true
   add_index "users", ["username"], :name => "index_users_on_username", :unique => true
 
+  add_foreign_key "bonuses", "customers", :name => "bonuses_customer_id_fk", :dependent => :restrict
+
+  add_foreign_key "print_jobs", "documents", :name => "print_jobs_document_id_fk", :dependent => :restrict
+  add_foreign_key "print_jobs", "prints", :name => "print_jobs_print_id_fk", :dependent => :restrict
+
+  add_foreign_key "prints", "customers", :name => "prints_customer_id_fk", :dependent => :restrict
+  add_foreign_key "prints", "users", :name => "prints_user_id_fk", :dependent => :restrict
+
 end

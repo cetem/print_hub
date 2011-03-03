@@ -10,6 +10,7 @@ class Document < ActiveRecord::Base
   find_by_autocomplete :name
 
   # Callbacks
+  before_destroy :can_be_destroyed?
   after_file_post_process :extract_page_count
 
   attr_protected :pages
@@ -40,6 +41,17 @@ class Document < ActiveRecord::Base
 
   def to_s
     "[#{self.code}] #{self.name}"
+  end
+
+  def can_be_destroyed?
+    if self.print_jobs.empty?
+      true
+    else
+      self.errors.add :base,
+        I18n.t(:has_related_print_jobs, :scope => [:view, :documents])
+
+      false
+    end
   end
 
   # Invocado por PDF::Reader para establecer la cantidad de páginas del PDF

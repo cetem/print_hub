@@ -158,7 +158,7 @@ class PrintsControllerTest < ActionController::TestCase
     UserSession.create(users(:operator))
     get :autocomplete_for_document_name, :q => '00'
     assert_response :success
-    assert_select 'li[data-id]', 3
+    assert_select 'li[data-id]', 4
 
     # TODO: revisar por que estos test no funcionan
     get :autocomplete_for_document_name, :q => 'note'

@@ -18,7 +18,7 @@ class DocumentTest < ActiveSupport::TestCase
     assert_equal documents(:math_book).description, @document.description
   end
 
-  # Prueba la creación de un usuario
+  # Prueba la creación de un documento
   test 'create' do
     assert_difference 'Document.count' do
       @document = Document.new(
@@ -46,7 +46,7 @@ class DocumentTest < ActiveSupport::TestCase
       thumbs_dir.entries.select { |f| f.extname == '.png' && !f.zero? }.size
   end
 
-  # Prueba de actualización de un usuario
+  # Prueba de actualización de un documento
   test 'update' do
     assert_no_difference 'Document.count' do
       assert @document.update_attributes(:name => 'Updated name'),
@@ -56,9 +56,16 @@ class DocumentTest < ActiveSupport::TestCase
     assert_equal 'Updated name', @document.reload.name
   end
 
-  # Prueba de eliminación de usuarios
+  # Prueba de eliminación de documentos
   test 'destroy' do
-    assert_difference('Document.count', -1) { @document.destroy }
+    document = Document.find(documents(:unused_book).id)
+
+    assert_difference('Document.count', -1) { document.destroy }
+  end
+
+  # Prueba de eliminación de documentos
+  test 'not destroy with related print jobs' do
+    assert_no_difference('Document.count') { @document.destroy }
   end
 
   # Prueba que las validaciones del modelo se cumplan como es esperado
