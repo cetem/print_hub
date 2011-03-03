@@ -5,13 +5,59 @@
 
 <p>
   <b><%= Print.human_attribute_name :customer %></b>:
-  <%= @print.customer %>
+  <%= @print.customer || '-' %>
 </p>
 
 <p>
   <b><%= Print.human_attribute_name :user %></b>:
   <%= @print.user %>
 </p>
+
+<section class="nested_items">
+  <h2><%= t :print_jobs, :scope => [:view, :prints] %></h2>
+
+  <table class="summary">
+    <thead>
+      <tr>
+        <th><%= PrintJob.human_attribute_name :document_id %></th>
+        <th><%= PrintJob.human_attribute_name :copies %></th>
+        <th><%= PrintJob.human_attribute_name :price_per_copy %></th>
+        <th><%= PrintJob.human_attribute_name :range %></th>
+        <th><%= PrintJob.human_attribute_name :two_sided %></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @print.print_jobs.each do |print_job| %>
+        <tr>
+          <td><%= print_job.document %></td>
+          <td><%= print_job.copies %></td>
+          <td><%= print_job.price_per_copy %></td>
+          <td><%= print_job.range %></td>
+          <td><%= t(print_job.two_sided ? :yes : :no, :scope => :label) %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</section>
+
+<table class="summary">
+  <thead>
+    <tr>
+      <th><%= Payment.human_attribute_name :amount %></th>
+      <th><%= Payment.human_attribute_name :paid %></th>
+      <th><%= Payment.human_attribute_name :paid_with %></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @print.payments.each do |payment| %>
+      <tr>
+        <td><%= payment.amount %></td>
+        <td><%= payment.paid %></td>
+        <td><%= payment.paid_with_text %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
 
 <nav class="links">
   <%= link_to t(:'label.edit'), edit_print_path(@print) %> |
