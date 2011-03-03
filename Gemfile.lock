@@ -23,6 +23,7 @@ GEM
   remote: http://rubygems.org/
   specs:
     Ascii85 (1.0.0)
+    aaronh-chronic (0.3.9)
     abstract (1.0.0)
     actionmailer (3.0.5)
       actionpack (= 3.0.5)
@@ -132,6 +133,9 @@ GEM
     tzinfo (0.3.24)
     validates_timeliness (3.0.5)
       timeliness (~> 0.3.2)
+    whenever (0.6.2)
+      aaronh-chronic (>= 0.3.9)
+      activesupport (>= 2.3.4)
     will_paginate (3.0.pre2)
 
 PLATFORMS
@@ -155,4 +159,5 @@ DEPENDENCIES
   simple_autocomplete
   turn
   validates_timeliness (~> 3.0)
+  whenever
   will_paginate (~> 3.0.beta)

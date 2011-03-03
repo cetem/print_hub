@@ -1,5 +1,8 @@
 require 'bundler/capistrano'
 
+set :whenever_command, 'bundle exec whenever'
+require 'whenever/capistrano'
+
 set :application, 'print_hub'
 set :repository,  'https://github.com/francocatena/print_hub.git'
 set :deploy_to, '/var/rails/print_hub'

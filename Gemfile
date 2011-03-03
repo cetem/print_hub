@@ -15,6 +15,7 @@ gem 'rghost'
 gem 'will_paginate', '~> 3.0.beta'
 gem 'paperclip'
 gem 'foreigner'
+gem 'whenever', :require => false
 # Previo sudo apt-get install libcupsys2-dev
 gem 'cups'
 gem 'pdf-reader'
