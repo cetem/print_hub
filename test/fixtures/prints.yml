@@ -12,3 +12,13 @@ os_print:
   printer: <%= Cups.show_destinations.select {|p| p =~ /pdf/i}.first %>
   user: operator
   customer: teacher
+
+second_math_print:
+  printer: <%= Cups.show_destinations.select {|p| p =~ /pdf/i}.first %>
+  user: second_operator
+  customer: student
+
+second_physics_print:
+  printer: <%= Cups.show_destinations.select {|p| p =~ /pdf/i}.first %>
+  user: second_operator
+  customer: teacher

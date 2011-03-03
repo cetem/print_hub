@@ -10,17 +10,34 @@ class PrintsControllerTest < ActionController::TestCase
     prepare_document_files
   end
 
-  test 'should get index' do
-    UserSession.create(users(:administrator))
+  test 'should get operator index' do
+    user = users(:operator)
+
+    UserSession.create(user)
     get :index
     assert_response :success
     assert_not_nil assigns(:prints)
+    assert_equal user.prints.count, assigns(:prints).size
+    assert assigns(:prints).all? { |p| p.user_id == user.id }
+    assert_select '#error_body', false
+    assert_template 'prints/index'
+  end
+
+  test 'should get admin index' do
+    user = users(:administrator)
+    
+    UserSession.create(user)
+    get :index
+    assert_response :success
+    assert_not_nil assigns(:prints)
+    assert_equal Print.count, assigns(:prints).size
+    assert assigns(:prints).any? { |p| p.user_id != user.id }
     assert_select '#error_body', false
     assert_template 'prints/index'
   end
 
   test 'should get new' do
-    UserSession.create(users(:administrator))
+    UserSession.create(users(:operator))
     get :new
     assert_response :success
     assert_not_nil assigns(:print)
@@ -29,7 +46,7 @@ class PrintsControllerTest < ActionController::TestCase
   end
 
   test 'should create print' do
-    UserSession.create(users(:administrator))
+    UserSession.create(users(:operator))
 
     counts_array = ['Print.count', 'PrintJob.count', 'Payment.count',
       'customer.prints.count']
@@ -56,13 +73,13 @@ class PrintsControllerTest < ActionController::TestCase
       }
     end
 
-    assert_redirected_to prints_path
+    assert_redirected_to print_path(assigns(:print))
     # Debe asignar el usuario autenticado como el creador de la impresión
-    assert_equal users(:administrator).id, assigns(:print).user.id
+    assert_equal users(:operator).id, assigns(:print).user.id
   end
 
   test 'should show print' do
-    UserSession.create(users(:administrator))
+    UserSession.create(users(:operator))
     get :show, :id => @print.to_param
     assert_response :success
     assert_not_nil assigns(:print)
@@ -71,7 +88,7 @@ class PrintsControllerTest < ActionController::TestCase
   end
 
   test 'should get edit' do
-    UserSession.create(users(:administrator))
+    UserSession.create(users(:operator))
     get :edit, :id => @print.to_param
     assert_response :success
     assert_not_nil assigns(:print)
@@ -80,7 +97,7 @@ class PrintsControllerTest < ActionController::TestCase
   end
 
   test 'should update print' do
-    user = User.find users(:administrator).id
+    user = User.find users(:operator).id
     customer = Customer.find customers(:teacher).id
 
     UserSession.create(user)
@@ -92,7 +109,7 @@ class PrintsControllerTest < ActionController::TestCase
         put :update, :id => @print.to_param, :print => {
           :printer => @printer,
           :customer_id => customer.id,
-          :user_id => user.id,
+          :user_id => users(:administrator).id,
           :print_jobs_attributes => {
             print_jobs(:math_job_1).id => {
               :id => print_jobs(:math_job_1).id,
@@ -129,27 +146,16 @@ class PrintsControllerTest < ActionController::TestCase
       end
     end
 
-    assert_redirected_to prints_path
+    assert_redirected_to print_path(@print)
     # No se puede cambiar el usuario que creo una impresión
-    assert_not_equal user.id, @print.reload.user_id
+    assert_not_equal users(:administrator).id, @print.reload.user_id
     assert_equal customer.id, @print.reload.customer_id
     assert_equal 123, @print.print_jobs.find_by_document_id(
       documents(:math_notes).id).copies
   end
 
-  test 'should destroy print' do
-    UserSession.create(users(:administrator))
-    assert_difference('Print.count', -1) do
-      assert_difference('PrintJob.count', -2) do
-        delete :destroy, :id => @print.to_param
-      end
-    end
-
-    assert_redirected_to prints_path
-  end
-
   test 'should get autocomplete document list' do
-    UserSession.create(users(:administrator))
+    UserSession.create(users(:operator))
     get :autocomplete_for_document_name, :q => '00'
     assert_response :success
     assert_select 'li[data-id]', 3
@@ -173,7 +179,7 @@ class PrintsControllerTest < ActionController::TestCase
   end
 
   test 'should get autocomplete customer list' do
-    UserSession.create(users(:administrator))
+    UserSession.create(users(:operator))
     get :autocomplete_for_customer_name, :q => 'wa'
     assert_response :success
     assert_select 'li[data-id]', 2

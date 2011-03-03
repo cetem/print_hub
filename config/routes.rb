@@ -5,7 +5,7 @@ PrintHubApp::Application.routes.draw do
 
   resources :settings, :only => [:index, :show, :edit, :update]
 
-  resources :prints do
+  resources :prints, :except => [:destroy] do
     collection do
       get :autocomplete_for_customer_name
       get :autocomplete_for_document_name

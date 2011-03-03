@@ -33,3 +33,30 @@ os_job_1:
   two_sided: true
   document: physics_notes
   print: os_print
+
+second_math_job_1:
+  job_id: 3
+  copies: 3
+  price_per_copy: 0.10
+  range: ''
+  two_sided: true
+  document: math_notes
+  print: second_math_print
+
+second_math_job_2:
+  job_id: 1
+  copies: 1
+  price_per_copy: 0.10
+  range: ''
+  two_sided: true
+  document: math_book
+  print: second_math_print
+
+second_physics_job_1:
+  job_id: 2
+  copies: 2
+  price_per_copy: 0.10
+  range: ''
+  two_sided: true
+  document: physics_notes
+  print: second_physics_print
