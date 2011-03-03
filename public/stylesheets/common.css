@@ -356,6 +356,11 @@ p.note {
     margin: 1em 0em;
 }
 
+section.details h3 {
+  margin: .5em 0em;
+  font-size: 1em;
+}
+
 section.nested_items div.headers {
     clear: both;
     padding: .5em 0em;

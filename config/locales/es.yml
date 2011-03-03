@@ -447,6 +447,7 @@
         cash: 'Efectivo'
         bonus: 'Bonificado'
       index_title: 'Listado de pagos'
+      payment_details: 'Formas de pago:'
     prints:
       index_title: 'Listado de impresiones'
       show_title: 'Detalle de impresión'

@@ -1,3 +1,5 @@
+<% amount = @payments.sum('amount') %>
+<% paid = @payments.sum('paid') %>
 <%= form_for :interval, :html => {:method => :get} do |f| %>
   <table class="summary">
     <thead>
@@ -29,11 +31,23 @@
 
   <tbody>
     <tr>
-      <td><%= number_to_currency(@payments.sum('amount')) %></td>
-      <td><%= number_to_currency(@payments.sum('paid')) %></td>
+      <td><%= number_to_currency(amount) %></td>
+      <td><%= number_to_currency(paid) %><%= '(*)' unless paid == 0 %></td>
     </tr>
   </tbody>
 </table>
+
 <p class="note">
   <%= t(:'view.payments.count', :count => @payments.count) %>
 </p>
+
+<% unless paid == 0 %>
+  <section class="details">
+    <h3>(*) <%= t(:payment_details, :scope => [:view, :payments]) %></h3>
+    <ul class="raw">
+      <% @payments.group(:paid_with).sum('paid').each do |paid_with, amount| %>
+        <li><%= "#{show_paid_with_text(paid_with)}: #{number_to_currency(amount)}" %></li>
+      <% end %>
+    </ul>
+  </section>
+<% end %>
