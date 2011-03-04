@@ -6,7 +6,7 @@ class CreateDocuments < ActiveRecord::Migration
       t.text :description
       t.integer :pages, :null => false
       t.integer :lock_version, :default => 0
-      # Atributos pra PaperClip
+      # Atributos para PaperClip
       t.string :file_file_name
       t.string :file_content_type
       t.integer :file_file_size
@@ -16,12 +16,25 @@ class CreateDocuments < ActiveRecord::Migration
     end
 
     add_index :documents, :code, :unique => true
-    add_index :documents, :name
+
+    if DB_ADAPTER == 'PostgreSQL'
+      # Índice para utilizar búsqueda full text (por el momento sólo en español)
+      execute "CREATE INDEX index_documents_on_name_ts ON documents USING gin(to_tsvector('spanish', name))"
+      execute "CREATE INDEX index_documents_on_code_ts ON documents USING gin(to_tsvector('spanish', code))"
+    else
+      add_index :documents, :name
+    end
   end
 
   def self.down
     remove_index :documents, :column => :code
-    remove_index :documents, :column => :name
+
+    if DB_ADAPTER == 'PostgreSQL'
+      execute 'DROP INDEX index_documents_on_name_ts'
+      execute 'DROP INDEX index_documents_on_code_ts'
+    else
+      remove_index :documents, :column => :name
+    end
 
     drop_table :documents
   end

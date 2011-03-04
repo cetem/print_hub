@@ -156,9 +156,9 @@ class PrintsControllerTest < ActionController::TestCase
 
   test 'should get autocomplete document list' do
     UserSession.create(users(:operator))
-    get :autocomplete_for_document_name, :q => '00'
+    get :autocomplete_for_document_name, :q => 'Math'
     assert_response :success
-    assert_select 'li[data-id]', 4
+    assert_select 'li[data-id]', 2
 
     # TODO: revisar por que estos test no funcionan
     get :autocomplete_for_document_name, :q => 'note'
@@ -169,7 +169,7 @@ class PrintsControllerTest < ActionController::TestCase
     assert_response :success
     assert_select 'li[data-id]', 1
 
-    get :autocomplete_for_document_name, :q => 'phy'
+    get :autocomplete_for_document_name, :q => 'physics'
     assert_response :success
     assert_select 'li[data-id]', 1
 

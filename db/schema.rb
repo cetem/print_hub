@@ -50,7 +50,6 @@ ActiveRecord::Schema.define(:version => 20110201005700) do
   end
 
   add_index "documents", ["code"], :name => "index_documents_on_code", :unique => true
-  add_index "documents", ["name"], :name => "index_documents_on_name"
 
   create_table "documents_tags", :id => false, :force => true do |t|
     t.integer "document_id", :null => false
@@ -123,7 +122,6 @@ ActiveRecord::Schema.define(:version => 20110201005700) do
     t.datetime "updated_at"
   end
 
-  add_index "tags", ["name"], :name => "index_tags_on_name"
   add_index "tags", ["parent_id"], :name => "index_tags_on_parent_id"
 
   create_table "user_sessions", :force => true do |t|

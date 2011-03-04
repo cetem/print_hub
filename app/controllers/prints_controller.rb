@@ -3,7 +3,11 @@ class PrintsController < ApplicationController
   autocomplete_for(:document, :name,
     :match => ["#{Document.table_name}.code", "#{Document.table_name}.name",
       "#{Tag.table_name}.name"],
-    :include => { :tags => :parent }, :limit => 10,
+    :mask => "%s",
+    :operator => '@@',
+    :column_operator => "to_tsvector('spanish', %s)",
+    :parameter_operator => "to_tsquery('spanish', %s)",
+    :include => { :tags => {:parent => {:parent => :parent}} }, :limit => 10,
     :order => "#{Document.table_name}.name ASC") do |docs|
       render_to_string :partial => 'autocomplete_for_document_name',
         :locals => { :docs => docs }

@@ -13,6 +13,8 @@ class ApplicationController < ActionController::Base
         render :template => 'shared/show_error', :locals => {:error => exception}
       end
 
+      p exception
+
     # En caso que la presentación misma de la excepción no salga como se espera
     rescue => ex
       STDERR << "#{ex.class}: #{ex.message}\n\n"
