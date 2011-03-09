@@ -2,9 +2,12 @@ class DocumentsController < ApplicationController
   before_filter :require_user
   layout lambda { |controller| controller.request.xhr? ? false : 'application' }
 
-  autocomplete_for :tag, :name, :limit => 10, :order => 'name ASC' do |tags|
-    render_to_string :partial => 'autocomplete_for_tag_name',
-      :locals => { :tags => tags }
+  autocomplete_for(:tag, :name, :limit => 10, :order => 'name ASC',
+    :query => DB_ADAPTER == 'PostgreSQL' ?
+      "to_tsvector('spanish', %{field}) @@ to_tsquery('spanish', %{query})" : nil,
+    :mask => DB_ADAPTER == 'PostgreSQL' ? '%{value}' : nil) do |tags|
+      render_to_string :partial => 'autocomplete_for_tag_name',
+        :locals => { :tags => tags }
   end
 
   # GET /documents

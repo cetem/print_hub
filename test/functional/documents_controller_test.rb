@@ -130,13 +130,13 @@ class DocumentsControllerTest < ActionController::TestCase
 
   test 'should get autocomplete tag list' do
     UserSession.create(users(:administrator))
-    get :autocomplete_for_tag_name, :q => 'o'
+    get :autocomplete_for_tag_name, :q => 'note'
     assert_response :success
-    assert_select 'li', 2
+    assert_select 'li[data-id]', {:count => 2, :text => /note/i}, 'Invalid tag'
 
-    get :autocomplete_for_tag_name, :q => 'bo'
+    get :autocomplete_for_tag_name, :q => 'books'
     assert_response :success
-    assert_select 'li', 1
+    assert_select 'li[data-id]', {:count => 1, :text => /books/i}, 'Invalid tag'
 
     get :autocomplete_for_tag_name, :q => 'boxyz'
     assert_response :success
