@@ -3,10 +3,9 @@ class PrintsController < ApplicationController
   autocomplete_for(:document, :name,
     :match => ["#{Document.table_name}.code", "#{Document.table_name}.name",
       "#{Tag.table_name}.name"],
-    :mask => "%s",
-    :operator => '@@',
-    :column_operator => "to_tsvector('spanish', %s)",
-    :parameter_operator => "to_tsquery('spanish', %s)",
+    :mask => DB_ADAPTER == 'PostgreSQL' ? '%{value}' : nil,
+    :query => DB_ADAPTER == 'PostgreSQL' ?
+      "to_tsvector('spanish', %{field}) @@ to_tsquery('spanish', %{query})" : nil,
     :include => { :tags => {:parent => {:parent => :parent}} }, :limit => 10,
     :order => "#{Document.table_name}.name ASC") do |docs|
       render_to_string :partial => 'autocomplete_for_document_name',

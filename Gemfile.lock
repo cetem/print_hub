@@ -14,7 +14,7 @@ GIT
 
 GIT
   remote: https://github.com/francocatena/simple_auto_complete.git
-  revision: f539b81567a5e5f7581225ad2eb49b48a4b80d8b
+  revision: 7921c3694441e3efa1ede05afe051aa06f29f7ea
   specs:
     simple_autocomplete (0.3.7)
 
@@ -138,7 +138,7 @@ GEM
     tzinfo (0.3.24)
     validates_timeliness (3.0.5)
       timeliness (~> 0.3.2)
-    whenever (0.6.2)
+    whenever (0.6.6)
       aaronh-chronic (>= 0.3.9)
       activesupport (>= 2.3.4)
     will_paginate (3.0.pre2)
