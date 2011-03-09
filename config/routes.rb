@@ -24,7 +24,9 @@ PrintHubApp::Application.routes.draw do
     end
   end
 
-  resources :tags
+  resources :tags do
+    resources :documents, :only => [:index]
+  end
 
   resources :user_sessions, :only => [:new, :create] do
     collection do

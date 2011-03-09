@@ -16,6 +16,19 @@ class DocumentsControllerTest < ActionController::TestCase
     assert_template 'documents/index'
   end
 
+  test 'should get index with tag filter' do
+    UserSession.create(users(:administrator))
+    tag = Tag.find(tags(:notes).id)
+
+    get :index, :tag_id => tag.to_param
+    assert_response :success
+    assert_not_nil assigns(:documents)
+    assert_equal tag.documents.count, assigns(:documents).size
+    assert assigns(:documents).all? { |d| d.tags.include?(tag) }
+    assert_select '#error_body', false
+    assert_template 'documents/index'
+  end
+
   test 'should get new' do
     UserSession.create(users(:administrator))
     get :new
@@ -32,6 +45,7 @@ class DocumentsControllerTest < ActionController::TestCase
         :name => 'New Name',
         :pages => '15',
         :description => 'New description',
+        :auto_tag_name => 'Some name given in autocomplete',
         :tag_ids => [tags(:books).id, tags(:notes).id],
         :file => fixture_file_upload('/files/test.pdf', 'application/pdf')
       }
@@ -66,6 +80,7 @@ class DocumentsControllerTest < ActionController::TestCase
       :name => 'Updated name',
       :pages => '15',
       :description => 'Updated description',
+      :auto_tag_name => 'Some name given in autocomplete',
       :file => fixture_file_upload('/files/test.pdf', 'application/pdf')
     }
     assert_redirected_to documents_path
