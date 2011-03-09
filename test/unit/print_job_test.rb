@@ -168,7 +168,7 @@ class PrintJobTest < ActiveSupport::TestCase
 
     assert_equal '100', @print_job.options['n']
     assert_equal '1', @print_job.options['page-ranges']
-    assert_equal 'two-sided-long-edge', @print_job.options['sides']
+    assert_equal 'two-sided-short-edge', @print_job.options['sides']
 
     @print_job.range = ''
     @print_job.two_sided = false
