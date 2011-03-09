@@ -14,9 +14,9 @@ set :use_sudo, false
 set :scm, :git
 set :branch, 'master'
 
-role :web, 'fcatena.com.ar' # Your HTTP server, Apache/etc
-role :app, 'fcatena.com.ar' # This may be the same as your `Web` server
-role :db,  'fcatena.com.ar', :primary => true # This is where Rails migrations will run
+role :web, 'fotocopia.frm.utn.edu.ar' # Your HTTP server, Apache/etc
+role :app, 'fotocopia.frm.utn.edu.ar' # This may be the same as your `Web` server
+role :db,  'fotocopia.frm.utn.edu.ar', :primary => true # This is where Rails migrations will run
 
 # If you are using Passenger mod_rails uncomment this:
 # if you're still using the script/reapear helper you will need
