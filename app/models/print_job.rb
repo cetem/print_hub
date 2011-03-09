@@ -2,9 +2,10 @@ class PrintJob < ActiveRecord::Base
   # Atributos no persistentes
   attr_writer :range_pages
   attr_accessor :auto_document_name
+  attr_protected :job_id
 
   # Restricciones
-  validates :copies, :price_per_copy, :job_id, :document_id, :presence => true
+  validates :copies, :price_per_copy, :document_id, :presence => true
   validates :copies, :job_id,
     :numericality => {:only_integer => true, :greater_than => 0},
     :allow_nil => true, :allow_blank => true
@@ -96,5 +97,16 @@ class PrintJob < ActiveRecord::Base
 
   def price_per_two_sided_copy
     Setting.price_per_two_sided_copy
+  end
+
+  def print(printer)
+    # Imprimir solamente si el archivo existe
+    if self.document.try(:file) && File.exists?(self.document.file.path)
+      job = Cups::PrintJob.new(self.document.file.path, printer, self.options)
+
+      job.print
+
+      self.job_id = job.job_id
+    end
   end
 end

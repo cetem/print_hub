@@ -98,6 +98,7 @@ class DocumentsControllerTest < ActionController::TestCase
     UserSession.create(users(:administrator))
     FileUtils.rm @document.file.path if File.exists?(@document.file.path)
 
+    assert !File.exists?(@document.file.path)
     get :download, :id => @document.to_param, :style => :original
     assert_redirected_to :action => :index
     assert_equal I18n.t(:'view.documents.non_existent'), flash.notice

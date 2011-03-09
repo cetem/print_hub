@@ -52,7 +52,10 @@ class PrintTest < ActiveSupport::TestCase
   end
 
   test 'create with free credit' do
-    assert_difference ['Print.count', 'PrintJob.count', 'Payment.count'] do
+    counts = ['Print.count', 'PrintJob.count', 'Payment.count',
+      'Cups.all_jobs(@printer).keys.sort.last']
+
+    assert_difference counts do
       @print = Print.create(
         :printer => @printer,
         :user => users(:administrator),
@@ -84,7 +87,10 @@ class PrintTest < ActiveSupport::TestCase
   end
 
   test 'create with free credit and cash' do
-    assert_difference ['Print.count', 'PrintJob.count'] do
+    counts = ['Print.count', 'PrintJob.count',
+      'Cups.all_jobs(@printer).keys.sort.last']
+
+    assert_difference counts do
       assert_difference 'Payment.count', 2 do
         @print = Print.create(
           :printer => @printer,
@@ -126,9 +132,11 @@ class PrintTest < ActiveSupport::TestCase
 
   # Prueba de actualización de una impresión
   test 'update' do
+    counts = ['Print.count', 'Cups.all_jobs(@printer).keys.sort.last']
+    
     assert_not_equal customers(:teacher).id, @print.customer_id
 
-    assert_no_difference 'Print.count' do
+    assert_no_difference counts do
       assert @print.update_attributes(:customer => customers(:teacher)),
         @print.errors.full_messages.join('; ')
     end
@@ -167,5 +175,11 @@ class PrintTest < ActiveSupport::TestCase
     assert @print.print_jobs.any? { |j| j.price > 0 }
     assert @print.price > 0
     assert_equal @print.price, @print.print_jobs.inject(0) {|t, j| t + j.price}
+  end
+
+  test 'print all jobs' do
+    assert_difference 'Cups.all_jobs(@printer).keys.sort.last', 2 do
+      @print.print_all_jobs
+    end
   end
 end

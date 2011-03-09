@@ -7,6 +7,12 @@ class PrintJobTest < ActiveSupport::TestCase
   # Función para inicializar las variables utilizadas en las pruebas
   def setup
     @print_job = PrintJob.find print_jobs(:math_job_1).id
+
+    @printer = Cups.show_destinations.select {|p| p =~ /pdf/i}.first
+
+    raise "Can't find a PDF printer to run tests with." unless @printer
+
+    prepare_document_files
   end
 
   # Prueba que se realicen las búsquedas como se espera
@@ -56,14 +62,11 @@ class PrintJobTest < ActiveSupport::TestCase
 
   # Prueba que las validaciones del modelo se cumplan como es esperado
   test 'validates blank attributes' do
-    @print_job.job_id = nil
     @print_job.copies = '  '
     @print_job.price_per_copy = '  '
     @print_job.document_id = nil
     assert @print_job.invalid?
-    assert_equal 4, @print_job.errors.count
-    assert_equal [error_message_from_model(@print_job, :job_id, :blank)],
-      @print_job.errors[:job_id]
+    assert_equal 3, @print_job.errors.count
     assert_equal [error_message_from_model(@print_job, :copies, :blank)],
       @print_job.errors[:copies]
     assert_equal [error_message_from_model(@print_job, :price_per_copy,
@@ -246,5 +249,11 @@ class PrintJobTest < ActiveSupport::TestCase
     assert @print_job.valid?
     assert_equal 1, @print_job.range_pages
     assert_equal '1.50', '%.2f' % @print_job.price
+  end
+
+  test 'print' do
+    assert_difference 'Cups.all_jobs(@printer).keys.sort.last' do
+      @print_job.print(@printer)
+    end
   end
 end

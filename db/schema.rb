@@ -74,7 +74,7 @@ ActiveRecord::Schema.define(:version => 20110201005700) do
   add_index "payments", ["payable_id", "payable_type"], :name => "index_payments_on_payable_id_and_payable_type"
 
   create_table "print_jobs", :force => true do |t|
-    t.integer  "job_id",                                                          :null => false
+    t.integer  "job_id"
     t.integer  "copies",                                                          :null => false
     t.decimal  "price_per_copy", :precision => 15, :scale => 2,                   :null => false
     t.string   "range"

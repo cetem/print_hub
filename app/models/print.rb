@@ -1,8 +1,7 @@
 class Print < ActiveRecord::Base
   # Callbacks
-  before_validation :assign_fake_job_ids
-  before_save :print_all_jobs, :remove_unnecessary_payments,
-    :update_customer_credit
+  before_create :print_all_jobs
+  before_save :remove_unnecessary_payments, :update_customer_credit
 
   # Atributos no persistentes
   attr_accessor :auto_customer_name
@@ -47,19 +46,8 @@ class Print < ActiveRecord::Base
       self.payments.build(:paid_with => Payment::PAID_WITH[type])
   end
 
-  def assign_fake_job_ids
-    # Para que valide, luego se asigna el verdadero ID en print_all_jobs
-    self.print_jobs.each { |pj| pj.job_id ||= 1 }
-  end
-
   def print_all_jobs
-    self.print_jobs.each do |pj|
-      job = Cups::PrintJob.new(pj.document.file.path, self.printer, pj.options)
-      
-      job.print
-      
-      pj.job_id = job.job_id
-    end
+    self.print_jobs.each { |pj| pj.print(self.printer) }
   end
 
   def price

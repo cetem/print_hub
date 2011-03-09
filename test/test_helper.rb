@@ -23,8 +23,10 @@ class ActiveSupport::TestCase
     Document.all.each do |document|
       unless File.exists?(document.file.path)
         FileUtils.mkdir_p File.dirname(document.file.path)
-        FileUtils.cp File.join(Rails.root, 'test', 'fixtures', 'files', 'test.pdf'),
+        FileUtils.ln_s(
+          File.join(Rails.root, 'test', 'fixtures', 'files', 'test.pdf'),
           document.file.path
+        )
       end
     end
   end
