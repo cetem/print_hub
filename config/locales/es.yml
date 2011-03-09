@@ -435,6 +435,7 @@
       non_existent: 'Archivo inexistente'
       add_tag: 'Agregar etiqueta'
       has_related_print_jobs: 'El documento no puede ser eliminado, tiene impresiones relacionadas'
+      documents_with_tag: 'Documentos con la etiqueta %{tag}'
     payments:
       count:
         one: 'Suma de un pago'
@@ -478,6 +479,7 @@
       correctly_updated: 'Etiqueta actualizado correctamente.'
       stale_object_error: 'La etiqueta no pudo ser actualizada, intente nuevamente.'
       root_tag: 'Raiz'
+      document_list: 'Ver documentos'
     users:
       index_title: 'Listado de usuarios'
       show_title: 'Detalle de usuario'

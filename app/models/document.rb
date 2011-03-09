@@ -9,6 +9,11 @@ class Document < ActiveRecord::Base
     :processors => [:pdf_thumb]
   find_by_autocomplete :name
 
+  # Scopes
+  scope :with_tag, lambda { |tag_id|
+    includes(:tags).where("#{Tag.table_name}.id" => tag_id)
+  }
+
   # Callbacks
   before_destroy :can_be_destroyed?
   after_file_post_process :extract_page_count

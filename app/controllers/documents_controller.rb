@@ -11,7 +11,9 @@ class DocumentsController < ApplicationController
   # GET /documents.xml
   def index
     @title = t :'view.documents.index_title'
-    @documents = Document.order("#{Document.table_name}.code ASC").paginate(
+    @tag = Tag.find(params[:tag_id]) if params[:tag_id]
+    @documents = @tag ? @tag.documents : Document
+    @documents = @documents.order("#{Document.table_name}.code ASC").paginate(
       :page => params[:page],
       :per_page => APP_LINES_PER_PAGE
     )

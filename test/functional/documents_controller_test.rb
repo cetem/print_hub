@@ -16,6 +16,19 @@ class DocumentsControllerTest < ActionController::TestCase
     assert_template 'documents/index'
   end
 
+  test 'should get index with tag filter' do
+    UserSession.create(users(:administrator))
+    tag = Tag.find(tags(:notes).id)
+
+    get :index, :tag_id => tag.to_param
+    assert_response :success
+    assert_not_nil assigns(:documents)
+    assert_equal tag.documents.count, assigns(:documents).size
+    assert assigns(:documents).all? { |d| d.tags.include?(tag) }
+    assert_select '#error_body', false
+    assert_template 'documents/index'
+  end
+
   test 'should get new' do
     UserSession.create(users(:administrator))
     get :new

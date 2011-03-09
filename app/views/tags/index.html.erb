@@ -10,7 +10,7 @@
   <thead>
     <tr>
       <th><%= Tag.human_attribute_name :name %></th>
-      <th colspan="3"></th>
+      <th colspan="4"></th>
     </tr>
   </thead>
 
@@ -18,6 +18,7 @@
     <% @tags.each do |tag| %>
       <tr class="<%= cycle(:even, :odd) %>">
         <td><%= link_to tag.name, tags_path(:parent => tag) %></td>
+        <td><%= link_to t(:document_list, :scope => [:view, :tags]), tag_documents_path(tag) %></td>
         <td><%= link_to t(:'label.show'), tag %></td>
         <td><%= link_to t(:'label.edit'), edit_tag_path(tag) %></td>
         <td><%= button_to t(:'label.delete'), tag,

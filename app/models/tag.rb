@@ -1,4 +1,6 @@
 class Tag < ActiveRecord::Base
+  include Comparable
+
   acts_as_tree
   find_by_autocomplete :name
 
@@ -14,5 +16,9 @@ class Tag < ActiveRecord::Base
 
   def to_s
     ([self] + self.ancestors).map(&:name).reverse.join(' | ')
+  end
+
+  def <=>(other)
+    self.id <=> other.id
   end
 end
