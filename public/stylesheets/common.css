@@ -250,7 +250,7 @@ dl.details dt {
 }
 
 form.button_to input[type="submit"] {
-    font-size: inherit;
+    font-size: .8em;
     padding: 0em .5em;
 }
 
