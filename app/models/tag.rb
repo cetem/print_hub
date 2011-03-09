@@ -1,7 +1,7 @@
 class Tag < ActiveRecord::Base
   include Comparable
 
-  acts_as_tree
+  acts_as_tree  
   find_by_autocomplete :name
 
   # Restricciones

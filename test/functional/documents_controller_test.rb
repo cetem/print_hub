@@ -45,6 +45,7 @@ class DocumentsControllerTest < ActionController::TestCase
         :name => 'New Name',
         :pages => '15',
         :description => 'New description',
+        :auto_tag_name => 'Some name given in autocomplete',
         :tag_ids => [tags(:books).id, tags(:notes).id],
         :file => fixture_file_upload('/files/test.pdf', 'application/pdf')
       }
@@ -79,6 +80,7 @@ class DocumentsControllerTest < ActionController::TestCase
       :name => 'Updated name',
       :pages => '15',
       :description => 'Updated description',
+      :auto_tag_name => 'Some name given in autocomplete',
       :file => fixture_file_upload('/files/test.pdf', 'application/pdf')
     }
     assert_redirected_to documents_path

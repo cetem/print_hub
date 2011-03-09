@@ -14,6 +14,9 @@ class Document < ActiveRecord::Base
     includes(:tags).where("#{Tag.table_name}.id" => tag_id)
   }
 
+  # Atributos no persistentes
+  attr_accessor :auto_tag_name
+
   # Callbacks
   before_destroy :can_be_destroyed?
   after_file_post_process :extract_page_count
@@ -36,7 +39,7 @@ class Document < ActiveRecord::Base
   # Relaciones
   has_many :print_jobs
   has_and_belongs_to_many :tags, :order => 'name ASC'
-  add_by_autocomplete :tag, :name
+  autocomplete_for :tag, :name, :name => :auto_tag
 
   def initialize(attributes = nil)
     super(attributes)
