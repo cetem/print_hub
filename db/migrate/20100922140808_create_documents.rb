@@ -20,7 +20,6 @@ class CreateDocuments < ActiveRecord::Migration
     if DB_ADAPTER == 'PostgreSQL'
       # Índice para utilizar búsqueda full text (por el momento sólo en español)
       execute "CREATE INDEX index_documents_on_name_ts ON documents USING gin(to_tsvector('spanish', name))"
-      execute "CREATE INDEX index_documents_on_code_ts ON documents USING gin(to_tsvector('spanish', code))"
     else
       add_index :documents, :name
     end
@@ -31,7 +30,6 @@ class CreateDocuments < ActiveRecord::Migration
 
     if DB_ADAPTER == 'PostgreSQL'
       execute 'DROP INDEX index_documents_on_name_ts'
-      execute 'DROP INDEX index_documents_on_code_ts'
     else
       remove_index :documents, :column => :name
     end

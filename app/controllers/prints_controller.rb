@@ -1,16 +1,8 @@
 class PrintsController < ApplicationController
   before_filter :require_user
-  autocomplete_for(:document, :name,
-    :match => ["#{Document.table_name}.code", "#{Document.table_name}.name",
-      "#{Tag.table_name}.name"],
-    :mask => DB_ADAPTER == 'PostgreSQL' ? '%{value}' : nil,
-    :query => DB_ADAPTER == 'PostgreSQL' ?
-      "to_tsvector('spanish', %{field}) @@ to_tsquery('spanish', %{query})" : nil,
-    :include => { :tags => {:parent => {:parent => :parent}} }, :limit => 10,
-    :order => "#{Document.table_name}.name ASC") do |docs|
-      render_to_string :partial => 'autocomplete_for_document_name',
-        :locals => { :docs => docs }
-    end
+
+  layout proc { |controller| controller.request.xhr? ? false : 'application' }
+
   autocomplete_for(:customer, :name,
     :match => ['name', 'lastname', 'identification'], :limit => 10,
     :order => ['lastname ASC', 'name ASC']) do |customers|
@@ -99,6 +91,43 @@ class PrintsController < ApplicationController
   rescue ActiveRecord::StaleObjectError
     flash.alert = t :'view.prints.stale_object_error'
     redirect_to edit_print_url(@print)
+  end
+
+  # POST /prints/autocomplete_for_document_name
+  def autocomplete_for_document_name
+    query = params[:q].strip.gsub(/\s*([&|])\s*/, '\1').gsub(/[|&!]$/, '')
+    @query_terms = query.split(/\s+/).reject(&:blank?)
+    @docs = Document.scoped
+
+    unless @query_terms.empty?
+      parameters = {
+        :and_term => @query_terms.join(' & '),
+        :wilcard_term => "%#{@query_terms.join('%')}%"
+      }
+
+      if DB_ADAPTER == 'PostgreSQL'
+        lang = "'spanish'" # TODO: implementar con I18n
+        query = "to_tsvector(#{lang}, coalesce(name,'') || ' ' || coalesce(tag_path,'')) @@ to_tsquery(#{lang}, :and_term)"
+        order = "ts_rank_cd(#{query.sub(' @@', ',')})"
+
+        order = Document.send(:sanitize_sql_for_conditions, [order, parameters])
+      else
+        query = "LOWER(name) LIKE LOWER(:wilcard_term) OR LOWER(tag_path) LIKE LOWER(:wilcard_term)"
+        order = 'name ASC'
+      end
+      conditions = [query]
+
+      @query_terms.each_with_index do |term, i|
+        conditions << "#{Document.table_name}.code = :clean_term_#{i}"
+        parameters[:"clean_term_#{i}"] = term
+      end
+
+      @docs = @docs.where(
+        conditions.map { |c| "(#{c})" }.join(' OR '), parameters
+      ).order(order)
+    end
+
+    @docs.limit(10)
   end
 
   private

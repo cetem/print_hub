@@ -18,6 +18,7 @@ class Document < ActiveRecord::Base
   attr_accessor :auto_tag_name
 
   # Callbacks
+  before_save :update_tag_path
   before_destroy :can_be_destroyed?
   after_file_post_process :extract_page_count
 
@@ -49,6 +50,10 @@ class Document < ActiveRecord::Base
 
   def to_s
     "[#{self.code}] #{self.name}"
+  end
+
+  def update_tag_path
+    self.tag_path = self.tags.map(&:to_s).join(' ## ')
   end
 
   def can_be_destroyed?

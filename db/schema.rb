@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110201005700) do
+ActiveRecord::Schema.define(:version => 20110310184257) do
 
   create_table "bonuses", :force => true do |t|
     t.decimal  "amount",      :precision => 15, :scale => 2, :null => false
@@ -47,6 +47,7 @@ ActiveRecord::Schema.define(:version => 20110201005700) do
     t.datetime "file_updated_at"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.text     "tag_path"
   end
 
   add_index "documents", ["code"], :name => "index_documents_on_code", :unique => true
