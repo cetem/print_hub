@@ -55,7 +55,7 @@ class PrintJob < ActiveRecord::Base
 
   def options
     options = {
-      'sides' => self.two_sided ? 'two-sided-short-edge' : 'one-sided'
+      'sides' => self.two_sided ? 'two-sided-long-edge' : 'one-sided'
     }
 
     options['page-ranges'] = self.range unless self.range.blank?
