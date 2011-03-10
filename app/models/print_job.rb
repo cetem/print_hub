@@ -55,7 +55,6 @@ class PrintJob < ActiveRecord::Base
 
   def options
     options = {
-      'n' => self.copies.to_s,
       'sides' => self.two_sided ? 'two-sided-short-edge' : 'one-sided'
     }
 
@@ -102,11 +101,13 @@ class PrintJob < ActiveRecord::Base
   def print(printer)
     # Imprimir solamente si el archivo existe
     if self.document.try(:file) && File.exists?(self.document.file.path)
-      job = Cups::PrintJob.new(self.document.file.path, printer, self.options)
+      self.copies.times do # TODO: manejar por opciones en lugar de esto
+        job = Cups::PrintJob.new(self.document.file.path, printer, self.options)
 
-      job.print
+        job.print
 
-      self.job_id = job.job_id
+        self.job_id = job.job_id
+      end
     end
   end
 end

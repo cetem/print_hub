@@ -165,11 +165,9 @@ class PrintJobTest < ActiveSupport::TestCase
   end
 
   test 'options' do
-    @print_job.copies = 100
     @print_job.range = '1'
     @print_job.two_sided = true
 
-    assert_equal '100', @print_job.options['n']
     assert_equal '1', @print_job.options['page-ranges']
     assert_equal 'two-sided-short-edge', @print_job.options['sides']
 
@@ -252,7 +250,9 @@ class PrintJobTest < ActiveSupport::TestCase
   end
 
   test 'print' do
-    assert_difference 'Cups.all_jobs(@printer).keys.sort.last' do
+    cups_count = 'Cups.all_jobs(@printer).keys.sort.last'
+    
+    assert_difference cups_count, @print_job.copies do
       @print_job.print(@printer)
     end
   end

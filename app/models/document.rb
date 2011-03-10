@@ -52,8 +52,12 @@ class Document < ActiveRecord::Base
     "[#{self.code}] #{self.name}"
   end
 
-  def update_tag_path
-    self.tag_path = self.tags.map(&:to_s).join(' ## ')
+  def update_tag_path(new_tag = nil)
+    tags = self.tags.reject { |t| t.id == new_tag.try(:id) } | [new_tag]
+
+    self.tag_path = tags.compact.map(&:to_s).join(' ## ')
+    
+    true
   end
 
   def can_be_destroyed?

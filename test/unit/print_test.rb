@@ -87,33 +87,34 @@ class PrintTest < ActiveSupport::TestCase
   end
 
   test 'create with free credit and cash' do
-    counts = ['Print.count', 'PrintJob.count',
-      'Cups.all_jobs(@printer).keys.sort.last']
+    cups_count = 'Cups.all_jobs(@printer).keys.sort.last'
 
-    assert_difference counts do
-      assert_difference 'Payment.count', 2 do
-        @print = Print.create(
-          :printer => @printer,
-          :user => users(:administrator),
-          :customer => customers(:student),
-          :print_jobs_attributes => {
-            :new_1 => {
-              :copies => 100,
-              :price_per_copy => 0.10,
-              :document => documents(:math_book)
-            } # 35000 páginas = $3500.00
-          }, :payments_attributes => {
-            :new_1 => {
-              :amount => 3000.00,
-              :paid => 3000.00
-            },
-            :new_2 => {
-              :amount => 500.00,
-              :paid => 500.00,
-              :paid_with => Payment::PAID_WITH[:bonus]
+    assert_difference ['Print.count', 'PrintJob.count'] do
+      assert_difference cups_count, 100 do
+        assert_difference 'Payment.count', 2 do
+          @print = Print.create(
+            :printer => @printer,
+            :user => users(:administrator),
+            :customer => customers(:student),
+            :print_jobs_attributes => {
+              :new_1 => {
+                :copies => 100,
+                :price_per_copy => 0.10,
+                :document => documents(:math_book)
+              } # 35000 páginas = $3500.00
+            }, :payments_attributes => {
+              :new_1 => {
+                :amount => 3000.00,
+                :paid => 3000.00
+              },
+              :new_2 => {
+                :amount => 500.00,
+                :paid => 500.00,
+                :paid_with => Payment::PAID_WITH[:bonus]
+              }
             }
-          }
-        )
+          )
+        end
       end
     end
 
@@ -178,7 +179,9 @@ class PrintTest < ActiveSupport::TestCase
   end
 
   test 'print all jobs' do
-    assert_difference 'Cups.all_jobs(@printer).keys.sort.last', 2 do
+    cups_count = 'Cups.all_jobs(@printer).keys.sort.last'
+
+    assert_difference cups_count, @print.print_jobs.sum(:copies) do
       @print.print_all_jobs
     end
   end

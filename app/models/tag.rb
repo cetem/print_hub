@@ -5,7 +5,7 @@ class Tag < ActiveRecord::Base
   find_by_autocomplete :name
 
   # Callbacks
-  before_update :update_related_documents
+  before_save :update_related_documents
 
   # Restricciones
   validates :name, :presence => true
@@ -28,9 +28,10 @@ class Tag < ActiveRecord::Base
   def update_related_documents
     if self.name_changed?
       self.documents.each do |d|
-        d.update_tag_path
-        d.save!
+        d.update_tag_path(self)
       end
     end
+
+    true
   end
 end

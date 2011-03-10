@@ -64,4 +64,20 @@ class TagTest < ActiveSupport::TestCase
     assert_equal [error_message_from_model(@tag, :name, :too_long,
       :count => 255)], @tag.errors[:name]
   end
+
+  test 'update related documents' do
+    @tag.name = 'Test tag'
+    @tag.update_related_documents
+
+    documents_tag_path = @tag.documents.map(&:tag_path).compact.sort
+    assert_not_equal 0, @tag.documents.count
+    assert !documents_tag_path.any? { |tp| tp.match /Updated/ }
+
+    assert @tag.update_attributes(:name => 'Updated')
+
+    new_documents_tag_path = @tag.documents.reload.map(&:tag_path).compact.sort
+
+    assert_not_equal documents_tag_path, new_documents_tag_path
+    assert new_documents_tag_path.all? { |tp| tp.match /Updated/ }
+  end
 end

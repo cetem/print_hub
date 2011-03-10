@@ -4,7 +4,7 @@ math_notes:
   pages: 12
   description: Math Notes description
   file_file_name: math_notes.pdf
-  tags: notes
+  tags: notes, basics
 
 math_book:
   code: '002'
@@ -12,7 +12,7 @@ math_book:
   pages: 350
   description: Math Book description
   file_file_name: math_book.pdf
-  tags: book
+  tags: books, basics
 
 physics_notes:
   code: '003'
@@ -28,4 +28,4 @@ unused_book:
   pages: 10
   description: Unused Book description
   file_file_name: unused_book.pdf
-  tags: book
+  tags: books, basics

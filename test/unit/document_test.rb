@@ -127,4 +127,15 @@ class DocumentTest < ActiveSupport::TestCase
     assert_equal [error_message_from_model(@document, :pages, :greater_than,
         :count => 0)], @document.errors[:pages]
   end
+
+  test 'update tag path' do
+    original_path = @document.update_tag_path
+
+    assert_difference '@document.tags.count' do
+      @document.tags << Tag.find(tags(:draft_note).id)
+    end
+
+    assert @document.save
+    assert_not_equal original_path, @document.tag_path
+  end
 end

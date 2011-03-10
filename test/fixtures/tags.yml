@@ -4,6 +4,9 @@ draft_note:
 notes:
   name: Notes
 
+basics:
+  name: Basics
+
 books:
   name: Books
 
