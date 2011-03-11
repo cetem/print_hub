@@ -16,6 +16,18 @@
     <dt><%= Document.human_attribute_name :file %>:</dt>
     <dd><%= link_to_if @document.file.file?, t(:'label.download'), @document.file.url %></dd>
   </dl>
+  
+  <% unless @document.tags.empty? %>
+    <section>
+      <h3 class="title"><%= t(:'menu.tags') %></h3>
+
+      <ul class="raw">
+        <% @document.tags.each do |tag| %>
+          <li><%= tag %></li>
+        <% end %>
+      </ul>
+    </section>
+  <% end %>
 
   <nav class="links">
     <% unless request.xhr? %>

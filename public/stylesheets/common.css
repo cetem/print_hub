@@ -1,48 +1,48 @@
 * {
-    margin: 0px;
-    padding: 0px;
+  margin: 0px;
+  padding: 0px;
 }
 
 body {
-    color: #333333;
-    background-color: #ffffff;
-    font-family: verdana, arial, helvetica, sans-serif;
-    font-size: 12px;
+  color: #333333;
+  background-color: #ffffff;
+  font-family: verdana, arial, helvetica, sans-serif;
+  font-size: 12px;
 }
 
 a {
-    color: #000;
+  color: #000;
 }
 
 a:visited {
-    color: #666666;
+  color: #666666;
 }
 
 a:hover {
-    color: #ffffff;
-    background-color:#000000;
+  color: #ffffff;
+  background-color:#000000;
 }
 
 a.action_link,
 a.remove,
 a[data-event="remove_item"],
 a[data-event="hide_item"] {
-    font-size: 12px;
-    font-weight: bold;
-    padding: 1px 3px;
-    text-decoration: none;
+  font-size: 12px;
+  font-weight: bold;
+  padding: 1px 3px;
+  text-decoration: none;
 }
 
 a.action_link:hover {
-    background: #333333;
-    color: #ffffff;
+  background: #333333;
+  color: #ffffff;
 }
 
 a.remove:hover,
 a[data-event="remove_item"]:hover,
 a[data-event="hide_item"]:hover {
-    background: #aa0000;
-    color: #ffffff;
+  background: #aa0000;
+  color: #ffffff;
 }
 
 br.break {
@@ -50,42 +50,42 @@ br.break {
 }
 
 div#alert, div#login_error {
-    background: #aa0000;
-    color: #ffffff;
+  background: #aa0000;
+  color: #ffffff;
 }
 
 div#alert, div#notice, div#login_error {
-    position: fixed;
-    bottom: .5em;
-    left: 5%;
-    right: 5%;
-    font-weight: bold;
-    font-size: 1.4em;
-    text-align: center;
-    padding: .5em 1em;
-    border: 4px solid #c2bfb7;
+  position: fixed;
+  bottom: .5em;
+  left: 5%;
+  right: 5%;
+  font-weight: bold;
+  font-size: 1.4em;
+  text-align: center;
+  padding: .5em 1em;
+  border: 4px solid #c2bfb7;
 }
 
 div#alert div#close_alert,
 div#notice div#close_notice,
 div#login_error div#close_login_error {
-    position: absolute;
-    top: .5em;
-    right: 1em;
-    font-size: .6em;
-    font-weight: normal;
-    border: 2px solid #c2bfb7;
+  position: absolute;
+  top: .5em;
+  right: 1em;
+  font-size: .6em;
+  font-weight: normal;
+  border: 2px solid #c2bfb7;
 }
 
 div#alert div#close_alert a,
 div#notice div#close_notice a,
 div#login_error div#close_login_error a {
-    background: inherit;
-    color: #c2bfb7;
-    text-decoration: none;
-    font-size: 1.2em;
-    font-weight: 600;
-    padding: 1px 5px;
+  background: inherit;
+  color: #c2bfb7;
+  text-decoration: none;
+  font-size: 1.2em;
+  font-weight: 600;
+  padding: 1px 5px;
 }
 
 div#error_explanation {
@@ -109,7 +109,7 @@ div#error_explanation h2 {
 }
 
 div#error_explanation ul {
-    margin: 1em 1em 1em 3em;
+  margin: 1em 1em 1em 3em;
 }
 
 div#error_explanation ul li {
@@ -117,52 +117,52 @@ div#error_explanation ul li {
 }
 
 div#loading {
-    position: fixed;
-    bottom: .5em;
-    left: 1em;
-    padding: 1px 5px;
+  position: fixed;
+  bottom: .5em;
+  left: 1em;
+  padding: 1px 5px;
 }
 
 div#login {
-    font-size: 1.2em;
-    width: 20em;
-    margin: 5em auto;
-    padding: 1em 2em;
-    border: 2px solid #333333;
+  font-size: 1.2em;
+  width: 20em;
+  margin: 5em auto;
+  padding: 1em 2em;
+  border: 2px solid #333333;
 }
 
 div#login div.field > label {
-    width: 100%;
+  width: 100%;
 }
 
 div#login input[type="text"], div#login input[type="password"] {
-    width: 100%;
+  width: 100%;
 }
 
 div#main_container {
-    margin: 4em auto;
-    width: 95%;
-    min-width: 750px;
-    max-width: 1250px;
+  margin: 4em auto;
+  width: 95%;
+  min-width: 750px;
+  max-width: 1250px;
 }
 
 div#main_menu {
-    position: absolute;
-    width: 100%;
-    border-bottom: 2px solid #666666;
-    top: 0px;
-    left: 0px;
-    padding: .5em 0em;
-    min-width: 750px;
+  position: absolute;
+  width: 100%;
+  border-bottom: 2px solid #666666;
+  top: 0px;
+  left: 0px;
+  padding: .5em 0em;
+  min-width: 750px;
 }
 
 div#notice {
-    background: #151215;
-    color: #ffffff;
+  background: #151215;
+  color: #ffffff;
 }
 
 div.actions input[type="submit"] {
-    padding: .1em 1em;
+  padding: .1em 1em;
 }
 
 div.actions, div.field {
@@ -170,194 +170,202 @@ div.actions, div.field {
 }
 
 div.add_nested_item {
-    clear: both;
-    font-weight: bold;
-    margin: 1em 0em;
+  clear: both;
+  font-weight: bold;
+  margin: 1em 0em;
 }
 
 div.autocomplete_container {
-    position: relative;
+  position: relative;
 }
 
 div.autocomplete {
-    position: absolute;
-    top: 0px !important;
-    left: 0px !important;
-    background-color: white;
-    border: 1px solid #888888;
+  position: absolute;
+  top: 0px !important;
+  left: 0px !important;
+  background-color: white;
+  border: 1px solid #888888;
 }
 
 div.autocomplete ul {
-    list-style-type: none;
+  list-style-type: none;
 }
 
 div.autocomplete ul li.selected {
-    background-color: #ffffbb;
+  background-color: #ffffbb;
 }
 
 div.autocomplete ul li {
-    list-style-type: none;
-    display: block;
-    padding: .1em;
-    min-height: 2.5em;
-    cursor: pointer;
+  list-style-type: none;
+  display: block;
+  padding: .1em;
+  min-height: 2.5em;
+  cursor: pointer;
 }
 
 div.autocomplete ul li span.informal {
-    display: block;
-    font-size: .8em;
-    color: #676767;
+  display: block;
+  font-size: .8em;
+  color: #676767;
 }
 
 div.dynamic_details {
-    clear: both;
-    padding: .5em 0em;
+  clear: both;
+  padding: .5em 0em;
 }
 
 div.field input[type="text"], div.field input[type="password"],
 div.field select, div.field textarea {
-    font-size: inherit;
-    font-family: inherit;
-    width: 30em;
+  font-size: inherit;
+  font-family: inherit;
+  width: 30em;
 }
 
 div.field textarea {
-    height: 7em;
+  height: 7em;
 }
 
 div.field > label {
-    display: block;
-    width: 30em;
+  display: block;
+  width: 30em;
 }
 
 div.field input[type="checkbox"] + label {
-    display: inline;
-    margin-left: .5em;
+  display: inline;
+  margin-left: .5em;
 }
 
 div.image_container {
-    float: left;
-    margin: 0em 2em 2em 0em;
-    padding: .5em;
-    border: 2px solid #666666;
-    -moz-border-radius: .5em;
-    border-radius: .5em;
-    -moz-box-shadow: .5em .5em .5em #999999;
-    -webkit-box-shadow: .5em .5em .5em #999999;
-    box-shadow: .5em .5em .5em #999999;
+  float: left;
+  margin: 0em 2em 2em 0em;
+  padding: .5em;
+  border: 2px solid #666666;
+  -moz-border-radius: .5em;
+  border-radius: .5em;
+  -moz-box-shadow: .5em .5em .5em #999999;
+  -webkit-box-shadow: .5em .5em .5em #999999;
+  box-shadow: .5em .5em .5em #999999;
 }
 
 dl.details dt {
-    font-weight: bold;
-    float: left;
-    margin-right: .5em;
+  font-weight: bold;
+  float: left;
+  margin-right: .5em;
 }
 
 form.button_to input[type="submit"] {
-    font-size: .8em;
-    padding: 0em .5em;
+  font-size: .8em;
+  padding: 0em .5em;
 }
 
 h2.title {
-    font-size: 1.5em;
-    margin-bottom: 1em;
+  font-size: 1.5em;
+  margin-bottom: 1em;
+}
+
+h3.title {
+  display: inline-block;
+  font-size: 1em;
+  margin: .5em 0em;
+  padding-bottom: .2em;
+  border-bottom: 1px dotted #333333;
 }
 
 input.field_with_errors, select.field_with_errors, text_area.field_with_errors {
-    border: 2px solid #cc0000;
+  border: 2px solid #cc0000;
 }
 
 label.field_with_errors {
-    color: #ffffff;
-    font-weight: bold;
-    background-color: #cc0000;
-    border: 2px solid #cc0000;
+  color: #ffffff;
+  font-weight: bold;
+  background-color: #cc0000;
+  border: 2px solid #cc0000;
 }
 
 nav#menu_links {
-    margin-left: 1em;
+  margin-left: 1em;
 }
 
 nav#menu_links a {
-    text-decoration: none;
+  text-decoration: none;
 }
 
 nav#menu_links li.selected a {
-    color: #151215;
-    font-weight: bold;
+  color: #151215;
+  font-weight: bold;
 }
 
 nav#menu_links ul, nav#menu_links li, nav#user_actions ul, nav#user_actions li {
-    display: inline;
-    list-style: none;
-    margin: 0em .5em;
+  display: inline;
+  list-style: none;
+  margin: 0em .5em;
 }
 
 nav#user_actions {
-    position: absolute;
-    right: 1em;
-    top: .5em;
+  position: absolute;
+  right: 1em;
+  top: .5em;
 }
 
 nav#user_actions div#username {
-    display: inline;
-    font-weight: bold;
+  display: inline;
+  font-weight: bold;
 }
 
 nav.links {
-    display: block;
-    clear: both;
-    margin: 1em 0em;
+  display: block;
+  clear: both;
+  margin: 1em 0em;
 }
 
 nav.links div.pagination {
-    float: right;
-    margin: .5em .5em .5em 0em;
+  float: right;
+  margin: .5em .5em .5em 0em;
 }
 
 nav.links div.pagination a {
-    color: #333333;
-    padding: 1px 2px;
-    text-decoration: none;
-    border: 2px solid #cecece;
+  color: #333333;
+  padding: 1px 2px;
+  text-decoration: none;
+  border: 2px solid #cecece;
 }
 
 nav.links div.pagination a, nav.links div.pagination span {
-    margin: 0em .1em;
+  margin: 0em .1em;
 }
 
 nav.links div.pagination a:hover {
-    color: #ffffff;
-    border: 2px solid #333333;
+  color: #ffffff;
+  border: 2px solid #333333;
 }
 
 nav.links div.pagination em {
-    font-style: normal;
-    border: 2px solid #333333;
-    background: #333333;
-    color: #ffffff;
-    padding: 1px 2px;
+  font-style: normal;
+  border: 2px solid #333333;
+  background: #333333;
+  color: #ffffff;
+  padding: 1px 2px;
 }
 
 nav.links div.pagination span.disabled {
-    border: 2px solid #cecece;
-    color: #cecece;
-    padding: 1px 2px;
+  border: 2px solid #cecece;
+  color: #cecece;
+  padding: 1px 2px;
 }
 
 nav.path {
-    display: block;
-    margin-bottom: 1em;
+  display: block;
+  margin-bottom: 1em;
 }
 
 nav.path ul, nav.path ul li {
-    display: inline;
-    list-style: none;
-    margin-right: .5em;
+  display: inline;
+  list-style: none;
+  margin-right: .5em;
 }
 
 p.note {
-    margin: 1em 0em;
+  margin: 1em 0em;
 }
 
 section.details h3 {
@@ -366,134 +374,134 @@ section.details h3 {
 }
 
 section.nested_items div.headers {
-    clear: both;
-    padding: .5em 0em;
-    border-bottom: 2px dotted #333333;
+  clear: both;
+  padding: .5em 0em;
+  border-bottom: 2px dotted #333333;
 }
 
 section.nested_items div.headers h3 {
-    font-size: 1em;
-    float: left;
-    margin-right: 1em;
+  font-size: 1em;
+  float: left;
+  margin-right: 1em;
 }
 
 section.nested_items div.items {
-    clear: both;
-    padding: .5em 0em;
+  clear: both;
+  padding: .5em 0em;
 }
 
 section.nested_items div.nested_item {
-    clear: both;
+  clear: both;
 }
 
 section.nested_items div.items div.nested_item_field,
 section.nested_items div.items div.nested_item_actions {
-    float: left;
-    margin-right: 1em;
+  float: left;
+  margin-right: 1em;
 }
 
 section.nested_items h2 {
-    font-size: 1.2em;
-    margin: .5em 0em;
+  font-size: 1.2em;
+  margin: .5em 0em;
 }
 
 section.nested_items input[type="text"],
 section.nested_items input[type="password"],
 section.nested_items select,
 section.nested_items textarea {
-    width: 98%;
+  width: 98%;
 }
 
 section.tags {
-    display: block;
-    margin: 1em 0em;
+  display: block;
+  margin: 1em 0em;
 }
 
 table.list {
-    width: 98%;
-    border: 2px solid #333333;
-    border-collapse: collapse;
+  width: 98%;
+  border: 2px solid #333333;
+  border-collapse: collapse;
 }
 
 table.list td {
-    padding: .2em .5em;
+  padding: .2em .5em;
 }
 
 table.list th {
-    text-align: left;
-    padding: .4em .5em;
-    border-bottom: 2px solid #333333;
+  text-align: left;
+  padding: .4em .5em;
+  border-bottom: 2px solid #333333;
 }
 
 table.list tbody tr.odd {
-    background: #efefef;
+  background: #efefef;
 }
 
 table.list tbody tr.odd:hover, table.list tbody tr.even:hover {
-    background: #cecece;
+  background: #cecece;
 }
 
 table.summary {
-    width: 100%;
-    border-collapse: collapse;
-    margin: 1em 0em;
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1em 0em;
 }
 
 table.summary td {
-    padding: .4em .5em;
+  padding: .4em .5em;
 }
 
 table.summary th {
-    text-align: left;
-    padding: .4em .5em;
-    border-bottom: 1px dotted #333333;
+  text-align: left;
+  padding: .4em .5em;
+  border-bottom: 1px dotted #333333;
 }
 
 ul.raw {
-    margin: 1em 0em 1em 3em;
+  margin: 1em 0em 1em 3em;
 }
 
 .bold {
-    font-weight: bold;
+  font-weight: bold;
 }
 
 /* Estilo de los "Trabajos de impresión" dentro de "Impresiones" */
 section.nested_items div#print_jobs_headers h3:nth-child(1),
 section.nested_items div.print_job div.nested_item_field:nth-child(1) {
-    width: 40%;
+  width: 40%;
 }
 
 section.nested_items div#print_jobs_headers h3:nth-child(2),
 section.nested_items div.print_job div.nested_item_field:nth-child(2) {
-    width: 9%;
+  width: 9%;
 }
 
 section.nested_items div#print_jobs_headers h3:nth-child(3),
 section.nested_items div.print_job div.nested_item_field:nth-child(3) {
-    width: 7%;
+  width: 7%;
 }
 
 section.nested_items div#print_jobs_headers h3:nth-child(4),
 section.nested_items div.print_job div.nested_item_field:nth-child(4) {
-    width: 7%;
+  width: 7%;
 }
 
 section.nested_items div#print_jobs_headers h3:nth-child(5),
 section.nested_items div.print_job div.nested_item_field:nth-child(5) {
-    width: 15%;
+  width: 15%;
 }
 
 section.nested_items div#print_jobs_headers h3:nth-child(6),
 section.nested_items div.print_job div.nested_item_field:nth-child(6) {
-    width: 7%;
+  width: 7%;
 }
 
 section.nested_items div#print_jobs_headers h3:nth-child(7),
 section.nested_items div.print_job div.nested_item_actions {
-    width: 5%;
+  width: 5%;
 }
 
 /* Estilo de "Etiquetas" dentro de "Documentos" */
 div#tags {
-    margin-left: 1em;
+  margin-left: 1em;
 }
