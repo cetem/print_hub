@@ -45,6 +45,10 @@ a[data-event="hide_item"]:hover {
     color: #ffffff;
 }
 
+br.break {
+  clear: both;
+}
+
 div#alert, div#login_error {
     background: #aa0000;
     color: #ffffff;
@@ -461,25 +465,30 @@ section.nested_items div.print_job div.nested_item_field:nth-child(1) {
 
 section.nested_items div#print_jobs_headers h3:nth-child(2),
 section.nested_items div.print_job div.nested_item_field:nth-child(2) {
-    width: 10%;
+    width: 9%;
 }
 
 section.nested_items div#print_jobs_headers h3:nth-child(3),
 section.nested_items div.print_job div.nested_item_field:nth-child(3) {
-    width: 10%;
+    width: 7%;
 }
 
 section.nested_items div#print_jobs_headers h3:nth-child(4),
 section.nested_items div.print_job div.nested_item_field:nth-child(4) {
-    width: 15%;
+    width: 7%;
 }
 
 section.nested_items div#print_jobs_headers h3:nth-child(5),
 section.nested_items div.print_job div.nested_item_field:nth-child(5) {
-    width: 10%;
+    width: 15%;
 }
 
 section.nested_items div#print_jobs_headers h3:nth-child(6),
+section.nested_items div.print_job div.nested_item_field:nth-child(6) {
+    width: 7%;
+}
+
+section.nested_items div#print_jobs_headers h3:nth-child(7),
 section.nested_items div.print_job div.nested_item_actions {
     width: 5%;
 }

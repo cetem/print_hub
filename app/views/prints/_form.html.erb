@@ -33,10 +33,11 @@
     <div id="print_jobs_headers" class="headers">
       <h3><%= PrintJob.human_attribute_name :document_id %></h3>
       <h3><%= PrintJob.human_attribute_name :copies %></h3>
+      <h3><%= PrintJob.human_attribute_name :pages %></h3>
       <h3><%= PrintJob.human_attribute_name :price_per_copy %></h3>
       <h3><%= PrintJob.human_attribute_name :range %></h3>
       <h3><%= PrintJob.human_attribute_name :two_sided %></h3>
-      <br />
+      <br class="break" />
     </div>
     
     <div id="print_jobs" class="items">
@@ -65,12 +66,12 @@
       <%= f.fields_for :payments do |p_f| %>
         <tr>
           <td>
-            <%= p_f.text_field :amount,
+            <%= p_f.text_field :amount, :value => '%.2f' % p_f.object.amount,
               :id => "payment_#{p_f.object.paid_with}_amount", :maxlength => 15,
               :readonly => true %>
           </td>
           <td>
-            <%= p_f.text_field :paid,
+            <%= p_f.text_field :paid, :value => '%.2f' % p_f.object.paid,
               :id => "payment_#{p_f.object.paid_with}_paid", :maxlength => 15,
               :readonly => p_f.object.bonus? %>
           </td>
@@ -143,7 +144,7 @@
       var pages = element.readAttribute('data-pages');
       var printJob = element.up('.print_job');
 
-      printJob.down('input.document_pages').setValue(pages);
+      printJob.down('input[name$="[pages]"]').setValue(pages).disable();
       printJob.down('a.details_link').writeAttribute('href',
         element.readAttribute('data-url'));
       printJob.down('a.details_link').show();
@@ -164,7 +165,7 @@
   document.on('keyup', 'input[name$="[range]"]', function(event, element) {
     var validRanges = true, maxPage = undefined, rangePages = 0;
     var pages = parseInt(
-      element.up('.print_job').down('input.document_pages').getValue()
+      element.up('.print_job').down('input[name$="[pages]"]').getValue()
     );
     var ranges = element.getValue().trim().split(/\s*,\s*/).sortBy(function(r) {
       return parseInt(r.match(/^\d+/)) || 0;
@@ -205,6 +206,39 @@
     } else {
       priceElement.setValue(element.readAttribute('data-price-per-one-sided'));
     }
+  });
+
+  document.on('change', 'input[name$="[auto_document_name]"]', function(event, element) {
+    var printJob = element.up('.print_job');
+
+    if(printJob && element.getValue().blank()) {
+      var pages = printJob.down('input[name$="[pages]"]');
+
+      printJob.down('input[name$="[range]"]').writeAttribute('data-range-pages', 0);
+
+      pages.setValue('');
+      pages.enable();
+
+      updatePrintJobPrice(printJob);
+    }
+  });
+
+  document.on('change', 'input[name$="[pages]"]', function(event, element) {
+    var printJob = element.up('.print_job');
+
+    if(!element.readAttribute('disabled') && parseInt(element.getValue()) > 0) {
+      var range = printJob.down('input[name$="[range]"]');
+
+      range.writeAttribute('data-range-pages', parseInt(element.getValue()));
+
+      range.disable();
+      printJob.down('input[name$="[auto_document_name]"]').disable();
+    } else {
+      printJob.down('input[name$="[range]"]').enable();
+      printJob.down('input[name$="[auto_document_name]"]').enable();
+    }
+
+    updatePrintJobPrice(printJob);
   });
 
   document.on('change', '.price_modifier', function(event, element) {

@@ -8,6 +8,7 @@ class PrintsControllerTest < ActionController::TestCase
     raise "Can't find a PDF printer to run tests with." unless @printer
 
     prepare_document_files
+    prepare_settings
   end
 
   test 'should get operator index' do
@@ -48,6 +49,7 @@ class PrintsControllerTest < ActionController::TestCase
   test 'should create print' do
     UserSession.create(users(:operator))
 
+    document = Document.find(documents(:math_book).id)
     counts_array = ['Print.count', 'PrintJob.count', 'Payment.count',
       'customer.prints.count']
     customer = Customer.find customers(:student).id
@@ -59,15 +61,52 @@ class PrintsControllerTest < ActionController::TestCase
         :print_jobs_attributes => {
           :new_1 => {
             :copies => '1',
-            :price_per_copy => '0.1',
+            :pages => document.pages.to_s,
+            # No importa el precio, se establece desde la configuración
+            :price_per_copy => '12.0',
             :range => '',
+            :two_sided => '0',
             :auto_document_name => 'Some name given in autocomplete',
-            :document_id => documents(:math_book).id.to_s
+            :document_id => document.id.to_s
           }
         }, :payments_attributes => {
           :new_1 => {
             :amount => '35.00',
             :paid => '35.00'
+          }
+        }
+      }
+    end
+
+    assert_redirected_to print_path(assigns(:print))
+    # Debe asignar el usuario autenticado como el creador de la impresión
+    assert_equal users(:operator).id, assigns(:print).user.id
+  end
+
+  test 'should create print without documents in print jobs' do
+    UserSession.create(users(:operator))
+
+    counts_array = ['Print.count', 'PrintJob.count', 'Payment.count',
+      'customer.prints.count']
+    customer = Customer.find customers(:student).id
+
+    assert_difference counts_array do
+      post :create, :print => {
+        :printer => @printer,
+        :customer_id => customer.id,
+        :print_jobs_attributes => {
+          :new_1 => {
+            :copies => '1',
+            :pages => '30',
+            # No importa el precio, se establece desde la configuración
+            :price_per_copy => '12.0',
+            :range => '',
+            :two_sided => '0'
+          }
+        }, :payments_attributes => {
+          :new_1 => {
+            :amount => '3.00',
+            :paid => '3.00'
           }
         }
       }
@@ -99,6 +138,8 @@ class PrintsControllerTest < ActionController::TestCase
   test 'should update print' do
     user = User.find users(:operator).id
     customer = Customer.find customers(:teacher).id
+    math_notes = Document.find(documents(:math_notes).id)
+    math_book = Document.find(documents(:math_book).id)
 
     UserSession.create(user)
 
@@ -114,31 +155,40 @@ class PrintsControllerTest < ActionController::TestCase
             print_jobs(:math_job_1).id => {
               :id => print_jobs(:math_job_1).id,
               :auto_document_name => 'Some name given in autocomplete',
-              :document_id => documents(:math_notes).id.to_s,
+              :document_id => math_notes.id.to_s,
               :copies => '123',
-              :price_per_copy => '0.1',
-              :range => ''
+              :pages => math_notes.pages.to_s,
+              # No importa el precio, se establece desde la configuración
+              :price_per_copy => '12.0',
+              :range => '',
+              :two_sided => '0'
             },
             print_jobs(:math_job_2).id => {
               :id => print_jobs(:math_job_2).id,
               :auto_document_name => 'Some name given in autocomplete',
-              :document_id => documents(:math_book).id.to_s,
+              :document_id => math_book.id.to_s,
               :copies => '234',
+              :pages => math_book.pages.to_s,
+              # No importa el precio, se establece desde la configuración
               :price_per_copy => '0.2',
-              :range => ''
+              :range => '',
+              :two_sided => '0'
             },
             :new_1 => {
               :auto_document_name => 'Some name given in autocomplete',
-              :document_id => documents(:math_book).id.to_s,
+              :document_id => math_book.id.to_s,
               :copies => '1',
+              # Sin páginas intencionalmente
+              # No importa el precio, se establece desde la configuración
               :price_per_copy => '0.3',
-              :range => ''
+              :range => '',
+              :two_sided => '0'
             }
           },
           :payments_attributes => {
             payments(:math_payment).id => {
               :id => payments(:math_payment).id.to_s,
-              :amount => '16632.6',
+              :amount => '8372.6',
               :paid => '7.50'
             }
           }
@@ -152,6 +202,7 @@ class PrintsControllerTest < ActionController::TestCase
     assert_equal customer.id, @print.reload.customer_id
     assert_equal 123, @print.print_jobs.find_by_document_id(
       documents(:math_notes).id).copies
+    assert_equal math_book.pages, @print.print_jobs.order('id ASC').last.pages
   end
 
   test 'should get autocomplete document list' do

@@ -26,7 +26,7 @@ var AutoComplete = {
               $(li).fire('autocomplete:update', li);
             }
           }
-          );
+        );
 
         input.store('observed', true);
       }
@@ -151,6 +151,12 @@ Event.observe(window, 'load', function() {
     if(eventList.include(eventName)) {
       EventHandler[eventName](element);
       Event.stop(event);
+    }
+  });
+
+  document.on('change', 'input.autocomplete_field', function(event, element) {
+    if(element.getValue().blank()) {
+      element.adjacent('input.autocomplete_id').first().setValue('');
     }
   });
 

@@ -30,6 +30,11 @@ class ActiveSupport::TestCase
       end
     end
   end
+
+  def prepare_settings
+    Setting.price_per_one_sided_copy = '0.10'
+    Setting.price_per_two_sided_copy = '0.07'
+  end
 end
 
 class ActionController::TestCase

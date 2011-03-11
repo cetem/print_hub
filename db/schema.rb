@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110310184257) do
+ActiveRecord::Schema.define(:version => 20110311151706) do
 
   create_table "bonuses", :force => true do |t|
     t.decimal  "amount",      :precision => 15, :scale => 2, :null => false
@@ -80,11 +80,12 @@ ActiveRecord::Schema.define(:version => 20110310184257) do
     t.decimal  "price_per_copy", :precision => 15, :scale => 2,                   :null => false
     t.string   "range"
     t.boolean  "two_sided",                                     :default => true
-    t.integer  "document_id",                                                     :null => false
+    t.integer  "document_id"
     t.integer  "print_id",                                                        :null => false
     t.integer  "lock_version",                                  :default => 0
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "pages",                                                           :null => false
   end
 
   add_index "print_jobs", ["document_id"], :name => "index_print_jobs_on_document_id"

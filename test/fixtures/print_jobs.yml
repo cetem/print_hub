@@ -1,6 +1,7 @@
 math_job_1:
   job_id: 3
   copies: 3
+  pages: 12
   price_per_copy: 0.10
   range: ''
   two_sided: true
@@ -10,6 +11,7 @@ math_job_1:
 math_job_2:
   job_id: 1
   copies: 1
+  pages: 350
   price_per_copy: 0.10
   range: ''
   two_sided: true
@@ -19,6 +21,7 @@ math_job_2:
 physics_job_1:
   job_id: 2
   copies: 2
+  pages: 14
   price_per_copy: 0.10
   range: ''
   two_sided: true
@@ -28,6 +31,7 @@ physics_job_1:
 os_job_1:
   job_id: 1
   copies: 1
+  pages: 14
   price_per_copy: 0.10
   range: ''
   two_sided: true
@@ -37,6 +41,7 @@ os_job_1:
 second_math_job_1:
   job_id: 3
   copies: 3
+  pages: 12
   price_per_copy: 0.10
   range: ''
   two_sided: true
@@ -46,6 +51,7 @@ second_math_job_1:
 second_math_job_2:
   job_id: 1
   copies: 1
+  pages: 350
   price_per_copy: 0.10
   range: ''
   two_sided: true
@@ -55,6 +61,7 @@ second_math_job_2:
 second_physics_job_1:
   job_id: 2
   copies: 2
+  pages: 14
   price_per_copy: 0.10
   range: ''
   two_sided: true

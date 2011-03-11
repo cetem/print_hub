@@ -12,6 +12,7 @@ class PrintTest < ActiveSupport::TestCase
     raise "Can't find a PDF printer to run tests with." unless @printer
 
     prepare_document_files
+    prepare_settings
   end
 
   # Prueba que se realicen las búsquedas como se espera
@@ -30,7 +31,11 @@ class PrintTest < ActiveSupport::TestCase
         :print_jobs_attributes => {
           :new_1 => {
             :copies => 1,
-            :price_per_copy => 0.10,
+            # No importa el precio, se establece desde la configuración
+            :price_per_copy => 1000,
+            # No importan las páginas, se establecen desde el documento
+            :pages => 1,
+            :two_sided => false,
             :document => documents(:math_book)
           }
         }, :payments_attributes => {
@@ -64,6 +69,7 @@ class PrintTest < ActiveSupport::TestCase
           :new_1 => {
             :copies => 1,
             :price_per_copy => 0.10,
+            :two_sided => false,
             :document => documents(:math_book)
           } # 350 páginas = $35.00
         }, :payments_attributes => {
@@ -100,6 +106,7 @@ class PrintTest < ActiveSupport::TestCase
               :new_1 => {
                 :copies => 100,
                 :price_per_copy => 0.10,
+                :two_sided => false,
                 :document => documents(:math_book)
               } # 35000 páginas = $3500.00
             }, :payments_attributes => {

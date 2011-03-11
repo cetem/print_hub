@@ -17,12 +17,17 @@
         :autocomplete => :off %>
     </div>
     <div class="nested_item_field">
-      <%= f.text_field :price_per_copy, :maxlength => 7,
+      <%= f.text_field :pages, :maxlength => 5, :class => :price_modifier,
+        :autocomplete => :off, :disabled => !f.object.document.blank? %>
+    </div>
+    <div class="nested_item_field">
+      <%= f.text_field :price_per_copy, :disabled => true,
         :class => :price_modifier, :autocomplete => :off %>
     </div>
     <div class="nested_item_field">
       <%= f.text_field :range, :maxlength => 255, :class => :price_modifier,
-        :autocomplete => :off, :'data-range-pages' => f.object.range_pages %>
+        :autocomplete => :off, :'data-range-pages' => f.object.range_pages,
+        :disabled => !f.object.document.blank? %>
     </div>
     <div class="nested_item_field">
       <%= f.check_box :two_sided, :class => :price_modifier,
@@ -30,9 +35,6 @@
         :'data-price-per-two-sided' => f.object.price_per_two_sided_copy %>
     </div>
     <div class="nested_item_actions">
-      <%= text_field_tag "document_pages_#{id}", f.object.document.try(:pages),
-        :class => 'document_pages price_modifier',
-        :id => "document_pages_#{id}", :style => 'display: none;' %>
       <%= link_to_remove_nested_item(f) %>
       <%= link_to '...', f.object.document || '#',
         :class => 'details_link action_link', :remote => true,

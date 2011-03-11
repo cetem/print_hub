@@ -2,11 +2,11 @@ class PrintJob < ActiveRecord::Base
   # Atributos no persistentes
   attr_writer :range_pages
   attr_accessor :auto_document_name
-  attr_protected :job_id
+  attr_protected :job_id, :price_per_copy
 
   # Restricciones
-  validates :copies, :price_per_copy, :document_id, :presence => true
-  validates :copies, :job_id,
+  validates :copies, :pages, :price_per_copy, :presence => true
+  validates :copies, :pages, :job_id,
     :numericality => {:only_integer => true, :greater_than => 0},
     :allow_nil => true, :allow_blank => true
   validates :price_per_copy, :numericality => {:greater_than_or_equal_to => 0},
@@ -49,7 +49,8 @@ class PrintJob < ActiveRecord::Base
 
     self.two_sided = true if self.two_sided.nil?
     self.copies ||= 1
-    self.price_per_copy ||= self.two_sided ?
+    self.pages = self.document.pages if self.document
+    self.price_per_copy = self.two_sided ?
       Setting.price_per_two_sided_copy : Setting.price_per_one_sided_copy
   end
 
@@ -76,7 +77,7 @@ class PrintJob < ActiveRecord::Base
     pages = 0
 
     if self.range.blank?
-      pages = self.document.try(:pages)
+      pages = self.pages
     else
       self.extract_ranges.each do |r|
         pages += r.kind_of?(Array) ? r[1].next - r[0] : 1

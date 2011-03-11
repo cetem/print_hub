@@ -13,6 +13,7 @@ class PrintJobTest < ActiveSupport::TestCase
     raise "Can't find a PDF printer to run tests with." unless @printer
 
     prepare_document_files
+    prepare_settings
   end
 
   # Prueba que se realicen las búsquedas como se espera
@@ -20,6 +21,7 @@ class PrintJobTest < ActiveSupport::TestCase
     assert_kind_of PrintJob, @print_job
     assert_equal print_jobs(:math_job_1).job_id, @print_job.job_id
     assert_equal print_jobs(:math_job_1).copies, @print_job.copies
+    assert_equal print_jobs(:math_job_1).pages, @print_job.pages
     assert_equal print_jobs(:math_job_1).price_per_copy,
       @print_job.price_per_copy
     assert_equal print_jobs(:math_job_1).range, @print_job.range
@@ -29,20 +31,46 @@ class PrintJobTest < ActiveSupport::TestCase
   end
 
   # Prueba la creación de un trabajo de impresión
-  test 'create' do
+  test 'create with document' do
+    document = Document.find(documents(:math_book).id);
+
     assert_difference 'PrintJob.count' do
       @print_job = PrintJob.create(
         :copies => 1,
-        :price_per_copy => 0.1,
+        :pages => document.pages,
+        :price_per_copy => 0.10,
         :range => nil,
         :two_sided => false,
         :job_id => 1,
         :print => prints(:math_print),
-        :document => documents(:math_book)
+        :document => document
       )
     end
 
     assert @print_job.reload.two_sided == false
+    # El precio por copia no se puede alterar
+    assert_equal Setting.price_per_one_sided_copy.to_s,
+      '%.2f' % @print_job.price_per_copy
+  end
+
+  # Prueba la creación de un trabajo de impresión
+  test 'create without document' do
+    assert_difference 'PrintJob.count' do
+      @print_job = PrintJob.create(
+        :copies => 1,
+        :pages => 50,
+        :price_per_copy => 1111,
+        :range => nil,
+        :two_sided => false,
+        :job_id => 1,
+        :print => prints(:math_print)
+      )
+    end
+
+    assert_equal '5.0', @print_job.price.to_s
+    # El precio por copia no se puede alterar
+    assert_equal Setting.price_per_one_sided_copy.to_s,
+      '%.2f' % @print_job.price_per_copy
   end
 
   # Prueba de actualización de un trabajo de impresión
@@ -63,51 +91,64 @@ class PrintJobTest < ActiveSupport::TestCase
   # Prueba que las validaciones del modelo se cumplan como es esperado
   test 'validates blank attributes' do
     @print_job.copies = '  '
+    @print_job.pages = nil
     @print_job.price_per_copy = '  '
-    @print_job.document_id = nil
     assert @print_job.invalid?
     assert_equal 3, @print_job.errors.count
     assert_equal [error_message_from_model(@print_job, :copies, :blank)],
       @print_job.errors[:copies]
+    assert_equal [error_message_from_model(@print_job, :pages, :blank)],
+      @print_job.errors[:pages]
     assert_equal [error_message_from_model(@print_job, :price_per_copy,
         :blank)], @print_job.errors[:price_per_copy]
-    assert_equal [error_message_from_model(@print_job, :document_id, :blank)],
-      @print_job.errors[:document_id]
   end
 
   # Prueba que las validaciones del modelo se cumplan como es esperado
   test 'validates well formated attributes' do
     @print_job.job_id = '?xx'
     @print_job.copies = '?xx'
+    @print_job.pages = '?xx'
     @print_job.price_per_copy = '?xx'
     assert @print_job.invalid?
-    assert_equal 3, @print_job.errors.count
+    assert_equal 4, @print_job.errors.count
     assert_equal [error_message_from_model(@print_job, :job_id, :not_a_number)],
       @print_job.errors[:job_id]
     assert_equal [error_message_from_model(@print_job, :copies, :not_a_number)],
       @print_job.errors[:copies]
+    assert_equal [error_message_from_model(@print_job, :pages, :not_a_number)],
+      @print_job.errors[:pages]
     assert_equal [error_message_from_model(@print_job, :price_per_copy,
         :not_a_number)], @print_job.errors[:price_per_copy]
+  end
 
+  test 'validates integer attributes' do
     @print_job.job_id = '1.23'
     @print_job.copies = '1.23'
+    @print_job.pages = '1.23'
     @print_job.price_per_copy = '1.23'
     assert @print_job.invalid?
-    assert_equal 2, @print_job.errors.count
+    assert_equal 3, @print_job.errors.count
     assert_equal [error_message_from_model(@print_job, :job_id, :not_an_integer)],
       @print_job.errors[:job_id]
     assert_equal [error_message_from_model(@print_job, :copies, :not_an_integer)],
       @print_job.errors[:copies]
+    assert_equal [error_message_from_model(@print_job, :pages, :not_an_integer)],
+      @print_job.errors[:pages]
+  end
 
+  test 'validates correct range of attributes' do
     @print_job.copies = '0'
+    @print_job.pages = '0'
     @print_job.job_id = '0'
     @print_job.price_per_copy = '-0.01'
     assert @print_job.invalid?
-    assert_equal 3, @print_job.errors.count
+    assert_equal 4, @print_job.errors.count
     assert_equal [error_message_from_model(@print_job, :job_id, :greater_than,
         :count => 0)], @print_job.errors[:job_id]
     assert_equal [error_message_from_model(@print_job, :copies, :greater_than,
         :count => 0)], @print_job.errors[:copies]
+    assert_equal [error_message_from_model(@print_job, :pages, :greater_than,
+        :count => 0)], @print_job.errors[:pages]
     assert_equal [error_message_from_model(@print_job, :price_per_copy,
         :greater_than_or_equal_to, :count => 0)],
       @print_job.errors[:price_per_copy]
@@ -169,7 +210,7 @@ class PrintJobTest < ActiveSupport::TestCase
     @print_job.two_sided = true
 
     assert_equal '1', @print_job.options['page-ranges']
-    assert_equal 'two-sided-short-edge', @print_job.options['sides']
+    assert_equal 'two-sided-long-edge', @print_job.options['sides']
 
     @print_job.range = ''
     @print_job.two_sided = false
