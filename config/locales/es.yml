@@ -481,7 +481,10 @@
       correctly_updated: 'Etiqueta actualizado correctamente.'
       stale_object_error: 'La etiqueta no pudo ser actualizada, intente nuevamente.'
       root_tag: 'Raiz'
-      document_list: 'Ver documentos'
+      without_documents: 'Sin documentos'
+      document_list:
+        one: 'Un documento'
+        other: '%{count} documentos'
     users:
       index_title: 'Listado de usuarios'
       show_title: 'Detalle de usuario'

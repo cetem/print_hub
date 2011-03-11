@@ -10,4 +10,17 @@ module TagsHelper
 
     raw(ancestors.reverse.map { |a| content_tag(:li, raw(a)) }.join)
   end
+
+  def show_link_to_tag_documents(tag)
+    documents_count = tag.documents.count
+
+    if documents_count > 0
+      link_to(
+        t(:document_list, :count => documents_count, :scope => [:view, :tags]),
+        tag_documents_path(tag)
+      )
+    else
+      t(:without_documents, :scope => [:view, :tags])
+    end
+  end
 end
