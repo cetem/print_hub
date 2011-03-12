@@ -96,7 +96,7 @@ class PrintTest < ActiveSupport::TestCase
     cups_count = 'Cups.all_jobs(@printer).keys.sort.last'
 
     assert_difference ['Print.count', 'PrintJob.count'] do
-      assert_difference cups_count, 100 do
+      assert_difference cups_count, 1 do
         assert_difference 'Payment.count', 2 do
           @print = Print.create(
             :printer => @printer,
@@ -188,7 +188,7 @@ class PrintTest < ActiveSupport::TestCase
   test 'print all jobs' do
     cups_count = 'Cups.all_jobs(@printer).keys.sort.last'
 
-    assert_difference cups_count, @print.print_jobs.sum(:copies) do
+    assert_difference cups_count, @print.print_jobs.count do
       @print.print_all_jobs
     end
   end

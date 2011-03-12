@@ -102,13 +102,11 @@ class PrintJob < ActiveRecord::Base
   def print(printer)
     # Imprimir solamente si el archivo existe
     if self.document.try(:file) && File.exists?(self.document.file.path)
-      self.copies.times do # TODO: manejar por opciones en lugar de esto
-        job = Cups::PrintJob.new(self.document.file.path, printer, self.options)
-
-        job.print
-
-        self.job_id = job.job_id
-      end
+      options = "-d #{printer} -n #{self.copies} -o landscape "
+      options += self.options.map { |o, v| "-o #{o}=#{v}" }.join(' ')
+      out = `lp #{options} "#{self.document.file.path}"`
+      
+      self.job_id = out.match(/\d+$/).to_a[0].try(:to_i) || 1
     end
   end
 end
