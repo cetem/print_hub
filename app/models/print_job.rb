@@ -6,12 +6,12 @@ class PrintJob < ActiveRecord::Base
 
   # Restricciones
   validates :copies, :pages, :price_per_copy, :presence => true
-  validates :copies, :pages, :job_id,
+  validates :copies, :pages,
     :numericality => {:only_integer => true, :greater_than => 0},
     :allow_nil => true, :allow_blank => true
   validates :price_per_copy, :numericality => {:greater_than_or_equal_to => 0},
     :allow_nil => true, :allow_blank => true
-  validates :range, :length => { :maximum => 255 }, :allow_nil => true,
+  validates :range, :job_id, :length => { :maximum => 255 }, :allow_nil => true,
     :allow_blank => true
   validates_each :range do |record, attr, value|
     valid_ranges, ranges_overlapped, max_page = true, false, nil
@@ -59,6 +59,7 @@ class PrintJob < ActiveRecord::Base
       'sides' => self.two_sided ? 'two-sided-long-edge' : 'one-sided'
     }
 
+    options['media'] = self.document.media if self.document
     options['page-ranges'] = self.range unless self.range.blank?
 
     options
@@ -102,11 +103,11 @@ class PrintJob < ActiveRecord::Base
   def print(printer)
     # Imprimir solamente si el archivo existe
     if self.document.try(:file) && File.exists?(self.document.file.path)
-      options = "-d #{printer} -n #{self.copies} -o landscape "
+      options = "-d #{printer} -n #{self.copies} "
       options += self.options.map { |o, v| "-o #{o}=#{v}" }.join(' ')
       out = `lp #{options} "#{self.document.file.path}"`
-      
-      self.job_id = out.match(/\d+$/).to_a[0].try(:to_i) || 1
+
+      self.job_id = out.match(/#{Regexp.escape(printer)}-\d+/).to_a[0] || '-'
     end
   end
 end

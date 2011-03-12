@@ -18,6 +18,10 @@
     <%= f.text_field :pages, :maxlength => 5, :readonly => true %>
   </div>
   <div class="field">
+    <%= f.label :media %>
+    <%= show_document_media_field(f) %>
+  </div>
+  <div class="field">
     <%= f.label :description %>
     <%= f.text_area :description %>
   </div>

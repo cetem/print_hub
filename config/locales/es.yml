@@ -73,6 +73,7 @@
         code: 'Código'
         name: 'Nombre'
         pages: 'Páginas'
+        media: 'Tamaño de papel'
         description: 'Descripción'
         file: 'Archivo'
         file_file_name: 'Archivo'
@@ -438,6 +439,9 @@
       add_tag: 'Agregar etiqueta'
       has_related_print_jobs: 'El documento no puede ser eliminado, tiene impresiones relacionadas'
       documents_with_tag: 'Documentos con la etiqueta %{tag}'
+      media_type:
+        A4: 'A4'
+        Legal: 'Oficio'
     payments:
       count:
         one: 'Suma de un pago'

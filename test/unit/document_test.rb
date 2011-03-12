@@ -15,6 +15,7 @@ class DocumentTest < ActiveSupport::TestCase
     assert_equal documents(:math_book).code, @document.code
     assert_equal documents(:math_book).name, @document.name
     assert_equal documents(:math_book).pages, @document.pages
+    assert_equal documents(:math_book).media, @document.media
     assert_equal documents(:math_book).description, @document.description
   end
 
@@ -25,6 +26,7 @@ class DocumentTest < ActiveSupport::TestCase
         :code => '00001234',
         :name => 'New name',
         :pages => '5',
+        :media => Document::MEDIA_TYPES.first,
         :description => 'New description',
         :tags => [tags(:books), tags(:notes)]
       )
@@ -72,14 +74,17 @@ class DocumentTest < ActiveSupport::TestCase
   test 'validates blank attributes' do
     @document.code = '  '
     @document.name = '  '
+    @document.media = '  '
     @document.pages = nil
     @document.file = nil
     assert @document.invalid?
-    assert_equal 4, @document.errors.count
+    assert_equal 5, @document.errors.count
     assert_equal [error_message_from_model(@document, :code, :blank)],
       @document.errors[:code]
     assert_equal [error_message_from_model(@document, :name, :blank)],
       @document.errors[:name]
+    assert_equal [error_message_from_model(@document, :media, :blank)],
+      @document.errors[:media]
     assert_equal [error_message_from_model(@document, :pages, :blank)],
       @document.errors[:pages]
     # No se puede probar el mensaje porque funciona mal authlogic en modo test
@@ -99,12 +104,25 @@ class DocumentTest < ActiveSupport::TestCase
   test 'validates length of attributes' do
     @document.code = 'abcde' * 52
     @document.name = 'abcde' * 52
+    @document.media = 'abcde' * 52
     assert @document.invalid?
-    assert_equal 2, @document.errors.count
+    assert_equal 4, @document.errors.count
     assert_equal [error_message_from_model(@document, :code, :too_long,
       :count => 255)], @document.errors[:code]
     assert_equal [error_message_from_model(@document, :name, :too_long,
       :count => 255)], @document.errors[:name]
+    assert_equal [error_message_from_model(@document, :media, :too_long,
+      :count => 255), error_message_from_model(@document, :media,
+      :inclusion)].sort, @document.errors[:media].sort
+  end
+
+  # Prueba que las validaciones del modelo se cumplan como es esperado
+  test 'validates included attributes' do
+    @document.media = 'invalid'
+    assert @document.invalid?
+    assert_equal 1, @document.errors.count
+    assert_equal [error_message_from_model(@document, :media, :inclusion)],
+      @document.errors[:media]
   end
 
   # Prueba que las validaciones del modelo se cumplan como es esperado

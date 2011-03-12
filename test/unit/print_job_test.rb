@@ -105,14 +105,11 @@ class PrintJobTest < ActiveSupport::TestCase
 
   # Prueba que las validaciones del modelo se cumplan como es esperado
   test 'validates well formated attributes' do
-    @print_job.job_id = '?xx'
     @print_job.copies = '?xx'
     @print_job.pages = '?xx'
     @print_job.price_per_copy = '?xx'
     assert @print_job.invalid?
-    assert_equal 4, @print_job.errors.count
-    assert_equal [error_message_from_model(@print_job, :job_id, :not_a_number)],
-      @print_job.errors[:job_id]
+    assert_equal 3, @print_job.errors.count
     assert_equal [error_message_from_model(@print_job, :copies, :not_a_number)],
       @print_job.errors[:copies]
     assert_equal [error_message_from_model(@print_job, :pages, :not_a_number)],
@@ -122,29 +119,36 @@ class PrintJobTest < ActiveSupport::TestCase
   end
 
   test 'validates integer attributes' do
-    @print_job.job_id = '1.23'
     @print_job.copies = '1.23'
     @print_job.pages = '1.23'
     @print_job.price_per_copy = '1.23'
     assert @print_job.invalid?
-    assert_equal 3, @print_job.errors.count
-    assert_equal [error_message_from_model(@print_job, :job_id, :not_an_integer)],
-      @print_job.errors[:job_id]
+    assert_equal 2, @print_job.errors.count
     assert_equal [error_message_from_model(@print_job, :copies, :not_an_integer)],
       @print_job.errors[:copies]
     assert_equal [error_message_from_model(@print_job, :pages, :not_an_integer)],
       @print_job.errors[:pages]
   end
 
+  # Prueba que las validaciones del modelo se cumplan como es esperado
+  test 'validates attributes length' do
+    @print_job.range = 'abcde' * 52
+    @print_job.job_id = 'abcde' * 52
+    assert @print_job.invalid?
+    assert_equal 3, @print_job.errors.count
+    assert_equal [error_message_from_model(@print_job, :range, :too_long,
+        :count => 255), error_message_from_model(@print_job, :range,
+        :invalid)].sort, @print_job.errors[:range].sort
+    assert_equal [error_message_from_model(@print_job, :job_id, :too_long,
+        :count => 255)], @print_job.errors[:job_id]
+  end
+
   test 'validates correct range of attributes' do
     @print_job.copies = '0'
     @print_job.pages = '0'
-    @print_job.job_id = '0'
     @print_job.price_per_copy = '-0.01'
     assert @print_job.invalid?
-    assert_equal 4, @print_job.errors.count
-    assert_equal [error_message_from_model(@print_job, :job_id, :greater_than,
-        :count => 0)], @print_job.errors[:job_id]
+    assert_equal 3, @print_job.errors.count
     assert_equal [error_message_from_model(@print_job, :copies, :greater_than,
         :count => 0)], @print_job.errors[:copies]
     assert_equal [error_message_from_model(@print_job, :pages, :greater_than,

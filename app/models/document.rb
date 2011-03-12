@@ -9,6 +9,9 @@ class Document < ActiveRecord::Base
     :processors => [:pdf_thumb]
   find_by_autocomplete :name
 
+  # Constantes
+  MEDIA_TYPES = ['A4', 'Legal']
+
   # Scopes
   scope :with_tag, lambda { |tag_id|
     includes(:tags).where("#{Tag.table_name}.id" => tag_id)
@@ -25,9 +28,11 @@ class Document < ActiveRecord::Base
   attr_protected :pages
 
   # Restricciones
-  validates :name, :code, :pages, :presence => true
+  validates :name, :code, :pages, :media, :presence => true
   validates :code, :uniqueness => true, :allow_nil => true, :allow_blank => true
-  validates :name, :code, :length => { :maximum => 255 }, :allow_nil => true,
+  validates :name, :code, :media, :length => { :maximum => 255 },
+    :allow_nil => true, :allow_blank => true
+  validates :media, :inclusion => { :in => MEDIA_TYPES }, :allow_nil => true,
     :allow_blank => true
   validates :pages,
     :numericality => { :only_integer => true, :greater_than => 0 },

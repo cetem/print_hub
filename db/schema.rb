@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110311151706) do
+ActiveRecord::Schema.define(:version => 20110312220745) do
 
   create_table "bonuses", :force => true do |t|
     t.decimal  "amount",      :precision => 15, :scale => 2, :null => false
@@ -48,6 +48,7 @@ ActiveRecord::Schema.define(:version => 20110311151706) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.text     "tag_path"
+    t.string   "media"
   end
 
   add_index "documents", ["code"], :name => "index_documents_on_code", :unique => true
@@ -75,7 +76,7 @@ ActiveRecord::Schema.define(:version => 20110311151706) do
   add_index "payments", ["payable_id", "payable_type"], :name => "index_payments_on_payable_id_and_payable_type"
 
   create_table "print_jobs", :force => true do |t|
-    t.integer  "job_id"
+    t.string   "job_id"
     t.integer  "copies",                                                          :null => false
     t.decimal  "price_per_copy", :precision => 15, :scale => 2,                   :null => false
     t.string   "range"
