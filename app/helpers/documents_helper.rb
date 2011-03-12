@@ -11,9 +11,13 @@ module DocumentsHelper
 
   def show_document_media_field(form)
     media_types = Document::MEDIA_TYPES.map do |mt|
-      [t(mt, :scope => [:view, :documents, :media_type]), mt]
+      [show_document_media_text(mt), mt]
     end
 
     form.select :media, media_types, :prompt => true
+  end
+
+  def show_document_media_text(media)
+    t media, :scope => [:view, :documents, :media_type]
   end
 end

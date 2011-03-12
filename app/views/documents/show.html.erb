@@ -10,6 +10,9 @@
     <dt><%= Document.human_attribute_name :pages %>:</dt>
     <dd><%= @document.pages %></dd>
 
+    <dt><%= Document.human_attribute_name :media %>:</dt>
+    <dd><%= show_document_media_text @document.media %></dd>
+
     <dt><%= Document.human_attribute_name :description %>:</dt>
     <dd><%= @document.description %>&nbsp;</dd>
 
