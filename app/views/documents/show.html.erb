@@ -37,6 +37,7 @@
       <%= link_to t(:'label.edit'), edit_document_path(@document) %> |
       <%= link_to t(:'label.list'), documents_path %>
     <% else %>
+      <%= link_to t(:'label.show'), document_path(@document) %> |
       <%= link_to_function t(:'label.hide'), "this.up('.document_details').hide()" %>
     <% end %>
   </nav>
