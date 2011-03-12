@@ -27,7 +27,7 @@
     <div class="nested_item_field">
       <%= f.text_field :range, :maxlength => 255, :class => :price_modifier,
         :autocomplete => :off, :'data-range-pages' => f.object.range_pages,
-        :disabled => !f.object.document.blank? %>
+        :disabled => f.object.document.blank? %>
     </div>
     <div class="nested_item_field">
       <%= f.check_box :two_sided, :class => :price_modifier,
