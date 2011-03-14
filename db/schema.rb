@@ -10,11 +10,11 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110312220745) do
+ActiveRecord::Schema.define(:version => 20110314062849) do
 
   create_table "bonuses", :force => true do |t|
-    t.decimal  "amount",      :precision => 15, :scale => 2, :null => false
-    t.decimal  "remaining",   :precision => 15, :scale => 2, :null => false
+    t.decimal  "amount",      :precision => 15, :scale => 3, :null => false
+    t.decimal  "remaining",   :precision => 15, :scale => 3, :null => false
     t.date     "valid_until"
     t.integer  "customer_id"
     t.datetime "created_at"
@@ -27,7 +27,7 @@ ActiveRecord::Schema.define(:version => 20110312220745) do
     t.string   "name",                                                             :null => false
     t.string   "lastname"
     t.string   "identification",                                                   :null => false
-    t.decimal  "free_monthly_bonus", :precision => 15, :scale => 2
+    t.decimal  "free_monthly_bonus", :precision => 15, :scale => 3
     t.integer  "lock_version",                                      :default => 0
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -61,8 +61,8 @@ ActiveRecord::Schema.define(:version => 20110312220745) do
   add_index "documents_tags", ["document_id", "tag_id"], :name => "index_documents_tags_on_document_id_and_tag_id", :unique => true
 
   create_table "payments", :force => true do |t|
-    t.decimal  "amount",                    :precision => 15, :scale => 2,                :null => false
-    t.decimal  "paid",                      :precision => 15, :scale => 2,                :null => false
+    t.decimal  "amount",                    :precision => 15, :scale => 3,                :null => false
+    t.decimal  "paid",                      :precision => 15, :scale => 3,                :null => false
     t.string   "paid_with",    :limit => 1,                                               :null => false
     t.integer  "payable_id"
     t.string   "payable_type"
@@ -78,7 +78,7 @@ ActiveRecord::Schema.define(:version => 20110312220745) do
   create_table "print_jobs", :force => true do |t|
     t.string   "job_id"
     t.integer  "copies",                                                          :null => false
-    t.decimal  "price_per_copy", :precision => 15, :scale => 2,                   :null => false
+    t.decimal  "price_per_copy", :precision => 15, :scale => 3,                   :null => false
     t.string   "range"
     t.boolean  "two_sided",                                     :default => true
     t.integer  "document_id"

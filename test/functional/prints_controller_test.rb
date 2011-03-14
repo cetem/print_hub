@@ -117,6 +117,41 @@ class PrintsControllerTest < ActionController::TestCase
     assert_equal users(:operator).id, assigns(:print).user.id
   end
 
+  test 'should create print with 3 decimal payment' do
+    UserSession.create(users(:operator))
+
+    counts_array = ['Print.count', 'PrintJob.count', 'Payment.count',
+      'customer.prints.count']
+    customer = Customer.find customers(:student).id
+    Setting.price_per_one_sided_copy = '0.125'
+
+    assert_difference counts_array do
+      post :create, :print => {
+        :printer => @printer,
+        :customer_id => customer.id,
+        :print_jobs_attributes => {
+          :new_1 => {
+            :copies => '1',
+            :pages => '3',
+            # No importa el precio, se establece desde la configuración
+            :price_per_copy => '12.0',
+            :range => '',
+            :two_sided => '0'
+          }
+        }, :payments_attributes => {
+          :new_1 => {
+            :amount => '0.375',
+            :paid => '0.375'
+          }
+        }
+      }
+    end
+
+    assert_redirected_to print_path(assigns(:print))
+    # Debe asignar el usuario autenticado como el creador de la impresión
+    assert_equal users(:operator).id, assigns(:print).user.id
+  end
+
   test 'should show print' do
     UserSession.create(users(:operator))
     get :show, :id => @print.to_param

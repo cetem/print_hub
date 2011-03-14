@@ -66,12 +66,12 @@
       <%= f.fields_for :payments do |p_f| %>
         <tr>
           <td>
-            <%= p_f.text_field :amount, :value => '%.2f' % p_f.object.amount,
+            <%= p_f.text_field :amount, :value => '%.3f' % p_f.object.amount,
               :id => "payment_#{p_f.object.paid_with}_amount", :maxlength => 15,
               :readonly => true %>
           </td>
           <td>
-            <%= p_f.text_field :paid, :value => '%.2f' % p_f.object.paid,
+            <%= p_f.text_field :paid, :value => '%.3f' % p_f.object.paid,
               :id => "payment_#{p_f.object.paid_with}_paid", :maxlength => 15,
               :readonly => p_f.object.bonus? %>
           </td>
@@ -111,10 +111,10 @@
       payWithBonus = freeCredit;
     }
 
-    $(cashPrefix + '_amount').setValue(payWithCash.toFixed(2));
-    $(cashPrefix + '_paid').setValue(payWithCash.toFixed(2));
-    $(bonusPrefix + '_amount').setValue(payWithBonus.toFixed(2));
-    $(bonusPrefix + '_paid').setValue(payWithBonus.toFixed(2));
+    $(cashPrefix + '_amount').setValue(payWithCash.toFixed(3));
+    $(cashPrefix + '_paid').setValue(payWithCash.toFixed(3));
+    $(bonusPrefix + '_amount').setValue(payWithBonus.toFixed(3));
+    $(bonusPrefix + '_paid').setValue(payWithBonus.toFixed(3));
   }
 
   function updatePrintJobPrice(printJob) {
