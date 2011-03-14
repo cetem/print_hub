@@ -127,7 +127,7 @@ class PrintsController < ApplicationController
       ).order(order)
     end
 
-    @docs.limit(10)
+    @docs = @docs.limit(10)
   end
 
   private
