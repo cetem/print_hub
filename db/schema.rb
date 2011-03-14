@@ -10,7 +10,19 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110314062849) do
+ActiveRecord::Schema.define(:version => 20110314173337) do
+
+  create_table "articles", :force => true do |t|
+    t.string   "code",                                                       :null => false
+    t.string   "name",                                                       :null => false
+    t.decimal  "price",        :precision => 15, :scale => 3,                :null => false
+    t.text     "description"
+    t.integer  "lock_version",                                :default => 0
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "articles", ["code"], :name => "index_articles_on_code", :unique => true
 
   create_table "bonuses", :force => true do |t|
     t.decimal  "amount",      :precision => 15, :scale => 3, :null => false

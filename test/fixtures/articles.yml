@@ -1,0 +1,11 @@
+binding:
+  code: 'A01'
+  name: Binding
+  price: 1.79
+  description: Binding of copy
+
+ringed:
+  code: 'A02'
+  name: Ringed
+  price: 2.30
+  description: Ringed of book

@@ -42,6 +42,7 @@
       #   user: 'Dude'
       # will translate User model name to 'Dude'
     models:
+      article: 'Artículo'
       bonus: 'Bonificación'
       customer: 'Cliente'
       document: 'Documento'
@@ -60,6 +61,11 @@
       #     login: 'Handle'
       # will translate User attribute 'login' as 'Handle'
     attributes:
+      article:
+        code: 'Código'
+        name: 'Nombre'
+        price: 'Precio'
+        description: 'Descripción'
       bonus:
         amount: 'Monto'
         remaining: 'Restante'
@@ -293,6 +299,7 @@
   menu:
     actions:
       logout: 'Salir'
+    articles: 'Artículos'
     customers: 'Clientes'
     documents: 'Documentos'
     payments: 'Pagos'
@@ -419,6 +426,14 @@
     pm: 'pm'
 
   view:
+    articles:
+      index_title: 'Listado de artículos'
+      show_title: 'Detalle de artículo'
+      new_title: 'Nuevo artículo'
+      edit_title: 'Modificar artículo'
+      correctly_created: 'Artículo agregado correctamente.'
+      correctly_updated: 'Artículo actualizado correctamente.'
+      stale_object_error: 'El artículo no pudo ser actualizado, intente nuevamente.'
     customers:
       index_title: 'Listado de clientes'
       show_title: 'Detalle de cliente'
