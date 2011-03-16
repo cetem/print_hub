@@ -20,6 +20,8 @@ class PrintTest < ActiveSupport::TestCase
     assert_kind_of Print, @print
     assert_equal prints(:math_print).printer, @print.printer
     assert_equal prints(:math_print).user_id, @print.user_id
+    assert_equal prints(:math_print).customer_id, @print.customer_id
+    assert_equal prints(:math_print).pending_payment, @print.pending_payment
   end
 
   # Prueba la creación de una impresión
@@ -54,6 +56,7 @@ class PrintTest < ActiveSupport::TestCase
     assert payment.cash?
     assert_equal '35.0', payment.amount.to_s
     assert_equal '35.0', payment.paid.to_s
+    assert_equal false, @print.pending_payment
   end
 
   test 'create with free credit' do
@@ -139,7 +142,7 @@ class PrintTest < ActiveSupport::TestCase
   end
 
   # Prueba de actualización de una impresión
-  test 'update' do
+  test 'can not update' do
     counts = ['Print.count', 'Cups.all_jobs(@printer).keys.sort.last']
     
     assert_not_equal customers(:teacher).id, @print.customer_id
@@ -149,7 +152,7 @@ class PrintTest < ActiveSupport::TestCase
         @print.errors.full_messages.join('; ')
     end
 
-    assert_equal customers(:teacher).id, @print.reload.customer_id
+    assert_not_equal customers(:teacher).id, @print.reload.customer_id
   end
 
   # Prueba de eliminación de impresiones
@@ -191,5 +194,23 @@ class PrintTest < ActiveSupport::TestCase
     assert_difference cups_count, @print.print_jobs.count do
       @print.print_all_jobs
     end
+  end
+
+  test 'pending payment' do
+    assert @print.has_pending_payment?
+    assert @print.pending_payment
+
+    payment = @print.payments.first
+
+    assert @print.update_attributes(
+      :payments_attributes => {
+        payment.id => {
+          :id => payment.id,
+          :paid => payment.amount
+        }
+      }
+    )
+    assert !@print.reload.has_pending_payment?
+    assert !@print.pending_payment
   end
 end

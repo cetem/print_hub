@@ -28,6 +28,8 @@
       models:
         print:
           attributes:
+            payments:
+              invalid: 'es inválido, el monto es de %{price} y el pago es de %{payment}'
             print_jobs:
               blank: 'al menos debe haber uno'
         print_job:

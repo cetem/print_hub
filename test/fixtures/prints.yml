@@ -2,23 +2,28 @@ math_print:
   printer: <%= Cups.show_destinations.select {|p| p =~ /pdf/i}.first %>
   user: operator
   customer: student
+  pending_payment: true
 
 physics_print:
   printer: <%= Cups.show_destinations.select {|p| p =~ /pdf/i}.first %>
   user: operator
   customer: teacher
+  pending_payment: true
 
 os_print:
   printer: <%= Cups.show_destinations.select {|p| p =~ /pdf/i}.first %>
   user: operator
   customer: teacher
+  pending_payment: false
 
 second_math_print:
   printer: <%= Cups.show_destinations.select {|p| p =~ /pdf/i}.first %>
   user: second_operator
   customer: student
+  pending_payment: true
 
 second_physics_print:
   printer: <%= Cups.show_destinations.select {|p| p =~ /pdf/i}.first %>
   user: second_operator
   customer: teacher
+  pending_payment: true

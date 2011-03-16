@@ -1,13 +1,15 @@
 class Print < ActiveRecord::Base
   # Callbacks
   before_create :print_all_jobs
-  before_save :remove_unnecessary_payments, :update_customer_credit
+  before_save :remove_unnecessary_payments, :update_customer_credit,
+    :mark_as_pending
 
   # Atributos no persistentes
   attr_accessor :auto_customer_name
 
   # Restricciones en los atributos
-  attr_readonly :user_id
+  attr_readonly :user_id, :customer_id, :printer
+  attr_protected :pending_payment
 
   # Restricciones
   validates :printer, :presence => true
@@ -50,13 +52,20 @@ class Print < ActiveRecord::Base
     self.print_jobs.each { |pj| pj.print(self.printer) }
   end
 
+  def mark_as_pending
+    self.pending_payment = self.has_pending_payment?
+
+    true
+  end
+
   def price
     self.print_jobs.to_a.sum(&:price)
   end
 
   def must_have_valid_payments
-    unless self.payments.to_a.sum(&:amount) == self.price
-      self.errors.add :payments, :invalid
+    unless (payment = self.payments.to_a.sum(&:amount)) == self.price
+      self.errors.add :payments, :invalid, :price => '%.3f' % self.price,
+        :payment => '%.3f' % payment
     end
   end
 
@@ -80,5 +89,9 @@ class Print < ActiveRecord::Base
         raise 'Invalid payment'
       end
     end
+  end
+
+  def has_pending_payment?
+    self.payments.inject(0.0) { |t, p| t + p.amount - p.paid } > 0
   end
 end

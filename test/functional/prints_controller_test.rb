@@ -175,13 +175,15 @@ class PrintsControllerTest < ActionController::TestCase
     customer = Customer.find customers(:teacher).id
     math_notes = Document.find(documents(:math_notes).id)
     math_book = Document.find(documents(:math_book).id)
+    immutable_counts = ['user.prints.count', 'Payment.count',
+      'customer.prints.count']
 
     UserSession.create(user)
 
     assert_not_equal customer.id, @print.customer_id
 
-    assert_no_difference ['user.prints.count', 'Payment.count'] do
-      assert_difference ['@print.print_jobs.count', 'customer.prints.count'] do
+    assert_no_difference immutable_counts do
+      assert_difference ['@print.print_jobs.count'] do
         put :update, :id => @print.to_param, :print => {
           :printer => @printer,
           :customer_id => customer.id,
@@ -234,7 +236,8 @@ class PrintsControllerTest < ActionController::TestCase
     assert_redirected_to print_path(@print)
     # No se puede cambiar el usuario que creo una impresión
     assert_not_equal users(:administrator).id, @print.reload.user_id
-    assert_equal customer.id, @print.reload.customer_id
+    # No se puede cambiar el cliente de la impresión
+    assert_not_equal customer.id, @print.reload.customer_id
     assert_equal 123, @print.print_jobs.find_by_document_id(
       documents(:math_notes).id).copies
     assert_equal math_book.pages, @print.print_jobs.order('id ASC').last.pages
