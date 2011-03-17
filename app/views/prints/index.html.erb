@@ -1,6 +1,7 @@
 <table class="list">
   <thead>
     <tr>
+      <th><%= Print.human_attribute_name :id %></th>
       <th><%= Print.human_attribute_name :created_at %></th>
       <th><%= Print.human_attribute_name :printer %></th>
       <th><%= Print.human_attribute_name :customer %></th>
@@ -12,12 +13,13 @@
   <tbody>
     <% @prints.each do |print| %>
       <tr class="<%= cycle(:even, :odd) %>">
+        <td><%= print.id %></td>
         <td><%= l print.created_at, :format => :short if print.created_at %></td>
         <td><%= print.printer %></td>
         <td><%= print.customer || '-' %></td>
         <td><%= print.user %></td>
         <td><%= link_to t(:'label.show'), print %></td>
-        <td><%= link_to t(:'label.edit'), edit_print_path(print) %></td>
+        <td><%= link_to t(:'label.edit'), edit_print_path(print) if print.pending_payment %></td>
       </tr>
     <% end %>
   </tbody>
@@ -25,5 +27,10 @@
 
 <nav class="links">
   <%= pagination_links(@prints) %>
-  <%= link_to t(:'label.new'), new_print_path %>
+  <%= link_to t(:'label.new'), new_print_path %> |
+  <% if params[:pending] != 'pending' %>
+    <%= link_to t(:'view.prints.show_pending'), prints_path(:pending => 'pending') %>
+  <% else %>
+    <%= link_to t(:'view.prints.show_all'), prints_path(:pending => 'all') %>
+  <% end %>
 </nav>

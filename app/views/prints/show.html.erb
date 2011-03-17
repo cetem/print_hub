@@ -60,6 +60,9 @@
 </table>
 
 <nav class="links">
-  <%= link_to t(:'label.edit'), edit_print_path(@print) %> |
+  <%= link_to t(:'label.new'), new_print_path %> |
+  <% if @print.pending_payment %>
+    <%= link_to t(:'label.edit'), edit_print_path(@print) %> |
+  <% end %>
   <%= link_to t(:'label.list'), prints_path %>
 </nav>

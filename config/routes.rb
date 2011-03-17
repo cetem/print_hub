@@ -7,10 +7,12 @@ PrintHubApp::Application.routes.draw do
 
   resources :settings, :only => [:index, :show, :edit, :update]
 
-  resources :prints, :except => [:destroy] do
-    collection do
-      get :autocomplete_for_customer_name
-      get :autocomplete_for_document_name
+  scope ':pending', :defaults => {:pending => 'all'} do
+    resources :prints, :except => [:destroy] do
+      collection do
+        get :autocomplete_for_customer_name
+        get :autocomplete_for_document_name
+      end
     end
   end
 

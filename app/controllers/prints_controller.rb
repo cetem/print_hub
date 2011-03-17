@@ -14,7 +14,8 @@ class PrintsController < ApplicationController
   # GET /prints.xml
   def index
     @title = t :'view.prints.index_title'
-    @prints = prints_scope.order('created_at DESC').paginate(
+    prints = params[:pending] == 'pending' ? prints_scope.pending : prints_scope
+    @prints = prints.order('created_at DESC').paginate(
       :page => params[:page],
       :per_page => APP_LINES_PER_PAGE
     )
@@ -52,7 +53,7 @@ class PrintsController < ApplicationController
   # GET /prints/1/edit
   def edit
     @title = t :'view.prints.edit_title'
-    @print = prints_scope.find(params[:id])
+    @print = prints_scope.pending.find(params[:id])
   end
 
   # POST /prints
@@ -76,7 +77,7 @@ class PrintsController < ApplicationController
   # PUT /prints/1.xml
   def update
     @title = t :'view.prints.edit_title'
-    @print = prints_scope.find(params[:id])
+    @print = prints_scope.pending.find(params[:id])
 
     respond_to do |format|
       if @print.update_attributes(params[:print])
@@ -133,6 +134,6 @@ class PrintsController < ApplicationController
   private
 
   def prints_scope
-    current_user.admin ? Print : current_user.prints
+    current_user.admin ? Print.scoped : current_user.prints
   end
 end

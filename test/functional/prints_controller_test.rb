@@ -24,6 +24,19 @@ class PrintsControllerTest < ActionController::TestCase
     assert_template 'prints/index'
   end
 
+  test 'should get operator pending index' do
+    user = users(:operator)
+
+    UserSession.create(user)
+    get :index, :pending => 'pending'
+    assert_response :success
+    assert_not_nil assigns(:prints)
+    assert assigns(:prints).size > 0
+    assert assigns(:prints).all?(&:pending_payment)
+    assert_select '#error_body', false
+    assert_template 'prints/index'
+  end
+
   test 'should get admin index' do
     user = users(:administrator)
     
@@ -33,6 +46,20 @@ class PrintsControllerTest < ActionController::TestCase
     assert_not_nil assigns(:prints)
     assert_equal Print.count, assigns(:prints).size
     assert assigns(:prints).any? { |p| p.user_id != user.id }
+    assert_select '#error_body', false
+    assert_template 'prints/index'
+  end
+
+  test 'should get admin pending index' do
+    user = users(:administrator)
+
+    UserSession.create(user)
+    get :index, :pending => 'pending'
+    assert_response :success
+    assert_not_nil assigns(:prints)
+    assert_equal Print.pending.count, assigns(:prints).size
+    assert assigns(:prints).any? { |p| p.user_id != user.id }
+    assert assigns(:prints).all?(&:pending_payment)
     assert_select '#error_body', false
     assert_template 'prints/index'
   end
@@ -168,6 +195,19 @@ class PrintsControllerTest < ActionController::TestCase
     assert_not_nil assigns(:print)
     assert_select '#error_body', false
     assert_template 'prints/edit'
+  end
+
+  test 'should not get edit' do
+    UserSession.create(users(:administrator))
+
+    print = Print.where(:pending_payment => false).first
+
+    # Se debe producir un error al tratar de editar una impresión no pendiente
+    get :edit, :id => print.to_param
+    assert_response :success
+    assert_nil assigns(:print)
+    assert_select '#error_body'
+    assert_template 'shared/show_error'
   end
 
   test 'should update print' do

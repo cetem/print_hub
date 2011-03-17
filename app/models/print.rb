@@ -4,6 +4,9 @@ class Print < ActiveRecord::Base
   before_save :remove_unnecessary_payments, :update_customer_credit,
     :mark_as_pending
 
+  # Scopes
+  scope :pending, where(:pending_payment => true)
+
   # Atributos no persistentes
   attr_accessor :auto_customer_name
 
@@ -49,7 +52,9 @@ class Print < ActiveRecord::Base
   end
 
   def print_all_jobs
-    self.print_jobs.each { |pj| pj.print(self.printer) }
+    self.print_jobs.reject(&:marked_for_destruction?).each do |pj|
+      pj.print(self.printer)
+    end
   end
 
   def mark_as_pending
@@ -59,7 +64,7 @@ class Print < ActiveRecord::Base
   end
 
   def price
-    self.print_jobs.to_a.sum(&:price)
+    self.print_jobs.reject(&:marked_for_destruction?).to_a.sum(&:price)
   end
 
   def must_have_valid_payments
