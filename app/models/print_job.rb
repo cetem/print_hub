@@ -103,7 +103,7 @@ class PrintJob < ActiveRecord::Base
   def print(printer)
     # Imprimir solamente si el archivo existe
     if self.document.try(:file) && File.exists?(self.document.file.path)
-      options = "-d #{printer} -n #{self.copies} "
+      options = "-d #{printer} -n #{self.copies} -o fit-to-page "
       options += self.options.map { |o, v| "-o #{o}=#{v}" }.join(' ')
       out = `lp #{options} "#{self.document.file.path}"`
 
