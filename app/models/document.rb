@@ -10,7 +10,7 @@ class Document < ActiveRecord::Base
   find_by_autocomplete :name
 
   # Constantes
-  MEDIA_TYPES = ['A4', 'na_legal_8.5x14in']
+  MEDIA_TYPES = { :a4 => 'A4', :legal => 'na_legal_8.5x14in' }.freeze
 
   # Scopes
   scope :with_tag, lambda { |tag_id|
@@ -32,8 +32,8 @@ class Document < ActiveRecord::Base
   validates :code, :uniqueness => true, :allow_nil => true, :allow_blank => true
   validates :name, :code, :media, :length => { :maximum => 255 },
     :allow_nil => true, :allow_blank => true
-  validates :media, :inclusion => { :in => MEDIA_TYPES }, :allow_nil => true,
-    :allow_blank => true
+  validates :media, :inclusion => { :in => MEDIA_TYPES.values },
+    :allow_nil => true, :allow_blank => true
   validates :pages,
     :numericality => { :only_integer => true, :greater_than => 0 },
     :allow_nil => true, :allow_blank => true

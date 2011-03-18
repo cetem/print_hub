@@ -44,7 +44,7 @@ class DocumentsControllerTest < ActionController::TestCase
         :code => '0001234',
         :name => 'New Name',
         :pages => '15',
-        :media => Document::MEDIA_TYPES.first,
+        :media => Document::MEDIA_TYPES.values.first,
         :description => 'New description',
         :auto_tag_name => 'Some name given in autocomplete',
         :tag_ids => [tags(:books).id, tags(:notes).id],
@@ -80,7 +80,7 @@ class DocumentsControllerTest < ActionController::TestCase
       :code => '003456',
       :name => 'Updated name',
       :pages => '15',
-      :media => Document::MEDIA_TYPES.first,
+      :media => Document::MEDIA_TYPES.values.first,
       :description => 'Updated description',
       :auto_tag_name => 'Some name given in autocomplete',
       :file => fixture_file_upload('/files/test.pdf', 'application/pdf')

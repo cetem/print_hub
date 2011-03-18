@@ -10,7 +10,7 @@ module DocumentsHelper
   end
 
   def show_document_media_field(form)
-    media_types = Document::MEDIA_TYPES.map do |mt|
+    media_types = Document::MEDIA_TYPES.values.map do |mt|
       [show_document_media_text(mt), mt]
     end
 
@@ -18,6 +18,7 @@ module DocumentsHelper
   end
 
   def show_document_media_text(media)
-    t media, :scope => [:view, :documents, :media_type]
+    t Document::MEDIA_TYPES.invert[media],
+      :scope => [:view, :documents, :media_type]
   end
 end

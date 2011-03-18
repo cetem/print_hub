@@ -2,7 +2,7 @@ math_notes:
   code: '001'
   name: Math
   pages: 12
-  media: <%= Document::MEDIA_TYPES.first %>
+  media: <%= Document::MEDIA_TYPES.values.first %>
   description: Math Notes description
   file_file_name: math_notes.pdf
   tags: notes, basics
@@ -11,7 +11,7 @@ math_book:
   code: '002'
   name: Math Book
   pages: 350
-  media: <%= Document::MEDIA_TYPES.first %>
+  media: <%= Document::MEDIA_TYPES.values.first %>
   description: Math Book description
   file_file_name: math_book.pdf
   tags: books, basics
@@ -20,7 +20,7 @@ physics_notes:
   code: '003'
   name: Physics
   pages: 14
-  media: <%= Document::MEDIA_TYPES.first %>
+  media: <%= Document::MEDIA_TYPES.values.first %>
   description: Physics Notes description
   file_file_name: physics_notes.pdf
   tags: notes, physics
@@ -29,7 +29,7 @@ unused_book:
   code: '004'
   name: Unused Book
   pages: 10
-  media: <%= Document::MEDIA_TYPES.first %>
+  media: <%= Document::MEDIA_TYPES.values.first %>
   description: Unused Book description
   file_file_name: unused_book.pdf
   tags: books, basics

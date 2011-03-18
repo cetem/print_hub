@@ -26,7 +26,7 @@ class DocumentTest < ActiveSupport::TestCase
         :code => '00001234',
         :name => 'New name',
         :pages => '5',
-        :media => Document::MEDIA_TYPES.first,
+        :media => Document::MEDIA_TYPES.values.first,
         :description => 'New description',
         :tags => [tags(:books), tags(:notes)]
       )
