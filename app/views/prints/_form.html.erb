@@ -1,7 +1,10 @@
 <%= form_for(@print) do |f| %>
-  <%= content_for :js_extra do -%>
-    <%= raw "var print_job='#{generate_template(f, :print_jobs)}';" %>
-  <% end -%>
+  <% if @print.new_record? %>
+    <%= content_for :js_extra do -%>
+      <%= raw "var print_job='#{generate_template(f, :print_jobs,
+        :locals => {:disabled => false})}';" %>
+    <% end -%>
+  <% end %>
   <%= show_error_messages(@print) %>
 
   <div class="field">
@@ -42,14 +45,15 @@
     
     <div id="print_jobs" class="items">
       <%= f.fields_for :print_jobs do |pj_f| %>
-        <%= render :partial => 'print_job',
-          :locals => {:f => pj_f, :is_dynamic => false} %>
+        <%= render :partial => 'print_job', :locals => {
+          :f => pj_f, :is_dynamic => false, :disabled => !@print.new_record?
+        } %>
       <% end %>
     </div>
   </section>
 
   <div class="add_nested_item">
-    <%= link_to t(:'view.prints.add_print_job'), '#',
+    <%= link_to_if @print.new_record?, t(:'view.prints.add_print_job'), '#',
       :'data-template' => :print_job, :'data-container' => :print_jobs,
       :'data-event' => :add_nested_item %>
   </div>

@@ -278,7 +278,8 @@ class PrintsControllerTest < ActionController::TestCase
     assert_not_equal users(:administrator).id, @print.reload.user_id
     # No se puede cambiar el cliente de la impresión
     assert_not_equal customer.id, @print.reload.customer_id
-    assert_equal 123, @print.print_jobs.find_by_document_id(
+    # No se puede cambiar ningún trabajo de impresión
+    assert_not_equal 123, @print.print_jobs.find_by_document_id(
       documents(:math_notes).id).copies
     assert_equal math_book.pages, @print.print_jobs.order('id ASC').last.pages
   end

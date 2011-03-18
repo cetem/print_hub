@@ -5,7 +5,9 @@
     <div class="nested_item_field">
       <% field_classes = [:autocomplete_field] %>
       <% field_classes << :field_with_errors unless f.object.errors[:document_id].blank? %>
-      <%= f.text_field :auto_document_name, :class => field_classes.join(' '),
+      <%= f.text_field :auto_document_name, :disabled => disabled,
+        :id => "auto_document_#{id}", :class => field_classes.join(' '),
+        :value => f.object.document.try(:to_s),
         :'data-autocomplete-url' => autocomplete_for_document_name_prints_path %>
       <div class="autocomplete_container">
         <div class="autocomplete" style="display: none;"></div>
@@ -14,11 +16,12 @@
     </div>
     <div class="nested_item_field">
       <%= f.text_field :copies, :maxlength => 5, :class => :price_modifier,
-        :autocomplete => :off %>
+        :autocomplete => :off, :disabled => disabled %>
     </div>
     <div class="nested_item_field">
       <%= f.text_field :pages, :maxlength => 5, :class => :price_modifier,
-        :autocomplete => :off, :disabled => !f.object.document.blank? %>
+        :autocomplete => :off,
+        :disabled => disabled || !f.object.document.blank? %>
     </div>
     <div class="nested_item_field">
       <%= f.text_field :price_per_copy, :disabled => true,
@@ -27,15 +30,18 @@
     <div class="nested_item_field">
       <%= f.text_field :range, :maxlength => 255, :class => :price_modifier,
         :autocomplete => :off, :'data-range-pages' => f.object.range_pages,
-        :disabled => !f.object.new_record? && f.object.document.blank? %>
+        :disabled => disabled || (!f.object.new_record? && f.object.document.blank?) %>
     </div>
     <div class="nested_item_field">
       <%= f.check_box :two_sided, :class => :price_modifier,
+        :disabled => disabled,
         :'data-price-per-one-sided' => f.object.price_per_one_sided_copy,
         :'data-price-per-two-sided' => f.object.price_per_two_sided_copy %>
     </div>
     <div class="nested_item_actions">
-      <%= link_to_remove_nested_item(f) %>
+      <% unless disabled %>
+        <%= link_to_remove_nested_item(f) %>
+      <% end %>
       <%= link_to '...', f.object.document || '#',
         :class => 'details_link action_link', :remote => true,
         :'data-update' => "document_details_#{id}",

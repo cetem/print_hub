@@ -3,6 +3,8 @@ class PrintJob < ActiveRecord::Base
   attr_writer :range_pages
   attr_accessor :auto_document_name
   attr_protected :job_id, :price_per_copy
+  attr_readonly :document_id, :copies, :pages, :price_per_copy, :range, :job_id,
+    :two_sided, :print_id
 
   # Restricciones
   validates :copies, :pages, :price_per_copy, :presence => true

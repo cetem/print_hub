@@ -80,7 +80,8 @@ class PrintJobTest < ActiveSupport::TestCase
         @print_job.errors.full_messages.join('; ')
     end
 
-    assert_equal 20, @print_job.reload.copies
+    # No se puede modificar ningún atributo
+    assert_not_equal 20, @print_job.reload.copies
   end
 
   # Prueba de eliminación de trabajos de impresión
