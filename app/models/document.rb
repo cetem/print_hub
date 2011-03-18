@@ -10,7 +10,7 @@ class Document < ActiveRecord::Base
   find_by_autocomplete :name
 
   # Constantes
-  MEDIA_TYPES = ['iso_a4_210x297mm', 'na_legal_8.5x14in']
+  MEDIA_TYPES = ['A4', 'na_legal_8.5x14in']
 
   # Scopes
   scope :with_tag, lambda { |tag_id|
