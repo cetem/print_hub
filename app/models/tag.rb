@@ -22,7 +22,7 @@ class Tag < ActiveRecord::Base
   end
 
   def <=>(other)
-    self.id <=> other.id
+    other.kind_of?(Tag) ? self.id <=> other.id : -1
   end
 
   def update_related_documents

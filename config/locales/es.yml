@@ -458,8 +458,8 @@
       has_related_print_jobs: 'El documento no puede ser eliminado, tiene impresiones relacionadas'
       documents_with_tag: 'Documentos con la etiqueta %{tag}'
       media_type:
-        'iso_a4_210x297mm': 'A4'
-        'na_legal_8.5x14in': 'Oficio'
+        iso_a4_210x297mm: 'A4'
+        na_legal_8.5x14in: 'Oficio'
     payments:
       count:
         one: 'Suma de un pago'
