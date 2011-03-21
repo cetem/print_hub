@@ -4,8 +4,14 @@ binding:
   price: 1.79
   description: Binding of copy
 
-ringed:
+heavy_binding:
   code: 'A02'
+  name: Heavy Binding
+  price: 5.79
+  description: Heavy binding of copy
+
+ringed:
+  code: 'A03'
   name: Ringed
   price: 2.30
   description: Ringed of book

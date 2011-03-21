@@ -94,7 +94,7 @@ class PrintsController < ApplicationController
     redirect_to edit_print_url(@print)
   end
 
-  # POST /prints/autocomplete_for_document_name
+  # GET /prints/autocomplete_for_document_name
   def autocomplete_for_document_name
     query = params[:q].strip.gsub(/\s*([&|])\s*/, '\1').gsub(/[|&!]$/, '')
     @query_terms = query.split(/\s+/).reject(&:blank?)
@@ -129,6 +129,43 @@ class PrintsController < ApplicationController
     end
 
     @docs = @docs.limit(10)
+  end
+
+  # GET /prints/autocomplete_for_article_name
+  def autocomplete_for_article_name
+    query = params[:q].strip.gsub(/\s*([&|])\s*/, '\1').gsub(/[|&!]$/, '')
+    @query_terms = query.split(/\s+/).reject(&:blank?)
+    @articles = Article.scoped
+
+    unless @query_terms.empty?
+      parameters = {
+        :and_term => @query_terms.join(' & '),
+        :wilcard_term => "%#{@query_terms.join('%')}%"
+      }
+
+      if DB_ADAPTER == 'PostgreSQL'
+        lang = "'spanish'" # TODO: implementar con I18n
+        query = "to_tsvector(#{lang}, name) @@ to_tsquery(#{lang}, :and_term)"
+        order = "ts_rank_cd(#{query.sub(' @@', ',')})"
+
+        order = Article.send(:sanitize_sql_for_conditions, [order, parameters])
+      else
+        query = "LOWER(name) LIKE LOWER(:wilcard_term)"
+        order = 'name ASC'
+      end
+      conditions = [query]
+
+      @query_terms.each_with_index do |term, i|
+        conditions << "#{Article.table_name}.code = :clean_term_#{i}"
+        parameters[:"clean_term_#{i}"] = term
+      end
+
+      @articles = @articles.where(
+        conditions.map { |c| "(#{c})" }.join(' OR '), parameters
+      ).order(order)
+    end
+
+    @articles = @articles.limit(10)
   end
 
   private

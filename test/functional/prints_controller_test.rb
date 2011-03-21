@@ -294,7 +294,6 @@ class PrintsControllerTest < ActionController::TestCase
     assert_response :success
     assert_select 'li[data-id]', 2
 
-    # TODO: revisar por que estos test no funcionan
     get :autocomplete_for_document_name, :q => 'note'
     assert_response :success
     assert_select 'li[data-id]', 2
@@ -308,6 +307,26 @@ class PrintsControllerTest < ActionController::TestCase
     assert_select 'li[data-id]', 1
 
     get :autocomplete_for_document_name, :q => 'phyxyz'
+    assert_response :success
+    assert_select 'li[data-id]', false
+  end
+
+  test 'should get autocomplete article list' do
+    UserSession.create(users(:operator))
+    get :autocomplete_for_article_name, :q => 'A01'
+    assert_response :success
+    puts response_from_page_or_rjs
+    assert_select 'li[data-id]', 1
+
+    get :autocomplete_for_article_name, :q => 'binding'
+    assert_response :success
+    assert_select 'li[data-id]', 2
+
+    get :autocomplete_for_article_name, :q => 'A03'
+    assert_response :success
+    assert_select 'li[data-id]', 1
+
+    get :autocomplete_for_article_name, :q => 'xyz'
     assert_response :success
     assert_select 'li[data-id]', false
   end

@@ -1,0 +1,7 @@
+<ul>
+  <% @articles.each do |article| %>
+    <li data-id="<%= article.id %>">
+      <%= highlight article.to_s, @query_terms %>
+    </li>
+  <% end %>
+</ul>
