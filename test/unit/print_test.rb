@@ -173,6 +173,7 @@ class PrintTest < ActiveSupport::TestCase
   test 'validates blank attributes' do
     @print.printer = '   '
     @print.print_jobs.destroy_all
+    @print.article_lines.destroy_all
     @print.payments.destroy_all
     assert @print.invalid?
     assert_equal 2, @print.errors.count
@@ -192,9 +193,12 @@ class PrintTest < ActiveSupport::TestCase
   end
 
   test 'price' do
+    price = @print.print_jobs.inject(0) {|t, j| t + j.price} +
+      @print.article_lines.inject(0) {|t, j| t + j.price}
+
     assert @print.print_jobs.any? { |j| j.price > 0 }
     assert @print.price > 0
-    assert_equal @print.price, @print.print_jobs.inject(0) {|t, j| t + j.price}
+    assert_equal @print.price, price
   end
 
   test 'print all jobs' do

@@ -85,4 +85,8 @@ class ArticleLineTest < ActiveSupport::TestCase
         :greater_than_or_equal_to, :count => 0)],
       @article_line.errors[:unit_price]
   end
+
+  test 'price' do
+    assert_equal '3.58', @article_line.price.to_s
+  end
 end

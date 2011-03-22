@@ -34,7 +34,8 @@ class Print < ActiveRecord::Base
   has_many :article_lines
   autocomplete_for :customer, :name, :name => :auto_customer
 
-  accepts_nested_attributes_for :print_jobs, :allow_destroy => true
+  accepts_nested_attributes_for :print_jobs, :allow_destroy => false
+  accepts_nested_attributes_for :article_lines, :allow_destroy => false
   accepts_nested_attributes_for :payments, :allow_destroy => false,
     :reject_if => proc { |attributes| attributes['amount'].to_f <= 0 }
 
@@ -70,7 +71,8 @@ class Print < ActiveRecord::Base
   end
 
   def price
-    self.print_jobs.reject(&:marked_for_destruction?).to_a.sum(&:price)
+    self.print_jobs.reject(&:marked_for_destruction?).to_a.sum(&:price) +
+      self.article_lines.reject(&:marked_for_destruction?).to_a.sum(&:price)
   end
 
   def must_have_valid_payments

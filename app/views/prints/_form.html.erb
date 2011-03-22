@@ -3,6 +3,8 @@
     <%= content_for :js_extra do -%>
       <%= raw "var print_job='#{generate_template(f, :print_jobs,
         :locals => {:disabled => false})}';" %>
+      <%= raw "var article_line='#{generate_template(f, :article_lines,
+        :locals => {:disabled => false})}';" %>
     <% end -%>
   <% end %>
   <%= show_error_messages(@print) %>
@@ -58,6 +60,31 @@
       :'data-event' => :add_nested_item %>
   </div>
 
+  <section class="nested_items">
+    <h2><%= t :article_lines, :scope => [:view, :prints] %></h2>
+
+    <div id="article_lines_headers" class="headers">
+      <h3><%= ArticleLine.human_attribute_name :article_id %></h3>
+      <h3><%= ArticleLine.human_attribute_name :units %></h3>
+      <h3><%= ArticleLine.human_attribute_name :unit_price %></h3>
+      <br class="break" />
+    </div>
+
+    <div id="article_lines" class="items">
+      <%= f.fields_for :article_lines do |pj_f| %>
+        <%= render :partial => 'article_line', :locals => {
+          :f => pj_f, :is_dynamic => false, :disabled => !@print.new_record?
+        } %>
+      <% end %>
+    </div>
+  </section>
+
+  <div class="add_nested_item">
+    <%= link_to_if @print.new_record?, t(:'view.prints.add_article_line'), '#',
+      :'data-template' => :article_line, :'data-container' => :article_lines,
+      :'data-event' => :add_nested_item %>
+  </div>
+
   <table class="summary">
     <thead>
       <tr>
@@ -99,13 +126,20 @@
     var cashPrefix = 'payment_<%= Payment::PAID_WITH[:cash] %>';
     var bonusPrefix = 'payment_<%= Payment::PAID_WITH[:bonus] %>';
     var freeCredit = parseFloat($('customer_free_credit').getValue()) || 0.0;
+    var payWithCash = 0.0, payWithBonus = 0.0;
     var totalPrice = $$('.print_job').inject(0.0, function(total, pj) {
       var pjPrice = (pj.retrieve('exclude_from_total') ?
         0 : (parseFloat(pj.readAttribute('data-price')) || 0));
-      
+
       return total + pjPrice;
     });
-    var payWithCash = 0.0, payWithBonus = 0.0;
+
+    totalPrice += $$('.article_line').inject(0.0, function(total, pj) {
+      var pjPrice = (pj.retrieve('exclude_from_total') ?
+        0 : (parseFloat(pj.readAttribute('data-price')) || 0));
+
+      return total + pjPrice;
+    });
     
     if(freeCredit > totalPrice) {
       payWithCash = 0.0;
@@ -135,16 +169,33 @@
     updateTotalPrice();
   }
 
+  function updateArticleLinePrice(articleLine) {
+    var units = parseInt(articleLine.down('input[name$="[units]"]').getValue());
+    var unitPrice = parseFloat(
+      articleLine.down('input[name$="[unit_price]"]').getValue()
+    );
+
+    articleLine.writeAttribute('data-price', units * unitPrice);
+
+    updateTotalPrice();
+  }
+
   document.on('item:removed', '.print_job', function(event, element) {
     element.store('exclude_from_total', true);
     
     updateTotalPrice();
   });
 
+  document.on('item:removed', '.article_line', function(event, element) {
+    element.store('exclude_from_total', true);
+
+    updateTotalPrice();
+  });
+
   document.on('autocomplete:update', 'form', function(event) {
     var element = $(event.memo);
     
-    if(element.readAttribute('data-pages')) {
+    if (element.readAttribute('data-pages')) {
       var pages = element.readAttribute('data-pages');
       var printJob = element.up('.print_job');
 
@@ -157,6 +208,13 @@
         'data-range-pages', pages);
 
       updatePrintJobPrice(printJob);
+    } else if (element.readAttribute('data-unit-price')) {
+      var unitPrice = element.readAttribute('data-unit-price');
+      var articleLine = element.up('.article_line');
+
+      articleLine.down('input[name$="[unit_price]"]').setValue(unitPrice);
+
+      updateArticleLinePrice(articleLine);
     } else if (element.readAttribute('data-free-credit')) {
       $('customer_free_credit').setValue(
         element.readAttribute('data-free-credit')
@@ -227,6 +285,17 @@
     }
   });
 
+  document.on('change', 'input[name$="[auto_article_name]"]', function(event, element) {
+    var articleLine = element.up('.article_line');
+
+    if(articleLine && element.getValue().blank()) {
+      articleLine.down('input[name$="[units]"]').setValue('0');
+      articleLine.down('input[name$="[unit_price]"]').setValue('');
+
+      updateArticleLinePrice(articleLine);
+    }
+  });
+
   document.on('change', 'input[name$="[pages]"]', function(event, element) {
     var printJob = element.up('.print_job');
 
@@ -246,6 +315,10 @@
   });
 
   document.on('change', '.price_modifier', function(event, element) {
-    updatePrintJobPrice(element.up('.print_job'));
+    if (element.up('.print_job')) {
+      updatePrintJobPrice(element.up('.print_job'));
+    } else if (element.up('.article_line')) {
+      updateArticleLinePrice(element.up('.article_line'));
+    }
   });
 </script>

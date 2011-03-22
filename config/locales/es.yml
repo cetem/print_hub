@@ -45,6 +45,7 @@
       # will translate User model name to 'Dude'
     models:
       article: 'Artículo'
+      article_line: 'Línea de artículo'
       bonus: 'Bonificación'
       customer: 'Cliente'
       document: 'Documento'
@@ -68,6 +69,10 @@
         name: 'Nombre'
         price: 'Precio'
         description: 'Descripción'
+      article_line:
+        article_id: 'Artículo'
+        units: 'Cantidad'
+        unit_price: 'Precio unitario'
       bonus:
         amount: 'Monto'
         remaining: 'Restante'
@@ -96,6 +101,12 @@
         customer_id: 'Cliente'
         user: 'Usuario'
         user_id: 'Usuario'
+        article_lines:
+          one: 'Artículo'
+          other: 'Artículos'
+          article_id: 'Artículo'
+          units: 'Cantidad'
+          unit_price: 'Precio unitario'
         payments:
           one: 'Pago'
           other: 'Pagos'
@@ -483,6 +494,8 @@
       stale_object_error: 'La impresión no pudo ser actualizada, intente nuevamente.'
       print_jobs: 'Trabajos de impresión'
       add_print_job: 'Agregar trabajo de impresión'
+      article_lines: 'Artículos'
+      add_article_line: 'Agregar artículo'
       document_details: 'Ver detalles del documento'
       print: 'Imprimir'
       show_pending: 'Ver impresiones con pagos pendientes'

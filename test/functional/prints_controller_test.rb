@@ -78,7 +78,7 @@ class PrintsControllerTest < ActionController::TestCase
 
     document = Document.find(documents(:math_book).id)
     counts_array = ['Print.count', 'PrintJob.count', 'Payment.count',
-      'customer.prints.count']
+      'customer.prints.count', 'ArticleLine.count']
     customer = Customer.find customers(:student).id
 
     assert_difference counts_array do
@@ -96,10 +96,19 @@ class PrintsControllerTest < ActionController::TestCase
             :auto_document_name => 'Some name given in autocomplete',
             :document_id => document.id.to_s
           }
-        }, :payments_attributes => {
+        },
+        :article_lines_attributes => {
           :new_1 => {
-            :amount => '35.00',
-            :paid => '35.00'
+            :article_id => articles(:binding).id.to_s,
+            :units => '1',
+            # No importa el precio, se establece desde el artículo
+            :unit_price => '12.0'
+          }
+        },
+        :payments_attributes => {
+          :new_1 => {
+            :amount => '36.79',
+            :paid => '36.79'
           }
         }
       }
@@ -114,7 +123,7 @@ class PrintsControllerTest < ActionController::TestCase
     UserSession.create(users(:operator))
 
     counts_array = ['Print.count', 'PrintJob.count', 'Payment.count',
-      'customer.prints.count']
+      'customer.prints.count', 'ArticleLine.count']
     customer = Customer.find customers(:student).id
 
     assert_difference counts_array do
@@ -130,10 +139,19 @@ class PrintsControllerTest < ActionController::TestCase
             :range => '',
             :two_sided => '0'
           }
-        }, :payments_attributes => {
+        },
+        :article_lines_attributes => {
           :new_1 => {
-            :amount => '3.00',
-            :paid => '3.00'
+            :article_id => articles(:binding).id.to_s,
+            :units => '1',
+            # No importa el precio, se establece desde el artículo
+            :unit_price => '12.0'
+          }
+        },
+        :payments_attributes => {
+          :new_1 => {
+            :amount => '4.79',
+            :paid => '4.79'
           }
         }
       }
@@ -148,7 +166,7 @@ class PrintsControllerTest < ActionController::TestCase
     UserSession.create(users(:operator))
 
     counts_array = ['Print.count', 'PrintJob.count', 'Payment.count',
-      'customer.prints.count']
+      'customer.prints.count', 'ArticleLine.count']
     customer = Customer.find customers(:student).id
     Setting.price_per_one_sided_copy = '0.125'
 
@@ -165,10 +183,19 @@ class PrintsControllerTest < ActionController::TestCase
             :range => '',
             :two_sided => '0'
           }
-        }, :payments_attributes => {
+        },
+        :article_lines_attributes => {
           :new_1 => {
-            :amount => '0.375',
-            :paid => '0.375'
+            :article_id => articles(:binding).id.to_s,
+            :units => '3',
+            # No importa el precio, se establece desde el artículo
+            :unit_price => '12.0'
+          }
+        },
+        :payments_attributes => {
+          :new_1 => {
+            :amount => '5.745',
+            :paid => '5.745'
           }
         }
       }
@@ -265,7 +292,7 @@ class PrintsControllerTest < ActionController::TestCase
           :payments_attributes => {
             payments(:math_payment).id => {
               :id => payments(:math_payment).id.to_s,
-              :amount => '8372.6',
+              :amount => '8376.18',
               :paid => '7.50'
             }
           }
@@ -282,6 +309,7 @@ class PrintsControllerTest < ActionController::TestCase
     assert_not_equal 123, @print.print_jobs.find_by_document_id(
       documents(:math_notes).id).copies
     assert_equal math_book.pages, @print.print_jobs.order('id ASC').last.pages
+    assert @print.pending_payment == true
   end
 
   test 'should get autocomplete document list' do

@@ -31,9 +31,32 @@
         <tr>
           <td><%= print_job.document %></td>
           <td><%= print_job.copies %></td>
-          <td><%= print_job.price_per_copy %></td>
+          <td><%= number_to_currency print_job.price_per_copy %></td>
           <td><%= print_job.range %></td>
           <td><%= t(print_job.two_sided ? :yes : :no, :scope => :label) %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</section>
+
+<section class="nested_items">
+  <h2><%= t :article_lines, :scope => [:view, :prints] %></h2>
+
+  <table class="summary">
+    <thead>
+      <tr>
+        <th><%= ArticleLine.human_attribute_name :article_id %></th>
+        <th><%= ArticleLine.human_attribute_name :units %></th>
+        <th><%= ArticleLine.human_attribute_name :unit_price %></th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @print.article_lines.each do |article_line| %>
+        <tr>
+          <td><%= article_line.article %></td>
+          <td><%= article_line.units %></td>
+          <td><%= number_to_currency article_line.unit_price %></td>
         </tr>
       <% end %>
     </tbody>

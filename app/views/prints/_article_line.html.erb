@@ -1,0 +1,38 @@
+<% id = dynamic_object_id('article_line', f) %>
+<% hide = is_dynamic || f.object.marked_for_destruction? %>
+<div class="article_line nested_item" id="<%= id %>" data-price="<%= f.object.price %>" <%= raw 'style="display: none;"' if hide %>>
+  <div>
+    <div class="nested_item_field">
+      <% field_classes = [:autocomplete_field] %>
+      <% field_classes << :field_with_errors unless f.object.errors[:article_id].blank? %>
+      <%= f.text_field :auto_article_name, :disabled => disabled,
+        :id => "auto_article_line_#{id}", :class => field_classes.join(' '),
+        :value => f.object.article.try(:to_s),
+        :'data-autocomplete-url' => autocomplete_for_article_name_prints_path %>
+      <div class="autocomplete_container">
+        <div class="autocomplete" style="display: none;"></div>
+      </div>
+      <%= f.hidden_field :article_id, :class => :autocomplete_id %>
+    </div>
+    <div class="nested_item_field">
+      <%= f.text_field :units, :maxlength => 5, :class => :price_modifier,
+        :autocomplete => :off, :disabled => disabled %>
+    </div>
+    <div class="nested_item_field">
+      <%= f.text_field :unit_price, :disabled => true,
+        :value => ('%.3f' % f.object.unit_price if f.object.unit_price),
+        :class => :price_modifier, :autocomplete => :off %>
+    </div>
+    <div class="nested_item_actions">
+      <%= link_to_remove_nested_item(f) unless disabled %>
+      <%= f.hidden_field :lock_version %>
+    </div>
+    <div class="dynamic_details"></div>
+  </div>
+</div>
+<% if is_dynamic %>
+  <script type="text/javascript">
+    Helper.show('<%= id %>');
+    AutoComplete.observeAll();
+  </script>
+<% end -%>

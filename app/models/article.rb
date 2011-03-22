@@ -1,4 +1,6 @@
 class Article < ActiveRecord::Base
+  find_by_autocomplete :name
+  
   # Callbacks
   before_destroy :can_be_destroyed?
 
