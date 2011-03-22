@@ -66,8 +66,11 @@ class ArticlesControllerTest < ActionController::TestCase
 
   test 'should destroy article' do
     UserSession.create(users(:administrator))
+
+    article = Article.find(articles(:ringed).id)
+
     assert_difference('Article.count', -1) do
-      delete :destroy, :id => @article.to_param
+      delete :destroy, :id => article.to_param
     end
 
     assert_redirected_to articles_path

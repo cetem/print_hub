@@ -3,6 +3,7 @@ class Print < ActiveRecord::Base
   before_create :print_all_jobs
   before_save :remove_unnecessary_payments, :update_customer_credit,
     :mark_as_pending
+  before_destroy :can_be_destroyed?
 
   # Scopes
   scope :pending, where(:pending_payment => true)
@@ -28,8 +29,9 @@ class Print < ActiveRecord::Base
   # Relaciones
   belongs_to :user
   belongs_to :customer
-  has_many :payments, :as => :payable, :dependent => :destroy
-  has_many :print_jobs, :dependent => :destroy
+  has_many :payments, :as => :payable
+  has_many :print_jobs
+  has_many :article_lines
   autocomplete_for :customer, :name, :name => :auto_customer
 
   accepts_nested_attributes_for :print_jobs, :allow_destroy => true
@@ -44,6 +46,10 @@ class Print < ActiveRecord::Base
 
     self.payment(:cash)
     self.payment(:bonus)
+  end
+
+  def can_be_destroyed?
+    self.article_lines.empty? && self.print_jobs.empty? && self.payments.empty?
   end
 
   def payment(type)

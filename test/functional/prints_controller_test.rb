@@ -315,7 +315,6 @@ class PrintsControllerTest < ActionController::TestCase
     UserSession.create(users(:operator))
     get :autocomplete_for_article_name, :q => 'A01'
     assert_response :success
-    puts response_from_page_or_rjs
     assert_select 'li[data-id]', 1
 
     get :autocomplete_for_article_name, :q => 'binding'

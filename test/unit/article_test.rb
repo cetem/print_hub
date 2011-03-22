@@ -42,9 +42,13 @@ class ArticleTest < ActiveSupport::TestCase
 
   # Prueba de eliminación de articleos
   test 'destroy' do
-    article = Article.find(articles(:binding).id)
+    article = Article.find(articles(:ringed).id)
 
     assert_difference('Article.count', -1) { article.destroy }
+  end
+
+  test 'can not be destroyed' do
+    assert_no_difference('Article.count', -1) { @article.destroy }
   end
 
   # Prueba que las validaciones del modelo se cumplan como es esperado

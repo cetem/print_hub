@@ -157,14 +157,23 @@ class PrintTest < ActiveSupport::TestCase
 
   # Prueba de eliminación de impresiones
   test 'destroy' do
+    @print.print_jobs.destroy_all
+    @print.article_lines.destroy_all
+    @print.payments.destroy_all
+
     assert_difference('Print.count', -1) { @print.destroy }
+  end
+
+  # Prueba de eliminación de impresiones
+  test 'can not be destroyed' do
+    assert_no_difference('Print.count', -1) { @print.destroy }
   end
 
   # Prueba que las validaciones del modelo se cumplan como es esperado
   test 'validates blank attributes' do
     @print.printer = '   '
-    @print.print_jobs.clear
-    @print.payments.clear
+    @print.print_jobs.destroy_all
+    @print.payments.destroy_all
     assert @print.invalid?
     assert_equal 2, @print.errors.count
     assert_equal [error_message_from_model(@print, :printer, :blank)],

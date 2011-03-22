@@ -2,6 +2,8 @@ class PrintJob < ActiveRecord::Base
   # Atributos no persistentes
   attr_writer :range_pages
   attr_accessor :auto_document_name
+
+  # Restricciones de atributos
   attr_protected :job_id, :price_per_copy
   attr_readonly :document_id, :copies, :pages, :price_per_copy, :range, :job_id,
     :two_sided, :print_id

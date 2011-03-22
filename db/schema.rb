@@ -10,7 +10,20 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110315184544) do
+ActiveRecord::Schema.define(:version => 20110321223943) do
+
+  create_table "article_lines", :force => true do |t|
+    t.integer  "print_id",                                                   :null => false
+    t.integer  "article_id",                                                 :null => false
+    t.integer  "units",                                                      :null => false
+    t.decimal  "unit_price",   :precision => 15, :scale => 3,                :null => false
+    t.integer  "lock_version",                                :default => 0
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "article_lines", ["article_id"], :name => "index_article_lines_on_article_id"
+  add_index "article_lines", ["print_id"], :name => "index_article_lines_on_print_id"
 
   create_table "articles", :force => true do |t|
     t.string   "code",                                                       :null => false
@@ -169,6 +182,9 @@ ActiveRecord::Schema.define(:version => 20110315184544) do
 
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true
   add_index "users", ["username"], :name => "index_users_on_username", :unique => true
+
+  add_foreign_key "article_lines", "articles", :name => "article_lines_article_id_fk", :dependent => :restrict
+  add_foreign_key "article_lines", "prints", :name => "article_lines_print_id_fk", :dependent => :restrict
 
   add_foreign_key "bonuses", "customers", :name => "bonuses_customer_id_fk", :dependent => :restrict
 
