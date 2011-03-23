@@ -496,6 +496,7 @@
       add_print_job: 'Agregar trabajo de impresión'
       article_lines: 'Artículos'
       add_article_line: 'Agregar artículo'
+      payment: 'Pago'
       document_details: 'Ver detalles del documento'
       print: 'Imprimir'
       show_pending: 'Ver impresiones con pagos pendientes'

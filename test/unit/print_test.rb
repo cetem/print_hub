@@ -26,7 +26,10 @@ class PrintTest < ActiveSupport::TestCase
 
   # Prueba la creación de una impresión
   test 'create' do
-    assert_difference ['Print.count', 'PrintJob.count', 'Payment.count'] do
+    counts = ['Print.count', 'PrintJob.count', 'Payment.count',
+      'ArticleLine.count']
+    
+    assert_difference counts do
       @print = Print.create(
         :printer => @printer,
         :user => users(:administrator),
@@ -40,10 +43,19 @@ class PrintTest < ActiveSupport::TestCase
             :two_sided => false,
             :document => documents(:math_book)
           }
-        }, :payments_attributes => {
+        },
+        :article_lines_attributes => {
           :new_1 => {
-            :amount => 35.00,
-            :paid => 35.00
+            :article_id => articles(:binding).id,
+            :units => 1,
+            # No importa el precio, se establece desde el artículo
+            :unit_price => 12.0
+          }
+        },
+        :payments_attributes => {
+          :new_1 => {
+            :amount => 36.79,
+            :paid => 36.79
           }
         }
       )
@@ -54,14 +66,14 @@ class PrintTest < ActiveSupport::TestCase
     payment = @print.payments.first
 
     assert payment.cash?
-    assert_equal '35.0', payment.amount.to_s
-    assert_equal '35.0', payment.paid.to_s
+    assert_equal '36.79', payment.amount.to_s
+    assert_equal '36.79', payment.paid.to_s
     assert_equal false, @print.pending_payment
   end
 
   test 'create with free credit' do
     counts = ['Print.count', 'PrintJob.count', 'Payment.count',
-      'Cups.all_jobs(@printer).keys.sort.last']
+      'Cups.all_jobs(@printer).keys.sort.last', 'ArticleLine.count']
 
     assert_difference counts do
       @print = Print.create(
@@ -75,10 +87,19 @@ class PrintTest < ActiveSupport::TestCase
             :two_sided => false,
             :document => documents(:math_book)
           } # 350 páginas = $35.00
-        }, :payments_attributes => {
+        },
+        :article_lines_attributes => {
           :new_1 => {
-            :amount => 35.00,
-            :paid => 35.00,
+            :article_id => articles(:binding).id,
+            :units => 1,
+            # No importa el precio, se establece desde el artículo
+            :unit_price => 12.0
+          }
+        },
+        :payments_attributes => {
+          :new_1 => {
+            :amount => 36.79,
+            :paid => 36.79,
             :paid_with => Payment::PAID_WITH[:bonus]
           }
         }
@@ -90,15 +111,16 @@ class PrintTest < ActiveSupport::TestCase
     payment = @print.payments.first
 
     assert payment.bonus?
-    assert_equal '35.0', payment.amount.to_s
-    assert_equal '35.0', payment.paid.to_s
-    assert_equal '465.0', Customer.find(customers(:student).id).free_credit.to_s
+    assert_equal '36.79', payment.amount.to_s
+    assert_equal '36.79', payment.paid.to_s
+    assert_equal '463.21',
+      Customer.find(customers(:student).id).free_credit.to_s
   end
 
   test 'create with free credit and cash' do
     cups_count = 'Cups.all_jobs(@printer).keys.sort.last'
 
-    assert_difference ['Print.count', 'PrintJob.count'] do
+    assert_difference ['Print.count', 'PrintJob.count', 'ArticleLine.count'] do
       assert_difference cups_count, 1 do
         assert_difference 'Payment.count', 2 do
           @print = Print.create(
@@ -112,10 +134,19 @@ class PrintTest < ActiveSupport::TestCase
                 :two_sided => false,
                 :document => documents(:math_book)
               } # 35000 páginas = $3500.00
-            }, :payments_attributes => {
+            },
+            :article_lines_attributes => {
               :new_1 => {
-                :amount => 3000.00,
-                :paid => 3000.00
+                :article_id => articles(:binding).id,
+                :units => 1,
+                # No importa el precio, se establece desde el artículo
+                :unit_price => 12.0
+              }
+            },
+            :payments_attributes => {
+              :new_1 => {
+                :amount => 3001.79,
+                :paid => 3001.79
               },
               :new_2 => {
                 :amount => 500.00,
@@ -137,8 +168,8 @@ class PrintTest < ActiveSupport::TestCase
 
     cash_payment = @print.payments.detect(&:cash?)
 
-    assert_equal '3000.0', cash_payment.amount.to_s
-    assert_equal '3000.0', cash_payment.paid.to_s
+    assert_equal '3001.79', cash_payment.amount.to_s
+    assert_equal '3001.79', cash_payment.paid.to_s
   end
 
   # Prueba de actualización de una impresión

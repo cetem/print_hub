@@ -71,6 +71,7 @@
     </div>
 
     <div id="article_lines" class="items">
+      <% @print.article_lines.build if @print.article_lines.empty? %>
       <%= f.fields_for :article_lines do |pj_f| %>
         <%= render :partial => 'article_line', :locals => {
           :f => pj_f, :is_dynamic => false, :disabled => !@print.new_record?
@@ -85,36 +86,39 @@
       :'data-event' => :add_nested_item %>
   </div>
 
-  <table class="summary">
-    <thead>
-      <tr>
-        <th><%= Payment.human_attribute_name :amount %></th>
-        <th><%= Payment.human_attribute_name :paid %></th>
-        <th><%= Payment.human_attribute_name :paid_with %></th>
-      </tr>
-    </thead>
-    <tbody>
-      <%= f.fields_for :payments do |p_f| %>
+  <section class="nested_items">
+    <h2><%= t :payment, :scope => [:view, :prints] %></h2>
+    <table class="summary">
+      <thead>
         <tr>
-          <td>
-            <%= p_f.text_field :amount, :value => '%.3f' % p_f.object.amount,
-              :id => "payment_#{p_f.object.paid_with}_amount", :maxlength => 15,
-              :readonly => true %>
-          </td>
-          <td>
-            <%= p_f.text_field :paid, :value => '%.3f' % p_f.object.paid,
-              :id => "payment_#{p_f.object.paid_with}_paid", :maxlength => 15,
-              :readonly => p_f.object.bonus? %>
-          </td>
-          <td>
-            <%= p_f.object.paid_with_text %>
-            <%= p_f.hidden_field :paid_with %>
-            <%= p_f.hidden_field :lock_version %>
-          </td>
+          <th><%= Payment.human_attribute_name :amount %></th>
+          <th><%= Payment.human_attribute_name :paid %></th>
+          <th><%= Payment.human_attribute_name :paid_with %></th>
         </tr>
-      <% end %>
-    </tbody>
-  </table>
+      </thead>
+      <tbody>
+        <%= f.fields_for :payments do |p_f| %>
+          <tr>
+            <td>
+              <%= p_f.text_field :amount, :value => '%.3f' % p_f.object.amount,
+                :id => "payment_#{p_f.object.paid_with}_amount", :maxlength => 15,
+                :readonly => true %>
+            </td>
+            <td>
+              <%= p_f.text_field :paid, :value => '%.3f' % p_f.object.paid,
+                :id => "payment_#{p_f.object.paid_with}_paid", :maxlength => 15,
+                :readonly => p_f.object.bonus? %>
+            </td>
+            <td>
+              <%= p_f.object.paid_with_text %>
+              <%= p_f.hidden_field :paid_with %>
+              <%= p_f.hidden_field :lock_version %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </section>
 
   <div class="actions">
     <%= f.hidden_field :lock_version %>

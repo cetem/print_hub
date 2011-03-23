@@ -35,7 +35,8 @@ class Print < ActiveRecord::Base
   autocomplete_for :customer, :name, :name => :auto_customer
 
   accepts_nested_attributes_for :print_jobs, :allow_destroy => false
-  accepts_nested_attributes_for :article_lines, :allow_destroy => false
+  accepts_nested_attributes_for :article_lines, :allow_destroy => false,
+    :reject_if => proc { |attributes| attributes['article_id'].blank? }
   accepts_nested_attributes_for :payments, :allow_destroy => false,
     :reject_if => proc { |attributes| attributes['amount'].to_f <= 0 }
 

@@ -63,24 +63,28 @@
   </table>
 </section>
 
-<table class="summary">
-  <thead>
-    <tr>
-      <th><%= Payment.human_attribute_name :amount %></th>
-      <th><%= Payment.human_attribute_name :paid %></th>
-      <th><%= Payment.human_attribute_name :paid_with %></th>
-    </tr>
-  </thead>
-  <tbody>
-    <% @print.payments.each do |payment| %>
+<section class="nested_items">
+  <h2><%= t :payment, :scope => [:view, :prints] %></h2>
+
+  <table class="summary">
+    <thead>
       <tr>
-        <td><%= payment.amount %></td>
-        <td><%= payment.paid %></td>
-        <td><%= payment.paid_with_text %></td>
+        <th><%= Payment.human_attribute_name :amount %></th>
+        <th><%= Payment.human_attribute_name :paid %></th>
+        <th><%= Payment.human_attribute_name :paid_with %></th>
       </tr>
-    <% end %>
-  </tbody>
-</table>
+    </thead>
+    <tbody>
+      <% @print.payments.each do |payment| %>
+        <tr>
+          <td><%= payment.amount %></td>
+          <td><%= payment.paid %></td>
+          <td><%= payment.paid_with_text %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</section>
 
 <nav class="links">
   <%= link_to t(:'label.new'), new_print_path %> |
