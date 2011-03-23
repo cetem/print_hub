@@ -40,28 +40,30 @@
   </table>
 </section>
 
-<section class="nested_items">
-  <h2><%= t :article_lines, :scope => [:view, :prints] %></h2>
+<% unless @print.article_lines.empty? %>
+  <section class="nested_items">
+    <h2><%= t :article_lines, :scope => [:view, :prints] %></h2>
 
-  <table class="summary">
-    <thead>
-      <tr>
-        <th><%= ArticleLine.human_attribute_name :article_id %></th>
-        <th><%= ArticleLine.human_attribute_name :units %></th>
-        <th><%= ArticleLine.human_attribute_name :unit_price %></th>
-      </tr>
-    </thead>
-    <tbody>
-      <% @print.article_lines.each do |article_line| %>
+    <table class="summary">
+      <thead>
         <tr>
-          <td><%= article_line.article %></td>
-          <td><%= article_line.units %></td>
-          <td><%= number_to_currency article_line.unit_price %></td>
+          <th><%= ArticleLine.human_attribute_name :article_id %></th>
+          <th><%= ArticleLine.human_attribute_name :units %></th>
+          <th><%= ArticleLine.human_attribute_name :unit_price %></th>
         </tr>
-      <% end %>
-    </tbody>
-  </table>
-</section>
+      </thead>
+      <tbody>
+        <% @print.article_lines.each do |article_line| %>
+          <tr>
+            <td><%= article_line.article %></td>
+            <td><%= article_line.units %></td>
+            <td><%= number_to_currency article_line.unit_price %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </section>
+<% end %>
 
 <section class="nested_items">
   <h2><%= t :payment, :scope => [:view, :prints] %></h2>
