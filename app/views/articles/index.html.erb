@@ -11,8 +11,8 @@
   <tbody>
     <% @articles.each do |article| %>
       <tr>
-        <td><%= article.name %></td>
         <td><%= article.code %></td>
+        <td><%= article.name %></td>
         <td><%= number_to_currency article.price %></td>
         <td><%= link_to t(:'label.show'), article %></td>
         <td><%= link_to t(:'label.edit'), edit_article_path(article) %></td>
