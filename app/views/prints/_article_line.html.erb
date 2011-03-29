@@ -32,9 +32,11 @@
 </div>
 <% if is_dynamic %>
   <script type="text/javascript">
-    Helper.show('<%= id %>', {afterFinish: function() {
-      $('<%= "auto_article_line_#{id}" %>').focus();
-    }});
+    Helper.show('<%= id %>', {
+      afterFinish: function() {
+        $('<%= "auto_article_line_#{id}" %>').focus();
+      }
+    });
     AutoComplete.observeAll();
   </script>
 <% end -%>

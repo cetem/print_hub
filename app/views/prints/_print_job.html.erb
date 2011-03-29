@@ -54,9 +54,11 @@
 </div>
 <% if is_dynamic %>
   <script type="text/javascript">
-    Helper.show('<%= id %>', {afterFinish: function() {
-      $('<%= "auto_document_#{id}" %>').focus();
-    }});
+    Helper.show('<%= id %>', {
+      afterFinish: function() {
+        $('<%= "auto_document_#{id}" %>').focus();
+      }
+    });
     AutoComplete.observeAll();
   </script>
 <% end -%>

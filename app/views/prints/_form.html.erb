@@ -57,7 +57,8 @@
   <div class="add_nested_item">
     <%= link_to_if @print.new_record?, t(:'view.prints.add_print_job'), '#',
       :'data-template' => :print_job, :'data-container' => :print_jobs,
-      :'data-event' => :add_nested_item %>
+      :'data-event' => :add_nested_item, :id => :add_print_job_link,
+      :title => t(:'view.prints.add_print_job_title') %>
   </div>
 
   <section class="nested_items">
@@ -83,7 +84,8 @@
   <div class="add_nested_item">
     <%= link_to_if @print.new_record?, t(:'view.prints.add_article_line'), '#',
       :'data-template' => :article_line, :'data-container' => :article_lines,
-      :'data-event' => :add_nested_item %>
+      :'data-event' => :add_nested_item, :id => :add_article_line_link,
+      :title => t(:'view.prints.add_article_line_title') %>
   </div>
 
   <section class="nested_items">
@@ -122,7 +124,8 @@
 
   <div class="actions">
     <%= f.hidden_field :lock_version %>
-    <%= f.submit t(:'view.prints.print') %>
+    <%= f.submit t(:'view.prints.print'), :id => :print_submit,
+      :title => t(:'view.prints.print_title') %>
   </div>
 <% end %>
 <script type="text/javascript">
@@ -323,6 +326,25 @@
       updatePrintJobPrice(element.up('.print_job'));
     } else if (element.up('.article_line')) {
       updateArticleLinePrice(element.up('.article_line'));
+    }
+  });
+
+  // Captura de atajos de teclado
+  document.on('keydown', function(e) {
+    var key = e.keyCode || e.which;
+
+    // CTRL + ALT + I = Agregar un trabajo
+    if((key == 73 || key == 105) && e.ctrlKey && e.altKey) {
+      $('add_print_job_link').click();
+      Event.stop(e);
+    // CTRL + ALT + A = Agregar un artículo
+    } else if((key == 65 || key == 97) && e.ctrlKey && e.altKey) {
+      $('add_article_line_link').click();
+      Event.stop(e);
+    // CTRL + ALT + P = Imprimir
+    } else if((key == 80 || key == 112) && e.ctrlKey && e.altKey) {
+      $('print_submit').click();
+      Event.stop(e);
     }
   });
 </script>

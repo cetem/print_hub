@@ -60,7 +60,7 @@ var EventHandler = {
 
     var hiddenInput = e.previous('input[type=hidden].destroy');
 
-    if(hiddenInput) { hiddenInput.setValue('1'); }
+    if(hiddenInput) {hiddenInput.setValue('1');}
 
     e.fire('item:hidden');
   },
@@ -80,7 +80,7 @@ var Helper = {
      * Oculta el elemento indicado
      */
   hide: function(element, options) {
-    Effect.SlideUp(element, Util.merge({ duration: 0.5 }, options));
+    Effect.SlideUp(element, Util.merge({duration: 0.5}, options));
   },
 
   /**
@@ -89,7 +89,7 @@ var Helper = {
   hideLoading: function(element) {
     $('loading').hide();
 
-    if($(element)) { $(element).enable(); }
+    if($(element)) {$(element).enable();}
   },
 
   /**
@@ -98,7 +98,7 @@ var Helper = {
   remove: function(element, options) {
     Effect.SlideUp(element, Util.merge({
       duration: 0.5,
-      afterFinish: function() { $(element).remove(); }
+      afterFinish: function() {$(element).remove();}
     }, options));
   },
 
@@ -109,7 +109,7 @@ var Helper = {
     var e = $(element);
 
     if(e != null && !e.visible()) {
-      Effect.SlideDown(e, Util.merge({ duration: 0.5 }, options));
+      Effect.SlideDown(e, Util.merge({duration: 0.5}, options));
     }
   },
 
@@ -119,7 +119,7 @@ var Helper = {
   showLoading: function(element) {
     $('loading').show();
 
-    if($(element)) { $(element).disable(); }
+    if($(element)) {$(element).disable();}
   }
 }
 
@@ -162,3 +162,17 @@ Event.observe(window, 'load', function() {
 
   AutoComplete.observeAll();
 });
+
+// Lograr que la función click() se comporte de la misma manera que un click
+if (!HTMLAnchorElement.prototype.click) {
+  HTMLAnchorElement.prototype.click = function() {
+    var ev = document.createEvent('MouseEvents');
+    ev.initEvent('click',true,true);
+    if (this.dispatchEvent(ev) !== false) {
+      //safari will have already done this, but I'm not sniffing safari
+      //just in case they might in the future fix it; I figure it's better
+      //to trigger the action twice than risk not triggering it at all
+      document.location.href = this.href;
+    }
+  }
+}
