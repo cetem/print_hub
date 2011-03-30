@@ -1,7 +1,7 @@
 class PrintJob < ActiveRecord::Base
   # Atributos no persistentes
   attr_writer :range_pages
-  attr_accessor :auto_document_name
+  attr_accessor :auto_document_name, :job_hold_until
 
   # Restricciones de atributos
   attr_protected :job_id, :price_per_copy
@@ -65,6 +65,7 @@ class PrintJob < ActiveRecord::Base
 
     options['media'] = self.document.media if self.document
     options['page-ranges'] = self.range unless self.range.blank?
+    options['job-hold-until'] = self.job_hold_until if self.job_hold_until
 
     options
   end
@@ -116,5 +117,13 @@ class PrintJob < ActiveRecord::Base
 
       self.job_id = out.match(/#{Regexp.escape(printer)}-\d+/).to_a[0] || '-'
     end
+  end
+
+  def cancel
+    job = self.job_id ? self.job_id.match(/\d+$/).to_a[0] : nil
+
+    out = job ? %x{lprm #{job} 2>&1} : 'Error'
+    
+    out.blank?
   end
 end

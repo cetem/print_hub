@@ -302,4 +302,34 @@ class PrintJobTest < ActiveSupport::TestCase
       @print_job.send_to_print(@printer)
     end
   end
+
+  test 'cancel print' do
+    cups_count = 'Cups.all_jobs(@printer).keys.sort.last'
+    canceled_count = Cups.all_jobs(@printer).select do |_, j|
+      j[:state] == :cancelled
+    end.size
+
+    assert_difference [cups_count] do
+      @print_job.job_hold_until = 'indefinite'
+      
+      @print_job.send_to_print(@printer)
+    end
+
+    assert @print_job.cancel
+
+    new_canceled_count = Cups.all_jobs(@printer).select do |_, j|
+      j[:state] == :cancelled
+    end.size
+
+    assert_equal canceled_count, new_canceled_count - 1
+
+    # Se rotorna false cuando no se puede cancelar el trabajo por algún error
+    assert !@print_job.cancel
+
+    new_canceled_count = Cups.all_jobs(@printer).select do |_, j|
+      j[:state] == :cancelled
+    end.size
+    
+    assert_equal canceled_count, new_canceled_count - 1
+  end
 end
