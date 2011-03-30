@@ -331,4 +331,26 @@ class PrintJobTest < ActiveSupport::TestCase
     
     assert_equal canceled_count, new_canceled_count - 1
   end
+
+  test 'pending' do
+    assert !@print_job.pending?
+
+    @print_job.job_hold_until = 'indefinite'
+
+    @print_job.send_to_print(@printer)
+
+    assert @print_job.pending?
+    assert @print_job.cancel
+    assert !@print_job.pending?
+  end
+
+  test 'completed' do
+    print_job = PrintJob.create(@print_job.attributes.except(:id))
+
+    assert !print_job.completed?
+
+    print_job.send_to_print(@printer)
+
+    assert print_job.completed?
+  end
 end

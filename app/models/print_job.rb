@@ -126,4 +126,12 @@ class PrintJob < ActiveRecord::Base
     
     out.blank?
   end
+
+  def pending?
+    !%x{lpstat -W not-completed | grep "^#{self.job_id} "}.blank?
+  end
+
+  def completed?
+    !%x{lpstat -W completed | grep "^#{self.job_id} "}.blank?
+  end
 end
