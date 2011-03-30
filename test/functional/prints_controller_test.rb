@@ -312,6 +312,59 @@ class PrintsControllerTest < ActionController::TestCase
     assert @print.pending_payment == true
   end
 
+  test 'should cancel job' do
+    UserSession.create(users(:operator))
+    
+    canceled_count = Cups.all_jobs(@printer).select do |_, j|
+      j[:state] == :cancelled
+    end.size
+
+    document = Document.find documents(:math_book).id
+
+    assert_difference 'Cups.all_jobs(@printer).keys.sort.last' do
+      post :create, :print => {
+        :printer => @printer,
+        :print_jobs_attributes => {
+          :new_1 => {
+            :copies => '1',
+            :range => '',
+            :two_sided => '0',
+            :document_id => document.id.to_s,
+            :job_hold_until => 'indefinite'
+          }
+        },
+        :payments_attributes => {
+          :new_1 => {
+            :amount => '35.00',
+            :paid => '35.00'
+          }
+        }
+      }
+    end
+
+    print_job = Print.order('id DESC').first.print_jobs.first
+
+    put :cancel_job, :id => print_job.to_param
+
+    assert_equal true, ActiveSupport::JSON.decode(@response.body)
+
+    new_canceled_count = Cups.all_jobs(@printer).select do |_, j|
+      j[:state] == :cancelled
+    end.size
+
+    assert_equal canceled_count, new_canceled_count - 1
+  end
+
+  test 'can not cancel a completed job' do
+    UserSession.create(users(:operator))
+    
+    print_job = PrintJob.find print_jobs(:math_job_1).id
+
+    put :cancel_job, :id => print_job.to_param
+
+    assert_equal false, ActiveSupport::JSON.decode(@response.body)
+  end
+
   test 'should get autocomplete document list' do
     Document.all.each do |d|
       d.update_attributes!(:tag_path => d.tags.map(&:to_s).join(' ## '))

@@ -168,6 +168,13 @@ class PrintsController < ApplicationController
     @articles = @articles.limit(10)
   end
 
+  # PUT /prints/cancel_job
+  def cancel_job
+    @print_job = PrintJob.find(params[:id])
+
+    render :json => @print_job.cancel
+  end
+
   private
 
   def prints_scope

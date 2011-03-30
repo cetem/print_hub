@@ -9,6 +9,10 @@ PrintHubApp::Application.routes.draw do
 
   scope ':pending', :defaults => {:pending => 'all'} do
     resources :prints, :except => [:destroy] do
+      member do
+        put :cancel_job
+      end
+      
       collection do
         get :autocomplete_for_customer_name
         get :autocomplete_for_document_name

@@ -304,12 +304,11 @@ class PrintJobTest < ActiveSupport::TestCase
   end
 
   test 'cancel print' do
-    cups_count = 'Cups.all_jobs(@printer).keys.sort.last'
     canceled_count = Cups.all_jobs(@printer).select do |_, j|
       j[:state] == :cancelled
     end.size
 
-    assert_difference [cups_count] do
+    assert_difference 'Cups.all_jobs(@printer).keys.sort.last' do
       @print_job.job_hold_until = 'indefinite'
       
       @print_job.send_to_print(@printer)
