@@ -344,9 +344,11 @@ class PrintsControllerTest < ActionController::TestCase
 
     print_job = Print.order('id DESC').first.print_jobs.first
 
-    put :cancel_job, :id => print_job.to_param
+    xhr :put, :cancel_job, :id => print_job.to_param
 
-    assert_equal true, ActiveSupport::JSON.decode(@response.body)
+    assert_response :success
+    assert_match %r{#{I18n.t(:job_canceled, :scope => [:view, :prints])}},
+      @response.body
 
     new_canceled_count = Cups.all_jobs(@printer).select do |_, j|
       j[:state] == :cancelled
@@ -360,9 +362,11 @@ class PrintsControllerTest < ActionController::TestCase
     
     print_job = PrintJob.find print_jobs(:math_job_1).id
 
-    put :cancel_job, :id => print_job.to_param
+    xhr :put, :cancel_job, :id => print_job.to_param
 
-    assert_equal false, ActiveSupport::JSON.decode(@response.body)
+    assert_response :success
+    assert_match %r{#{I18n.t(:job_not_canceled, :scope => [:view, :prints])}},
+      @response.body
   end
 
   test 'should get autocomplete document list' do

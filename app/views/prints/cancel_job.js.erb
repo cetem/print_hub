@@ -1,0 +1,4 @@
+<% scope = [:view, :prints] %>
+<% message = @cancelled ? t(:job_canceled, :scope => scope) :
+  t(:job_not_canceled, :scope => scope) %>
+$('cancel_print_job_<%= @print_job.id %>').update('<%= message %>');

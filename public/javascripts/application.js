@@ -160,6 +160,9 @@ Event.observe(window, 'load', function() {
     }
   });
 
+  document.on('ajax:before', '*', function() { $('loading').show(); });
+  document.on('ajax:after', '*', function() { $('loading').hide(); });
+
   AutoComplete.observeAll();
 });
 

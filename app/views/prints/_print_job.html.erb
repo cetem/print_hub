@@ -48,6 +48,7 @@
         :title => t(:'view.prints.document_details'),
         :style => ('display: none;' unless f.object.document) %>
       <%= f.hidden_field :lock_version %>
+      <%= f.hidden_field :job_hold_until, :value => 'indefinite' %>
     </div>
     <div class="dynamic_details" id="<%= "document_details_#{id}" %>"></div>
   </div>

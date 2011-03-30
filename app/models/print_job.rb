@@ -105,11 +105,11 @@ class PrintJob < ActiveRecord::Base
     Setting.price_per_two_sided_copy
   end
 
-  def send_to_print(printer)
+  def send_to_print(printer, user = nil)
     # Imprimir solamente si el archivo existe
     if self.document.try(:file) && File.exists?(self.document.file.path)
       timestamp = Time.now.utc.strftime('%Y%m%d%H%M%S')
-      user = self.print.try(:user).try(:username)
+      user = user.try(:username)
       options = "-d #{printer} -n #{self.copies} -o fit-to-page "
       options += "-t #{user ? "#{user}-#{timestamp}" : "ph-#{timestamp}"} "
       options += self.options.map { |o, v| "-o #{o}=#{v}" }.join(' ')

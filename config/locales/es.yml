@@ -504,6 +504,10 @@
       print_title: 'Imprimir (CTRL + ALT + P)'
       show_pending: 'Ver impresiones con pagos pendientes'
       show_all: 'Ver todas las impresiones'
+      cancel_job: 'Cancelar trabajo'
+      disabled_cancel_job: 'Cancelando ...'
+      job_canceled: 'Cancelado'
+      job_not_canceled: 'No se pudo cancelar'
     settings:
       index_title: 'Listado de configuraciones'
       show_title: 'Detalle de configuración'
