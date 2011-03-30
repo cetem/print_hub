@@ -61,7 +61,7 @@ class Print < ActiveRecord::Base
 
   def print_all_jobs
     self.print_jobs.reject(&:marked_for_destruction?).each do |pj|
-      pj.print(self.printer)
+      pj.send_to_print(self.printer)
     end
   end
 

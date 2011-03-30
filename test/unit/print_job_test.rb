@@ -299,7 +299,7 @@ class PrintJobTest < ActiveSupport::TestCase
     cups_count = 'Cups.all_jobs(@printer).keys.sort.last'
     
     assert_difference cups_count do
-      @print_job.print(@printer)
+      @print_job.send_to_print(@printer)
     end
   end
 end
