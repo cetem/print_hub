@@ -35,7 +35,7 @@
           <td><%= number_to_currency print_job.price_per_copy %></td>
           <td><%= print_job.range %></td>
           <td><%= t(print_job.two_sided ? :yes : :no, :scope => :label) %></td>
-          <td><%= link_to_cancel_print_job(print_job) if print_job.pending? %></td>
+          <td><%= link_to_cancel_print_job(print_job) %></td>
         </tr>
       <% end %>
     </tbody>

@@ -471,6 +471,14 @@ ul.raw {
   font-weight: bold;
 }
 
+.green {
+  color: #00cc00;
+}
+
+.red {
+  color: #cc0000;
+}
+
 /* Estilo de los "Trabajos de impresión" dentro de "Impresiones" */
 section.nested_items div#print_jobs_headers h3:nth-child(1),
 section.nested_items div.print_job div.nested_item_field:nth-child(1) {
