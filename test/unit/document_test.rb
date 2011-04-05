@@ -102,13 +102,10 @@ class DocumentTest < ActiveSupport::TestCase
 
   # Prueba que las validaciones del modelo se cumplan como es esperado
   test 'validates length of attributes' do
-    @document.code = 'abcde' * 52
     @document.name = 'abcde' * 52
     @document.media = 'abcde' * 52
     assert @document.invalid?
-    assert_equal 4, @document.errors.count
-    assert_equal [error_message_from_model(@document, :code, :too_long,
-      :count => 255)], @document.errors[:code]
+    assert_equal 3, @document.errors.count
     assert_equal [error_message_from_model(@document, :name, :too_long,
       :count => 255)], @document.errors[:name]
     assert_equal [error_message_from_model(@document, :media, :too_long,
@@ -128,22 +125,31 @@ class DocumentTest < ActiveSupport::TestCase
   # Prueba que las validaciones del modelo se cumplan como es esperado
   test 'validates formatted attributes' do
     @document.pages = '?xx'
+    @document.code = '?xx'
     assert @document.invalid?
-    assert_equal 1, @document.errors.count
+    assert_equal 2, @document.errors.count
     assert_equal [error_message_from_model(@document, :pages, :not_a_number)],
       @document.errors[:pages]
+    assert_equal [error_message_from_model(@document, :code, :not_a_number)],
+      @document.errors[:code]
 
-    @document.pages = '1.23'
+    @document.pages = '41.23'
+    @document.code = '41.23'
     assert @document.invalid?
-    assert_equal 1, @document.errors.count
+    assert_equal 2, @document.errors.count
     assert_equal [error_message_from_model(@document, :pages, :not_an_integer)],
       @document.errors[:pages]
+    assert_equal [error_message_from_model(@document, :code, :not_an_integer)],
+      @document.errors[:code]
 
     @document.pages = '0'
+    @document.code = '0'
     assert @document.invalid?
-    assert_equal 1, @document.errors.count
+    assert_equal 2, @document.errors.count
     assert_equal [error_message_from_model(@document, :pages, :greater_than,
         :count => 0)], @document.errors[:pages]
+    assert_equal [error_message_from_model(@document, :code, :greater_than,
+        :count => 0)], @document.errors[:code]
   end
 
   test 'update tag path' do

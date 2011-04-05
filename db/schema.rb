@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110321223943) do
+ActiveRecord::Schema.define(:version => 20110403200212) do
 
   create_table "article_lines", :force => true do |t|
     t.integer  "print_id",                                                   :null => false
@@ -61,7 +61,7 @@ ActiveRecord::Schema.define(:version => 20110321223943) do
   add_index "customers", ["identification"], :name => "index_customers_on_identification", :unique => true
 
   create_table "documents", :force => true do |t|
-    t.string   "code",                             :null => false
+    t.integer  "code",                             :null => false
     t.string   "name",                             :null => false
     t.text     "description"
     t.integer  "pages",                            :null => false

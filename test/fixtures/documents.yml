@@ -1,5 +1,5 @@
 math_notes:
-  code: '001'
+  code: 1
   name: Math
   pages: 12
   media: <%= Document::MEDIA_TYPES.values.first %>
@@ -8,7 +8,7 @@ math_notes:
   tags: notes, basics
 
 math_book:
-  code: '002'
+  code: 2
   name: Math Book
   pages: 350
   media: <%= Document::MEDIA_TYPES.values.first %>
@@ -17,7 +17,7 @@ math_book:
   tags: books, basics
 
 physics_notes:
-  code: '003'
+  code: 3
   name: Physics
   pages: 14
   media: <%= Document::MEDIA_TYPES.values.first %>
@@ -26,7 +26,7 @@ physics_notes:
   tags: notes, physics
 
 unused_book:
-  code: '004'
+  code: 4
   name: Unused Book
   pages: 10
   media: <%= Document::MEDIA_TYPES.values.first %>

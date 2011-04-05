@@ -30,11 +30,11 @@ class Document < ActiveRecord::Base
   # Restricciones
   validates :name, :code, :pages, :media, :presence => true
   validates :code, :uniqueness => true, :allow_nil => true, :allow_blank => true
-  validates :name, :code, :media, :length => { :maximum => 255 },
-    :allow_nil => true, :allow_blank => true
+  validates :name, :media, :length => { :maximum => 255 }, :allow_nil => true,
+    :allow_blank => true
   validates :media, :inclusion => { :in => MEDIA_TYPES.values },
     :allow_nil => true, :allow_blank => true
-  validates :pages,
+  validates :pages, :code,
     :numericality => { :only_integer => true, :greater_than => 0 },
     :allow_nil => true, :allow_blank => true
   validates_attachment_content_type :file, :content_type => /pdf/i,

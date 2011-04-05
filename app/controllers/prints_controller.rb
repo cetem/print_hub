@@ -119,8 +119,10 @@ class PrintsController < ApplicationController
       conditions = [query]
 
       @query_terms.each_with_index do |term, i|
-        conditions << "#{Document.table_name}.code = :clean_term_#{i}"
-        parameters[:"clean_term_#{i}"] = term
+        if term =~ /^\d+$/ # Sólo si es un número vale la pena la condición
+          conditions << "#{Document.table_name}.code = :clean_term_#{i}"
+          parameters[:"clean_term_#{i}"] = term.to_i
+        end
       end
 
       @docs = @docs.where(
