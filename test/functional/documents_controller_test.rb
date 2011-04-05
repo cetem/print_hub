@@ -29,6 +29,22 @@ class DocumentsControllerTest < ActionController::TestCase
     assert_template 'documents/index'
   end
 
+  test 'should get index with search filter' do
+    UserSession.create(users(:administrator))
+
+    Document.all.each do |d|
+      d.update_attributes!(:tag_path => d.tags.map(&:to_s).join(' ## '))
+    end
+
+    get :index, :q => 'Math'
+    assert_response :success
+    assert_not_nil assigns(:documents)
+    assert_equal 2, assigns(:documents).size
+    assert assigns(:documents).all? { |d| d.name.match(/math/i) }
+    assert_select '#error_body', false
+    assert_template 'documents/index'
+  end
+
   test 'should get new' do
     UserSession.create(users(:administrator))
     get :new

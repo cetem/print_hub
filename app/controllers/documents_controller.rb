@@ -15,7 +15,43 @@ class DocumentsController < ApplicationController
   def index
     @title = t :'view.documents.index_title'
     @tag = Tag.find(params[:tag_id]) if params[:tag_id]
-    @documents = @tag ? @tag.documents : Document
+    @documents = @tag ? @tag.documents : Document.scoped
+
+    if params[:q]
+      query = params[:q].strip.gsub(/\s*([&|])\s*/, '\1').gsub(/[|&!]$/, '')
+      @query_terms = query.split(/\s+/).reject(&:blank?)
+
+      unless @query_terms.empty?
+        parameters = {
+          :and_term => @query_terms.join(' & '),
+          :wilcard_term => "%#{@query_terms.join('%')}%"
+        }
+
+        if DB_ADAPTER == 'PostgreSQL'
+          lang = "'spanish'" # TODO: implementar con I18n
+          query = "to_tsvector(#{lang}, coalesce(name,'') || ' ' || coalesce(tag_path,'')) @@ to_tsquery(#{lang}, :and_term)"
+          order = "ts_rank_cd(#{query.sub(' @@', ',')})"
+
+          order = Document.send(:sanitize_sql_for_conditions, [order, parameters])
+        else
+          query = "LOWER(name) LIKE LOWER(:wilcard_term) OR LOWER(tag_path) LIKE LOWER(:wilcard_term)"
+          order = 'name ASC'
+        end
+        conditions = [query]
+
+        @query_terms.each_with_index do |term, i|
+          if term =~ /^\d+$/ # Sólo si es un número vale la pena la condición
+            conditions << "#{Document.table_name}.code = :clean_term_#{i}"
+            parameters[:"clean_term_#{i}"] = term.to_i
+          end
+        end
+
+        @documents = @documents.where(
+          conditions.map { |c| "(#{c})" }.join(' OR '), parameters
+        )
+      end
+    end
+
     @documents = @documents.order("#{Document.table_name}.code ASC").paginate(
       :page => params[:page],
       :per_page => APP_LINES_PER_PAGE

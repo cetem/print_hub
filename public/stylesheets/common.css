@@ -161,6 +161,36 @@ div#notice {
   color: #ffffff;
 }
 
+div#search {
+  margin: .5em 0em;
+}
+
+div#search input#search_query {
+  width: 100%;
+  margin: 0px;
+  font-size: 1.2em;
+  padding: .2em;
+}
+
+div#search input[type="submit"] {
+  margin: 0px;
+}
+
+div#search table {
+  width: 98%;
+  border: none;
+  padding: 0px;
+  margin: 0px;
+}
+
+div#search table td:nth-child(1) {
+  width: 99%;
+}
+
+div#search table td:nth-child(2), div#search table td:nth-child(3) {
+  padding-left: 1em;
+}
+
 div.actions input[type="submit"] {
   padding: .1em 1em;
 }
@@ -374,9 +404,9 @@ section.details h3 {
 }
 
 section.nested_items {
-    display: block;
-    padding-left: 1.5em;
-    border-left: 3px solid #999999;
+  display: block;
+  padding-left: 1.5em;
+  border-left: 3px solid #999999;
 }
 
 section.nested_items div.headers {

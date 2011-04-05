@@ -296,6 +296,7 @@
     'yes': 'Si'
     'no': 'No'
     back: 'Volver'
+    cancel: 'Cancelar'
     close: 'Cerrar'
     delete: 'Eliminar'
     download: 'Descargar'
@@ -305,6 +306,7 @@
     new: 'Nuevo'
     next: 'Siguiente'
     previous: 'Anterior'
+    search: 'Buscar'
     show: 'Ver'
 
   lang:

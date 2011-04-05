@@ -144,6 +144,9 @@ var Util = {
 var eventList = $H(EventHandler).keys();
 
 Event.observe(window, 'load', function() {
+  // Para que los navegadores que no soportan HTML5 funcionen con autofocus
+  Try.these(function() { $$('*[autofocus]').first().focus() });
+  
   document.on('click', 'a[data-event]', function(event, element) {
     if (event.stopped) return;
     var eventName = element.readAttribute('data-event').dasherize().camelize();

@@ -3,6 +3,7 @@
     <%= t(:documents_with_tag, :scope => [:view, :documents], :tag => @tag.to_s) %>
   </h2>
 <% end %>
+<%= render :partial => 'shared/search' %>
 <table class="list">
   <thead>
     <tr>
