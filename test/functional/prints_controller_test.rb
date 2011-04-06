@@ -398,7 +398,7 @@ class PrintsControllerTest < ActionController::TestCase
 
   test 'should get autocomplete article list' do
     UserSession.create(users(:operator))
-    get :autocomplete_for_article_name, :q => 'A01'
+    get :autocomplete_for_article_name, :q => '111'
     assert_response :success
     assert_select 'li[data-id]', 1
 
@@ -406,7 +406,7 @@ class PrintsControllerTest < ActionController::TestCase
     assert_response :success
     assert_select 'li[data-id]', 2
 
-    get :autocomplete_for_article_name, :q => 'A03'
+    get :autocomplete_for_article_name, :q => '333'
     assert_response :success
     assert_select 'li[data-id]', 1
 

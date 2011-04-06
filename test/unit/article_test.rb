@@ -78,12 +78,9 @@ class ArticleTest < ActiveSupport::TestCase
 
   # Prueba que las validaciones del modelo se cumplan como es esperado
   test 'validates length of attributes' do
-    @article.code = 'abcde' * 52
     @article.name = 'abcde' * 52
     assert @article.invalid?
-    assert_equal 2, @article.errors.count
-    assert_equal [error_message_from_model(@article, :code, :too_long,
-      :count => 255)], @article.errors[:code]
+    assert_equal 1, @article.errors.count
     assert_equal [error_message_from_model(@article, :name, :too_long,
       :count => 255)], @article.errors[:name]
   end
@@ -91,15 +88,28 @@ class ArticleTest < ActiveSupport::TestCase
   # Prueba que las validaciones del modelo se cumplan como es esperado
   test 'validates formatted attributes' do
     @article.price = '?xx'
+    @article.code = '?xx'
     assert @article.invalid?
-    assert_equal 1, @article.errors.count
+    assert_equal 2, @article.errors.count
     assert_equal [error_message_from_model(@article, :price, :not_a_number)],
       @article.errors[:price]
+    assert_equal [error_message_from_model(@article, :code, :not_a_number)],
+      @article.errors[:code]
 
     @article.price = '-0.01'
+    @article.code = '-1'
     assert @article.invalid?
-    assert_equal 1, @article.errors.count
+    assert_equal 2, @article.errors.count
     assert_equal [error_message_from_model(@article, :price,
         :greater_than_or_equal_to, :count => 0)], @article.errors[:price]
+    assert_equal [error_message_from_model(@article, :code, :greater_than,
+        :count => 0)], @article.errors[:code]
+
+    @article.reload
+    @article.code = '51.23'
+    assert @article.invalid?
+    assert_equal 1, @article.errors.count
+    assert_equal [error_message_from_model(@article, :code, :not_an_integer)],
+      @article.errors[:code]
   end
 end
