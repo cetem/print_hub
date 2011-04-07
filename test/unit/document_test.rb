@@ -16,24 +16,30 @@ class DocumentTest < ActiveSupport::TestCase
     assert_equal documents(:math_book).name, @document.name
     assert_equal documents(:math_book).pages, @document.pages
     assert_equal documents(:math_book).media, @document.media
+    assert_equal documents(:math_book).enable, @document.enable
+    assert_equal documents(:math_book).tag_path, @document.tag_path
     assert_equal documents(:math_book).description, @document.description
   end
 
   # Prueba la creación de un documento
   test 'create' do
     assert_difference 'Document.count' do
+      file = Rack::Test::UploadedFile.new(
+        File.join(Rails.root, 'test', 'fixtures', 'files', 'test.pdf'),
+        'application/pdf'
+      )
+
       @document = Document.new(
         :code => '00001234',
         :name => 'New name',
         :pages => '5',
         :media => Document::MEDIA_TYPES.values.first,
         :description => 'New description',
-        :tags => [tags(:books), tags(:notes)]
+        :enable => true,
+        :tags => [tags(:books), tags(:notes)],
+        :file => file
       )
 
-      @document.file = Rack::Test::UploadedFile.new(
-        File.join(Rails.root, 'test', 'fixtures', 'files', 'test.pdf'),
-        'application/pdf')
       assert @document.save
     end
 
@@ -48,6 +54,37 @@ class DocumentTest < ActiveSupport::TestCase
       thumbs_dir.entries.select { |f| f.extname == '.png' && !f.zero? }.size
   end
 
+  # Prueba la creación de un documento con múltiples páginas
+  test 'create a multipage document' do
+    assert_difference 'Document.count' do
+      @document = Document.new(
+        :code => '00001234',
+        :name => 'New name',
+        :pages => '1',
+        :media => Document::MEDIA_TYPES.values.first,
+        :enable => true,
+        :description => 'New description',
+        :tags => [tags(:books), tags(:notes)]
+      )
+
+      @document.file = Rack::Test::UploadedFile.new(
+        File.join(Rails.root, 'test', 'fixtures', 'files', 'multipage_test.pdf'),
+        'application/pdf'
+      )
+      assert @document.save
+    end
+
+    assert_equal 2, @document.tags.count
+    assert_equal 3, @document.pages
+
+    thumbs_dir = Pathname.new(@document.file.path).dirname
+    # PDF original y 6 miñaturas
+    assert_equal 7, thumbs_dir.entries.reject(&:directory?).size
+    # Asegurar que las 6 miñaturas son imágenes y no están vacías
+    assert_equal 6,
+      thumbs_dir.entries.select { |f| f.extname == '.png' && !f.zero? }.size
+  end
+
   # Prueba de actualización de un documento
   test 'update' do
     assert_no_difference 'Document.count' do
@@ -56,6 +93,20 @@ class DocumentTest < ActiveSupport::TestCase
     end
 
     assert_equal 'Updated name', @document.reload.name
+  end
+
+  test 'can not update with diferent pdfs' do
+    file = Rack::Test::UploadedFile.new(
+      File.join(Rails.root, 'test', 'fixtures', 'files', 'multipage_test.pdf'),
+      'application/pdf'
+    )
+
+    assert_no_difference 'Document.count' do
+      assert !@document.update_attributes(:file => file),
+        @document.errors.full_messages.join('; ')
+    end
+
+    assert_not_equal 3, @document.reload.pages
   end
 
   # Prueba de eliminación de documentos
@@ -98,6 +149,9 @@ class DocumentTest < ActiveSupport::TestCase
     assert_equal 1, @document.errors.count
     assert_equal [error_message_from_model(@document, :code, :taken)],
       @document.errors[:code]
+
+    @document.enable = false
+    assert @document.valid?
   end
 
   # Prueba que las validaciones del modelo se cumplan como es esperado

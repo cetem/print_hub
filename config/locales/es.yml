@@ -85,6 +85,7 @@
       document:
         code: 'Código'
         name: 'Nombre'
+        enable: 'Habilitado'
         pages: 'Páginas'
         media: 'Tamaño de papel'
         description: 'Descripción'

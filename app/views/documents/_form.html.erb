@@ -25,6 +25,10 @@
     <%= f.label :description %>
     <%= f.text_area :description %>
   </div>
+  <div class="field">
+    <%= f.check_box :enable %>
+    <%= f.label :enable %>
+  </div>
   <section class="nested_items">
     <h2><%= t(:'menu.tags') %></h2>
 
@@ -45,10 +49,15 @@
   </div>
 
   <div class="field">
-    <%= f.label :file,
-      :class => (:field_with_errors unless @document.errors[:file_file_name].blank?) %>
-    <%= f.file_field :file,
-      :class => (:field_with_errors unless @document.errors[:file_file_name].blank?) %>
+    <% if @document.new_record? %>
+      <%= f.label :file,
+        :class => (:field_with_errors unless @document.errors[:file_file_name].blank?) %>
+      <%= f.file_field :file,
+        :class => (:field_with_errors unless @document.errors[:file_file_name].blank?) %>
+    <% else %>
+      <b><%= Document.human_attribute_name :file %></b>:
+      <%= link_to_if @document.file.file?, t(:'label.download'), @document.file.url %>
+    <% end %>
   </div>
   <div class="actions">
     <%= f.hidden_field :lock_version %>

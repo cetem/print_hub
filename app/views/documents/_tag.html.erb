@@ -20,12 +20,16 @@
     <div class="nested_item_actions">
       <%= link_to_remove_nested_item(nil, 'tag') %>
     </div>
-    <br />
+    <div class="dynamic_details"></div>
   </div>
 </div>
 <% if is_dynamic %>
   <script type="text/javascript">
-    Helper.show('<%= id %>');
+    Helper.show('<%= id %>', {
+      afterFinish: function() {
+        $('<%= "autocomplete_tag_#{id}" %>').focus();
+      }
+    });
     AutoComplete.observeAll();
   </script>
 <% end -%>

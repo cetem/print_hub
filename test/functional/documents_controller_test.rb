@@ -30,12 +30,11 @@ class DocumentsControllerTest < ActionController::TestCase
   end
 
   test 'should get index with search filter' do
-    UserSession.create(users(:administrator))
-
     Document.all.each do |d|
       d.update_attributes!(:tag_path => d.tags.map(&:to_s).join(' ## '))
     end
 
+    UserSession.create(users(:administrator))
     get :index, :q => 'Math'
     assert_response :success
     assert_not_nil assigns(:documents)
@@ -61,6 +60,7 @@ class DocumentsControllerTest < ActionController::TestCase
         :name => 'New Name',
         :pages => '15',
         :media => Document::MEDIA_TYPES.values.first,
+        :enable => '1',
         :description => 'New description',
         :auto_tag_name => 'Some name given in autocomplete',
         :tag_ids => [tags(:books).id, tags(:notes).id],
@@ -97,14 +97,12 @@ class DocumentsControllerTest < ActionController::TestCase
       :name => 'Updated name',
       :pages => '15',
       :media => Document::MEDIA_TYPES.values.first,
+      :enable => '1',
       :description => 'Updated description',
-      :auto_tag_name => 'Some name given in autocomplete',
-      :file => fixture_file_upload('/files/test.pdf', 'application/pdf')
+      :auto_tag_name => 'Some name given in autocomplete'
     }
     assert_redirected_to documents_path
     assert_equal 'Updated name', @document.reload.name
-    # Debe poner 1 ya que cuenta las que tiene efectivamente el PDF
-    assert_equal 1, Document.find_by_code('003456').pages
   end
 
   test 'should destroy document' do
@@ -139,27 +137,9 @@ class DocumentsControllerTest < ActionController::TestCase
 
   test 'should download document' do
     UserSession.create(users(:administrator))
-    put :update, :id => @document.to_param, :document => {
-      :file => fixture_file_upload('/files/test.pdf', 'application/pdf')
-    }
-    assert_redirected_to documents_path
-
     get :download, :id => @document.to_param, :style => :original
     assert_response :success
     assert_equal File.open(@document.reload.file.path).read, @response.body
-  end
-
-  test 'should download document thumb' do
-    UserSession.create(users(:administrator))
-    put :update, :id => @document.to_param, :document => {
-      :file => fixture_file_upload('/files/test.pdf', 'application/pdf')
-    }
-    assert_redirected_to documents_path
-
-    get :download, :id => @document.to_param, :style => :pdf_thumb
-    assert_response :success
-    assert_equal File.open(@document.reload.file.path(:pdf_thumb)).read,
-      @response.body
   end
 
   test 'should get autocomplete tag list' do

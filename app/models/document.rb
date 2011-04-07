@@ -2,10 +2,7 @@ class Document < ActiveRecord::Base
   has_attached_file :file,
     :path => ':rails_root/private/:attachment/:id_partition/:basename_:style.:extension',
     :url => '/documents/:id/:style/download',
-    :styles => {
-      :pdf_thumb => {:resolution => 48, :format => :png},
-      :pdf_mini_thumb => {:resolution => 24, :format => :png}
-    },
+    :styles => lambda { |attachment| attachment.instance.choose_styles },
     :processors => [:pdf_thumb]
   find_by_autocomplete :name
 
@@ -13,6 +10,7 @@ class Document < ActiveRecord::Base
   MEDIA_TYPES = { :a4 => 'A4', :legal => 'na_legal_8.5x14in' }.freeze
 
   # Scopes
+  default_scope where(:enable => true)
   scope :with_tag, lambda { |tag_id|
     includes(:tags).where("#{Tag.table_name}.id" => tag_id)
   }
@@ -22,14 +20,16 @@ class Document < ActiveRecord::Base
 
   # Callbacks
   before_save :update_tag_path
+  before_update :can_be_modified?
   before_destroy :can_be_destroyed?
-  after_file_post_process :extract_page_count
+  before_file_post_process :extract_page_count
 
   attr_protected :pages
 
   # Restricciones
   validates :name, :code, :pages, :media, :presence => true
-  validates :code, :uniqueness => true, :allow_nil => true, :allow_blank => true
+  validates :code, :uniqueness => true, :if => :enable, :allow_nil => true,
+    :allow_blank => true
   validates :name, :media, :length => { :maximum => 255 }, :allow_nil => true,
     :allow_blank => true
   validates :media, :inclusion => { :in => MEDIA_TYPES.values },
@@ -65,6 +65,10 @@ class Document < ActiveRecord::Base
     true
   end
 
+  def can_be_modified?
+    !self.file_file_name_changed?
+  end
+
   def can_be_destroyed?
     if self.print_jobs.empty?
       true
@@ -74,6 +78,25 @@ class Document < ActiveRecord::Base
 
       false
     end
+  end
+
+  def choose_styles
+    styles = {
+      :pdf_thumb => {:resolution => 48, :format => :png, :page => 1},
+      :pdf_mini_thumb => {:resolution => 24, :format => :png, :page => 1}
+    }
+
+    styles.merge!(
+      :pdf_thumb_2 => {:resolution => 48, :format => :png, :page => 2},
+      :pdf_mini_thumb_2 => {:resolution => 24, :format => :png, :page => 2}
+    ) if self.pages && self.pages > 1
+
+    styles.merge!(
+      :pdf_thumb_3 => {:resolution => 48, :format => :png, :page => 3},
+      :pdf_mini_thumb_3 => {:resolution => 24, :format => :png, :page => 3}
+    ) if self.pages && self.pages > 2
+
+    styles
   end
 
   # Invocado por PDF::Reader para establecer la cantidad de páginas del PDF
