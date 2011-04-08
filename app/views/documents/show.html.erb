@@ -1,36 +1,39 @@
 <div class="document_details">
-  <%= show_document_thumb(@document) %>
-  <dl class="details">
-    <dt><%= Document.human_attribute_name :code %>:</dt>
-    <dd><%= @document.code %></dd>
+  <div class="document_data">
+    <dl class="details">
+      <dt><%= Document.human_attribute_name :code %>:</dt>
+      <dd><%= @document.code %></dd>
 
-    <dt><%= Document.human_attribute_name :name %>:</dt>
-    <dd><%= @document.name %></dd>
+      <dt><%= Document.human_attribute_name :name %>:</dt>
+      <dd><%= @document.name %></dd>
 
-    <dt><%= Document.human_attribute_name :pages %>:</dt>
-    <dd><%= @document.pages %></dd>
+      <dt><%= Document.human_attribute_name :pages %>:</dt>
+      <dd><%= @document.pages %></dd>
 
-    <dt><%= Document.human_attribute_name :media %>:</dt>
-    <dd><%= show_document_media_text @document.media %></dd>
+      <dt><%= Document.human_attribute_name :media %>:</dt>
+      <dd><%= show_document_media_text @document.media %></dd>
 
-    <dt><%= Document.human_attribute_name :description %>:</dt>
-    <dd><%= @document.description %>&nbsp;</dd>
+      <dt><%= Document.human_attribute_name :description %>:</dt>
+      <dd><%= @document.description %>&nbsp;</dd>
 
-    <dt><%= Document.human_attribute_name :file %>:</dt>
-    <dd><%= link_to_if @document.file.file?, t(:'label.download'), @document.file.url %></dd>
-  </dl>
+      <dt><%= Document.human_attribute_name :file %>:</dt>
+      <dd><%= link_to_if @document.file.file?, t(:'label.download'), @document.file.url %></dd>
+    </dl>
+
+    <% unless @document.tags.empty? %>
+      <section>
+        <h3 class="title"><%= t(:'menu.tags') %></h3>
+
+        <ul class="raw">
+          <% @document.tags.each do |tag| %>
+            <li><%= tag %></li>
+          <% end %>
+        </ul>
+      </section>
+    <% end %>
+  </div>
   
-  <% unless @document.tags.empty? %>
-    <section>
-      <h3 class="title"><%= t(:'menu.tags') %></h3>
-
-      <ul class="raw">
-        <% @document.tags.each do |tag| %>
-          <li><%= tag %></li>
-        <% end %>
-      </ul>
-    </section>
-  <% end %>
+  <%= show_document_thumb(@document) %>
 
   <nav class="links">
     <% unless request.xhr? %>

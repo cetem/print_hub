@@ -116,7 +116,7 @@ div#error_explanation ul li {
   list-style: square;
 }
 
-div#loading {
+div#loading_image {
   position: fixed;
   bottom: .5em;
   left: 1em;
@@ -564,4 +564,10 @@ section.nested_items div.article_line div.nested_item_field:nth-child(3) {
 /* Estilo de "Etiquetas" dentro de "Documentos" */
 div#tags {
   margin-left: 1em;
+}
+
+/* Estilo de "descripción" dentro de "Documentos" */
+div.document_data {
+  float: left;
+  margin-right: 1em;
 }

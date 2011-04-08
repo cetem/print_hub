@@ -14,7 +14,7 @@ var AutoComplete = {
           input.adjacent('.autocomplete').first(),
           input.readAttribute('data-autocomplete-url'), {
             paramName: 'q',
-            indicator: 'loading',
+            indicator: 'loading_image',
             method: 'get',
             afterUpdateElement: function(text, li) {
               var objectId = $(li).readAttribute('data-id');
@@ -87,7 +87,7 @@ var Helper = {
      * Oculta el elemento que indica que algo se está cargando
      */
   hideLoading: function(element) {
-    $('loading').hide();
+    $('loading_image').hide();
 
     if($(element)) {$(element).enable();}
   },
@@ -117,7 +117,7 @@ var Helper = {
      * Muestra una imagen para indicar que una operación está en curso
      */
   showLoading: function(element) {
-    $('loading').show();
+    $('loading_image').show();
 
     if($(element)) {$(element).disable();}
   }
@@ -163,8 +163,8 @@ Event.observe(window, 'load', function() {
     }
   });
 
-  document.on('ajax:before', '*', function() { $('loading').show(); });
-  document.on('ajax:after', '*', function() { $('loading').hide(); });
+  document.on('ajax:before', '*', function() { $('loading_image').show(); });
+  document.on('ajax:after', '*', function() { $('loading_image').hide(); });
 
   AutoComplete.observeAll();
 });

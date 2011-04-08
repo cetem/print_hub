@@ -1,6 +1,6 @@
 module ApplicationHelper
   def default_stylesheets
-    sheets = ['common']
+    sheets = ['common', 'lightbox']
     sheets |= calendar_date_select_stylesheets(:style => 'silver').to_a
     sheets << {:cache => 'main'}
 
@@ -8,7 +8,7 @@ module ApplicationHelper
   end
 
   def default_javascripts
-    libs = [:defaults]
+    libs = [:defaults, 'builder', 'lightbox']
     libs |= calendar_date_select_javascripts(
       :locale => (current_user.language if current_user) || :es
     ).to_a
