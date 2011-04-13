@@ -39,6 +39,7 @@
         :'data-price-per-two-sided' => f.object.price_per_two_sided_copy %>
     </div>
     <div class="nested_item_actions">
+      <span class="money"><%= number_to_currency f.object.price %></span>
       <% unless disabled %>
         <%= link_to_remove_nested_item(f) %>
       <% end %>

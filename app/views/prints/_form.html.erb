@@ -170,8 +170,11 @@
     var rangePages = parseInt(
       printJob.down('input[name$="[range]"]').readAttribute('data-range-pages')
     );
+    var jobPrice = copies * pricePerCopy * rangePages;
+    var money = printJob.down('span.money');
 
-    printJob.writeAttribute('data-price', copies * pricePerCopy * rangePages);
+    printJob.writeAttribute('data-price', jobPrice);
+    money.update(money.innerHTML.sub(/(\d+.)+\d+/, jobPrice.toFixed(3)));
 
     updateTotalPrice();
   }
@@ -181,8 +184,13 @@
     var unitPrice = parseFloat(
       articleLine.down('input[name$="[unit_price]"]').getValue()
     );
+    var articlePrice = units * unitPrice;
+    var money = articleLine.down('span.money');
 
-    articleLine.writeAttribute('data-price', units * unitPrice);
+    articleLine.writeAttribute('data-price', articlePrice);
+    // Es demasiado código para lo que hace, todo sea por respetar el formato
+    // de moneda elegido en la internacionalización
+    money.update(money.innerHTML.sub(/(\d+.)+\d+/, articlePrice.toFixed(3)));
 
     updateTotalPrice();
   }

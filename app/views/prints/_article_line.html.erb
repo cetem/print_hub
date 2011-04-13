@@ -24,6 +24,7 @@
         :class => :price_modifier, :autocomplete => :off %>
     </div>
     <div class="nested_item_actions">
+      <span class="money"><%= number_to_currency f.object.price %></span>
       <%= link_to_remove_nested_item(f) unless disabled %>
       <%= f.hidden_field :lock_version %>
     </div>

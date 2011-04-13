@@ -453,6 +453,13 @@ section.tags {
   margin: 1em 0em;
 }
 
+span.money {
+  padding: .5em;
+  margin: 0em .5em;
+  background: #f0f0f0;
+  font-size: .8em;
+}
+
 table.list {
   width: 98%;
   border: 2px solid #333333;
@@ -512,7 +519,7 @@ ul.raw {
 /* Estilo de los "Trabajos de impresión" dentro de "Impresiones" */
 section.nested_items div#print_jobs_headers h3:nth-child(1),
 section.nested_items div.print_job div.nested_item_field:nth-child(1) {
-  width: 40%;
+  width: 35%;
 }
 
 section.nested_items div#print_jobs_headers h3:nth-child(2),
@@ -542,7 +549,7 @@ section.nested_items div.print_job div.nested_item_field:nth-child(6) {
 
 section.nested_items div#print_jobs_headers h3:nth-child(7),
 section.nested_items div.print_job div.nested_item_actions {
-  width: 5%;
+  width: 10%;
 }
 
 /* Estilo de los "Artículos" dentro de "Impresiones" */
