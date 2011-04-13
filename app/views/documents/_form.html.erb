@@ -43,24 +43,33 @@
   </section>
 
   <div class="add_nested_item">
-    <%= link_to t(:'view.documents.add_tag'), '#',
+    <%= link_to t(:'view.documents.add_tag'), '#', :id => :add_tag_link,
       :'data-template' => :tag, :'data-container' => :tags,
-      :'data-event' => :add_nested_item %>
+      :'data-event' => :add_nested_item,
+      :title => t(:'view.documents.add_tag_title') %>
   </div>
 
   <div class="field">
-    <% if @document.new_record? %>
-      <%= f.label :file,
-        :class => (:field_with_errors unless @document.errors[:file_file_name].blank?) %>
-      <%= f.file_field :file,
-        :class => (:field_with_errors unless @document.errors[:file_file_name].blank?) %>
-    <% else %>
-      <b><%= Document.human_attribute_name :file %></b>:
-      <%= link_to_if @document.file.file?, t(:'label.download'), @document.file.url %>
-    <% end %>
+    <%= f.label :file,
+      :class => (:field_with_errors unless @document.errors[:file_file_name].blank?) %>
+    <%= f.file_field :file,
+      :class => (:field_with_errors unless @document.errors[:file_file_name].blank?) %>
+    <%= link_to_if @document.file.file?, t(:'label.download'), @document.file.url %>
   </div>
   <div class="actions">
     <%= f.hidden_field :lock_version %>
     <%= f.submit %>
   </div>
 <% end %>
+<script type="text/javascript">
+  // Captura de atajos de teclado
+  document.on('keydown', function(e) {
+    var key = e.keyCode || e.which;
+
+    // CTRL + ALT + E = Agregar una etiqueta
+    if((key == 69 || key == 101) && e.ctrlKey && e.altKey) {
+      $('add_tag_link').click();
+      Event.stop(e);
+    }
+  });
+</script>

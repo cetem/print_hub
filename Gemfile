@@ -2,9 +2,6 @@ source 'http://rubygems.org'
 
 gem 'rails', '3.0.6'
 
-# Bundle edge Rails instead:
-# gem 'rails', :git => 'git://github.com/rails/rails.git'
-
 gem 'pg'
 gem 'authlogic', :git => 'https://github.com/francocatena/authlogic.git'
 gem 'rails-settings', :git => 'https://github.com/100hz/rails-settings.git'
@@ -13,7 +10,7 @@ gem 'simple_autocomplete'
 gem 'validates_timeliness', '~> 3.0'
 gem 'rghost'
 gem 'will_paginate', '~> 3.0.beta'
-gem 'paperclip'
+gem 'paperclip', :git => 'https://github.com/francocatena/paperclip.git'
 gem 'foreigner'
 gem 'memcache-client'
 gem 'whenever', :require => false
@@ -21,8 +18,9 @@ gem 'whenever', :require => false
 gem 'cups'
 gem 'pdf-reader'
 
-# Use unicorn as the web server
-# gem 'unicorn'
+group :production do
+  gem 'smurf'
+end
 
 group :development do
   gem 'capistrano'

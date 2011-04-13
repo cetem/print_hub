@@ -467,6 +467,7 @@
       correctly_created: 'Documento agregado correctamente.'
       correctly_updated: 'Documento actualizado correctamente.'
       stale_object_error: 'El documento no pudo ser actualizado, intente nuevamente.'
+      add_tag_title: 'Agregar etiqueta (CTRL + ALT + E)'
       non_existent: 'Archivo inexistente'
       add_tag: 'Agregar etiqueta'
       has_related_print_jobs: 'El documento no puede ser eliminado, tiene impresiones relacionadas'

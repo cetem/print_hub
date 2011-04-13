@@ -20,7 +20,6 @@ class Document < ActiveRecord::Base
 
   # Callbacks
   before_save :update_tag_path
-  before_update :can_be_modified?
   before_destroy :can_be_destroyed?
   before_file_post_process :extract_page_count
 
@@ -63,10 +62,6 @@ class Document < ActiveRecord::Base
     self.tag_path = tags.compact.map(&:to_s).join(' ## ')
     
     true
-  end
-
-  def can_be_modified?
-    !self.file_file_name_changed?
   end
 
   def can_be_destroyed?

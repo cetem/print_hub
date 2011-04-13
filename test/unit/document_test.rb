@@ -101,12 +101,32 @@ class DocumentTest < ActiveSupport::TestCase
       'application/pdf'
     )
 
+    # Asegurar la "limpieza" del directorio
+    thumbs_dir = Pathname.new(@document.file.path).dirname.rmtree
+
     assert_no_difference 'Document.count' do
-      assert !@document.update_attributes(:file => file),
+      assert @document.update_attributes(:file => file),
         @document.errors.full_messages.join('; ')
     end
 
-    assert_not_equal 3, @document.reload.pages
+    assert_equal 3, @document.reload.pages
+    thumbs_dir = Pathname.new(@document.file.path).dirname
+    # PDF original y 6 miñaturas
+    assert_equal 7, thumbs_dir.entries.reject(&:directory?).size
+
+    file = Rack::Test::UploadedFile.new(
+      File.join(Rails.root, 'test', 'fixtures', 'files', 'test.pdf'),
+      'application/pdf'
+    )
+
+    assert_no_difference 'Document.count' do
+      assert @document.update_attributes(:file => file),
+        @document.errors.full_messages.join('; ')
+    end
+
+    assert_equal 1, @document.reload.pages
+    # PDF original y 2 miñaturas
+    assert_equal 3, thumbs_dir.entries.reject(&:directory?).size
   end
 
   # Prueba de eliminación de documentos
@@ -119,6 +139,12 @@ class DocumentTest < ActiveSupport::TestCase
   # Prueba de eliminación de documentos
   test 'not destroy with related print jobs' do
     assert_no_difference('Document.count') { @document.destroy }
+  end
+
+  test 'disable a document' do
+    assert_difference('Document.count', -1) do
+      @document.update_attributes(:enable => false)
+    end
   end
 
   # Prueba que las validaciones del modelo se cumplan como es esperado
