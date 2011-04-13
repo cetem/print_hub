@@ -188,8 +188,6 @@
     var money = articleLine.down('span.money');
 
     articleLine.writeAttribute('data-price', articlePrice);
-    // Es demasiado código para lo que hace, todo sea por respetar el formato
-    // de moneda elegido en la internacionalización
     money.update(money.innerHTML.sub(/(\d+.)+\d+/, articlePrice.toFixed(3)));
 
     updateTotalPrice();
