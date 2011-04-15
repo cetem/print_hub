@@ -9,11 +9,11 @@
   <% end %>
   <%= show_error_messages(@print) %>
 
-  <div class="field">
+  <div class="field column_left">
     <%= f.label :printer %>
     <%= print_destinations_field(f) %>
   </div>
-  <div class="field">
+  <div class="field column_right">
     <%= f.label :customer, :for => :print_auto_customer_name %>
     <% field_classes = [:autocomplete_field] %>
     <% field_classes << :field_with_errors unless @print.errors[:customer_id].blank? %>

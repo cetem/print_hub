@@ -265,6 +265,29 @@ div.field input[type="checkbox"] + label {
   margin-left: .5em;
 }
 
+div.field.column_left {
+    float: left;
+    width: 48%;
+    margin-right: 1%;
+}
+
+div.field.column_right {
+    float: right;
+    width: 48%;
+    margin-left: 1%;
+}
+
+div.field.column_left input[type="text"],
+div.field.column_left input[type="password"],
+div.field.column_left select,
+div.field.column_left textarea,
+div.field.column_right input[type="text"],
+div.field.column_right input[type="password"],
+div.field.column_right select,
+div.field.column_right textarea {
+    width: 98%;
+}
+
 div.image_container {
   float: left;
   margin: 0em 2em 2em 0em;
@@ -405,6 +428,7 @@ section.details h3 {
 
 section.nested_items {
   display: block;
+  clear: both;
   padding-left: 1.5em;
   border-left: 3px solid #999999;
 }
