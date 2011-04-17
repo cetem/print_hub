@@ -113,7 +113,7 @@ class PrintJob < ActiveRecord::Base
       options = "-d #{printer} -n #{self.copies} -o fit-to-page "
       options += "-t #{user ? "#{user}-#{timestamp}" : "ph-#{timestamp}"} "
       options += self.options.map { |o, v| "-o #{o}=#{v}" }.join(' ')
-      out = %x{lp #{options} "#{self.document.file.path}"}
+      out = %x{lp #{options} "#{self.document.file.path}" 2>&1}
 
       self.job_id = out.match(/#{Regexp.escape(printer)}-\d+/).to_a[0] || '-'
     end

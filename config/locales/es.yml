@@ -28,6 +28,8 @@
       models:
         print:
           attributes:
+            printer:
+              must_be_blank: 'no debe estar seleccionada'
             payments:
               invalid: 'es inválido, el monto es de %{price} y el pago es de %{payment}'
             print_jobs:
@@ -98,6 +100,7 @@
       print:
         id: 'Número'
         printer: 'Impresora'
+        scheduled_at: 'Programado para'
         customer: 'Cliente'
         customer_id: 'Cliente'
         user: 'Usuario'

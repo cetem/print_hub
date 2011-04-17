@@ -5,6 +5,7 @@
       <th><%= Print.human_attribute_name :created_at %></th>
       <th><%= Print.human_attribute_name :printer %></th>
       <th><%= Print.human_attribute_name :customer %></th>
+      <th><%= Print.human_attribute_name :scheduled_at %></th>
       <th><%= Print.human_attribute_name :user %></th>
       <th colspan="2"></th>
     </tr>
@@ -15,8 +16,9 @@
       <tr class="<%= cycle(:even, :odd) %>">
         <td><%= print.id %></td>
         <td><%= l print.created_at, :format => :short if print.created_at %></td>
-        <td><%= print.printer %></td>
+        <td><%= print.printer || '-' %></td>
         <td><%= print.customer || '-' %></td>
+        <td><%= l print.scheduled_at, :format => :short if print.scheduled_at %></td>
         <td><%= print.user %></td>
         <td><%= link_to t(:'label.show'), print %></td>
         <td><%= link_to t(:'label.edit'), edit_print_path(print) if print.pending_payment %></td>

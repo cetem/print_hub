@@ -1,8 +1,7 @@
 class Print < ActiveRecord::Base
   # Callbacks
-  before_create :print_all_jobs
   before_save :remove_unnecessary_payments, :update_customer_credit,
-    :mark_as_pending
+    :mark_as_pending, :print_all_jobs
   before_destroy :can_be_destroyed?
 
   # Scopes
@@ -16,12 +15,24 @@ class Print < ActiveRecord::Base
   attr_protected :pending_payment
 
   # Restricciones
-  validates :printer, :presence => true
+  validates :printer, :presence => true,
+    :if => lambda { |p| p.scheduled_at.blank? }
   validates :printer, :length => { :maximum => 255 }, :allow_nil => true,
     :allow_blank => true
+  validates_datetime :scheduled_at, :allow_nil => true, :allow_blank => true,
+    :after => lambda { Time.now }
   validates_each :print_jobs do |record, attr, value|
     if value.reject { |pj| pj.marked_for_destruction? }.empty?
       record.errors.add attr, :blank
+    end
+  end
+  validates_each :printer do |record, attr, value|
+    printer_changed = !record.printer_was.blank? && record.printer_was != value
+    print_and_schedule_new_record = record.new_record? &&
+      !record.printer.blank? && !record.scheduled_at.blank?
+
+    if printer_changed || print_and_schedule_new_record
+      record.errors.add attr, :must_be_blank
     end
   end
   validate :must_have_valid_payments
@@ -60,8 +71,10 @@ class Print < ActiveRecord::Base
   end
 
   def print_all_jobs
-    self.print_jobs.reject(&:marked_for_destruction?).each do |pj|
-      pj.send_to_print(self.printer, self.user)
+    if self.printer_was.blank? && !self.printer.blank?
+      self.print_jobs.reject(&:marked_for_destruction?).each do |pj|
+        pj.send_to_print(self.printer, self.user)
+      end
     end
   end
 

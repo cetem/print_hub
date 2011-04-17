@@ -85,6 +85,7 @@ class PrintsControllerTest < ActionController::TestCase
       post :create, :print => {
         :printer => @printer,
         :customer_id => customer.id,
+        :scheduled_at => '',
         :print_jobs_attributes => {
           :new_1 => {
             :copies => '1',
@@ -130,6 +131,7 @@ class PrintsControllerTest < ActionController::TestCase
       post :create, :print => {
         :printer => @printer,
         :customer_id => customer.id,
+        :scheduled_at => '',
         :print_jobs_attributes => {
           :new_1 => {
             :copies => '1',
@@ -174,6 +176,7 @@ class PrintsControllerTest < ActionController::TestCase
       post :create, :print => {
         :printer => @printer,
         :customer_id => customer.id,
+        :scheduled_at => '',
         :print_jobs_attributes => {
           :new_1 => {
             :copies => '1',
@@ -254,6 +257,7 @@ class PrintsControllerTest < ActionController::TestCase
         put :update, :id => @print.to_param, :print => {
           :printer => @printer,
           :customer_id => customer.id,
+          :scheduled_at => '',
           :user_id => users(:administrator).id,
           :print_jobs_attributes => {
             print_jobs(:math_job_1).id => {
@@ -324,6 +328,7 @@ class PrintsControllerTest < ActionController::TestCase
     assert_difference 'Cups.all_jobs(@printer).keys.sort.last' do
       post :create, :print => {
         :printer => @printer,
+        :scheduled_at => '',
         :print_jobs_attributes => {
           :new_1 => {
             :copies => '1',
@@ -342,7 +347,7 @@ class PrintsControllerTest < ActionController::TestCase
       }
     end
 
-    print_job = Print.order('id DESC').first.print_jobs.first
+    print_job = Print.find(assigns(:print).id).print_jobs.first
 
     xhr :put, :cancel_job, :id => print_job.to_param
 

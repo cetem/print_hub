@@ -285,7 +285,11 @@ div.field.column_right input[type="text"],
 div.field.column_right input[type="password"],
 div.field.column_right select,
 div.field.column_right textarea {
-    width: 98%;
+    width: 94%;
+}
+
+div.field.column_left > label, div.field.column_right > label {
+  width: 94%;
 }
 
 div.image_container {
@@ -530,6 +534,11 @@ ul.raw {
 
 .bold {
   font-weight: bold;
+}
+
+.clear {
+  display: block;
+  clear: both;
 }
 
 .green {

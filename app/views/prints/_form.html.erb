@@ -32,6 +32,12 @@
     <%= hidden_field_tag :customer_free_credit,
       @print.customer.try(:free_credit), :id => :customer_free_credit %>
   </div>
+
+  <div class="field column_left clear">
+    <%= f.label :scheduled_at %>
+    <%= f.calendar_date_select :scheduled_at, :time => true %>
+  </div>
+
   <section class="nested_items">
     <h2><%= t :print_jobs, :scope => [:view, :prints] %></h2>
     
@@ -124,7 +130,7 @@
 
   <div class="actions">
     <%= f.hidden_field :lock_version %>
-    <%= f.submit t(:'view.prints.print'), :id => :print_submit,
+    <%= f.submit nil, :id => :print_submit,
       :title => t(:'view.prints.print_title') %>
   </div>
 <% end %>
@@ -269,6 +275,20 @@
       }
     } else {
       element.addClassName('field_with_errors');
+    }
+  });
+
+  document.on('change', '#print_printer', function(event, element) {
+    var submit = $('print_submit');
+
+    if($F(element).blank()) {
+      submit.writeAttribute('value', submit.retrieve('original_value'));
+    } else {
+      if(!submit.retrieve('original_value')) {
+        submit.store('original_value', submit.readAttribute('value'));
+      }
+      
+      submit.writeAttribute('value', '<%= t(:'view.prints.print') %>');
     }
   });
 

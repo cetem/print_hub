@@ -27,12 +27,13 @@ class PrintTest < ActiveSupport::TestCase
   # Prueba la creación de una impresión
   test 'create' do
     counts = ['Print.count', 'PrintJob.count', 'Payment.count',
-      'ArticleLine.count']
+      'ArticleLine.count', 'Cups.all_jobs(@printer).keys.sort.last']
     
     assert_difference counts do
       @print = Print.create(
         :printer => @printer,
         :user => users(:administrator),
+        :scheduled_at => '',
         :print_jobs_attributes => {
           :new_1 => {
             :copies => 1,
@@ -71,6 +72,45 @@ class PrintTest < ActiveSupport::TestCase
     assert_equal false, @print.pending_payment
   end
 
+  # Prueba la creación de una impresión programada
+  test 'create scheduled' do
+    assert_difference ['Print.count', 'PrintJob.count', 'Payment.count'] do
+      assert_no_difference 'Cups.all_jobs(@printer).keys.sort.last' do
+        @print = Print.create(
+          :printer => '',
+          :user => users(:administrator),
+          :scheduled_at => 2.hours.from_now,
+          :print_jobs_attributes => {
+            :new_1 => {
+              :copies => 1,
+              # No importa el precio, se establece desde la configuración
+              :price_per_copy => 1000,
+              # No importan las páginas, se establecen desde el documento
+              :pages => 1,
+              :two_sided => false,
+              :document => documents(:math_book)
+            }
+          },
+          :payments_attributes => {
+            :new_1 => {
+              :amount => 35.00,
+              :paid => 35.00
+            }
+          }
+        )
+      end
+    end
+
+    assert_equal 1, @print.reload.payments.size
+
+    payment = @print.payments.first
+
+    assert payment.cash?
+    assert_equal '35.0', payment.amount.to_s
+    assert_equal '35.0', payment.paid.to_s
+    assert_equal false, @print.pending_payment
+  end
+
   test 'create with free credit' do
     counts = ['Print.count', 'PrintJob.count', 'Payment.count',
       'Cups.all_jobs(@printer).keys.sort.last', 'ArticleLine.count']
@@ -80,6 +120,7 @@ class PrintTest < ActiveSupport::TestCase
         :printer => @printer,
         :user => users(:administrator),
         :customer => customers(:student),
+        :scheduled_at => '',
         :print_jobs_attributes => {
           :new_1 => {
             :copies => 1,
@@ -127,6 +168,7 @@ class PrintTest < ActiveSupport::TestCase
             :printer => @printer,
             :user => users(:administrator),
             :customer => customers(:student),
+            :scheduled_at => '',
             :print_jobs_attributes => {
               :new_1 => {
                 :copies => 100,
@@ -207,20 +249,56 @@ class PrintTest < ActiveSupport::TestCase
     @print.article_lines.destroy_all
     @print.payments.destroy_all
     assert @print.invalid?
-    assert_equal 2, @print.errors.count
-    assert_equal [error_message_from_model(@print, :printer, :blank)],
-      @print.errors[:printer]
+    assert_equal 3, @print.errors.count
+    assert_equal [error_message_from_model(@print, :printer, :blank),
+      error_message_from_model(@print, :printer, :must_be_blank)].sort,
+      @print.errors[:printer].sort
     assert_equal [error_message_from_model(@print, :print_jobs, :blank)],
       @print.errors[:print_jobs]
+  end
+
+  # Prueba que las validaciones del modelo se cumplan como es esperado
+  test 'validates formated attributes' do
+    @print.scheduled_at = '13/13/13'
+    assert @print.invalid?
+    assert_equal 1, @print.errors.count
+    assert_equal [error_message_from_model(@print, :scheduled_at,
+        :invalid_date)], @print.errors[:scheduled_at]
+  end
+
+  # Prueba que las validaciones del modelo se cumplan como es esperado
+  test 'validates attributes boundaries' do
+    @print.scheduled_at = 2.seconds.ago
+    assert @print.invalid?
+    assert_equal 1, @print.errors.count
+    assert_equal [error_message_from_model(@print, :scheduled_at, :after,
+        :restriction => Time.now.strftime('%d/%m/%Y %H:%M:%S'))],
+      @print.errors[:scheduled_at]
   end
 
   # Prueba que las validaciones del modelo se cumplan como es esperado
   test 'validates length of attributes' do
     @print.printer = 'abcde' * 52
     assert @print.invalid?
-    assert_equal 1, @print.errors.count
-    assert_equal [error_message_from_model(@print, :printer, :too_long,
-      :count => 255)], @print.errors[:printer]
+    assert_equal 2, @print.errors.count
+    assert_equal [error_message_from_model(@print, :printer, :must_be_blank),
+      error_message_from_model(@print, :printer, :too_long, :count => 255)].sort,
+      @print.errors[:printer].sort
+  end
+
+  # Prueba que las validaciones del modelo se cumplan como es esperado
+  test 'validates printer and scheduled_at states' do
+    new_print = build_new_print_from(@print)
+
+    new_print.scheduled_at = 1.day.from_now
+
+    assert new_print.invalid?
+    assert_equal 1, new_print.errors.count
+    assert_equal [error_message_from_model(new_print, :printer,
+        :must_be_blank)], new_print.errors[:printer].sort
+
+    new_print.scheduled_at = nil
+    assert new_print.valid?
   end
 
   test 'price' do
@@ -234,8 +312,17 @@ class PrintTest < ActiveSupport::TestCase
 
   test 'print all jobs' do
     cups_count = 'Cups.all_jobs(@printer).keys.sort.last'
+    new_print = build_new_print_from(@print)
 
     assert_difference cups_count, @print.print_jobs.count do
+      new_print.print_all_jobs
+    end
+  end
+
+  test 'print no jobs' do
+    cups_count = 'Cups.all_jobs(@printer).keys.sort.last'
+
+    assert_no_difference cups_count do
       @print.print_all_jobs
     end
   end
@@ -256,5 +343,21 @@ class PrintTest < ActiveSupport::TestCase
     )
     assert !@print.reload.has_pending_payment?
     assert !@print.pending_payment
+  end
+
+  def build_new_print_from(print)
+    new_print = Print.new(print.attributes.except(:id))
+    new_print.print_jobs.clear
+
+    print.print_jobs.each do |pj|
+      new_print.print_jobs.build(pj.attributes.except(:id))
+    end
+    print.article_lines.each do |al|
+      new_print.article_lines.build(al.attributes.except(:id))
+    end
+
+    new_print.payments.build(:amount => new_print.price)
+
+    new_print
   end
 end

@@ -13,6 +13,11 @@
   <%= @print.user %>
 </p>
 
+<p>
+  <b><%= Print.human_attribute_name :scheduled_at %></b>:
+  <%= l @print.scheduled_at, :format => :long if @print.scheduled_at %>
+</p>
+
 <section class="nested_items">
   <h2><%= t :print_jobs, :scope => [:view, :prints] %></h2>
 

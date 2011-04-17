@@ -351,6 +351,9 @@ class PrintJobTest < ActiveSupport::TestCase
 
     print_job.send_to_print(@printer)
 
+    # Necesario para esperar que Cups lo "agregue" a la lista de completos
+    sleep 1
+
     assert print_job.completed?
   end
 end
