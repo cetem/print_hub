@@ -1,4 +1,23 @@
 module ApplicationHelper
+  def textilize(text)
+    if text.blank?
+      ''
+    else
+      textilized = RedCloth.new(text, [ :hard_breaks ])
+      textilized.hard_breaks = true if textilized.respond_to?(:'hard_breaks=')
+      textilized.to_html.html_safe
+    end
+  end
+
+  def textilize_without_paragraph(text)
+    textiled = textilize(text)
+
+    if textiled[0..2] == '<p>' then textiled = textiled[3..-1] end
+    if textiled[-4..-1] == '</p>' then textiled = textiled[0..-5] end
+
+    textiled.html_safe
+  end
+
   def default_stylesheets
     sheets = ['common', 'lightbox']
     sheets |= calendar_date_select_stylesheets(:style => 'silver').to_a

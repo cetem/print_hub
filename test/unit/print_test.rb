@@ -345,6 +345,14 @@ class PrintTest < ActiveSupport::TestCase
     assert !@print.pending_payment
   end
 
+  test 'scheduled' do
+    print = Print.find(prints(:scheduled_math_print).id)
+
+    assert print.scheduled?
+    assert print.printer.blank?
+    assert !print.scheduled_at.blank?
+  end
+
   def build_new_print_from(print)
     new_print = Print.new(print.attributes.except(:id))
     new_print.print_jobs.clear

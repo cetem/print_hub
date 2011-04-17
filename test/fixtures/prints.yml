@@ -27,3 +27,10 @@ second_physics_print:
   user: second_operator
   customer: teacher
   pending_payment: true
+
+scheduled_math_print:
+  printer: ''
+  user: operator
+  customer: student
+  pending_payment: false
+  scheduled_at: <%= 1.hour.from_now.to_s(:db) %>

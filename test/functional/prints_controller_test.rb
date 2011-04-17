@@ -28,7 +28,7 @@ class PrintsControllerTest < ActionController::TestCase
     user = users(:operator)
 
     UserSession.create(user)
-    get :index, :pending => 'pending'
+    get :index, :status => 'pending'
     assert_response :success
     assert_not_nil assigns(:prints)
     assert assigns(:prints).size > 0
@@ -54,12 +54,26 @@ class PrintsControllerTest < ActionController::TestCase
     user = users(:administrator)
 
     UserSession.create(user)
-    get :index, :pending => 'pending'
+    get :index, :status => 'pending'
     assert_response :success
     assert_not_nil assigns(:prints)
     assert_equal Print.pending.count, assigns(:prints).size
     assert assigns(:prints).any? { |p| p.user_id != user.id }
     assert assigns(:prints).all?(&:pending_payment)
+    assert_select '#error_body', false
+    assert_template 'prints/index'
+  end
+
+  test 'should get admin scheduled index' do
+    user = users(:administrator)
+
+    UserSession.create(user)
+    get :index, :status => 'scheduled'
+    assert_response :success
+    assert_not_nil assigns(:prints)
+    assert_equal Print.scheduled.count, assigns(:prints).size
+    assert assigns(:prints).any? { |p| p.user_id != user.id }
+    assert assigns(:prints).all?(&:scheduled?)
     assert_select '#error_body', false
     assert_template 'prints/index'
   end
@@ -230,12 +244,13 @@ class PrintsControllerTest < ActionController::TestCase
   test 'should not get edit' do
     UserSession.create(users(:administrator))
 
-    print = Print.where(:pending_payment => false).first
+    print = Print.find(prints(:os_print).id)
 
-    # Se debe producir un error al tratar de editar una impresión no pendiente
+    # Se debe producir un error al tratar de editar una impresión "cerrada"
     get :edit, :id => print.to_param
     assert_response :success
-    assert_nil assigns(:print)
+    assert_not_nil assigns(:print)
+    assert !assigns(:print).pending_payment && !assigns(:print).scheduled?
     assert_select '#error_body'
     assert_template 'shared/show_error'
   end

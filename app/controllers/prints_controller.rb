@@ -14,8 +14,10 @@ class PrintsController < ApplicationController
   # GET /prints.xml
   def index
     @title = t :'view.prints.index_title'
-    prints = params[:pending] == 'pending' ? prints_scope.pending : prints_scope
-    @prints = prints.order('created_at DESC').paginate(
+    order = params[:status] == 'scheduled' ? 'scheduled_at ASC' :
+      'created_at DESC'
+    
+    @prints = prints_scope.order(order).paginate(
       :page => params[:page],
       :per_page => APP_LINES_PER_PAGE
     )
@@ -53,7 +55,11 @@ class PrintsController < ApplicationController
   # GET /prints/1/edit
   def edit
     @title = t :'view.prints.edit_title'
-    @print = prints_scope.pending.find(params[:id])
+    @print = prints_scope.find(params[:id])
+
+    if !@print.pending_payment && !@print.scheduled?
+      raise 'This print is readonly!'
+    end
   end
 
   # POST /prints
@@ -77,7 +83,11 @@ class PrintsController < ApplicationController
   # PUT /prints/1.xml
   def update
     @title = t :'view.prints.edit_title'
-    @print = prints_scope.pending.find(params[:id])
+    @print = prints_scope.find(params[:id])
+
+    if !@print.pending_payment && !@print.scheduled?
+      raise 'This print is readonly!'
+    end
 
     respond_to do |format|
       if @print.update_attributes(params[:print])
@@ -181,6 +191,15 @@ class PrintsController < ApplicationController
   private
 
   def prints_scope
-    current_user.admin ? Print.scoped : current_user.prints
+    scope = current_user.admin ? Print.scoped : current_user.prints
+
+    case params[:status]
+      when 'pending'
+        scope = scope.pending
+      when 'scheduled'
+        scope = scope.scheduled
+    end
+
+    scope
   end
 end

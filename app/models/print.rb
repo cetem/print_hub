@@ -6,6 +6,10 @@ class Print < ActiveRecord::Base
 
   # Scopes
   scope :pending, where(:pending_payment => true)
+  scope :scheduled, where(
+    '(printer = :blank OR printer IS NULL) AND scheduled_at IS NOT NULL',
+    :blank => ''
+  )
 
   # Atributos no persistentes
   attr_accessor :auto_customer_name
@@ -120,5 +124,9 @@ class Print < ActiveRecord::Base
 
   def has_pending_payment?
     self.payments.inject(0.0) { |t, p| t + p.amount - p.paid } > 0
+  end
+
+  def scheduled?
+    self.printer.blank? && !self.scheduled_at.blank?
   end
 end

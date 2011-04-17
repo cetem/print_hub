@@ -67,3 +67,23 @@ second_physics_job_1:
   two_sided: true
   document: physics_notes
   print: second_physics_print
+
+scheduled_math_job_1:
+  job_id: 3
+  copies: 3
+  pages: 12
+  price_per_copy: 0.10
+  range: ''
+  two_sided: true
+  document: math_notes
+  print: scheduled_math_print
+
+scheduled_math_job_2:
+  job_id: 1
+  copies: 1
+  pages: 350
+  price_per_copy: 0.10
+  range: ''
+  two_sided: true
+  document: math_book
+  print: scheduled_math_print

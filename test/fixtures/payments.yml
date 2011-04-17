@@ -34,3 +34,12 @@ second_physics_payment:
   paid_with: <%= Payment::PAID_WITH[:cash] %>
   payable_id: <%= Fixtures.identify(:second_physics_print) %>
   payable_type: 'Print'
+
+scheduled_math_payment:
+  amount: 42.18
+  paid: 42.18
+  paid_with: <%= Payment::PAID_WITH[:cash] %>
+  payable_id: <%= Fixtures.identify(:scheduled_math_print) %>
+  payable_type: 'Print'
+  created_at: <%= 2.days.ago.to_datetime.to_s(:db) %>
+  updated_at: <%= 2.days.ago.to_datetime.to_s(:db) %>

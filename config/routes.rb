@@ -7,7 +7,8 @@ PrintHubApp::Application.routes.draw do
 
   resources :settings, :only => [:index, :show, :edit, :update]
 
-  scope ':pending', :defaults => {:pending => 'all'} do
+  scope ':status', :defaults => {:status => 'all'},
+    :constraints => {:status => /pending|scheduled|all/} do
     resources :prints, :except => [:destroy] do
       member do
         put :cancel_job
