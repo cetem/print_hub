@@ -1,4 +1,5 @@
 class Article < ActiveRecord::Base
+  has_paper_trail
   find_by_autocomplete :name
   
   # Callbacks

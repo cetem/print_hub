@@ -1,4 +1,6 @@
 class Print < ActiveRecord::Base
+  has_paper_trail
+  
   # Callbacks
   before_save :remove_unnecessary_payments, :update_customer_credit,
     :mark_as_pending, :print_all_jobs

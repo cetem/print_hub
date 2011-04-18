@@ -100,6 +100,8 @@ GEM
     net-ssh (2.1.4)
     net-ssh-gateway (1.0.1)
       net-ssh (>= 1.99.1)
+    paper_trail (2.2.2)
+      rails (~> 3)
     pdf-reader (0.9.1)
       Ascii85 (>= 0.9)
     pg (0.10.1)
@@ -158,6 +160,7 @@ DEPENDENCIES
   foreigner
   memcache-client
   mongrel
+  paper_trail
   paperclip!
   pdf-reader
   pg

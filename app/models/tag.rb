@@ -1,6 +1,7 @@
 class Tag < ActiveRecord::Base
   include Comparable
 
+  has_paper_trail
   acts_as_tree  
   find_by_autocomplete :name
 

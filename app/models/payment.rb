@@ -1,4 +1,6 @@
 class Payment < ActiveRecord::Base
+  has_paper_trail
+  
   # Constantes
   PAID_WITH = {
     :bonus => 'B',

@@ -1,4 +1,6 @@
 class ArticleLine < ActiveRecord::Base
+  has_paper_trail
+  
   # Atributos no persistentes
   attr_accessor :auto_article_name
   

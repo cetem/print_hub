@@ -24,7 +24,7 @@ class ArticlesControllerTest < ActionController::TestCase
 
   test 'should create article' do
     UserSession.create(users(:administrator))
-    assert_difference('Article.count') do
+    assert_difference ['Article.count', 'Version.count'] do
       post :create, :article => {
         :code => '0001234',
         :name => 'New Name',
@@ -34,6 +34,8 @@ class ArticlesControllerTest < ActionController::TestCase
     end
 
     assert_redirected_to articles_path
+    # Prueba básica para "asegurar" el funcionamiento del versionado
+    assert_equal users(:administrator).id, Version.last.whodunnit
   end
 
   test 'should show article' do

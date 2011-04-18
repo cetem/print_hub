@@ -1,4 +1,6 @@
 class PrintJob < ActiveRecord::Base
+  has_paper_trail
+  
   # Atributos no persistentes
   attr_writer :range_pages
   attr_accessor :auto_document_name, :job_hold_until

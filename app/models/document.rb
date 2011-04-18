@@ -1,4 +1,5 @@
 class Document < ActiveRecord::Base
+  has_paper_trail
   has_attached_file :file,
     :path => ':rails_root/private/:attachment/:id_partition/:basename_:style.:extension',
     :url => '/documents/:id/:style/download',

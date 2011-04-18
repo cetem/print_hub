@@ -1,8 +1,5 @@
 class User < ActiveRecord::Base
-  #include Trimmer
-
-  #trimmed_fields :username, :email, :name, :last_name
-
+  has_paper_trail
   acts_as_authentic do |c|
     c.crypto_provider = Authlogic::CryptoProviders::Sha512
   end

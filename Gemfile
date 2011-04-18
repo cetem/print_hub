@@ -13,6 +13,7 @@ gem 'will_paginate', '~> 3.0.beta'
 gem 'paperclip', :git => 'https://github.com/francocatena/paperclip.git'
 gem 'foreigner'
 gem 'memcache-client'
+gem 'paper_trail'
 gem 'RedCloth'
 gem 'whenever', :require => false
 # Previo sudo apt-get install libcupsys2-dev

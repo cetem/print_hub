@@ -54,7 +54,7 @@ class DocumentsControllerTest < ActionController::TestCase
 
   test 'should create document' do
     UserSession.create(users(:administrator))
-    assert_difference('Document.count') do
+    assert_difference ['Document.count', 'Version.count'] do
       post :create, :document => {
         :code => '0001234',
         :name => 'New Name',
@@ -72,6 +72,8 @@ class DocumentsControllerTest < ActionController::TestCase
     assert_equal 2, Document.find_by_code('0001234').tags.count
     # Debe poner 1 ya que cuenta las que tiene efectivamente el PDF
     assert_equal 1, Document.find_by_code('0001234').pages
+    # Prueba básica para "asegurar" el funcionamiento del versionado
+    assert_equal users(:administrator).id, Version.last.whodunnit
   end
 
   test 'should show document' do

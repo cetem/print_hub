@@ -25,7 +25,7 @@ class CustomersControllerTest < ActionController::TestCase
 
   test 'should create customer' do
     UserSession.create(users(:administrator))
-    assert_difference 'Customer.count' do
+    assert_difference ['Customer.count', 'Version.count'] do
       post :create, :customer => {
         :name => 'Jar Jar',
         :lastname => 'Binks',
@@ -35,6 +35,8 @@ class CustomersControllerTest < ActionController::TestCase
     end
 
     assert_redirected_to customers_path
+    # Prueba básica para "asegurar" el funcionamiento del versionado
+    assert_equal users(:administrator).id, Version.last.whodunnit
   end
 
   test 'should show customer' do

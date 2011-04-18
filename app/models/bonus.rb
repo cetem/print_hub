@@ -1,6 +1,8 @@
 class Bonus < ActiveRecord::Base
   set_table_name 'bonuses'
 
+  has_paper_trail
+
   # Named scopes
   scope :valids, lambda {
     where(

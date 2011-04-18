@@ -96,42 +96,46 @@ class PrintsControllerTest < ActionController::TestCase
     customer = Customer.find customers(:student).id
 
     assert_difference counts_array do
-      post :create, :print => {
-        :printer => @printer,
-        :customer_id => customer.id,
-        :scheduled_at => '',
-        :print_jobs_attributes => {
-          :new_1 => {
-            :copies => '1',
-            :pages => document.pages.to_s,
-            # No importa el precio, se establece desde la configuración
-            :price_per_copy => '12.0',
-            :range => '',
-            :two_sided => '0',
-            :auto_document_name => 'Some name given in autocomplete',
-            :document_id => document.id.to_s
-          }
-        },
-        :article_lines_attributes => {
-          :new_1 => {
-            :article_id => articles(:binding).id.to_s,
-            :units => '1',
-            # No importa el precio, se establece desde el artículo
-            :unit_price => '12.0'
-          }
-        },
-        :payments_attributes => {
-          :new_1 => {
-            :amount => '36.79',
-            :paid => '36.79'
+      assert_difference 'Version.count', 4 do
+        post :create, :print => {
+          :printer => @printer,
+          :customer_id => customer.id,
+          :scheduled_at => '',
+          :print_jobs_attributes => {
+            :new_1 => {
+              :copies => '1',
+              :pages => document.pages.to_s,
+              # No importa el precio, se establece desde la configuración
+              :price_per_copy => '12.0',
+              :range => '',
+              :two_sided => '0',
+              :auto_document_name => 'Some name given in autocomplete',
+              :document_id => document.id.to_s
+            }
+          },
+          :article_lines_attributes => {
+            :new_1 => {
+              :article_id => articles(:binding).id.to_s,
+              :units => '1',
+              # No importa el precio, se establece desde el artículo
+              :unit_price => '12.0'
+            }
+          },
+          :payments_attributes => {
+            :new_1 => {
+              :amount => '36.79',
+              :paid => '36.79'
+            }
           }
         }
-      }
+      end
     end
 
     assert_redirected_to print_path(assigns(:print))
     # Debe asignar el usuario autenticado como el creador de la impresión
     assert_equal users(:operator).id, assigns(:print).user.id
+    # Prueba básica para "asegurar" el funcionamiento del versionado
+    assert_equal users(:operator).id, Version.last.whodunnit
   end
 
   test 'should create print without documents in print jobs' do

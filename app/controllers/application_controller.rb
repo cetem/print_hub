@@ -36,6 +36,10 @@ class ApplicationController < ActionController::Base
     @current_user ||= current_user_session && current_user_session.record
   end
 
+  def user_for_paper_trail
+    current_user.try(:id)
+  end
+
   def require_user
     unless current_user
       flash.notice = t(:'messages.must_be_logged_in')

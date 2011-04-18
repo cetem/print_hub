@@ -36,13 +36,15 @@ class TagsControllerTest < ActionController::TestCase
 
   test 'should create tag' do
     UserSession.create(users(:administrator))
-    assert_difference('Tag.count') do
+    assert_difference ['Tag.count', 'Version.count'] do
       post :create, :tag => {
         :name => 'New tag'
       }
     end
 
     assert_redirected_to tags_path
+    # Prueba básica para "asegurar" el funcionamiento del versionado
+    assert_equal users(:administrator).id, Version.last.whodunnit
   end
 
   test 'should show tag' do

@@ -1,4 +1,5 @@
 class Customer < ActiveRecord::Base
+  has_paper_trail
   find_by_autocomplete :name
 
   scope :with_monthly_bonus, where('free_monthly_bonus > :zero', :zero => 0)
