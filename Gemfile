@@ -1,6 +1,6 @@
 source 'http://rubygems.org'
 
-gem 'rails', '3.0.6'
+gem 'rails', '3.0.7'
 
 gem 'pg'
 gem 'authlogic', :git => 'https://github.com/francocatena/authlogic.git'
