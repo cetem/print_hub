@@ -33,9 +33,16 @@
       @print.customer.try(:free_credit), :id => :customer_free_credit %>
   </div>
 
-  <div class="field column_left clear">
-    <%= f.label :scheduled_at %>
-    <%= f.calendar_date_select :scheduled_at, :time => true %>
+  <div class="clear">
+    <div class="field column_left">
+      <%= f.label :scheduled_at %>
+      <%= f.calendar_date_select :scheduled_at, :time => true %>
+    </div>
+
+    <div class="field column_right">
+      <%= f.label :avoid_printing %>
+      <%= f.check_box :avoid_printing %>
+    </div>
   </div>
 
   <section class="nested_items">

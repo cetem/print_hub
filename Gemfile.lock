@@ -21,7 +21,7 @@ GIT
 
 GIT
   remote: https://github.com/thoughtbot/paperclip.git
-  revision: 7ff4120e8f9741b76c7e1c2d8c53234e1bc680b7
+  revision: 93753d5c4da6488cce82e5378997dc3f5478ceff
   specs:
     paperclip (2.3.10)
       activerecord (>= 2.3.0)

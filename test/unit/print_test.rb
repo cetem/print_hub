@@ -111,6 +111,46 @@ class PrintTest < ActiveSupport::TestCase
     assert_equal false, @print.pending_payment
   end
 
+  # Prueba la creación de una impresión que evita imprimir =)
+  test 'create with avoid printing' do
+    assert_difference ['Print.count', 'PrintJob.count', 'Payment.count'] do
+      assert_no_difference 'Cups.all_jobs(@printer).keys.sort.last' do
+        @print = Print.create(
+          :printer => @printer,
+          :user => users(:administrator),
+          :scheduled_at => '',
+          :avoid_printing => true,
+          :print_jobs_attributes => {
+            :new_1 => {
+              :copies => 1,
+              # No importa el precio, se establece desde la configuración
+              :price_per_copy => 1000,
+              # No importan las páginas, se establecen desde el documento
+              :pages => 1,
+              :two_sided => false,
+              :document => documents(:math_book)
+            }
+          },
+          :payments_attributes => {
+            :new_1 => {
+              :amount => 35.00,
+              :paid => 35.00
+            }
+          }
+        )
+      end
+    end
+
+    assert_equal 1, @print.reload.payments.size
+
+    payment = @print.payments.first
+
+    assert payment.cash?
+    assert_equal '35.0', payment.amount.to_s
+    assert_equal '35.0', payment.paid.to_s
+    assert_equal false, @print.pending_payment
+  end
+
   test 'create with free credit' do
     counts = ['Print.count', 'PrintJob.count', 'Payment.count',
       'Cups.all_jobs(@printer).keys.sort.last', 'ArticleLine.count']

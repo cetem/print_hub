@@ -101,6 +101,7 @@
         id: 'Número'
         printer: 'Impresora'
         scheduled_at: 'Programado para'
+        avoid_printing: 'No imprimir'
         customer: 'Cliente'
         customer_id: 'Cliente'
         user: 'Usuario'

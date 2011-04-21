@@ -14,7 +14,7 @@ class Print < ActiveRecord::Base
   )
 
   # Atributos no persistentes
-  attr_accessor :auto_customer_name
+  attr_accessor :auto_customer_name, :avoid_printing
 
   # Restricciones en los atributos
   attr_readonly :user_id, :customer_id, :printer
@@ -77,7 +77,7 @@ class Print < ActiveRecord::Base
   end
 
   def print_all_jobs
-    if self.printer_was.blank? && !self.printer.blank?
+    if self.printer_was.blank? && !self.printer.blank? && !self.avoid_printing
       self.print_jobs.reject(&:marked_for_destruction?).each do |pj|
         pj.send_to_print(self.printer, self.user)
       end
