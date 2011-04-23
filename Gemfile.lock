@@ -72,7 +72,7 @@ GEM
     cgi_multipart_eof_fix (2.5.0)
     columnize (0.3.2)
     cups (0.0.7)
-    daemons (1.1.2)
+    daemons (1.1.3)
     erubis (2.6.6)
       abstract (>= 1.0.0)
     fastthread (1.0.7)

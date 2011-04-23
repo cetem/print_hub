@@ -154,9 +154,11 @@ class DocumentsController < ApplicationController
     file = @document.file.path(params[:style].try(:to_sym))
 
     if File.exists?(file)
+      response.headers['Last-Modified'] = File.mtime(file).httpdate
+      response.headers['Cache-Control'] = 'private, no-store'
       mime_type = Mime::Type.lookup_by_extension(File.extname(file)[1..-1])
 
-      send_file file, :type => mime_type
+      send_file file, :type => (mime_type || 'application/octet-stream')
     else
       redirect_to documents_path, :notice => t(:'view.documents.non_existent')
     end
