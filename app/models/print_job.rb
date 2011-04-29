@@ -96,7 +96,11 @@ class PrintJob < ActiveRecord::Base
   end
 
   def price
-    (self.copies || 0) * (self.price_per_copy || 0) * (self.range_pages || 0)
+    r_pages = self.range_pages || 0
+    even_range = r_pages - (r_pages % 2)
+    rest = (r_pages % 2) * BigDecimal.new(price_per_one_sided_copy)
+
+    (self.copies || 0) * ((self.price_per_copy || 0) * even_range + rest)
   end
 
   def price_per_one_sided_copy
@@ -113,7 +117,7 @@ class PrintJob < ActiveRecord::Base
       timestamp = Time.now.utc.strftime('%Y%m%d%H%M%S')
       user = user.try(:username)
       options = "-d #{printer} -n #{self.copies} -o fit-to-page "
-      options += "-t #{user ? "#{user}-#{timestamp}" : "ph-#{timestamp}"} "
+      options += "-t #{user || 'ph'}-#{timestamp} "
       options += self.options.map { |o, v| "-o #{o}=#{v}" }.join(' ')
       out = %x{lp #{options} "#{self.document.file.path}" 2>&1}
 

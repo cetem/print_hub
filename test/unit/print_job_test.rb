@@ -293,6 +293,14 @@ class PrintJobTest < ActiveSupport::TestCase
     assert @print_job.valid?
     assert_equal 1, @print_job.range_pages
     assert_equal '1.50', '%.2f' % @print_job.price
+
+    @print_job.copies = 1
+    @print_job.price_per_copy = 0.07
+    @print_job.range = '1-11'
+    @print_job.two_sided = true
+    assert @print_job.valid?
+    assert_equal 11, @print_job.range_pages
+    assert_equal '0.80', '%.2f' % @print_job.price # 0.70 + 0.10
   end
 
   test 'print' do

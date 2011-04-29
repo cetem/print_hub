@@ -160,7 +160,7 @@
 
       return total + pjPrice;
     });
-    
+
     if(freeCredit > totalPrice) {
       payWithCash = 0.0;
       payWithBonus = totalPrice;
@@ -180,10 +180,16 @@
     var pricePerCopy = parseFloat(
       printJob.down('input[name$="[price_per_copy]"]').getValue()
     );
+    var pricePerOneSidedCopy = parseFloat(
+      printJob.down('input[name$="[two_sided]"].price_modifier').readAttribute(
+        'data-price-per-one-sided')
+    );
     var rangePages = parseInt(
       printJob.down('input[name$="[range]"]').readAttribute('data-range-pages')
     );
-    var jobPrice = copies * pricePerCopy * rangePages;
+    var evenRange = rangePages - (rangePages % 2);
+    var rest = (rangePages % 2) * pricePerOneSidedCopy;
+    var jobPrice = copies * (pricePerCopy * evenRange + rest);
     var money = printJob.down('span.money');
 
     printJob.writeAttribute('data-price', jobPrice);
@@ -208,7 +214,7 @@
 
   document.on('item:removed', '.print_job', function(event, element) {
     element.store('exclude_from_total', true);
-    
+
     updateTotalPrice();
   });
 
@@ -220,7 +226,7 @@
 
   document.on('autocomplete:update', 'form', function(event) {
     var element = $(event.memo);
-    
+
     if (element.readAttribute('data-pages')) {
       var pages = element.readAttribute('data-pages');
       var printJob = element.up('.print_job');
@@ -263,7 +269,7 @@
       var data = r.match(/^(\d+)(-(\d+))?$/);
       var n1 = Try.these(function() { return parseInt(data[1]); });
       var n2 = Try.these(function() { return parseInt(data[3]); });
-      
+
       validRanges = validRanges && n1 && n1 > 0 && (!n2 || n1 < n2);
       validRanges = validRanges && (!maxPage || maxPage < n1);
 
@@ -289,12 +295,14 @@
     var submit = $('print_submit');
 
     if($F(element).blank()) {
-      submit.writeAttribute('value', submit.retrieve('original_value'));
+      if(submit.retrieve('original_value')) {
+        submit.writeAttribute('value', submit.retrieve('original_value'));
+      }
     } else {
       if(!submit.retrieve('original_value')) {
         submit.store('original_value', submit.readAttribute('value'));
       }
-      
+
       submit.writeAttribute('value', '<%= t(:'view.prints.print') %>');
     }
   });
