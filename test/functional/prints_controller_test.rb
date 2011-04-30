@@ -92,7 +92,8 @@ class PrintsControllerTest < ActionController::TestCase
 
     document = Document.find(documents(:math_book).id)
     counts_array = ['Print.count', 'PrintJob.count', 'Payment.count',
-      'customer.prints.count', 'ArticleLine.count']
+      'customer.prints.count', 'ArticleLine.count',
+      'Cups.all_jobs(@printer).keys.sort.last']
     customer = Customer.find customers(:student).id
 
     assert_difference counts_array do
@@ -101,6 +102,7 @@ class PrintsControllerTest < ActionController::TestCase
           :printer => @printer,
           :customer_id => customer.id,
           :scheduled_at => '',
+          :avoid_printing => '0',
           :print_jobs_attributes => {
             :new_1 => {
               :copies => '1',
@@ -138,6 +140,50 @@ class PrintsControllerTest < ActionController::TestCase
     assert_equal users(:operator).id, Version.last.whodunnit
   end
 
+  test 'should create print and avoid printing' do
+    UserSession.create(users(:operator))
+
+    document = Document.find(documents(:math_book).id)
+    counts_array = ['Print.count', 'PrintJob.count', 'Payment.count']
+
+    assert_difference counts_array do
+      assert_difference 'Version.count', 3 do
+        assert_no_difference 'Cups.all_jobs(@printer).keys.sort.last' do
+          post :create, :print => {
+            :printer => @printer,
+            :customer_id => '',
+            :scheduled_at => '',
+            :avoid_printing => '1',
+            :print_jobs_attributes => {
+              :new_1 => {
+                :copies => '1',
+                :pages => document.pages.to_s,
+                # No importa el precio, se establece desde la configuración
+                :price_per_copy => '12.0',
+                :range => '',
+                :two_sided => '0',
+                :auto_document_name => 'Some name given in autocomplete',
+                :document_id => document.id.to_s
+              }
+            },
+            :payments_attributes => {
+              :new_1 => {
+                :amount => '35.00',
+                :paid => '35.00'
+              }
+            }
+          }
+        end
+      end
+    end
+
+    assert_redirected_to print_path(assigns(:print))
+    # Debe asignar el usuario autenticado como el creador de la impresión
+    assert_equal users(:operator).id, assigns(:print).user.id
+    # Prueba básica para "asegurar" el funcionamiento del versionado
+    assert_equal users(:operator).id, Version.last.whodunnit
+  end
+
   test 'should create print without documents in print jobs' do
     UserSession.create(users(:operator))
 
@@ -150,6 +196,7 @@ class PrintsControllerTest < ActionController::TestCase
         :printer => @printer,
         :customer_id => customer.id,
         :scheduled_at => '',
+        :avoid_printing => '0',
         :print_jobs_attributes => {
           :new_1 => {
             :copies => '1',
@@ -195,6 +242,7 @@ class PrintsControllerTest < ActionController::TestCase
         :printer => @printer,
         :customer_id => customer.id,
         :scheduled_at => '',
+        :avoid_printing => '0',
         :print_jobs_attributes => {
           :new_1 => {
             :copies => '1',
@@ -277,6 +325,7 @@ class PrintsControllerTest < ActionController::TestCase
           :printer => @printer,
           :customer_id => customer.id,
           :scheduled_at => '',
+          :avoid_printing => '0',
           :user_id => users(:administrator).id,
           :print_jobs_attributes => {
             print_jobs(:math_job_1).id => {
@@ -348,6 +397,7 @@ class PrintsControllerTest < ActionController::TestCase
       post :create, :print => {
         :printer => @printer,
         :scheduled_at => '',
+        :avoid_printing => '0',
         :print_jobs_attributes => {
           :new_1 => {
             :copies => '1',
