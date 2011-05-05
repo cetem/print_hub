@@ -61,17 +61,15 @@ class UserTest < ActiveSupport::TestCase
     @user.language = '   '
     @user.email = '  '
     assert @user.invalid?
-    assert_equal 5, @user.errors.count
+    assert_equal 4, @user.errors.count
     assert_equal [error_message_from_model(@user, :name, :blank)],
       @user.errors[:name]
     assert_equal [error_message_from_model(@user, :last_name, :blank)],
       @user.errors[:last_name]
     assert_equal [error_message_from_model(@user, :language, :blank)],
       @user.errors[:language]
-    assert_equal [error_message_from_model(@user, :email, :too_short,
-        :count => 6), I18n.t(:email_invalid,
-        :scope => [:authlogic, :error_messages])].sort,
-      @user.errors[:email].sort
+    assert_equal [I18n.t(:'authlogic.error_messages.email_invalid')],
+      @user.errors[:email]
   end
 
   # Prueba que las validaciones del modelo se cumplan como es esperado

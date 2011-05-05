@@ -7,6 +7,8 @@ class DocumentTest < ActiveSupport::TestCase
   # Función para inicializar las variables utilizadas en las pruebas
   def setup
     @document = Document.find documents(:math_book).id
+    
+    prepare_document_files
   end
 
   # Prueba que se realicen las búsquedas como se espera
@@ -52,6 +54,9 @@ class DocumentTest < ActiveSupport::TestCase
     # Asegurar que las 2 miñaturas son imágenes y no están vacías
     assert_equal 2,
       thumbs_dir.entries.select { |f| f.extname == '.png' && !f.zero? }.size
+    
+    # Asegurar la "limpieza" del directorio
+    Pathname.new(@document.file.path).dirname.rmtree
   end
 
   # Prueba la creación de un documento con múltiples páginas
@@ -83,6 +88,9 @@ class DocumentTest < ActiveSupport::TestCase
     # Asegurar que las 6 miñaturas son imágenes y no están vacías
     assert_equal 6,
       thumbs_dir.entries.select { |f| f.extname == '.png' && !f.zero? }.size
+    
+    # Asegurar la "limpieza" del directorio
+    Pathname.new(@document.file.path).dirname.rmtree
   end
 
   # Prueba de actualización de un documento
@@ -95,7 +103,7 @@ class DocumentTest < ActiveSupport::TestCase
     assert_equal 'Updated name', @document.reload.name
   end
 
-  test 'can not update with diferent pdfs' do
+  test 'can update with diferent pdfs' do
     file = Rack::Test::UploadedFile.new(
       File.join(Rails.root, 'test', 'fixtures', 'files', 'multipage_test.pdf'),
       'application/pdf'

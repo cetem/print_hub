@@ -3,7 +3,7 @@ source 'http://rubygems.org'
 gem 'rails', '3.0.7'
 
 gem 'pg'
-gem 'authlogic', :git => 'https://github.com/francocatena/authlogic.git'
+gem 'authlogic'
 gem 'rails-settings', :git => 'https://github.com/100hz/rails-settings.git'
 gem 'calendar_date_select', :git => 'https://github.com/paneq/calendar_date_select.git', :branch => 'rails3test'
 gem 'simple_autocomplete'
