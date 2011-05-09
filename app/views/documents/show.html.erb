@@ -36,12 +36,13 @@
   <%= show_document_thumb(@document) %>
 
   <nav class="links">
-    <% unless request.xhr? %>
-      <%= link_to t(:'label.edit'), edit_document_path(@document) %> |
-      <%= link_to t(:'label.list'), documents_path %>
-    <% else %>
+    <% if request.xhr? %>
       <%= link_to t(:'label.show'), document_path(@document) %> |
       <%= link_to_function t(:'label.hide'), "this.up('.document_details').hide()" %>
+    <% else %>
+      <%= document_link_for_use_in_next_print @document %> |
+      <%= link_to t(:'label.edit'), edit_document_path(@document) %> |
+      <%= link_to t(:'label.list'), documents_path %>
     <% end %>
   </nav>
 </div>

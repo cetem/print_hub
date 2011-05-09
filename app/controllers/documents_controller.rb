@@ -1,5 +1,7 @@
 class DocumentsController < ApplicationController
-  before_filter :require_user
+  before_filter :require_user, :load_documents_for_printing
+  hidden_actions :load_documents_for_printing
+  
   layout lambda { |controller| controller.request.xhr? ? false : 'application' }
 
   autocomplete_for(:tag, :name, :limit => 10, :order => 'name ASC',
@@ -16,6 +18,12 @@ class DocumentsController < ApplicationController
     @title = t :'view.documents.index_title'
     @tag = Tag.find(params[:tag_id]) if params[:tag_id]
     @documents = @tag ? @tag.documents : Document.scoped
+    
+    unless params[:clear_documents_for_printing].blank?
+      @documents_for_printing = session[:documents_for_printing].clear
+      
+      redirect_to request.parameters.except(:clear_documents_for_printing)
+    end
 
     if params[:q]
       query = params[:q].strip.gsub(/\s*([&|])\s*/, '\1').gsub(/[|&!]$/, '')
@@ -162,5 +170,30 @@ class DocumentsController < ApplicationController
     else
       redirect_to documents_path, :notice => t(:'view.documents.non_existent')
     end
+  end
+  
+  # POST /documents/1/add_to_next_print
+  def add_to_next_print
+    @document = Document.find(params[:id])
+    session[:documents_for_printing] ||= []
+    
+    unless session[:documents_for_printing].include?(@document.id)
+      session[:documents_for_printing] << @document.id
+    end
+  end
+  
+  # DELETE /documents/1/remove_from_next_print
+  def remove_from_next_print
+    @document = Document.find(params[:id])
+    session[:documents_for_printing] ||= []
+    
+    session[:documents_for_printing].delete(@document.id)
+  end
+  
+  private
+  
+  def load_documents_for_printing
+    session[:documents_for_printing] ||= []
+    @documents_for_printing = session[:documents_for_printing]
   end
 end

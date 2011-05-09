@@ -44,7 +44,9 @@ class PrintsController < ApplicationController
   # GET /prints/new.xml
   def new
     @title = t :'view.prints.new_title'
-    @print = current_user.prints.build
+    @print = current_user.prints.build(
+      :include_documents => session[:documents_for_printing]
+    )
 
     respond_to do |format|
       format.html # new.html.erb
@@ -67,6 +69,7 @@ class PrintsController < ApplicationController
   def create
     @title = t :'view.prints.new_title'
     @print = current_user.prints.build(params[:print])
+    session[:documents_for_printing].try(:clear)
 
     respond_to do |format|
       if @print.save

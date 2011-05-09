@@ -28,6 +28,9 @@ PrintHubApp::Application.routes.draw do
     end
 
     member do
+      post :add_to_next_print
+      delete :remove_from_next_print
+      
       scope ':style' do
         get :download
       end

@@ -10,7 +10,7 @@
       <th><%= Document.human_attribute_name :code %></th>
       <th><%= Document.human_attribute_name :name %></th>
       <th><%= Document.human_attribute_name :pages %></th>
-      <th colspan="3"></th>
+      <th colspan="4"></th>
     </tr>
   </thead>
 
@@ -20,6 +20,7 @@
         <td><%= document.code %></td>
         <td><%= document.name %></td>
         <td><%= document.pages %></td>
+        <td><%= document_link_for_use_in_next_print document %></td>
         <td><%= link_to t(:'label.show'), document %></td>
         <td><%= link_to t(:'label.edit'), edit_document_path(document) %></td>
         <td><%= button_to t(:'label.delete'), document,
@@ -31,5 +32,8 @@
 
 <nav class="links">
   <%= pagination_links(@documents) %>
-  <%= link_to t(:'label.new'), new_document_path %>
+  <%= link_to t(:'label.new'), new_document_path %> |
+  <%= link_to t(:new_print, :scope => [:view, :documents]), new_print_path %> |
+  <%= link_to t(:clear_documents_for_printing, :scope => [:view, :documents]),
+    request.parameters.merge(:clear_documents_for_printing => true) %>
 </nav>

@@ -12,6 +12,7 @@ class DocumentsControllerTest < ActionController::TestCase
     get :index
     assert_response :success
     assert_not_nil assigns(:documents)
+    assert_not_nil assigns(:documents_for_printing)
     assert_select '#error_body', false
     assert_template 'documents/index'
   end
@@ -42,6 +43,15 @@ class DocumentsControllerTest < ActionController::TestCase
     assert assigns(:documents).all? { |d| d.name.match(/math/i) }
     assert_select '#error_body', false
     assert_template 'documents/index'
+  end
+  
+  test 'should clear documents for printing' do
+    UserSession.create(users(:administrator))
+    session[:documents_for_printing] = [@document.id]
+    
+    get :index, :clear_documents_for_printing => true
+    assert_redirected_to :action => :index
+    assert session[:documents_for_printing].blank?
   end
 
   test 'should get new' do
@@ -142,6 +152,34 @@ class DocumentsControllerTest < ActionController::TestCase
     get :download, :id => @document.to_param, :style => :original
     assert_response :success
     assert_equal File.open(@document.reload.file.path).read, @response.body
+  end
+  
+  test 'should add document to next print' do
+    UserSession.create(users(:administrator))
+    assert session[:documents_for_printing].blank?
+    
+    i18n_scope = [:view, :documents, :remove_from_next_print]
+    
+    xhr :post, :add_to_next_print, :id => @document.to_param
+    assert_response :success
+    assert_match %r{#{I18n.t(:link, :scope => i18n_scope)}}, @response.body
+    assert session[:documents_for_printing].include?(@document.id)
+  end
+  
+  test 'should remove document from next print' do
+    UserSession.create(users(:administrator))
+    assert session[:documents_for_printing].blank?
+    
+    session[:documents_for_printing] = [@document.id]
+    i18n_scope = [:view, :documents, :add_to_next_print]
+    
+    xhr :delete, :remove_from_next_print, :id => @document.to_param
+    assert_response :success
+    assert_match %r{#{I18n.t(:link, :scope => i18n_scope)}},
+      @response.body
+    assert !session[:documents_for_printing].include?(@document.id)
+    
+    assert session[:documents_for_printing].blank?
   end
 
   test 'should get autocomplete tag list' do

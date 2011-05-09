@@ -32,4 +32,27 @@ module DocumentsHelper
     t Document::MEDIA_TYPES.invert[media],
       :scope => [:view, :documents, :media_type]
   end
+  
+  def document_link_for_use_in_next_print(document)
+    content = ''
+    
+    if @documents_for_printing.include?(document.id)
+      content << link_to(
+        t(:link, :scope => [:view, :documents, :remove_from_next_print]),
+        remove_from_next_print_document_path(document),
+        :title => t(:title, :scope => [:view, :documents, :remove_from_next_print]),
+        :remote => true, :method => :delete, :class => :red
+      )
+    else
+      content << link_to(
+        t(:link, :scope => [:view, :documents, :add_to_next_print]),
+        add_to_next_print_document_path(document),
+        :title => t(:title, :scope => [:view, :documents, :add_to_next_print]),
+        :remote => true, :method => :post
+      )
+    end
+    
+    content_tag :span, raw(content),
+      :id => "document_for_use_in_next_print_#{document.id}"
+  end
 end

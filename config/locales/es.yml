@@ -476,6 +476,14 @@
       add_tag: 'Agregar etiqueta'
       has_related_print_jobs: 'El documento no puede ser eliminado, tiene impresiones relacionadas'
       documents_with_tag: 'Documentos con la etiqueta %{tag}'
+      clear_documents_for_printing: 'Desmarcar todos los documentos a imprimir'
+      add_to_next_print:
+        link: 'Agregar a impresión'
+        title: 'Marca el documento para que sea INCLUIDO en la próxima impresión'
+      remove_from_next_print:
+        link: 'Quitar de impresión'
+        title: 'Elimina la marca del documento para que NO sea incluido en la próxima impresión'
+      new_print: 'Crear impresión'
       media_type:
         a4: 'A4'
         legal: 'Oficio'

@@ -253,6 +253,37 @@ class PrintTest < ActiveSupport::TestCase
     assert_equal '3001.79', cash_payment.amount.to_s
     assert_equal '3001.79', cash_payment.paid.to_s
   end
+  
+  # Prueba la creación de una impresión con documentos incluidos
+  test 'create with included documents' do
+    assert_difference ['Print.count', 'PrintJob.count', 'Payment.count'] do
+      assert_no_difference 'Cups.all_jobs(@printer).keys.sort.last' do
+        @print = Print.create(
+          :printer => @printer,
+          :user => users(:administrator),
+          :scheduled_at => '',
+          :avoid_printing => true,
+          :include_documents => [documents(:math_book).id],
+          :payments_attributes => {
+            :new_1 => {
+              :amount => 24.50,
+              :paid => 24.50
+            }
+          }
+        )
+      end
+    end
+
+    assert_equal 1, @print.reload.payments.size
+
+    payment = @print.payments.first
+
+    assert payment.cash?
+    assert_equal '24.5', payment.amount.to_s
+    assert_equal '24.5', payment.paid.to_s
+    assert_equal false, @print.pending_payment
+    assert_equal documents(:math_book).id, @print.print_jobs.first.document_id
+  end
 
   # Prueba de actualización de una impresión
   test 'can not update' do
