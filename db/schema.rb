@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110511141815) do
+ActiveRecord::Schema.define(:version => 20110512204533) do
 
   create_table "article_lines", :force => true do |t|
     t.integer  "print_id",                                                   :null => false
@@ -193,6 +193,7 @@ ActiveRecord::Schema.define(:version => 20110511141815) do
     t.integer  "lock_version",      :default => 0
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "default_printer"
   end
 
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true

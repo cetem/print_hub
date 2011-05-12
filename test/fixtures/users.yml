@@ -3,6 +3,7 @@ administrator:
   last_name: Administrator
   language: <%= LANGUAGES.first.to_s %>
   email: admin@printhub.com
+  default_printer: <%= Cups.show_destinations.select {|p| p =~ /pdf/i}.first %>
   username: admin
   password_salt: <%= salt = Authlogic::Random.hex_token %>
   crypted_password: <%= Authlogic::CryptoProviders::Sha512.encrypt('admin123' + salt) %>
@@ -15,6 +16,7 @@ operator:
   last_name: Operator
   language: <%= LANGUAGES.first.to_s %>
   email: operator@printhub.com
+  default_printer: <%= Cups.show_destinations.select {|p| p =~ /pdf/i}.first %>
   username: operator
   password_salt: <%= salt = Authlogic::Random.hex_token %>
   crypted_password: <%= Authlogic::CryptoProviders::Sha512.encrypt('operator123' + salt) %>
@@ -27,6 +29,7 @@ second_operator:
   last_name: Operator
   language: <%= LANGUAGES.first.to_s %>
   email: second_operator@printhub.com
+  default_printer: <%= Cups.show_destinations.select {|p| p =~ /pdf/i}.first %>
   username: second_operator
   password_salt: <%= salt = Authlogic::Random.hex_token %>
   crypted_password: <%= Authlogic::CryptoProviders::Sha512.encrypt('second_operator123' + salt) %>
@@ -39,6 +42,7 @@ disabled_operator:
   last_name: Operator
   language: <%= LANGUAGES.first.to_s %>
   email: disabled_operator@printhub.com
+  default_printer: <%= Cups.show_destinations.select {|p| p =~ /pdf/i}.first %>
   username: disabled_operator
   password_salt: <%= salt = Authlogic::Random.hex_token %>
   crypted_password: <%= Authlogic::CryptoProviders::Sha512.encrypt('disabled_operator123' + salt) %>

@@ -16,6 +16,7 @@ class UserTest < ActiveSupport::TestCase
     assert_equal users(:administrator).last_name, @user.last_name
     assert_equal users(:administrator).language, @user.language
     assert_equal users(:administrator).email, @user.email
+    assert_equal users(:administrator).default_printer, @user.default_printer
     assert_equal users(:administrator).username, @user.username
     assert_equal users(:administrator).crypted_password, @user.crypted_password
     assert_equal users(:administrator).admin, @user.admin
@@ -29,6 +30,7 @@ class UserTest < ActiveSupport::TestCase
         :name => 'New name',
         :last_name => 'New last name',
         :email => 'new_user@printhub.com',
+        :default_printer => '',
         :language => LANGUAGES.first.to_s,
         :username => 'new_user',
         :password => 'new_password',

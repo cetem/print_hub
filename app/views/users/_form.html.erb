@@ -18,6 +18,10 @@
     <%= f.text_field :email, :maxlength => 255 %>
   </div>
   <div class="field">
+    <%= f.label :default_printer %>
+    <%= user_default_printer_field(f) %>
+  </div>
+  <div class="field">
     <%= f.label :username %>
     <%= f.text_field :username, :maxlength => 255 %>
   </div>

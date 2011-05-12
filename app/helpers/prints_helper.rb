@@ -1,7 +1,9 @@
 module PrintsHelper
   def print_destinations_field(form)
+    selected = form.object.printer || current_user.default_printer
+    
     form.select :printer, Cups.show_destinations.map { |d| [d, d] },
-      { :prompt => true }, { :autofocus => true }
+      { :include_blank => true, :selected => selected }, { :autofocus => true }
   end
 
   def link_to_cancel_print_job(print_job)

@@ -145,6 +145,7 @@
         last_name: 'Apellido'
         language: 'Idioma'
         email: 'Correo electrónico'
+        default_printer: 'Impresora predeterminada'
         username: 'Usuario'
         password: 'Contraseña'
         password_confirmation: 'Confirmación'
