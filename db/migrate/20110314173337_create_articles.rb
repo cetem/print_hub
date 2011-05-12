@@ -14,7 +14,7 @@ class CreateArticles < ActiveRecord::Migration
 
     if DB_ADAPTER == 'PostgreSQL'
       # Índice para utilizar búsqueda full text (por el momento sólo en español)
-      execute "CREATE INDEX index_articles_on_code_and_name_ts ON articles USING gin(to_tsvector('spanish', coalesce(code,'') || ' ' || coalesce(name,'')))"
+      execute "CREATE INDEX index_articles_on_code_and_name_ts ON articles USING gin(to_tsvector('spanish', coalesce(code::text,'') || ' ' || coalesce(name,'')))"
     end
   end
 

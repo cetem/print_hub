@@ -4,6 +4,10 @@ class ChangeJobIdTypeInPrintJobs < ActiveRecord::Migration
   end
 
   def self.down
-    change_column :print_jobs, :job_id, :integer
+    if DB_ADAPTER == 'PostgreSQL'
+      execute 'ALTER TABLE print_jobs ALTER COLUMN job_id TYPE integer USING CAST(job_id AS INTEGER)'
+    else
+      change_column :print_jobs, :job_id, :integer
+    end
   end
 end

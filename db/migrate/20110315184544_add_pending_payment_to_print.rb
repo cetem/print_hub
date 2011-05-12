@@ -3,7 +3,7 @@ class AddPendingPaymentToPrint < ActiveRecord::Migration
     add_column :prints, :pending_payment, :boolean, :null => false,
       :default => true
 
-    Print.all.each do |p|
+    Print.unscoped.all.each do |p|
       p.update_attribute :pending_payment, p.has_pending_payment?
     end
 
