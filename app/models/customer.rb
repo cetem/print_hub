@@ -22,9 +22,17 @@ class Customer < ActiveRecord::Base
   has_many :prints, :inverse_of => :customer, :dependent => :nullify
   has_many :bonuses, :inverse_of => :customer, :dependent => :destroy,
     :class_name => 'Bonus', :order => 'valid_until ASC'
+  
+  accepts_nested_attributes_for :bonuses, :allow_destroy => true,
+    :reject_if => proc { |attributes| attributes['amount'].to_f <= 0 }
 
   def to_s
     [self.name, self.lastname].compact.join(' ')
+  end
+  
+  def current_bonuses
+    self.bonuses.select { |b| b.new_record? || b.marked_for_destruction? } |
+      self.bonuses.valids
   end
 
   def build_monthly_bonus

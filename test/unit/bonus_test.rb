@@ -23,12 +23,14 @@ class BonusTest < ActiveSupport::TestCase
     assert_difference 'Bonus.count' do
       @bonus = Bonus.create(
         :amount => '100.00',
+        :remaining => '50.0',
         :valid_until => 1.month.from_now.to_date,
         :customer => customers(:student)
       )
     end
 
     # Asignación automática del monto restante
+    # No se puede inicializar en un valor menor al monto
     assert_equal '100.0', @bonus.reload.remaining.to_s
   end
 
@@ -36,11 +38,15 @@ class BonusTest < ActiveSupport::TestCase
   test 'update' do
     assert_no_difference 'Bonus.count' do
       assert @bonus.update_attributes(
+        :amount => '1500.0',
         :valid_until => 10.years.from_now.to_date
       ), @bonus.errors.full_messages.join('; ')
     end
 
     assert_equal 10.years.from_now.to_date, @bonus.reload.valid_until
+    assert_not_equal '1500.0', @bonus.amount.to_s
+    # No se debe poder alterar el valor inicial
+    assert_equal '1000.0', @bonus.amount.to_s
   end
 
   # Prueba de eliminación de usuarios
@@ -79,14 +85,17 @@ class BonusTest < ActiveSupport::TestCase
 
   # Prueba que las validaciones del modelo se cumplan como es esperado
   test 'validates boundaries of attributes' do
-    @bonus.amount = '-0.01'
+    @bonus.amount = '0'
     @bonus.remaining = '-0.01'
+    @bonus.valid_until = 1.day.ago.to_date
     assert @bonus.invalid?
-    assert_equal 2, @bonus.errors.count
-    assert_equal [error_message_from_model(@bonus, :amount,
-        :greater_than_or_equal_to, :count => 0)], @bonus.errors[:amount]
+    assert_equal 3, @bonus.errors.count
+    assert_equal [error_message_from_model(@bonus, :amount, :greater_than,
+        :count => 0)], @bonus.errors[:amount]
     assert_equal [error_message_from_model(@bonus, :remaining,
         :greater_than_or_equal_to, :count => 0)], @bonus.errors[:remaining]
+    assert_equal [error_message_from_model(@bonus, :valid_until, :on_or_after,
+        :restriction => I18n.l(Date.today))], @bonus.errors[:valid_until]
 
     @bonus.reload
     @bonus.remaining = @bonus.amount + 1

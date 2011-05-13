@@ -54,7 +54,7 @@ class CustomersController < ApplicationController
 
     respond_to do |format|
       if @customer.save
-        format.html { redirect_to(customers_path, :notice => t(:'view.customers.correctly_created')) }
+        format.html { redirect_to(customer_path(@customer), :notice => t(:'view.customers.correctly_created')) }
         format.xml  { render :xml => @customer, :status => :created, :location => @customer }
       else
         format.html { render :action => :new }
@@ -71,7 +71,7 @@ class CustomersController < ApplicationController
 
     respond_to do |format|
       if @customer.update_attributes(params[:customer])
-        format.html { redirect_to(customers_path, :notice => t(:'view.customers.correctly_updated')) }
+        format.html { redirect_to(customer_path(@customer), :notice => t(:'view.customers.correctly_updated')) }
         format.xml  { head :ok }
       else
         format.html { render :action => :edit }

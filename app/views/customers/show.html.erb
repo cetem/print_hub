@@ -18,6 +18,36 @@
   <%= number_to_currency(@customer.free_monthly_bonus) %>
 </p>
 
+<% unless @customer.current_bonuses.empty? %>
+  <section class="nested_items">
+    <h2>
+      <%= t(:current_bonuses,
+        :count => @customer.current_bonuses.size,
+        :scope => [:view, :customers])
+      %>
+    </h2>
+
+    <table class="summary">
+      <thead>
+        <tr>
+          <th><%= Bonus.human_attribute_name :amount %></th>
+          <th><%= Bonus.human_attribute_name :remaining %></th>
+          <th><%= Bonus.human_attribute_name :valid_until %></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @customer.current_bonuses.each do |bonus| %>
+          <tr>
+            <td><%= bonus.amount %></td>
+            <td><%= bonus.remaining %></td>
+            <td><%= l bonus.valid_until if bonus.valid_until %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </section>
+<% end %>
+
 <nav class="links">
   <%= link_to t(:'label.edit'), edit_customer_path(@customer) %> |
   <%= link_to t(:'label.list'), customers_path %>

@@ -3,6 +3,12 @@ big_bonus:
   remaining: 500.00
   valid_until: <%= 1.month.from_now.to_date.to_s(:db) %>
   customer_id: <%= Fixtures.identify(:student) %>
+  
+used_bonus:
+  amount: 1000.00
+  remaining: 0.00
+  valid_until: <%= 1.month.ago.to_date.to_s(:db) %>
+  customer_id: <%= Fixtures.identify(:student) %>
 
 expired_bonus:
   amount: 1.50

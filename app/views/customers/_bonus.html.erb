@@ -1,0 +1,30 @@
+<% id = dynamic_object_id('bonus', f) %>
+<% hide = is_dynamic || f.object.marked_for_destruction? %>
+<div class="bonus nested_item" id="<%= id %>" <%= raw 'style="display: none;"' if hide %>>
+  <div>
+    <div class="nested_item_field">
+      <%= f.text_field :amount, :value => '%.3f' % f.object.amount,
+        :maxlength => 15, :autocomplete => :off,
+        :disabled => !f.object.new_record?, :id => "bonus_amount_#{id}" %>
+    </div>
+    <div class="nested_item_field">
+      <%= f.text_field :remaining, :value => '%.3f' % f.object.remaining,
+        :maxlength => 15, :autocomplete => :off, :disabled => true %>
+    </div>
+    <div class="nested_item_field">
+      <%= f.calendar_date_select :valid_until %>
+    </div>
+    <div class="nested_item_actions">
+      <%= link_to_remove_nested_item(f) %>
+      <%= f.hidden_field :lock_version %>
+    </div>
+    <div class="dynamic_details"></div>
+  </div>
+</div>
+<% if is_dynamic %>
+  <script type="text/javascript">
+    Helper.show('<%= id %>', {
+      afterFinish: function() { $('<%= "bonus_amount_#{id}" %>').focus(); }
+    });
+  </script>
+<% end -%>

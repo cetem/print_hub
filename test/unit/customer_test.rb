@@ -41,6 +41,8 @@ class CustomerTest < ActiveSupport::TestCase
         :identification => '111',
         :free_monthly_bonus => 10.0
       )
+      
+      puts @customer.errors.full_messages.join('; ')
     end
 
     assert_equal 10.0, @customer.bonuses.first.amount
@@ -60,8 +62,10 @@ class CustomerTest < ActiveSupport::TestCase
 
   # Prueba de eliminación de clientes
   test 'destroy' do
-    assert_difference(['Customer.count', '@customer.bonuses.count'], -1) do
-      @customer.destroy
+    assert_difference 'Customer.count', -1 do
+      assert_difference '@customer.bonuses.count', -2 do
+        @customer.destroy
+      end
     end
   end
 
@@ -123,6 +127,12 @@ class CustomerTest < ActiveSupport::TestCase
         :greater_than_or_equal_to, :count => 0)],
       @customer.errors[:free_monthly_bonus]
   end
+  
+  test 'current bonuses' do
+    assert_equal 2, @customer.bonuses.count
+    assert_equal 1, @customer.current_bonuses.size
+    assert @customer.current_bonuses.all?(&:still_valid?)
+  end
 
   test 'free credit' do
     assert_equal '500.0', @customer.free_credit.to_s
@@ -170,7 +180,7 @@ class CustomerTest < ActiveSupport::TestCase
     student = Customer.find(customers(:student).id)
     teacher = Customer.find(customers(:teacher).id)
 
-    assert_equal 2, student.bonuses.count
+    assert_equal 3, student.bonuses.count
     assert_equal 2, teacher.bonuses.count
     assert Customer.find(customers(:student_without_bonus).id).bonuses.empty?
     assert student.bonuses.any? { |b| b.valid_until == valid_until }

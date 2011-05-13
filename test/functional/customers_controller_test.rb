@@ -25,16 +25,29 @@ class CustomersControllerTest < ActionController::TestCase
 
   test 'should create customer' do
     UserSession.create(users(:administrator))
-    assert_difference ['Customer.count', 'Version.count'] do
-      post :create, :customer => {
-        :name => 'Jar Jar',
-        :lastname => 'Binks',
-        :identification => '111',
-        :free_monthly_bonus => 0.0
-      }
+    assert_difference ['Customer.count', 'Bonus.count'] do
+      assert_difference 'Version.count', 2 do
+        post :create, :customer => {
+          :name => 'Jar Jar',
+          :lastname => 'Binks',
+          :identification => '111',
+          :free_monthly_bonus => 0.0,
+          :bonuses_attributes => {
+            :new_1 => {
+              :amount => '100',
+              :valid_until => I18n.l(1.day.from_now.to_date)
+            },
+            # Debe ser ignorado por su monto = 0
+            :new_2 => {
+              :amount => '0',
+              :valid_until => I18n.l(1.day.from_now.to_date)
+            }
+          }
+        }
+      end
     end
 
-    assert_redirected_to customers_path
+    assert_redirected_to customer_path(assigns(:customer))
     # Prueba básica para "asegurar" el funcionamiento del versionado
     assert_equal users(:administrator).id, Version.last.whodunnit
   end
@@ -61,15 +74,23 @@ class CustomersControllerTest < ActionController::TestCase
     UserSession.create(users(:administrator))
 
     assert_no_difference 'Customer.count' do
-      put :update, :id => @customer.to_param, :customer => {
-        :name => 'Updated name',
-        :lastname => 'Updated lastname',
-        :identification => '111x',
-        :free_monthly_bonus => 0.0
-      }
+      assert_difference 'Bonus.count' do
+        put :update, :id => @customer.to_param, :customer => {
+          :name => 'Updated name',
+          :lastname => 'Updated lastname',
+          :identification => '111x',
+          :free_monthly_bonus => 0.0,
+          :bonuses_attributes => {
+            :new_1 => {
+              :amount => '100.0',
+              :valid_until => '' # Por siempre
+            }
+          }
+        }
+      end
     end
 
-    assert_redirected_to customers_path
+    assert_redirected_to customer_path(assigns(:customer))
     assert_equal 'Updated name', @customer.reload.name
   end
 

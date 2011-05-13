@@ -84,6 +84,9 @@
         lastname: 'Apellido'
         identification: 'Identificación (DNI, CUIT, Legajo, etc.)'
         free_monthly_bonus: 'Bonificación mensual'
+        bonuses:
+          one: 'Bonificación'
+          other: 'Bonificaciones'
       document:
         code: 'Código'
         name: 'Nombre'
@@ -464,6 +467,11 @@
       correctly_created: 'Cliente agregado correctamente.'
       correctly_updated: 'Cliente actualizado correctamente.'
       stale_object_error: 'El cliente no pudo ser actualizado, intente nuevamente.'
+      add_bonus: 'Agregar bonificación'
+      add_bonus_title: 'Agregar bonificación (CTRL + ALT + B)'
+      current_bonuses:
+        one: 'Bonificación vigente'
+        other: 'Bonificaciones vigentes'
     documents:
       index_title: 'Listado de documentos'
       show_title: 'Detalle de documento'
