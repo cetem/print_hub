@@ -14,7 +14,7 @@ GIT
 
 GIT
   remote: https://github.com/thoughtbot/paperclip.git
-  revision: 93753d5c4da6488cce82e5378997dc3f5478ceff
+  revision: 13d51e3120e67b2b8b0b4d550968235dc90defb9
   specs:
     paperclip (2.3.10)
       activerecord (>= 2.3.0)
@@ -74,7 +74,7 @@ GEM
     fastthread (1.0.7)
     foreigner (0.9.2)
     gem_plugin (0.2.3)
-    highline (1.6.1)
+    highline (1.6.2)
     i18n (0.5.0)
     linecache (0.43)
     mail (2.2.19)

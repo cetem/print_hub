@@ -59,6 +59,7 @@
     </div>
     
     <div id="print_jobs" class="items">
+      <% @print.print_jobs.build if @print.print_jobs.empty? %>
       <%= f.fields_for :print_jobs do |pj_f| %>
         <%= render :partial => 'print_job', :locals => {
           :f => pj_f, :is_dynamic => false, :disabled => !@print.new_record?

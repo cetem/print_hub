@@ -18,36 +18,38 @@
   <%= l @print.scheduled_at, :format => :long if @print.scheduled_at %>
 </p>
 
-<section class="nested_items">
-  <h2><%= t :print_jobs, :scope => [:view, :prints] %></h2>
+<% unless @print.print_jobs.empty? %>
+  <section class="nested_items">
+    <h2><%= t :print_jobs, :scope => [:view, :prints] %></h2>
 
-  <table class="summary">
-    <thead>
-      <tr>
-        <th><%= PrintJob.human_attribute_name :document_id %></th>
-        <th><%= PrintJob.human_attribute_name :copies %></th>
-        <th><%= PrintJob.human_attribute_name :pages %></th>
-        <th><%= PrintJob.human_attribute_name :price_per_copy %></th>
-        <th><%= PrintJob.human_attribute_name :range %></th>
-        <th><%= PrintJob.human_attribute_name :two_sided %></th>
-        <th></th>
-      </tr>
-    </thead>
-    <tbody>
-      <% @print.print_jobs.each do |print_job| %>
+    <table class="summary">
+      <thead>
         <tr>
-          <td><%= print_job.document %></td>
-          <td><%= print_job.copies %></td>
-          <td><%= print_job.pages %></td>
-          <td><%= number_to_currency print_job.price_per_copy %></td>
-          <td><%= print_job.range %></td>
-          <td><%= t(print_job.two_sided ? :yes : :no, :scope => :label) %></td>
-          <td><%= link_to_cancel_print_job(print_job) %></td>
+          <th><%= PrintJob.human_attribute_name :document_id %></th>
+          <th><%= PrintJob.human_attribute_name :copies %></th>
+          <th><%= PrintJob.human_attribute_name :pages %></th>
+          <th><%= PrintJob.human_attribute_name :price_per_copy %></th>
+          <th><%= PrintJob.human_attribute_name :range %></th>
+          <th><%= PrintJob.human_attribute_name :two_sided %></th>
+          <th></th>
         </tr>
-      <% end %>
-    </tbody>
-  </table>
-</section>
+      </thead>
+      <tbody>
+        <% @print.print_jobs.each do |print_job| %>
+          <tr>
+            <td><%= print_job.document %></td>
+            <td><%= print_job.copies %></td>
+            <td><%= print_job.pages %></td>
+            <td><%= number_to_currency print_job.price_per_copy %></td>
+            <td><%= print_job.range %></td>
+            <td><%= t(print_job.two_sided ? :yes : :no, :scope => :label) %></td>
+            <td><%= link_to_cancel_print_job(print_job) %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </section>
+<% end %>
 
 <% unless @print.article_lines.empty? %>
   <section class="nested_items">
