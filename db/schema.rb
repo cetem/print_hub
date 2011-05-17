@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110512230710) do
+ActiveRecord::Schema.define(:version => 20110516204617) do
 
   create_table "article_lines", :force => true do |t|
     t.integer  "print_id",                                                   :null => false

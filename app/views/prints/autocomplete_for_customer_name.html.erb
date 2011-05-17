@@ -1,5 +1,5 @@
 <ul>
-  <% customers.each do |customer| %>
+  <% @customers.each do |customer| %>
     <li data-id="<%= customer.id %>" data-free-credit="<%= customer.free_credit %>">
       <%= highlight customer.to_s, params[:q] %>
       <span class="informal">
