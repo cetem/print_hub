@@ -1,3 +1,8 @@
+<% if @customer %>
+  <h2 class="title">
+    <%= t(:prints_with_customer, :scope => [:view, :prints], :customer => @customer.to_s) %>
+  </h2>
+<% end %>
 <table class="list">
   <thead>
     <tr>
@@ -30,11 +35,11 @@
 <nav class="links">
   <%= pagination_links(@prints) %>
   <%= link_to "<b>#{t(:'label.new')}</b>".html_safe, new_print_path %>
-  <% if params[:status] != 'scheduled' %>
+  <% if @customer.nil? && params[:status] != 'scheduled' %>
     | <%= link_to textilize_without_paragraph(t(:'view.prints.show_scheduled')),
           prints_path(:status => 'scheduled') %>
   <% end %>
-  <% if params[:status] != 'pending' %>
+  <% if @customer.nil? && params[:status] != 'pending' %>
     | <%= link_to textilize_without_paragraph(t(:'view.prints.show_pending')),
           prints_path(:status => 'pending') %>
   <% end %>

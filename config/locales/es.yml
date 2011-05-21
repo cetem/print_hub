@@ -474,6 +474,10 @@
       current_bonuses:
         one: 'Bonificación vigente'
         other: 'Bonificaciones vigentes'
+      without_prints: 'Sin impresiones'
+      print_list:
+        one: 'Una impresión'
+        other: '%{count} impresiones'
     documents:
       index_title: 'Listado de documentos'
       show_title: 'Detalle de documento'
@@ -536,6 +540,7 @@
       disabled_cancel_job: 'Cancelando ...'
       job_canceled: 'Cancelado'
       job_not_canceled: 'No se pudo cancelar'
+      prints_with_customer: 'Impresiones de %{customer}'
     settings:
       index_title: 'Listado de configuraciones'
       show_title: 'Detalle de configuración'

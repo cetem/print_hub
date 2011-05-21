@@ -11,7 +11,7 @@
   <tbody>
     <% @customers.each do |customer| %>
       <tr>
-        <td><%= customer.to_s %></td>
+        <td><%= customer.to_s %> (<%= show_link_to_customer_prints(customer) %>)</td>
         <td><%= customer.identification %></td>
         <td><%= number_to_currency(customer.free_monthly_bonus || 0) %></td>
         <td><%= link_to t(:'label.show'), customer %></td>

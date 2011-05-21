@@ -1,5 +1,5 @@
 class PrintsController < ApplicationController
-  before_filter :require_user
+  before_filter :require_user, :load_customer
 
   layout proc { |controller| controller.request.xhr? ? false : 'application' }
 
@@ -221,9 +221,17 @@ class PrintsController < ApplicationController
   end
 
   private
+  
+  def load_customer
+    @customer = Customer.find(params[:customer_id]) if params[:customer_id]
+  end
 
   def prints_scope
-    scope = current_user.admin ? Print.scoped : current_user.prints
+    if @customer
+      scope = @customer.prints
+    else
+      scope = current_user.admin ? Print.scoped : current_user.prints
+    end
 
     case params[:status]
       when 'pending'
