@@ -36,7 +36,7 @@ class Customer < ActiveRecord::Base
   end
 
   def build_monthly_bonus
-    if self.free_monthly_bonus > 0
+    if self.free_monthly_bonus && self.free_monthly_bonus > 0
       self.bonuses.build(
         :amount => self.free_monthly_bonus,
         :valid_until => Date.today.at_end_of_month
