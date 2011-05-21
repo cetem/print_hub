@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110516204617) do
+ActiveRecord::Schema.define(:version => 20110521181700) do
 
   create_table "article_lines", :force => true do |t|
     t.integer  "print_id",                                                   :null => false
@@ -47,7 +47,9 @@ ActiveRecord::Schema.define(:version => 20110516204617) do
     t.integer  "lock_version",                                :default => 0
   end
 
+  add_index "bonuses", ["created_at"], :name => "index_bonuses_on_created_at"
   add_index "bonuses", ["customer_id"], :name => "index_bonuses_on_customer_id"
+  add_index "bonuses", ["valid_until"], :name => "index_bonuses_on_valid_until"
 
   create_table "customers", :force => true do |t|
     t.string   "name",                                                             :null => false

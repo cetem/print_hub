@@ -2,5 +2,7 @@
 
 <nav class="links">
   <%= link_to t(:'label.show'), @customer %> |
+  <%= show_link_to_customer_prints(@customer) %> |
+  <%= show_link_to_customer_bonuses(@customer) %> |
   <%= link_to t(:'label.list'), customers_path %>
 </nav>

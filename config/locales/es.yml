@@ -461,6 +461,9 @@
       correctly_created: 'Artículo agregado correctamente.'
       correctly_updated: 'Artículo actualizado correctamente.'
       stale_object_error: 'El artículo no pudo ser actualizado, intente nuevamente.'
+    bonuses:
+      index_title: 'Listado de bonificaciones'
+      bonuses_with_customer: 'Bonificaciones de %{customer}'
     customers:
       index_title: 'Listado de clientes'
       show_title: 'Detalle de cliente'
@@ -474,6 +477,10 @@
       current_bonuses:
         one: 'Bonificación vigente'
         other: 'Bonificaciones vigentes'
+      without_bonuses: 'Sin bonificaciones'
+      bonus_list:
+        one: 'Una bonificación'
+        other: '%{count} bonificaciones'
       without_prints: 'Sin impresiones'
       print_list:
         one: 'Una impresión'

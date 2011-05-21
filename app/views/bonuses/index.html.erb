@@ -1,0 +1,32 @@
+<% if @customer %>
+  <h2 class="title">
+    <%= t(:bonuses_with_customer, :scope => [:view, :bonuses], :customer => @customer.to_s) %>
+  </h2>
+<% end %>
+<table class="list">
+  <thead>
+    <tr>
+      <th><%= Bonus.human_attribute_name :customer_id %></th>
+      <th><%= Bonus.human_attribute_name :amount %></th>
+      <th><%= Bonus.human_attribute_name :remaining %></th>
+      <th><%= Bonus.human_attribute_name :valid_until %></th>
+      <th><%= Bonus.human_attribute_name :created_at %></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @bonuses.each do |bonus| %>
+      <tr class="<%= cycle(:even, :odd) %>">
+        <td><%= bonus.customer %></td>
+        <td><%= number_to_currency bonus.amount %></td>
+        <td><%= number_to_currency bonus.remaining %></td>
+        <td><%= l bonus.valid_until, :format => :short if bonus.valid_until %></td>
+        <td><%= l bonus.created_at, :format => :short if bonus.created_at %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<nav class="links">
+  <%= pagination_links(@bonuses) %>
+</nav>
