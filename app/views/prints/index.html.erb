@@ -34,7 +34,7 @@
 
 <nav class="links">
   <%= pagination_links(@prints) %>
-  <%= link_to "<b>#{t(:'label.new')}</b>".html_safe, new_print_path %>
+  <%= link_to "<b>#{t(:'view.prints.new')}</b>".html_safe, new_print_path %>
   <% if @customer.nil? && params[:status] != 'scheduled' %>
     | <%= link_to textilize_without_paragraph(t(:'view.prints.show_scheduled')),
           prints_path(:status => 'scheduled') %>

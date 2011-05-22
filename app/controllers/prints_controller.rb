@@ -37,6 +37,11 @@ class PrintsController < ApplicationController
   # GET /prints/new.xml
   def new
     @title = t :'view.prints.new_title'
+    
+    unless params[:clear_documents_for_printing].blank?
+      session[:documents_for_printing].try(:clear)
+    end
+    
     @print = current_user.prints.build(
       :include_documents => session[:documents_for_printing]
     )

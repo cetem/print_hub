@@ -100,6 +100,31 @@ class PrintsControllerTest < ActionController::TestCase
     assert_select '#error_body', false
     assert_template 'prints/new'
   end
+  
+  test 'should get new with stored documents' do
+    UserSession.create(users(:administrator))
+    session[:documents_for_printing] =
+      [documents(:math_notes).id, documents(:math_book).id]
+    
+    get :new
+    assert_response :success
+    assert_not_nil assigns(:print)
+    assert_select '.print_job', 2
+    assert_select '#error_body', false
+    assert_template 'prints/new'
+  end
+  
+  test 'should get new without stored documents' do
+    UserSession.create(users(:administrator))
+    session[:documents_for_printing] = [documents(:math_notes).id]
+    
+    get :new, :clear_documents_for_printing => true
+    assert_response :success
+    assert_not_nil assigns(:print)
+    assert session[:documents_for_printing].blank?
+    assert_select '#error_body', false
+    assert_template 'prints/new'
+  end
 
   test 'should create print' do
     UserSession.create(users(:operator))
