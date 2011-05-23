@@ -20,6 +20,8 @@
         :class => (:selected if current_controller == :articles)) %>
       <%= content_tag(:li, link_to(t(:customers, :scope => :menu), customers_path),
         :class => (:selected if current_controller == :customers)) %>
+      <%= content_tag(:li, link_to(t(:bonuses, :scope => :menu), bonuses_path),
+        :class => (:selected if current_controller == :bonuses)) %>
     </ul>
   </nav>
 <% end %>

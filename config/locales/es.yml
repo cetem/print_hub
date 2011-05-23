@@ -327,6 +327,7 @@
     actions:
       logout: 'Salir'
     articles: 'Artículos'
+    bonuses: 'Bonificaciones'
     customers: 'Clientes'
     documents: 'Documentos'
     payments: 'Pagos'
