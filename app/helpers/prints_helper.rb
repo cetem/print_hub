@@ -15,4 +15,14 @@ module PrintsHelper
     content_tag :div, button, :id => "cancel_print_job_#{print_job.id}",
       :class => :button_form_container
   end
+  
+  def link_to_customer_credit_detail(customer)
+    link_to t(:'view.prints.customer_credit_detail.link'),
+      customer ? credit_detail_customer_path(customer) : '#',
+      :id => :link_to_customer_credit_detail,
+      :class => 'details_link action_link', :remote => true,
+      :'data-update' => :print_customer_credit_detail,
+      :title => t(:'view.prints.customer_credit_detail.title'),
+      :style => ('display: none;' unless customer)
+  end
 end

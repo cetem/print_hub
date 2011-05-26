@@ -551,6 +551,9 @@
       job_canceled: 'Cancelado'
       job_not_canceled: 'No se pudo cancelar'
       prints_with_customer: 'Impresiones de %{customer}'
+      customer_credit_detail:
+        link: 'Ver bonificaciones'
+        title: 'Ver detalle de bonificaciones vigentes'
       new: 'Nueva'
       new_without_stored_documents: 'Nueva impresión *sin* documentos'
     settings:

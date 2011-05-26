@@ -1,0 +1,54 @@
+<div id="customer_credit_detail" style="display: none;">
+  <div>
+    <% if @customer.current_bonuses.empty? %>
+      <p class="red">
+        <%= t(:without_bonuses, :scope => [:view, :customers]) %>
+      </p>
+    <% else %>
+      <section class="nested_items">
+        <h2>
+          <%= t(:current_bonuses,
+            :count => @customer.current_bonuses.size,
+            :scope => [:view, :customers])
+          %>
+        </h2>
+
+        <table class="summary">
+          <thead>
+            <tr>
+              <th><%= Bonus.human_attribute_name :amount %></th>
+              <th><%= Bonus.human_attribute_name :remaining %></th>
+              <th><%= Bonus.human_attribute_name :valid_until %></th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @customer.current_bonuses.each do |bonus| %>
+              <tr>
+                <td><%= bonus.amount %></td>
+                <td><%= bonus.remaining %></td>
+                <td><%= l bonus.valid_until if bonus.valid_until %></td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </section>
+    <% end %>
+    <% if request.xhr? %>
+      <nav class="links">
+        <%= link_to_function t(:'label.hide'),
+          "Helper.hide('customer_credit_detail', { afterFinish: function() { $('link_to_customer_credit_detail').show(); } })" %>
+      </nav>
+    <% end %>
+  </div>
+</div>
+<% if request.xhr? %>
+  <script type="text/javascript">
+    if(!$('customer_credit_detail').visible()) {
+      Helper.show('customer_credit_detail', {
+        afterFinish: function() {
+          $('link_to_customer_credit_detail').hide();
+        }
+      });
+    }
+  </script>
+<% end %>

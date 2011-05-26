@@ -8,6 +8,10 @@ PrintHubApp::Application.routes.draw do
   resources :customers do
     resources :prints, :only => [:index]
     resources :bonuses, :only => [:index]
+    
+    member do
+      get :credit_detail
+    end
   end
 
   resources :settings, :only => [:index, :show, :edit, :update]

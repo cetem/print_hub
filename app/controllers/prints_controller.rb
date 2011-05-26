@@ -224,7 +224,7 @@ class PrintsController < ApplicationController
     @print_job = PrintJob.find(params[:id])
     @cancelled = @print_job.cancel
   end
-
+  
   private
   
   def load_customer

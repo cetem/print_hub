@@ -1,5 +1,7 @@
 class CustomersController < ApplicationController
   before_filter :require_user
+  
+  layout proc { |controller| controller.request.xhr? ? false : 'application' }
 
   # GET /customers
   # GET /customers.xml
@@ -93,6 +95,15 @@ class CustomersController < ApplicationController
     respond_to do |format|
       format.html { redirect_to(customers_url) }
       format.xml  { head :ok }
+    end
+  end
+  
+  # GET /customer/credit_detail/1
+  def credit_detail
+    @customer = Customer.find(params[:id])
+    
+    respond_to do |format|
+      format.html
     end
   end
 end

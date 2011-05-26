@@ -14,20 +14,20 @@
     <%= print_destinations_field(f) %>
   </div>
   <div class="field column_right">
-    <%= f.label :customer, :for => :print_auto_customer_name %>
+    <%= f.label :customer, raw(Print.human_attribute_name(:customer) + ' ' + link_to_customer_credit_detail(@print.customer)), :for => :print_auto_customer_name %>
     <% field_classes = [:autocomplete_field] %>
     <% field_classes << :field_with_errors unless @print.errors[:customer_id].blank? %>
     <%= f.text_field :auto_customer_name, :value => @print.customer,
       :class => field_classes.join(' '),
       :'data-autocomplete-url' => autocomplete_for_customer_name_prints_path %>
     <% if @print.customer %>
-      <%= link_to_function 'X',
-        "$('print_auto_customer_name').setValue(''); $('print_customer_id').setValue(''); this.remove()",
+      <%= link_to_function 'X', "clearCustomer(); this.remove()",
         :class => :remove %>
     <% end %>
     <div class="autocomplete_container">
       <div class="autocomplete" style="display: none;"></div>
     </div>
+    <div id="print_customer_credit_detail"></div>
     <%= f.hidden_field :customer_id, :class => :autocomplete_id %>
     <%= hidden_field_tag :customer_free_credit,
       @print.customer.try(:free_credit), :id => :customer_free_credit %>
@@ -212,6 +212,15 @@
 
     updateTotalPrice();
   }
+  
+  function clearCustomer() {
+    $('print_auto_customer_name').setValue('');
+    $('print_customer_id').setValue('');
+    $('customer_free_credit').setValue('');
+    $('link_to_customer_credit_detail').hide();
+    
+    updateTotalPrice();
+  }
 
   document.on('item:removed', '.print_job', function(event, element) {
     element.store('exclude_from_total', true);
@@ -252,6 +261,9 @@
       $('customer_free_credit').setValue(
         element.readAttribute('data-free-credit')
       );
+      $('link_to_customer_credit_detail').writeAttribute('href',
+        element.readAttribute('data-options-url'));
+      $('link_to_customer_credit_detail').show();
 
       updateTotalPrice();
     }
@@ -306,6 +318,10 @@
 
       submit.writeAttribute('value', '<%= t(:'view.prints.print') %>');
     }
+  });
+  
+  document.on('change', 'input[name="[print_auto_customer_name]"]', function(event, element) {
+    if(element.getValue().blank()) { clearCustomer(); }
   });
 
   document.on('change', 'input[name$="[two_sided]"]', function(event, element) {
