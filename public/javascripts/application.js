@@ -71,6 +71,26 @@ var EventHandler = {
     Helper.remove(target);
 
     target.fire('item:removed');
+  },
+  
+  toggleMenu: function(e) {
+    var target = $(e.readAttribute('data-target'));
+    var options = {
+      duration: 0.3,
+      queue: {position: 'end', scope: 'menuscope', limit: 1}
+    }
+    
+    if(target.visible()) {
+      Effect.SlideUp(target, options);
+      
+      target.removeClassName('hide_when_show_menu');
+    } else {
+      Effect.SlideDown(target, options);
+      
+      $$('.hide_when_show_menu').invoke('hide');
+      
+      target.addClassName('hide_when_show_menu');
+    }
   }
 }
 
@@ -145,7 +165,7 @@ var eventList = $H(EventHandler).keys();
 
 Event.observe(window, 'load', function() {
   // Para que los navegadores que no soportan HTML5 funcionen con autofocus
-  Try.these(function() { $$('*[autofocus]').first().focus() });
+  Try.these(function() {$$('*[autofocus]').first().focus()});
   
   document.on('click', 'a[data-event]', function(event, element) {
     if (event.stopped) return;
@@ -163,8 +183,8 @@ Event.observe(window, 'load', function() {
     }
   });
 
-  document.on('ajax:before', '*', function() { $('loading_image').show(); });
-  document.on('ajax:after', '*', function() { $('loading_image').hide(); });
+  document.on('ajax:before', '*', function() {$('loading_image').show();});
+  document.on('ajax:after', '*', function() {$('loading_image').hide();});
 
   AutoComplete.observeAll();
 });

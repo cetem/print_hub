@@ -149,6 +149,7 @@ div#main_container {
 div#main_menu {
   position: absolute;
   width: 100%;
+  height: 1.1em;
   border-bottom: 2px solid #666666;
   top: 0px;
   left: 0px;
@@ -352,8 +353,21 @@ nav#menu_links li.selected a {
   font-weight: bold;
 }
 
-nav#menu_links ul, nav#menu_links li, nav#user_actions ul, nav#user_actions li {
-  display: inline;
+nav#menu_links li.submenu ul {
+  margin-top: 2px;
+  padding: .5em;
+  border: 1px dotted #666666;
+  display: block;
+  background: #ffffff;
+}
+
+nav#menu_links li.submenu ul > li {
+  display: block;
+  margin-top: .2em;
+}
+
+nav#menu_links > ul, nav#menu_links > ul > li {
+  float: left;
   list-style: none;
   margin: 0em .5em;
 }
@@ -367,6 +381,12 @@ nav#user_actions {
 nav#user_actions div#username {
   display: inline;
   font-weight: bold;
+}
+
+nav#user_actions > ul, nav#user_actions > ul > li {
+  display: inline;
+  list-style: none;
+  margin: 0em .5em;
 }
 
 nav.links {

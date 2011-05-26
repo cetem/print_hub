@@ -326,10 +326,12 @@
   menu:
     actions:
       logout: 'Salir'
+    admin: '» Administración'
     articles: 'Artículos'
     bonuses: 'Bonificaciones'
     customers: 'Clientes'
     documents: 'Documentos'
+    more: '» Más'
     payments: 'Pagos'
     prints: 'Impresiones'
     settings: 'Configuración'
