@@ -1,5 +1,5 @@
 class CustomersController < ApplicationController
-  before_filter :require_user
+  before_filter :require_admin_user
   
   layout proc { |controller| controller.request.xhr? ? false : 'application' }
 

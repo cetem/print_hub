@@ -3,15 +3,18 @@ student:
   lastname: Skywalker
   identification: 123
   free_monthly_bonus: 100.00
+  bonuses_password: <%= Digest::SHA512.hexdigest('student') %>
 
 teacher:
   name: Obi Wan
   lastname: Kenobi
   identification: 321
   free_monthly_bonus: 10.00
+  bonuses_password: <%= Digest::SHA512.hexdigest('teacher') %>
 
 student_without_bonus:
   name: Darth
   lastname: Vader
   identification: 666
   free_monthly_bonus: 0.00
+  bonuses_password: <%= Digest::SHA512.hexdigest('student_without_bonus') %>

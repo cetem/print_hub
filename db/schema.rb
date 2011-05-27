@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110521181700) do
+ActiveRecord::Schema.define(:version => 20110526203520) do
 
   create_table "article_lines", :force => true do |t|
     t.integer  "print_id",                                                   :null => false
@@ -59,6 +59,7 @@ ActiveRecord::Schema.define(:version => 20110521181700) do
     t.integer  "lock_version",                                      :default => 0
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "bonuses_password"
   end
 
   add_index "customers", ["identification"], :name => "index_customers_on_identification", :unique => true

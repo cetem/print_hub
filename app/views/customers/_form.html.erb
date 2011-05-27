@@ -20,6 +20,10 @@
     <%= f.label :free_monthly_bonus %>
     <%= f.text_field :free_monthly_bonus, :maxlength => 15 %>
   </div>
+  <div class="field">
+    <%= f.label :bonuses_password %>
+    <%= f.password_field :bonuses_password, :value => '', :maxlength => 255 %>
+  </div>
   
   <section class="nested_items">
     <% @customer.bonuses.build if @customer.current_bonuses.empty? %>

@@ -17,6 +17,8 @@ class CustomerTest < ActiveSupport::TestCase
     assert_equal customers(:student).identification, @customer.identification
     assert_equal customers(:student).free_monthly_bonus,
       @customer.free_monthly_bonus
+    assert_equal customers(:student).bonuses_password,
+      @customer.bonuses_password
   end
 
   # Prueba la creación de un cliente
@@ -27,10 +29,15 @@ class CustomerTest < ActiveSupport::TestCase
           :name => 'Jar Jar',
           :lastname => 'Binks',
           :identification => '111',
-          :free_monthly_bonus => 0.0
+          :free_monthly_bonus => 0.0,
+          :bonuses_password => '123'
         )
       end
     end
+    
+    assert !@customer.reload.bonuses_password.blank?
+    assert_not_equal '123', @customer.bonuses_password
+    assert_equal Digest::SHA512.hexdigest('123'), @customer.bonuses_password
   end
 
   test 'create with bonus' do
@@ -52,12 +59,32 @@ class CustomerTest < ActiveSupport::TestCase
 
   # Prueba de actualización de un cliente
   test 'update' do
+    old_password = @customer.bonuses_password.dup
+    
     assert_no_difference ['Customer.count', 'Bonus.count'] do
-      assert @customer.update_attributes(:name => 'Updated name'),
-        @customer.errors.full_messages.join('; ')
+      assert @customer.update_attributes(
+        :name => 'Updated name',
+        :bonuses_password => '123'
+      ), @customer.errors.full_messages.join('; ')
     end
 
     assert_equal 'Updated name', @customer.reload.name
+    assert_not_equal old_password, @customer.bonuses_password
+    assert_equal Digest::SHA512.hexdigest('123'), @customer.bonuses_password
+  end
+  
+  test 'update without bonuses password' do
+    old_password = @customer.bonuses_password.dup
+    
+    assert_no_difference ['Customer.count', 'Bonus.count'] do
+      assert @customer.update_attributes(
+        :name => 'Updated name',
+        :bonuses_password => ''
+      ), @customer.errors.full_messages.join('; ')
+    end
+
+    assert_equal 'Updated name', @customer.reload.name
+    assert_equal old_password, @customer.bonuses_password
   end
 
   # Prueba de eliminación de clientes

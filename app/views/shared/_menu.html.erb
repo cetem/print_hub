@@ -10,6 +10,8 @@
             <ul>
               <%= content_tag(:li, link_to(t(:users, :scope => :menu), users_path),
                 :class => (:selected if current_controller == :users)) %>
+              <%= content_tag(:li, link_to(t(:customers, :scope => :menu), customers_path),
+                :class => (:selected if current_controller == :customers)) %>
               <%= content_tag(:li, link_to(t(:settings, :scope => :menu), settings_path),
                 :class => (:selected if current_controller == :settings)) %>
               <%= content_tag(:li, link_to(t(:payments, :scope => :menu), payments_path),
@@ -24,8 +26,6 @@
         :class => (:selected if current_controller == :documents)) %>
       <%= content_tag(:li, link_to(t(:tags, :scope => :menu), tags_path),
         :class => (:selected if current_controller == :tags)) %>
-      <%= content_tag(:li, link_to(t(:customers, :scope => :menu), customers_path),
-        :class => (:selected if current_controller == :customers)) %>
       <li class="submenu">
         <%= link_to t(:more, :scope => :menu), '#',
           :'data-event' => :toggle_menu, :'data-target' => :submenu_more %>

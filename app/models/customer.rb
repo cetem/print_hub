@@ -6,6 +6,7 @@ class Customer < ActiveRecord::Base
 
   # Callbacks
   before_create :build_monthly_bonus
+  before_save :crypt_bonuses_password
   
   # Restricciones
   validates :name, :identification, :presence => true
@@ -41,6 +42,16 @@ class Customer < ActiveRecord::Base
         :amount => self.free_monthly_bonus,
         :valid_until => Date.today.at_end_of_month
       )
+    end
+  end
+  
+  def crypt_bonuses_password
+    if self.bonuses_password.blank?
+      self.bonuses_password = self.bonuses_password_was
+    elsif self.bonuses_password_changed?
+      require 'digest/sha2' unless defined?(Digest)
+      
+      self.bonuses_password = Digest::SHA512.hexdigest(self.bonuses_password)
     end
   end
 
