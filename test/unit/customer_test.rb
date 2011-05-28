@@ -176,7 +176,7 @@ class CustomerTest < ActiveSupport::TestCase
 
   test 'use credit' do
     # Usa el crédito de la bonificación que tiene disponible
-    assert_equal '0', @customer.use_credit(100).to_s
+    assert_equal '0', @customer.use_credit(100, 'student').to_s
     assert_equal '400.0', @customer.free_credit.to_s
 
     assert_difference '@customer.bonuses.count' do
@@ -187,15 +187,20 @@ class CustomerTest < ActiveSupport::TestCase
     end
 
     # Usa primero la bonificación más próxima a vencer
-    assert_equal '0', @customer.use_credit(200).to_s
+    assert_equal '0', @customer.use_credit(200, 'student').to_s
     assert_equal '1200.0', @customer.free_credit.to_s
     assert_equal ['200.0', '1000.0'],
       @customer.bonuses.valids.map(&:remaining).map(&:to_s)
     # Pagar más de lo que se puede con bonificaciones
-    assert_equal '300.0', @customer.use_credit(1500).to_s
+    assert_equal '300.0', @customer.use_credit(1500, 'student').to_s
     assert_equal '0.0', @customer.free_credit.to_s
     # Intentar pagar sin bonificaciones
-    assert_equal '100.0', @customer.use_credit(100).to_s
+    assert_equal '100.0', @customer.use_credit(100, 'student').to_s
+  end
+  
+  test 'can not use credit with wrong password' do
+    assert_equal false, @customer.use_credit(100, 'wrong_password')
+    assert_equal '500.0', @customer.free_credit.to_s
   end
 
   test 'create monthly bonuses' do

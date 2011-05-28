@@ -109,6 +109,7 @@
         <tr>
           <th><%= Payment.human_attribute_name :amount %></th>
           <th><%= Payment.human_attribute_name :paid %></th>
+          <th><%= Print.human_attribute_name :credit_password %></th>
           <th><%= Payment.human_attribute_name :paid_with %></th>
         </tr>
       </thead>
@@ -124,6 +125,13 @@
               <%= p_f.text_field :paid, :value => '%.3f' % p_f.object.paid,
                 :id => "payment_#{p_f.object.paid_with}_paid", :maxlength => 15,
                 :readonly => p_f.object.bonus? %>
+            </td>
+            <td>
+              <% if p_f.object.bonus? %>
+                <%= f.password_field :credit_password, :value => '', :size => 15, :maxlength => 255 %>
+              <% else %>
+                &nbsp;
+              <% end %>
             </td>
             <td>
               <%= p_f.object.paid_with_text %>

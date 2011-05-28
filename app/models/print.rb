@@ -14,7 +14,8 @@ class Print < ActiveRecord::Base
   )
 
   # Atributos no persistentes
-  attr_accessor :auto_customer_name, :avoid_printing, :include_documents
+  attr_accessor :auto_customer_name, :avoid_printing, :include_documents,
+    :credit_password
 
   # Restricciones en los atributos
   attr_readonly :user_id, :customer_id, :printer
@@ -137,11 +138,16 @@ class Print < ActiveRecord::Base
 
   def update_customer_credit
     if (bonus = self.payments.detect(&:bonus?)) && bonus.amount > 0
-      remaining = self.customer.use_credit(bonus.amount)
+      remaining = self.customer.use_credit(bonus.amount, self.credit_password)
 
-      if remaining > 0 &&
-          remaining != (self.payments.detect(&:cash?).try(:amount) || 0)
-        raise 'Invalid payment'
+      if remaining == false
+        self.errors.add :base, :invalid_credit_password
+        
+        false
+      elsif remaining > 0
+        expected_remaining = self.payments.detect(&:cash?).try(:amount) || 0
+        
+        raise 'Invalid payment' if remaining != expected_remaining
       end
     end
   end

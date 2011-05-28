@@ -59,28 +59,33 @@ class Customer < ActiveRecord::Base
     self.bonuses.valids.sum('remaining')
   end
 
-  def use_credit(amount)
-    to_pay = BigDecimal.new(amount.to_s)
-    available_bonuses = self.bonuses.valids.order('valid_until DESC').to_a
+  def use_credit(amount, password = '')
+    if Digest::SHA512.hexdigest(password) == self.bonuses_password ||
+        self.bonuses_password.blank?
+      to_pay = BigDecimal.new(amount.to_s)
+      available_bonuses = self.bonuses.valids.order('valid_until DESC').to_a
 
-    Bonus.transaction do
-      while to_pay > 0 && available_bonuses.size > 0
-        bonus = available_bonuses.shift
-        remaining = bonus.remaining
+      Bonus.transaction do
+        while to_pay > 0 && available_bonuses.size > 0
+          bonus = available_bonuses.shift
+          remaining = bonus.remaining
 
-        if remaining >= to_pay
-          bonus.remaining = remaining - to_pay
-          to_pay = 0
-        else
-          bonus.remaining = 0
-          to_pay -= remaining
+          if remaining >= to_pay
+            bonus.remaining = remaining - to_pay
+            to_pay = 0
+          else
+            bonus.remaining = 0
+            to_pay -= remaining
+          end
+
+          bonus.save!
         end
-
-        bonus.save!
       end
-    end
 
-    to_pay
+      to_pay
+    else
+      false
+    end
   end
 
   def self.create_monthly_bonuses
