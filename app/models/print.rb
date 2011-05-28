@@ -42,7 +42,7 @@ class Print < ActiveRecord::Base
 
   # Relaciones
   belongs_to :user
-  belongs_to :customer
+  belongs_to :customer, :autosave => true
   has_many :payments, :as => :payable
   has_many :print_jobs
   has_many :article_lines
@@ -141,7 +141,7 @@ class Print < ActiveRecord::Base
       remaining = self.customer.use_credit(bonus.amount, self.credit_password)
 
       if remaining == false
-        self.errors.add :base, :invalid_credit_password
+        self.errors.add :credit_password, :invalid
         
         false
       elsif remaining > 0

@@ -222,6 +222,52 @@ class PrintsControllerTest < ActionController::TestCase
     # Prueba básica para "asegurar" el funcionamiento del versionado
     assert_equal users(:operator).id, Version.last.whodunnit
   end
+  
+  test 'should create print with free credit' do
+    UserSession.create(users(:operator))
+
+    document = Document.find(documents(:math_book).id)
+    counts_array = ['Print.count', 'PrintJob.count', 'Payment.count',
+      'customer.prints.count', 'Cups.all_jobs(@printer).keys.sort.last']
+    customer = Customer.find customers(:student).id
+
+    assert_difference counts_array do
+      assert_difference 'Version.count', 4 do
+        post :create, :print => {
+          :printer => @printer,
+          :customer_id => customer.id,
+          :scheduled_at => '',
+          :avoid_printing => '0',
+          :credit_password => 'student',
+          :print_jobs_attributes => {
+            :new_1 => {
+              :copies => '1',
+              :pages => document.pages.to_s,
+              # No importa el precio, se establece desde la configuración
+              :price_per_copy => '12.0',
+              :range => '',
+              :two_sided => '0',
+              :auto_document_name => 'Some name given in autocomplete',
+              :document_id => document.id.to_s
+            }
+          },
+          :payments_attributes => {
+            :new_1 => {
+              :amount => '35.00',
+              :paid => '35.00',
+              :paid_with => Payment::PAID_WITH[:bonus].to_s
+            }
+          }
+        }
+      end
+    end
+
+    assert_redirected_to print_path(assigns(:print))
+    # Debe asignar el usuario autenticado como el creador de la impresión
+    assert_equal users(:operator).id, assigns(:print).user.id
+    # Prueba básica para "asegurar" el funcionamiento del versionado
+    assert_equal users(:operator).id, Version.last.whodunnit
+  end
 
   test 'should create print without documents in print jobs' do
     UserSession.create(users(:operator))

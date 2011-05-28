@@ -264,8 +264,8 @@ class PrintTest < ActiveSupport::TestCase
       )
     end
     
-    assert_equal [error_message_from_model(@print, :base,
-        :invalid_credit_password)], @print.errors[:base]
+    assert_equal [error_message_from_model(@print, :credit_password, :invalid)],
+      @print.errors[:credit_password]
   end
 
   test 'create with free credit and cash' do

@@ -30,7 +30,8 @@
           attributes:
             base:
               must_have_one_item: 'La impresión debe tener al menos un trabajo o un artículo'
-              invalid_credit_password: 'La contraseña proporcionada para utilizar el crédito no es válida'
+            credit_password:
+              invalid: 'no es correcta'
             printer:
               must_be_blank: 'no debe estar seleccionada'
             payments:
