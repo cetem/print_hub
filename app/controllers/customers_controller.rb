@@ -1,5 +1,6 @@
 class CustomersController < ApplicationController
-  before_filter :require_admin_user
+  before_filter :require_admin_user, :except => [:credit_detail]
+  before_filter :require_user, :only => [:credit_detail]
   
   layout proc { |controller| controller.request.xhr? ? false : 'application' }
 
