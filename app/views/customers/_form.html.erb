@@ -52,8 +52,8 @@
 
   <div class="add_nested_item">
     <%= link_to t(:'view.customers.add_bonus'), '#', :id => :add_bonus_link,
-      :'data-template' => :bonus, :'data-container' => :bonuses,
-      :'data-event' => :add_nested_item,
+      :'data-template' => :bonus, :'data-container' => '#bonuses',
+      :'data-event' => 'addNestedItem',
       :title => t(:'view.customers.add_bonus_title') %>
   </div>
   
@@ -64,13 +64,14 @@
 <% end %>
 <script type="text/javascript">
   // Captura de atajos de teclado
-  document.on('keydown', function(e) {
-    var key = e.keyCode || e.which;
+  $(document).keydown(function(e) {
+    var key = e.which;
 
     // CTRL + ALT + E = Agregar una bonificación
     if((key == 66 || key == 98) && e.ctrlKey && e.altKey) {
-      $('add_bonus_link').click();
-      Event.stop(e);
+      $('#add_bonus_link').click();
+      e.preventDefault();
+      e.stopPropagation();
     }
   });
 </script>

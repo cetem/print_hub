@@ -1,11 +1,11 @@
 source 'http://rubygems.org'
 
-gem 'rails', '3.0.7'
+gem 'rails', '3.0.9.rc3'
 
 gem 'pg'
 gem 'authlogic'
 gem 'rails-settings', :git => 'https://github.com/100hz/rails-settings.git'
-gem 'calendar_date_select', :git => 'https://github.com/paneq/calendar_date_select.git', :branch => 'rails3test'
+gem 'jquery-rails'
 gem 'simple_autocomplete'
 gem 'validates_timeliness', '~> 3.0'
 gem 'rghost'
@@ -19,8 +19,6 @@ gem 'whenever', :require => false
 # Previo sudo apt-get install libcupsys2-dev
 gem 'cups'
 gem 'pdf-reader'
-# TODO: eliminar cuando corrijan el problema en Rails
-gem 'rake', '0.8.7'
 
 group :production do
   gem 'smurf'

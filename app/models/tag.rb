@@ -21,6 +21,17 @@ class Tag < ActiveRecord::Base
   def to_s
     ([self] + self.ancestors).map(&:name).reverse.join(' | ')
   end
+  
+  alias_method :label, :to_s
+  
+  def as_json(options = nil)
+    default_options = {
+      :only => [:id],
+      :methods => [:label]
+    }
+    
+    super(default_options.merge(options || {}))
+  end
 
   def <=>(other)
     other.kind_of?(Tag) ? self.id <=> other.id : -1

@@ -2,6 +2,9 @@ class Article < ActiveRecord::Base
   has_paper_trail
   find_by_autocomplete :name
   
+  # Alias de atributos
+  alias_attribute :unit_price, :price
+  
   # Callbacks
   before_destroy :can_be_destroyed?
 
@@ -19,6 +22,17 @@ class Article < ActiveRecord::Base
 
   def to_s
     "[#{self.code}] #{self.name}"
+  end
+  
+  alias_method :label, :to_s
+  
+  def as_json(options = nil)
+    default_options = {
+      :only => [:id],
+      :methods => [:label, :unit_price]
+    }
+    
+    super(default_options.merge(options || {}))
   end
 
   def can_be_destroyed?

@@ -1,6 +1,6 @@
 <div id="alert">
   <p><%= flash.alert %></p>
-  <div id="close_alert"><%= link_to_function 'X', "$('alert').fade()",
+  <div id="close_alert"><%= link_to_function 'X', "$('#alert').fadeOut()",
     :title => t(:'label.close') %></div>
 </div>
-<%= javascript_tag "Element.fade.delay(7, 'alert');" %>
+<%= javascript_tag "$('#alert').delay(7000).fadeOut();" %>

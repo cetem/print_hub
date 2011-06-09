@@ -186,14 +186,25 @@ class DocumentsControllerTest < ActionController::TestCase
     UserSession.create(users(:administrator))
     get :autocomplete_for_tag_name, :q => 'note'
     assert_response :success
-    assert_select 'li[data-id]', {:count => 2, :text => /note/i}, 'Invalid tag'
+    
+    tags = ActiveSupport::JSON.decode(@response.body)
+    
+    assert_equal 2, tags.size
+    assert tags.all? { |t| t['label'].match /note/i }
 
     get :autocomplete_for_tag_name, :q => 'books'
     assert_response :success
-    assert_select 'li[data-id]', {:count => 1, :text => /books/i}, 'Invalid tag'
+    
+    tags = ActiveSupport::JSON.decode(@response.body)
+    
+    assert_equal 1, tags.size
+    assert tags.all? { |t| t['label'].match /books/i }
 
     get :autocomplete_for_tag_name, :q => 'boxyz'
     assert_response :success
-    assert_select 'li', false
+    
+    tags = ActiveSupport::JSON.decode(@response.body)
+    
+    assert tags.empty?
   end
 end

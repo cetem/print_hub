@@ -8,8 +8,7 @@ class DocumentsController < ApplicationController
     :query => DB_ADAPTER == 'PostgreSQL' ?
       "to_tsvector('spanish', %{field}) @@ plainto_tsquery('spanish', %{query})" : nil,
     :mask => DB_ADAPTER == 'PostgreSQL' ? '%{value}' : nil) do |tags|
-      render_to_string :partial => 'autocomplete_for_tag_name',
-        :locals => { :tags => tags }
+      render :json => tags
   end
 
   # GET /documents
@@ -162,9 +161,10 @@ class DocumentsController < ApplicationController
     file = @document.file.path(params[:style].try(:to_sym))
 
     if File.exists?(file)
+      mime_type = Mime::Type.lookup_by_extension(File.extname(file)[1..-1])
+      
       response.headers['Last-Modified'] = File.mtime(file).httpdate
       response.headers['Cache-Control'] = 'private, no-store'
-      mime_type = Mime::Type.lookup_by_extension(File.extname(file)[1..-1])
 
       send_file file, :type => (mime_type || 'application/octet-stream')
     else

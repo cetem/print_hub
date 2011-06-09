@@ -25,8 +25,8 @@ a:hover {
 
 a.action_link,
 a.remove,
-a[data-event="remove_item"],
-a[data-event="hide_item"] {
+a[data-event="removeItem"],
+a[data-event="hideItem"] {
   font-size: 12px;
   font-weight: bold;
   padding: 1px 3px;
@@ -39,8 +39,8 @@ a.action_link:hover {
 }
 
 a.remove:hover,
-a[data-event="remove_item"]:hover,
-a[data-event="hide_item"]:hover {
+a[data-event="removeItem"]:hover,
+a[data-event="hideItem"]:hover {
   background: #aa0000;
   color: #ffffff;
 }
@@ -206,38 +206,15 @@ div.add_nested_item {
   margin: .5em 0em;
 }
 
-div.autocomplete_container {
-  position: relative;
-}
-
-div.autocomplete {
-  position: absolute;
-  top: 0px !important;
-  left: 0px !important;
-  background-color: white;
-  border: 1px solid #888888;
-}
-
-div.autocomplete ul {
-  list-style-type: none;
-}
-
-div.autocomplete ul li.selected {
-  background-color: #ffffbb;
-}
-
-div.autocomplete ul li {
-  list-style-type: none;
+.ui-autocomplete span.informal {
   display: block;
-  padding: .1em;
-  min-height: 2.5em;
-  cursor: pointer;
-}
-
-div.autocomplete ul li span.informal {
-  display: block;
+  white-space: normal;
   font-size: .8em;
   color: #676767;
+}
+
+.ui-autocomplete span.label {
+  white-space: normal;
 }
 
 div.dynamic_details {
@@ -554,6 +531,10 @@ ul.raw {
 
 .bold {
   font-weight: bold;
+}
+
+.ui-datepicker-trigger {
+  display: none;
 }
 
 .clear {

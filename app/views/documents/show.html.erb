@@ -1,4 +1,5 @@
-<div class="document_details">
+<% id = "document_details_#{@document.id}" %>
+<div id="<%= id %>" class="document_details">
   <div class="document_data">
     <dl class="details">
       <dt><%= Document.human_attribute_name :code %>:</dt>
@@ -38,7 +39,7 @@
   <nav class="links">
     <% if request.xhr? %>
       <%= link_to t(:'label.show'), document_path(@document) %> |
-      <%= link_to_function t(:'label.hide'), "this.up('.document_details').hide()" %>
+      <%= link_to_function t(:'label.hide'), "Helper.remove('##{id}')" %>
     <% else %>
       <%= document_link_for_use_in_next_print @document %> |
       <%= link_to t(:'label.edit'), edit_document_path(@document) %> |
@@ -46,3 +47,6 @@
     <% end %>
   </nav>
 </div>
+<script type="text/javascript">
+  $('a.fancybox', $('#<%= id %>')).fancybox({type: 'image'});
+</script>

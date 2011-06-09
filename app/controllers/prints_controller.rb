@@ -142,6 +142,10 @@ class PrintsController < ApplicationController
     end
 
     @docs = @docs.limit(10)
+    
+    respond_to do |format|
+      format.json { render :json => @docs }
+    end
   end
 
   # GET /prints/autocomplete_for_article_name
@@ -181,6 +185,10 @@ class PrintsController < ApplicationController
     end
 
     @articles = @articles.limit(10)
+    
+    respond_to do |format|
+      format.json { render :json => @articles }
+    end
   end
   
   # GET /prints/autocomplete_for_customer_name
@@ -217,6 +225,10 @@ class PrintsController < ApplicationController
     end
 
     @customers = @customers.limit(10)
+    
+    respond_to do |format|
+      format.json { render :json => @customers }
+    end
   end
 
   # PUT /prints/cancel_job

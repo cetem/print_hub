@@ -8,10 +8,7 @@
       <%= f.text_field :auto_document_name, :disabled => disabled,
         :id => "auto_document_#{id}", :class => field_classes.join(' '),
         :value => f.object.document.try(:to_s),
-        :'data-autocomplete-url' => autocomplete_for_document_name_prints_path %>
-      <div class="autocomplete_container">
-        <div class="autocomplete" style="display: none;"></div>
-      </div>
+        :'data-autocomplete-url' => autocomplete_for_document_name_prints_path(:format => :json) %>
       <%= f.hidden_field :document_id, :class => :autocomplete_id %>
     </div>
     <div class="nested_item_field">
@@ -43,9 +40,8 @@
       <% unless disabled %>
         <%= link_to_remove_nested_item(f) %>
       <% end %>
-      <%= link_to '...', f.object.document || '#',
+      <%= link_to '...', f.object.document || document_path(:id => 0),
         :class => 'details_link action_link', :remote => true,
-        :'data-update' => "document_details_#{id}",
         :title => t(:'view.prints.document_details'),
         :style => ('display: none;' unless f.object.document) %>
       <%= f.hidden_field :lock_version %>
@@ -55,10 +51,8 @@
 </div>
 <% if is_dynamic %>
   <script type="text/javascript">
-    Helper.show('<%= id %>', {
-      afterFinish: function() {
-        $('<%= "auto_document_#{id}" %>').focus();
-      }
+    Helper.show('#<%= id %>', function() {
+      $('<%= "#auto_document_#{id}" %>').focus();
     });
     AutoComplete.observeAll();
   </script>

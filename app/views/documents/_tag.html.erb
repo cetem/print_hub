@@ -8,9 +8,6 @@
         <%= f.text_field :auto_tag_name, :class => field_classes.join(' '),
           :'data-autocomplete-url' => autocomplete_for_tag_name_documents_path,
           :id => "autocomplete_tag_#{id}", :value => nil %>
-        <div class="autocomplete_container">
-          <div class="autocomplete" style="display: none;"></div>
-        </div>
       <% else %>
         <%= tag %>
       <% end %>
@@ -25,10 +22,8 @@
 </div>
 <% if is_dynamic %>
   <script type="text/javascript">
-    Helper.show('<%= id %>', {
-      afterFinish: function() {
-        $('<%= "autocomplete_tag_#{id}" %>').focus();
-      }
+    Helper.show('#<%= id %>', function() {
+      $('#<%= "autocomplete_tag_#{id}" %>').focus();
     });
     AutoComplete.observeAll();
   </script>

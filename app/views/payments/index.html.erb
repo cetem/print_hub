@@ -11,8 +11,8 @@
 
     <tbody>
       <tr>
-        <td><%= f.calendar_date_select :from, :value => l(@from_date, :format => :minimal), :time => true %></td>
-        <td><%= f.calendar_date_select :to, :value => l(@to_date, :format => :minimal), :time => true %></td>
+        <td><%= f.text_field :from, :value => l(@from_date, :format => :minimal), :class => :calendar, :'data-time' => true %></td>
+        <td><%= f.text_field :to, :value => l(@to_date, :format => :minimal), :class => :calendar, :'data-time' => true %></td>
       </tr>
     </tbody>
   </table>

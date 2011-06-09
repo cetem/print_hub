@@ -534,58 +534,103 @@ class PrintsControllerTest < ActionController::TestCase
     end
 
     UserSession.create(users(:operator))
-    get :autocomplete_for_document_name, :q => 'Math'
+    get :autocomplete_for_document_name, :format => :json, :q => 'Math'
     assert_response :success
-    assert_select 'li[data-id]', 2
+    
+    documents = ActiveSupport::JSON.decode(@response.body)
+    
+    assert_equal 2, documents.size
+    assert documents.all? { |d| (d['label'] + d['informal']).match /math/i }
 
-    get :autocomplete_for_document_name, :q => 'note'
+    get :autocomplete_for_document_name, :format => :json, :q => 'note'
     assert_response :success
-    assert_select 'li[data-id]', 2
+    
+    documents = ActiveSupport::JSON.decode(@response.body)
+    
+    assert_equal 2, documents.size
+    assert documents.all? { |d| (d['label'] + d['informal']).match /note/i }
 
-    get :autocomplete_for_document_name, :q => '001'
+    get :autocomplete_for_document_name, :format => :json, :q => '001'
     assert_response :success
-    assert_select 'li[data-id]', 1
+    
+    documents = ActiveSupport::JSON.decode(@response.body)
+    
+    assert_equal 1, documents.size
+    assert documents.all? { |d| (d['label'] + d['informal']).match /1/i }
 
-    get :autocomplete_for_document_name, :q => 'physics'
+    get :autocomplete_for_document_name, :format => :json, :q => 'physics'
     assert_response :success
-    assert_select 'li[data-id]', 1
+    
+    documents = ActiveSupport::JSON.decode(@response.body)
+    
+    assert_equal 1, documents.size
+    assert documents.all? { |d| (d['label'] + d['informal']).match /physics/i }
 
-    get :autocomplete_for_document_name, :q => 'phyxyz'
+    get :autocomplete_for_document_name, :format => :json, :q => 'phyxyz'
     assert_response :success
-    assert_select 'li[data-id]', false
+    
+    documents = ActiveSupport::JSON.decode(@response.body)
+    
+    assert documents.empty?
   end
 
   test 'should get autocomplete article list' do
     UserSession.create(users(:operator))
-    get :autocomplete_for_article_name, :q => '111'
+    get :autocomplete_for_article_name, :format => :json, :q => '111'
     assert_response :success
-    assert_select 'li[data-id]', 1
+    
+    articles = ActiveSupport::JSON.decode(@response.body)
+    
+    assert_equal 1, articles.size
+    assert articles.all? { |a| a['label'].match /111/i }
 
-    get :autocomplete_for_article_name, :q => 'binding'
+    get :autocomplete_for_article_name, :format => :json, :q => 'binding'
     assert_response :success
-    assert_select 'li[data-id]', 2
+    
+    articles = ActiveSupport::JSON.decode(@response.body)
+    
+    assert_equal 2, articles.size
+    assert articles.all? { |a| a['label'].match /binding/i }
 
-    get :autocomplete_for_article_name, :q => '333'
+    get :autocomplete_for_article_name, :format => :json, :q => '333'
     assert_response :success
-    assert_select 'li[data-id]', 1
+    
+    articles = ActiveSupport::JSON.decode(@response.body)
+    
+    assert_equal 1, articles.size
+    assert articles.all? { |a| a['label'].match /333/i }
 
-    get :autocomplete_for_article_name, :q => 'xyz'
+    get :autocomplete_for_article_name, :format => :json, :q => 'xyz'
     assert_response :success
-    assert_select 'li[data-id]', false
+    
+    articles = ActiveSupport::JSON.decode(@response.body)
+    
+    assert articles.empty?
   end
 
   test 'should get autocomplete customer list' do
     UserSession.create(users(:operator))
-    get :autocomplete_for_customer_name, :q => 'anakin'
+    get :autocomplete_for_customer_name, :format => :json, :q => 'anakin'
     assert_response :success
-    assert_select 'li[data-id]', 1
+    
+    customers = ActiveSupport::JSON.decode(@response.body)
+    
+    assert_equal 1, customers.size
+    assert customers.all? { |c| (c['label'] + c['informal']).match /anakin/i }
 
-    get :autocomplete_for_customer_name, :q => 'obi'
+    get :autocomplete_for_customer_name, :format => :json, :q => 'obi'
     assert_response :success
-    assert_select 'li[data-id]', 1
+    
+    customers = ActiveSupport::JSON.decode(@response.body)
+    
+    assert_equal 1, customers.size
+    assert customers.all? { |c| (c['label'] + c['informal']).match /obi/i }
 
-    get :autocomplete_for_customer_name, :q => 'phyxyz'
+    get :autocomplete_for_customer_name, :format => :json, :q => 'phyxyz'
     assert_response :success
-    assert_select 'li[data-id]', false
+    
+    customers = ActiveSupport::JSON.decode(@response.body)
+    
+    assert customers.empty?
   end
 end

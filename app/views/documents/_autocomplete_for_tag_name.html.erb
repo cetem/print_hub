@@ -1,8 +1,0 @@
-<ul>
-  <% tags.each do |tag| %>
-    <li data-id="<%= tag.id %>">
-      <%= highlight tag.name, params[:q] %>
-      <span class="informal"><%= highlight tag.to_s, params[:q] %></span>
-    </li>
-  <% end %>
-</ul>

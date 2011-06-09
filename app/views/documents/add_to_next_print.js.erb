@@ -4,5 +4,5 @@
   :title => t(:title, :scope => [:view, :documents, :remove_from_next_print]),
   :remote => true, :method => :delete, :class => :red
 ) %>
-<% id = "document_for_use_in_next_print_#{@document.id}" %>
-$('<%= id %>').update('<%= message %>');
+<% id = "#document_for_use_in_next_print_#{@document.id}" %>
+$('<%= id %>').html('<%= message %>');

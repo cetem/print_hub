@@ -8,10 +8,7 @@
       <%= f.text_field :auto_article_name, :disabled => disabled,
         :id => "auto_article_line_#{id}", :class => field_classes.join(' '),
         :value => f.object.article.try(:to_s),
-        :'data-autocomplete-url' => autocomplete_for_article_name_prints_path %>
-      <div class="autocomplete_container">
-        <div class="autocomplete" style="display: none;"></div>
-      </div>
+        :'data-autocomplete-url' => autocomplete_for_article_name_prints_path(:format => :json) %>
       <%= f.hidden_field :article_id, :class => :autocomplete_id %>
     </div>
     <div class="nested_item_field">
@@ -33,10 +30,8 @@
 </div>
 <% if is_dynamic %>
   <script type="text/javascript">
-    Helper.show('<%= id %>', {
-      afterFinish: function() {
-        $('<%= "auto_article_line_#{id}" %>').focus();
-      }
+    Helper.show('#<%= id %>', function() {
+      $('<%= "#auto_article_line_#{id}" %>').focus();
     });
     AutoComplete.observeAll();
   </script>

@@ -2,7 +2,11 @@ class Customer < ActiveRecord::Base
   has_paper_trail
   find_by_autocomplete :name
 
+  # Scopes
   scope :with_monthly_bonus, where('free_monthly_bonus > :zero', :zero => 0)
+  
+  # Alias de atributos
+  alias_attribute :informal, :identification
 
   # Callbacks
   before_create :build_monthly_bonus
@@ -29,6 +33,17 @@ class Customer < ActiveRecord::Base
 
   def to_s
     [self.name, self.lastname].compact.join(' ')
+  end
+  
+  alias_method :label, :to_s
+  
+  def as_json(options = nil)
+    default_options = {
+      :only => [:id],
+      :methods => [:label, :informal, :free_credit]
+    }
+    
+    super(default_options.merge(options || {}))
   end
   
   def current_bonuses

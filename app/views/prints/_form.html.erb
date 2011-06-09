@@ -21,7 +21,7 @@
       :class => field_classes.join(' '),
       :'data-autocomplete-url' => autocomplete_for_customer_name_prints_path %>
     <% if @print.customer %>
-      <%= link_to_function 'X', "clearCustomer(); this.remove()",
+      <%= link_to_function 'X', "clearCustomer(); $(this).remove()",
         :class => :remove %>
     <% end %>
     <div class="autocomplete_container">
@@ -36,7 +36,7 @@
   <div class="clear">
     <div class="field column_left">
       <%= f.label :scheduled_at %>
-      <%= f.calendar_date_select :scheduled_at, :time => true %>
+      <%= f.text_field :scheduled_at, :class => :calendar, :'data-time' => true %>
     </div>
 
     <div class="field column_right">
@@ -70,8 +70,8 @@
 
   <div class="add_nested_item">
     <%= link_to_if @print.new_record?, t(:'view.prints.add_print_job'), '#',
-      :'data-template' => :print_job, :'data-container' => :print_jobs,
-      :'data-event' => :add_nested_item, :id => :add_print_job_link,
+      :'data-template' => :print_job, :'data-container' => '#print_jobs',
+      :'data-event' => 'addNestedItem', :id => :add_print_job_link,
       :title => t(:'view.prints.add_print_job_title') %>
   </div>
 
@@ -97,8 +97,8 @@
 
   <div class="add_nested_item">
     <%= link_to_if @print.new_record?, t(:'view.prints.add_article_line'), '#',
-      :'data-template' => :article_line, :'data-container' => :article_lines,
-      :'data-event' => :add_nested_item, :id => :add_article_line_link,
+      :'data-template' => :article_line, :'data-container' => '#article_lines',
+      :'data-event' => 'addNestedItem', :id => :add_article_line_link,
       :title => t(:'view.prints.add_article_line_title') %>
   </div>
 
@@ -152,22 +152,24 @@
 <% end %>
 <script type="text/javascript">
   function updateTotalPrice() {
-    var cashPrefix = 'payment_<%= Payment::PAID_WITH[:cash] %>';
-    var bonusPrefix = 'payment_<%= Payment::PAID_WITH[:bonus] %>';
-    var freeCredit = parseFloat($('customer_free_credit').getValue()) || 0.0;
+    var cashPrefix = '#payment_<%= Payment::PAID_WITH[:cash] %>';
+    var bonusPrefix = '#payment_<%= Payment::PAID_WITH[:bonus] %>';
+    var freeCredit = parseFloat($('#customer_free_credit').val()) || 0.0;
     var payWithCash = 0.0, payWithBonus = 0.0;
-    var totalPrice = $$('.print_job').inject(0.0, function(total, pj) {
-      var pjPrice = (pj.retrieve('exclude_from_total') ?
-        0 : (parseFloat(pj.readAttribute('data-price')) || 0));
+    var totalPrice = 0.0;
+    
+    $('.print_job').each(function() {
+      var pjPrice = ($(this).data('exclude_from_total') ?
+        0 : (parseFloat($(this).data('price')) || 0));
 
-      return total + pjPrice;
+      totalPrice += pjPrice;
     });
 
-    totalPrice += $$('.article_line').inject(0.0, function(total, pj) {
-      var pjPrice = (pj.retrieve('exclude_from_total') ?
-        0 : (parseFloat(pj.readAttribute('data-price')) || 0));
+    $('.article_line').each(function() {
+      var alPrice = ($(this).data('exclude_from_total') ?
+        0 : (parseFloat($(this).data('price')) || 0));
 
-      return total + pjPrice;
+      totalPrice += alPrice;
     });
 
     if(freeCredit > totalPrice) {
@@ -178,115 +180,118 @@
       payWithBonus = freeCredit;
     }
 
-    $(cashPrefix + '_amount').setValue(payWithCash.toFixed(3));
-    $(cashPrefix + '_paid').setValue(payWithCash.toFixed(3));
-    $(bonusPrefix + '_amount').setValue(payWithBonus.toFixed(3));
-    $(bonusPrefix + '_paid').setValue(payWithBonus.toFixed(3));
+    $(cashPrefix + '_amount').val(payWithCash.toFixed(3));
+    $(cashPrefix + '_paid').val(payWithCash.toFixed(3));
+    $(bonusPrefix + '_amount').val(payWithBonus.toFixed(3));
+    $(bonusPrefix + '_paid').val(payWithBonus.toFixed(3));
   }
 
   function updatePrintJobPrice(printJob) {
-    var copies = parseInt(printJob.down('input[name$="[copies]"]').getValue());
+    var copies = parseInt($('input[name$="[copies]"]', printJob).val());
     var pricePerCopy = parseFloat(
-      printJob.down('input[name$="[price_per_copy]"]').getValue()
+      $('input[name$="[price_per_copy]"]', printJob).val()
     );
     var pricePerOneSidedCopy = parseFloat(
-      printJob.down('input[name$="[two_sided]"].price_modifier').readAttribute(
-        'data-price-per-one-sided')
+      $('input[name$="[two_sided]"].price_modifier', printJob).data(
+        'price-per-one-sided')
     );
     var rangePages = parseInt(
-      printJob.down('input[name$="[range]"]').readAttribute('data-range-pages')
+      $('input[name$="[range]"]', printJob).data('range-pages')
     );
     var evenRange = rangePages - (rangePages % 2);
     var rest = (rangePages % 2) * pricePerOneSidedCopy;
-    var jobPrice = copies * (pricePerCopy * evenRange + rest);
-    var money = printJob.down('span.money');
+    var jobPrice = (copies * (pricePerCopy * evenRange + rest)) || 0;
+    var money = $('span.money', printJob);
 
-    printJob.writeAttribute('data-price', jobPrice);
-    money.update(money.innerHTML.sub(/(\d+.)+\d+/, jobPrice.toFixed(3)));
+    printJob.data('price', jobPrice);
+    money.html(money.html().replace(/(\d+.)+\d+/, jobPrice.toFixed(3)));
 
     updateTotalPrice();
   }
 
   function updateArticleLinePrice(articleLine) {
-    var units = parseInt(articleLine.down('input[name$="[units]"]').getValue());
+    var units = parseInt($('input[name$="[units]"]', articleLine).val());
     var unitPrice = parseFloat(
-      articleLine.down('input[name$="[unit_price]"]').getValue()
+      $('input[name$="[unit_price]"]', articleLine).val()
     );
-    var articlePrice = units * unitPrice;
-    var money = articleLine.down('span.money');
+    var articlePrice = (units * unitPrice) || 0;
+    var money = $('span.money', articleLine);
 
-    articleLine.writeAttribute('data-price', articlePrice);
-    money.update(money.innerHTML.sub(/(\d+.)+\d+/, articlePrice.toFixed(3)));
+    articleLine.data('price', articlePrice);
+    money.html(money.html().replace(/(\d+.)+\d+/, articlePrice.toFixed(3)));
 
     updateTotalPrice();
   }
   
   function clearCustomer() {
-    $('print_auto_customer_name').setValue('');
-    $('print_customer_id').setValue('');
-    $('customer_free_credit').setValue('');
-    $('link_to_customer_credit_detail').hide();
+    $('#print_auto_customer_name').val('');
+    $('#print_customer_id').val('');
+    $('#customer_free_credit').val('');
+    $('#link_to_customer_credit_detail').hide();
     
     updateTotalPrice();
   }
 
-  document.on('item:removed', '.print_job', function(event, element) {
-    element.store('exclude_from_total', true);
+  $('.print_job').live('item:removed', function() {
+    $(this).data('exclude_from_total', true);
 
     updateTotalPrice();
   });
 
-  document.on('item:removed', '.article_line', function(event, element) {
-    element.store('exclude_from_total', true);
+  $('.article_line').live('item:removed', function() {
+    $(this).data('exclude_from_total', true);
 
     updateTotalPrice();
   });
 
-  document.on('autocomplete:update', 'form', function(event) {
-    var element = $(event.memo);
+  $('input.autocomplete_field').live('autocomplete:update', function() {
+    var item = $(this).data('item');
+    
+    if (item.pages) {
+      var pages = item.pages;
+      var printJob = $(this).parents('.print_job');
+      var detailsLink = $('a.details_link', printJob);
 
-    if (element.readAttribute('data-pages')) {
-      var pages = element.readAttribute('data-pages');
-      var printJob = element.up('.print_job');
-
-      printJob.down('input[name$="[pages]"]').setValue(pages).disable();
-      printJob.down('a.details_link').writeAttribute('href',
-        element.readAttribute('data-url'));
-      printJob.down('a.details_link').show();
-      printJob.down('.dynamic_details').update('');
-      printJob.down('input[name$="[range]"]').setValue('').writeAttribute(
-        'data-range-pages', pages);
+      $('input[name$="[pages]"]', printJob).val(pages).attr('disabled', true);
+      detailsLink.attr(
+        'href', detailsLink.attr('href').replace(/\d+$/, item.id)
+      ).show();
+      $('.dynamic_details', printJob).text('');
+      $('input[name$="[range]"]', printJob).val('').data('range-pages', pages);
 
       updatePrintJobPrice(printJob);
-    } else if (element.readAttribute('data-unit-price')) {
-      var unitPrice = element.readAttribute('data-unit-price');
-      var articleLine = element.up('.article_line');
+    } else if (item.unit_price) {
+      var unitPrice = parseFloat(item.unit_price).toFixed(3);
+      var articleLine = $(this).parents('.article_line');
 
-      articleLine.down('input[name$="[unit_price]"]').setValue(unitPrice);
+      $('input[name$="[unit_price]"]', articleLine).val(unitPrice);
 
       updateArticleLinePrice(articleLine);
-    } else if (element.readAttribute('data-free-credit')) {
-      $('customer_free_credit').setValue(
-        element.readAttribute('data-free-credit')
-      );
-      $('link_to_customer_credit_detail').writeAttribute('href',
-        element.readAttribute('data-options-url'));
-      $('link_to_customer_credit_detail').show();
+    } else if (item.free_credit) {
+      $('#customer_free_credit').val(item.free_credit);
+      var detailsLink = $('#link_to_customer_credit_detail');
+      detailsLink.attr(
+        'href', detailsLink.attr('href').replace(/\d+/, item.id)
+      ).show();
 
       updateTotalPrice();
     }
   });
 
-  document.on('keyup', 'input[name$="[range]"]', function(event, element) {
+  $('input[name$="[range]"]').live('keyup', function() {
+    var element = $(this);
     var validRanges = true, maxPage = undefined, rangePages = 0;
     var pages = parseInt(
-      element.up('.print_job').down('input[name$="[pages]"]').getValue()
+      $('input[name$="[pages]"]', element.parents('.print_job')).val()
     );
-    var ranges = element.getValue().trim().split(/\s*,\s*/).sortBy(function(r) {
-      return parseInt(r.match(/^\d+/)) || 0;
+    var ranges = element.val().trim().split(/\s*,\s*/).sort(function(r1, r2) {
+      var r1Value = parseInt(r1.match(/^\d+/)) || 0;
+      var r2Value = parseInt(r2.match(/^\d+/)) || 0;
+      
+      return r1Value - r2Value;
     });
 
-    ranges.each(function(r) {
+    jQuery.each(ranges, function(i, r) {
       var data = r.match(/^(\d+)(-(\d+))?$/);
       var n1 = Try.these(function() { return parseInt(data[1]); });
       var n2 = Try.these(function() { return parseInt(data[3]); });
@@ -295,122 +300,134 @@
       validRanges = validRanges && (!maxPage || maxPage < n1);
 
       maxPage = n2 || n1;
-      rangePages += n2 ? n2.succ() - n1 : 1
+      rangePages += n2 ? n2 + 1 - n1 : 1
     });
 
-    if((element.getValue().blank() || validRanges) &&
+    if((/^\s*$/.test(element.val()) || validRanges) &&
       (!pages || !maxPage || pages >= maxPage)) {
-      element.removeClassName('field_with_errors');
+      element.removeClass('field_with_errors');
 
-      if(element.getValue().blank() && pages) {
-        element.writeAttribute('data-range-pages', pages);
-      } else if(!element.getValue().blank() && validRanges) {
-        element.writeAttribute('data-range-pages', rangePages);
+      if(/^\s*$/.test(element.val()) && pages) {
+        element.data('range-pages', pages);
+      } else if(!/^\s*$/.test(element.val()) && validRanges) {
+        element.data('range-pages', rangePages);
       }
     } else {
-      element.addClassName('field_with_errors');
+      element.addClass('field_with_errors');
     }
   });
 
-  document.on('change', '#print_printer', function(event, element) {
-    var submit = $('print_submit');
+  $('#print_printer').change(function() {
+    var submit = $('#print_submit');
 
-    if($F(element).blank()) {
-      if(submit.retrieve('original_value')) {
-        submit.writeAttribute('value', submit.retrieve('original_value'));
+    if(/^\s*$/.test($(this).val())) {
+      if(submit.data('original_value')) {
+        submit.attr('value', submit.data('original_value'));
       }
     } else {
-      if(!submit.retrieve('original_value')) {
-        submit.store('original_value', submit.readAttribute('value'));
+      if(!submit.data('original_value')) {
+        submit.data('original_value', submit.attr('value'));
       }
 
-      submit.writeAttribute('value', '<%= t(:'view.prints.print') %>');
+      submit.attr('value', '<%= t(:'view.prints.print') %>');
     }
   });
   
-  document.on('change', 'input[name="[print_auto_customer_name]"]', function(event, element) {
-    if(element.getValue().blank()) { clearCustomer(); }
+  $('input[name="[print_auto_customer_name]"]').live('change', function() {
+    if(/^\s*$/.test($(this).val())) { clearCustomer(); }
   });
 
-  document.on('change', 'input[name$="[two_sided]"]', function(event, element) {
-    var priceElement = element.up('.print_job').down(
-      'input[name$="[price_per_copy]"]');
-
-    if(element.checked) {
-      priceElement.setValue(element.readAttribute('data-price-per-two-sided'));
+  $('input[name$="[two_sided]"]').live('change', function() {
+    var element = $(this);
+    var priceElement = $('input[name$="[price_per_copy]"]',
+      element.parents('.print_job'));
+    
+    if(element.is(':checked')) {
+      priceElement.val(element.data('price-per-two-sided'));
     } else {
-      priceElement.setValue(element.readAttribute('data-price-per-one-sided'));
+      priceElement.val(element.data('price-per-one-sided'));
     }
   });
 
-  document.on('change', 'input[name$="[auto_document_name]"]', function(event, element) {
-    var printJob = element.up('.print_job');
+  $('input[name$="[auto_document_name]"]').live('change', function() {
+    var element = $(this);
+    var printJob = element.parents('.print_job');
 
-    if(printJob && element.getValue().blank()) {
-      var pages = printJob.down('input[name$="[pages]"]');
-
-      printJob.down('input[name$="[range]"]').writeAttribute('data-range-pages', 0);
-
-      pages.setValue('');
-      pages.enable();
+    if(printJob.length > 0 && /^\s*$/.test(element.val())) {
+      $('input[name$="[range]"]', printJob).data('range-pages', 0);
+      $('input[name$="[pages]"]', printJob).val('').attr('disabled', false);
+      $('.dynamic_details', printJob).html('');
+      $('a.details_link', printJob).hide();
 
       updatePrintJobPrice(printJob);
     }
   });
 
-  document.on('change', 'input[name$="[auto_article_name]"]', function(event, element) {
-    var articleLine = element.up('.article_line');
+  $('input[name$="[auto_article_name]"]').live('change', function() {
+    var element = $(this);
+    var articleLine = element.parents('.article_line');
 
-    if(articleLine && element.getValue().blank()) {
-      articleLine.down('input[name$="[units]"]').setValue('0');
-      articleLine.down('input[name$="[unit_price]"]').setValue('');
+    if(articleLine.length > 0 && /^\s*$/.test(element.val())) {
+      $('input[name$="[units]"]', articleLine).val('0');
+      $('input[name$="[unit_price]"]', articleLine).val('');
 
       updateArticleLinePrice(articleLine);
     }
   });
 
-  document.on('change', 'input[name$="[pages]"]', function(event, element) {
-    var printJob = element.up('.print_job');
+  $('input[name$="[pages]"]').live('change', function() {
+    var element = $(this);
+    var printJob = element.parents('.print_job');
 
-    if(!element.readAttribute('disabled') && parseInt(element.getValue()) > 0) {
-      var range = printJob.down('input[name$="[range]"]');
+    if(!element.attr('disabled') && parseInt(element.val()) > 0) {
+      var range = $('input[name$="[range]"]', printJob);
 
-      range.writeAttribute('data-range-pages', parseInt(element.getValue()));
-
-      range.disable();
-      printJob.down('input[name$="[auto_document_name]"]').disable();
+      range.data('range-pages', parseInt(element.val())).attr('disabled', true);
+      $('input[name$="[auto_document_name]"]', printJob).attr('disabled', true);
     } else {
-      printJob.down('input[name$="[range]"]').enable();
-      printJob.down('input[name$="[auto_document_name]"]').enable();
+      $('input[name$="[range]"]', printJob).attr('disabled', false);
+      $('input[name$="[auto_document_name]"]', printJob).attr('disabled', false);
     }
 
     updatePrintJobPrice(printJob);
   });
 
-  document.on('change', '.price_modifier', function(event, element) {
-    if (element.up('.print_job')) {
-      updatePrintJobPrice(element.up('.print_job'));
-    } else if (element.up('.article_line')) {
-      updateArticleLinePrice(element.up('.article_line'));
+  $('.price_modifier').live('change', function() {
+    var element = $(this);
+    
+    if (element.parents('.print_job')) {
+      updatePrintJobPrice(element.parents('.print_job'));
+    } else if (element.parents('.article_line')) {
+      updateArticleLinePrice(element.parents('.article_line'));
     }
+  });
+  
+  $('a.details_link').live('ajax:success', function(event, data) {
+    Helper.show($('.dynamic_details', $(this).parents('.print_job')).hide().html(data));
+  });
+  
+  $('#link_to_customer_credit_detail').live('ajax:success', function(event, data) {
+    $('#print_customer_credit_detail').html(data);
   });
 
   // Captura de atajos de teclado
-  document.on('keydown', function(e) {
-    var key = e.keyCode || e.which;
+  $(document).keydown(function(e) {
+    var key = e.which;
 
     // CTRL + ALT + I = Agregar un trabajo
     if((key == 73 || key == 105) && e.ctrlKey && e.altKey) {
-      $('add_print_job_link').click();
-      Event.stop(e);
+      $('#add_print_job_link').click();
+      e.preventDefault();
     // CTRL + ALT + A = Agregar un artículo
     } else if((key == 65 || key == 97) && e.ctrlKey && e.altKey) {
-      $('add_article_line_link').click();
-      Event.stop(e);
+      $('#add_article_line_link').click();
+      e.preventDefault();
     // CTRL + ALT + P = Imprimir
     } else if((key == 80 || key == 112) && e.ctrlKey && e.altKey) {
-      $('print_submit').click();
-      Event.stop(e);
+      $('#print_submit').click();
+      e.preventDefault();
     }
   });
+  
+  updateTotalPrice();
 </script>

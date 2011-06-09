@@ -19,18 +19,14 @@ module ApplicationHelper
   end
 
   def default_stylesheets
-    sheets = ['common', 'lightbox']
-    sheets |= calendar_date_select_stylesheets(:style => 'silver').to_a
+    sheets = ['common', 'jquery/ui-custom', 'jquery/fancybox']
     sheets << {:cache => 'main'}
 
     stylesheet_link_tag *sheets
   end
 
   def default_javascripts
-    libs = [:defaults, 'builder', 'lightbox']
-    libs |= calendar_date_select_javascripts(
-      :locale => (current_user.language if current_user) || :es
-    ).to_a
+    libs = [:defaults, 'utils', 'jquery.fancybox', 'jquery-ui-timepicker-addon', 'datepicker/jquery.ui.datepicker-es']
     libs << {:cache => 'main'}
 
     javascript_include_tag *libs
@@ -100,7 +96,7 @@ module ApplicationHelper
       :value => fields.object.marked_for_destruction? ? 1 : 0) unless new_record
     out << link_to('X', '#', :title => t(:'label.delete'),
       :'data-target' => ".#{class_for_remove || fields.object.class.name.underscore}",
-      :'data-event' => (new_record ? :remove_item : :hide_item))
+      :'data-event' => (new_record ? 'removeItem' : 'hideItem'))
 
     raw out
   end

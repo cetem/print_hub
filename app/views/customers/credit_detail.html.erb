@@ -36,18 +36,16 @@
     <% if request.xhr? %>
       <nav class="links">
         <%= link_to_function t(:'label.hide'),
-          "Helper.hide('customer_credit_detail', { afterFinish: function() { $('link_to_customer_credit_detail').show(); } })" %>
+          "Helper.hide('#customer_credit_detail', function() { $('#link_to_customer_credit_detail').show(); })" %>
       </nav>
     <% end %>
   </div>
 </div>
 <% if request.xhr? %>
   <script type="text/javascript">
-    if(!$('customer_credit_detail').visible()) {
-      Helper.show('customer_credit_detail', {
-        afterFinish: function() {
-          $('link_to_customer_credit_detail').hide();
-        }
+    if(!$('#customer_credit_detail').is(':visible')) {
+      Helper.show('#customer_credit_detail', function() {
+        $('#link_to_customer_credit_detail').hide();
       });
     }
   </script>

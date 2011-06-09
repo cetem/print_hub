@@ -7,30 +7,52 @@ var State = {
 // Funciones de autocompletado
 var AutoComplete = {
   observeAll: function() {
-    $$('input.autocomplete_field').each(function(input) {
-      if(!input.retrieve('observed')) {
-        new Ajax.Autocompleter(
-          input,
-          input.adjacent('.autocomplete').first(),
-          input.readAttribute('data-autocomplete-url'), {
-            paramName: 'q',
-            indicator: 'loading_image',
-            method: 'get',
-            afterUpdateElement: function(text, li) {
-              var objectId = $(li).readAttribute('data-id');
-              var idField = input.adjacent('input.autocomplete_id');
+    $('input.autocomplete_field:not([data-observed])').each(function(){
+      var input = $(this);
+      
+      input.autocomplete({
+        source: function(request, response) {
+          return jQuery.ajax({
+            url: input.data('autocompleteUrl'),
+            dataType: 'json',
+            data: {q: request.term},
+            success: function(data) {
+              response(jQuery.map(data, function(item) {
+                  var content = $('<div>');
+                  
+                  content.append($('<span class="label">').text(item.label));
+          
+                  if(item.informal) {
+                    content.append($('<span class="informal">').text(item.informal));
+                  }
 
-              text.setValue(text.getValue().strip());
-              idField.first().setValue(objectId);
-
-              $(li).fire('autocomplete:update', li);
+                  return {label: content.html(), value: item.label, item: item};
+                })
+              );
             }
-          }
-        );
-
-        input.store('observed', true);
+          });
+        },
+        type: 'get',
+        select: function(event, ui) {
+          var selected = ui.item;
+          
+          input.val(selected.value);
+          input.data('item', selected.item);
+          input.next('input.autocomplete_id').val(selected.item.id);
+          
+          input.trigger('autocomplete:update', input);
+          
+          return false;
+        },
+        open: function() { $('.ui-menu').css('width', input.width()); }
+      });
+      
+      input.data('autocomplete')._renderItem = function(ul, item) {
+        return $('<li></li>')
+          .data('item.autocomplete', item)
+          .append($( "<a></a>" ).html(item.label)).appendTo( ul );
       }
-    });
+    }).data('observed', true);
   }
 };
 
@@ -40,13 +62,11 @@ var EventHandler = {
      * Agrega un ítem anidado
      */
   addNestedItem: function(e) {
-    var template = eval(e.readAttribute('data-template'));
+    var template = eval(e.data('template'));
 
-    $(e.readAttribute('data-container')).insert({
-      bottom: Util.replaceIds(template, /NEW_RECORD/)
-    });
+    $(e.data('container')).append(Util.replaceIds(template, /NEW_RECORD/g));
 
-    e.fire('item:added');
+    e.trigger('item:added', e);
   },
 
   /**
@@ -54,42 +74,36 @@ var EventHandler = {
      * dinámico)
      */
   hideItem: function(e) {
-    var target = e.readAttribute('data-target');
+    Helper.hide(e.parents(e.data('target')));
 
-    Helper.hide(e.up(target));
+    var hiddenInput = e.prev('input[type=hidden].destroy');
 
-    var hiddenInput = e.previous('input[type=hidden].destroy');
+    if(hiddenInput.length != 0) { hiddenInput.val('1'); }
 
-    if(hiddenInput) {hiddenInput.setValue('1');}
-
-    e.fire('item:hidden');
+    e.trigger('item:hidden', e);
   },
 
   removeItem: function(e) {
-    var target = e.up(e.readAttribute('data-target'));
+    var target = e.parents(e.data('target'));
 
     Helper.remove(target);
 
-    target.fire('item:removed');
+    target.trigger('item:removed', target);
   },
   
   toggleMenu: function(e) {
-    var target = $(e.readAttribute('data-target'));
-    var options = {
-      duration: 0.3,
-      queue: {position: 'end', scope: 'menuscope', limit: 1}
-    }
+    var target = $(e.data('target'));
     
-    if(target.visible()) {
-      Effect.SlideUp(target, options);
+    if(target.is(':visible')) {
+      target.stop().slideUp(300);
       
-      target.removeClassName('hide_when_show_menu');
+      target.removeClass('hide_when_show_menu');
     } else {
-      Effect.SlideDown(target, options);
+      target.stop().slideDown(300);
       
-      $$('.hide_when_show_menu').invoke('hide');
+      $('.hide_when_show_menu').hide();
       
-      target.addClassName('hide_when_show_menu');
+      target.addClass('hide_when_show_menu');
     }
   }
 }
@@ -99,37 +113,38 @@ var Helper = {
   /**
      * Oculta el elemento indicado
      */
-  hide: function(element, options) {
-    Effect.SlideUp(element, Util.merge({duration: 0.5}, options));
+  hide: function(element, callback) {
+    $(element).stop().slideUp(500, callback);
   },
 
   /**
      * Oculta el elemento que indica que algo se está cargando
      */
   hideLoading: function(element) {
-    $('loading_image').hide();
+    $('#loading_image').hide();
 
-    if($(element)) {$(element).enable();}
+    $(element).attr('disabled', false);
   },
 
   /**
      * Elimina el elemento indicado
      */
-  remove: function(element, options) {
-    Effect.SlideUp(element, Util.merge({
-      duration: 0.5,
-      afterFinish: function() {$(element).remove();}
-    }, options));
+  remove: function(element, callback) {
+    $(element).stop().slideUp(500, function() {
+      $(this).remove();
+      
+      if(jQuery.isFunction(callback)) { callback(); }
+    });
   },
 
   /**
      * Muestra el ítem indicado (puede ser un string con el ID o el elemento mismo)
      */
-  show: function(element, options) {
+  show: function(element, callback) {
     var e = $(element);
 
-    if(e != null && !e.visible()) {
-      Effect.SlideDown(e, Util.merge({duration: 0.5}, options));
+    if(e.is(':visible').length != 0) {
+      e.stop().slideDown(500, callback);
     }
   },
 
@@ -137,9 +152,9 @@ var Helper = {
      * Muestra una imagen para indicar que una operación está en curso
      */
   showLoading: function(element) {
-    $('loading_image').show();
+    $('#loading_image').show();
 
-    if($(element)) {$(element).disable();}
+    if( $(element).is(':visible')) { $(element).attr('disabled', true); }
   }
 }
 
@@ -149,7 +164,7 @@ var Util = {
      * Combina dos hash javascript nativos
      */
   merge: function(hashOne, hashTwo) {
-    return $H(hashOne).merge($H(hashTwo)).toObject();
+    return jQuery.extend({}, hashOne, hashTwo);
   },
 
   /**
@@ -157,34 +172,49 @@ var Util = {
      * único generado con la fecha y un número incremental
      */
   replaceIds: function(s, regex){
-    return s.gsub(regex, new Date().getTime() + State.newIdCounter++);
+    return s.replace(regex, new Date().getTime() + State.newIdCounter++);
   }
 }
 
-var eventList = $H(EventHandler).keys();
-
-Event.observe(window, 'load', function() {
-  // Para que los navegadores que no soportan HTML5 funcionen con autofocus
-  Try.these(function() {$$('*[autofocus]').first().focus()});
+jQuery(function($) {
+  var eventList = $.map(EventHandler, function(v, k ) {return k;});
   
-  document.on('click', 'a[data-event]', function(event, element) {
+  // Para que los navegadores que no soportan HTML5 funcionen con autofocus
+  $('*[autofocus]:visible:first').focus();
+  
+  $('a[data-event]').live('click', function(event) {
     if (event.stopped) return;
-    var eventName = element.readAttribute('data-event').dasherize().camelize();
+    var element = $(this);
+    var eventName = element.data('event');
 
-    if(eventList.include(eventName)) {
+    if($.inArray(eventName, eventList) != -1) {
       EventHandler[eventName](element);
-      Event.stop(event);
+      
+      event.preventDefault();
+      event.stopPropagation();
     }
   });
 
-  document.on('change', 'input.autocomplete_field', function(event, element) {
-    if(element.getValue().blank()) {
-      element.adjacent('input.autocomplete_id').first().setValue('');
+  $('input.autocomplete_field').live('change', function() {
+    var element = $(this);
+    
+    if(/^\s*$/.test(element.val())) {
+      element.next('input.autocomplete_id:first').val('');
     }
   });
-
-  document.on('ajax:before', '*', function() {$('loading_image').show();});
-  document.on('ajax:after', '*', function() {$('loading_image').hide();});
+  
+  $('#loading_image').bind({
+    ajaxStart: function() {$(this).show();},
+    ajaxStop: function() {$(this).hide();}
+  });
+  
+  $('input.calendar:not(.hasDatepicker)').live('focus', function() {
+    if($(this).data('time')) {
+      $(this).datetimepicker({showOn: 'both'}).focus();
+    } else {
+      $(this).datepicker({showOn: 'both'}).focus();
+    }
+  });
 
   AutoComplete.observeAll();
 });

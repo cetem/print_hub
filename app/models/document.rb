@@ -18,13 +18,15 @@ class Document < ActiveRecord::Base
 
   # Atributos no persistentes
   attr_accessor :auto_tag_name
+  # Alias de atributos
+  alias_attribute :informal, :tag_path
+  # Atributos protegidos contra escritura masiva
+  attr_protected :pages
 
   # Callbacks
   before_save :update_tag_path
   before_destroy :can_be_destroyed?
   before_file_post_process :extract_page_count
-
-  attr_protected :pages
 
   # Restricciones
   validates :name, :code, :pages, :media, :presence => true
@@ -55,6 +57,17 @@ class Document < ActiveRecord::Base
 
   def to_s
     "[#{self.code}] #{self.name}"
+  end
+  
+  alias_method :label, :to_s
+  
+  def as_json(options = nil)
+    default_options = {
+      :only => [:id, :pages],
+      :methods => [:label, :informal]
+    }
+    
+    super(default_options.merge(options || {}))
   end
 
   def update_tag_path(new_tag = nil)

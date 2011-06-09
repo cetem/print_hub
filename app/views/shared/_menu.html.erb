@@ -5,7 +5,7 @@
       <% if current_user.admin %>
         <li class="submenu">
           <%= link_to t(:admin, :scope => :menu), '#',
-            :'data-event' => :toggle_menu, :'data-target' => :submenu_admin %>
+            :'data-event' => 'toggleMenu', :'data-target' => '#submenu_admin' %>
           <div id="submenu_admin" style="display: none;">
             <ul>
               <%= content_tag(:li, link_to(t(:users, :scope => :menu), users_path),
@@ -28,7 +28,7 @@
         :class => (:selected if current_controller == :tags)) %>
       <li class="submenu">
         <%= link_to t(:more, :scope => :menu), '#',
-          :'data-event' => :toggle_menu, :'data-target' => :submenu_more %>
+          :'data-event' => 'toggleMenu', :'data-target' => '#submenu_more' %>
         <div id="submenu_more" style="display: none;">
           <ul>
             <%= content_tag(:li, link_to(t(:articles, :scope => :menu), articles_path),

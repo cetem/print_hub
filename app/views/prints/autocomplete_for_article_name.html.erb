@@ -1,7 +1,0 @@
-<ul>
-  <% @articles.each do |article| %>
-    <li data-id="<%= article.id %>" data-unit-price="<%= '%.3f' % article.price %>">
-      <%= highlight article.to_s, @query_terms %>
-    </li>
-  <% end %>
-</ul>

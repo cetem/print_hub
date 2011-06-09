@@ -1,6 +1,6 @@
 <% scope = [:view, :prints] %>
 <% message = @cancelled ? t(:job_canceled, :scope => scope) :
   t(:job_not_canceled, :scope => scope) %>
-<% id = "cancel_print_job_#{@print_job.id}" %>
-$('<%= id %>').update('<%= message %>');
-$('<%= id %>').addClassName('<%= @cancelled ? 'green' : 'red' %>');
+<% id = "#cancel_print_job_#{@print_job.id}" %>
+$('<%= id %>').html('<%= message %>');
+$('<%= id %>').addClass('<%= @cancelled ? 'green' : 'red' %>');
