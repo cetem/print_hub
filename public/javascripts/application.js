@@ -74,13 +74,11 @@ var EventHandler = {
      * dinámico)
      */
   hideItem: function(e) {
-    Helper.hide(e.parents(e.data('target')));
+    Helper.hide($(e).parents($(e).data('target')));
 
-    var hiddenInput = e.prev('input[type=hidden].destroy');
+    $(e).prev('input[type=hidden].destroy').val('1');
 
-    if(hiddenInput.length != 0) { hiddenInput.val('1'); }
-
-    e.trigger('item:hidden', e);
+    $(e).trigger('item:hidden', $(e));
   },
 
   removeItem: function(e) {
@@ -94,14 +92,14 @@ var EventHandler = {
   toggleMenu: function(e) {
     var target = $(e.data('target'));
     
-    if(target.is(':visible')) {
+    if(target.is(':visible:not(:animated)')) {
       target.stop().slideUp(300);
       
       target.removeClass('hide_when_show_menu');
-    } else {
-      target.stop().slideDown(300);
+    } else if (target.is(':not(:animated)')) {
+      $('.hide_when_show_menu').stop().hide();
       
-      $('.hide_when_show_menu').hide();
+      target.stop().slideDown(300);
       
       target.addClass('hide_when_show_menu');
     }
