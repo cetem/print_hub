@@ -254,7 +254,7 @@
 }
 
 #fancybox-title {
-	font-family: Helvetica;
+	font-family: verdana, arial, helvetica, sans-serif;
 	font-size: 12px;
 	z-index: 1102;
 }

@@ -209,7 +209,7 @@ div.add_nested_item {
 .ui-autocomplete span.informal {
   display: block;
   white-space: normal;
-  font-size: .8em;
+  font-size: .75em;
   color: #676767;
 }
 
