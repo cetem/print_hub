@@ -1,6 +1,6 @@
 source 'http://rubygems.org'
 
-gem 'rails', '3.0.9.rc3'
+gem 'rails', '3.0.9'
 
 gem 'pg'
 gem 'authlogic'
@@ -28,6 +28,8 @@ group :development do
   gem 'capistrano'
   gem 'mongrel'
   gem 'ruby-debug'
+  # TODO: descomentar cuando solucionen la dependencia en Rails
+  gem 'require_relative'
 end
 
 group :test do
