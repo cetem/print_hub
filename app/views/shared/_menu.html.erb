@@ -16,6 +16,8 @@
                 :class => (:selected if current_controller == :settings)) %>
               <%= content_tag(:li, link_to(t(:payments, :scope => :menu), payments_path),
                 :class => (:selected if current_controller == :payments)) %>
+              <%= content_tag(:li, link_to(t(:stats, :scope => :menu), printer_stats_path),
+                :class => (:selected if current_controller == :stats)) %>
             </ul>
           </div>
         </li>

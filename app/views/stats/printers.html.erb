@@ -1,0 +1,48 @@
+<%= form_for :interval, :html => {:method => :get} do |f| %>
+  <table class="summary">
+    <thead>
+      <tr>
+        <th><%= t(:'view.stats.date_filter.start') %></th>
+        <th><%= t(:'view.stats.date_filter.end') %></th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <tr>
+        <td><%= f.text_field :from, :value => l(@from_date, :format => :minimal), :class => :calendar, :'data-time' => true %></td>
+        <td><%= f.text_field :to, :value => l(@to_date, :format => :minimal), :class => :calendar, :'data-time' => true %></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="actions">
+    <%= f.submit t(:'view.stats.date_filter.apply') %>
+  </div>
+<% end %>
+<% if @printers_count.blank? %>
+  <p><%= t(:'view.stats.empty_result') %></p>
+<% else %>
+  <table class="list">
+    <thead>
+      <tr>
+        <th><%= Print.human_attribute_name :printer %></th>
+        <th><%= PrintJob.human_attribute_name :printed_copies %></th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <% @printers_count.sort {|a,b| a[1] <=> b[1]}.each do |printer, count| %>
+        <tr>
+          <td><%= printer.blank? ? t(:'view.stats.scheduled_print') : printer %></td>
+          <td><%= count %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+  <section class="details">
+    <h3><%= show_stats_total(@printers_count.sum(&:second)) %></h3>
+  </section>
+<% end %>
+<nav class="links">
+  <%= link_to t(:'view.stats.users_title'), user_stats_path %>
+</nav>

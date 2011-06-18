@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110528130828) do
+ActiveRecord::Schema.define(:version => 20110617215237) do
 
   create_table "article_lines", :force => true do |t|
     t.integer  "print_id",                                                   :null => false
@@ -117,6 +117,7 @@ ActiveRecord::Schema.define(:version => 20110528130828) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "pages",                                                           :null => false
+    t.integer  "printed_pages",                                                   :null => false
   end
 
   add_index "print_jobs", ["document_id"], :name => "index_print_jobs_on_document_id"

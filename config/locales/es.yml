@@ -141,6 +141,7 @@
         pages: 'Páginas'
         price_per_copy: 'Precio por hoja'
         range: 'Rango'
+        printed_copies: 'Copias impresas'
         two_sided: 'Doble faz'
         document_id: 'Documento'
       setting:
@@ -339,6 +340,7 @@
     payments: 'Pagos'
     prints: 'Impresiones'
     settings: 'Configuración'
+    stats: 'Estadísticas'
     tags: 'Etiquetas'
     users: 'Usuarios'
 
@@ -569,6 +571,18 @@
       names:
         price_per_one_sided_copy: 'Precio por hoja simple faz'
         price_per_two_sided_copy: 'Precio por hoja doble faz'
+    stats:
+      date_filter:
+        start: 'Inicio'
+        end: 'Fin'
+        apply: 'Aplicar'
+      empty_result: 'Sin resultados para el rango de fechas seleccionado'
+      printers_title: 'Estadísticas por impresora'
+      scheduled_print: 'Impresiones programadas'
+      total:
+        one: 'De un total de una copia hecha en %{distance_time}'
+        other: 'De un total de %{count} copias hechas en %{distance_time}'
+      users_title: 'Estadísticas por usuario'
     tags:
       index_title: 'Listado de etiquetas'
       show_title: 'Detalle de etiqueta'

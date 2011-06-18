@@ -1,6 +1,9 @@
 class PrintJob < ActiveRecord::Base
   has_paper_trail
   
+  # Callbacks
+  before_save :put_printed_pages
+  
   # Atributos no persistentes
   attr_writer :range_pages
   attr_accessor :auto_document_name, :job_hold_until
@@ -58,6 +61,10 @@ class PrintJob < ActiveRecord::Base
     self.pages = self.document.pages if self.document
     self.price_per_copy = self.two_sided ?
       Setting.price_per_two_sided_copy : Setting.price_per_one_sided_copy
+  end
+  
+  def put_printed_pages
+    self.printed_pages = self.range_pages * self.copies
   end
 
   def options

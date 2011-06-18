@@ -36,7 +36,7 @@ class PrintJobTest < ActiveSupport::TestCase
 
     assert_difference 'PrintJob.count' do
       @print_job = PrintJob.create(
-        :copies => 1,
+        :copies => 2,
         :pages => document.pages,
         :price_per_copy => 0.10,
         :range => nil,
@@ -48,6 +48,7 @@ class PrintJobTest < ActiveSupport::TestCase
     end
 
     assert @print_job.reload.two_sided == false
+    assert_equal document.pages * 2, @print_job.printed_pages
     # El precio por copia no se puede alterar
     assert_equal Setting.price_per_one_sided_copy.to_s,
       '%.2f' % @print_job.price_per_copy
@@ -68,6 +69,7 @@ class PrintJobTest < ActiveSupport::TestCase
     end
 
     assert_equal '5.0', @print_job.price.to_s
+    assert_equal 50, @print_job.printed_pages
     # El precio por copia no se puede alterar
     assert_equal Setting.price_per_one_sided_copy.to_s,
       '%.2f' % @print_job.price_per_copy

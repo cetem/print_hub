@@ -210,7 +210,10 @@ jQuery(function($) {
     if($(this).data('time')) {
       $(this).datetimepicker({showOn: 'both'}).focus();
     } else {
-      $(this).datepicker({showOn: 'both'}).focus();
+      $(this).datepicker({
+        showOn: 'both',
+        onSelect: function() { $(this).datepicker('hide'); }
+      }).focus();
     }
   });
 
