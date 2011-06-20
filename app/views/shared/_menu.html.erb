@@ -4,14 +4,15 @@
     <ul>
       <% if current_user.admin %>
         <li class="submenu">
-          <%= link_to t(:admin, :scope => :menu), '#',
-            :'data-event' => 'toggleMenu', :'data-target' => '#submenu_admin' %>
+          <%= link_to_menu_with_nested_menu(:admin, :submenu_admin) %>
           <div id="submenu_admin" style="display: none;">
             <ul>
               <%= content_tag(:li, link_to(t(:users, :scope => :menu), users_path),
                 :class => (:selected if current_controller == :users)) %>
               <%= content_tag(:li, link_to(t(:customers, :scope => :menu), customers_path),
                 :class => (:selected if current_controller == :customers)) %>
+              <%= content_tag(:li, link_to(t(:bonuses, :scope => :menu), bonuses_path),
+                :class => (:selected if current_controller == :bonuses)) %>
               <%= content_tag(:li, link_to(t(:settings, :scope => :menu), settings_path),
                 :class => (:selected if current_controller == :settings)) %>
               <%= content_tag(:li, link_to(t(:payments, :scope => :menu), payments_path),
@@ -28,18 +29,8 @@
         :class => (:selected if current_controller == :documents)) %>
       <%= content_tag(:li, link_to(t(:tags, :scope => :menu), tags_path),
         :class => (:selected if current_controller == :tags)) %>
-      <li class="submenu">
-        <%= link_to t(:more, :scope => :menu), '#',
-          :'data-event' => 'toggleMenu', :'data-target' => '#submenu_more' %>
-        <div id="submenu_more" style="display: none;">
-          <ul>
-            <%= content_tag(:li, link_to(t(:articles, :scope => :menu), articles_path),
-              :class => (:selected if current_controller == :articles)) %>
-            <%= content_tag(:li, link_to(t(:bonuses, :scope => :menu), bonuses_path),
-              :class => (:selected if current_controller == :bonuses)) %>
-          </ul>
-        </div>
-      </li>
+      <%= content_tag(:li, link_to(t(:articles, :scope => :menu), articles_path),
+        :class => (:selected if current_controller == :articles)) %>
     </ul>
   </nav>
 <% end %>

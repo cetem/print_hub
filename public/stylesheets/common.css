@@ -485,6 +485,31 @@ span.money {
   font-size: .8em;
 }
 
+span.arrow_down, span.arrow_up {
+  border-style: dashed;
+  border-color: transparent;
+  border-width: .4em;
+  display: -moz-inline-box;
+  display: inline-block;
+  position: relative;
+  vertical-align: middle;
+  width: 0em;
+}
+
+span.arrow_down {
+  border-top-width: .5em;
+  border-top-style: solid;
+  border-top-color: #666666;
+  top: .25em;
+}
+
+span.arrow_up {
+  border-bottom-width: .5em;
+  border-bottom-style: solid;
+  border-bottom-color: #666666;
+  bottom: .25em;
+}
+
 table.list {
   width: 98%;
   border: 2px solid #333333;

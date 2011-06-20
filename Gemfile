@@ -28,8 +28,6 @@ group :development do
   gem 'capistrano'
   gem 'mongrel'
   gem 'ruby-debug'
-  # TODO: descomentar cuando solucionen la dependencia en Rails
-  gem 'require_relative'
 end
 
 group :test do

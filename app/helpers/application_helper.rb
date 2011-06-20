@@ -118,4 +118,11 @@ module ApplicationHelper
 
     result
   end
+  
+  def link_to_menu_with_nested_menu(name, submenu)
+    link_to(
+      raw("#{t(name, :scope => :menu)} <span class=\"arrow_down\"></span>"),
+      '#', :'data-event' => 'toggleMenu', :'data-target' => "##{submenu}"
+    )
+  end
 end

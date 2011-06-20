@@ -331,12 +331,12 @@
   menu:
     actions:
       logout: 'Salir'
-    admin: 'Administración »'
+    admin: 'Administración'
     articles: 'Artículos'
     bonuses: 'Bonificaciones'
     customers: 'Clientes'
     documents: 'Documentos'
-    more: 'Más »'
+    more: 'Más'
     payments: 'Pagos'
     prints: 'Impresiones'
     settings: 'Configuración'
