@@ -1,0 +1,24 @@
+<% i18n_scope = [:view, controller_name] %>
+<div class="filter">
+  <%= form_for :interval, :html => {:method => :get} do |f| %>
+    <table class="summary">
+      <thead>
+        <tr>
+          <th><%= t(:'date_filter.start', :scope => i18n_scope) %></th>
+          <th><%= t(:'date_filter.end', :scope => i18n_scope) %></th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr>
+          <td><%= calendar_text_field f, :from, true, from_date %></td>
+          <td><%= calendar_text_field f, :to, true, to_date %></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="actions">
+      <%= f.submit t(:'date_filter.apply', :scope => i18n_scope) %>
+    </div>
+  <% end %>
+</div>

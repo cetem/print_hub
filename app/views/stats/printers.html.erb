@@ -1,24 +1,6 @@
-<%= form_for :interval, :html => {:method => :get} do |f| %>
-  <table class="summary">
-    <thead>
-      <tr>
-        <th><%= t(:'view.stats.date_filter.start') %></th>
-        <th><%= t(:'view.stats.date_filter.end') %></th>
-      </tr>
-    </thead>
-
-    <tbody>
-      <tr>
-        <td><%= calendar_text_field f, :from, true, @from_date %></td>
-        <td><%= calendar_text_field f, :to, true, @to_date %></td>
-      </tr>
-    </tbody>
-  </table>
-
-  <div class="actions">
-    <%= f.submit t(:'view.stats.date_filter.apply') %>
-  </div>
-<% end %>
+<%= render :partial => 'shared/date_filter', :locals => {
+  :from_date => @from_date, :to_date => @to_date
+} %>
 <% if @printers_count.blank? %>
   <p><%= t(:'view.stats.empty_result') %></p>
 <% else %>

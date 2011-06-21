@@ -31,7 +31,8 @@ class CustomersControllerTest < ActionController::TestCase
           :name => 'Jar Jar',
           :lastname => 'Binks',
           :identification => '111',
-          :free_monthly_bonus => 0.0,
+          :free_monthly_bonus => '0.0',
+          :bonus_without_expiration => '0',
           :bonuses_password => '123',
           :bonuses_attributes => {
             :new_1 => {
@@ -80,7 +81,8 @@ class CustomersControllerTest < ActionController::TestCase
           :name => 'Updated name',
           :lastname => 'Updated lastname',
           :identification => '111x',
-          :free_monthly_bonus => 0.0,
+          :free_monthly_bonus => '0.0',
+          :bonus_without_expiration => '0',
           :bonuses_password => '123',
           :bonuses_attributes => {
             :new_1 => {
