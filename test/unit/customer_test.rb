@@ -17,6 +17,8 @@ class CustomerTest < ActiveSupport::TestCase
     assert_equal customers(:student).identification, @customer.identification
     assert_equal customers(:student).free_monthly_bonus,
       @customer.free_monthly_bonus
+    assert_equal customers(:student).bonus_without_expiration,
+      @customer.bonus_without_expiration
     assert_equal customers(:student).bonuses_password,
       @customer.bonuses_password
   end
@@ -30,6 +32,7 @@ class CustomerTest < ActiveSupport::TestCase
           :lastname => 'Binks',
           :identification => '111',
           :free_monthly_bonus => 0.0,
+          :bonus_without_expiration => false,
           :bonuses_password => '123'
         )
       end
@@ -46,7 +49,8 @@ class CustomerTest < ActiveSupport::TestCase
         :name => 'Jar Jar',
         :lastname => 'Binks',
         :identification => '111',
-        :free_monthly_bonus => 10.0
+        :free_monthly_bonus => 10.0,
+        :bonus_without_expiration => false
       )
       
       puts @customer.errors.full_messages.join('; ')
@@ -201,6 +205,25 @@ class CustomerTest < ActiveSupport::TestCase
   test 'can not use credit with wrong password' do
     assert_equal false, @customer.use_credit(100, 'wrong_password', true)
     assert_equal '500.0', @customer.free_credit.to_s
+  end
+  
+  test 'build monthly bonus' do
+    assert !@customer.bonus_without_expiration
+    assert_nil @customer.bonuses.detect { |b| b.valid_until.blank? }
+    
+    new_bonus = @customer.build_monthly_bonus
+    
+    assert_equal Date.today.at_end_of_month, new_bonus.valid_until
+    assert_difference('Bonus.count') { @customer.save }
+    assert_nil @customer.reload.bonuses.detect { |b| b.valid_until.blank? }
+    
+    assert @customer.update_attributes(:bonus_without_expiration => true)
+    
+    new_bonus = @customer.build_monthly_bonus
+    
+    assert_nil new_bonus.valid_until
+    assert_difference('Bonus.count') { @customer.save }
+    assert_not_nil @customer.reload.bonuses.detect { |b| b.valid_until.blank? }
   end
 
   test 'create monthly bonuses' do

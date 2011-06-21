@@ -12,7 +12,7 @@
         :maxlength => 15, :autocomplete => :off, :disabled => true %>
     </div>
     <div class="nested_item_field">
-      <%= f.text_field :valid_until, :class => :calendar %>
+      <%= calendar_text_field f, :valid_until %>
     </div>
     <div class="nested_item_actions">
       <%= link_to_remove_nested_item(f) %>

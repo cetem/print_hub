@@ -88,6 +88,7 @@
         lastname: 'Apellido'
         identification: 'Identificación (DNI, CUIT, Legajo, etc.)'
         free_monthly_bonus: 'Bonificación mensual'
+        bonus_without_expiration: 'Bonificación mensual sin caducidad'
         bonuses_password: 'Contraseña para bonificaciones'
         bonuses:
           one: 'Bonificación'
@@ -336,7 +337,6 @@
     bonuses: 'Bonificaciones'
     customers: 'Clientes'
     documents: 'Documentos'
-    more: 'Más'
     payments: 'Pagos'
     prints: 'Impresiones'
     settings: 'Configuración'

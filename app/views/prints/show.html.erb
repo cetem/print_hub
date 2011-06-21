@@ -90,8 +90,8 @@
     <tbody>
       <% @print.payments.each do |payment| %>
         <tr>
-          <td><%= payment.amount %></td>
-          <td><%= payment.paid %></td>
+          <td><%= number_to_currency payment.amount %></td>
+          <td><%= number_to_currency payment.paid %></td>
           <td><%= payment.paid_with_text %></td>
         </tr>
       <% end %>

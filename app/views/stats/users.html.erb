@@ -9,8 +9,8 @@
 
     <tbody>
       <tr>
-        <td><%= f.text_field :from, :value => l(@from_date, :format => :minimal), :class => :calendar, :'data-time' => true %></td>
-        <td><%= f.text_field :to, :value => l(@to_date, :format => :minimal), :class => :calendar, :'data-time' => true %></td>
+        <td><%= calendar_text_field f, :from, true, @from_date %></td>
+        <td><%= calendar_text_field f, :to, true, @to_date %></td>
       </tr>
     </tbody>
   </table>

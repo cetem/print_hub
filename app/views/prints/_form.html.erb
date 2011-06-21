@@ -36,7 +36,7 @@
   <div class="clear">
     <div class="field column_left">
       <%= f.label :scheduled_at %>
-      <%= f.text_field :scheduled_at, :class => :calendar, :'data-time' => true %>
+      <%= calendar_text_field f, :scheduled_at, true %>
     </div>
 
     <div class="field column_right">

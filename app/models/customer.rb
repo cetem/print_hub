@@ -53,9 +53,11 @@ class Customer < ActiveRecord::Base
 
   def build_monthly_bonus
     if self.free_monthly_bonus && self.free_monthly_bonus > 0
+      expiration = Date.today.at_end_of_month
+      
       self.bonuses.build(
         :amount => self.free_monthly_bonus,
-        :valid_until => Date.today.at_end_of_month
+        :valid_until => (expiration unless self.bonus_without_expiration)
       )
     end
   end
@@ -106,7 +108,7 @@ class Customer < ActiveRecord::Base
   end
 
   def self.create_monthly_bonuses
-    User.transaction do
+    Customer.transaction do
       begin
         Customer.with_monthly_bonus.each do |customer|
           customer.build_monthly_bonus
