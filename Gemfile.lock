@@ -1,6 +1,6 @@
 GIT
   remote: https://github.com/100hz/rails-settings.git
-  revision: 381949bf9d0f32e8ebf6e93bd2ce62940b245f46
+  revision: a85f9121f503d3ae9761bae651d52b2fa94ae7cc
   specs:
     rails-settings (0.1.1)
       rails (>= 3.0.0)
@@ -72,7 +72,7 @@ GEM
     gem_plugin (0.2.3)
     highline (1.6.2)
     i18n (0.5.0)
-    jquery-rails (1.0.11)
+    jquery-rails (1.0.12)
       railties (~> 3.0)
       thor (~> 0.14)
     linecache (0.46)

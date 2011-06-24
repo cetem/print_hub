@@ -24,4 +24,8 @@ module PrintsHelper
       :title => t(:'view.prints.customer_credit_detail.title'),
       :style => ('display: none;' unless customer)
   end
+  
+  def there_are_documents_for_printing?
+    !session[:documents_for_printing].blank?
+  end
 end

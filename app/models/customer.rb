@@ -115,7 +115,7 @@ class Customer < ActiveRecord::Base
           customer.save!
         end
 
-      rescue RecordInvalid
+      rescue ActiveRecord::RecordInvalid
         raise ActiveRecord::Rollback
       end
     end
