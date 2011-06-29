@@ -5,15 +5,6 @@ GIT
     rails-settings (0.1.1)
       rails (>= 3.0.0)
 
-GIT
-  remote: https://github.com/thoughtbot/paperclip.git
-  revision: 26ef20e192f8ff7ed3ed4f9e16b2b1e8782e7ff6
-  specs:
-    paperclip (2.3.10)
-      activerecord (>= 2.3.0)
-      activesupport (>= 2.3.2)
-      cocaine (>= 0.0.2)
-
 GEM
   remote: http://rubygems.org/
   specs:
@@ -98,6 +89,10 @@ GEM
       net-ssh (>= 1.99.1)
     paper_trail (2.2.5)
       rails (~> 3)
+    paperclip (2.3.12)
+      activerecord (>= 2.3.0)
+      activesupport (>= 2.3.2)
+      cocaine (>= 0.0.2)
     pdf-reader (0.9.2)
       Ascii85 (>= 0.9)
     pg (0.11.0)
@@ -123,7 +118,7 @@ GEM
       thor (~> 0.14.4)
     rake (0.9.2)
     rbx-require-relative (0.0.5)
-    rdoc (3.6.1)
+    rdoc (3.7)
     rghost (0.8.7.6)
     ruby-debug (0.10.4)
       columnize (>= 0.1)
@@ -139,7 +134,7 @@ GEM
       polyglot (>= 0.3.1)
     turn (0.8.2)
       ansi (>= 1.2.2)
-    tzinfo (0.3.28)
+    tzinfo (0.3.29)
     validates_timeliness (3.0.6)
       timeliness (~> 0.3.3)
     whenever (0.6.8)
@@ -160,7 +155,7 @@ DEPENDENCIES
   memcache-client
   mongrel
   paper_trail
-  paperclip!
+  paperclip
   pdf-reader
   pg
   rails (= 3.0.9)
