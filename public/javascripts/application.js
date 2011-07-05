@@ -178,7 +178,7 @@ jQuery(function($) {
   var eventList = $.map(EventHandler, function(v, k ) {return k;});
   
   // Para que los navegadores que no soportan HTML5 funcionen con autofocus
-  $('*[autofocus]:visible:first').focus();
+  $('*[autofocus]:not([readonly]):not([disabled]):visible:first').focus();
   
   $('a[data-event]').live('click', function(event) {
     if (event.stopped) return;
