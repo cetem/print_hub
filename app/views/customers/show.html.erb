@@ -18,6 +18,11 @@
   <%= number_to_currency(@customer.free_monthly_bonus) %>
 </p>
 
+<p>
+  <b><%= Customer.human_attribute_name :bonus_without_expiration %>:</b>
+  <%= t(@customer.bonus_without_expiration ? :yes : :no, :scope => :label) %>
+</p>
+
 <% unless @customer.current_bonuses.empty? %>
   <section class="nested_items">
     <h2>

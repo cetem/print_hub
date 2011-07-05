@@ -118,4 +118,21 @@ module ApplicationHelper
 
     result
   end
+  
+  def link_to_menu_with_nested_menu(name, submenu)
+    link_to(
+      raw("#{t(name, :scope => :menu)} <span class=\"arrow_down\"></span>"),
+      '#', :'data-event' => 'toggleMenu', :'data-target' => "##{submenu}"
+    )
+  end
+  
+  def calendar_text_field(form, attribute, time = false, value = nil)
+    value ||= form.object.send(attribute)
+    options = {:class => :calendar}
+    
+    options[:value] = l(value, :format => time ? :minimal : :default) if value
+    options[:'data-time'] = true if time
+    
+    form.text_field attribute, options
+  end
 end

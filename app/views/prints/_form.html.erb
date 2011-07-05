@@ -24,11 +24,8 @@
       <%= link_to_function 'X', "clearCustomer(); $(this).remove()",
         :class => :remove %>
     <% end %>
-    <div class="autocomplete_container">
-      <div class="autocomplete" style="display: none;"></div>
-    </div>
-    <div id="print_customer_credit_detail"></div>
     <%= f.hidden_field :customer_id, :class => :autocomplete_id %>
+    <div id="print_customer_credit_detail"></div>
     <%= hidden_field_tag :customer_free_credit,
       @print.customer.try(:free_credit), :id => :customer_free_credit %>
   </div>
@@ -36,7 +33,7 @@
   <div class="clear">
     <div class="field column_left">
       <%= f.label :scheduled_at %>
-      <%= f.text_field :scheduled_at, :class => :calendar, :'data-time' => true %>
+      <%= calendar_text_field f, :scheduled_at, true %>
     </div>
 
     <div class="field column_right">

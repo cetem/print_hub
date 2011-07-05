@@ -1,6 +1,6 @@
 source 'http://rubygems.org'
 
-gem 'rails', '3.0.9.rc3'
+gem 'rails', '3.0.9'
 
 gem 'pg'
 gem 'authlogic'
@@ -10,7 +10,7 @@ gem 'simple_autocomplete'
 gem 'validates_timeliness', '~> 3.0'
 gem 'rghost'
 gem 'will_paginate', '~> 3.0.beta'
-gem 'paperclip', :git => 'https://github.com/thoughtbot/paperclip.git'
+gem 'paperclip'
 gem 'foreigner'
 gem 'memcache-client'
 gem 'paper_trail'

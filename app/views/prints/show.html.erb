@@ -90,8 +90,8 @@
     <tbody>
       <% @print.payments.each do |payment| %>
         <tr>
-          <td><%= payment.amount %></td>
-          <td><%= payment.paid %></td>
+          <td><%= number_to_currency payment.amount %></td>
+          <td><%= number_to_currency payment.paid %></td>
           <td><%= payment.paid_with_text %></td>
         </tr>
       <% end %>
@@ -100,7 +100,7 @@
 </section>
 
 <nav class="links">
-  <%= link_to t(:'label.new'), new_print_path %> |
+  <%= link_to raw("<b>#{t(:'view.prints.new')}</b>"), new_print_path %> |
   <% if @print.pending_payment %>
     <%= link_to t(:'label.edit'), edit_print_path(@print) %> |
   <% end %>

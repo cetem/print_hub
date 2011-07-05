@@ -24,6 +24,10 @@
     <%= f.label :bonuses_password %>
     <%= f.password_field :bonuses_password, :value => '', :maxlength => 255 %>
   </div>
+  <div class="field">
+    <%= f.label :bonus_without_expiration %>
+    <%= f.check_box :bonus_without_expiration %>
+  </div>
   
   <section class="nested_items">
     <% @customer.bonuses.build if @customer.current_bonuses.empty? %>

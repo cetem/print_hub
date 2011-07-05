@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110528130828) do
+ActiveRecord::Schema.define(:version => 20110621191556) do
 
   create_table "article_lines", :force => true do |t|
     t.integer  "print_id",                                                   :null => false
@@ -35,7 +35,7 @@ ActiveRecord::Schema.define(:version => 20110528130828) do
     t.integer  "code",                                                       :null => false
   end
 
-  add_index "articles", ["code"], :name => "index_articles_on_code"
+  add_index "articles", ["code"], :name => "index_articles_on_code", :unique => true
 
   create_table "bonuses", :force => true do |t|
     t.decimal  "amount",      :precision => 15, :scale => 3, :null => false
@@ -51,14 +51,15 @@ ActiveRecord::Schema.define(:version => 20110528130828) do
   add_index "bonuses", ["valid_until"], :name => "index_bonuses_on_valid_until"
 
   create_table "customers", :force => true do |t|
-    t.string   "name",                                                             :null => false
+    t.string   "name",                                                                       :null => false
     t.string   "lastname"
-    t.string   "identification",                                                   :null => false
-    t.decimal  "free_monthly_bonus", :precision => 15, :scale => 3
-    t.integer  "lock_version",                                      :default => 0
+    t.string   "identification",                                                             :null => false
+    t.decimal  "free_monthly_bonus",       :precision => 15, :scale => 3
+    t.integer  "lock_version",                                            :default => 0
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "bonuses_password"
+    t.boolean  "bonus_without_expiration",                                :default => false, :null => false
   end
 
   add_index "customers", ["identification"], :name => "index_customers_on_identification", :unique => true
@@ -117,6 +118,7 @@ ActiveRecord::Schema.define(:version => 20110528130828) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "pages",                                                           :null => false
+    t.integer  "printed_pages",                                                   :null => false
   end
 
   add_index "print_jobs", ["document_id"], :name => "index_print_jobs_on_document_id"

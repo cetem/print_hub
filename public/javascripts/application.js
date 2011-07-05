@@ -44,7 +44,7 @@ var AutoComplete = {
           
           return false;
         },
-        open: function() { $('.ui-menu').css('width', input.width()); }
+        open: function() {$('.ui-menu').css('width', input.width());}
       });
       
       input.data('autocomplete')._renderItem = function(ul, item) {
@@ -93,13 +93,19 @@ var EventHandler = {
     var target = $(e.data('target'));
     
     if(target.is(':visible:not(:animated)')) {
-      target.stop().slideUp(300);
+      target.stop().slideUp(300, function() {
+        $('span.arrow_up', e).removeClass('arrow_up').addClass('arrow_down');
+      });
       
       target.removeClass('hide_when_show_menu');
     } else if (target.is(':not(:animated)')) {
       $('.hide_when_show_menu').stop().hide();
+      $('span.arrow_up', $('#menu_links')).removeClass('arrow_up').
+        addClass('arrow_down');
       
-      target.stop().slideDown(300);
+      target.stop().slideDown(300, function() {
+        $('span.arrow_down', e).removeClass('arrow_down').addClass('arrow_up');
+      });
       
       target.addClass('hide_when_show_menu');
     }
@@ -131,7 +137,7 @@ var Helper = {
     $(element).stop().slideUp(500, function() {
       $(this).remove();
       
-      if(jQuery.isFunction(callback)) { callback(); }
+      if(jQuery.isFunction(callback)) {callback();}
     });
   },
 
@@ -152,7 +158,7 @@ var Helper = {
   showLoading: function(element) {
     $('#loading_image').show();
 
-    if( $(element).is(':visible')) { $(element).attr('disabled', true); }
+    if( $(element).is(':visible')) {$(element).attr('disabled', true);}
   }
 }
 
@@ -210,7 +216,10 @@ jQuery(function($) {
     if($(this).data('time')) {
       $(this).datetimepicker({showOn: 'both'}).focus();
     } else {
-      $(this).datepicker({showOn: 'both'}).focus();
+      $(this).datepicker({
+        showOn: 'both',
+        onSelect: function() {$(this).datepicker('hide');}
+      }).focus();
     }
   });
 
