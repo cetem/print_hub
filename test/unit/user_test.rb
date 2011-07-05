@@ -26,6 +26,11 @@ class UserTest < ActiveSupport::TestCase
   # Prueba la creación de un usuario
   test 'create' do
     assert_difference 'User.count' do
+      avatar = Rack::Test::UploadedFile.new(
+        File.join(Rails.root, 'test', 'fixtures', 'files', 'test.gif'),
+        'image/gif'
+      )
+      
       @user = User.create(
         :name => 'New name',
         :last_name => 'New last name',
@@ -36,8 +41,16 @@ class UserTest < ActiveSupport::TestCase
         :password => 'new_password',
         :password_confirmation => 'new_password',
         :admin => true,
-        :enable => true
+        :enable => true,
+        :avatar => avatar
       )
+      
+      thumbs_dir = Pathname.new(@user.reload.avatar.path).dirname
+      # Original y 3 miñaturas
+      assert_equal 4, thumbs_dir.entries.reject(&:directory?).size
+      # Asegurar que las 3 miñaturas son imágenes y no están vacías
+      assert_equal 3,
+        thumbs_dir.entries.select { |f| f.extname == '.png' && !f.zero? }.size
     end
   end
 

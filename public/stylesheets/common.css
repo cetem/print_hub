@@ -276,10 +276,35 @@ div.image_container {
   padding: .5em;
   border: 2px solid #666666;
   -moz-border-radius: .5em;
+  -webkit-border-radius: .5em;
   border-radius: .5em;
   -moz-box-shadow: .5em .5em .5em #999999;
   -webkit-box-shadow: .5em .5em .5em #999999;
   box-shadow: .5em .5em .5em #999999;
+}
+
+div.image_container img {
+  float: left;
+}
+
+div.image_container.medium_style {
+  float: right;
+  margin: 0em 0em 2em 2em;
+}
+
+div.image_container.mini_style {
+  float: left;
+  margin: .25em;
+  -moz-box-shadow: .25em .25em .25em #999999;
+  -webkit-box-shadow: .25em .25em .25em #999999;
+  box-shadow: .25em .25em .25em #999999;
+}
+
+div.image_container.user_avatar {
+  padding: 0em;
+  -moz-border-radius: .25em;
+  -webkit-border-radius: .25em;
+  border-radius: .25em;
 }
 
 dl.details dt {

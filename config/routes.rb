@@ -14,9 +14,7 @@ PrintHubApp::Application.routes.draw do
     resources :prints, :only => [:index]
     resources :bonuses, :only => [:index]
     
-    member do
-      get :credit_detail
-    end
+    get :credit_detail, :on => :member
   end
 
   resources :settings, :only => [:index, :show, :edit, :update]
@@ -24,9 +22,7 @@ PrintHubApp::Application.routes.draw do
   scope ':status', :defaults => {:status => 'all'},
     :constraints => {:status => /pending|scheduled|all/} do
     resources :prints, :except => [:destroy] do
-      member do
-        put :cancel_job
-      end
+      put :cancel_job, :on => :member
       
       collection do
         get :autocomplete_for_customer_name
@@ -37,9 +33,7 @@ PrintHubApp::Application.routes.draw do
   end
 
   resources :documents do
-    collection do
-      get :autocomplete_for_tag_name
-    end
+    get :autocomplete_for_tag_name, :on => :collection
 
     member do
       post :add_to_next_print
@@ -56,12 +50,12 @@ PrintHubApp::Application.routes.draw do
   end
 
   resources :user_sessions, :only => [:new, :create] do
-    collection do
-      delete :destroy
-    end
+    delete :destroy, :on => :collection
   end
 
-  resources :users, :except => [:destroy]
+  resources :users, :except => [:destroy] do
+    get :avatar, :on => :member, :path => '/avatar/:style'
+  end
 
   # The priority is based upon order of creation:
   # first created -> highest priority.

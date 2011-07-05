@@ -1,4 +1,4 @@
-<%= form_for(@user) do |f| %>
+<%= form_for(@user, :html => { :multipart => true }) do |f| %>
   <%= show_error_messages(@user) %>
 
   <div class="field">
@@ -40,6 +40,10 @@
   <div class="field">
     <%= f.check_box :enable %>
     <%= f.label :enable %>
+  </div>
+  <div class="field">
+    <%= f.label :avatar %>
+    <%= f.file_field :avatar %>
   </div>
   <div class="actions">
     <%= f.hidden_field :lock_version %>

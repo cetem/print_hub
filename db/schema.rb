@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110621191556) do
+ActiveRecord::Schema.define(:version => 20110705183007) do
 
   create_table "article_lines", :force => true do |t|
     t.integer  "print_id",                                                   :null => false
@@ -185,20 +185,24 @@ ActiveRecord::Schema.define(:version => 20110621191556) do
   end
 
   create_table "users", :force => true do |t|
-    t.string   "name",                                 :null => false
-    t.string   "last_name",                            :null => false
-    t.string   "language",                             :null => false
-    t.string   "email",                                :null => false
-    t.string   "username",                             :null => false
-    t.string   "crypted_password",                     :null => false
-    t.string   "password_salt",                        :null => false
-    t.string   "persistence_token",                    :null => false
-    t.boolean  "admin",             :default => false, :null => false
+    t.string   "name",                                   :null => false
+    t.string   "last_name",                              :null => false
+    t.string   "language",                               :null => false
+    t.string   "email",                                  :null => false
+    t.string   "username",                               :null => false
+    t.string   "crypted_password",                       :null => false
+    t.string   "password_salt",                          :null => false
+    t.string   "persistence_token",                      :null => false
+    t.boolean  "admin",               :default => false, :null => false
     t.boolean  "enable"
-    t.integer  "lock_version",      :default => 0
+    t.integer  "lock_version",        :default => 0
     t.datetime "created_at"
     t.datetime "updated_at"
     t.string   "default_printer"
+    t.string   "avatar_file_name"
+    t.string   "avatar_content_type"
+    t.integer  "avatar_file_size"
+    t.datetime "avatar_updated_at"
   end
 
   add_index "users", ["email"], :name => "index_users_on_email", :unique => true

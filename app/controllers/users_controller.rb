@@ -7,7 +7,7 @@ class UsersController < ApplicationController
     @title = t :'view.users.index_title'
     @users = User.order("#{User.table_name}.username ASC").paginate(
       :page => params[:page],
-      :per_page => APP_LINES_PER_PAGE
+      :per_page => (APP_LINES_PER_PAGE / 4).round
     )
 
     respond_to do |format|
@@ -82,5 +82,22 @@ class UsersController < ApplicationController
   rescue ActiveRecord::StaleObjectError
     flash.alert = t :'view.users.stale_object_error'
     redirect_to edit_user_url(@user)
+  end
+  
+  # GET /users/1/avatar/thumb
+  def avatar
+    @user = User.find(params[:id])
+    file = @user.avatar.path(params[:style].try(:to_sym))
+
+    if File.exists?(file)
+      mime_type = Mime::Type.lookup_by_extension(File.extname(file)[1..-1])
+      
+      response.headers['Last-Modified'] = File.mtime(file).httpdate
+      response.headers['Cache-Control'] = 'private, no-store'
+
+      send_file file, :type => (mime_type || 'application/octet-stream')
+    else
+      redirect_to users_path, :notice => t(:'view.users.non_existent_avatar')
+    end
   end
 end

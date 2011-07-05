@@ -162,6 +162,7 @@
         password_confirmation: 'Confirmación'
         admin: 'Administrador'
         enable: 'Habilitado'
+        avatar: 'Imagen'
       user_session:
         username: 'Usuario'
         password: 'Contraseña'
@@ -604,6 +605,7 @@
       correctly_created: 'Usuario agregado correctamente.'
       correctly_updated: 'Usuario actualizado correctamente.'
       stale_object_error: 'El usuario no pudo ser actualizado, intente nuevamente.'
+      non_existent_avatar: 'Imagen inexistente'
     user_sessions:
       login: 'Ingresar'
       new_title: 'Iniciar sesión'

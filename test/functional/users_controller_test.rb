@@ -36,7 +36,8 @@ class UsersControllerTest < ActionController::TestCase
         :password => 'new_password',
         :password_confirmation => 'new_password',
         :admin => '1',
-        :enable => '1'
+        :enable => '1',
+        :avatar => fixture_file_upload('/files/test.gif', 'image/gif')
       }
     end
 
