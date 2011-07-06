@@ -30,6 +30,18 @@ class ActiveSupport::TestCase
       end
     end
   end
+  
+  def prepare_avatar_files
+    User.all.each do |user|
+      unless File.exists?(user.avatar.path)
+        FileUtils.mkdir_p File.dirname(user.avatar.path)
+        FileUtils.ln_s(
+          File.join(Rails.root, 'test', 'fixtures', 'files', 'test.gif'),
+          user.avatar.path
+        )
+      end
+    end
+  end
 
   def prepare_settings
     Setting.price_per_one_sided_copy = '0.10'

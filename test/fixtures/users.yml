@@ -10,6 +10,7 @@ administrator:
   persistence_token: 6cde0674657a8a313ce952df979de2830309aa4c11ca65805dd00bfdc65dbcc2f5e36718660a1d2e68c1a08c276d996763985d2f06fd3d076eb7bc4d97b1e317
   admin: true
   enable: true
+  avatar_file_name: avatar.gif
 
 operator:
   name: Operator
@@ -23,6 +24,7 @@ operator:
   persistence_token: 6cde0674657a8a313ce952df979de2830309aa4c11ca65805dd00bfdc65dbcc2f5e36718660a1d2e68c1a08c276d996763985d2f06fd3d076eb7bc4d97b1e317
   admin: false
   enable: true
+  avatar_file_name: avatar.gif
 
 second_operator:
   name: Second
@@ -36,6 +38,7 @@ second_operator:
   persistence_token: 6cde0674657a8a313ce952df979de2830309aa4c11ca65805dd00bfdc65dbcc2f5e36718660a1d2e68c1a08c276d996763985d2f06fd3d076eb7bc4d97b1e317
   admin: false
   enable: true
+  avatar_file_name: avatar.gif
 
 disabled_operator:
   name: Disabled
@@ -49,3 +52,4 @@ disabled_operator:
   persistence_token: 6cde0674657a8a313ce952df979de2830309aa4c11ca65805dd00bfdc65dbcc2f5e36718660a1d2e68c1a08c276d996763985d2f06fd3d076eb7bc4d97b1e317
   admin: false
   enable: false
+  avatar_file_name: avatar.gif

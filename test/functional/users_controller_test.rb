@@ -3,6 +3,8 @@ require 'test_helper'
 class UsersControllerTest < ActionController::TestCase
   setup do
     @user = users(:administrator)
+    
+    prepare_avatar_files
   end
 
   test 'should get index' do
@@ -79,5 +81,22 @@ class UsersControllerTest < ActionController::TestCase
     }
     assert_redirected_to users_path
     assert_equal 'Updated name', @user.reload.name
+  end
+  
+  test 'should not download avatar' do
+    UserSession.create(users(:administrator))
+    FileUtils.rm @user.avatar.path if File.exists?(@user.avatar.path)
+
+    assert !File.exists?(@user.avatar.path)
+    get :avatar, :id => @user.to_param, :style => :original
+    assert_redirected_to :action => :index
+    assert_equal I18n.t(:'view.users.non_existent_avatar'), flash.notice
+  end
+
+  test 'should download avatar' do
+    UserSession.create(users(:administrator))
+    get :avatar, :id => @user.to_param, :style => :original
+    assert_response :success
+    assert_equal File.open(@user.reload.avatar.path).read, @response.body
   end
 end
