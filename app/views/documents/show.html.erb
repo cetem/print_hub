@@ -47,6 +47,8 @@
     <% end %>
   </nav>
 </div>
-<script type="text/javascript">
-  $('a.fancybox', $('#<%= id %>')).fancybox({type: 'image'});
-</script>
+<% if request.xhr? %>
+  <script type="text/javascript">
+    $('a.fancybox', $('#<%= id %>')).fancybox({type: 'image'});
+  </script>
+<% end %>

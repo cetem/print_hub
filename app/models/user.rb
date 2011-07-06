@@ -4,9 +4,9 @@ class User < ActiveRecord::Base
     :path => ':rails_root/private/:attachment/:id_partition/:basename_:style.:extension',
     :url => '/users/:id/avatar/:style',
     :styles => {
-      :mini => { :geometry => '50x50>', :format => :png },
-      :thumb => { :geometry => '100x100>', :format => :png },
-      :medium => { :geometry => '300x300>', :format => :png }
+      :mini => { :geometry => '35x35>', :format => :png },
+      :thumb => { :geometry => '75x75>', :format => :png },
+      :medium => { :geometry => '200x200>', :format => :png }
     }
   acts_as_authentic do |c|
     c.crypto_provider = Authlogic::CryptoProviders::Sha512

@@ -389,7 +389,7 @@
     updatePrintJobPrice(printJob);
   });
 
-  $('.price_modifier').live('change', function() {
+  $('.price_modifier').live('change keyup', function() {
     var element = $(this);
     
     if (element.parents('.print_job')) {

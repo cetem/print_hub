@@ -7,7 +7,7 @@ class UsersController < ApplicationController
     @title = t :'view.users.index_title'
     @users = User.order("#{User.table_name}.username ASC").paginate(
       :page => params[:page],
-      :per_page => (APP_LINES_PER_PAGE / 4).round
+      :per_page => (APP_LINES_PER_PAGE / 2.5).round
     )
 
     respond_to do |format|

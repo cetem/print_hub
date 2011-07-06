@@ -222,6 +222,8 @@ jQuery(function($) {
       }).focus();
     }
   });
+  
+  $('a.fancybox').fancybox({type: 'image'});
 
   AutoComplete.observeAll();
 });
