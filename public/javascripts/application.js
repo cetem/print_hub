@@ -93,7 +93,7 @@ var EventHandler = {
     var target = $(e.data('target'));
     
     if(target.is(':visible:not(:animated)')) {
-      target.stop().slideUp(300, function() {
+      target.stop().fadeOut(300, function() {
         $('span.arrow_up', e).removeClass('arrow_up').addClass('arrow_down');
       });
       
@@ -103,7 +103,7 @@ var EventHandler = {
       $('span.arrow_up', $('#menu_links')).removeClass('arrow_up').
         addClass('arrow_down');
       
-      target.stop().slideDown(300, function() {
+      target.stop().fadeIn(300, function() {
         $('span.arrow_down', e).removeClass('arrow_down').addClass('arrow_up');
       });
       

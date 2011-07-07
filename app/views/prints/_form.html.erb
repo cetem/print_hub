@@ -114,18 +114,24 @@
         <%= f.fields_for :payments do |p_f| %>
           <tr>
             <td>
-              <%= p_f.text_field :amount, :value => '%.3f' % p_f.object.amount,
-                :id => "payment_#{p_f.object.paid_with}_amount", :maxlength => 15,
-                :readonly => true %>
+              <div class="nested_item_field">
+                <%= p_f.text_field :amount, :value => '%.3f' % p_f.object.amount,
+                  :id => "payment_#{p_f.object.paid_with}_amount", :maxlength => 15,
+                  :readonly => true %>
+              </div>
             </td>
             <td>
-              <%= p_f.text_field :paid, :value => '%.3f' % p_f.object.paid,
-                :id => "payment_#{p_f.object.paid_with}_paid", :maxlength => 15,
-                :readonly => p_f.object.bonus? %>
+              <div class="nested_item_field">
+                <%= p_f.text_field :paid, :value => '%.3f' % p_f.object.paid,
+                  :id => "payment_#{p_f.object.paid_with}_paid", :maxlength => 15,
+                  :readonly => p_f.object.bonus? %>
+              </div>
             </td>
             <td>
               <% if p_f.object.bonus? %>
-                <%= f.password_field :credit_password, :value => '', :size => 15, :maxlength => 255 %>
+                <div class="nested_item_field">
+                  <%= f.password_field :credit_password, :value => '', :size => 15, :maxlength => 255 %>
+                </div>
               <% else %>
                 &nbsp;
               <% end %>

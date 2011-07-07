@@ -3,13 +3,6 @@
   padding: 0px;
 }
 
-body {
-  color: #333333;
-  background-color: #ffffff;
-  font-family: verdana, arial, helvetica, sans-serif;
-  font-size: 12px;
-}
-
 a {
   color: #000;
 }
@@ -43,6 +36,13 @@ a[data-event="removeItem"]:hover,
 a[data-event="hideItem"]:hover {
   background: #aa0000;
   color: #ffffff;
+}
+
+body {
+  color: #333333;
+  background-color: #ffffff;
+  font-family: verdana, arial, helvetica, sans-serif;
+  font-size: 12px;
 }
 
 br.break {
@@ -124,19 +124,35 @@ div#loading_image {
 }
 
 div#login {
-  font-size: 1.2em;
+  font-size: 1.25em;
+  background-color: #dfdfdf;
   width: 20em;
-  margin: 5em auto;
-  padding: 1em 2em;
-  border: 2px solid #333333;
+  margin: 6em auto;
+  padding: 1.5em 3em;
+  border: .25em solid #f72;
+  -webkit-border-radius: .5em;
+  -moz-border-radius: .5em;
+  border-radius: .5em;
+  -webkit-box-shadow: 0em 0em 1em #999;
+  -moz-box-shadow: 0em 0em 1em #999;
+  box-shadow: 0em 0em 1em #999;
+  text-shadow: .1em .1em .25em #999;
 }
 
 div#login div.field > label {
   width: 100%;
+  margin-bottom: .25em;
 }
 
 div#login input[type="text"], div#login input[type="password"] {
   width: 100%;
+  padding: .25em .5em;
+}
+
+div#login input[type="submit"] {
+  font-size: 1em;
+  font-family: inherit;
+  padding: .25em 1em;
 }
 
 div#main_container {
@@ -149,12 +165,17 @@ div#main_container {
 div#main_menu {
   position: absolute;
   width: 100%;
-  height: 1.1em;
-  border-bottom: 2px solid #666666;
+  background: #dfdfdf;
+  line-height: 1.25em;
+  border-bottom: 4px solid #f72;
   top: 0px;
   left: 0px;
   padding: .5em 0em;
   min-width: 900px;
+  -webkit-box-shadow: 0em .25em .75em #999;
+  -moz-box-shadow: 0em .25em .75em #999;
+  box-shadow: 0em .25em .75em #999;
+  text-shadow: .1em .1em .1em #999;
 }
 
 div#notice {
@@ -223,10 +244,41 @@ div.dynamic_details {
 }
 
 div.field input[type="text"], div.field input[type="password"],
-div.field select, div.field textarea {
+div.field select, div.field textarea,
+div.nested_item_field input[type="text"], div.nested_item_field input[type="password"],
+div.nested_item_field select, div.nested_item_field textarea {
   font-size: inherit;
   font-family: inherit;
+  padding: .1em .25em;
   width: 30em;
+  text-shadow: 0px 1px 0px #fff;
+  outline: none;
+  background: -webkit-gradient(linear, left top, left bottom, from(#efefef), to(#ffffff));
+  background: -moz-linear-gradient(top,  #efefef,  #ffffff);
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+  border: 1px solid #999;
+  -webkit-box-shadow: 1px 1px 0px #efefef;
+  -moz-box-shadow: 1px 1px 0px #efefef;
+  box-shadow:  1px 1px 0px #efefef;
+}
+
+div.field input[type="text"]:focus, div.field input[type="password"]:focus,
+div.field select:focus, div.field textarea:focus,
+div.nested_item_field input[type="text"]:focus, div.nested_item_field input[type="password"]:focus,
+div.nested_item_field select:focus, div.nested_item_field textarea:focus {
+  border: 1px solid #f72;
+}
+
+div.field input[disabled], div.field input[readonly],
+div.field select[disabled], div.field select[readonly],
+div.field textarea[disabled], div.field textarea[readonly],
+div.nested_item_field input[disabled], div.nested_item_field input[readonly],
+div.nested_item_field select[disabled], div.nested_item_field select[readonly],
+div.nested_item_field textarea[disabled], div.nested_item_field textarea[readonly] {
+  background: #dedede;
+  color: #999;
 }
 
 div.field textarea {
@@ -236,6 +288,7 @@ div.field textarea {
 div.field > label {
   display: block;
   width: 30em;
+  padding: .1em .25em;
 }
 
 div.field input[type="checkbox"] + label {
@@ -332,14 +385,14 @@ h3.title {
 }
 
 input.field_with_errors, select.field_with_errors, text_area.field_with_errors {
-  border: 2px solid #cc0000;
+  border: 1px solid #cc0000 !important;
 }
 
 label.field_with_errors {
   color: #ffffff;
   font-weight: bold;
   background-color: #cc0000;
-  border: 2px solid #cc0000;
+  border: 1px solid #cc0000;
 }
 
 nav#menu_links {
@@ -347,15 +400,16 @@ nav#menu_links {
 }
 
 nav#menu_links a {
+  padding: .25em .5em;
   text-decoration: none;
 }
 
 nav#menu_links li.selected a {
-  color: #151215;
   font-weight: bold;
 }
 
 nav#menu_links li.submenu ul {
+  position: absolute;
   margin-top: 2px;
   padding: .5em;
   border: 1px dotted #666666;
