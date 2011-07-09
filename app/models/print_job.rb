@@ -71,8 +71,7 @@ class PrintJob < ActiveRecord::Base
     options = {
       'sides' => self.two_sided ? 'two-sided-long-edge' : 'one-sided'
     }
-
-    options['media'] = self.document.media if self.document
+    
     options['page-ranges'] = self.range unless self.range.blank?
     options['job-hold-until'] = self.job_hold_until if self.job_hold_until
 
@@ -126,7 +125,11 @@ class PrintJob < ActiveRecord::Base
       options = "-d #{printer} -n #{self.copies} -o fit-to-page "
       options += "-t #{user || 'ph'}-#{timestamp} "
       options += self.options.map { |o, v| "-o #{o}=#{v}" }.join(' ')
-      out = %x{lp #{options} "#{self.document.file.path}" 2>&1}
+      gs_command = "gs -q -dQUIET -dBATCH -dSAFER -dNOPAUSE -dNOPROMPT"
+      gs_command += " -sOutputFile=%stdout% -sDEVICE=pswrite"
+      gs_command += " -sPAPERSIZE=#{Document::MEDIA_TYPES.invert[self.document.media]}"
+      gs_command += " #{self.document.file.path}"
+      out = %x{#{gs_command} | lp #{options} 2>&1}
 
       self.job_id = out.match(/#{Regexp.escape(printer)}-\d+/).to_a[0] || '-'
     end
