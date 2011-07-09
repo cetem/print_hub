@@ -59,13 +59,13 @@ div#alert, div#login_error {
 div#alert, div#notice, div#login_error {
   position: fixed;
   bottom: .5em;
-  left: 5%;
-  right: 5%;
+  left: 0px;
+  right: 0px;
   font-weight: bold;
   font-size: 1.4em;
   text-align: center;
-  padding: .5em 1em;
-  border: 4px solid #c2bfb7;
+  padding: .75em 1em;
+  text-shadow: 0px 0px 1px #fff;
 }
 
 div#alert div#close_alert,
@@ -76,14 +76,17 @@ div#login_error div#close_login_error {
   right: 1em;
   font-size: .6em;
   font-weight: normal;
-  border: 2px solid #c2bfb7;
+  border: 2px solid #dfdfdf;
+  -webkit-border-radius: .5em;
+  -moz-border-radius: .5em;
+  border-radius: .5em;
 }
 
 div#alert div#close_alert a,
 div#notice div#close_notice a,
 div#login_error div#close_login_error a {
   background: inherit;
-  color: #c2bfb7;
+  color: #dfdfdf;
   text-decoration: none;
   font-size: 1.2em;
   font-weight: 600;
@@ -92,11 +95,17 @@ div#login_error div#close_login_error a {
 
 div#error_explanation {
   width: 100%;
-  border: 2px solid #cc0000;
   padding: .5em;
   padding-bottom: 0em;
   margin-bottom: 1.5em;
-  background-color: #f0f0f0;
+  background-color: #efefef;
+  border: 2px solid #f72;
+  -webkit-border-radius: .5em;
+  -moz-border-radius: .5em;
+  border-radius: .5em;
+  -webkit-box-shadow: 0em 0em 1em #f72;
+  -moz-box-shadow: 0em 0em 1em #f72;
+  box-shadow: 0em 0em 1em #f72;
 }
 
 div#error_explanation h2 {
@@ -106,8 +115,9 @@ div#error_explanation h2 {
   font-size: 1em;
   margin: -.5em;
   margin-bottom: 0em;
-  background-color: #cc0000;
-  color: #ffffff;
+  background-color: #f72;
+  color: #fff;
+  text-shadow: 0px 0px .1em #fff;
 }
 
 div#error_explanation ul {
@@ -118,6 +128,11 @@ div#error_explanation ul li {
   list-style: square;
 }
 
+div#error_header > h1 {
+  margin-top: 3em;
+  text-shadow: 0 0 4px white, 0 -5px 4px #FFFF33, 2px -10px 6px #FFDD33, -2px -15px 11px #FF8800, 2px -25px 18px #FF2200;
+}
+
 div#loading_image {
   position: fixed;
   bottom: .5em;
@@ -126,7 +141,7 @@ div#loading_image {
 }
 
 div#login {
-  font-size: 1.25em;
+  font-size: 1.1em;
   background-color: #dfdfdf;
   width: 20em;
   margin: 6em auto;
@@ -258,6 +273,12 @@ div.add_nested_item {
   margin: .5em 0em;
 }
 
+div.add_nested_item a {
+  text-decoration: none;
+  padding-bottom: .25em;
+  border-bottom: 1px dotted #f72;
+}
+
 .ui-autocomplete span.informal {
   display: block;
   white-space: normal;
@@ -322,7 +343,7 @@ div.field textarea {
 div.field > label {
   display: block;
   width: 30em;
-  padding: .1em .25em;
+  padding: .1em;
 }
 
 div.field input[type="checkbox"] + label {
@@ -449,14 +470,16 @@ h3.title {
 }
 
 input.field_with_errors, select.field_with_errors, text_area.field_with_errors {
-  border: 1px solid #cc0000 !important;
+  border: 1px solid #c00 !important;
+  -webkit-box-shadow: 0em 0em .25em #c00 !important;
+  -moz-box-shadow: 0em 0em .25em #c00 !important;
+  box-shadow: 0em 0em .25em #c00 !important;
+  
 }
 
 label.field_with_errors {
-  color: #ffffff;
-  font-weight: bold;
-  background-color: #cc0000;
-  border: 1px solid #cc0000;
+  color: #c00;
+  text-shadow: 0px 0px .1em #c00;
 }
 
 nav#menu_links {
@@ -566,7 +589,7 @@ nav.links div.pagination a, nav.links div.pagination span {
 
 nav.links div.pagination a:hover {
   color: #f72;
-  background: #dfdfdf;
+  background: #efefef;
   border: 2px solid #f72;
 }
 
@@ -696,7 +719,7 @@ span.arrow_up {
 
 table.list {
   width: 100%;
-  border: 2px solid #999;
+  border: 2px solid #666;
   border-collapse: collapse;
 }
 
@@ -709,7 +732,7 @@ table.list th {
   padding: .5em;
   color: #fff;
   background: #666;
-  border-bottom: 2px solid #999;
+  border-bottom: 2px solid #666;
   text-shadow: 0px 0px .1em #fff;
 }
 
