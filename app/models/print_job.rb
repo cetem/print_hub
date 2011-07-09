@@ -128,7 +128,7 @@ class PrintJob < ActiveRecord::Base
       gs_command = "gs -q -dQUIET -dBATCH -dSAFER -dNOPAUSE -dNOPROMPT"
       gs_command += " -sOutputFile=%stdout% -sDEVICE=pswrite"
       gs_command += " -sPAPERSIZE=#{Document::MEDIA_TYPES.invert[self.document.media]}"
-      gs_command += " #{self.document.file.path}"
+      gs_command += " -- \"#{self.document.file.path}\""
       out = %x{#{gs_command} | lp #{options} 2>&1}
 
       self.job_id = out.match(/#{Regexp.escape(printer)}-\d+/).to_a[0] || '-'
