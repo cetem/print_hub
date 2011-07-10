@@ -3,8 +3,7 @@ class Document < ActiveRecord::Base
   has_attached_file :file,
     :path => ':rails_root/private/:attachment/:id_partition/:basename_:style.:extension',
     :url => '/documents/:id/:style/download',
-    :styles => lambda { |attachment| attachment.instance.choose_styles },
-    :processors => [:pdf_thumb]
+    :styles => lambda { |attachment| attachment.instance.choose_styles }
   find_by_autocomplete :name
 
   # Constantes
@@ -90,22 +89,34 @@ class Document < ActiveRecord::Base
   end
 
   def choose_styles
+    thumb_opts = {:processors => [:pdf_thumb], :format => :png}
     styles = {
-      :pdf_thumb => {:resolution => 48, :format => :png, :page => 1},
-      :pdf_mini_thumb => {:resolution => 24, :format => :png, :page => 1}
+      :canonical => {:processors => [:pdf_canonical]},
+      :pdf_thumb => thumb_opts.merge({:resolution => 48, :page => 1}),
+      :pdf_mini_thumb => thumb_opts.merge({:resolution => 24, :page => 1})
     }
 
     styles.merge!(
-      :pdf_thumb_2 => {:resolution => 48, :format => :png, :page => 2},
-      :pdf_mini_thumb_2 => {:resolution => 24, :format => :png, :page => 2}
+      :pdf_thumb_2 => thumb_opts.merge({:resolution => 48, :page => 2}),
+      :pdf_mini_thumb_2 => thumb_opts.merge({:resolution => 24, :page => 2})
     ) if self.pages && self.pages > 1
 
     styles.merge!(
-      :pdf_thumb_3 => {:resolution => 48, :format => :png, :page => 3},
-      :pdf_mini_thumb_3 => {:resolution => 24, :format => :png, :page => 3}
+      :pdf_thumb_3 => thumb_opts.merge({:resolution => 48, :page => 3}),
+      :pdf_mini_thumb_3 => thumb_opts.merge({:resolution => 24, :page => 3})
     ) if self.pages && self.pages > 2
 
     styles
+  end
+  
+  def best_file_for_print
+    if self.file?
+      if File.exists?(self.file.path(:canonical))
+        self.file.path(:canonical)
+      elsif File.exists?(self.file.path)
+        self.file.path
+      end
+    end
   end
 
   # Invocado por PDF::Reader para establecer la cantidad de páginas del PDF

@@ -509,6 +509,7 @@
       has_related_print_jobs: 'El documento no puede ser eliminado, tiene impresiones relacionadas'
       documents_with_tag: 'Documentos con la etiqueta %{tag}'
       clear_documents_for_printing: 'Desmarcar todos los documentos a imprimir'
+      processing_document: 'Procesando documento, espere...'
       add_to_next_print:
         link: 'Agregar a impresión'
         title: 'Marca el documento para que sea INCLUIDO en la próxima impresión'

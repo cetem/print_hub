@@ -72,6 +72,7 @@ class PrintJob < ActiveRecord::Base
       'sides' => self.two_sided ? 'two-sided-long-edge' : 'one-sided'
     }
     
+    options['media'] = self.document.media if self.document
     options['page-ranges'] = self.range unless self.range.blank?
     options['job-hold-until'] = self.job_hold_until if self.job_hold_until
 
@@ -119,17 +120,13 @@ class PrintJob < ActiveRecord::Base
 
   def send_to_print(printer, user = nil)
     # Imprimir solamente si el archivo existe
-    if self.document.try(:file) && File.exists?(self.document.file.path)
+    if self.document.try(:file?) && self.document.best_file_for_print
       timestamp = Time.now.utc.strftime('%Y%m%d%H%M%S')
       user = user.try(:username)
       options = "-d #{printer} -n #{self.copies} -o fit-to-page "
       options += "-t #{user || 'ph'}-#{timestamp} "
       options += self.options.map { |o, v| "-o #{o}=#{v}" }.join(' ')
-      gs_command = "gs -q -dQUIET -dBATCH -dSAFER -dNOPAUSE -dNOPROMPT"
-      gs_command += " -sOutputFile=%stdout% -sDEVICE=pswrite"
-      gs_command += " -sPAPERSIZE=#{Document::MEDIA_TYPES.invert[self.document.media]}"
-      gs_command += " -- \"#{self.document.file.path}\""
-      out = %x{#{gs_command} | lp #{options} 2>&1}
+      out = %x{lp #{options} "#{self.document.best_file_for_print}" 2>&1}
 
       self.job_id = out.match(/#{Regexp.escape(printer)}-\d+/).to_a[0] || '-'
     end

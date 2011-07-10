@@ -61,7 +61,15 @@
     <%= f.submit %>
   </div>
 <% end %>
+<%= render :partial => 'shared/notice', :locals => {
+  :hide => true,
+  :message => t(:'view.documents.processing_document')
+} %>
 <script type="text/javascript">
+  $('form').submit(function() {
+    $('#notice').slideDown();
+  });
+  
   // Captura de atajos de teclado
   $(document).keydown(function(e) {
     var key = e.which;

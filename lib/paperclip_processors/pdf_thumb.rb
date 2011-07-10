@@ -1,4 +1,3 @@
-# TODO: mover a lib/paperclip_processors cuando solucionen el error con Rails 3
 module Paperclip
   class PdfThumb < Processor
 
