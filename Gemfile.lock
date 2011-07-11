@@ -89,7 +89,7 @@ GEM
       net-ssh (>= 1.99.1)
     paper_trail (2.2.5)
       rails (~> 3)
-    paperclip (2.3.14)
+    paperclip (2.3.15)
       activerecord (>= 2.3.0)
       activesupport (>= 2.3.2)
       cocaine (>= 0.0.2)
