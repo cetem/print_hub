@@ -526,6 +526,17 @@ nav#menu_links li.submenu ul {
   border: 1px solid #666;
   display: block;
   background: #dfdfdf;
+  opacity: .8;
+  -moz-transition: .3s opacity ease-in;
+  -webkit-transition: .3s opacity ease-in;
+  transition: .3s opacity ease-in;
+}
+
+nav#menu_links li.submenu ul:hover {
+  opacity: 1;
+  -moz-transition: .3s opacity ease-out;
+  -webkit-transition: .3s opacity ease-out;
+  transition: .3s opacity ease-out;
 }
 
 nav#menu_links li.submenu ul > li {
