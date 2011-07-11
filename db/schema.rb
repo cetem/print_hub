@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110705183007) do
+ActiveRecord::Schema.define(:version => 20110711174540) do
 
   create_table "article_lines", :force => true do |t|
     t.integer  "print_id",                                                   :null => false
@@ -79,6 +79,7 @@ ActiveRecord::Schema.define(:version => 20110705183007) do
     t.text     "tag_path"
     t.string   "media"
     t.boolean  "enable",            :default => true, :null => false
+    t.string   "file_fingerprint"
   end
 
   add_index "documents", ["code"], :name => "index_documents_on_code"

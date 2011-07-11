@@ -6,7 +6,6 @@ module Paperclip
 
       @format = options[:format] || :pdf
       @resolution = options[:resolution] || 1200
-      @paper_size = options[:paper_size] || :a4
     end
 
     def make
@@ -20,7 +19,6 @@ module Paperclip
         '-dNOPROMPT',
         '-dDOINTERPOLATE',
         '-sDEVICE=pdfwrite',
-        "-sPAPERSIZE=#{@paper_size}",
         "-r#{@resolution}x#{@resolution}",
         "-sOutputFile=\"#{file_path}\""
       ]

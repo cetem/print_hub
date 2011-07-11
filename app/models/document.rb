@@ -91,10 +91,7 @@ class Document < ActiveRecord::Base
   def choose_styles
     thumb_opts = {:processors => [:pdf_thumb], :format => :png}
     styles = {
-      :canonical => {
-        :processors => [:pdf_canonical],
-        :paper_size => MEDIA_TYPES.invert[self.media]
-      },
+      :canonical => {:processors => [:pdf_canonical]},
       :pdf_thumb => thumb_opts.merge({:resolution => 48, :page => 1}),
       :pdf_mini_thumb => thumb_opts.merge({:resolution => 24, :page => 1})
     }
