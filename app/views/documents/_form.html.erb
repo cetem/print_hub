@@ -26,6 +26,13 @@
     <%= f.text_area :description %>
   </div>
   <div class="field">
+    <%= f.label :file,
+      :class => (:field_with_errors unless @document.errors[:file_file_name].blank?) %>
+    <%= f.file_field :file,
+      :class => (:field_with_errors unless @document.errors[:file_file_name].blank?) %>
+    <%= link_to t(:'label.download'), @document.file.url if @document.file? %>
+  </div>
+  <div class="field">
     <%= f.check_box :enable %>
     <%= f.label :enable %>
   </div>
@@ -49,13 +56,6 @@
       :title => t(:'view.documents.add_tag_title') %>
   </div>
 
-  <div class="field">
-    <%= f.label :file,
-      :class => (:field_with_errors unless @document.errors[:file_file_name].blank?) %>
-    <%= f.file_field :file,
-      :class => (:field_with_errors unless @document.errors[:file_file_name].blank?) %>
-    <%= link_to_if @document.file.file?, t(:'label.download'), @document.file.url %>
-  </div>
   <div class="actions">
     <%= f.hidden_field :lock_version %>
     <%= f.submit %>

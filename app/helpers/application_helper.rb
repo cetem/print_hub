@@ -26,7 +26,7 @@ module ApplicationHelper
   end
 
   def default_javascripts
-    libs = [:defaults, 'utils', 'jquery.fancybox', 'jquery-ui-timepicker-addon', 'datepicker/jquery.ui.datepicker-es']
+    libs = [:defaults, 'utils', 'jquery.fancybox', 'jquery.filestyle', 'jquery-ui-timepicker-addon', 'datepicker/jquery.ui.datepicker-es']
     libs << {:cache => 'main'}
 
     javascript_include_tag *libs

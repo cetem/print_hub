@@ -224,6 +224,13 @@ jQuery(function($) {
   });
   
   $('a.fancybox').fancybox({type: 'image'});
+  
+  $('input[type="file"]').filestyle({ 
+    image: '/images/choose-file.png',
+    imageheight : 16,
+    imagewidth : 16,
+    width : 360
+  });
 
   AutoComplete.observeAll();
 });

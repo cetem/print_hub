@@ -291,7 +291,7 @@ div.actions, div.field {
 div.add_nested_item {
   clear: both;
   font-weight: bold;
-  margin: .5em 0em;
+  margin: .5em 0em 1em 0em;
 }
 
 div.add_nested_item a {
@@ -316,10 +316,15 @@ div.dynamic_details {
   padding: .5em 0em 0em 0em;
 }
 
+div.field input[type="file"] {
+  cursor: pointer !important;
+}
+
 div.field input[type="text"], div.field input[type="password"],
 div.field select, div.field textarea,
 div.nested_item_field input[type="text"], div.nested_item_field input[type="password"],
-div.nested_item_field select, div.nested_item_field textarea {
+div.nested_item_field select, div.nested_item_field textarea,
+div.field input.file {
   font-size: inherit;
   font-family: inherit;
   padding: .1em 0em;
@@ -340,7 +345,8 @@ div.nested_item_field select, div.nested_item_field textarea {
 div.field input[type="text"]:focus, div.field input[type="password"]:focus,
 div.field select:focus, div.field textarea:focus,
 div.nested_item_field input[type="text"]:focus, div.nested_item_field input[type="password"]:focus,
-div.nested_item_field select:focus, div.nested_item_field textarea:focus {
+div.nested_item_field select:focus, div.nested_item_field textarea:focus,
+div.field input.file:focus {
   border: 1px solid #f72;
   -webkit-box-shadow: 0px 0px 2px #f72;
   -moz-box-shadow: 0px 0px 2px #f72;
@@ -355,6 +361,10 @@ div.nested_item_field select[disabled], div.nested_item_field select[readonly],
 div.nested_item_field textarea[disabled], div.nested_item_field textarea[readonly] {
   background: #dedede;
   color: #999;
+}
+
+div.field input.file {
+  width: 30em !important;
 }
 
 div.field textarea {
@@ -676,7 +686,7 @@ section.nested_items {
 section.nested_items div.headers {
   clear: both;
   padding: .5em 0em;
-  border-bottom: 2px dotted #333333;
+  border-bottom: 1px solid #999;
 }
 
 section.nested_items div.headers h3 {
@@ -802,8 +812,8 @@ table.summary td {
 
 table.summary th {
   text-align: left;
-  padding: .4em .5em;
-  border-bottom: 1px dotted #333333;
+  padding: .5em;
+  border-bottom: 1px solid #999;
 }
 
 ul.raw {
