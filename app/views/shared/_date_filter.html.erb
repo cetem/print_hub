@@ -6,19 +6,29 @@
         <tr>
           <th><%= t(:'date_filter.start', :scope => i18n_scope) %></th>
           <th><%= t(:'date_filter.end', :scope => i18n_scope) %></th>
+          <th></th>
         </tr>
       </thead>
 
       <tbody>
         <tr>
-          <td><%= calendar_text_field f, :from, true, from_date %></td>
-          <td><%= calendar_text_field f, :to, true, to_date %></td>
+          <td>
+            <div class="field">
+              <%= calendar_text_field f, :from, true, from_date %>
+            </div>
+          </td>
+          <td>
+            <div class="field">
+              <%= calendar_text_field f, :to, true, to_date %>
+            </div>
+          </td>
+          <td>
+            <div class="actions">
+              <%= f.submit t(:'date_filter.apply', :scope => i18n_scope) %>
+            </div>
+          </td>
         </tr>
       </tbody>
     </table>
-
-    <div class="actions">
-      <%= f.submit t(:'date_filter.apply', :scope => i18n_scope) %>
-    </div>
   <% end %>
 </div>

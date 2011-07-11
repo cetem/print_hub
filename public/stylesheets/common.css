@@ -207,8 +207,26 @@ div#search {
 div#search input#search_query {
   width: 100%;
   margin: 0px;
-  font-size: 1.2em;
+  font-size: 1.25em;
   padding: .2em;
+  text-shadow: 0px 1px 0px #fff;
+  outline: none;
+  background: -webkit-gradient(linear, left top, left bottom, from(#efefef), to(#ffffff));
+  background: -moz-linear-gradient(top,  #efefef,  #ffffff);
+  -webkit-border-radius: 3px;
+  -moz-border-radius: 3px;
+  border-radius: 3px;
+  border: 1px solid #999;
+  -webkit-box-shadow: 1px 1px 0px #efefef;
+  -moz-box-shadow: 1px 1px 0px #efefef;
+  box-shadow:  1px 1px 0px #efefef;
+}
+
+div#search input#search_query:focus {
+  border: 1px solid #f72;
+  -webkit-box-shadow: 0px 0px 2px #f72;
+  -moz-box-shadow: 0px 0px 2px #f72;
+  box-shadow:  0px 0px 2px #f72;
 }
 
 div#search input[type="submit"] {
@@ -216,7 +234,7 @@ div#search input[type="submit"] {
 }
 
 div#search table {
-  width: 98%;
+  width: 100%;
   border: none;
   padding: 0px;
   margin: 0px;
@@ -230,7 +248,7 @@ div#search table td:nth-child(2), div#search table td:nth-child(3) {
   padding-left: 1em;
 }
 
-div.actions input[type="submit"] {
+div.actions input[type="submit"], div#search input[type="submit"] {
   padding: .1em 1em;
   display: inline-block;
   background: rgba(185,185,185,1);
@@ -247,18 +265,20 @@ div.actions input[type="submit"] {
   box-shadow: 0px 0px .1em rgba(0,0,0,0.5);
 }
 
-div.actions input[type="submit"]:hover:not(:disabled) {
+div.actions input[type="submit"]:hover:not(:disabled), div#search input[type="submit"]:hover:not(:disabled) {
   border: 1px solid #f72;
   text-shadow: 0px 0px 2px #999;
 }
 
-div.actions input[type="submit"]:active, div.actions input[type="submit"]:focus {
+div.actions input[type="submit"]:active, div.actions input[type="submit"]:focus,
+div#search input[type="submit"]:focus, div#search input[type="submit"]:active {
   background: rgba(255,255,255,1);
   background: -moz-linear-gradient(top,rgba(185,185,185,1),rgba(255,255,255,1));
   background: -webkit-gradient(linear,0% 0%,0% 100%,from(rgba(185,185,185,1)),to(rgba(255,255,255,1)));
 }
 
-div.actions input[type="submit"]:disabled {
+div.actions input[type="submit"]:disabled,
+div#search input[type="submit"]:disabled {
   color: rgba(0,0,0,0.4);
   text-shadow: 1px 1px 0px rgba(255,255,255,0.5);
   background: rgba(220,220,220,1);
@@ -770,6 +790,10 @@ table.summary {
   width: 100%;
   border-collapse: collapse;
   margin: 1em 0em;
+}
+
+table.summary div.actions {
+  text-align: right;
 }
 
 table.summary td {
