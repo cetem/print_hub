@@ -49,14 +49,11 @@ class DocumentTest < ActiveSupport::TestCase
     assert_equal 1, @document.pages
 
     thumbs_dir = Pathname.new(@document.file.path).dirname
-    # PDF original, PDF "canonico" y 2 miñaturas
-    assert_equal 4, thumbs_dir.entries.reject(&:directory?).size
+    # PDF original y 2 miñaturas
+    assert_equal 3, thumbs_dir.entries.reject(&:directory?).size
     # Asegurar que las 2 miñaturas son imágenes y no están vacías
     assert_equal 2,
       thumbs_dir.entries.select { |f| f.extname == '.png' && !f.zero? }.size
-    # Asegurar que hay 2 PDFs y que no están vacíos
-    assert_equal 2,
-      thumbs_dir.entries.select { |f| f.extname == '.pdf' && !f.zero? }.size
     
     # Asegurar la "limpieza" del directorio
     Pathname.new(@document.file.path).dirname.rmtree
@@ -86,14 +83,11 @@ class DocumentTest < ActiveSupport::TestCase
     assert_equal 3, @document.pages
 
     thumbs_dir = Pathname.new(@document.file.path).dirname
-    # PDF original, PDF "canonico" y 6 miñaturas
-    assert_equal 8, thumbs_dir.entries.reject(&:directory?).size
+    # PDF original y 6 miñaturas
+    assert_equal 7, thumbs_dir.entries.reject(&:directory?).size
     # Asegurar que las 6 miñaturas son imágenes y no están vacías
     assert_equal 6,
       thumbs_dir.entries.select { |f| f.extname == '.png' && !f.zero? }.size
-    # Asegurar que hay 2 PDFs y que no están vacíos
-    assert_equal 2,
-      thumbs_dir.entries.select { |f| f.extname == '.pdf' && !f.zero? }.size
     
     # Asegurar la "limpieza" del directorio
     Pathname.new(@document.file.path).dirname.rmtree
@@ -125,8 +119,8 @@ class DocumentTest < ActiveSupport::TestCase
 
     assert_equal 3, @document.reload.pages
     thumbs_dir = Pathname.new(@document.file.path).dirname
-    # PDF original, PDF "canonico" y 6 miñaturas
-    assert_equal 8, thumbs_dir.entries.reject(&:directory?).size
+    # PDF original y 6 miñaturas
+    assert_equal 7, thumbs_dir.entries.reject(&:directory?).size
 
     file = Rack::Test::UploadedFile.new(
       File.join(Rails.root, 'test', 'fixtures', 'files', 'test.pdf'),
@@ -139,8 +133,8 @@ class DocumentTest < ActiveSupport::TestCase
     end
 
     assert_equal 1, @document.reload.pages
-    # PDF original, PDF "canonico" y 2 miñaturas
-    assert_equal 4, thumbs_dir.entries.reject(&:directory?).size
+    # PDF original y 2 miñaturas
+    assert_equal 3, thumbs_dir.entries.reject(&:directory?).size
   end
 
   # Prueba de eliminación de documentos
@@ -159,16 +153,6 @@ class DocumentTest < ActiveSupport::TestCase
     assert_difference('Document.count', -1) do
       @document.update_attributes(:enable => false)
     end
-  end
-  
-  test 'best file for print' do
-    assert @document.best_file_for_print
-    assert_equal @document.file.path, @document.best_file_for_print
-    
-    @document.file.reprocess!
-    
-    assert_equal @document.file.path(:canonical), @document.best_file_for_print
-    assert_not_equal @document.file.path, @document.file.path(:canonical)
   end
 
   # Prueba que las validaciones del modelo se cumplan como es esperado

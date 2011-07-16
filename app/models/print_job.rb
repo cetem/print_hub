@@ -120,13 +120,13 @@ class PrintJob < ActiveRecord::Base
 
   def send_to_print(printer, user = nil)
     # Imprimir solamente si el archivo existe
-    if self.document.try(:file?) && self.document.best_file_for_print
+    if self.document.try(:file?) && File.exists?(self.document.file.path)
       timestamp = Time.now.utc.strftime('%Y%m%d%H%M%S')
       user = user.try(:username)
       options = "-d #{printer} -n #{self.copies} -o fit-to-page "
       options += "-t #{user || 'ph'}-#{timestamp} "
       options += self.options.map { |o, v| "-o #{o}=#{v}" }.join(' ')
-      out = %x{lp #{options} "#{self.document.best_file_for_print}" 2>&1}
+      out = %x{lp #{options} "#{self.document.file.path}" 2>&1}
 
       self.job_id = out.match(/#{Regexp.escape(printer)}-\d+/).to_a[0] || '-'
     end

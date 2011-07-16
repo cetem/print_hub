@@ -91,7 +91,6 @@ class Document < ActiveRecord::Base
   def choose_styles
     thumb_opts = {:processors => [:pdf_thumb], :format => :png}
     styles = {
-      :canonical => {:processors => [:pdf_canonical]},
       :pdf_thumb => thumb_opts.merge({:resolution => 48, :page => 1}),
       :pdf_mini_thumb => thumb_opts.merge({:resolution => 24, :page => 1})
     }
@@ -107,16 +106,6 @@ class Document < ActiveRecord::Base
     ) if self.pages && self.pages > 2
 
     styles
-  end
-  
-  def best_file_for_print
-    if self.file?
-      if File.exists?(self.file.path(:canonical))
-        self.file.path(:canonical)
-      elsif File.exists?(self.file.path)
-        self.file.path
-      end
-    end
   end
 
   # Invocado por PDF::Reader para establecer la cantidad de páginas del PDF
