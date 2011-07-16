@@ -1,7 +1,4 @@
-<p>
-  <b><%= Tag.human_attribute_name :name %></b>:
-  <%= @tag.name %>
-</p>
+<h2 class="title"><%= @tag %></h2>
 
 <nav class="links">
   <%= link_to t(:'label.edit'), edit_tag_path(@tag, :parent => params[:parent]) %> |

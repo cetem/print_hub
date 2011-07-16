@@ -1,13 +1,9 @@
 <% id = "document_details_#{@document.id}" %>
 <div id="<%= id %>" class="document_details">
   <div class="document_data">
+    <h2 class="title"><%= @document %></h2>
+    
     <dl class="details">
-      <dt><%= Document.human_attribute_name :code %>:</dt>
-      <dd><%= @document.code %></dd>
-
-      <dt><%= Document.human_attribute_name :name %>:</dt>
-      <dd><%= @document.name %></dd>
-
       <dt><%= Document.human_attribute_name :pages %>:</dt>
       <dd><%= @document.pages %></dd>
 

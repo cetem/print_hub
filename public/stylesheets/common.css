@@ -285,7 +285,7 @@ div#search input[type="submit"]:disabled {
 }
 
 div.actions, div.field {
-  margin-bottom: 1em;
+  margin-bottom: .5em;
 }
 
 div.add_nested_item {
@@ -295,25 +295,15 @@ div.add_nested_item {
 }
 
 div.add_nested_item a {
+  color: #333;
   text-decoration: none;
   padding-bottom: .25em;
   border-bottom: 1px dotted #f72;
 }
 
-.ui-autocomplete span.informal {
-  display: block;
-  white-space: normal;
-  font-size: .75em;
-  color: #676767;
-}
-
-.ui-autocomplete span.label {
-  white-space: normal;
-}
-
 div.dynamic_details {
   clear: both;
-  padding: .5em 0em 0em 0em;
+  padding: 1em 0em 0em 0em;
 }
 
 div.field input[type="file"] {
@@ -488,8 +478,9 @@ form.button_to input[type="submit"]:active, form.button_to input[type="submit"]:
 }
 
 h2.title {
-  font-size: 1.5em;
+  font-size: 1.25em;
   margin-bottom: 1em;
+  text-shadow: 1px 1px .25em #999;
 }
 
 h3.title {
@@ -679,14 +670,14 @@ section.details h3 {
 section.nested_items {
   display: block;
   clear: both;
-  padding-left: 1.5em;
-  border-left: 2px dotted #f72;
+  padding-left: 1em;
+  border-left: 2px solid #f72;
 }
 
 section.nested_items div.headers {
   clear: both;
-  padding: .5em 0em;
-  border-bottom: 1px solid #999;
+  padding: .25em;
+  background: #dedede;
 }
 
 section.nested_items div.headers h3 {
@@ -710,9 +701,10 @@ section.nested_items div.items div.nested_item_actions {
   margin-right: 1em;
 }
 
-section.nested_items h2 {
+section.nested_items h2:not(.title) {
   font-size: 1.2em;
-  margin: 1em 0em .5em -.8em;
+  margin: 1em 0em .5em -.5em;
+  text-shadow: 1px 1px .25em #999;
 }
 
 section.nested_items input[type="text"],
@@ -812,8 +804,8 @@ table.summary td {
 
 table.summary th {
   text-align: left;
-  padding: .5em;
-  border-bottom: 1px solid #999;
+  padding: .25em;
+  background: #dedede;
 }
 
 ul.raw {
@@ -822,6 +814,17 @@ ul.raw {
 
 .bold {
   font-weight: bold;
+}
+
+.ui-autocomplete span.informal {
+  display: block;
+  white-space: normal;
+  font-size: .75em;
+  color: #676767;
+}
+
+.ui-autocomplete span.label {
+  white-space: normal;
 }
 
 .ui-datepicker-trigger {

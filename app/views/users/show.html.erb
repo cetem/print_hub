@@ -1,28 +1,21 @@
 <%= show_avatar(@user, :medium) %>
 
-<p>
-  <b><%= User.human_attribute_name :name %></b>:
-  <%= @user.name %>
-</p>
+<h2 class="title"><%= @user %></h2>
 
 <p>
-  <b><%= User.human_attribute_name :last_name %></b>:
-  <%= @user.last_name %>
+  <%= mail_to @user.email %>
 </p>
 
-<p>
-  <b><%= User.human_attribute_name :language %></b>:
-  <%= @user.language %>
-</p>
-
-<p>
-  <b><%= User.human_attribute_name :email %></b>:
-  <%= @user.email %>
-</p>
+<br />
 
 <p>
   <b><%= User.human_attribute_name :username %></b>:
   <%= @user.username %>
+</p>
+
+<p>
+  <b><%= User.human_attribute_name :language %></b>:
+  <%= t(@user.language, :scope => :lang) %>
 </p>
 
 <p>

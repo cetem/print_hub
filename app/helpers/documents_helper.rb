@@ -14,7 +14,7 @@ module DocumentsHelper
         image_style = style.to_s.sub(/_mini/, '').to_sym
 
         content_tag :a, thumb, :href => document.file.url(image_style),
-          :rel => "doc_image_#{document.id}", :title => document.name,
+          :'data-rel' => "doc_image_#{document.id}", :title => document.name,
           :class => :fancybox
       end
     end.compact.join("\n").html_safe

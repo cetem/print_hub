@@ -806,13 +806,13 @@
 				selectedArray = [];
 				selectedIndex = 0;
 
-				var rel = $(this).attr('rel') || '';
+				var rel = $(this).attr('rel') || $(this).data('rel') || '';
 
 				if (!rel || rel == '' || rel === 'nofollow') {
 					selectedArray.push(this);
 
 				} else {
-					selectedArray = $("a[rel=" + rel + "], area[rel=" + rel + "]");
+					selectedArray = $("a[rel=" + rel + "], area[rel=" + rel + "], a[data-rel=" + rel + "], area[data-rel=" + rel + "]");
 					selectedIndex = selectedArray.index( this );
 				}
 

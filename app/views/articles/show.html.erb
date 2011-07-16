@@ -1,22 +1,10 @@
-<p>
-  <b><%= Article.human_attribute_name :code %>:</b>
-  <%= @article.code %>
-</p>
+<h2 class="title"><%= @article %></h2>
 
-<p>
-  <b><%= Article.human_attribute_name :name %>:</b>
-  <%= @article.name %>
-</p>
+<p><%= number_to_currency @article.price %></p>
 
-<p>
-  <b><%= Article.human_attribute_name :price %>:</b>
-  <%= number_to_currency @article.price %>
-</p>
+<br />
 
-<p>
-  <b><%= Article.human_attribute_name :description %>:</b>
-  <%= @article.description %>
-</p>
+<p><%= @article.description %></p>
 
 <nav class="links">
   <%= link_to t(:'label.edit'), edit_article_path(@article) %> |
