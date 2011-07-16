@@ -151,7 +151,10 @@ class DocumentsControllerTest < ActionController::TestCase
     UserSession.create(users(:administrator))
     get :download, :id => @document.to_param, :style => :original
     assert_response :success
-    assert_equal File.open(@document.reload.file.path).read, @response.body
+    assert_equal(
+      File.open(@document.reload.file.path, :encoding => 'ASCII-8BIT').read,
+      @response.body
+    )
   end
   
   test 'should add document to next print' do

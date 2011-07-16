@@ -35,7 +35,7 @@ class PrintTest < ActiveSupport::TestCase
         :user => users(:administrator),
         :scheduled_at => '',
         :print_jobs_attributes => {
-          :new_1 => {
+          '1' => {
             :copies => 1,
             # No importa el precio, se establece desde la configuración
             :price_per_copy => 1000,
@@ -46,7 +46,7 @@ class PrintTest < ActiveSupport::TestCase
           }
         },
         :article_lines_attributes => {
-          :new_1 => {
+          '1' => {
             :article_id => articles(:binding).id,
             :units => 1,
             # No importa el precio, se establece desde el artículo
@@ -54,7 +54,7 @@ class PrintTest < ActiveSupport::TestCase
           }
         },
         :payments_attributes => {
-          :new_1 => {
+          '1' => {
             :amount => 36.79,
             :paid => 36.79
           }
@@ -82,7 +82,7 @@ class PrintTest < ActiveSupport::TestCase
         :user => users(:administrator),
         :scheduled_at => '',
         :article_lines_attributes => {
-          :new_1 => {
+          '1' => {
             :article_id => articles(:binding).id,
             :units => 1,
             # No importa el precio, se establece desde el artículo
@@ -90,7 +90,7 @@ class PrintTest < ActiveSupport::TestCase
           }
         },
         :payments_attributes => {
-          :new_1 => {
+          '1' => {
             :amount => 1.79,
             :paid => 1.79
           }
@@ -117,7 +117,7 @@ class PrintTest < ActiveSupport::TestCase
           :user => users(:administrator),
           :scheduled_at => 2.hours.from_now,
           :print_jobs_attributes => {
-            :new_1 => {
+            '1' => {
               :copies => 1,
               # No importa el precio, se establece desde la configuración
               :price_per_copy => 1000,
@@ -128,7 +128,7 @@ class PrintTest < ActiveSupport::TestCase
             }
           },
           :payments_attributes => {
-            :new_1 => {
+            '1' => {
               :amount => 35.00,
               :paid => 35.00
             }
@@ -157,7 +157,7 @@ class PrintTest < ActiveSupport::TestCase
           :scheduled_at => '',
           :avoid_printing => true,
           :print_jobs_attributes => {
-            :new_1 => {
+            '1' => {
               :copies => 1,
               # No importa el precio, se establece desde la configuración
               :price_per_copy => 1000,
@@ -168,7 +168,7 @@ class PrintTest < ActiveSupport::TestCase
             }
           },
           :payments_attributes => {
-            :new_1 => {
+            '1' => {
               :amount => 35.00,
               :paid => 35.00
             }
@@ -199,7 +199,7 @@ class PrintTest < ActiveSupport::TestCase
         :scheduled_at => '',
         :credit_password => 'student',
         :print_jobs_attributes => {
-          :new_1 => {
+          '1' => {
             :copies => 1,
             :price_per_copy => 0.10,
             :two_sided => false,
@@ -207,7 +207,7 @@ class PrintTest < ActiveSupport::TestCase
           } # 350 páginas = $35.00
         },
         :article_lines_attributes => {
-          :new_1 => {
+          '1' => {
             :article_id => articles(:binding).id,
             :units => 1,
             # No importa el precio, se establece desde el artículo
@@ -215,7 +215,7 @@ class PrintTest < ActiveSupport::TestCase
           }
         },
         :payments_attributes => {
-          :new_1 => {
+          '1' => {
             :amount => 36.79,
             :paid => 36.79,
             :paid_with => Payment::PAID_WITH[:bonus]
@@ -247,7 +247,7 @@ class PrintTest < ActiveSupport::TestCase
         :scheduled_at => '',
         :credit_password => 'wrong_password',
         :print_jobs_attributes => {
-          :new_1 => {
+          '1' => {
             :copies => 1,
             :price_per_copy => 0.10,
             :two_sided => false,
@@ -255,7 +255,7 @@ class PrintTest < ActiveSupport::TestCase
           } # 350 páginas = $35.00
         },
         :payments_attributes => {
-          :new_1 => {
+          '1' => {
             :amount => 35.00,
             :paid => 35.00,
             :paid_with => Payment::PAID_WITH[:bonus]
@@ -281,7 +281,7 @@ class PrintTest < ActiveSupport::TestCase
             :scheduled_at => '',
             :credit_password => 'student',
             :print_jobs_attributes => {
-              :new_1 => {
+              '1' => {
                 :copies => 100,
                 :price_per_copy => 0.10,
                 :two_sided => false,
@@ -289,7 +289,7 @@ class PrintTest < ActiveSupport::TestCase
               } # 35000 páginas = $3500.00
             },
             :article_lines_attributes => {
-              :new_1 => {
+              '1' => {
                 :article_id => articles(:binding).id,
                 :units => 1,
                 # No importa el precio, se establece desde el artículo
@@ -297,11 +297,11 @@ class PrintTest < ActiveSupport::TestCase
               }
             },
             :payments_attributes => {
-              :new_1 => {
+              '1' => {
                 :amount => 3001.79,
                 :paid => 3001.79
               },
-              :new_2 => {
+              '2' => {
                 :amount => 500.00,
                 :paid => 500.00,
                 :paid_with => Payment::PAID_WITH[:bonus]
@@ -336,7 +336,7 @@ class PrintTest < ActiveSupport::TestCase
           :avoid_printing => true,
           :include_documents => [documents(:math_book).id],
           :payments_attributes => {
-            :new_1 => {
+            '1' => {
               :amount => 24.50,
               :paid => 24.50
             }

@@ -1,6 +1,5 @@
 class DocumentsController < ApplicationController
   before_filter :require_user, :load_documents_for_printing
-  hidden_actions :load_documents_for_printing
   
   layout lambda { |controller| controller.request.xhr? ? false : 'application' }
 

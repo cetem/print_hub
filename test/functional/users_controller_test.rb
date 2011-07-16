@@ -97,6 +97,9 @@ class UsersControllerTest < ActionController::TestCase
     UserSession.create(users(:administrator))
     get :avatar, :id => @user.to_param, :style => :original
     assert_response :success
-    assert_equal File.open(@user.reload.avatar.path).read, @response.body
+    assert_equal(
+      File.open(@user.reload.avatar.path, :encoding => 'ASCII-8BIT').read,
+      @response.body
+    )
   end
 end

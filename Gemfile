@@ -26,8 +26,8 @@ end
 
 group :development do
   gem 'capistrano'
-  gem 'mongrel'
-  gem 'ruby-debug'
+  gem 'ruby-debug19'
+  gem 'mongrel', '1.2.0.pre2'
 end
 
 group :test do
