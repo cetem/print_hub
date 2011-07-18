@@ -26,11 +26,9 @@
     <%= f.text_area :description %>
   </div>
   <div class="field">
-    <%= f.label :file,
-      :class => (:field_with_errors unless @document.errors[:file_file_name].blank?) %>
+    <%= document_file_label f %>
     <%= f.file_field :file,
       :class => (:field_with_errors unless @document.errors[:file_file_name].blank?) %>
-    <%= link_to t(:'label.download'), @document.file.url if @document.file? %>
   </div>
   <div class="field">
     <%= f.check_box :enable %>

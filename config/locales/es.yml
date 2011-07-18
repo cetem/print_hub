@@ -510,6 +510,7 @@
       documents_with_tag: 'Documentos con la etiqueta %{tag}'
       clear_documents_for_printing: 'Desmarcar todos los documentos a imprimir'
       processing_document: 'Procesando documento, espere...'
+      download: 'Descargar versión actual'
       add_to_next_print:
         link: 'Agregar a impresión'
         title: 'Marca el documento para que sea INCLUIDO en la próxima impresión'

@@ -55,4 +55,15 @@ module DocumentsHelper
     content_tag :span, raw(content),
       :id => "document_for_use_in_next_print_#{document.id}"
   end
+  
+  def document_file_label(form)
+    label = Document.human_attribute_name :file
+    
+    if @document.file?
+      label += " | #{link_to t(:'view.documents.download'), @document.file.url}"
+    end
+    
+    form.label :file, raw(label),
+      :class => (:field_with_errors unless @document.errors[:file_file_name].blank?)
+  end
 end
