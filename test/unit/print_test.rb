@@ -471,14 +471,13 @@ class PrintTest < ActiveSupport::TestCase
   test 'pending payment' do
     assert @print.has_pending_payment?
     assert @print.pending_payment
-
-    payment = @print.payments.first
-
+    
     assert @print.update_attributes(
       :payments_attributes => {
-        payment.id => {
-          :id => payment.id,
-          :paid => payment.amount
+        '0' => {
+          :id => payments(:math_payment).id,
+          :amount => payments(:math_payment).amount,
+          :paid => payments(:math_payment).amount
         }
       }
     )

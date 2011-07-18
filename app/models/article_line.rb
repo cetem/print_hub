@@ -20,8 +20,8 @@ class ArticleLine < ActiveRecord::Base
   belongs_to :article
   autocomplete_for :article, :name, :name => :auto_document
 
-  def initialize(attributes = nil)
-    super(attributes)
+  def initialize(attributes = nil, options = {})
+    super(attributes, options)
 
     self.units ||= 1
     self.unit_price = self.article.price if self.article

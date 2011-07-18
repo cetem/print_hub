@@ -27,8 +27,8 @@ class Bonus < ActiveRecord::Base
   # Relaciones
   belongs_to :customer
 
-  def initialize(attributes = nil)
-    super(attributes)
+  def initialize(attributes = nil, options = {})
+    super(attributes, options)
 
     self.amount ||= 0.0
     self.remaining = self.amount

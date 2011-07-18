@@ -48,8 +48,8 @@ class Document < ActiveRecord::Base
   has_and_belongs_to_many :tags, :order => 'name ASC'
   autocomplete_for :tag, :name, :name => :auto_tag
 
-  def initialize(attributes = nil)
-    super(attributes)
+  def initialize(attributes = nil, options = {})
+    super(attributes, options)
 
     self.pages ||= 1
   end

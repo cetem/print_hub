@@ -12,4 +12,4 @@ books:
 
 physics:
   name: Physics
-  parent_id: <%= Fixtures.identify(:notes) %>
+  parent_id: <%= ActiveRecord::Fixtures.identify(:notes) %>

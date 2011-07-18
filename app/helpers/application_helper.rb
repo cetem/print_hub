@@ -19,17 +19,11 @@ module ApplicationHelper
   end
 
   def default_stylesheets
-    sheets = ['common', 'jquery/ui-custom', 'jquery/fancybox']
-    sheets << {:cache => 'main'}
-
-    stylesheet_link_tag *sheets
+    stylesheet_link_tag 'application'
   end
 
   def default_javascripts
-    libs = [:defaults, 'utils', 'jquery.fancybox', 'jquery.filestyle', 'jquery-ui-timepicker-addon', 'datepicker/jquery.ui.datepicker-es']
-    libs << {:cache => 'main'}
-
-    javascript_include_tag *libs
+    javascript_include_tag 'application'
   end
 
   # Devuelve una etiqueta con el mismo nombre que el del objeto para que sea

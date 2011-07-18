@@ -22,14 +22,14 @@ class Payment < ActiveRecord::Base
   # Relaciones
   belongs_to :payable, :polymorphic => true
 
-  def initialize(attributes = nil)
-    super(attributes)
+  def initialize(attributes = nil, options = {})
+    super(attributes, options)
 
     self.amount ||= 0.0
     self.paid ||= 0.0
     self.paid_with ||= PAID_WITH[:cash]
   end
-
+  
   def paid_with_text
     I18n.t(:"view.payments.paid_with.#{PAID_WITH.invert[self.paid_with]}")
   end

@@ -1,15 +1,20 @@
 source 'http://rubygems.org'
 
-gem 'rails', '3.0.9'
+gem 'rails', :git => 'https://github.com/rails/rails.git',
+  :branch => '3-1-stable'
 
 gem 'pg'
 gem 'authlogic'
 gem 'rails-settings', :git => 'https://github.com/100hz/rails-settings.git'
 gem 'jquery-rails'
+gem 'sass'
+gem 'sass-rails', '~> 3.1.0.rc'
+gem 'coffee-script'
+gem 'therubyracer'
 gem 'simple_autocomplete'
 gem 'validates_timeliness', '~> 3.0'
 gem 'rghost'
-gem 'will_paginate', '~> 3.0.beta'
+gem 'will_paginate', :git => 'https://github.com/JackDanger/will_paginate.git'
 gem 'paperclip'
 gem 'foreigner'
 gem 'memcache-client'
@@ -21,7 +26,7 @@ gem 'cups'
 gem 'pdf-reader'
 
 group :production do
-  gem 'smurf'
+  gem 'uglifier'
 end
 
 group :development do

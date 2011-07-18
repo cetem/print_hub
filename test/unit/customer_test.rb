@@ -52,8 +52,6 @@ class CustomerTest < ActiveSupport::TestCase
         :free_monthly_bonus => 10.0,
         :bonus_without_expiration => false
       )
-      
-      puts @customer.errors.full_messages.join('; ')
     end
 
     assert_equal 10.0, @customer.bonuses.first.amount

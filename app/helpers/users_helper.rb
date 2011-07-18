@@ -21,7 +21,7 @@ module UsersHelper
         :class => :fancybox
     else
       default_name = "default_avatar_#{style}.gif"
-      image = File.join(Rails.root, 'public', 'images', default_name)
+      image = File.join(Rails.root, 'app', 'assets', 'images', default_name)
       image_dimensions = Paperclip::Geometry.from_file image
       default_image_tag = image_tag default_name, :alt => user.to_s,
         :size => image_dimensions.to_s

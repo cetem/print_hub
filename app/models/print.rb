@@ -55,8 +55,8 @@ class Print < ActiveRecord::Base
   accepts_nested_attributes_for :payments, :allow_destroy => false,
     :reject_if => proc { |attributes| attributes['amount'].to_f <= 0 }
 
-  def initialize(attributes = nil)
-    super(attributes)
+  def initialize(attributes = nil, options = {})
+    super(attributes, options)
 
     self.user = UserSession.find.try(:user) || self.user rescue self.user
     

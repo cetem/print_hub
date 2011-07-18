@@ -53,8 +53,8 @@ class PrintJob < ActiveRecord::Base
   belongs_to :document
   autocomplete_for :document, :name, :name => :auto_document
 
-  def initialize(attributes = nil)
-    super(attributes)
+  def initialize(attributes = nil, options = {})
+    super(attributes, options)
 
     self.two_sided = true if self.two_sided.nil?
     self.copies ||= 1
