@@ -13,7 +13,7 @@ GIT
 
 GIT
   remote: https://github.com/rails/rails.git
-  revision: 2b33d05c24e719616955bc039e4871ebce91d215
+  revision: d963ef96e6877a27a0ec2c1ea76dad603836cc44
   branch: 3-1-stable
   specs:
     actionmailer (3.1.0.rc4)
@@ -30,7 +30,6 @@ GIT
       rack-mount (~> 0.8.1)
       rack-test (~> 0.6.0)
       sprockets (~> 2.0.0.beta.10)
-      tzinfo (~> 0.3.29)
     activemodel (3.1.0.rc4)
       activesupport (= 3.1.0.rc4)
       bcrypt-ruby (~> 2.1.4)
@@ -97,7 +96,7 @@ GEM
       activerecord (>= 3.0.0)
     gem_plugin (0.2.3)
     highline (1.6.2)
-    hike (1.1.0)
+    hike (1.2.0)
     i18n (0.6.0)
     jquery-rails (1.0.12)
       railties (~> 3.0)

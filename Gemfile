@@ -31,11 +31,11 @@ end
 
 group :development do
   gem 'capistrano'
-  gem 'ruby-debug19'
+  gem 'ruby-debug19', :require => 'ruby-debug'
   gem 'mongrel', '1.2.0.pre2'
 end
 
 group :test do
-  gem 'turn'
+  gem 'turn', :require => false
   gem 'ruby-prof'
 end
