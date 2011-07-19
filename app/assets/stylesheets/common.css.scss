@@ -503,6 +503,11 @@ nav#menu_links {
       opacity: .8;
       @include transition(.3s, opacity, ease-in);
 
+      &:hover {
+        opacity: 1;
+        @include transition(.3s, opacity, ease-out);
+      }
+
       > li {
         display: block;
 
@@ -512,11 +517,6 @@ nav#menu_links {
           white-space: nowrap;
         }
       }
-    }
-
-    &:hover {
-      opacity: 1;
-      @include transition(.3s, opacity, ease-out);
     }
   }
 
@@ -529,11 +529,18 @@ nav#menu_links {
 nav#user_actions {
   position: absolute;
   right: 1em;
-  top: .5em;
+  top: .25em;
 
   div#username {
     display: inline;
+    color: #fff;
+    background: $main-color;
+    padding: .25em .5em;
+    line-height: 1.5em;
     font-weight: bold;
+    text-shadow: 1px 1px 1px rgba(0, 0, 0, .3);
+    box-shadow: 0 2px 2px -1px rgba(0, 0, 0, .4), 0 .9em .5em -0.2em rgba(255, 255, 255, .2) inset;
+    @include rounded-corners(.25em);
   }
 
   > ul, > ul > li {
@@ -620,7 +627,7 @@ section.nested_items {
   div.headers {
     clear: both;
     padding: .25em;
-    background: #dedede;
+    background: #efefef;
 
     h3 {
       font-size: 1em;
@@ -742,7 +749,7 @@ table.summary {
   th {
     text-align: left;
     padding: .25em;
-    background: #dedede;
+    background: #efefef;
   }
 }
 
