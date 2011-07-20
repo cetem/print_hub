@@ -1,0 +1,7 @@
+for_tomorrow:
+  scheduled_at: <%= 1.day.from_now.to_s(:db) %>
+  customer: student_without_bonus
+
+from_yesterday:
+  scheduled_at: <%= 1.day.ago.to_s(:db) %>
+  customer: student_without_bonus

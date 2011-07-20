@@ -6,6 +6,9 @@
  *= require common
  *= require nested-items
  *= require documents
+ *= require orders
+ *= require tags
+ *= require users
  *= require jquery/fancybox
  *= require jquery/ui-custom
 */

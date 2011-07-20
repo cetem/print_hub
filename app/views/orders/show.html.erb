@@ -1,0 +1,9 @@
+<p>
+  <b><%= Order.human_attribute_name :scheduled_at %>:</b>
+  <%= l @order.scheduled_at, :format => :short if @order.scheduled_at %>
+</p>
+
+<nav class="links">
+  <%= link_to t(:'label.edit'), edit_order_path(@order) %> |
+  <%= link_to t(:'label.list'), orders_path %>
+</nav>

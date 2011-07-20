@@ -1,0 +1,12 @@
+<%= form_for(@order) do |f| %>
+  <%= show_error_messages(@order) %>
+
+  <div class="field">
+    <%= f.label :scheduled_at %><br />
+    <%= f.datetime_select :scheduled_at %>
+  </div>
+  <div class="actions">
+    <%= f.hidden_field :lock_version %>
+    <%= f.submit %>
+  </div>
+<% end %>

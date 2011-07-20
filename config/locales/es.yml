@@ -55,6 +55,7 @@
       bonus: 'Bonificación'
       customer: 'Cliente'
       document: 'Documento'
+      order: 'Pedido'
       payment: 'Pago'
       print: 'Impresión'
       print_job: 'Trabajo de impresión'
@@ -102,6 +103,8 @@
         description: 'Descripción'
         file: 'Archivo'
         file_file_name: 'Archivo'
+      order:
+        scheduled_at: 'Programado para'
       payment:
         amount: 'Monto'
         paid: 'Monto abonado'
@@ -521,6 +524,14 @@
       media_type:
         a4: 'A4'
         legal: 'Oficio'
+    orders:
+      index_title: 'Listado de pedidos'
+      show_title: 'Detalle de pedido'
+      new_title: 'Nuevo pedido'
+      edit_title: 'Modificar pedido'
+      correctly_created: 'Pedido agregado correctamente.'
+      correctly_updated: 'Pedido actualizado correctamente.'
+      stale_object_error: 'El pedido no pudo ser actualizado, intente nuevamente.'
     payments:
       count:
         one: 'Suma de un pago'

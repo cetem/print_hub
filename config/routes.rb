@@ -4,6 +4,8 @@ PrintHubApp::Application.routes.draw do
   match 'user_stats(.:format)' => 'stats#users', :as => 'user_stats',
     :via => :get
 
+  resources :orders
+  
   resources :bonuses, :only => [:index]
 
   resources :articles

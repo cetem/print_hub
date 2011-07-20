@@ -1,22 +1,4 @@
-$main-color: #f72;
-
-@mixin box-shadow($h-offset: 0em, $v-offset: 0em, $blur-offset: .25em, $color: #999) {
-  -moz-box-shadow: $h-offset $v-offset $blur-offset $color;
-  -webkit-box-shadow: $h-offset $v-offset $blur-offset $color;
-  box-shadow: $h-offset $v-offset $blur-offset $color;
-}
-
-@mixin rounded-corners($radius) {
-  -moz-border-radius: $radius;
-  -webkit-border-radius: $radius;
-  border-radius: $radius;
-}
-
-@mixin transition($time, $property, $function) {
-  -moz-transition: $time $property $function;
-  -webkit-transition: $time $property $function;
-  transition: $time $property $function;
-}
+@import "mixins";
 
 * {
   margin: 0px;
@@ -144,34 +126,6 @@ div#loading_image {
   bottom: .5em;
   left: 1em;
   padding: 1px 5px;
-}
-
-div#login {
-  font-size: 1.1em;
-  background-color: #dfdfdf;
-  width: 20em;
-  margin: 6em auto;
-  padding: 1.5em 3em;
-  border: .25em solid $main-color;
-  @include rounded-corners(.5em);
-  @include box-shadow(0em, 0em, 1em, #999);
-  text-shadow: .1em .1em .25em #999;
-  
-  div.field > label {
-    width: 100%;
-    margin-bottom: .25em;
-  }
-
-  input[type="text"], input[type="password"] {
-    width: 100%;
-    padding: .25em .5em;
-  }
-
-  input[type="submit"] {
-    font-size: 1em;
-    font-family: inherit;
-    padding: .25em 1em;
-  }
 }
 
 div#main_container {
@@ -598,17 +552,6 @@ nav.links {
   }
 }
 
-nav.path {
-  display: block;
-  margin-bottom: 1em;
-
-  ul, ul li {
-    display: inline;
-    list-style: none;
-    margin-right: .5em;
-  }
-}
-
 p.note {
   margin: 1em 0em;
 }
@@ -661,11 +604,6 @@ section.nested_items {
   input[type="text"], input[type="password"], select, textarea {
     width: 98%;
   }
-}
-
-section.tags {
-  display: block;
-  margin: 1em 0em;
 }
 
 span.money {
@@ -786,9 +724,9 @@ ul.raw {
 }
 
 .green {
-  color: #00cc00;
+  color: #0c0;
 }
 
 .red {
-  color: #cc0000;
+  color: #c00;
 }
