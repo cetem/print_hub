@@ -1,6 +1,7 @@
 <table class="list">
   <thead>
     <tr>
+      <th><%= Order.human_attribute_name :customer %></th>
       <th><%= Order.human_attribute_name :scheduled_at %></th>
       <th colspan="3"></th>
     </tr>
@@ -9,6 +10,7 @@
   <tbody>
     <% @orders.each do |order| %>
       <tr class="<%= cycle(:even, :odd) %>">
+        <td><%= order.customer %></td>
         <td><%= l order.scheduled_at, :format => :short if order.scheduled_at %></td>
         <td><%= link_to t(:'label.show'), order %></td>
         <td><%= link_to t(:'label.edit'), edit_order_path(order) %></td>

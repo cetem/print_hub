@@ -2,8 +2,8 @@
   <%= show_error_messages(@order) %>
 
   <div class="field">
-    <%= f.label :scheduled_at %><br />
-    <%= f.datetime_select :scheduled_at %>
+    <%= f.label :scheduled_at %>
+    <%= calendar_text_field f, :scheduled_at, true %>
   </div>
   <div class="actions">
     <%= f.hidden_field :lock_version %>

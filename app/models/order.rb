@@ -12,6 +12,6 @@ class Order < ActiveRecord::Base
   def initialize(attributes = nil, options = {})
     super(attributes, options)
     
-    self.scheduled_at ||= 12.hours.from_now
+    self.scheduled_at ||= 1.day.from_now
   end
 end
