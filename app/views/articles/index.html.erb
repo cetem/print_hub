@@ -10,7 +10,7 @@
 
   <tbody>
     <% @articles.each do |article| %>
-      <tr>
+      <tr class="<%= cycle(:even, :odd) %>">
         <td><%= article.code %></td>
         <td><%= article.name %></td>
         <td><%= number_to_currency article.price %></td>

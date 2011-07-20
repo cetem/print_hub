@@ -10,7 +10,7 @@
 
   <tbody>
     <% @customers.each do |customer| %>
-      <tr>
+      <tr class="<%= cycle(:even, :odd) %>">
         <td><%= customer.to_s %> (<%= show_link_to_customer_prints(customer) %>)</td>
         <td><%= customer.identification %></td>
         <td><%= number_to_currency(customer.free_monthly_bonus || 0) %></td>
