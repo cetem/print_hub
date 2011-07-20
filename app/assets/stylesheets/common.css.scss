@@ -62,7 +62,7 @@ div#alert, div#notice, div#login_error {
   font-size: 1.4em;
   text-align: center;
   padding: .75em 1em;
-  text-shadow: 0px 0px 1px #fff;
+  text-shadow: 0px 0px 1px #ccc;
   opacity: .8;
   
   .close {
@@ -489,7 +489,7 @@ nav#user_actions {
     display: inline;
     color: #fff;
     background: $main-color;
-    padding: .25em .5em;
+    padding: 2px 6px;
     line-height: 1.5em;
     font-weight: bold;
     text-shadow: 1px 1px 1px rgba(0, 0, 0, .3);
@@ -568,6 +568,7 @@ section.nested_items {
   clear: both;
   padding-left: 1em;
   border-left: 2px solid $main-color;
+  margin-bottom: .5em;
 
   div.headers {
     clear: both;
@@ -653,7 +654,7 @@ table.list {
     color: #fff;
     background: #666;
     border-bottom: 2px solid #666;
-    text-shadow: 0px 0px .1em #fff;
+    text-shadow: 0px 0px .1em #ccc;
   }
 
   tbody {
