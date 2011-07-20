@@ -564,11 +564,13 @@ nav.links {
       padding: 1px 2px;
       text-decoration: none;
       border: 2px solid #cecece;
+      @include transition(.25s, border, ease-in);
 
       &:hover {
         color: $main-color;
         background: #efefef;
         border: 2px solid $main-color;
+        @include transition(.25s, border, ease-out);
       }
     }
 
@@ -577,7 +579,7 @@ nav.links {
       @include rounded-corners(.25em);
     }
 
-    em {
+    em, span.current {
       font-style: normal;
       background: #333;
       color: #fff;
