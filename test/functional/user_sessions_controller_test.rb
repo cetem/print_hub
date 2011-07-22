@@ -23,8 +23,21 @@ class UserSessionsControllerTest < ActionController::TestCase
     assert_equal @user, user_session.user
     assert_redirected_to prints_url
   end
-
+  
   test 'should not create a user session' do
+    post :create, :user_session => {
+      :username => @user.username,
+      :password => 'wrong'
+    }
+
+    assert_nil UserSession.find
+    assert_response :success
+    assert_not_nil assigns(:user_session)
+    assert_select '#error_body', false
+    assert_template 'user_sessions/new'
+  end
+
+  test 'should not create a user session with a disabled user' do
     disabled_user = users(:disabled_operator)
 
     post :create, :user_session => {
@@ -32,7 +45,7 @@ class UserSessionsControllerTest < ActionController::TestCase
       :password => 'disabled_operator123'
     }
 
-    assert_nil user_session = UserSession.find
+    assert_nil UserSession.find
     assert_response :success
     assert_not_nil assigns(:user_session)
     assert_select '#error_body', false
@@ -40,6 +53,10 @@ class UserSessionsControllerTest < ActionController::TestCase
   end
 
   test 'should destroy user session' do
+    UserSession.create(@user)
+
+    assert_not_nil UserSession.find
+    
     delete :destroy
 
     assert_nil UserSession.find

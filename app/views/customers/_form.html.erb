@@ -17,6 +17,18 @@
     <%= f.text_field :identification, :maxlength => 255 %>
   </div>
   <div class="field">
+    <%= f.label :email %>
+    <%= f.text_field :email, :maxlength => 255 %>
+  </div>
+  <div class="field">
+    <%= f.label :password %>
+    <%= f.password_field :password, :maxlength => 255 %>
+  </div>
+  <div class="field">
+    <%= f.label :password_confirmation %>
+    <%= f.password_field :password_confirmation, :maxlength => 255 %>
+  </div>
+  <div class="field">
     <%= f.label :free_monthly_bonus %>
     <%= f.text_field :free_monthly_bonus, :maxlength => 15 %>
   </div>

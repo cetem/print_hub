@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110720010207) do
+ActiveRecord::Schema.define(:version => 20110720230224) do
 
   create_table "article_lines", :force => true do |t|
     t.integer  "print_id",                                                   :null => false
@@ -60,8 +60,14 @@ ActiveRecord::Schema.define(:version => 20110720010207) do
     t.datetime "updated_at"
     t.string   "bonuses_password"
     t.boolean  "bonus_without_expiration",                                :default => false, :null => false
+    t.string   "email"
+    t.string   "crypted_password"
+    t.string   "password_salt"
+    t.string   "persistence_token"
+    t.string   "perishable_token"
   end
 
+  add_index "customers", ["email"], :name => "index_customers_on_email", :unique => true
   add_index "customers", ["identification"], :name => "index_customers_on_identification", :unique => true
 
   create_table "documents", :force => true do |t|

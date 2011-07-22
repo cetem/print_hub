@@ -8,6 +8,23 @@ class ApplicationControllerTest < ActionController::TestCase
     @controller.send :'response=', @response
     @controller.send :'request=', @request
   end
+  
+  test 'current customer session' do
+    assert_nil @controller.send(:current_customer_session)
+
+    CustomerSession.create(customers(:student))
+
+    assert_not_nil @controller.send(:current_customer_session)
+  end
+
+  test 'current customer' do
+    assert_nil @controller.send(:current_customer)
+
+    CustomerSession.create(customers(:student))
+
+    assert_not_nil @controller.send(:current_customer)
+    assert_equal customers(:student).id, @controller.send(:current_customer).id
+  end
 
   test 'current user session' do
     assert_nil @controller.send(:current_user_session)
@@ -24,6 +41,26 @@ class ApplicationControllerTest < ActionController::TestCase
 
     assert_not_nil @controller.send(:current_user)
     assert_equal users(:administrator).id, @controller.send(:current_user).id
+  end
+  
+  test 'require customer' do
+    assert !@controller.send(:require_customer)
+    assert_redirected_to new_customer_session_url
+    assert_equal I18n.t(:'messages.must_be_logged_in'),
+      @controller.send(:flash)[:notice]
+
+    CustomerSession.create(customers(:student))
+    assert @controller.send(:require_customer)
+  end
+
+  test 'require no customer' do
+    assert @controller.send(:require_no_customer)
+
+    CustomerSession.create(customers(:student))
+    assert !@controller.send(:require_no_customer)
+    assert_redirected_to orders_url
+    assert_equal I18n.t(:'messages.must_be_logged_out'),
+      @controller.send(:flash)[:notice]
   end
 
   test 'require user' do

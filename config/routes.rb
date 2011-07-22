@@ -1,118 +1,75 @@
 PrintHubApp::Application.routes.draw do
-  match 'printer_stats(.:format)' => 'stats#printers', :as => 'printer_stats',
-    :via => :get
-  match 'user_stats(.:format)' => 'stats#users', :as => 'user_stats',
-    :via => :get
-
-  resources :orders
-  
-  resources :bonuses, :only => [:index]
-
-  resources :articles
-
-  resources :payments, :only => [:index]
-
-  resources :customers do
-    resources :prints, :only => [:index]
-    resources :bonuses, :only => [:index]
+  constraints :subdomain => /\Afotocopia/i do
+    resources :customer_sessions, :only => [:new, :create] do
+      delete :destroy, :on => :collection
+    end
     
-    get :credit_detail, :on => :member
+    resources :orders
+    
+    root :to => 'customer_sessions#new'
   end
+  
+  constraints :subdomain => '' do
+    match 'printer_stats(.:format)' => 'stats#printers', :as => 'printer_stats',
+      :via => :get
+    match 'user_stats(.:format)' => 'stats#users', :as => 'user_stats',
+      :via => :get
 
-  resources :settings, :only => [:index, :show, :edit, :update]
+    resources :orders, :only => [:index]
 
-  scope ':status', :defaults => {:status => 'all'},
-    :constraints => {:status => /pending|scheduled|all/} do
-    resources :prints, :except => [:destroy] do
-      put :cancel_job, :on => :member
-      
-      collection do
-        get :autocomplete_for_customer_name
-        get :autocomplete_for_document_name
-        get :autocomplete_for_article_name
+    resources :bonuses, :only => [:index]
+
+    resources :articles
+
+    resources :payments, :only => [:index]
+
+    resources :customers do
+      resources :prints, :only => [:index]
+      resources :bonuses, :only => [:index]
+
+      get :credit_detail, :on => :member
+    end
+
+    resources :settings, :only => [:index, :show, :edit, :update]
+
+    scope ':status', :defaults => {:status => 'all'},
+      :constraints => {:status => /pending|scheduled|all/} do
+      resources :prints, :except => [:destroy] do
+        put :cancel_job, :on => :member
+
+        collection do
+          get :autocomplete_for_customer_name
+          get :autocomplete_for_document_name
+          get :autocomplete_for_article_name
+        end
       end
     end
-  end
 
-  resources :documents do
-    get :autocomplete_for_tag_name, :on => :collection
+    resources :documents do
+      get :autocomplete_for_tag_name, :on => :collection
 
-    member do
-      post :add_to_next_print
-      delete :remove_from_next_print
-      
-      scope ':style' do
-        get :download
+      member do
+        post :add_to_next_print
+        delete :remove_from_next_print
+
+        scope ':style' do
+          get :download
+        end
       end
     end
+
+    resources :tags do
+      resources :documents, :only => [:index]
+    end
+
+    resources :user_sessions, :only => [:new, :create] do
+      delete :destroy, :on => :collection
+    end
+
+    resources :users, :except => [:destroy] do
+      get :avatar, :on => :member, :path => '/avatar/:style'
+    end
+  
+    root :to => 'user_sessions#new'
   end
-
-  resources :tags do
-    resources :documents, :only => [:index]
-  end
-
-  resources :user_sessions, :only => [:new, :create] do
-    delete :destroy, :on => :collection
-  end
-
-  resources :users, :except => [:destroy] do
-    get :avatar, :on => :member, :path => '/avatar/:style'
-  end
-
-  # The priority is based upon order of creation:
-  # first created -> highest priority.
-
-  # Sample of regular route:
-  #   match 'products/:id' => 'catalog#view'
-  # Keep in mind you can assign values other than :controller and :action
-
-  # Sample of named route:
-  #   match 'products/:id/purchase' => 'catalog#purchase', :as => :purchase
-  # This route can be invoked with purchase_url(:id => product.id)
-
-  # Sample resource route (maps HTTP verbs to controller actions automatically):
-  #   resources :products
-
-  # Sample resource route with options:
-  #   resources :products do
-  #     member do
-  #       get 'short'
-  #       post 'toggle'
-  #     end
-  #
-  #     collection do
-  #       get 'sold'
-  #     end
-  #   end
-
-  # Sample resource route with sub-resources:
-  #   resources :products do
-  #     resources :comments, :sales
-  #     resource :seller
-  #   end
-
-  # Sample resource route with more complex sub-resources
-  #   resources :products do
-  #     resources :comments
-  #     resources :sales do
-  #       get 'recent', :on => :collection
-  #     end
-  #   end
-
-  # Sample resource route within a namespace:
-  #   namespace :admin do
-  #     # Directs /admin/products/* to Admin::ProductsController
-  #     # (app/controllers/admin/products_controller.rb)
-  #     resources :products
-  #   end
-
-  # You can have the root of your site routed with "root"
-  # just remember to delete public/index.html.
-  root :to => 'user_sessions#new'
-
-  # See how all your routes lay out with "rake routes"
-
-  # This is a legacy wild controller route that's not recommended for RESTful applications.
-  # Note: This route will make all actions in every controller accessible via GET requests.
-  # match ':controller(/:action(/:id(.:format)))'
 end

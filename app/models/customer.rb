@@ -1,6 +1,11 @@
 class Customer < ActiveRecord::Base
-  has_paper_trail
+  has_paper_trail :ignore => [:perishable_token]
   find_by_autocomplete :name
+  acts_as_authentic do |c|
+    c.validates_uniqueness_of_email_field_options = { :case_sensitive => false }
+    c.validates_length_of_email_field_options = { :maximum => 255 }
+    c.crypto_provider = Authlogic::CryptoProviders::Sha512
+  end
 
   # Scopes
   scope :with_monthly_bonus, where('free_monthly_bonus > :zero', :zero => 0)
@@ -24,6 +29,7 @@ class Customer < ActiveRecord::Base
     :numericality => {:greater_than_or_equal_to => 0}
 
   # Relaciones
+  has_many :orders, :inverse_of => :customer, :dependent => :destroy
   has_many :prints, :inverse_of => :customer, :dependent => :nullify
   has_many :bonuses, :inverse_of => :customer, :dependent => :destroy,
     :autosave => true, :class_name => 'Bonus', :order => 'valid_until ASC'

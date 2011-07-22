@@ -27,6 +27,14 @@ class ApplicationController < ActionController::Base
   end
 
   private
+  
+  def current_customer_session
+    @current_customer_session ||= CustomerSession.find
+  end
+
+  def current_customer
+    @current_customer ||= current_customer_session && current_customer_session.record
+  end
 
   def current_user_session
     @current_user_session ||= UserSession.find
@@ -38,6 +46,32 @@ class ApplicationController < ActionController::Base
 
   def user_for_paper_trail
     current_user.try(:id)
+  end
+  
+  def require_customer
+    unless current_customer
+      flash.notice = t(:'messages.must_be_logged_in')
+
+      store_location
+      redirect_to new_customer_session_url
+
+      false
+    else
+      expires_now
+    end
+  end
+
+  def require_no_customer
+    if current_customer
+      flash.notice = t(:'messages.must_be_logged_out')
+
+      store_location
+      redirect_to orders_url
+
+      false
+    else
+      true
+    end
   end
 
   def require_user

@@ -31,6 +31,9 @@ class CustomerTest < ActiveSupport::TestCase
           :name => 'Jar Jar',
           :lastname => 'Binks',
           :identification => '111',
+          :email => 'jar_jar@printhub.com',
+          :password => 'jarjar123',
+          :password_confirmation => 'jarjar123',
           :free_monthly_bonus => 0.0,
           :bonus_without_expiration => false,
           :bonuses_password => '123'
@@ -49,6 +52,9 @@ class CustomerTest < ActiveSupport::TestCase
         :name => 'Jar Jar',
         :lastname => 'Binks',
         :identification => '111',
+        :email => 'jar_jar@printhub.com',
+        :password => 'jarjar123',
+        :password_confirmation => 'jarjar123',
         :free_monthly_bonus => 10.0,
         :bonus_without_expiration => false
       )
@@ -102,12 +108,15 @@ class CustomerTest < ActiveSupport::TestCase
   test 'validates blank attributes' do
     @customer.name = nil
     @customer.identification = ' '
+    @customer.email = ''
     assert @customer.invalid?
-    assert_equal 2, @customer.errors.count
+    assert_equal 3, @customer.errors.count
     assert_equal [error_message_from_model(@customer, :name, :blank)],
       @customer.errors[:name]
     assert_equal [error_message_from_model(@customer, :identification, :blank)],
       @customer.errors[:identification]
+    assert_equal [I18n.t(:'authlogic.error_messages.email_invalid')],
+      @customer.errors[:email]
   end
 
   # Prueba que las validaciones del modelo se cumplan como es esperado
@@ -115,12 +124,15 @@ class CustomerTest < ActiveSupport::TestCase
     @customer.identification = customers(:teacher).identification
     @customer.name = customers(:teacher).name
     @customer.lastname = customers(:teacher).lastname
+    @customer.email = customers(:teacher).email
     assert @customer.invalid?
-    assert_equal 2, @customer.errors.count
+    assert_equal 3, @customer.errors.count
     assert_equal [error_message_from_model(@customer, :identification, :taken)],
       @customer.errors[:identification]
     assert_equal [error_message_from_model(@customer, :name, :taken)],
       @customer.errors[:name]
+    assert_equal [error_message_from_model(@customer, :email, :taken)],
+      @customer.errors[:email]
   end
 
   # Prueba que las validaciones del modelo se cumplan como es esperado
@@ -128,23 +140,30 @@ class CustomerTest < ActiveSupport::TestCase
     @customer.name = 'abcde' * 52
     @customer.lastname = 'abcde' * 52
     @customer.identification = 'abcde' * 52
+    @customer.email = "#{'abcde' * 52}@printhub.com"
     assert @customer.invalid?
-    assert_equal 3, @customer.errors.count
+    assert_equal 4, @customer.errors.count
     assert_equal [error_message_from_model(@customer, :name, :too_long,
-      :count => 255)], @customer.errors[:name]
+        :count => 255)], @customer.errors[:name]
     assert_equal [error_message_from_model(@customer, :lastname, :too_long,
-      :count => 255)], @customer.errors[:lastname]
+        :count => 255)], @customer.errors[:lastname]
     assert_equal [error_message_from_model(@customer, :identification,
         :too_long, :count => 255)], @customer.errors[:identification]
+    assert_equal [error_message_from_model(@customer, :email, :too_long,
+        :count => 255)], @customer.errors[:email]
   end
 
   # Prueba que las validaciones del modelo se cumplan como es esperado
   test 'validates well formated attributes' do
     @customer.free_monthly_bonus = '1.2x'
+    @customer.email = 'incorrect@format'
     assert @customer.invalid?
-    assert_equal 1, @customer.errors.count
+    assert_equal 2, @customer.errors.count
     assert_equal [error_message_from_model(@customer, :free_monthly_bonus,
         :not_a_number)], @customer.errors[:free_monthly_bonus]
+    assert_equal [I18n.t(:email_invalid,
+        :scope => [:authlogic, :error_messages])],
+      @customer.errors[:email]
   end
 
   # Prueba que las validaciones del modelo se cumplan como es esperado

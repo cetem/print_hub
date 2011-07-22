@@ -3,6 +3,7 @@ require 'test_helper'
 class OrdersControllerTest < ActionController::TestCase
   setup do
     @order = orders(:for_tomorrow)
+    @request.host = 'facultad.printhub.local'
   end
 
   test 'should get index' do
