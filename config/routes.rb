@@ -1,10 +1,13 @@
 PrintHubApp::Application.routes.draw do
   constraints :subdomain => /\Afotocopia/i do
+    match 'catalog' => 'catalog#index', :as => 'catalog', :via => :get
+    match 'catalog/:id' => 'catalog#show', :as => 'show_catalog', :via => :get
+    
     resources :customer_sessions, :only => [:new, :create] do
       delete :destroy, :on => :collection
     end
     
-    resources :orders
+    resources :orders, :except => [:index]
     
     root :to => 'customer_sessions#new'
   end

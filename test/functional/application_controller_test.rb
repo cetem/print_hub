@@ -44,6 +44,8 @@ class ApplicationControllerTest < ActionController::TestCase
   end
   
   test 'require customer' do
+    @request.host = 'facultad.printhub.local'
+    
     assert !@controller.send(:require_customer)
     assert_redirected_to new_customer_session_url
     assert_equal I18n.t(:'messages.must_be_logged_in'),
@@ -54,11 +56,13 @@ class ApplicationControllerTest < ActionController::TestCase
   end
 
   test 'require no customer' do
+    @request.host = 'facultad.printhub.local'
+    
     assert @controller.send(:require_no_customer)
 
     CustomerSession.create(customers(:student))
     assert !@controller.send(:require_no_customer)
-    assert_redirected_to orders_url
+    assert_redirected_to catalog_url
     assert_equal I18n.t(:'messages.must_be_logged_out'),
       @controller.send(:flash)[:notice]
   end

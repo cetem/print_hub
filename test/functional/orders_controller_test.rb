@@ -7,6 +7,7 @@ class OrdersControllerTest < ActionController::TestCase
   end
 
   test 'should get index' do
+    @request.host = 'localhost'
     UserSession.create(users(:administrator))
     get :index
     assert_response :success
@@ -16,7 +17,7 @@ class OrdersControllerTest < ActionController::TestCase
   end
 
   test 'should get new' do
-    UserSession.create(users(:administrator))
+    CustomerSession.create(customers(:student))
     get :new
     assert_response :success
     assert_select '#error_body', false
@@ -24,7 +25,7 @@ class OrdersControllerTest < ActionController::TestCase
   end
 
   test 'should create order' do
-    UserSession.create(users(:administrator))
+    CustomerSession.create(customers(:student))
     assert_difference 'Order.count' do
       post :create, order: {
         scheduled_at: I18n.l(10.days.from_now, :format => :minimal),
@@ -34,11 +35,11 @@ class OrdersControllerTest < ActionController::TestCase
 
     assert_redirected_to order_path(assigns(:order))
     # Prueba básica para "asegurar" el funcionamiento del versionado
-    assert_equal users(:administrator).id, Version.last.whodunnit
+    assert_nil Version.last.whodunnit
   end
 
   test 'should show order' do
-    UserSession.create(users(:administrator))
+    CustomerSession.create(customers(:student))
     get :show, id: @order.to_param
     assert_response :success
     assert_select '#error_body', false
@@ -46,7 +47,7 @@ class OrdersControllerTest < ActionController::TestCase
   end
 
   test 'should get edit' do
-    UserSession.create(users(:administrator))
+    CustomerSession.create(customers(:student))
     get :edit, id: @order.to_param
     assert_response :success
     assert_select '#error_body', false
@@ -54,7 +55,7 @@ class OrdersControllerTest < ActionController::TestCase
   end
 
   test 'should update order' do
-    UserSession.create(users(:administrator))
+    CustomerSession.create(customers(:student))
     put :update, id: @order.to_param, order: {
       scheduled_at: I18n.l(5.days.from_now.at_midnight, :format => :minimal),
       customer_id: customers(:student_without_bonus).id.to_s
@@ -65,7 +66,7 @@ class OrdersControllerTest < ActionController::TestCase
   end
 
   test 'should destroy order' do
-    UserSession.create(users(:administrator))
+    CustomerSession.create(customers(:student))
     assert_difference('Order.count', -1) do
       delete :destroy, id: @order.to_param
     end

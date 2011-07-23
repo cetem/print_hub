@@ -1,0 +1,35 @@
+<% id = "document_details_#{@document.id}" %>
+<div id="<%= id %>" class="document_details">
+  <div class="document_data">
+    <h2 class="title"><%= @document %></h2>
+    
+    <dl class="details">
+      <dt><%= Document.human_attribute_name :pages %>:</dt>
+      <dd><%= @document.pages %></dd>
+
+      <dt><%= Document.human_attribute_name :media %>:</dt>
+      <dd><%= show_document_media_text @document.media %></dd>
+
+      <dt><%= Document.human_attribute_name :description %>:</dt>
+      <dd><%= @document.description %>&nbsp;</dd>
+    </dl>
+
+    <% unless @document.tags.empty? %>
+      <section>
+        <h3 class="title"><%= t(:'menu.tags') %></h3>
+
+        <ul class="raw">
+          <% @document.tags.each do |tag| %>
+            <li><%= tag %></li>
+          <% end %>
+        </ul>
+      </section>
+    <% end %>
+  </div>
+  
+  <%= show_document_thumb(@document) %>
+
+  <nav class="links">
+    <%= link_to t(:'label.list'), catalog_path %>
+  </nav>
+</div>

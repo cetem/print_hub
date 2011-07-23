@@ -66,7 +66,7 @@ class ApplicationController < ActionController::Base
       flash.notice = t(:'messages.must_be_logged_out')
 
       store_location
-      redirect_to orders_url
+      redirect_to catalog_url
 
       false
     else

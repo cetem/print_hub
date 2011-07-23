@@ -14,7 +14,7 @@ class CustomerSessionsControllerTest < ActionController::TestCase
     assert_template 'customer_sessions/new'
   end
 
-  test 'should create user session' do
+  test 'should create customer session' do
     post :create, :customer_session => {
       :email => @customer.email,
       :password => 'student123'
@@ -22,7 +22,7 @@ class CustomerSessionsControllerTest < ActionController::TestCase
 
     assert customer_session = CustomerSession.find
     assert_equal @customer, customer_session.record
-    assert_redirected_to orders_url
+    assert_redirected_to catalog_url
   end
 
   test 'should not create a customer session' do

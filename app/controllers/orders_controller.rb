@@ -1,5 +1,6 @@
 class OrdersController < ApplicationController
-  before_filter :require_user
+  before_filter :require_user, :only => [:index]
+  before_filter :require_customer, :except => [:index]
   
   # GET /orders
   # GET /orders.json

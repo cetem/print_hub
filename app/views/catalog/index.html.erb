@@ -1,0 +1,31 @@
+<% if @tag %>
+  <h2 class="title">
+    <%= t(:documents_with_tag, :scope => [:view, :documents], :tag => @tag.to_s) %>
+  </h2>
+<% end %>
+<%= render :partial => 'shared/search' %>
+<table class="list">
+  <thead>
+    <tr>
+      <th><%= Document.human_attribute_name :code %></th>
+      <th><%= Document.human_attribute_name :name %></th>
+      <th><%= Document.human_attribute_name :pages %></th>
+      <th></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @documents.each do |document| %>
+      <tr class="<%= cycle(:even, :odd) %>">
+        <td><%= document.code %></td>
+        <td><%= document.name %></td>
+        <td><%= document.pages %></td>
+        <td><%= link_to t(:'view.catalog.show'), show_catalog_path(document) %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<nav class="links">
+  <%= pagination_links(@documents) %>
+</nav>
