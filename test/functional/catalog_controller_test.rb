@@ -52,4 +52,37 @@ class CatalogControllerTest < ActionController::TestCase
     assert_select '#error_body', false
     assert_template 'catalog/show'
   end
+  
+  test 'should not download original document' do
+    CustomerSession.create(customers(:student))
+    
+    assert File.exists?(@document.file.path(:original))
+    get :download, :id => @document.to_param, :style => :original
+    assert_redirected_to catalog_url
+    assert_equal I18n.t(:'view.documents.non_existent'), flash.notice
+  end
+  
+  test 'should not download document if no exist' do
+    CustomerSession.create(customers(:student))
+    
+    if File.exists?(@document.file.path(:pdf_thumb))
+      FileUtils.rm @document.file.path(:pdf_thumb)
+    end
+    
+    assert !File.exists?(@document.file.path(:pdf_thumb))
+    get :download, :id => @document.to_param, :style => :pdf_thumb
+    assert_redirected_to catalog_url
+    assert_equal I18n.t(:'view.documents.non_existent'), flash.notice
+  end
+
+  test 'should download document' do
+    CustomerSession.create(customers(:student))
+    @document.file.reprocess!(:pdf_thumb)
+    get :download, :id => @document.to_param, :style => :pdf_thumb
+    assert_response :success
+    assert_equal(
+      File.open(@document.reload.file.path(:pdf_thumb), :encoding => 'ASCII-8BIT').read,
+      @response.body
+    )
+  end
 end

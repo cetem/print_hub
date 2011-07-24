@@ -8,9 +8,8 @@
   <thead>
     <tr>
       <th><%= Document.human_attribute_name :code %></th>
-      <th><%= Document.human_attribute_name :name %></th>
+      <th><%= Document.model_name.human %></th>
       <th><%= Document.human_attribute_name :pages %></th>
-      <th></th>
     </tr>
   </thead>
 
@@ -18,9 +17,8 @@
     <% @documents.each do |document| %>
       <tr class="<%= cycle(:even, :odd) %>">
         <td><%= document.code %></td>
-        <td><%= document.name %></td>
+        <td><%= catalog_document_link_with_name(document) %></td>
         <td><%= document.pages %></td>
-        <td><%= link_to t(:'view.catalog.show'), show_catalog_path(document) %></td>
       </tr>
     <% end %>
   </tbody>

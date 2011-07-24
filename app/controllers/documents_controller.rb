@@ -167,7 +167,7 @@ class DocumentsController < ApplicationController
 
       send_file file, :type => (mime_type || 'application/octet-stream')
     else
-      redirect_to documents_path, :notice => t(:'view.documents.non_existent')
+      redirect_to documents_url, :notice => t(:'view.documents.non_existent')
     end
   end
   

@@ -97,7 +97,7 @@ class UsersController < ApplicationController
 
       send_file file, :type => (mime_type || 'application/octet-stream')
     else
-      redirect_to users_path, :notice => t(:'view.users.non_existent_avatar')
+      redirect_to users_url, :notice => t(:'view.users.non_existent_avatar')
     end
   end
 end
