@@ -1,0 +1,18 @@
+<% current_controller = controller.controller_name.to_sym %>
+<% cache :"customer_menu_#{current_controller}" do %>
+  <nav id="menu_links">
+    <ul>
+      <%= content_tag(:li, link_to(t(:catalog, :scope => :customer_menu), catalog_path),
+        :class => (:selected if current_controller == :catalog)) %>
+      <%= content_tag(:li, link_to(t(:orders, :scope => :customer_menu), orders_path),
+        :class => (:selected if current_controller == :orders)) %>
+    </ul>
+  </nav>
+<% end %>
+<nav id="user_actions">
+  <div id="username"><%= current_customer.email %></div>
+  <ul>
+    <li><%= link_to t(:logout, :scope => [:menu, :actions]),
+      customer_sessions_path, :method => :delete %></li>
+  </ul>
+</nav>

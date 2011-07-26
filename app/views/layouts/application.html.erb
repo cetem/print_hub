@@ -18,6 +18,10 @@
     <div id="main_menu">
       <%= render :partial => 'shared/menu' %>
     </div>
+  <% elsif current_customer %>
+    <div id="main_menu">
+      <%= render :partial => 'shared/customer_menu' %>
+    </div>
   <% end %>
   <div id="main_container">
     <%= yield %>

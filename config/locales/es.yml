@@ -217,6 +217,10 @@
         email: 'Correo electrónico'
         password: 'Contraseña'
         remember_me: 'Recordarme'
+        
+  customer_menu:
+    catalog: 'Documentos'
+    orders: 'Pedidos'
 
   # Active Support
   date:
