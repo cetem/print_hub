@@ -13,7 +13,7 @@ PrintHubApp::Application.routes.draw do
       delete :destroy, :on => :collection
     end
     
-    resources :orders, :except => [:index]
+    resources :orders
     
     root :to => 'customer_sessions#new'
   end
@@ -24,7 +24,7 @@ PrintHubApp::Application.routes.draw do
     match 'user_stats(.:format)' => 'stats#users', :as => 'user_stats',
       :via => :get
 
-    resources :orders, :only => [:index]
+    resources :orders, :only => [:index, :show]
 
     resources :bonuses, :only => [:index]
 

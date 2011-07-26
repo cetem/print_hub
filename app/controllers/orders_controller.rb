@@ -1,12 +1,12 @@
 class OrdersController < ApplicationController
-  before_filter :require_user, :only => [:index]
-  before_filter :require_customer, :except => [:index]
+  before_filter :require_customer_or_user, :load_scope, :only => [:index, :show]
+  before_filter :require_customer, :except => [:index, :show]
   
   # GET /orders
   # GET /orders.json
   def index
     @title = t :'view.orders.index_title'
-    @orders = Order.order('scheduled_at ASC').paginate(
+    @orders = @order_scope.order('scheduled_at ASC').paginate(
       :page => params[:page],
       :per_page => APP_LINES_PER_PAGE
     )
@@ -21,7 +21,7 @@ class OrdersController < ApplicationController
   # GET /orders/1.json
   def show
     @title = t :'view.orders.show_title'
-    @order = current_customer.orders.find(params[:id])
+    @order = @order_scope.find(params[:id])
 
     respond_to do |format|
       format.html # show.html.erb
@@ -97,5 +97,11 @@ class OrdersController < ApplicationController
       format.html { redirect_to orders_url }
       format.json { head :ok }
     end
+  end
+  
+  private
+  
+  def load_scope
+    @order_scope = current_customer ? current_customer.orders : Order.scoped
   end
 end

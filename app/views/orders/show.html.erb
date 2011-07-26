@@ -36,5 +36,5 @@
 
 <nav class="links">
   <%= link_to t(:'label.edit'), edit_order_path(@order) %> |
-  <%= link_to t(:'label.back'), catalog_path %>
+  <%= link_to t(:'label.back'), current_customer ? catalog_path : orders_path %>
 </nav>

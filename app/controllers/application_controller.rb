@@ -1,5 +1,5 @@
 class ApplicationController < ActionController::Base
-  helper_method :current_user_session, :current_user
+  helper_method :current_user_session, :current_user, :current_customer
   
   protect_from_forgery
 

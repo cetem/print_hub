@@ -6,12 +6,28 @@ class OrdersControllerTest < ActionController::TestCase
     @request.host = "#{CUSTOMER_SUBDOMAIN}.printhub.local"
   end
 
-  test 'should get index' do
+  test 'should get user index' do
     @request.host = 'localhost'
     UserSession.create(users(:administrator))
     get :index
     assert_response :success
     assert_not_nil assigns(:orders)
+    # Se listan órdenes de mas de un cliente
+    assert assigns(:orders).map(&:customer_id).uniq.size > 1
+    assert_select '#error_body', false
+    assert_template 'orders/index'
+  end
+  
+  test 'should get customer index' do
+    customer = Customer.find(customers(:student_without_bonus).id)
+    
+    CustomerSession.create(customer)
+    
+    get :index
+    assert_response :success
+    assert_not_nil assigns(:orders)
+    # Se listan órdenes solo del cliente
+    assert_equal customer.orders.count, assigns(:orders).size
     assert_select '#error_body', false
     assert_template 'orders/index'
   end
@@ -39,8 +55,17 @@ class OrdersControllerTest < ActionController::TestCase
     # Prueba básica para "asegurar" el funcionamiento del versionado
     assert_nil Version.last.whodunnit
   end
+  
+  test 'should show user order' do
+    @request.host = 'localhost'
+    UserSession.create(users(:administrator))
+    get :show, id: @order.to_param
+    assert_response :success
+    assert_select '#error_body', false
+    assert_template 'orders/show'
+  end
 
-  test 'should show order' do
+  test 'should show customer order' do
     CustomerSession.create(customers(:student_without_bonus))
     get :show, id: @order.to_param
     assert_response :success
