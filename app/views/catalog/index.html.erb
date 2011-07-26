@@ -10,6 +10,7 @@
       <th><%= Document.human_attribute_name :code %></th>
       <th><%= Document.model_name.human %></th>
       <th><%= Document.human_attribute_name :pages %></th>
+      <th></th>
     </tr>
   </thead>
 
@@ -19,11 +20,13 @@
         <td><%= document.code %></td>
         <td><%= catalog_document_link_with_name(document) %></td>
         <td><%= document.pages %></td>
+        <td><%= catalog_document_to_order document %></td>
       </tr>
     <% end %>
   </tbody>
 </table>
 
 <nav class="links">
+  <%= link_to t(:'view.catalog.new_order'), new_order_path %>
   <%= pagination_links(@documents) %>
 </nav>

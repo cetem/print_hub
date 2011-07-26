@@ -21,7 +21,7 @@ class OrdersController < ApplicationController
   # GET /orders/1.json
   def show
     @title = t :'view.orders.show_title'
-    @order = Order.find(params[:id])
+    @order = current_customer.orders.find(params[:id])
 
     respond_to do |format|
       format.html # show.html.erb
@@ -33,7 +33,9 @@ class OrdersController < ApplicationController
   # GET /orders/new.json
   def new
     @title = t :'view.orders.new_title'
-    @order = Order.new
+    @order = current_customer.orders.build(
+      :include_documents => session[:documents_to_order]
+    )
 
     respond_to do |format|
       format.html # new.html.erb
@@ -44,14 +46,14 @@ class OrdersController < ApplicationController
   # GET /orders/1/edit
   def edit
     @title = t :'view.orders.edit_title'
-    @order = Order.find(params[:id])
+    @order = current_customer.orders.find(params[:id])
   end
 
   # POST /orders
   # POST /orders.json
   def create
     @title = t :'view.orders.new_title'
-    @order = Order.new(params[:order])
+    @order = current_customer.orders.build(params[:order])
 
     respond_to do |format|
       if @order.save
@@ -68,7 +70,7 @@ class OrdersController < ApplicationController
   # PUT /orders/1.json
   def update
     @title = t :'view.orders.edit_title'
-    @order = Order.find(params[:id])
+    @order = current_customer.orders.find(params[:id])
 
     respond_to do |format|
       if @order.update_attributes(params[:order])
@@ -88,7 +90,7 @@ class OrdersController < ApplicationController
   # DELETE /orders/1
   # DELETE /orders/1.json
   def destroy
-    @order = Order.find(params[:id])
+    @order = current_customer.orders.find(params[:id])
     @order.destroy
 
     respond_to do |format|

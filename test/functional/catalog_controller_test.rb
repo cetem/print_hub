@@ -85,4 +85,32 @@ class CatalogControllerTest < ActionController::TestCase
       @response.body
     )
   end
+  
+  test 'should add document to order' do
+    CustomerSession.create(customers(:student))
+    assert session[:documents_to_order].blank?
+    
+    i18n_scope = [:view, :catalog, :remove_from_order]
+    
+    xhr :post, :add_to_order, :id => @document.to_param
+    assert_response :success
+    assert_match %r{#{I18n.t(:link, :scope => i18n_scope)}}, @response.body
+    assert session[:documents_to_order].include?(@document.id)
+  end
+  
+  test 'should remove document from next print' do
+    CustomerSession.create(customers(:student))
+    assert session[:documents_to_order].blank?
+    
+    session[:documents_to_order] = [@document.id]
+    i18n_scope = [:view, :catalog, :add_to_order]
+    
+    xhr :delete, :remove_from_order, :id => @document.to_param
+    assert_response :success
+    assert_match %r{#{I18n.t(:link, :scope => i18n_scope)}},
+      @response.body
+    assert !session[:documents_to_order].include?(@document.id)
+    
+    assert session[:documents_to_order].blank?
+  end
 end

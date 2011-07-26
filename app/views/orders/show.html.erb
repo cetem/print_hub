@@ -1,9 +1,40 @@
 <p>
   <b><%= Order.human_attribute_name :scheduled_at %>:</b>
-  <%= l @order.scheduled_at, :format => :short if @order.scheduled_at %>
+  <%= l @order.scheduled_at, :format => :long if @order.scheduled_at %>
 </p>
+
+<% unless @order.order_lines.empty? %>
+  <section class="nested_items">
+    <h2><%= t :order_lines, :scope => [:view, :orders] %></h2>
+
+    <table class="summary">
+      <thead>
+        <tr>
+          <th><%= OrderLine.human_attribute_name :document_id %></th>
+          <th><%= OrderLine.human_attribute_name :copies %></th>
+          <th><%= Document.human_attribute_name :pages %></th>
+          <th><%= OrderLine.human_attribute_name :price_per_copy %></th>
+          <th><%= OrderLine.human_attribute_name :range %></th>
+          <th><%= OrderLine.human_attribute_name :two_sided %></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @order.order_lines.each do |order_line| %>
+          <tr>
+            <td><%= order_line.document %></td>
+            <td><%= order_line.copies %></td>
+            <td><%= order_line.document.try(:pages) %></td>
+            <td><%= number_to_currency order_line.price_per_copy %></td>
+            <td><%= order_line.range %></td>
+            <td><%= t(order_line.two_sided ? :yes : :no, :scope => :label) %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </section>
+<% end %>
 
 <nav class="links">
   <%= link_to t(:'label.edit'), edit_order_path(@order) %> |
-  <%= link_to t(:'label.list'), orders_path %>
+  <%= link_to t(:'label.back'), catalog_path %>
 </nav>

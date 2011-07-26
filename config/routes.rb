@@ -4,6 +4,10 @@ PrintHubApp::Application.routes.draw do
     match 'catalog/:id' => 'catalog#show', :as => 'show_catalog', :via => :get
     match 'catalog/:id/:style/download' => 'catalog#download',
       :as => 'download_catalog', :via => :get
+    match 'catalog/:id/add_to_order' => 'catalog#add_to_order',
+      :as => 'add_to_order_catalog', :via => :post
+    match 'catalog/:id/remove_from_order' => 'catalog#remove_from_order',
+      :as => 'remove_from_order_catalog', :via => :delete
     
     resources :customer_sessions, :only => [:new, :create] do
       delete :destroy, :on => :collection

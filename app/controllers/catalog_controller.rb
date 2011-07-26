@@ -1,5 +1,7 @@
 class CatalogController < ApplicationController
-  before_filter :require_customer
+  before_filter :require_customer, :load_documents_to_order
+  
+  layout lambda { |controller| controller.request.xhr? ? false : 'application' }
   
   def index
     @title = t :'view.catalog.index_title'
@@ -82,5 +84,30 @@ class CatalogController < ApplicationController
     else
       redirect_to catalog_url, :notice => t(:'view.documents.non_existent')
     end
+  end
+  
+  # POST /catalog/1/add_to_order
+  def add_to_order
+    @document = Document.find(params[:id])
+    session[:documents_to_order] ||= []
+    
+    unless session[:documents_to_order].include?(@document.id)
+      session[:documents_to_order] << @document.id
+    end
+  end
+  
+  # DELETE /catalog/1/remove_from_order
+  def remove_from_order
+    @document = Document.find(params[:id])
+    session[:documents_to_order] ||= []
+    
+    session[:documents_to_order].delete(@document.id)
+  end
+  
+  private
+  
+  def load_documents_to_order
+    session[:documents_to_order] ||= []
+    @documents_to_order = session[:documents_to_order]
   end
 end

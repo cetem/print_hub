@@ -1,0 +1,8 @@
+<% message = link_to(
+  t(:link, :scope => [:view, :catalog, :remove_from_order]),
+  remove_from_order_catalog_path(@document),
+  :title => t(:title, :scope => [:view, :catalog, :remove_from_order]),
+  :remote => true, :method => :delete, :class => :red
+) %>
+<% id = "#document_#{@document.id}_to_order" %>
+$('<%= id %>').html('<%= message %>');

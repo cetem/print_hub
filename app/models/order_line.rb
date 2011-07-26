@@ -2,7 +2,6 @@ class OrderLine < ActiveRecord::Base
   has_paper_trail
   
   # Restricciones
-  # Restricciones
   validates :copies, :price_per_copy, :presence => true
   validates :copies,
     :numericality => {:only_integer => true, :greater_than => 0},
@@ -32,5 +31,35 @@ class OrderLine < ActiveRecord::Base
 
       n2 ? [n1, n2] : n1
     end
+  end
+  
+  def range_pages
+    pages = 0
+
+    if self.range.blank?
+      pages = self.document.try(:pages)
+    else
+      self.extract_ranges.each do |r|
+        pages += r.kind_of?(Array) ? r[1].next - r[0] : 1
+      end
+    end
+
+    pages || 0
+  end
+  
+  def price
+    r_pages = self.range_pages || 0
+    even_range = r_pages - (r_pages % 2)
+    rest = (r_pages % 2) * BigDecimal.new(price_per_one_sided_copy)
+
+    (self.copies || 0) * ((self.price_per_copy || 0) * even_range + rest)
+  end
+  
+  def price_per_one_sided_copy
+    Setting.price_per_one_sided_copy
+  end
+
+  def price_per_two_sided_copy
+    Setting.price_per_two_sided_copy
   end
 end

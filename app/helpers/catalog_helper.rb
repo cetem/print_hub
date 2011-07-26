@@ -29,4 +29,26 @@ module CatalogHelper
       :title => t(:'view.catalog.show')
     )
   end
+  
+  def catalog_document_to_order(document)
+    content = ''
+    
+    if @documents_to_order.include?(document.id)
+      content << link_to(
+        t(:link, :scope => [:view, :catalog, :remove_from_order]),
+        remove_from_order_catalog_path(document),
+        :title => t(:title, :scope => [:view, :catalog, :remove_from_order]),
+        :remote => true, :method => :delete, :class => :red
+      )
+    else
+      content << link_to(
+        t(:link, :scope => [:view, :catalog, :add_to_order]),
+        add_to_order_catalog_path(document),
+        :title => t(:title, :scope => [:view, :catalog, :add_to_order]),
+        :remote => true, :method => :post
+      )
+    end
+    
+    content_tag :span, raw(content), :id => "document_#{document.id}_to_order"
+  end
 end

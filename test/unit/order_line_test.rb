@@ -166,4 +166,34 @@ class OrderLineTest < ActiveSupport::TestCase
     assert_equal [error_message_from_model(@order_line, :range, :too_long,
         :count => @order_line.document.pages)], @order_line.errors[:range]
   end
+  
+  test 'range pages' do
+    @order_line.range = ' '
+    assert @order_line.valid?
+    assert_equal @order_line.document.pages, @order_line.range_pages
+
+    @order_line.range = '1'
+    assert @order_line.valid?
+    assert_equal 1, @order_line.range_pages
+
+    @order_line.range = '1,2'
+    assert @order_line.valid?
+    assert_equal 2, @order_line.range_pages
+
+    @order_line.range = '1,2-7'
+    assert @order_line.valid?
+    assert_equal 7, @order_line.range_pages
+
+    @order_line.range = '2-7'
+    assert @order_line.valid?
+    assert_equal 6, @order_line.range_pages
+
+    @order_line.range = '2-7,8-9'
+    assert @order_line.valid?
+    assert_equal 8, @order_line.range_pages
+
+    @order_line.range = '1,2-7,8-9,10'
+    assert @order_line.valid?
+    assert_equal 10, @order_line.range_pages
+  end
 end

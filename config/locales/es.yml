@@ -56,6 +56,7 @@
       customer: 'Cliente'
       document: 'Documento'
       order: 'Pedido'
+      order_line: 'Línea de pedido'
       payment: 'Pago'
       print: 'Impresión'
       print_job: 'Trabajo de impresión'
@@ -109,6 +110,20 @@
       order:
         customer: 'Cliente'
         scheduled_at: 'Programado para'
+        order_lines:
+          one: 'Línea de pedido'
+          other: 'Líneas de pedido'
+          copies: 'Copias'
+          price_per_copy: 'Precio por hoja'
+          range: 'Rango'
+          two_sided: 'Doble faz'
+          document_id: 'Documento'
+      order_line:
+        copies: 'Copias'
+        price_per_copy: 'Precio por hoja'
+        range: 'Rango'
+        two_sided: 'Doble faz'
+        document_id: 'Documento'
       payment:
         amount: 'Monto'
         paid: 'Monto abonado'
@@ -350,6 +365,7 @@
     bonuses: 'Bonificaciones'
     customers: 'Clientes'
     documents: 'Documentos'
+    orders: 'Pedidos'
     payments: 'Pagos'
     prints: 'Impresiones'
     settings: 'Configuración'
@@ -490,6 +506,13 @@
       index_title: 'Listado de documentos'
       show_title: 'Detalle de documento'
       show: 'Ver documento'
+      new_order: 'Revisar pedido'
+      add_to_order:
+        link: 'Agregar al pedido'
+        title: 'Marca el documento para que sea INCLUIDO en el pedido'
+      remove_from_order:
+        link: 'Quitar del pedido'
+        title: 'Elimina la marca del documento para que NO sea incluido en el pedido'
     customers:
       index_title: 'Listado de clientes'
       show_title: 'Detalle de cliente'
@@ -550,6 +573,7 @@
       correctly_created: 'Pedido agregado correctamente.'
       correctly_updated: 'Pedido actualizado correctamente.'
       stale_object_error: 'El pedido no pudo ser actualizado, intente nuevamente.'
+      order_lines: 'Trabajos a encargar'
     payments:
       count:
         one: 'Suma de un pago'

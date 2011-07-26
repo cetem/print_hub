@@ -29,7 +29,8 @@ class Customer < ActiveRecord::Base
     :numericality => {:greater_than_or_equal_to => 0}
 
   # Relaciones
-  has_many :orders, :inverse_of => :customer, :dependent => :destroy
+  has_many :orders, :inverse_of => :customer, :dependent => :destroy,
+    :order => 'scheduled_at ASC'
   has_many :prints, :inverse_of => :customer, :dependent => :nullify
   has_many :bonuses, :inverse_of => :customer, :dependent => :destroy,
     :autosave => true, :class_name => 'Bonus', :order => 'valid_until ASC'

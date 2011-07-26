@@ -7,6 +7,8 @@ class OrderTest < ActiveSupport::TestCase
   # Función para inicializar las variables utilizadas en las pruebas
   def setup
     @order = Order.find orders(:for_tomorrow).id
+    
+    prepare_settings
   end
 
   # Prueba que se realicen las búsquedas como se espera
@@ -18,10 +20,20 @@ class OrderTest < ActiveSupport::TestCase
 
   # Prueba la creación de un pedido
   test 'create' do
-    assert_difference 'Order.count' do
+    assert_difference ['Order.count', 'Version.count'] do
       @order = Order.create(
         :scheduled_at => 10.days.from_now,
         :customer => customers(:student_without_bonus)
+      )
+    end
+  end
+  
+  test 'create with included documents' do
+    assert_difference ['Order.count', 'OrderLine.count'] do
+      @order = Order.create(
+        :scheduled_at => 10.days.from_now,
+        :customer => customers(:student_without_bonus),
+        :include_documents => [documents(:math_book).id]
       )
     end
   end

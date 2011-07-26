@@ -1,0 +1,42 @@
+<% id = dynamic_object_id('order_line', f) %>
+<div class="order_line nested_item" id="<%= id %>" data-price="<%= f.object.price %>">
+  <div>
+    <div class="nested_item_field">
+      <%= f.object.document %>
+      <%= f.hidden_field :document_id, :class => :autocomplete_id %>
+    </div>
+    <div class="nested_item_field">
+      <%= f.text_field :copies, :maxlength => 5, :class => :price_modifier,
+        :autocomplete => :off %>
+    </div>
+    <div class="nested_item_field">
+      <%= text_field_tag :pages, f.object.document.try(:pages),
+        :id => "order_line_pages_#{f.object.document_id}", :disabled => true %>
+    </div>
+    <div class="nested_item_field">
+      <%= f.text_field :price_per_copy, :disabled => true,
+        :class => :price_modifier, :autocomplete => :off %>
+    </div>
+    <div class="nested_item_field">
+      <%= f.text_field :range, :maxlength => 255, :class => :price_modifier,
+        :autocomplete => :off, :'data-range-pages' => f.object.range_pages %>
+    </div>
+    <div class="nested_item_field">
+      <%= f.check_box :two_sided, :class => :price_modifier,
+        :'data-price-per-one-sided' => f.object.price_per_one_sided_copy,
+        :'data-price-per-two-sided' => f.object.price_per_two_sided_copy %>
+    </div>
+    <div class="nested_item_actions">
+      <span class="money"><%= number_to_currency f.object.price %></span>
+      <% unless disabled %>
+        <%= link_to_remove_nested_item(f) %>
+      <% end %>
+      <%= link_to '...', show_catalog_path(f.object.document),
+        :class => 'details_link action_link', :remote => true,
+        :title => t(:'view.prints.document_details'),
+        :style => ('display: none;' unless f.object.document) %>
+      <%= f.hidden_field :lock_version %>
+    </div>
+    <div class="dynamic_details" id="<%= "document_details_#{id}" %>"></div>
+  </div>
+</div>
