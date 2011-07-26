@@ -3,7 +3,7 @@ require 'test_helper'
 class CatalogControllerTest < ActionController::TestCase
   setup do
     @document = documents(:math_book)
-    @request.host = 'facultad.printhub.local'
+    @request.host = "#{CUSTOMER_SUBDOMAIN}.printhub.local"
 
     prepare_document_files
   end

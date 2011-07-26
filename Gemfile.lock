@@ -6,14 +6,8 @@ GIT
       rails (>= 3.0.0)
 
 GIT
-  remote: https://github.com/JackDanger/will_paginate.git
-  revision: e97acba1b94f2a6d19d5a271ddfa5ebc80d3d822
-  specs:
-    will_paginate (2.3.15)
-
-GIT
   remote: https://github.com/rails/rails.git
-  revision: 8f67029a097220247041579f473fed7490df8cc2
+  revision: b589f0c375165db0629be0477a6f84822a7e1389
   branch: 3-1-stable
   specs:
     actionmailer (3.1.0.rc5)
@@ -184,6 +178,7 @@ GEM
     whenever (0.6.8)
       aaronh-chronic (>= 0.3.9)
       activesupport (>= 2.3.4)
+    will_paginate (3.0.pre4)
 
 PLATFORMS
   ruby
@@ -215,4 +210,4 @@ DEPENDENCIES
   uglifier
   validates_timeliness (~> 3.0)
   whenever
-  will_paginate!
+  will_paginate (~> 3.0.beta)
