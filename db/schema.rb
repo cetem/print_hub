@@ -10,7 +10,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110720230224) do
+ActiveRecord::Schema.define(:version => 20110726015816) do
 
   create_table "article_lines", :force => true do |t|
     t.integer  "print_id",                                                   :null => false
@@ -98,10 +98,25 @@ ActiveRecord::Schema.define(:version => 20110720230224) do
 
   add_index "documents_tags", ["document_id", "tag_id"], :name => "index_documents_tags_on_document_id_and_tag_id", :unique => true
 
+  create_table "order_lines", :force => true do |t|
+    t.integer  "document_id"
+    t.integer  "copies",                                                          :null => false
+    t.decimal  "price_per_copy", :precision => 15, :scale => 2,                   :null => false
+    t.string   "range"
+    t.boolean  "two_sided",                                     :default => true
+    t.integer  "order_id"
+    t.integer  "lock_version",                                  :default => 0
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "order_lines", ["document_id"], :name => "index_order_lines_on_document_id"
+  add_index "order_lines", ["order_id"], :name => "index_order_lines_on_order_id"
+
   create_table "orders", :force => true do |t|
-    t.datetime "scheduled_at"
+    t.datetime "scheduled_at",                :null => false
     t.integer  "lock_version", :default => 0
-    t.integer  "customer_id"
+    t.integer  "customer_id",                 :null => false
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -243,6 +258,11 @@ ActiveRecord::Schema.define(:version => 20110720230224) do
   add_foreign_key "article_lines", "prints", :name => "article_lines_print_id_fk", :dependent => :restrict
 
   add_foreign_key "bonuses", "customers", :name => "bonuses_customer_id_fk", :dependent => :restrict
+
+  add_foreign_key "order_lines", "documents", :name => "order_lines_document_id_fk", :dependent => :restrict
+  add_foreign_key "order_lines", "orders", :name => "order_lines_order_id_fk", :dependent => :restrict
+
+  add_foreign_key "orders", "customers", :name => "orders_customer_id_fk", :dependent => :restrict
 
   add_foreign_key "print_jobs", "documents", :name => "print_jobs_document_id_fk", :dependent => :restrict
   add_foreign_key "print_jobs", "prints", :name => "print_jobs_print_id_fk", :dependent => :restrict

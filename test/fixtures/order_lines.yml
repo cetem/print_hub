@@ -1,0 +1,17 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/Fixtures.html
+
+from_yesterday_math_notes:
+  document: math_notes
+  copies: 1
+  price_per_copy: 0.10
+  range: ''
+  two_sided: true
+  order: from_yesterday
+
+from_yesterday_math_notes:
+  document: math_book
+  copies: 1
+  price_per_copy: 0.10
+  range: ''
+  two_sided: true
+  order: from_yesterday
