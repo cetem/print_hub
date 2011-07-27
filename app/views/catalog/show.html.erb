@@ -30,6 +30,15 @@
   <%= catalog_document_thumb(@document) %>
 
   <nav class="links">
-    <%= link_to t(:'label.list'), catalog_path %>
+    <% if request.xhr? %>
+      <%= link_to_function t(:'label.hide'), "Helper.remove('##{id}')" %>
+    <% else %>
+      <%= link_to t(:'label.list'), catalog_path %>
+    <% end %>
   </nav>
 </div>
+<% if request.xhr? %>
+  <script type="text/javascript">
+    $('a.fancybox', $('#<%= id %>')).fancybox({type: 'image'});
+  </script>
+<% end %>

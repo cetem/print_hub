@@ -406,7 +406,7 @@
   });
   
   $('a.details_link').live('ajax:success', function(event, data) {
-    Helper.show($('.dynamic_details', $(this).parents('.print_job')).hide().html(data));
+    Helper.show($(this).parents('.print_job').find('.dynamic_details').hide().html(data));
   });
   
   $('#link_to_customer_credit_detail').live('ajax:success', function(event, data) {

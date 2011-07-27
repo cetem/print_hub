@@ -1,8 +1,6 @@
 module CatalogHelper
   def catalog_document_thumb(document)
-    mini_styles = [:pdf_mini_thumb, :pdf_mini_thumb_2, :pdf_mini_thumb_3]
-
-    mini_styles.map do |style|
+    links_with_thumbs = [:pdf_mini_thumb].map do |style|
       if document.file.file? && File.exists?(document.file.path(style))
         thumb_dimensions = Paperclip::Geometry.from_file document.file.path(style)
         thumb_image_tag = image_tag(
@@ -19,7 +17,18 @@ module CatalogHelper
           :'data-rel' => "doc_image_#{document.id}", :title => document.name,
           :class => :fancybox
       end
-    end.compact.join("\n").html_safe
+    end
+    
+    links_with_thumbs += [:pdf_thumb_2, :pdf_thumb_3].map do |style|
+      if document.file.file? && File.exists?(document.file.path(style))
+        content_tag :a, '',
+          :href => download_catalog_path(document, :style => style),
+          :'data-rel' => "doc_image_#{document.id}", :title => document.name,
+          :class => :fancybox, :style => 'display: none;'
+      end
+    end
+    
+    links_with_thumbs.compact.join("\n").html_safe
   end
   
   def catalog_document_link_with_name(document)

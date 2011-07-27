@@ -33,3 +33,10 @@
     <%= f.submit %>
   </div>
 <% end %>
+<script type="text/javascript">
+jQuery(function() {
+  $('a.details_link').live('ajax:success', function(event, data) {
+    Helper.show($(this).parents('.order_line').find('.dynamic_details').hide().html(data));
+  });
+});
+</script>
