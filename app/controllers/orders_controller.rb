@@ -54,6 +54,7 @@ class OrdersController < ApplicationController
   def create
     @title = t :'view.orders.new_title'
     @order = current_customer.orders.build(params[:order])
+    session[:documents_to_order].try(:clear)
 
     respond_to do |format|
       if @order.save

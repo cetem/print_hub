@@ -33,6 +33,7 @@
     <% if request.xhr? %>
       <%= link_to_function t(:'label.hide'), "Helper.remove('##{id}')" %>
     <% else %>
+      <%= catalog_document_to_order @document %> |
       <%= link_to t(:'label.list'), catalog_path %>
     <% end %>
   </nav>
