@@ -398,9 +398,9 @@
   $('.price_modifier').live('change keyup', function() {
     var element = $(this);
     
-    if (element.parents('.print_job')) {
+    if (element.parents('.print_job').length > 0) {
       updatePrintJobPrice(element.parents('.print_job'));
-    } else if (element.parents('.article_line')) {
+    } else if (element.parents('.article_line').length > 0) {
       updateArticleLinePrice(element.parents('.article_line'));
     }
   });
