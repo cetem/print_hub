@@ -162,14 +162,14 @@
     var totalPrice = 0.0;
     
     $('.print_job').each(function() {
-      var pjPrice = ($(this).data('exclude_from_total') ?
+      var pjPrice = ($(this).data('excludeFromTotal') ?
         0 : (parseFloat($(this).data('price')) || 0));
 
       totalPrice += pjPrice;
     });
 
     $('.article_line').each(function() {
-      var alPrice = ($(this).data('exclude_from_total') ?
+      var alPrice = ($(this).data('excludeFromTotal') ?
         0 : (parseFloat($(this).data('price')) || 0));
 
       totalPrice += alPrice;
@@ -196,10 +196,10 @@
     );
     var pricePerOneSidedCopy = parseFloat(
       $('input[name$="[two_sided]"].price_modifier', printJob).data(
-        'price-per-one-sided')
+        'pricePerOneSided')
     );
     var rangePages = parseInt(
-      $('input[name$="[range]"]', printJob).data('range-pages')
+      $('input[name$="[range]"]', printJob).data('rangePages')
     );
     var evenRange = rangePages - (rangePages % 2);
     var rest = (rangePages % 2) * pricePerOneSidedCopy;
@@ -236,13 +236,13 @@
   }
 
   $('.print_job').live('item:removed', function() {
-    $(this).data('exclude_from_total', true);
+    $(this).data('excludeFromTotal', true);
 
     updateTotalPrice();
   });
 
   $('.article_line').live('item:removed', function() {
-    $(this).data('exclude_from_total', true);
+    $(this).data('excludeFromTotal', true);
 
     updateTotalPrice();
   });
@@ -260,7 +260,7 @@
         'href', detailsLink.attr('href').replace(/\d+$/, item.id)
       ).show();
       $('.dynamic_details', printJob).text('');
-      $('input[name$="[range]"]', printJob).val('').data('range-pages', pages);
+      $('input[name$="[range]"]', printJob).val('').data('rangePages', pages);
 
       updatePrintJobPrice(printJob);
     } else if (item.unit_price) {
@@ -281,55 +281,16 @@
     }
   });
 
-  $('input[name$="[range]"]').live('keyup', function() {
-    var element = $(this);
-    var validRanges = true, maxPage = undefined, rangePages = 0;
-    var pages = parseInt(
-      $('input[name$="[pages]"]', element.parents('.print_job')).val()
-    );
-    var ranges = element.val().trim().split(/\s*,\s*/).sort(function(r1, r2) {
-      var r1Value = parseInt(r1.match(/^\d+/)) || 0;
-      var r2Value = parseInt(r2.match(/^\d+/)) || 0;
-      
-      return r1Value - r2Value;
-    });
-
-    jQuery.each(ranges, function(i, r) {
-      var data = r.match(/^(\d+)(-(\d+))?$/);
-      var n1 = Try.these(function() { return parseInt(data[1]); });
-      var n2 = Try.these(function() { return parseInt(data[3]); });
-
-      validRanges = validRanges && n1 && n1 > 0 && (!n2 || n1 < n2);
-      validRanges = validRanges && (!maxPage || maxPage < n1);
-
-      maxPage = n2 || n1;
-      rangePages += n2 ? n2 + 1 - n1 : 1
-    });
-
-    if((/^\s*$/.test(element.val()) || validRanges) &&
-      (!pages || !maxPage || pages >= maxPage)) {
-      element.removeClass('field_with_errors');
-
-      if(/^\s*$/.test(element.val()) && pages) {
-        element.data('range-pages', pages);
-      } else if(!/^\s*$/.test(element.val()) && validRanges) {
-        element.data('range-pages', rangePages);
-      }
-    } else {
-      element.addClass('field_with_errors');
-    }
-  });
-
   $('#print_printer').change(function() {
     var submit = $('#print_submit');
 
     if(/^\s*$/.test($(this).val())) {
-      if(submit.data('original_value')) {
-        submit.attr('value', submit.data('original_value'));
+      if(submit.data('originalValue')) {
+        submit.attr('value', submit.data('originalValue'));
       }
     } else {
-      if(!submit.data('original_value')) {
-        submit.data('original_value', submit.attr('value'));
+      if(!submit.data('originalValue')) {
+        submit.data('originalValue', submit.attr('value'));
       }
 
       submit.attr('value', '<%= t(:'view.prints.print') %>');
@@ -340,24 +301,12 @@
     if(/^\s*$/.test($(this).val())) { clearCustomer(); }
   });
 
-  $('input[name$="[two_sided]"]').live('change', function() {
-    var element = $(this);
-    var priceElement = $('input[name$="[price_per_copy]"]',
-      element.parents('.print_job'));
-    
-    if(element.is(':checked')) {
-      priceElement.val(element.data('price-per-two-sided'));
-    } else {
-      priceElement.val(element.data('price-per-one-sided'));
-    }
-  });
-
   $('input[name$="[auto_document_name]"]').live('change', function() {
     var element = $(this);
     var printJob = element.parents('.print_job');
 
     if(printJob.length > 0 && /^\s*$/.test(element.val())) {
-      $('input[name$="[range]"]', printJob).data('range-pages', 0);
+      $('input[name$="[range]"]', printJob).data('rangePages', 0);
       $('input[name$="[pages]"]', printJob).val('').attr('disabled', false);
       $('.dynamic_details', printJob).html('');
       $('a.details_link', printJob).hide();
@@ -385,7 +334,7 @@
     if(!element.attr('disabled') && parseInt(element.val()) > 0) {
       var range = $('input[name$="[range]"]', printJob);
 
-      range.data('range-pages', parseInt(element.val())).attr('disabled', true);
+      range.data('rangePages', parseInt(element.val())).attr('disabled', true);
       $('input[name$="[auto_document_name]"]', printJob).attr('disabled', true);
     } else {
       $('input[name$="[range]"]', printJob).attr('disabled', false);
@@ -394,6 +343,9 @@
 
     updatePrintJobPrice(printJob);
   });
+  
+  Jobs.listenRangeChanges('.print_job');
+  Jobs.listenTwoSidedChanges('.print_job');
 
   $('.price_modifier').live('change keyup', function() {
     var element = $(this);

@@ -7,4 +7,9 @@
 //= require jquery
 //= require jquery-ui
 //= require jquery_ujs
-//= require_tree .
+//= require jquery-ui-timepicker-addon
+//= require datepicker/jquery.ui.datepicker-es
+//= require jquery.fancybox
+//= require jquery.filestyle
+//= require common
+//= require jobs

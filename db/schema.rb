@@ -101,7 +101,7 @@ ActiveRecord::Schema.define(:version => 20110726015816) do
   create_table "order_lines", :force => true do |t|
     t.integer  "document_id"
     t.integer  "copies",                                                          :null => false
-    t.decimal  "price_per_copy", :precision => 15, :scale => 2,                   :null => false
+    t.decimal  "price_per_copy", :precision => 15, :scale => 3,                   :null => false
     t.string   "range"
     t.boolean  "two_sided",                                     :default => true
     t.integer  "order_id"

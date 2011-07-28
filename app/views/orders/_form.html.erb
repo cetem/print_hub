@@ -36,9 +36,61 @@
   </div>
 <% end %>
 <script type="text/javascript">
-jQuery(function() {
-  $('a.details_link').live('ajax:success', function(event, data) {
-    Helper.show($(this).parents('.order_line').find('.dynamic_details').hide().html(data));
+  function updateTotalPrice() {
+    var totalPrice = 0.0;
+    
+    $('.order_line').each(function(i, e) {
+      var olPrice = $(e).data('excludeFromTotal')
+        ? 0 : (parseFloat($(e).data('price')) || 0);
+
+      totalPrice += olPrice;
+    });
+    
+    var money = $('#total span.money');
+    
+    money.html(money.html().replace(/(\d+.)+\d+/, totalPrice.toFixed(3)));
+  }
+  
+  function updateOrderLinePrice(orderLine) {
+    var copies = parseInt(orderLine.find('input[name$="[copies]"]').val());
+    var pricePerCopy = parseFloat(
+      orderLine.find('input[name$="[price_per_copy]"]').val()
+    );
+    var pricePerOneSidedCopy = parseFloat(
+      orderLine.find('input[name$="[two_sided]"].price_modifier').data('pricePerOneSided')
+    );
+    var rangePages = parseInt(
+      orderLine.find('input[name$="[range]"]').data('rangePages')
+    );
+    var evenRange = rangePages - (rangePages % 2);
+    var rest = (rangePages % 2) * pricePerOneSidedCopy;
+    var olPrice = (copies * (pricePerCopy * evenRange + rest)) || 0;
+    var money = orderLine.find('span.money');
+
+    orderLine.data('price', olPrice.toFixed(3));
+    money.html(money.html().replace(/(\d+.)+\d+/, olPrice.toFixed(3)));
+
+    updateTotalPrice();
+  }
+  
+  jQuery(function() {
+    $('a.details_link').live('ajax:success', function(event, data) {
+      Helper.show($(this).parents('.order_line').find('.dynamic_details').hide().html(data));
+    });
+    
+    $('.order_line').live('item:removed', function() {
+      $(this).data('excludeFromTotal', true);
+
+      updateTotalPrice();
+    });
+    
+    Jobs.listenRangeChanges('.order_line');
+    Jobs.listenTwoSidedChanges('.order_line');
+    
+    $('.price_modifier').live('change keyup', function() {
+      var element = $(this);
+
+      updateOrderLinePrice(element.parents('.order_line'));
+    });
   });
-});
 </script>

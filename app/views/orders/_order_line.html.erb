@@ -3,15 +3,17 @@
   <div>
     <div class="nested_item_field">
       <%= f.object.document %>
-      <%= f.hidden_field :document_id, :class => :autocomplete_id %>
+      <%= f.hidden_field :document_id %>
     </div>
     <div class="nested_item_field">
       <%= f.text_field :copies, :maxlength => 5, :class => :price_modifier,
         :autocomplete => :off %>
     </div>
     <div class="nested_item_field">
-      <%= text_field_tag :pages, f.object.document.try(:pages),
-        :id => "order_line_pages_#{f.object.document_id}", :disabled => true %>
+      <%= text_field_tag "document[#{f.object.document_id}][pages]",
+        f.object.document.try(:pages),
+        :id => "order_line_pages_#{f.object.document_id}",
+        :class => :price_modifier, :disabled => true %>
     </div>
     <div class="nested_item_field">
       <%= f.text_field :price_per_copy, :disabled => true,
