@@ -27,3 +27,27 @@ div#login {
     padding: .25em 1em;
   }
 }
+
+nav#user_actions {
+  position: absolute;
+  right: 1em;
+  top: .25em;
+
+  div#username {
+    display: inline;
+    color: #fff;
+    background: $main-color;
+    padding: 2px 6px;
+    line-height: 1.5em;
+    font-weight: bold;
+    text-shadow: 1px 1px 1px rgba(0, 0, 0, .3);
+    box-shadow: 0 2px 2px -1px rgba(0, 0, 0, .4), 0 .9em .5em -0.2em rgba(255, 255, 255, .2) inset;
+    @include rounded-corners(.25em);
+  }
+
+  > ul, > ul > li {
+    display: inline;
+    list-style: none;
+    margin: 0em .5em;
+  }
+}

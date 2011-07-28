@@ -167,6 +167,24 @@ class OrderLineTest < ActiveSupport::TestCase
         :count => @order_line.document.pages)], @order_line.errors[:range]
   end
   
+  test 'extract ranges' do
+    @order_line.range = ' '
+    assert @order_line.valid?
+    assert_equal [], @order_line.extract_ranges
+
+    @order_line.range = '1'
+    assert @order_line.valid?
+    assert_equal [1], @order_line.extract_ranges
+
+    @order_line.range = '1,2-7'
+    assert @order_line.valid?
+    assert_equal [1, [2, 7]], @order_line.extract_ranges
+
+    @order_line.range = '1,3-7,2,10'
+    assert @order_line.valid?
+    assert_equal [1, 2, [3, 7], 10], @order_line.extract_ranges
+  end
+  
   test 'range pages' do
     @order_line.range = ' '
     assert @order_line.valid?
@@ -195,5 +213,36 @@ class OrderLineTest < ActiveSupport::TestCase
     @order_line.range = '1,2-7,8-9,10'
     assert @order_line.valid?
     assert_equal 10, @order_line.range_pages
+  end
+  
+  test 'price' do
+    @order_line.copies = 1
+    @order_line.price_per_copy = 0.10
+    @order_line.range = ''
+    assert @order_line.valid?
+    assert_equal 350, @order_line.range_pages
+    assert_equal '35.00', '%.2f' % @order_line.price
+
+    @order_line.copies = 1
+    @order_line.price_per_copy = 0.00
+    @order_line.range = ''
+    assert @order_line.valid?
+    assert_equal 350, @order_line.range_pages
+    assert_equal '0.00', '%.2f' % @order_line.price
+
+    @order_line.copies = 15
+    @order_line.price_per_copy = 0.10
+    @order_line.range = '1'
+    assert @order_line.valid?
+    assert_equal 1, @order_line.range_pages
+    assert_equal '1.50', '%.2f' % @order_line.price
+
+    @order_line.copies = 1
+    @order_line.price_per_copy = 0.07
+    @order_line.range = '1-11'
+    @order_line.two_sided = true
+    assert @order_line.valid?
+    assert_equal 11, @order_line.range_pages
+    assert_equal '0.80', '%.2f' % @order_line.price # 0.70 + 0.10
   end
 end

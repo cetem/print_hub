@@ -401,8 +401,12 @@ h3.title {
   display: inline-block;
   font-size: 1em;
   margin: .5em 0em;
-  padding-bottom: .2em;
-  border-bottom: 1px dotted #333;
+  padding-bottom: .25em;
+  border-bottom: 1px solid #333;
+}
+
+h3.title.clear {
+  border: none;
 }
 
 input.field_with_errors, select.field_with_errors, text_area.field_with_errors {
@@ -477,30 +481,6 @@ nav#menu_links {
   > ul, > ul > li{
     float: left;
     list-style: none;
-  }
-}
-
-nav#user_actions {
-  position: absolute;
-  right: 1em;
-  top: .25em;
-
-  div#username {
-    display: inline;
-    color: #fff;
-    background: $main-color;
-    padding: 2px 6px;
-    line-height: 1.5em;
-    font-weight: bold;
-    text-shadow: 1px 1px 1px rgba(0, 0, 0, .3);
-    box-shadow: 0 2px 2px -1px rgba(0, 0, 0, .4), 0 .9em .5em -0.2em rgba(255, 255, 255, .2) inset;
-    @include rounded-corners(.25em);
-  }
-
-  > ul, > ul > li {
-    display: inline;
-    list-style: none;
-    margin: 0em .5em;
   }
 }
 
@@ -612,6 +592,7 @@ span.money {
   margin: 0em .5em;
   background: #f0f0f0;
   font-size: .8em;
+  text-shadow: 1px 1px 1px rgba(0, 0, 0, .3);
 }
 
 span.arrow_down, span.arrow_up {

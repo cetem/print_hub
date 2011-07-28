@@ -34,6 +34,8 @@
   </section>
 <% end %>
 
+<%= render :partial => 'total', :locals => { :order => @order } %>
+
 <nav class="links">
   <%= link_to t(:'label.edit'), edit_order_path(@order) %> |
   <%= link_to t(:'label.back'), current_customer ? catalog_path : orders_path %>

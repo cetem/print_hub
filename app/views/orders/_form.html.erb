@@ -27,6 +27,8 @@
       <% end %>
     </div>
   </section>
+
+  <%= render :partial => 'total', :locals => { :order => @order } %>
   
   <div class="actions">
     <%= f.hidden_field :lock_version %>

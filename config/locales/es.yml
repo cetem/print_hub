@@ -578,6 +578,7 @@
       correctly_updated: 'Pedido actualizado correctamente.'
       stale_object_error: 'El pedido no pudo ser actualizado, intente nuevamente.'
       order_lines: 'Trabajos a encargar'
+      total: 'Total'
     payments:
       count:
         one: 'Suma de un pago'

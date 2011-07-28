@@ -76,4 +76,12 @@ class OrderTest < ActiveSupport::TestCase
       error_message_from_model(@order, :scheduled_at, :invalid_date)
     ].sort, @order.errors[:scheduled_at].sort
   end
+  
+  test 'price' do
+    price = @order.order_lines.inject(0) { |t, ol| t + ol.price }
+
+    assert @order.order_lines.any? { |ol| ol.price > 0 }
+    assert @order.price > 0
+    assert_equal @order.price, price
+  end
 end

@@ -4,6 +4,8 @@ class OrdersControllerTest < ActionController::TestCase
   setup do
     @order = orders(:for_tomorrow)
     @request.host = "#{CUSTOMER_SUBDOMAIN}.printhub.local"
+    
+    prepare_settings
   end
 
   test 'should get user index' do

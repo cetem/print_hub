@@ -27,4 +27,8 @@ class Order < ActiveRecord::Base
       end
     end
   end
+  
+  def price
+    self.order_lines.to_a.sum(&:price)
+  end
 end
