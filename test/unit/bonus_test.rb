@@ -2,23 +2,23 @@ require 'test_helper'
 
 # Clase para probar el modelo "Bonus"
 class BonusTest < ActiveSupport::TestCase
-  fixtures :bonuses
+  fixtures :credits
 
   # Función para inicializar las variables utilizadas en las pruebas
   def setup
-    @bonus = Bonus.find(bonuses(:big_bonus).id)
+    @bonus = Bonus.find(credits(:big_bonus).id)
   end
 
   # Prueba que se realicen las búsquedas como se espera
   test 'find' do
     assert_kind_of Bonus, @bonus
-    assert_equal bonuses(:big_bonus).amount, @bonus.amount
-    assert_equal bonuses(:big_bonus).remaining, @bonus.remaining
-    assert_equal bonuses(:big_bonus).valid_until, @bonus.valid_until
-    assert_equal bonuses(:big_bonus).customer_id, @bonus.customer_id
+    assert_equal credits(:big_bonus).amount, @bonus.amount
+    assert_equal credits(:big_bonus).remaining, @bonus.remaining
+    assert_equal credits(:big_bonus).valid_until, @bonus.valid_until
+    assert_equal credits(:big_bonus).customer_id, @bonus.customer_id
   end
 
-  # Prueba la creación de un usuario
+  # Prueba la creación de una bonificación
   test 'create' do
     assert_difference 'Bonus.count' do
       @bonus = Bonus.create(
@@ -34,7 +34,7 @@ class BonusTest < ActiveSupport::TestCase
     assert_equal '100.0', @bonus.reload.remaining.to_s
   end
 
-  # Prueba de actualización de un usuario
+  # Prueba de actualización de una bonificación
   test 'update' do
     assert_no_difference 'Bonus.count' do
       assert @bonus.update_attributes(
@@ -49,7 +49,7 @@ class BonusTest < ActiveSupport::TestCase
     assert_equal '1000.0', @bonus.amount.to_s
   end
 
-  # Prueba de eliminación de usuarios
+  # Prueba de eliminación de bonificaciones
   test 'destroy' do
     assert_difference('Bonus.count', -1) { @bonus.destroy }
   end

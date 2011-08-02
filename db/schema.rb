@@ -1,3 +1,4 @@
+# encoding: UTF-8
 # This file is auto-generated from the current state of the database. Instead
 # of editing this file, please use the migrations feature of Active Record to
 # incrementally modify your database, and then regenerate this schema definition.
@@ -10,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110726015816) do
+ActiveRecord::Schema.define(:version => 20110801221920) do
 
   create_table "article_lines", :force => true do |t|
     t.integer  "print_id",                                                   :null => false
@@ -37,18 +38,20 @@ ActiveRecord::Schema.define(:version => 20110726015816) do
 
   add_index "articles", ["code"], :name => "index_articles_on_code", :unique => true
 
-  create_table "bonuses", :force => true do |t|
-    t.decimal  "amount",      :precision => 15, :scale => 3, :null => false
-    t.decimal  "remaining",   :precision => 15, :scale => 3, :null => false
+  create_table "credits", :force => true do |t|
+    t.decimal  "amount",      :precision => 15, :scale => 3,                      :null => false
+    t.decimal  "remaining",   :precision => 15, :scale => 3,                      :null => false
     t.date     "valid_until"
     t.integer  "customer_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "type",                                       :default => "Bonus", :null => false
   end
 
-  add_index "bonuses", ["created_at"], :name => "index_bonuses_on_created_at"
-  add_index "bonuses", ["customer_id"], :name => "index_bonuses_on_customer_id"
-  add_index "bonuses", ["valid_until"], :name => "index_bonuses_on_valid_until"
+  add_index "credits", ["created_at"], :name => "index_bonuses_on_created_at"
+  add_index "credits", ["customer_id"], :name => "index_bonuses_on_customer_id"
+  add_index "credits", ["type"], :name => "index_credits_on_type"
+  add_index "credits", ["valid_until"], :name => "index_bonuses_on_valid_until"
 
   create_table "customers", :force => true do |t|
     t.string   "name",                                                                       :null => false
@@ -257,7 +260,7 @@ ActiveRecord::Schema.define(:version => 20110726015816) do
   add_foreign_key "article_lines", "articles", :name => "article_lines_article_id_fk", :dependent => :restrict
   add_foreign_key "article_lines", "prints", :name => "article_lines_print_id_fk", :dependent => :restrict
 
-  add_foreign_key "bonuses", "customers", :name => "bonuses_customer_id_fk", :dependent => :restrict
+  add_foreign_key "credits", "customers", :name => "credits_customer_id_fk", :dependent => :restrict
 
   add_foreign_key "order_lines", "documents", :name => "order_lines_document_id_fk", :dependent => :restrict
   add_foreign_key "order_lines", "orders", :name => "order_lines_order_id_fk", :dependent => :restrict

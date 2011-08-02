@@ -53,7 +53,9 @@
       article: 'Artículo'
       article_line: 'Línea de artículo'
       bonus: 'Bonificación'
+      credit: 'Crédito'
       customer: 'Cliente'
+      deposit: 'Depósito'
       document: 'Documento'
       order: 'Pedido'
       order_line: 'Línea de pedido'
@@ -85,6 +87,10 @@
         amount: 'Monto'
         remaining: 'Restante'
         valid_until: 'Válido hasta'
+      credit:
+        amount: 'Monto'
+        remaining: 'Restante'
+        valid_until: 'Válido hasta'
       customer:
         name: 'Nombre'
         lastname: 'Apellido'
@@ -98,6 +104,13 @@
         bonuses:
           one: 'Bonificación'
           other: 'Bonificaciones'
+          amount: 'Monto'
+          remaining: 'Restante'
+          valid_until: 'Válido hasta'
+      deposit:
+        amount: 'Monto'
+        remaining: 'Restante'
+        valid_until: 'Válido hasta'
       document:
         code: 'Código'
         name: 'Nombre'

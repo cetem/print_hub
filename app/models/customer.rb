@@ -34,6 +34,8 @@ class Customer < ActiveRecord::Base
   has_many :prints, :inverse_of => :customer, :dependent => :nullify
   has_many :bonuses, :inverse_of => :customer, :dependent => :destroy,
     :autosave => true, :class_name => 'Bonus', :order => 'valid_until ASC'
+  has_many :deposits, :inverse_of => :customer, :dependent => :destroy,
+    :autosave => true, :order => 'valid_until ASC'
   
   accepts_nested_attributes_for :bonuses, :allow_destroy => true,
     :reject_if => proc { |attributes| attributes['amount'].to_f <= 0 }
