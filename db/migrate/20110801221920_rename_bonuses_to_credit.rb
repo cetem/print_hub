@@ -13,12 +13,13 @@ class RenameBonusesToCredit < ActiveRecord::Migration
 
   def down
     remove_foreign_key :credits, :column => :customer_id
-    add_foreign_key :bonuses, :customers, :dependent => :restrict
     
     remove_index :credits, :column => :type
     
     remove_column :credits, :type
     
     rename_table :credits, :bonuses
+    
+    add_foreign_key :bonuses, :customers, :dependent => :restrict
   end
 end
