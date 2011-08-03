@@ -1,4 +1,6 @@
 $main-color: #f72;
+$main-text-color: #333;
+$soft-highlight-color: #ffc;
 
 @mixin box-shadow($h-offset: 0em, $v-offset: 0em, $blur-offset: .25em, $color: #999) {
   -moz-box-shadow: $h-offset $v-offset $blur-offset $color;

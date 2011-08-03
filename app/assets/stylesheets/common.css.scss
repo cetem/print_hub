@@ -6,10 +6,10 @@
 }
 
 a {
-  color: #000;
+  color: darken($main-text-color, 20%);
 
   &:visited {
-    color: #666;
+    color: lighten($main-text-color, 20%);
   }
 
   &:hover {
@@ -38,8 +38,8 @@ a[data-event="hideItem"] {
 }
 
 body {
-  color: #333;
-  background-color: #fff;
+  color: $main-text-color;
+  background: #fff;
   font-family: verdana, arial, helvetica, sans-serif;
   font-size: 12px;
 }
@@ -238,7 +238,7 @@ div.add_nested_item {
 }
 
 div.add_nested_item a {
-  color: #333;
+  color: $main-text-color;
   text-decoration: none;
   padding-bottom: .25em;
   border-bottom: 1px dotted $main-color;
@@ -494,7 +494,7 @@ nav.links {
     margin: .5em 0em;
 
     a {
-      color: #333;
+      color: $main-text-color;
       padding: 1px 2px;
       text-decoration: none;
       border: 2px solid #cecece;
@@ -652,6 +652,10 @@ table.list {
         background: #cecece;
         @include transition(.15s, background, ease-out);
       }
+    }
+
+    tr.private {
+      background: $soft-highlight-color;
     }
   }
 }

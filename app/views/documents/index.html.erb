@@ -16,7 +16,8 @@
 
   <tbody>
     <% @documents.each do |document| %>
-      <tr class="<%= cycle(:even, :odd) %>">
+      <% classes = [cycle(:even, :odd), document.private ? 'private' : 'public'] %>
+      <tr class="<%= classes.join(' ') %>">
         <td><%= document.code %></td>
         <td><%= document.name %></td>
         <td><%= document.pages %></td>

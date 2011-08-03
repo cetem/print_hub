@@ -5,6 +5,7 @@
   <title><%= [t(:app_name), @title].compact.join(' | ') %></title>
   <%= default_stylesheets %>
   <%= default_javascripts %>
+  <%= favicon_link_tag %>
   <%= csrf_meta_tag %>
   <%= javascript_tag do %>
     <%= yield :js_extra %>
