@@ -231,7 +231,7 @@ class PrintTest < ActiveSupport::TestCase
     assert payment.bonus?
     assert_equal '36.79', payment.amount.to_s
     assert_equal '36.79', payment.paid.to_s
-    assert_equal '463.21',
+    assert_equal '963.21',
       Customer.find(customers(:student).id).free_credit.to_s
   end
   

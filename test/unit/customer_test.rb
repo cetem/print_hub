@@ -163,22 +163,22 @@ class CustomerTest < ActiveSupport::TestCase
   end
 
   test 'free credit' do
-    assert_equal '500.0', @customer.free_credit.to_s
+    assert_equal '1000.0', @customer.free_credit.to_s
 
     assert_difference '@customer.bonuses.count' do
       @customer.bonuses.create(:amount => 100.0)
     end
 
-    assert_equal '600.0', @customer.free_credit.to_s
+    assert_equal '1100.0', @customer.free_credit.to_s
 
     # Un cliente nuevo no debería tener crédito
     assert_equal '0.0', Customer.new.free_credit.to_s
   end
 
   test 'use credit' do
-    # Usa el crédito de la bonificación que tiene disponible
+    # Usa el crédito que tiene disponible
     assert_equal '0', @customer.use_credit(100, 'student123', true).to_s
-    assert_equal '400.0', @customer.free_credit.to_s
+    assert_equal '900.0', @customer.free_credit.to_s
 
     assert_difference '@customer.bonuses.count' do
       @customer.bonuses.create(
@@ -187,21 +187,21 @@ class CustomerTest < ActiveSupport::TestCase
       )
     end
 
-    # Usa primero la bonificación más próxima a vencer
+    # Usa primero el crédito más próximo a vencer
     assert_equal '0', @customer.use_credit(200, 'student123', true).to_s
-    assert_equal '1200.0', @customer.free_credit.to_s
-    assert_equal ['200.0', '1000.0'],
-      @customer.bonuses.valids.map(&:remaining).map(&:to_s)
-    # Pagar más de lo que se puede con bonificaciones
-    assert_equal '300.0', @customer.use_credit(1500, 'student123', true).to_s
+    assert_equal '1700.0', @customer.free_credit.to_s
+    assert_equal ['200.0', '500.0', '1000.0'],
+      @customer.credits.valids.map(&:remaining).map(&:to_s)
+    # Pagar más de lo que se puede con crédito
+    assert_equal '300.0', @customer.use_credit(2000, 'student123', true).to_s
     assert_equal '0.0', @customer.free_credit.to_s
-    # Intentar pagar sin bonificaciones
+    # Intentar pagar sin crédito
     assert_equal '100.0', @customer.use_credit(100, 'student123', true).to_s
   end
   
   test 'can not use credit with wrong password' do
     assert_equal false, @customer.use_credit(100, 'wrong_password', true)
-    assert_equal '500.0', @customer.free_credit.to_s
+    assert_equal '1000.0', @customer.free_credit.to_s
   end
   
   test 'build monthly bonus' do

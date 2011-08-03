@@ -32,6 +32,7 @@ class Customer < ActiveRecord::Base
   has_many :orders, :inverse_of => :customer, :dependent => :destroy,
     :order => 'scheduled_at ASC'
   has_many :prints, :inverse_of => :customer, :dependent => :nullify
+  has_many :credits, :inverse_of => :customer, :order => 'valid_until ASC'
   has_many :bonuses, :inverse_of => :customer, :dependent => :destroy,
     :autosave => true, :class_name => 'Bonus', :order => 'valid_until ASC'
   has_many :deposits, :inverse_of => :customer, :dependent => :destroy,
@@ -79,31 +80,32 @@ class Customer < ActiveRecord::Base
   end
 
   def free_credit
-    self.bonuses.valids.sum('remaining')
+    self.credits.valids.sum('remaining')
   end
 
   def use_credit(amount, password = '', auto_save = false)
     if self.valid_password?(password)
       to_pay = BigDecimal.new(amount.to_s)
-      available_bonuses = self.bonuses.valids.order('valid_until DESC').to_a
-      bonuses_for_update = []
+      available_credits = self.credits.valids.order('valid_until DESC').to_a
+      credits_for_update = {'Bonus' => [], 'Deposit' => []}
       
-      while to_pay > 0 && available_bonuses.size > 0
-        bonus = available_bonuses.shift
-        remaining = bonus.remaining
+      while to_pay > 0 && available_credits.size > 0
+        credit = available_credits.shift
+        remaining = credit.remaining
 
         if remaining >= to_pay
-          bonus.remaining = remaining - to_pay
+          credit.remaining = remaining - to_pay
           to_pay = 0
         else
-          bonus.remaining = 0
+          credit.remaining = 0
           to_pay -= remaining
         end
 
-        bonuses_for_update << bonus
+        credits_for_update[credit.type] << credit
       end
       
-      self.bonuses_attributes = bonuses_for_update.map(&:attributes)
+      self.bonuses_attributes = credits_for_update['Bonus'].map(&:attributes)
+      self.deposits_attributes = credits_for_update['Deposit'].map(&:attributes)
       self.save! if auto_save
 
       to_pay
