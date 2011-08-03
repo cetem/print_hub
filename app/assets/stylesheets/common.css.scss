@@ -593,6 +593,7 @@ span.money {
   background: #f0f0f0;
   font-size: .8em;
   text-shadow: 1px 1px 1px rgba(0, 0, 0, .3);
+  @include rounded-corners(.75em);
 }
 
 span.arrow_down, span.arrow_up {

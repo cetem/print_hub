@@ -255,7 +255,7 @@ class PrintsControllerTest < ActionController::TestCase
             :new_1 => {
               :amount => '35.00',
               :paid => '35.00',
-              :paid_with => Payment::PAID_WITH[:bonus].to_s
+              :paid_with => Payment::PAID_WITH[:credit].to_s
             }
           }
         }

@@ -548,6 +548,7 @@
         one: 'Depósito vigente'
         other: 'Depósitos vigentes'
       without_bonuses: 'Sin bonificaciones'
+      without_deposits: 'Sin depósitos'
       bonus_list:
         one: 'Una bonificación'
         other: '%{count} bonificaciones'
@@ -606,7 +607,7 @@
         apply: 'Aplicar'
       paid_with:
         cash: 'Efectivo'
-        bonus: 'Bonificado'
+        credit: 'Crédito'
       index_title: 'Listado de pagos'
       payment_details: 'Formas de pago:'
     prints:
@@ -636,8 +637,8 @@
       job_not_canceled: 'No se pudo cancelar'
       prints_with_customer: 'Impresiones de %{customer}'
       customer_credit_detail:
-        link: 'Ver bonificaciones'
-        title: 'Ver detalle de bonificaciones vigentes'
+        link: 'Ver crédito'
+        title: 'Ver detalles del crédito vigente'
       new: 'Nueva'
       new_without_stored_documents: 'Nueva impresión *sin* documentos'
     settings:

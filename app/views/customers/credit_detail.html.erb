@@ -33,6 +33,41 @@
         </table>
       </section>
     <% end %>
+    
+    <% if @customer.current_deposits.empty? %>
+      <p class="red">
+        <%= t(:without_deposits, :scope => [:view, :customers]) %>
+      </p>
+    <% else %>
+      <section class="nested_items">
+        <h2>
+          <%= t(:current_deposits,
+            :count => @customer.current_deposits.size,
+            :scope => [:view, :customers])
+          %>
+        </h2>
+
+        <table class="summary">
+          <thead>
+            <tr>
+              <th><%= Deposit.human_attribute_name :amount %></th>
+              <th><%= Deposit.human_attribute_name :remaining %></th>
+              <th><%= Deposit.human_attribute_name :valid_until %></th>
+            </tr>
+          </thead>
+          <tbody>
+            <% @customer.current_deposits.each do |deposit| %>
+              <tr>
+                <td><%= number_to_currency deposit.amount %></td>
+                <td><%= number_to_currency deposit.remaining %></td>
+                <td><%= l deposit.valid_until if deposit.valid_until %></td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+      </section>
+    <% end %>
+    
     <% if request.xhr? %>
       <nav class="links">
         <%= link_to_function t(:'label.hide'),

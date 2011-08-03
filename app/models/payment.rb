@@ -3,7 +3,7 @@ class Payment < ActiveRecord::Base
   
   # Constantes
   PAID_WITH = {
-    :bonus => 'B',
+    :credit => 'B',
     :cash => 'C'
   }.with_indifferent_access.freeze
 
@@ -31,7 +31,7 @@ class Payment < ActiveRecord::Base
   end
   
   def paid_with_text
-    I18n.t(:"view.payments.paid_with.#{PAID_WITH.invert[self.paid_with]}")
+    I18n.t("view.payments.paid_with.#{PAID_WITH.invert[self.paid_with]}")
   end
 
   PAID_WITH.each do |paid_with_type, paid_with_value|

@@ -218,7 +218,7 @@ class PrintTest < ActiveSupport::TestCase
           '1' => {
             :amount => 36.79,
             :paid => 36.79,
-            :paid_with => Payment::PAID_WITH[:bonus]
+            :paid_with => Payment::PAID_WITH[:credit]
           }
         }
       )
@@ -228,7 +228,7 @@ class PrintTest < ActiveSupport::TestCase
 
     payment = @print.payments.first
 
-    assert payment.bonus?
+    assert payment.credit?
     assert_equal '36.79', payment.amount.to_s
     assert_equal '36.79', payment.paid.to_s
     assert_equal '963.21',
@@ -258,7 +258,7 @@ class PrintTest < ActiveSupport::TestCase
           '1' => {
             :amount => 35.00,
             :paid => 35.00,
-            :paid_with => Payment::PAID_WITH[:bonus]
+            :paid_with => Payment::PAID_WITH[:credit]
           }
         }
       )
@@ -304,7 +304,7 @@ class PrintTest < ActiveSupport::TestCase
               '2' => {
                 :amount => 500.00,
                 :paid => 500.00,
-                :paid_with => Payment::PAID_WITH[:bonus]
+                :paid_with => Payment::PAID_WITH[:credit]
               }
             }
           )
@@ -314,10 +314,10 @@ class PrintTest < ActiveSupport::TestCase
 
     assert_equal 2, @print.reload.payments.size
 
-    bonus_payment = @print.payments.detect(&:bonus?)
+    credit_payment = @print.payments.detect(&:credit?)
 
-    assert_equal '500.0', bonus_payment.amount.to_s
-    assert_equal '500.0', bonus_payment.paid.to_s
+    assert_equal '500.0', credit_payment.amount.to_s
+    assert_equal '500.0', credit_payment.paid.to_s
 
     cash_payment = @print.payments.detect(&:cash?)
 

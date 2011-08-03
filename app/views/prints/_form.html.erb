@@ -124,11 +124,11 @@
               <div class="nested_item_field">
                 <%= p_f.text_field :paid, :value => '%.3f' % p_f.object.paid,
                   :id => "payment_#{p_f.object.paid_with}_paid", :maxlength => 15,
-                  :readonly => p_f.object.bonus? %>
+                  :readonly => p_f.object.credit? %>
               </div>
             </td>
             <td>
-              <% if p_f.object.bonus? %>
+              <% if p_f.object.credit? %>
                 <div class="nested_item_field">
                   <%= f.password_field :credit_password, :value => '', :size => 15, :maxlength => 255 %>
                 </div>
@@ -156,7 +156,7 @@
 <script type="text/javascript">
   function updateTotalPrice() {
     var cashPrefix = '#payment_<%= Payment::PAID_WITH[:cash] %>';
-    var bonusPrefix = '#payment_<%= Payment::PAID_WITH[:bonus] %>';
+    var creditPrefix = '#payment_<%= Payment::PAID_WITH[:credit] %>';
     var freeCredit = parseFloat($('#customer_free_credit').val()) || 0.0;
     var payWithCash = 0.0, payWithBonus = 0.0;
     var totalPrice = 0.0;
@@ -185,8 +185,8 @@
 
     $(cashPrefix + '_amount').val(payWithCash.toFixed(3));
     $(cashPrefix + '_paid').val(payWithCash.toFixed(3));
-    $(bonusPrefix + '_amount').val(payWithBonus.toFixed(3));
-    $(bonusPrefix + '_paid').val(payWithBonus.toFixed(3));
+    $(creditPrefix + '_amount').val(payWithBonus.toFixed(3));
+    $(creditPrefix + '_paid').val(payWithBonus.toFixed(3));
   }
 
   function updatePrintJobPrice(printJob) {

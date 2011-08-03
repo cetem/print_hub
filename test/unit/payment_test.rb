@@ -19,19 +19,19 @@ class PaymentTest < ActiveSupport::TestCase
     assert_equal payments(:math_payment).payable_type, @payment.payable_type
   end
 
-  # Prueba la creación de un usuario
+  # Prueba la creación de un pago
   test 'create' do
     assert_difference 'Payment.count' do
       @payment = Payment.create(
         :amount => '10.50',
         :paid => '10.00',
-        :paid_with => Payment::PAID_WITH[:bonus],
+        :paid_with => Payment::PAID_WITH[:credit],
         :payable => prints(:math_print)
       )
     end
   end
 
-  # Prueba de actualización de un usuario
+  # Prueba de actualización de un pago
   test 'update' do
     assert_no_difference 'Payment.count' do
       assert @payment.update_attributes(:paid => '38.00'),
@@ -41,7 +41,7 @@ class PaymentTest < ActiveSupport::TestCase
     assert_equal BigDecimal.new('38.00'), @payment.reload.paid
   end
 
-  # Prueba de eliminación de usuarios
+  # Prueba de eliminación de pagos
   test 'destroy' do
     assert_difference('Payment.count', -1) { @payment.destroy }
   end

@@ -67,7 +67,7 @@ class Print < ActiveRecord::Base
     end
 
     self.payment(:cash)
-    self.payment(:bonus)
+    self.payment(:credit)
   end
 
   def can_be_destroyed?
@@ -126,19 +126,20 @@ class Print < ActiveRecord::Base
   end
 
   def remove_unnecessary_payments
-    bonus_payment = self.payments.detect(&:bonus?)
+    credit_payment = self.payments.detect(&:credit?)
     cash_payment = self.payments.detect(&:cash?)
 
-    bonus_payment.try(:mark_for_destruction) if bonus_payment.try(:amount) == 0
-    if bonus_payment && bonus_payment.amount > 0 &&
+    credit_payment.mark_for_destruction if credit_payment.try(:amount) == 0
+    
+    if credit_payment && credit_payment.amount > 0 &&
         cash_payment.try(:amount) == 0
       cash_payment.mark_for_destruction
     end
   end
 
   def update_customer_credit
-    if (bonus = self.payments.detect(&:bonus?)) && bonus.amount > 0
-      remaining = self.customer.use_credit(bonus.amount, self.credit_password)
+    if (credit = self.payments.detect(&:credit?)) && credit.amount > 0
+      remaining = self.customer.use_credit(credit.amount, self.credit_password)
 
       if remaining == false
         self.errors.add :credit_password, :invalid
