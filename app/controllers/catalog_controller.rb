@@ -5,8 +5,7 @@ class CatalogController < ApplicationController
   
   def index
     @title = t :'view.catalog.index_title'
-    @tag = Tag.find(params[:tag_id]) if params[:tag_id]
-    @documents = @tag ? @tag.documents : Document.scoped
+    @documents = document_scope
 
     if params[:q]
       query = params[:q].strip.gsub(/\s*([&|])\s*/, '\1').gsub(/[|&!]$/, '')
@@ -56,7 +55,7 @@ class CatalogController < ApplicationController
 
   def show
     @title = t :'view.catalog.show_title'
-    @document = Document.find(params[:id])
+    @document = document_scope.find(params[:id])
 
     respond_to do |format|
       format.html # show.html.erb
@@ -66,7 +65,7 @@ class CatalogController < ApplicationController
   
   # GET /catalog/1/pdf_thumb/download
   def download
-    @document = Document.find(params[:id])
+    @document = document_scope.find(params[:id])
     style = params[:style].try(:to_sym)
     styles = [
       :pdf_thumb, :pdf_thumb_2, :pdf_thumb_3,
@@ -88,7 +87,7 @@ class CatalogController < ApplicationController
   
   # POST /catalog/1/add_to_order
   def add_to_order
-    @document = Document.find(params[:id])
+    @document = document_scope.find(params[:id])
     session[:documents_to_order] ||= []
     
     unless session[:documents_to_order].include?(@document.id)
@@ -98,13 +97,19 @@ class CatalogController < ApplicationController
   
   # DELETE /catalog/1/remove_from_order
   def remove_from_order
-    @document = Document.find(params[:id])
+    @document = document_scope.find(params[:id])
     session[:documents_to_order] ||= []
     
     session[:documents_to_order].delete(@document.id)
   end
   
   private
+  
+  def document_scope
+    @tag = Tag.publicly_visible.find(params[:tag_id]) if params[:tag_id]
+    
+    @tag ? @tag.documents.publicly_visible : Document.publicly_visible
+  end
   
   def load_documents_to_order
     session[:documents_to_order] ||= []

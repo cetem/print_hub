@@ -5,6 +5,8 @@ math_notes:
   media: <%= Document::MEDIA_TYPES[:a4] %>
   description: Math Notes description
   enable: true
+  private: false
+  tag_path: 'Basics ## Notes'
   file_file_name: math_notes.pdf
   tags: notes, basics
 
@@ -15,6 +17,8 @@ math_book:
   media: <%= Document::MEDIA_TYPES[:a4] %>
   description: Math Book description
   enable: true
+  private: false
+  tag_path: 'Basics ## Books'
   file_file_name: math_book.pdf
   tags: books, basics
 
@@ -25,6 +29,8 @@ physics_notes:
   media: <%= Document::MEDIA_TYPES[:a4] %>
   description: Physics Notes description
   enable: true
+  private: false
+  tag_path: 'Notes ## Notes | Physics'
   file_file_name: physics_notes.pdf
   tags: notes, physics
 
@@ -35,5 +41,7 @@ unused_book:
   media: <%= Document::MEDIA_TYPES[:a4] %>
   description: Unused Book description
   enable: true
+  private: false
+  tag_path: 'Basics ## Books'
   file_file_name: unused_book.pdf
   tags: books, basics

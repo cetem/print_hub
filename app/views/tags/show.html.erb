@@ -1,5 +1,10 @@
 <h2 class="title"><%= @tag %></h2>
 
+<p>
+  <b><%= Tag.human_attribute_name :private %></b>:
+  <%= t @tag.private ? :yes : :no, :scope => :label %>
+</p>
+
 <nav class="links">
   <%= link_to t(:'label.edit'), edit_tag_path(@tag, :parent => params[:parent]) %> |
   <%= link_to t(:'label.list'), tags_path(:parent => params[:parent]) %>

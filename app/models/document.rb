@@ -14,6 +14,7 @@ class Document < ActiveRecord::Base
   scope :with_tag, lambda { |tag_id|
     includes(:tags).where("#{Tag.table_name}.id" => tag_id)
   }
+  scope :publicly_visible, where(:private => false)
 
   # Atributos no persistentes
   attr_accessor :auto_tag_name
@@ -23,7 +24,7 @@ class Document < ActiveRecord::Base
   attr_protected :pages
 
   # Callbacks
-  before_save :update_tag_path
+  before_save :update_tag_path, :update_privacy
   before_destroy :can_be_destroyed?
   before_file_post_process :extract_page_count
 
@@ -68,13 +69,27 @@ class Document < ActiveRecord::Base
     
     super(default_options.merge(options || {}))
   end
-
-  def update_tag_path(new_tag = nil)
-    tags = self.tags.reject { |t| t.id == new_tag.try(:id) } | [new_tag]
-
-    self.tag_path = tags.compact.map(&:to_s).join(' ## ')
+  
+  def update_tag_path(new_tag = nil, excluded_tag = nil)
+    unless @tag_path_updated
+      tags = conditional_tags(new_tag, excluded_tag)
+      self.tag_path = tags.compact.map(&:to_s).join(' ## ')
+      
+      @tag_path_updated = true
+    end
     
-    true
+    @tag_path_updated
+  end
+  
+  def update_privacy(new_tag = nil, excluded_tag = nil)
+    unless @privacy_updated
+      tags = conditional_tags(new_tag, excluded_tag)
+      self.private = tags.compact.any?(&:private)
+      
+      @privacy_updated = true
+    end
+    
+    @privacy_updated
   end
 
   def can_be_destroyed?
@@ -119,5 +134,13 @@ class Document < ActiveRecord::Base
 
   rescue PDF::Reader::MalformedPDFError
     false
+  end
+  
+  private
+  
+  def conditional_tags(new_tag = nil, excluded_tag = nil)
+    self.tags.reject do |t|
+      t.id == new_tag.try(:id) || t.id == excluded_tag.try(:id)
+    end | [new_tag]
   end
 end

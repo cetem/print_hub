@@ -16,14 +16,14 @@ class TagTest < ActiveSupport::TestCase
     assert_equal tags(:books).parent_id, @tag.parent_id
   end
 
-  # Prueba la creación de un usuario
+  # Prueba la creación de una etiqueta
   test 'create' do
     assert_difference 'Tag.count' do
       @tag = Tag.create(:name => 'New name')
     end
   end
 
-  # Prueba de actualización de un usuario
+  # Prueba de actualización de una etiqueta
   test 'update' do
     assert_no_difference 'Tag.count' do
       assert @tag.update_attributes(:name => 'Updated name'),
@@ -33,9 +33,18 @@ class TagTest < ActiveSupport::TestCase
     assert_equal 'Updated name', @tag.reload.name
   end
 
-  # Prueba de eliminación de usuarios
+  # Prueba de eliminación de etiquetas
   test 'destroy' do
+    document_ids = @tag.document_ids
+    tag_paths = Document.find(document_ids).map(&:tag_path)
+    
+    assert tag_paths.any? { |tp| tp.split(/\s##\s/).include?(@tag.to_s) }
+    
     assert_difference('Tag.count', -1) { @tag.destroy }
+    
+    tag_paths = Document.find(document_ids).map(&:tag_path)
+    
+    assert !tag_paths.any? { |tp| tp.split(/\s##\s/).include?(@tag.to_s) }
   end
 
   # Prueba que las validaciones del modelo se cumplan como es esperado
@@ -65,19 +74,63 @@ class TagTest < ActiveSupport::TestCase
       :count => 255)], @tag.errors[:name]
   end
 
-  test 'update related documents' do
+  test 'update name in related documents' do
     @tag.name = 'Test tag'
     @tag.update_related_documents
 
     documents_tag_path = @tag.documents.map(&:tag_path).compact.sort
-    assert_not_equal 0, @tag.documents.count
+    assert documents_tag_path.all? { |tp| tp.match /Test tag/ }
+  end
+  
+  test 'new name is saved in related documents' do
+    documents_tag_path = @tag.documents.map(&:tag_path).compact.sort
+    
     assert !documents_tag_path.any? { |tp| tp.match /Updated/ }
-
     assert @tag.update_attributes(:name => 'Updated')
 
     new_documents_tag_path = @tag.documents.reload.map(&:tag_path).compact.sort
 
-    assert_not_equal documents_tag_path, new_documents_tag_path
     assert new_documents_tag_path.all? { |tp| tp.match /Updated/ }
+  end
+  
+  test 'update private in related documents' do
+    assert !@tag.documents.any?(&:private)
+    
+    @tag.private = true
+    @tag.update_related_documents
+    
+    assert @tag.documents.all?(&:private)
+  end
+  
+  test 'private is saved in related documents' do
+    assert !@tag.documents.any?(&:private)
+    
+    assert @tag.update_attributes(:private => true)
+    
+    assert @tag.documents.reload.all?(&:private)
+  end
+  
+  test 'private convinations in multi tag document' do
+    document = Document.find(documents(:math_notes).id)
+    tag_ids = document.tags.map(&:id)
+    
+    assert_equal 2, tag_ids.size
+    assert !document.private
+    assert Tag.find(tag_ids.first).update_attributes(:private => true)
+    
+    # Con solo una etiqueta privada ya se considera privado el documento
+    assert document.reload.private
+    assert Tag.find(tag_ids.second).update_attributes(:private => true)
+    
+    # Sin cambios, ahora las dos son privadas
+    assert document.reload.private
+    assert Tag.find(tag_ids.first).update_attributes(:private => false)
+    
+    # Sin cambios, falta que la segunda sea pública
+    assert document.reload.private
+    assert Tag.find(tag_ids.second).update_attributes(:private => false)
+    
+    # Ahora si no se considera privado el documento
+    assert !document.reload.private
   end
 end

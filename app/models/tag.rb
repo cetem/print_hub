@@ -4,9 +4,13 @@ class Tag < ActiveRecord::Base
   has_paper_trail
   acts_as_tree  
   find_by_autocomplete :name
+  
+  # Scopes
+  scope :publicly_visible, where(:private => false)
 
   # Callbacks
   before_save :update_related_documents
+  before_destroy :remove_from_related_documents
 
   # Restricciones
   validates :name, :presence => true
@@ -16,7 +20,7 @@ class Tag < ActiveRecord::Base
     :allow_blank => true
 
   # Relaciones
-  has_and_belongs_to_many :documents, :order => 'name ASC'
+  has_and_belongs_to_many :documents, :autosave => true, :order => 'name ASC'
 
   def to_s
     ([self] + self.ancestors).map(&:name).reverse.join(' | ')
@@ -38,10 +42,20 @@ class Tag < ActiveRecord::Base
   end
 
   def update_related_documents
-    if self.name_changed?
-      self.documents.each do |d|
-        d.update_tag_path(self)
-      end
+    self.documents.each { |d| d.update_tag_path self } if self.name_changed?
+    
+    if self.private_changed?
+      self.documents.each { |d| d.update_privacy self }
+    end
+
+    true
+  end
+  
+  def remove_from_related_documents
+    self.documents.each do |d|
+      d.update_tag_path nil, self
+      d.update_privacy nil, self
+      d.save # Guardar porque se llama desde before_destroy y no "autoguarda"
     end
 
     true

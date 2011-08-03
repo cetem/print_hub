@@ -7,7 +7,7 @@ GIT
 
 GIT
   remote: https://github.com/rails/rails.git
-  revision: ebfad374ff89764a315c2bf476806001ad421091
+  revision: 1f1bfaf7d7bbabdf3a268d373b6178e436f08e44
   branch: 3-1-stable
   specs:
     actionmailer (3.1.0.rc5)
@@ -95,7 +95,7 @@ GEM
     cups (0.0.7)
     daemons (1.0.10)
     erubis (2.7.0)
-    execjs (1.2.1)
+    execjs (1.2.4)
       multi_json (~> 1.0)
     foreigner (1.1.0)
       activerecord (>= 3.0.0)

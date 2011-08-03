@@ -508,6 +508,8 @@ class PrintsControllerTest < ActionController::TestCase
     assert_response :success
     assert_match %r{#{I18n.t(:job_canceled, :scope => [:view, :prints])}},
       @response.body
+    
+    sleep 0.5
 
     new_canceled_count = Cups.all_jobs(@printer).select do |_, j|
       j[:state] == :cancelled

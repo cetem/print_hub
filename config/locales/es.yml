@@ -117,6 +117,7 @@
         pages: 'Páginas'
         media: 'Tamaño de papel'
         description: 'Descripción'
+        private: 'Privado'
         file: 'Archivo'
         file_file_name: 'Archivo'
       order:
@@ -184,6 +185,7 @@
         value: 'Valor'
       tag:
         name: 'Nombre'
+        private: 'Privada'
         parent_id: 'Padre'
       user:
         name: 'Nombre'

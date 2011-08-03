@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110802231955) do
+ActiveRecord::Schema.define(:version => 20110803213341) do
 
   create_table "article_lines", :force => true do |t|
     t.integer  "print_id",                                                   :null => false
@@ -73,10 +73,10 @@ ActiveRecord::Schema.define(:version => 20110802231955) do
   add_index "customers", ["identification"], :name => "index_customers_on_identification", :unique => true
 
   create_table "documents", :force => true do |t|
-    t.integer  "code",                                :null => false
-    t.string   "name",                                :null => false
+    t.integer  "code",                                 :null => false
+    t.string   "name",                                 :null => false
     t.text     "description"
-    t.integer  "pages",                               :null => false
+    t.integer  "pages",                                :null => false
     t.integer  "lock_version",      :default => 0
     t.string   "file_file_name"
     t.string   "file_content_type"
@@ -86,12 +86,14 @@ ActiveRecord::Schema.define(:version => 20110802231955) do
     t.datetime "updated_at"
     t.text     "tag_path"
     t.string   "media"
-    t.boolean  "enable",            :default => true, :null => false
+    t.boolean  "enable",            :default => true,  :null => false
     t.string   "file_fingerprint"
+    t.boolean  "private",           :default => false
   end
 
   add_index "documents", ["code"], :name => "index_documents_on_code"
   add_index "documents", ["enable"], :name => "index_documents_on_enable"
+  add_index "documents", ["private"], :name => "index_documents_on_private"
 
   create_table "documents_tags", :id => false, :force => true do |t|
     t.integer "document_id", :null => false
@@ -200,14 +202,16 @@ ActiveRecord::Schema.define(:version => 20110802231955) do
   add_index "settings", ["thing_type", "thing_id", "var"], :name => "index_settings_on_thing_type_and_thing_id_and_var", :unique => true
 
   create_table "tags", :force => true do |t|
-    t.string   "name",                        :null => false
+    t.string   "name",                            :null => false
     t.integer  "parent_id"
     t.integer  "lock_version", :default => 0
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.boolean  "private",      :default => false
   end
 
   add_index "tags", ["parent_id"], :name => "index_tags_on_parent_id"
+  add_index "tags", ["private"], :name => "index_tags_on_private"
 
   create_table "user_sessions", :force => true do |t|
     t.string   "session_id",                      :null => false

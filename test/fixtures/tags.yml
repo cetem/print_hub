@@ -1,15 +1,20 @@
 draft_note:
   name: Draft note
+  private: false
 
 notes:
   name: Notes
+  private: false
 
 basics:
   name: Basics
+  private: false
 
 books:
   name: Books
+  private: false
 
 physics:
   name: Physics
+  private: false
   parent_id: <%= ActiveRecord::Fixtures.identify(:notes) %>
