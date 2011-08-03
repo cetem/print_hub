@@ -80,7 +80,7 @@ GEM
       activerecord (>= 3.0.7)
     bcrypt-ruby (2.1.4)
     builder (3.0.0)
-    capistrano (2.6.0)
+    capistrano (2.8.0)
       highline
       net-scp (>= 1.0.0)
       net-sftp (>= 2.0.0)
@@ -160,7 +160,7 @@ GEM
     ruby-prof (0.10.8)
     ruby_core_source (0.1.5)
       archive-tar-minitar (>= 0.5.2)
-    sass (3.1.5)
+    sass (3.1.6)
     simple_autocomplete (0.3.8)
     sprockets (2.0.0.beta.12)
       hike (~> 1.2)

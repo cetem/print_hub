@@ -25,7 +25,6 @@
         :class => :remove %>
     <% end %>
     <%= f.hidden_field :customer_id, :class => :autocomplete_id %>
-    <div id="print_customer_credit_detail"></div>
     <%= hidden_field_tag :customer_free_credit,
       @print.customer.try(:free_credit), :id => :customer_free_credit %>
   </div>
@@ -362,7 +361,7 @@
   });
   
   $('#link_to_customer_credit_detail').live('ajax:success', function(event, data) {
-    $('#print_customer_credit_detail').html(data);
+    $.fancybox({ 'padding': 24, 'content': data });
   });
 
   // Captura de atajos de teclado

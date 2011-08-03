@@ -1,4 +1,4 @@
-<div id="customer_credit_detail" style="display: none;">
+<div id="customer_credit_detail">
   <div>
     <% if @customer.current_bonuses.empty? %>
       <p class="red">
@@ -67,21 +67,5 @@
         </table>
       </section>
     <% end %>
-    
-    <% if request.xhr? %>
-      <nav class="links">
-        <%= link_to_function t(:'label.hide'),
-          "Helper.hide('#customer_credit_detail', function() { $('#link_to_customer_credit_detail').show(); })" %>
-      </nav>
-    <% end %>
   </div>
 </div>
-<% if request.xhr? %>
-  <script type="text/javascript">
-    if(!$('#customer_credit_detail').is(':visible')) {
-      Helper.show('#customer_credit_detail', function() {
-        $('#link_to_customer_credit_detail').hide();
-      });
-    }
-  </script>
-<% end %>
