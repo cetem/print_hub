@@ -9,6 +9,7 @@ class User < ActiveRecord::Base
       :medium => { :geometry => '200x200>', :format => :png }
     }
   acts_as_authentic do |c|
+    c.maintain_sessions = false
     c.crypto_provider = Authlogic::CryptoProviders::Sha512
   end
 

@@ -2,6 +2,7 @@ class Customer < ActiveRecord::Base
   has_paper_trail :ignore => [:perishable_token]
   find_by_autocomplete :name
   acts_as_authentic do |c|
+    c.maintain_sessions = false
     c.validates_uniqueness_of_email_field_options = { :case_sensitive => false }
     c.validates_length_of_email_field_options = { :maximum => 255 }
     c.crypto_provider = Authlogic::CryptoProviders::Sha512
@@ -15,7 +16,6 @@ class Customer < ActiveRecord::Base
 
   # Callbacks
   before_create :build_monthly_bonus
-  before_save :crypt_bonuses_password
   
   # Restricciones
   validates :name, :identification, :presence => true
@@ -39,6 +39,8 @@ class Customer < ActiveRecord::Base
   
   accepts_nested_attributes_for :bonuses, :allow_destroy => true,
     :reject_if => proc { |attributes| attributes['amount'].to_f <= 0 }
+  accepts_nested_attributes_for :deposits, :allow_destroy => true,
+    :reject_if => proc { |attributes| attributes['amount'].to_f <= 0 }
 
   def to_s
     [self.name, self.lastname].compact.join(' ')
@@ -59,6 +61,11 @@ class Customer < ActiveRecord::Base
     self.bonuses.select { |b| b.new_record? || b.marked_for_destruction? } |
       self.bonuses.valids
   end
+  
+  def current_deposits
+    self.deposits.select { |d| d.new_record? || d.marked_for_destruction? } |
+      self.deposits.valids
+  end
 
   def build_monthly_bonus
     if self.free_monthly_bonus && self.free_monthly_bonus > 0
@@ -70,24 +77,13 @@ class Customer < ActiveRecord::Base
       )
     end
   end
-  
-  def crypt_bonuses_password
-    if self.bonuses_password.blank?
-      self.bonuses_password = self.bonuses_password_was
-    elsif self.bonuses_password_changed?
-      require 'digest/sha2' unless defined?(Digest)
-      
-      self.bonuses_password = Digest::SHA512.hexdigest(self.bonuses_password)
-    end
-  end
 
   def free_credit
     self.bonuses.valids.sum('remaining')
   end
 
   def use_credit(amount, password = '', auto_save = false)
-    if Digest::SHA512.hexdigest(password) == self.bonuses_password ||
-        self.bonuses_password.blank?
+    if self.valid_password?(password)
       to_pay = BigDecimal.new(amount.to_s)
       available_bonuses = self.bonuses.valids.order('valid_until DESC').to_a
       bonuses_for_update = []

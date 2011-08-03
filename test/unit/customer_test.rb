@@ -19,8 +19,6 @@ class CustomerTest < ActiveSupport::TestCase
       @customer.free_monthly_bonus
     assert_equal customers(:student).bonus_without_expiration,
       @customer.bonus_without_expiration
-    assert_equal customers(:student).bonuses_password,
-      @customer.bonuses_password
   end
 
   # Prueba la creación de un cliente
@@ -35,15 +33,10 @@ class CustomerTest < ActiveSupport::TestCase
           :password => 'jarjar123',
           :password_confirmation => 'jarjar123',
           :free_monthly_bonus => 0.0,
-          :bonus_without_expiration => false,
-          :bonuses_password => '123'
+          :bonus_without_expiration => false
         )
       end
     end
-    
-    assert !@customer.reload.bonuses_password.blank?
-    assert_not_equal '123', @customer.bonuses_password
-    assert_equal Digest::SHA512.hexdigest('123'), @customer.bonuses_password
   end
 
   test 'create with bonus' do
@@ -67,32 +60,13 @@ class CustomerTest < ActiveSupport::TestCase
 
   # Prueba de actualización de un cliente
   test 'update' do
-    old_password = @customer.bonuses_password.dup
-    
     assert_no_difference ['Customer.count', 'Bonus.count'] do
       assert @customer.update_attributes(
-        :name => 'Updated name',
-        :bonuses_password => '123'
+        :name => 'Updated name'
       ), @customer.errors.full_messages.join('; ')
     end
 
     assert_equal 'Updated name', @customer.reload.name
-    assert_not_equal old_password, @customer.bonuses_password
-    assert_equal Digest::SHA512.hexdigest('123'), @customer.bonuses_password
-  end
-  
-  test 'update without bonuses password' do
-    old_password = @customer.bonuses_password.dup
-    
-    assert_no_difference ['Customer.count', 'Bonus.count'] do
-      assert @customer.update_attributes(
-        :name => 'Updated name',
-        :bonuses_password => ''
-      ), @customer.errors.full_messages.join('; ')
-    end
-
-    assert_equal 'Updated name', @customer.reload.name
-    assert_equal old_password, @customer.bonuses_password
   end
 
   # Prueba de eliminación de clientes
@@ -181,6 +155,12 @@ class CustomerTest < ActiveSupport::TestCase
     assert_equal 1, @customer.current_bonuses.size
     assert @customer.current_bonuses.all?(&:still_valid?)
   end
+  
+  test 'current deposits' do
+    assert_equal 2, @customer.deposits.count
+    assert_equal 1, @customer.current_deposits.size
+    assert @customer.current_deposits.all?(&:still_valid?)
+  end
 
   test 'free credit' do
     assert_equal '500.0', @customer.free_credit.to_s
@@ -197,7 +177,7 @@ class CustomerTest < ActiveSupport::TestCase
 
   test 'use credit' do
     # Usa el crédito de la bonificación que tiene disponible
-    assert_equal '0', @customer.use_credit(100, 'student', true).to_s
+    assert_equal '0', @customer.use_credit(100, 'student123', true).to_s
     assert_equal '400.0', @customer.free_credit.to_s
 
     assert_difference '@customer.bonuses.count' do
@@ -208,15 +188,15 @@ class CustomerTest < ActiveSupport::TestCase
     end
 
     # Usa primero la bonificación más próxima a vencer
-    assert_equal '0', @customer.use_credit(200, 'student', true).to_s
+    assert_equal '0', @customer.use_credit(200, 'student123', true).to_s
     assert_equal '1200.0', @customer.free_credit.to_s
     assert_equal ['200.0', '1000.0'],
       @customer.bonuses.valids.map(&:remaining).map(&:to_s)
     # Pagar más de lo que se puede con bonificaciones
-    assert_equal '300.0', @customer.use_credit(1500, 'student', true).to_s
+    assert_equal '300.0', @customer.use_credit(1500, 'student123', true).to_s
     assert_equal '0.0', @customer.free_credit.to_s
     # Intentar pagar sin bonificaciones
-    assert_equal '100.0', @customer.use_credit(100, 'student', true).to_s
+    assert_equal '100.0', @customer.use_credit(100, 'student123', true).to_s
   end
   
   test 'can not use credit with wrong password' do

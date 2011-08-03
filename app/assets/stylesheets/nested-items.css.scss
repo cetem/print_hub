@@ -9,6 +9,11 @@
 @include nested-column(bonuses_headers, bonus, 3, 20%);
 @include nested-column(bonuses_headers, bonus, 4, 5%);
 
+@include nested-column(deposits_headers, deposit, 1, 20%);
+@include nested-column(deposits_headers, deposit, 2, 20%);
+@include nested-column(deposits_headers, deposit, 3, 20%);
+@include nested-column(deposits_headers, deposit, 4, 5%);
+
 @include nested-column(print_jobs_headers, print_job, 1, 35%);
 @include nested-column(print_jobs_headers, print_job, 2, 9%);
 @include nested-column(print_jobs_headers, print_job, 3, 7%);

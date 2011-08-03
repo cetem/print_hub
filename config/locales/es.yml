@@ -100,7 +100,6 @@
         password_confirmation: 'Confirmación'
         free_monthly_bonus: 'Bonificación mensual'
         bonus_without_expiration: 'Bonificación mensual sin caducidad'
-        bonuses_password: 'Contraseña para bonificaciones'
         bonuses:
           one: 'Bonificación'
           other: 'Bonificaciones'
@@ -540,9 +539,14 @@
       stale_object_error: 'El cliente no pudo ser actualizado, intente nuevamente.'
       add_bonus: 'Agregar bonificación'
       add_bonus_title: 'Agregar bonificación (CTRL + ALT + B)'
+      add_deposit: 'Agregar depósito'
+      add_deposit_title: 'Agregar depósito (CTRL + ALT + D)'
       current_bonuses:
         one: 'Bonificación vigente'
         other: 'Bonificaciones vigentes'
+      current_deposits:
+        one: 'Depósito vigente'
+        other: 'Depósitos vigentes'
       without_bonuses: 'Sin bonificaciones'
       bonus_list:
         one: 'Una bonificación'

@@ -8,7 +8,6 @@ student:
   persistence_token: 6cde0674657a8a313ce952df979de2830309aa4c11ca65805dd00bfdc65dbcc2f5e36718660a1d2e68c1a08c276d996763985d2f06fd3d076eb7bc4d97b1e317
   free_monthly_bonus: 100.00
   bonus_without_expiration: false
-  bonuses_password: <%= Digest::SHA512.hexdigest('student') %>
 
 teacher:
   name: Obi Wan
@@ -20,7 +19,6 @@ teacher:
   persistence_token: 6cde0674657a8a313ce952df979de2830309aa4c11ca65805dd00bfdc65dbcc2f5e36718660a1d2e68c1a08c276d996763985d2f06fd3d076eb7bc4d97b1e317
   free_monthly_bonus: 10.00
   bonus_without_expiration: false
-  bonuses_password: <%= Digest::SHA512.hexdigest('teacher') %>
 
 student_without_bonus:
   name: Darth
@@ -32,4 +30,3 @@ student_without_bonus:
   persistence_token: 6cde0674657a8a313ce952df979de2830309aa4c11ca65805dd00bfdc65dbcc2f5e36718660a1d2e68c1a08c276d996763985d2f06fd3d076eb7bc4d97b1e317
   free_monthly_bonus: 0.00
   bonus_without_expiration: false
-  bonuses_password: <%= Digest::SHA512.hexdigest('student_without_bonus') %>

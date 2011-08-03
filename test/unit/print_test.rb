@@ -197,7 +197,7 @@ class PrintTest < ActiveSupport::TestCase
         :user => users(:administrator),
         :customer => customers(:student),
         :scheduled_at => '',
-        :credit_password => 'student',
+        :credit_password => 'student123',
         :print_jobs_attributes => {
           '1' => {
             :copies => 1,
@@ -279,7 +279,7 @@ class PrintTest < ActiveSupport::TestCase
             :user => users(:administrator),
             :customer => customers(:student),
             :scheduled_at => '',
-            :credit_password => 'student',
+            :credit_password => 'student123',
             :print_jobs_attributes => {
               '1' => {
                 :copies => 100,

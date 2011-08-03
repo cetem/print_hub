@@ -238,7 +238,7 @@ class PrintsControllerTest < ActionController::TestCase
           :customer_id => customer.id,
           :scheduled_at => '',
           :avoid_printing => '0',
-          :credit_password => 'student',
+          :credit_password => 'student123',
           :print_jobs_attributes => {
             :new_1 => {
               :copies => '1',

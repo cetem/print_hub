@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110801221920) do
+ActiveRecord::Schema.define(:version => 20110802231955) do
 
   create_table "article_lines", :force => true do |t|
     t.integer  "print_id",                                                   :null => false
@@ -61,7 +61,6 @@ ActiveRecord::Schema.define(:version => 20110801221920) do
     t.integer  "lock_version",                                            :default => 0
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "bonuses_password"
     t.boolean  "bonus_without_expiration",                                :default => false, :null => false
     t.string   "email"
     t.string   "crypted_password"

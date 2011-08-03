@@ -36,7 +36,6 @@ class CustomersControllerTest < ActionController::TestCase
           :password_confirmation => 'jarjar123',
           :free_monthly_bonus => '0.0',
           :bonus_without_expiration => '0',
-          :bonuses_password => '123',
           :bonuses_attributes => {
             :new_1 => {
               :amount => '100',
@@ -87,7 +86,6 @@ class CustomersControllerTest < ActionController::TestCase
           :email => 'updated_email@printhub.com',
           :free_monthly_bonus => '0.0',
           :bonus_without_expiration => '0',
-          :bonuses_password => '123',
           :bonuses_attributes => {
             :new_1 => {
               :amount => '100.0',
