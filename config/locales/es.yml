@@ -600,6 +600,7 @@
       stale_object_error: 'El pedido no pudo ser actualizado, intente nuevamente.'
       order_lines: 'Trabajos a encargar'
       total: 'Total'
+      new_print: 'Crear impresión'
     payments:
       count:
         one: 'Suma de un pago'

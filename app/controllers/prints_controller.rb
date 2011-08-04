@@ -43,6 +43,7 @@ class PrintsController < ApplicationController
     end
     
     @print = current_user.prints.build(
+      :order_id => params[:order_id],
       :include_documents => session[:documents_for_printing]
     )
 

@@ -43,6 +43,7 @@ class Print < ActiveRecord::Base
   # Relaciones
   belongs_to :user
   belongs_to :customer, :autosave => true
+  belongs_to :order
   has_many :payments, :as => :payable
   has_many :print_jobs
   has_many :article_lines
@@ -60,7 +61,14 @@ class Print < ActiveRecord::Base
 
     self.user = UserSession.find.try(:user) || self.user rescue self.user
     
-    unless self.include_documents.blank?
+    if self.order && self.print_jobs.empty?
+      self.customer = self.order.customer
+      keys = ['document_id', 'copies', 'range', 'two_sided']
+      
+      self.order.order_lines.each do |order_line|
+        self.print_jobs.build(order_line.attributes.slice(*keys))
+      end
+    elsif self.include_documents.present?
       self.include_documents.each do |document_id|
         self.print_jobs.build(:document_id => document_id)
       end

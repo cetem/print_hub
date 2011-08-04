@@ -27,6 +27,7 @@ gem 'cups'
 gem 'pdf-reader'
 
 group :production do
+  gem 'therubyracer', :require => false
   gem 'uglifier'
 end
 

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110803213341) do
+ActiveRecord::Schema.define(:version => 20110804213338) do
 
   create_table "article_lines", :force => true do |t|
     t.integer  "print_id",                                                   :null => false
@@ -170,10 +170,12 @@ ActiveRecord::Schema.define(:version => 20110803213341) do
     t.datetime "updated_at"
     t.boolean  "pending_payment", :default => true, :null => false
     t.datetime "scheduled_at"
+    t.integer  "order_id"
   end
 
   add_index "prints", ["created_at"], :name => "index_prints_on_created_at"
   add_index "prints", ["customer_id"], :name => "index_prints_on_customer_id"
+  add_index "prints", ["order_id"], :name => "index_prints_on_order_id", :unique => true
   add_index "prints", ["pending_payment"], :name => "index_prints_on_pending_payment"
   add_index "prints", ["printer"], :name => "index_prints_on_printer"
   add_index "prints", ["scheduled_at"], :name => "index_prints_on_scheduled_at"
@@ -274,6 +276,7 @@ ActiveRecord::Schema.define(:version => 20110803213341) do
   add_foreign_key "print_jobs", "prints", :name => "print_jobs_print_id_fk", :dependent => :restrict
 
   add_foreign_key "prints", "customers", :name => "prints_customer_id_fk", :dependent => :restrict
+  add_foreign_key "prints", "orders", :name => "prints_order_id_fk", :dependent => :restrict
   add_foreign_key "prints", "users", :name => "prints_user_id_fk", :dependent => :restrict
 
 end

@@ -37,6 +37,12 @@
 <%= render :partial => 'total', :locals => { :order => @order } %>
 
 <nav class="links">
-  <%= link_to t(:'label.edit'), edit_order_path(@order) %> |
-  <%= link_to t(:'label.back'), current_customer ? catalog_path : orders_path %>
+  <% if current_customer %>
+    <%= link_to t(:'label.edit'), edit_order_path(@order) %> |
+    <%= link_to t(:'label.back'), catalog_path %>
+  <% else %>
+    <%= link_to t(:new_print, :scope => [:view, :orders]),
+      new_print_path(:order_id => @order.id) %> |
+    <%= link_to t(:'label.list'), orders_path %>
+  <% end %>
 </nav>

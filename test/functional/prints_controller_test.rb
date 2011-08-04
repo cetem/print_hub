@@ -98,6 +98,20 @@ class PrintsControllerTest < ActionController::TestCase
     assert_response :success
     assert_not_nil assigns(:print)
     assert_select '#error_body', false
+    assert_select '.print_job', 1
+    assert_template 'prints/new'
+  end
+  
+  test 'should get new from order' do
+    UserSession.create(users(:operator))
+    
+    order = Order.find(orders(:for_tomorrow).id)
+    
+    get :new, :order_id => order.id
+    assert_response :success
+    assert_not_nil assigns(:print)
+    assert_select '#error_body', false
+    assert_select '.print_job', order.order_lines.count
     assert_template 'prints/new'
   end
   
@@ -109,8 +123,8 @@ class PrintsControllerTest < ActionController::TestCase
     get :new
     assert_response :success
     assert_not_nil assigns(:print)
-    assert_select '.print_job', 2
     assert_select '#error_body', false
+    assert_select '.print_job', 2
     assert_template 'prints/new'
   end
   
@@ -123,6 +137,7 @@ class PrintsControllerTest < ActionController::TestCase
     assert_not_nil assigns(:print)
     assert session[:documents_for_printing].blank?
     assert_select '#error_body', false
+    assert_select '.print_job', 1
     assert_template 'prints/new'
   end
 

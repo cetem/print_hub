@@ -355,6 +355,40 @@ class PrintTest < ActiveSupport::TestCase
     assert_equal false, @print.pending_payment
     assert_equal documents(:math_book).id, @print.print_jobs.first.document_id
   end
+  
+  # Prueba la creación de una impresión a partir de un pedido
+  test 'create with order' do
+    order = Order.find(orders(:for_tomorrow).id)
+    
+    assert_difference ['Print.count', 'PrintJob.count', 'Payment.count'] do
+      assert_no_difference 'Cups.all_jobs(@printer).keys.sort.last' do
+        @print = Print.create(
+          :printer => @printer,
+          :user => users(:administrator),
+          :scheduled_at => '',
+          :avoid_printing => true,
+          :order => order,
+          :payments_attributes => {
+            '1' => {
+              :amount => '24.5',
+              :paid => '24.5'
+            }
+          }
+        )
+      end
+    end
+
+    assert_equal 1, @print.reload.payments.size
+
+    payment = @print.payments.first
+
+    assert payment.cash?
+    assert_equal '24.5', payment.amount.to_s
+    assert_equal '24.5', payment.paid.to_s
+    assert_equal false, @print.pending_payment
+    assert_equal order.order_lines.map(&:document_id).sort,
+      @print.print_jobs.map(&:document_id).sort
+  end
 
   # Prueba de actualización de una impresión
   test 'can not update' do

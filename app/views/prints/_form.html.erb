@@ -147,6 +147,7 @@
   </section>
 
   <div class="actions">
+    <%= f.hidden_field :order_id %>
     <%= f.hidden_field :lock_version %>
     <%= f.submit nil, :id => :print_submit,
       :title => t(:'view.prints.print_title') %>
