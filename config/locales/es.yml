@@ -525,12 +525,13 @@
       show_title: 'Detalle de documento'
       show: 'Ver documento'
       new_order: 'Revisar pedido'
+      more_tags:
+        one: 'Y una etiqueta más...'
+        other: 'Y %{count} etiquetas más...'
       add_to_order:
-        link: 'Agregar al pedido'
-        title: 'Marca el documento para que sea INCLUIDO en el pedido'
+        title: 'Marca este documento para que sea INCLUIDO en el pedido'
       remove_from_order:
-        link: 'Quitar del pedido'
-        title: 'Elimina la marca del documento para que NO sea incluido en el pedido'
+        title: 'Elimina la marca de este documento para que NO sea incluido en el pedido'
     customers:
       index_title: 'Listado de clientes'
       show_title: 'Detalle de cliente'

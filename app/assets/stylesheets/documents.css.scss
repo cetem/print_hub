@@ -1,4 +1,17 @@
+@import "mixins";
+
 div.document_data {
   float: left;
   margin-right: 1em;
+}
+
+span.tag {
+  color: $main-text-color;
+  background: #dedede;
+  border: 1px solid #999;
+  padding: 1px 4px;
+  margin-right: .5em;
+  line-height: 1.25em;
+  text-shadow: 1px 1px 1px rgba(0, 0, 0, .3);
+  @include rounded-corners(.25em);
 }

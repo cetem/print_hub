@@ -44,20 +44,39 @@ module CatalogHelper
     
     if @documents_to_order.include?(document.id)
       content << link_to(
-        t(:link, :scope => [:view, :catalog, :remove_from_order]),
+        '-',
         remove_from_order_catalog_path(document),
         :title => t(:title, :scope => [:view, :catalog, :remove_from_order]),
-        :remote => true, :method => :delete, :class => :red
+        :remote => true, :method => :delete, :class => :remove_link
       )
     else
       content << link_to(
-        t(:link, :scope => [:view, :catalog, :add_to_order]),
+        '+',
         add_to_order_catalog_path(document),
         :title => t(:title, :scope => [:view, :catalog, :add_to_order]),
-        :remote => true, :method => :post
+        :remote => true, :method => :post, :class => :add_link
       )
     end
     
     content_tag :span, raw(content), :id => "document_#{document.id}_to_order"
+  end
+  
+  def display_document_short_tags(document)
+    tags = document.tag_path.split(/ ## /)
+    clean_tags = (tags[0..2]).map { |tag| [tag.split(/ \| /).last, tag] }.sort
+    
+    out = clean_tags.map do |tag, long_tag|
+      name = truncate(tag, :length => 15, :omission => '...')
+      
+      content_tag(:span, name, :title => long_tag, :class => :tag)
+    end.join
+    
+    if tags.size > 3
+      title = t :more_tags, :scope => [:view, :catalog], :count => tags.size - 3
+      
+      out << content_tag(:span, '...', :title => title)
+    end
+    
+    raw content_tag(:div, raw(out), :class => :nowrap)
   end
 end

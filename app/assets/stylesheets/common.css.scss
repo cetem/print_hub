@@ -37,6 +37,35 @@ a[data-event="hideItem"] {
   }
 }
 
+a.add_link {
+  border: 2px solid #ccc;
+}
+
+a.add_link, a.remove_link {
+  color: #fff;
+  background: #666;
+  font-family: Monaco, "Courier New", "DejaVu Sans Mono", "Bitstream Vera Sans Mono", monospace;
+  font-size: 1.1em;
+  font-weight: bolder;
+  padding: 0em .25em;
+  text-decoration: none;
+  text-shadow: 0 0 .2em white;
+  @include rounded-corners(1em);
+  @include box-shadow(0em, 0em, .3em, #999);
+  @include transition(.25s, border, ease-in);
+
+  &:hover {
+    color: $highlight-color;
+    border: 2px solid $highlight-color;
+    @include transition(.25s, border, ease-out);
+  }
+}
+
+a.remove_link {
+  color: $main-color;
+  border: 2px solid $main-color;
+}
+
 body {
   color: $main-text-color;
   background: #fff;
@@ -123,9 +152,12 @@ div#error_explanation {
 
 div#loading_image {
   position: fixed;
+  width: 43px;
+  margin: 0 0 0 -21px;
   bottom: .5em;
-  left: 1em;
+  left: 48%;
   padding: 1px 5px;
+  z-index: 1;
 }
 
 div#main_container {
@@ -712,6 +744,10 @@ ul.raw {
 
 .green {
   color: #0c0;
+}
+
+.nowrap {
+  white-space: nowrap;
 }
 
 .red {
