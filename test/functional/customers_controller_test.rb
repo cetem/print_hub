@@ -103,7 +103,7 @@ class CustomersControllerTest < ActionController::TestCase
   test 'should destroy customer' do
     UserSession.create(users(:administrator))
     assert_difference('Customer.count', -1) do
-      delete :destroy, :id => @customer.to_param
+      delete :destroy, :id => Customer.find(customers(:teacher).id).to_param
     end
 
     assert_redirected_to customers_path

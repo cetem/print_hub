@@ -1,6 +1,17 @@
 class Order < ActiveRecord::Base
   has_paper_trail
   
+  # Constantes
+  STATUS = {
+    :pending => 'P',
+    :completed => 'C',
+    :cancelled => 'X'
+  }
+  
+  # Callbacks
+  before_destroy :avoid_destruction
+  before_save :can_be_modified?
+  
   # Atributos no persistentes
   attr_accessor :include_documents
   
@@ -19,6 +30,7 @@ class Order < ActiveRecord::Base
   def initialize(attributes = nil, options = {})
     super(attributes, options)
     
+    self.status ||= STATUS[:pending]
     self.scheduled_at ||= 1.day.from_now
     
     if self.include_documents.present?
@@ -26,6 +38,23 @@ class Order < ActiveRecord::Base
         self.order_lines.build(:document_id => document_id)
       end
     end
+  end
+  
+  def avoid_destruction
+    false
+  end
+  
+  def can_be_modified?
+    self.pending? || self.status_was == STATUS[:pending]
+  end
+  
+  def status_text
+    I18n.t("view.orders.status.#{STATUS.invert[self.status]}")
+  end
+  
+  STATUS.each do |status, value|
+    define_method(:"#{status}?") { self.status == value }
+    define_method(:"#{status}!") { self.status = value }
   end
   
   def price

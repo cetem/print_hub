@@ -357,8 +357,9 @@ class PrintTest < ActiveSupport::TestCase
   end
   
   # Prueba la creación de una impresión a partir de un pedido
-  test 'create with order' do
+  test 'create with order and mark it as completed' do
     order = Order.find(orders(:for_tomorrow).id)
+    assert order.pending?
     
     assert_difference ['Print.count', 'PrintJob.count', 'Payment.count'] do
       assert_no_difference 'Cups.all_jobs(@printer).keys.sort.last' do
@@ -388,6 +389,7 @@ class PrintTest < ActiveSupport::TestCase
     assert_equal false, @print.pending_payment
     assert_equal order.order_lines.map(&:document_id).sort,
       @print.print_jobs.map(&:document_id).sort
+    assert order.reload.completed?
   end
 
   # Prueba de actualización de una impresión

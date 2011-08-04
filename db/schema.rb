@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110804213338) do
+ActiveRecord::Schema.define(:version => 20110804224507) do
 
   create_table "article_lines", :force => true do |t|
     t.integer  "print_id",                                                   :null => false
@@ -118,15 +118,17 @@ ActiveRecord::Schema.define(:version => 20110804213338) do
   add_index "order_lines", ["order_id"], :name => "index_order_lines_on_order_id"
 
   create_table "orders", :force => true do |t|
-    t.datetime "scheduled_at",                :null => false
-    t.integer  "lock_version", :default => 0
-    t.integer  "customer_id",                 :null => false
+    t.datetime "scheduled_at",                             :null => false
+    t.integer  "lock_version",              :default => 0
+    t.integer  "customer_id",                              :null => false
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.string   "status",       :limit => 1,                :null => false
   end
 
   add_index "orders", ["customer_id"], :name => "index_orders_on_customer_id"
   add_index "orders", ["scheduled_at"], :name => "index_orders_on_scheduled_at"
+  add_index "orders", ["status"], :name => "index_orders_on_status"
 
   create_table "payments", :force => true do |t|
     t.decimal  "amount",                    :precision => 15, :scale => 3,                :null => false

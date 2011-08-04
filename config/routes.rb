@@ -13,7 +13,7 @@ PrintHubApp::Application.routes.draw do
       delete :destroy, :on => :collection
     end
     
-    resources :orders
+    resources :orders, :except => [:destroy]
     
     root :to => 'customer_sessions#new'
   end

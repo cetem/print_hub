@@ -16,8 +16,7 @@
         <td><%= number_to_currency(customer.free_monthly_bonus || 0) %></td>
         <td><%= link_to t(:'label.show'), customer %></td>
         <td><%= link_to t(:'label.edit'), edit_customer_path(customer) %></td>
-        <td><%= button_to t(:'label.delete'), customer,
-          :confirm => t(:'messages.confirmation'), :method => :delete %></td>
+        <td><%= show_button_to_destroy(customer) %></td>
       </tr>
     <% end %>
   </tbody>

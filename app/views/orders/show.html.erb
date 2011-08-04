@@ -1,4 +1,9 @@
 <p>
+  <b><%= Order.human_attribute_name :status %>:</b>
+  <%= @order.status_text %>
+</p>
+
+<p>
   <b><%= Order.human_attribute_name :scheduled_at %>:</b>
   <%= l @order.scheduled_at, :format => :long if @order.scheduled_at %>
 </p>
@@ -38,7 +43,7 @@
 
 <nav class="links">
   <% if current_customer %>
-    <%= link_to t(:'label.edit'), edit_order_path(@order) %> |
+    <%= link_to_if @order.pending?, t(:'label.edit'), edit_order_path(@order) %> |
     <%= link_to t(:'label.back'), catalog_path %>
   <% else %>
     <%= link_to t(:new_print, :scope => [:view, :orders]),

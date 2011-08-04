@@ -92,16 +92,4 @@ class OrdersControllerTest < ActionController::TestCase
     assert_redirected_to order_path(assigns(:order))
     assert_equal 5.days.from_now.at_midnight, @order.reload.scheduled_at
   end
-
-  test 'should destroy order' do
-    customer = Customer.find(customers(:student_without_bonus).id)
-    
-    CustomerSession.create(customer)
-    
-    assert_difference('customer.orders.count', -1) do
-      delete :destroy, id: @order.to_param
-    end
-
-    assert_redirected_to orders_path
-  end
 end

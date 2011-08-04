@@ -2,6 +2,7 @@ class Print < ActiveRecord::Base
   has_paper_trail
   
   # Callbacks
+  before_save :mark_order_as_completed, :on => :create
   before_save :remove_unnecessary_payments, :update_customer_credit,
     :mark_as_pending, :print_all_jobs
   before_destroy :can_be_destroyed?
@@ -43,7 +44,7 @@ class Print < ActiveRecord::Base
   # Relaciones
   belongs_to :user
   belongs_to :customer, :autosave => true
-  belongs_to :order
+  belongs_to :order, :autosave => true
   has_many :payments, :as => :payable
   has_many :print_jobs
   has_many :article_lines
@@ -104,6 +105,12 @@ class Print < ActiveRecord::Base
 
     true
   end
+  
+  def mark_order_as_completed
+    self.order.try(:completed!)
+    
+    true
+  end
 
   def price
     self.print_jobs.reject(&:marked_for_destruction?).to_a.sum(&:price) +
@@ -147,7 +154,11 @@ class Print < ActiveRecord::Base
 
   def update_customer_credit
     if (credit = self.payments.detect(&:credit?)) && credit.amount > 0
-      remaining = self.customer.use_credit(credit.amount, self.credit_password)
+      remaining = self.customer.use_credit(
+        credit.amount,
+        self.credit_password,
+        :avoid_password_check => self.order.present?
+      )
 
       if remaining == false
         self.errors.add :credit_password, :invalid

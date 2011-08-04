@@ -16,6 +16,7 @@ class Customer < ActiveRecord::Base
 
   # Callbacks
   before_create :build_monthly_bonus
+  before_destroy :has_no_orders?
   
   # Restricciones
   validates :name, :identification, :presence => true
@@ -78,13 +79,17 @@ class Customer < ActiveRecord::Base
       )
     end
   end
+  
+  def has_no_orders?
+    self.orders.empty?
+  end
 
   def free_credit
     self.credits.valids.sum('remaining')
   end
 
-  def use_credit(amount, password = '', auto_save = false)
-    if self.valid_password?(password)
+  def use_credit(amount, password = '', options = {})
+    if self.valid_password?(password) || options[:avoid_password_check]
       to_pay = BigDecimal.new(amount.to_s)
       available_credits = self.credits.valids.order('valid_until DESC').to_a
       credits_for_update = {'Bonus' => [], 'Deposit' => []}
@@ -106,7 +111,7 @@ class Customer < ActiveRecord::Base
       
       self.bonuses_attributes = credits_for_update['Bonus'].map(&:attributes)
       self.deposits_attributes = credits_for_update['Deposit'].map(&:attributes)
-      self.save! if auto_save
+      self.save! if options[:save]
 
       to_pay
     else

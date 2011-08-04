@@ -123,6 +123,7 @@
       order:
         customer: 'Cliente'
         scheduled_at: 'Programado para'
+        status: 'Estado'
         order_lines:
           one: 'Línea de pedido'
           other: 'Líneas de pedido'
@@ -601,6 +602,10 @@
       order_lines: 'Trabajos a encargar'
       total: 'Total'
       new_print: 'Crear impresión'
+      status:
+        pending: 'Pendiente'
+        completed: 'Procesado'
+        cancelled: 'Anulado'
     payments:
       count:
         one: 'Suma de un pago'

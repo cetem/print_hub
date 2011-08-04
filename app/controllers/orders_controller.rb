@@ -87,18 +87,6 @@ class OrdersController < ApplicationController
     flash.alert = t :'view.orders.stale_object_error'
     redirect_to edit_order_url(@order)
   end
-
-  # DELETE /orders/1
-  # DELETE /orders/1.json
-  def destroy
-    @order = current_customer.orders.find(params[:id])
-    @order.destroy
-
-    respond_to do |format|
-      format.html { redirect_to orders_url }
-      format.json { head :ok }
-    end
-  end
   
   private
   

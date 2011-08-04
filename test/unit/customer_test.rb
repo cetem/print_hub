@@ -72,10 +72,12 @@ class CustomerTest < ActiveSupport::TestCase
   # Prueba de eliminación de clientes
   test 'destroy' do
     assert_difference 'Customer.count', -1 do
-      assert_difference '@customer.bonuses.count', -2 do
-        @customer.destroy
-      end
+      Customer.find(customers(:teacher).id).destroy
     end
+  end
+  
+  test 'can not be destroyed with related orders' do
+    assert_no_difference('Customer.count') { @customer.destroy }
   end
 
   # Prueba que las validaciones del modelo se cumplan como es esperado
@@ -177,7 +179,8 @@ class CustomerTest < ActiveSupport::TestCase
 
   test 'use credit' do
     # Usa el crédito que tiene disponible
-    assert_equal '0', @customer.use_credit(100, 'student123', true).to_s
+    assert_equal '0',
+      @customer.use_credit(100, 'student123', :save => true).to_s
     assert_equal '900.0', @customer.free_credit.to_s
 
     assert_difference '@customer.bonuses.count' do
@@ -188,19 +191,23 @@ class CustomerTest < ActiveSupport::TestCase
     end
 
     # Usa primero el crédito más próximo a vencer
-    assert_equal '0', @customer.use_credit(200, 'student123', true).to_s
+    assert_equal '0',
+      @customer.use_credit(200, 'student123', :save => true).to_s
     assert_equal '1700.0', @customer.free_credit.to_s
     assert_equal ['200.0', '500.0', '1000.0'],
       @customer.credits.valids.map(&:remaining).map(&:to_s)
     # Pagar más de lo que se puede con crédito
-    assert_equal '300.0', @customer.use_credit(2000, 'student123', true).to_s
+    assert_equal '300.0',
+      @customer.use_credit(2000, 'student123', :save => true).to_s
     assert_equal '0.0', @customer.free_credit.to_s
     # Intentar pagar sin crédito
-    assert_equal '100.0', @customer.use_credit(100, 'student123', true).to_s
+    assert_equal '100.0',
+      @customer.use_credit(100, 'student123', :save => true).to_s
   end
   
   test 'can not use credit with wrong password' do
-    assert_equal false, @customer.use_credit(100, 'wrong_password', true)
+    assert_equal false,
+      @customer.use_credit(100, 'wrong_password', :save => true)
     assert_equal '1000.0', @customer.free_credit.to_s
   end
   

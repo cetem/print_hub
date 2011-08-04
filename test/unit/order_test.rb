@@ -48,10 +48,23 @@ class OrderTest < ActiveSupport::TestCase
 
     assert_equal 5.days.from_now.at_midnight, @order.reload.scheduled_at
   end
+  
+  # Prueba de actualización de un pedido
+  test 'not update completed orders' do
+    @order.completed!
+    assert @order.save
+    
+    assert !@order.update_attributes(
+      :scheduled_at => 5.days.from_now.at_midnight
+    )
+    
+    assert_not_equal 5.days.from_now.at_midnight, @order.reload.scheduled_at
+  end
 
   # Prueba de eliminación de pedidos
   test 'destroy' do
-    assert_difference('Order.count', -1) { @order.destroy }
+    # Ningún pedido puede ser eliminado
+    assert_no_difference('Order.count') { @order.destroy }
   end
 
   # Prueba que las validaciones del modelo se cumplan como es esperado
@@ -83,5 +96,22 @@ class OrderTest < ActiveSupport::TestCase
     assert @order.order_lines.any? { |ol| ol.price > 0 }
     assert @order.price > 0
     assert_equal @order.price, price
+  end
+  
+  test 'status methods' do
+    assert_equal Order::STATUS[:pending], @order.status
+    assert @order.pending?
+    assert !@order.completed?
+    assert !@order.cancelled?
+    
+    @order.completed!
+    assert !@order.pending?
+    assert @order.completed?
+    assert !@order.cancelled?
+    
+    @order.cancelled!
+    assert !@order.pending?
+    assert !@order.completed?
+    assert @order.cancelled?
   end
 end
