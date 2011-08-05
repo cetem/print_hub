@@ -604,7 +604,7 @@
       new_print: 'Crear impresión'
       status:
         pending: 'Pendiente'
-        completed: 'Procesado'
+        completed: 'Impreso'
         cancelled: 'Anulado'
     payments:
       count:

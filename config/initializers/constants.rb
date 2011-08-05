@@ -1,5 +1,5 @@
 # Cantidad de líneas por página
-APP_LINES_PER_PAGE = 16
+APP_LINES_PER_PAGE = 32
 # Subdominio donde ingresan los clientes
 CUSTOMER_SUBDOMAIN = 'fotocopia'
 # Adaptador de base de datos

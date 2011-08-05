@@ -44,7 +44,7 @@ class CatalogController < ApplicationController
 
     @documents = @documents.order("#{Document.table_name}.code ASC").paginate(
       :page => params[:page],
-      :per_page => APP_LINES_PER_PAGE
+      :per_page => (APP_LINES_PER_PAGE / 2).round
     )
 
     respond_to do |format|
