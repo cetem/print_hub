@@ -2,7 +2,7 @@
   '+',
   add_to_order_catalog_path(@document),
   :title => t(:title, :scope => [:view, :catalog, :add_to_order]),
-  :remote => true, :method => :post, :class => :add_link
+  :remote => true, :method => :post, :class => 'add_link add_to_order'
 ) %>
 <% id = "#document_#{@document.id}_to_order" %>
 $('<%= id %>').html('<%= message %>');

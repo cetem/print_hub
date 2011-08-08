@@ -47,14 +47,15 @@ module CatalogHelper
         '-',
         remove_from_order_catalog_path(document),
         :title => t(:title, :scope => [:view, :catalog, :remove_from_order]),
-        :remote => true, :method => :delete, :class => :remove_link
+        :remote => true, :method => :delete,
+        :class => 'remove_link remove_from_order'
       )
     else
       content << link_to(
         '+',
         add_to_order_catalog_path(document),
         :title => t(:title, :scope => [:view, :catalog, :add_to_order]),
-        :remote => true, :method => :post, :class => :add_link
+        :remote => true, :method => :post, :class => 'add_link add_to_order'
       )
     end
     

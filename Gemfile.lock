@@ -7,7 +7,7 @@ GIT
 
 GIT
   remote: https://github.com/rails/rails.git
-  revision: 9efc57f2b7880c6047f32bfea6516faf1b539ead
+  revision: ed85772c12c7fc49c195015225592ffb43ef75af
   branch: 3-1-stable
   specs:
     actionmailer (3.1.0.rc5)
@@ -90,7 +90,7 @@ GEM
     coffee-script (2.2.0)
       coffee-script-source
       execjs
-    coffee-script-source (1.1.1)
+    coffee-script-source (1.1.2)
     columnize (0.3.4)
     cups (0.0.7)
     daemons (1.0.10)

@@ -13,3 +13,4 @@
 //= require jquery.filestyle
 //= require common
 //= require jobs
+//= require catalog
