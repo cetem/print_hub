@@ -9,6 +9,7 @@
  *= require orders
  *= require tags
  *= require users
+ *= require customers
  *= require jquery/fancybox
  *= require jquery/ui-custom
 */
