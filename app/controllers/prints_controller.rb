@@ -108,7 +108,7 @@ class PrintsController < ApplicationController
 
   # GET /prints/autocomplete_for_document_name
   def autocomplete_for_document_name
-    query = params[:q].strip.gsub(/\s*([&|])\s*/, '\1').gsub(/[|&!]$/, '')
+    query = params[:q].sanitized_for_text_query
     @query_terms = query.split(/\s+/).reject(&:blank?)
     @docs = Document.scoped
 

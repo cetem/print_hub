@@ -546,10 +546,6 @@ class PrintsControllerTest < ActionController::TestCase
   end
 
   test 'should get autocomplete document list' do
-    Document.all.each do |d|
-      d.update_attributes!(:tag_path => d.tags.map(&:to_s).join(' ## '))
-    end
-
     UserSession.create(users(:operator))
     get :autocomplete_for_document_name, :format => :json, :q => 'Math'
     assert_response :success

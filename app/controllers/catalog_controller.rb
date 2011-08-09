@@ -1,16 +1,16 @@
 class CatalogController < ApplicationController
-  before_filter :require_customer, :load_documents_to_order
+  before_filter :require_customer, :load_documents_to_order, :load_tag
   
   layout lambda { |controller| controller.request.xhr? ? false : 'application' }
   
   def index
     @title = t :'view.catalog.index_title'
-    @documents = document_scope
-
-    if params[:q]
-      query = params[:q].strip.gsub(/\s*([&|])\s*/, '\1').gsub(/[|&!]$/, '')
+    
+    if params[:q].present? || @tag
+      query = params[:q].try(:sanitized_for_text_query) || ''
       @query_terms = query.split(/\s+/).reject(&:blank?)
-
+      @documents = document_scope
+      
       unless @query_terms.empty?
         parameters = {
           :and_term => @query_terms.join(' & '),
@@ -40,12 +40,12 @@ class CatalogController < ApplicationController
           conditions.map { |c| "(#{c})" }.join(' OR '), parameters
         )
       end
+      
+      @documents = @documents.order("#{Document.table_name}.code ASC").paginate(
+        :page => params[:page],
+        :per_page => (APP_LINES_PER_PAGE / 2).round
+      )
     end
-
-    @documents = @documents.order("#{Document.table_name}.code ASC").paginate(
-      :page => params[:page],
-      :per_page => (APP_LINES_PER_PAGE / 2).round
-    )
 
     respond_to do |format|
       format.html # index.html.erb
@@ -105,14 +105,16 @@ class CatalogController < ApplicationController
   
   private
   
-  def document_scope
-    @tag = Tag.publicly_visible.find(params[:tag_id]) if params[:tag_id]
-    
-    @tag ? @tag.documents.publicly_visible : Document.publicly_visible
-  end
-  
   def load_documents_to_order
     session[:documents_to_order] ||= []
     @documents_to_order = session[:documents_to_order]
+  end
+  
+  def load_tag
+    @tag = Tag.publicly_visible.find(params[:tag_id]) if params[:tag_id]
+  end
+  
+  def document_scope
+    @tag ? @tag.documents.publicly_visible : Document.publicly_visible
   end
 end

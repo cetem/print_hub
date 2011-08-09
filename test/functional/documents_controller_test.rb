@@ -31,10 +31,6 @@ class DocumentsControllerTest < ActionController::TestCase
   end
 
   test 'should get index with search filter' do
-    Document.all.each do |d|
-      d.update_attributes!(:tag_path => d.tags.map(&:to_s).join(' ## '))
-    end
-
     UserSession.create(users(:administrator))
     get :index, :q => 'Math'
     assert_response :success

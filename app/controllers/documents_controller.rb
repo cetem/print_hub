@@ -23,8 +23,8 @@ class DocumentsController < ApplicationController
       redirect_to request.parameters.except(:clear_documents_for_printing)
     end
 
-    if params[:q]
-      query = params[:q].strip.gsub(/\s*([&|])\s*/, '\1').gsub(/[|&!]$/, '')
+    if params[:q].present?
+      query = params[:q].sanitized_for_text_query
       @query_terms = query.split(/\s+/).reject(&:blank?)
 
       unless @query_terms.empty?

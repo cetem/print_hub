@@ -6,6 +6,7 @@
         :class => (:selected if current_controller == :catalog)) %>
       <%= content_tag(:li, link_to(t(:orders, :scope => :customer_menu), orders_path),
         :class => (:selected if current_controller == :orders)) %>
+      <%= content_tag(:li, link_to(t(:'view.catalog.new_order'), new_order_path)) %>
     </ul>
   </nav>
 <% end %>

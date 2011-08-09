@@ -12,7 +12,7 @@ class CatalogControllerTest < ActionController::TestCase
     CustomerSession.create(customers(:student))
     get :index
     assert_response :success
-    assert_not_nil assigns(:documents)
+    assert_nil assigns(:documents) # Index with no search give no documents =)
     assert_select '#error_body', false
     assert_template 'catalog/index'
   end
@@ -31,10 +31,6 @@ class CatalogControllerTest < ActionController::TestCase
   end
 
   test 'should get index with search filter' do
-    Document.all.each do |d|
-      d.update_attributes!(:tag_path => d.tags.map(&:to_s).join(' ## '))
-    end
-
     CustomerSession.create(customers(:student))
     get :index, :q => 'Math'
     assert_response :success

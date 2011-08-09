@@ -3,32 +3,39 @@
     <%= t(:documents_with_tag, :scope => [:view, :documents], :tag => @tag.to_s) %>
   </h2>
 <% end %>
+
 <%= render :partial => 'shared/search' %>
-<table class="list">
-  <thead>
-    <tr>
-      <th><%= Document.human_attribute_name :code %></th>
-      <th><%= Document.model_name.human %></th>
-      <th><%= t(:'menu.tags') %></th>
-      <th><%= Document.human_attribute_name :pages %></th>
-      <th></th>
-    </tr>
-  </thead>
 
-  <tbody>
-    <% @documents.each do |document| %>
-      <tr class="<%= cycle(:even, :odd) %>">
-        <td><%= document.code %></td>
-        <td><%= catalog_document_link_with_name(document) %></td>
-        <td><%= display_document_short_tags(document) %></td>
-        <td><%= document.pages %></td>
-        <td><%= catalog_document_to_order document %></td>
+<% if params[:q].blank? && @documents.blank? %>
+  <%= render :partial => 'help/empty_catalog' %>
+<% elsif params[:q].present? && @documents.blank? %>
+  <%= render :partial => 'help/empty_search_in_catalog' %>
+<% else %>
+  <table class="list">
+    <thead>
+      <tr>
+        <th><%= Document.human_attribute_name :code %></th>
+        <th><%= Document.model_name.human %></th>
+        <th><%= t(:'menu.tags') %></th>
+        <th><%= Document.human_attribute_name :pages %></th>
+        <th></th>
       </tr>
-    <% end %>
-  </tbody>
-</table>
+    </thead>
 
-<nav class="links">
-  <%= link_to t(:'view.catalog.new_order'), new_order_path %>
-  <%= pagination_links(@documents) %>
-</nav>
+    <tbody>
+      <% @documents.each do |document| %>
+        <tr class="<%= cycle(:even, :odd) %>">
+          <td><%= document.code %></td>
+          <td><%= catalog_document_link_with_name(document) %></td>
+          <td><%= display_document_short_tags(document) %></td>
+          <td><%= document.pages %></td>
+          <td><%= catalog_document_to_order document %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+
+  <nav class="links">
+    <%= pagination_links(@documents) %>
+  </nav>  
+<% end %>
