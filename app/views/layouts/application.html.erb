@@ -26,6 +26,7 @@
   <% end %>
   <div id="main_container">
     <%= yield %>
+    <div style="clear: both;"></div>
   </div>
   <%= render :partial => 'shared/notice' if flash.notice %>
   <%= render :partial => 'shared/alert' if flash.alert %>

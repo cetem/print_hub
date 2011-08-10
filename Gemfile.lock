@@ -7,7 +7,7 @@ GIT
 
 GIT
   remote: https://github.com/rails/rails.git
-  revision: 6e2e06043e6b0d7680b28164aab503622cbf45fc
+  revision: 4c492865b16b6c0c81b9fc9b5bc25aa557b9052d
   branch: 3-1-stable
   specs:
     actionmailer (3.1.0.rc5)
@@ -97,7 +97,7 @@ GEM
     erubis (2.7.0)
     execjs (1.2.4)
       multi_json (~> 1.0)
-    foreigner (1.1.0)
+    foreigner (1.1.1)
       activerecord (>= 3.0.0)
     gem_plugin (0.2.3)
     highline (1.6.2)
@@ -185,7 +185,7 @@ GEM
     whenever (0.6.8)
       aaronh-chronic (>= 0.3.9)
       activesupport (>= 2.3.4)
-    will_paginate (3.0.pre4)
+    will_paginate (3.0.0)
 
 PLATFORMS
   ruby
@@ -217,4 +217,4 @@ DEPENDENCIES
   uglifier
   validates_timeliness (~> 3.0)
   whenever
-  will_paginate (~> 3.0.beta)
+  will_paginate

@@ -1,0 +1,48 @@
+@import "mixins";
+
+section.explanation {
+  margin: 2em 0em;
+  padding: 1em;
+  background: #f6f6f6;
+  @include rounded-corners(3px);
+
+  div.image_container {
+    margin-left: 1em;
+    background: #fff;
+    padding: 2px;
+  }
+
+  footer {
+    display: block;
+    clear: both;
+    padding: .5em 1em;
+    background: #e8e8e8;
+    margin: 1em -1em -1em -1em;
+  }
+
+  header {
+    clear: both;
+    margin: -1em -1em 1em -1em;
+    padding: 1em;
+    background: #e8e8e8;
+    
+    h2 {
+      font-size: 1.5em;
+      font-weight: normal;
+    }
+  }
+
+  section.spot {
+    display: block;
+    clear: both;
+
+    h3 {
+      font-weight: normal;
+      margin: 0em 0em 1em 1em;
+    }
+
+    h3.left {
+      float: left;
+    }
+  }
+}

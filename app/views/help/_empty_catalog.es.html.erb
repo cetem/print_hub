@@ -1,2 +1,26 @@
-<h2>Catálogo sin búsqueda</h2>
-<p>Ayuda inicial</p>
+<section class="explanation">
+  <header>
+    <h2>Para realizar un pedido...</h2>
+  </header>
+  
+  <section class="spot">
+    <h3>Decinos <strong>que buscás</strong></h3>
+    <div class="image_container">
+      <%= image_tag 'help/example_search.gif', :size => '210x35',
+        :alt => "Buscar, por ejemplo, 'física 2011'",
+        :title => "Buscar, por ejemplo, 'física 2011'" %>
+    </div>
+  </section>
+  <section class="spot">
+    <h3>y de los resultados, <strong>seleccioná</strong> lo que te interesa.</h3>
+    <div class="image_container">
+      <%= image_tag 'help/example_document_grid.gif', :size => '600x44',
+        :alt => 'Seleccionar documentos con el signo +',
+        :title => 'Seleccionar documentos con el signo +' %>
+    </div>
+  </section>
+  <section class="spot">
+    <h3>Después confirmanos tu pedido desde <strong>Revisar pedido</strong></h3>
+  </section>
+  <footer>¿Te ayudó? <a href="#">Si</a> o <a href="#">No</a></footer>
+</section>

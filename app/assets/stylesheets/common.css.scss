@@ -358,9 +358,9 @@ div.image_container {
   float: left;
   margin: 0em 2em 2em 0em;
   padding: .5em;
-  border: 2px solid #666;
+  border: 1px solid #999;
   @include rounded-corners(.5em);
-  @include box-shadow(0em, 0em, 1em, #333);
+  @include box-shadow(0em, 0em, .5em, rgba(51, 51, 51, .6));
 
   img {
     float: left;
@@ -752,4 +752,8 @@ ul.raw {
 
 .red {
   color: #c00;
+}
+
+.strong {
+  font-weight: bold;
 }
