@@ -1,5 +1,5 @@
 <% current_controller = controller.controller_name.to_sym %>
-<% cache :"customer_menu_#{current_controller}" do %>
+<% cache "customer_menu_#{locale}_#{current_controller}" do %>
   <nav id="menu_links">
     <ul>
       <%= content_tag(:li, link_to(t(:catalog, :scope => :customer_menu), catalog_path),

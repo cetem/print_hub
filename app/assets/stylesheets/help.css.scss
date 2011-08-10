@@ -18,6 +18,17 @@ section.explanation {
     padding: .5em 1em;
     background: #e8e8e8;
     margin: 1em -1em -1em -1em;
+    
+    p {
+      font-size: .8em;
+      
+      em {
+        font-weight: bold;
+        font-style: normal;
+        color: $main-color;
+        opacity: .8;
+      }
+    }
   }
 
   header {

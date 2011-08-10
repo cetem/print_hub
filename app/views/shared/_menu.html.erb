@@ -1,5 +1,5 @@
 <% current_controller = controller.controller_name.to_sym %>
-<% cache :"menu_#{current_user.language}_#{current_controller}_#{current_user.admin?}" do %>
+<% cache "menu_#{locale}_#{current_controller}_#{!!current_user.admin?}" do %>
   <nav id="menu_links">
     <ul>
       <% if current_user.admin %>
