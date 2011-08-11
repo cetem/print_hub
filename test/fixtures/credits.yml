@@ -4,6 +4,8 @@ big_bonus:
   remaining: 500.00
   valid_until: <%= 1.month.from_now.to_date.to_s(:db) %>
   customer_id: <%= ActiveRecord::Fixtures.identify(:student) %>
+  created_at: <%= 2.days.ago.to_datetime.to_s(:db) %>
+  updated_at: <%= 2.days.ago.to_datetime.to_s(:db) %>
   
 used_bonus:
   type: Bonus
@@ -11,6 +13,8 @@ used_bonus:
   remaining: 0.00
   valid_until: <%= 1.month.ago.to_date.to_s(:db) %>
   customer_id: <%= ActiveRecord::Fixtures.identify(:student) %>
+  created_at: <%= 2.days.ago.to_datetime.to_s(:db) %>
+  updated_at: <%= 2.days.ago.to_datetime.to_s(:db) %>
 
 expired_bonus:
   type: Bonus
@@ -32,6 +36,8 @@ used_deposit:
   remaining: 0.00
   valid_until: <%= 1.month.ago.to_date.to_s(:db) %>
   customer_id: <%= ActiveRecord::Fixtures.identify(:student) %>
+  created_at: <%= 2.months.ago.to_datetime.to_s(:db) %>
+  updated_at: <%= 2.months.ago.to_datetime.to_s(:db) %>
 
 expired_deposit:
   type: Deposit

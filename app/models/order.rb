@@ -15,8 +15,15 @@ class Order < ActiveRecord::Base
   # Atributos no persistentes
   attr_accessor :include_documents
   
+  # Scopes
+  scope :pending, where(:status => STATUS[:pending])
+  scope :completed, where(:status => STATUS[:completed])
+  scope :cancelled, where(:status => STATUS[:cancelled])
+  
   # Restricciones
   validates :scheduled_at, :customer, :presence => true
+  validates :status, :inclusion => { :in => STATUS.values }, :allow_nil => true,
+    :allow_blank => true
   validates_datetime :scheduled_at, :allow_nil => true, :allow_blank => true,
     :after => lambda { 12.hours.from_now }
   

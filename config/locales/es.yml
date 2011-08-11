@@ -607,18 +607,22 @@
         completed: 'Impreso'
         cancelled: 'Anulado'
     payments:
-      count:
-        one: 'Suma de un pago'
-        other: 'Suma de %{count} pagos'
       date_filter:
         start: 'Inicio'
         end: 'Fin'
         apply: 'Aplicar'
+      deposits_count:
+        one: 'un depósito'
+        other: '%{count} depósitos'
       paid_with:
         cash: 'Efectivo'
         credit: 'Crédito'
+      payments_count:
+        one: 'Suma de un pago'
+        other: 'Suma de %{count} pagos'
       index_title: 'Listado de pagos'
       payment_details: 'Formas de pago:'
+      total: 'Total'
     prints:
       index_title: 'Listado de impresiones'
       show_title: 'Detalle de impresión'
@@ -698,3 +702,6 @@
       new_title: 'Iniciar sesión'
       correctly_created: 'Bienvenido a Central de Impresión.'
       correctly_destroyed: 'Sesión cerrada correctamente.'
+  
+  will_paginate:
+    page_gap: '...'

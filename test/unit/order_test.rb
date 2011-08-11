@@ -90,6 +90,15 @@ class OrderTest < ActiveSupport::TestCase
     ].sort, @order.errors[:scheduled_at].sort
   end
   
+  # Prueba que las validaciones del modelo se cumplan como es esperado
+  test 'validates included attributes' do
+    @order.status = 'x'
+    assert @order.invalid?
+    assert_equal 1, @order.errors.count
+    assert_equal [error_message_from_model(@order, :status, :inclusion)],
+      @order.errors[:status]
+  end
+  
   test 'price' do
     price = @order.order_lines.inject(0) { |t, ol| t + ol.price }
 

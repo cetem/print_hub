@@ -98,11 +98,11 @@
       :title => t(:'view.prints.add_article_line_title') %>
   </div>
 
-  <section class="nested_items">
+  <section id="payments" class="nested_items">
     <h2><%= t :payment, :scope => [:view, :prints] %></h2>
     <table class="summary">
       <thead>
-        <tr>
+        <tr class="payment_headers">
           <th><%= Payment.human_attribute_name :amount %></th>
           <th><%= Payment.human_attribute_name :paid %></th>
           <th><%= Print.human_attribute_name :credit_password %></th>
@@ -111,25 +111,26 @@
       </thead>
       <tbody>
         <%= f.fields_for :payments do |p_f| %>
-          <tr>
+          <tr class="payment">
             <td>
               <div class="nested_item_field">
                 <%= p_f.text_field :amount, :value => '%.3f' % p_f.object.amount,
-                  :id => "payment_#{p_f.object.paid_with}_amount", :maxlength => 15,
-                  :readonly => true %>
+                  :id => "payment_#{p_f.object.paid_with}_amount",
+                  :maxlength => 15, :size => nil, :readonly => true %>
               </div>
             </td>
             <td>
               <div class="nested_item_field">
                 <%= p_f.text_field :paid, :value => '%.3f' % p_f.object.paid,
-                  :id => "payment_#{p_f.object.paid_with}_paid", :maxlength => 15,
-                  :readonly => p_f.object.credit? %>
+                  :id => "payment_#{p_f.object.paid_with}_paid",
+                  :maxlength => 15, :size => nil, :readonly => p_f.object.credit? %>
               </div>
             </td>
             <td>
               <% if p_f.object.credit? %>
                 <div class="nested_item_field">
-                  <%= f.password_field :credit_password, :value => '', :maxlength => 255 %>
+                  <%= f.password_field :credit_password, :value => '',
+                    :size => nil, :maxlength => 255 %>
                 </div>
               <% else %>
                 &nbsp;
@@ -383,6 +384,5 @@
       e.preventDefault();
     }
   });
-  
-  updateTotalPrice();
 </script>
+<%= javascript_tag 'jQuery(function() { updateTotalPrice(); });' if @print.new_record? %>

@@ -21,6 +21,7 @@ class PaymentsControllerTest < ActionController::TestCase
     assert_equal 4, assigns(:payments).count
     assert_equal '88.17', assigns(:payments).sum('amount').to_s
     assert_equal '45.0', assigns(:payments).sum('paid').to_s
+    assert_equal '1001.5', assigns(:deposits).sum('amount').to_s
     assert_select '#error_body', false
     assert_template 'payments/index'
   end
