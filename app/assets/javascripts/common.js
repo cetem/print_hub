@@ -231,6 +231,12 @@ jQuery(function($) {
     imagewidth : 16,
     width : 360
   });
+  
+  $('form').submit(function() {
+    $(this).find('input[type="submit"], input[name="utf8"]').attr(
+      'disabled', true
+    );
+  });
 
   AutoComplete.observeAll();
 });

@@ -46,6 +46,18 @@ section.explanation {
   section.spot {
     display: block;
     clear: both;
+    margin-top: 1em;
+
+    code {
+      font-family: Monaco, "Courier New", "DejaVu Sans Mono", "Bitstream Vera Sans Mono", monospace;
+      font-style: italic;
+      color: $main-text-color;
+      background: $highlight-color;
+      border: 1px solid #999;
+      padding: 1px 4px;
+      text-shadow: 1px 1px 1px rgba(0, 0, 0, .3);
+      @include rounded-corners(.25em);
+    }
 
     h3 {
       font-weight: normal;
@@ -54,6 +66,16 @@ section.explanation {
 
     h3.left {
       float: left;
+    }
+
+    p {
+      line-height: 1.75em;
+      margin: .5em 0em 0em 1.5em;
+    }
+
+    ul {
+      line-height: 1.75em;
+      margin: .5em 0em 0em 3em;
     }
   }
 }

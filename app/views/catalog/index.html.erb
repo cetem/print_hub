@@ -4,12 +4,12 @@
   </h2>
 <% end %>
 
-<%= render :partial => 'shared/search' %>
+<%= render 'shared/search' %>
 
 <% if params[:q].blank? && @documents.blank? %>
-  <%= render :partial => 'help/empty_catalog' %>
+  <%= render 'help/empty_catalog' %>
 <% elsif params[:q].present? && @documents.blank? %>
-  <%= render :partial => 'help/empty_search_in_catalog' %>
+  <%= render 'help/empty_search_in_catalog' %>
 <% else %>
-  <%= render :partial => 'table_catalog' %>
+  <%= render 'table_catalog' %>
 <% end %>

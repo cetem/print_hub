@@ -1,2 +1,34 @@
-<h2>Catálogo con búsqueda sin resultados</h2>
-<p>Ayuda para búsquedas con resultado vacío</p>
+<section class="explanation">
+  <header>
+    <h2>
+      La búsqueda de <strong><%= params[:q] %></strong> no produjo resultados
+    </h2>
+  </header>
+  
+  <section class="spot">
+    <h3>Algunas sugerencias...</h3>
+    <ul>
+      <li>Revisá que todo esté <strong>bien escrito</strong></li>
+      <li>Usá palabras alternativas</li>
+      <li>Usá palabras más generales (o menos palabras)</li>
+    </ul>
+  </section>
+  <section class="spot">
+    <h3>También podés <strong>mejorar</strong> tus búsquedas</h3>
+    <ul>
+      <li>
+        Si buscás con <code>2011 física</code> seleccionás los documentos que
+        contienen las 2 palabras
+      </li>
+      <li>
+        Si buscás con <code>2011 <strong>o</strong> física</code> seleccionás
+        los documentos que contienen al menos una de las dos palabras
+      </li>
+    </ul>
+    <p>
+      Podés usar tantas palabras como quieras y combinarlas con <code>o</code>.
+      También podés utilizar paréntesis para formar expresiones más complejas.
+    </p>
+  </section>
+  <%= render 'help/footer' %>
+</section>
