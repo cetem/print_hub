@@ -1,0 +1,37 @@
+<section id="new_customer">
+  <div id="public_customer_form">
+    <%= form_for(@customer) do |f| %>
+      <%= show_error_messages(@customer) %>
+
+      <div class="field">
+        <%= f.label :name %>
+        <%= f.text_field :name, :autofocus => true, :maxlength => 255 %>
+      </div>
+      <div class="field">
+        <%= f.label :lastname %>
+        <%= f.text_field :lastname, :maxlength => 255 %>
+      </div>
+      <div class="field">
+        <%= f.label :identification %>
+        <%= f.text_field :identification, :maxlength => 255 %>
+      </div>
+      <div class="field">
+        <%= f.label :email %>
+        <%= f.text_field :email, :maxlength => 255 %>
+      </div>
+      <div class="field">
+        <%= f.label :password %>
+        <%= f.password_field :password, :maxlength => 255 %>
+      </div>
+      <div class="field">
+        <%= f.label :password_confirmation %>
+        <%= f.password_field :password_confirmation, :maxlength => 255 %>
+      </div>
+
+      <div class="actions">
+        <%= f.submit t(:register, :scope => [:view, :customers]) %>
+      </div>
+    <% end %>
+  </div>
+  <%= render 'help/new_customer' %>
+</section>

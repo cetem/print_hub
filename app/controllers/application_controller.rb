@@ -104,6 +104,11 @@ class ApplicationController < ActionController::Base
     request.subdomains.first == CUSTOMER_SUBDOMAIN ?
       require_customer : require_user
   end
+  
+  def require_no_customer_or_admin
+    request.subdomains.first == CUSTOMER_SUBDOMAIN ?
+      require_no_customer : require_admin_user
+  end
 
   def require_admin_user
     unless current_user.try(:admin) == true

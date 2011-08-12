@@ -22,6 +22,16 @@ class CustomersControllerTest < ActionController::TestCase
     assert_select '#error_body', false
     assert_template 'customers/new'
   end
+  
+  test 'should get public new' do
+    @request.host = "#{CUSTOMER_SUBDOMAIN}.printhub.local"
+    # Look ma, without login =)
+    get :new
+    assert_response :success
+    assert_not_nil assigns(:customer)
+    assert_select '#error_body', false
+    assert_template 'customers/new_public'
+  end
 
   test 'should create customer' do
     UserSession.create(users(:administrator))
@@ -54,6 +64,22 @@ class CustomersControllerTest < ActionController::TestCase
     assert_redirected_to customer_path(assigns(:customer))
     # Prueba básica para "asegurar" el funcionamiento del versionado
     assert_equal users(:administrator).id, Version.last.whodunnit
+  end
+  
+  test 'should create public customer' do
+    @request.host = "#{CUSTOMER_SUBDOMAIN}.printhub.local"
+    assert_difference 'Customer.count' do
+      post :create, :customer => {
+        :name => 'Jar Jar',
+        :lastname => 'Binks',
+        :identification => '111',
+        :email => 'jar_jar@printhub.com',
+        :password => 'jarjar123',
+        :password_confirmation => 'jarjar123'
+      }
+    end
+
+    assert_redirected_to new_customer_session_url
   end
 
   test 'should show customer' do

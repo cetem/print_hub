@@ -107,6 +107,35 @@ class ApplicationControllerTest < ActionController::TestCase
     CustomerSession.create(customers(:student))
     assert @controller.send(:require_customer_or_user)
   end
+  
+  test 'require no customer or admin with admin' do
+    assert !@controller.send(:require_no_customer_or_admin)
+    assert_redirected_to new_user_session_url
+    assert_equal I18n.t(:'messages.must_be_admin'),
+      @controller.send(:flash)[:alert]
+
+    UserSession.create(users(:administrator))
+    assert @controller.send(:require_no_customer_or_admin)
+  end
+  
+  test 'require no customer or admin with customer' do
+    @request.host = "#{CUSTOMER_SUBDOMAIN}.printhub.local"
+    assert @controller.send(:require_no_customer_or_admin)
+    
+    CustomerSession.create(customers(:student))
+    assert !@controller.send(:require_no_customer_or_admin)
+    assert_redirected_to catalog_url
+    assert_equal I18n.t(:'messages.must_be_logged_out'),
+      @controller.send(:flash)[:notice]
+  end
+  
+  test 'require no customer or admin with user' do
+    UserSession.create(users(:operator))
+    assert !@controller.send(:require_no_customer_or_admin)
+    assert_redirected_to prints_url
+    assert_equal I18n.t(:'messages.must_be_admin'),
+      @controller.send(:flash)[:alert]
+  end
 
   test 'require admin user with admin user' do
     UserSession.create(users(:administrator))

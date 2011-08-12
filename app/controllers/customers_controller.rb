@@ -1,6 +1,7 @@
 class CustomersController < ApplicationController
-  before_filter :require_admin_user, :except => [:credit_detail]
+  before_filter :require_admin_user, :except => [:new, :create, :credit_detail]
   before_filter :require_user, :only => [:credit_detail]
+  before_filter :require_no_customer_or_admin, :only => [:new, :create]
   
   layout proc { |controller| controller.request.xhr? ? false : 'application' }
 
@@ -38,7 +39,7 @@ class CustomersController < ApplicationController
     @customer = Customer.new
 
     respond_to do |format|
-      format.html # new.html.erb
+      format.html { render :action => current_user ? :new  : :new_public }
       format.xml  { render :xml => @customer }
     end
   end
@@ -57,7 +58,7 @@ class CustomersController < ApplicationController
 
     respond_to do |format|
       if @customer.save
-        format.html { redirect_to(customer_path(@customer), :notice => t(:'view.customers.correctly_created')) }
+        format.html { redirect_to(current_user ? customer_url(@customer) : new_customer_session_url, :notice => t(:'view.customers.correctly_created')) }
         format.xml  { render :xml => @customer, :status => :created, :location => @customer }
       else
         format.html { render :action => :new }
@@ -74,7 +75,7 @@ class CustomersController < ApplicationController
 
     respond_to do |format|
       if @customer.update_attributes(params[:customer])
-        format.html { redirect_to(customer_path(@customer), :notice => t(:'view.customers.correctly_updated')) }
+        format.html { redirect_to(customer_url(@customer), :notice => t(:'view.customers.correctly_updated')) }
         format.xml  { head :ok }
       else
         format.html { render :action => :edit }

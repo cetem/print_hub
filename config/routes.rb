@@ -15,6 +15,8 @@ PrintHubApp::Application.routes.draw do
     
     resources :orders, :except => [:destroy]
     
+    resources :customers, :only => [:new, :create]
+    
     root :to => 'customer_sessions#new'
   end
   
