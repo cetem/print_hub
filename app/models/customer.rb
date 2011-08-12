@@ -15,7 +15,7 @@ class Customer < ActiveRecord::Base
   alias_attribute :informal, :identification
 
   # Callbacks
-  before_create :build_monthly_bonus
+  before_create :build_monthly_bonus, :send_welcome_email
   before_destroy :has_no_orders?
   
   # Restricciones
@@ -28,6 +28,14 @@ class Customer < ActiveRecord::Base
     :allow_nil => true, :allow_blank => true
   validates :free_monthly_bonus, :allow_nil => true, :allow_blank => true,
     :numericality => {:greater_than_or_equal_to => 0}
+  validates_each :free_monthly_bonus do |record, attr, value|
+    # Si no es un usuario de tipo admin este atributo no lo puede tocar =)
+    if !UserSession.find.try(:record).try(:admin)
+      if record.send(:"#{attr}_changed?") && value.to_f > 0
+        record.errors.add attr, :invalid
+      end
+    end
+  end
 
   # Relaciones
   has_many :orders, :inverse_of => :customer, :dependent => :destroy,
@@ -40,9 +48,9 @@ class Customer < ActiveRecord::Base
     :autosave => true, :order => 'valid_until ASC'
   
   accepts_nested_attributes_for :bonuses, :allow_destroy => true,
-    :reject_if => proc { |attributes| attributes['amount'].to_f <= 0 }
+    :reject_if => :reject_credits
   accepts_nested_attributes_for :deposits, :allow_destroy => true,
-    :reject_if => proc { |attributes| attributes['amount'].to_f <= 0 }
+    :reject_if => :reject_credits
 
   def to_s
     [self.name, self.lastname].compact.join(' ')
@@ -57,6 +65,10 @@ class Customer < ActiveRecord::Base
     }
     
     super(default_options.merge(options || {}))
+  end
+  
+  def reject_credits(attributes)
+    attributes['amount'].to_f <= 0 || !UserSession.find.try(:record)
   end
   
   def current_bonuses
@@ -78,6 +90,10 @@ class Customer < ActiveRecord::Base
         :valid_until => (expiration unless self.bonus_without_expiration)
       )
     end
+  end
+  
+  def send_welcome_email
+    Notifications.signup(self).deliver
   end
   
   def has_no_orders?

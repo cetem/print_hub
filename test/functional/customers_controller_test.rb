@@ -81,6 +81,31 @@ class CustomersControllerTest < ActionController::TestCase
 
     assert_redirected_to new_customer_session_url
   end
+  
+  test 'should create public customer and ignore bonuses' do
+    @request.host = "#{CUSTOMER_SUBDOMAIN}.printhub.local"
+    assert_difference 'Customer.count' do
+      # Bonuses are silently ignored for customers
+      assert_no_difference 'Bonus.count' do
+        post :create, :customer => {
+          :name => 'Jar Jar',
+          :lastname => 'Binks',
+          :identification => '111',
+          :email => 'jar_jar@printhub.com',
+          :password => 'jarjar123',
+          :password_confirmation => 'jarjar123',
+          :bonuses_attributes => {
+            :new_1 => {
+              :amount => '100',
+              :valid_until => I18n.l(1.day.from_now.to_date)
+            }
+          }
+        }
+      end
+    end
+
+    assert_redirected_to new_customer_session_url
+  end
 
   test 'should show customer' do
     UserSession.create(users(:administrator))

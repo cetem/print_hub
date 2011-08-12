@@ -188,6 +188,7 @@ class PrintTest < ActiveSupport::TestCase
   end
 
   test 'create with free credit' do
+    UserSession.create(users(:operator))
     counts = ['Print.count', 'PrintJob.count', 'Payment.count',
       'Cups.all_jobs(@printer).keys.sort.last', 'ArticleLine.count']
 

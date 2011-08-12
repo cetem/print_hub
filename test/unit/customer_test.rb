@@ -23,8 +23,30 @@ class CustomerTest < ActiveSupport::TestCase
 
   # Prueba la creación de un cliente
   test 'create without bonus' do
-    assert_difference 'Customer.count' do
-      assert_no_difference 'Bonus.count' do
+    # Send welcome email
+    assert_difference 'ActionMailer::Base.deliveries.size' do
+      assert_difference ['Customer.count'] do
+        assert_no_difference 'Bonus.count' do
+          @customer = Customer.create(
+            :name => 'Jar Jar',
+            :lastname => 'Binks',
+            :identification => '111',
+            :email => 'jar_jar@printhub.com',
+            :password => 'jarjar123',
+            :password_confirmation => 'jarjar123',
+            :free_monthly_bonus => nil,
+            :bonus_without_expiration => false
+          )
+        end
+      end
+    end
+  end
+
+  test 'create with bonus' do
+    UserSession.create(users(:administrator))
+    # Send welcome email
+    assert_difference 'ActionMailer::Base.deliveries.size' do
+      assert_difference ['Customer.count', 'Bonus.count'] do
         @customer = Customer.create(
           :name => 'Jar Jar',
           :lastname => 'Binks',
@@ -32,15 +54,19 @@ class CustomerTest < ActiveSupport::TestCase
           :email => 'jar_jar@printhub.com',
           :password => 'jarjar123',
           :password_confirmation => 'jarjar123',
-          :free_monthly_bonus => 0.0,
+          :free_monthly_bonus => 10.0,
           :bonus_without_expiration => false
         )
       end
     end
-  end
 
-  test 'create with bonus' do
-    assert_difference ['Customer.count', 'Bonus.count'] do
+    assert_equal 10.0, @customer.bonuses.first.amount
+    assert_equal 10.0, @customer.bonuses.first.remaining
+    assert_equal Date.today.at_end_of_month, @customer.bonuses.first.valid_until
+  end
+  
+  test 'no create with bonus without login' do
+    assert_no_difference ['Customer.count', 'Bonus.count'] do
       @customer = Customer.create(
         :name => 'Jar Jar',
         :lastname => 'Binks',
@@ -53,9 +79,10 @@ class CustomerTest < ActiveSupport::TestCase
       )
     end
 
-    assert_equal 10.0, @customer.bonuses.first.amount
-    assert_equal 10.0, @customer.bonuses.first.remaining
-    assert_equal Date.today.at_end_of_month, @customer.bonuses.first.valid_until
+    assert_equal 1, @customer.errors.size
+    assert_equal [
+      error_message_from_model(@customer, :free_monthly_bonus, :invalid)
+    ], @customer.errors[:free_monthly_bonus]
   end
 
   # Prueba de actualización de un cliente
@@ -131,12 +158,14 @@ class CustomerTest < ActiveSupport::TestCase
 
   # Prueba que las validaciones del modelo se cumplan como es esperado
   test 'validates well formated attributes' do
+    UserSession.create(users(:administrator))
     @customer.free_monthly_bonus = '1.2x'
     @customer.email = 'incorrect@format'
     assert @customer.invalid?
     assert_equal 2, @customer.errors.count
-    assert_equal [error_message_from_model(@customer, :free_monthly_bonus,
-        :not_a_number)], @customer.errors[:free_monthly_bonus]
+    assert_equal [
+      error_message_from_model(@customer, :free_monthly_bonus, :not_a_number)
+    ], @customer.errors[:free_monthly_bonus]
     assert_equal [I18n.t(:email_invalid,
         :scope => [:authlogic, :error_messages])],
       @customer.errors[:email]
@@ -144,12 +173,24 @@ class CustomerTest < ActiveSupport::TestCase
 
   # Prueba que las validaciones del modelo se cumplan como es esperado
   test 'validates boundaries of attributes' do
+    UserSession.create(users(:administrator))
     @customer.free_monthly_bonus = '-0.01'
     assert @customer.invalid?
     assert_equal 1, @customer.errors.count
     assert_equal [error_message_from_model(@customer, :free_monthly_bonus,
         :greater_than_or_equal_to, :count => 0)],
       @customer.errors[:free_monthly_bonus]
+  end
+  
+  # Prueba que las validaciones del modelo se cumplan como es esperado
+  test 'validates nasty attributes' do
+    # Sin autenticación no se puede poner, ¡¡pillín!!
+    @customer.free_monthly_bonus = '1'
+    assert @customer.invalid?
+    assert_equal 1, @customer.errors.count
+    assert_equal [
+      error_message_from_model(@customer, :free_monthly_bonus, :invalid)
+    ], @customer.errors[:free_monthly_bonus]
   end
   
   test 'current bonuses' do
@@ -178,6 +219,7 @@ class CustomerTest < ActiveSupport::TestCase
   end
 
   test 'use credit' do
+    UserSession.create(users(:operator))
     # Usa el crédito que tiene disponible
     assert_equal '0',
       @customer.use_credit(100, 'student123', :save => true).to_s

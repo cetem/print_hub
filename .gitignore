@@ -1,4 +1,5 @@
 .bundle
+config/app_config.yml
 doc/
 log/
 nbproject/private/

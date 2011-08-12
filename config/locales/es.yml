@@ -399,6 +399,12 @@
     must_be_logged_in: 'Debe ingresar para poder ver el contenido requerido'
     must_be_logged_out: 'Debe salir para poder ver el contenido requerido'
     
+  notifications:
+    signup:
+      subject: 'Registro'
+    forgot_password:
+      subject: 'Restablecer contraseña'
+    
   # Action View
   number:
     # Used in number_with_delimiter()

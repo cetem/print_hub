@@ -52,3 +52,7 @@ end
 class ActionController::TestCase
   setup :activate_authlogic
 end
+
+class ActiveSupport::TestCase
+  setup :activate_authlogic
+end
