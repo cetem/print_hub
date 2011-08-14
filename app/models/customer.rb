@@ -9,7 +9,12 @@ class Customer < ActiveRecord::Base
   end
 
   # Scopes
+  default_scope where(:enable => true)
+  scope :disable, where(:enable => false)
   scope :with_monthly_bonus, where('free_monthly_bonus > :zero', :zero => 0)
+  
+  # Atributos protegidos
+  attr_protected :enable
   
   # Alias de atributos
   alias_attribute :informal, :identification
@@ -51,6 +56,12 @@ class Customer < ActiveRecord::Base
     :reject_if => :reject_credits
   accepts_nested_attributes_for :deposits, :allow_destroy => true,
     :reject_if => :reject_credits
+  
+  def initialize(attributes = nil, options = {})
+    super(attributes, options)
+    
+    self.enable = !!UserSession.find.try(:record)
+  end
 
   def to_s
     [self.name, self.lastname].compact.join(' ')

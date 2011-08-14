@@ -37,6 +37,19 @@ class CustomerSessionsControllerTest < ActionController::TestCase
     assert_select '#error_body', false
     assert_template 'customer_sessions/new'
   end
+  
+  test 'should not create a customer session with a disabled customer' do
+    post :create, :customer_session => {
+      :customername => customers(:disabled_student).email,
+      :password => 'disabled_student123'
+    }
+
+    assert_nil CustomerSession.find
+    assert_response :success
+    assert_not_nil assigns(:customer_session)
+    assert_select '#error_body', false
+    assert_template 'customer_sessions/new'
+  end
 
   test 'should destroy customer session' do
     CustomerSession.create(@customer)

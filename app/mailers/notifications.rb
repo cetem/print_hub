@@ -1,5 +1,5 @@
 class Notifications < ActionMailer::Base
-  default from: "\"#{t(:app_name)}\" <#{NOTIFICATIONS_EMAIL}>",
+  default from: "\"#{I18n.t(:app_name)}\" <#{NOTIFICATIONS_EMAIL}>",
     charset: 'UTF-8',
     content_type: 'text/html',
     date: proc { Time.now }

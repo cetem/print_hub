@@ -67,9 +67,11 @@ ActiveRecord::Schema.define(:version => 20110804224507) do
     t.string   "password_salt"
     t.string   "persistence_token"
     t.string   "perishable_token"
+    t.boolean  "enable",                                                  :default => true
   end
 
   add_index "customers", ["email"], :name => "index_customers_on_email", :unique => true
+  add_index "customers", ["enable"], :name => "index_customers_on_enable"
   add_index "customers", ["identification"], :name => "index_customers_on_identification", :unique => true
 
   create_table "documents", :force => true do |t|

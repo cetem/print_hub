@@ -58,10 +58,13 @@ class CustomersController < ApplicationController
 
     respond_to do |format|
       if @customer.save
-        format.html { redirect_to(current_user ? customer_url(@customer) : new_customer_session_url, :notice => t(:'view.customers.correctly_created')) }
+        url = current_user ? customer_url(@customer) : new_customer_session_url
+        notice = current_user ? t(:'view.customers.correctly_created') : t(:'view.customers.correctly_registered')
+        
+        format.html { redirect_to(url, :notice => notice) }
         format.xml  { render :xml => @customer, :status => :created, :location => @customer }
       else
-        format.html { render :action => :new }
+        format.html { render :action => current_user ? :new  : :new_public }
         format.xml  { render :xml => @customer.errors, :status => :unprocessable_entity }
       end
     end
