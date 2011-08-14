@@ -103,7 +103,7 @@ class CustomersController < ApplicationController
     end
   end
   
-  # GET /customer/credit_detail/1
+  # GET /customers/credit_detail/1
   def credit_detail
     @customer = Customer.find(params[:id])
     

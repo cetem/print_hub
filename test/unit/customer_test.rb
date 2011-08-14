@@ -23,6 +23,7 @@ class CustomerTest < ActiveSupport::TestCase
 
   # Prueba la creación de un cliente
   test 'create without bonus' do
+    UserSession.create(users(:administrator))
     # Send welcome email
     assert_difference 'ActionMailer::Base.deliveries.size' do
       assert_difference ['Customer.count'] do

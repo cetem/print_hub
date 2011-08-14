@@ -68,7 +68,7 @@ class CustomersControllerTest < ActionController::TestCase
   
   test 'should create public customer' do
     @request.host = "#{CUSTOMER_SUBDOMAIN}.printhub.local"
-    assert_difference 'Customer.count' do
+    assert_difference 'Customer.disable.count' do
       post :create, :customer => {
         :name => 'Jar Jar',
         :lastname => 'Binks',
@@ -84,7 +84,7 @@ class CustomersControllerTest < ActionController::TestCase
   
   test 'should create public customer and ignore bonuses' do
     @request.host = "#{CUSTOMER_SUBDOMAIN}.printhub.local"
-    assert_difference 'Customer.count' do
+    assert_difference 'Customer.disable.count' do
       # Bonuses are silently ignored for customers
       assert_no_difference 'Bonus.count' do
         post :create, :customer => {
