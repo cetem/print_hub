@@ -1,7 +1,7 @@
-email:
+smtp:
   address: 'smtp.gmail.com'
-  port: 587,
-  domain: 'public.domain.com'
+  port: 587
+  domain: 'gmail.com'
   user_name: '<username>'
   password: '<password>'
   authentication: 'plain'

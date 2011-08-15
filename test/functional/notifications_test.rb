@@ -6,7 +6,7 @@ class NotificationsTest < ActionMailer::TestCase
     mail = Notifications.signup(customer)
     assert_equal I18n.t('notifications.signup.subject'), mail.subject
     assert_equal [customer.email], mail.to
-    assert_equal [NOTIFICATIONS_EMAIL], mail.from
+    assert_equal [APP_CONFIG['smtp']['user_name']], mail.from
     assert_match 'Bienvenido', mail.body.encoded
     
     assert_difference 'ActionMailer::Base.deliveries.size' do
@@ -19,7 +19,7 @@ class NotificationsTest < ActionMailer::TestCase
     mail = Notifications.forgot_password(customer)
     assert_equal I18n.t('notifications.forgot_password.subject'), mail.subject
     assert_equal [customer.email], mail.to
-    assert_equal [NOTIFICATIONS_EMAIL], mail.from
+    assert_equal [APP_CONFIG['smtp']['user_name']], mail.from
     assert_match 'Cambio', mail.body.encoded
     
     assert_difference 'ActionMailer::Base.deliveries.size' do

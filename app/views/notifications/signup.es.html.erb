@@ -1,3 +1,6 @@
 <h1>Bienvenido a nuestro sistema de pedidos</h1>
 
-<p>Primero confirma tu dirección y establecé tu contraseña</p>
+<p><%= link_to 'Activá tu cuenta', activate_customer_url(:token => @customer.perishable_token) %></p>
+
+<p>Si tenés problemas con el enlace anterior probá copiando lo siguiente en la barra de dirección de tu navegador:</p>
+<p><pre><%= activate_customer_url(:token => @customer.perishable_token) %></pre></p>
