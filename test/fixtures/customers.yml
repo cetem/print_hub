@@ -7,6 +7,7 @@ student:
   password_salt: <%= salt = Authlogic::Random.hex_token %>
   crypted_password: <%= Authlogic::CryptoProviders::Sha512.encrypt('student123' + salt) %>
   persistence_token: 6cde0674657a8a313ce952df979de2830309aa4c11ca65805dd00bfdc65dbcc2f5e36718660a1d2e68c1a08c276d996763985d2f06fd3d076eb7bc4d97b1e317
+  perishable_token: <%= Authlogic::Random.friendly_token %>
   free_monthly_bonus: 100.00
   bonus_without_expiration: false
 
@@ -19,6 +20,7 @@ teacher:
   password_salt: <%= salt = Authlogic::Random.hex_token %>
   crypted_password: <%= Authlogic::CryptoProviders::Sha512.encrypt('teacher123' + salt) %>
   persistence_token: 6cde0674657a8a313ce952df979de2830309aa4c11ca65805dd00bfdc65dbcc2f5e36718660a1d2e68c1a08c276d996763985d2f06fd3d076eb7bc4d97b1e317
+  perishable_token: <%= Authlogic::Random.friendly_token %>
   free_monthly_bonus: 10.00
   bonus_without_expiration: false
 
@@ -31,6 +33,7 @@ student_without_bonus:
   password_salt: <%= salt = Authlogic::Random.hex_token %>
   crypted_password: <%= Authlogic::CryptoProviders::Sha512.encrypt('student_without_bonus123' + salt) %>
   persistence_token: 6cde0674657a8a313ce952df979de2830309aa4c11ca65805dd00bfdc65dbcc2f5e36718660a1d2e68c1a08c276d996763985d2f06fd3d076eb7bc4d97b1e317
+  perishable_token: <%= Authlogic::Random.friendly_token %>
   free_monthly_bonus: 0.00
   bonus_without_expiration: false
   
@@ -43,5 +46,6 @@ disabled_student:
   password_salt: <%= salt = Authlogic::Random.hex_token %>
   crypted_password: <%= Authlogic::CryptoProviders::Sha512.encrypt('disabled_student123' + salt) %>
   persistence_token: 6cde0674657a8a313ce952df979de2830309aa4c11ca65805dd00bfdc65dbcc2f5e36718660a1d2e68c1a08c276d996763985d2f06fd3d076eb7bc4d97b1e317
+  perishable_token: <%= Authlogic::Random.friendly_token %>
   free_monthly_bonus: 0.00
   bonus_without_expiration: false

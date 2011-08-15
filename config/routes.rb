@@ -13,6 +13,13 @@ PrintHubApp::Application.routes.draw do
       delete :destroy, :on => :collection
     end
     
+    match 'customers/activate/:token' => 'customers#activate',
+      :as => 'activate_customer', :via => :get
+    match 'customers/reset_password/:token' => 'customers#reset_password',
+      :as => 'reset_password_customer', :via => :get
+    match 'customers/update_password/:token' => 'customers#update_password',
+      :as => 'update_password_customer', :via => :put
+    
     resources :orders, :except => [:destroy]
     
     resources :customers, :only => [:new, :create]

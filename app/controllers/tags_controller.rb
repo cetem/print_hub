@@ -57,7 +57,7 @@ class TagsController < ApplicationController
 
     respond_to do |format|
       if @tag.save
-        format.html { redirect_to(tags_path(:parent => @tag.parent), :notice => t(:'view.tags.correctly_created')) }
+        format.html { redirect_to(tags_url(:parent => @tag.parent), :notice => t(:'view.tags.correctly_created')) }
         format.xml  { render :xml => @tag, :status => :created, :location => @tag }
       else
         format.html { render :action => :new }
@@ -74,7 +74,7 @@ class TagsController < ApplicationController
 
     respond_to do |format|
       if @tag.update_attributes(params[:tag])
-        format.html { redirect_to(tags_path(:parent => @tag.parent), :notice => t(:'view.tags.correctly_updated')) }
+        format.html { redirect_to(tags_url(:parent => @tag.parent), :notice => t(:'view.tags.correctly_updated')) }
         format.xml  { head :ok }
       else
         format.html { render :action => :edit }
@@ -94,7 +94,7 @@ class TagsController < ApplicationController
     @tag.destroy
 
     respond_to do |format|
-      format.html { redirect_to(tags_path(:parent => @parent_tag)) }
+      format.html { redirect_to(tags_url(:parent => @parent_tag)) }
       format.xml  { head :ok }
     end
   end

@@ -61,7 +61,7 @@ class CustomersControllerTest < ActionController::TestCase
       end
     end
 
-    assert_redirected_to customer_path(assigns(:customer))
+    assert_redirected_to customer_url(assigns(:customer))
     # Prueba básica para "asegurar" el funcionamiento del versionado
     assert_equal users(:administrator).id, Version.last.whodunnit
   end
@@ -147,7 +147,7 @@ class CustomersControllerTest < ActionController::TestCase
       end
     end
 
-    assert_redirected_to customer_path(assigns(:customer))
+    assert_redirected_to customer_url(assigns(:customer))
     assert_equal 'Updated name', @customer.reload.name
   end
 
@@ -157,7 +157,7 @@ class CustomersControllerTest < ActionController::TestCase
       delete :destroy, :id => Customer.find(customers(:teacher).id).to_param
     end
 
-    assert_redirected_to customers_path
+    assert_redirected_to customers_url
   end
   
   test 'should get credit detail' do
@@ -167,5 +167,39 @@ class CustomersControllerTest < ActionController::TestCase
     assert_not_nil assigns(:customer)
     assert_select '#error_body', false
     assert_template 'customers/credit_detail'
+  end
+  
+  test 'should activate customer' do
+    @request.host = "#{CUSTOMER_SUBDOMAIN}.printhub.local"
+    customer = Customer.disable.find(
+      ActiveRecord::Fixtures.identify(:disabled_student)
+    )
+    
+    get :activate, :token => customer.perishable_token
+    assert_redirected_to new_customer_session_url
+    assert I18n.t(:'view.customers.correctly_activated'), flash.notice
+    assert customer.reload.enable
+  end
+  
+  test 'should get the reset password form' do
+    @request.host = "#{CUSTOMER_SUBDOMAIN}.printhub.local"
+    get :reset_password, :token => @customer.perishable_token
+    assert_response :success
+    assert_not_nil assigns(:customer)
+    assert_select '#error_body', false
+    assert_template 'customers/reset_password'
+  end
+  
+  test 'should update customer password' do
+    @request.host = "#{CUSTOMER_SUBDOMAIN}.printhub.local"
+    put :update_password, :token => @customer.perishable_token, :customer => {
+      :password => 'updated_password',
+      :password_confirmation => 'updated_password'
+    }
+
+    assert_redirected_to new_customer_session_url
+    assert_equal I18n.t(:'view.customers.password_correctly_updated'),
+      flash.notice
+    assert @customer.reload.valid_password?('updated_password')
   end
 end

@@ -1,7 +1,12 @@
 class CustomersController < ApplicationController
-  before_filter :require_admin_user, :except => [:new, :create, :credit_detail]
+  before_filter :require_admin_user, :except => [
+    :new, :create, :credit_detail, :activate, :reset_password, :update_password
+  ]
   before_filter :require_user, :only => [:credit_detail]
   before_filter :require_no_customer_or_admin, :only => [:new, :create]
+  before_filter :require_no_customer, :only => [
+    :activate, :reset_password, :update_password
+  ]
   
   layout proc { |controller| controller.request.xhr? ? false : 'application' }
 
@@ -109,6 +114,46 @@ class CustomersController < ApplicationController
     
     respond_to do |format|
       format.html
+    end
+  end
+  
+  # GET /customers/activate/token
+  def activate
+    @title = t :'view.customers.activation_title'
+    @customer = Customer.disable.find_using_perishable_token(
+      params[:token], 2.days
+    )
+    
+    respond_to do |format|
+      if @customer.try(:activate!)
+        format.html { redirect_to(new_customer_session_url, :notice => t(:'view.customers.correctly_activated')) }
+        format.xml  { head :ok }
+      else
+        format.html { redirect_to(new_customer_session_url, :notice => t(:'view.customers.can_not_be_activated')) }
+        format.xml  { render :xml => [t(:'view.customers.can_not_be_activated')], :status => :unprocessable_entity }
+      end
+    end
+  end
+  
+  # GET /customers/reset_password/token
+  def reset_password
+    @title = t :'view.customers.reset_password_title'
+    @customer = Customer.find_using_perishable_token(params[:token], 2.days)
+  end
+  
+  # PUT /customers/update_password/token
+  def update_password
+    @title = t :'view.customers.reset_password_title'
+    @customer = Customer.find_using_perishable_token(params[:token], 2.days)
+    
+    respond_to do |format|
+      if @customer.try(:update_attributes, params[:customer])
+        format.html { redirect_to(new_customer_session_url, :notice => t(:'view.customers.password_correctly_updated')) }
+        format.xml  { head :ok }
+      else
+        format.html { render :action => :reset_password }
+        format.xml  { render :xml => @customer.try(:errors) || [], :status => :unprocessable_entity }
+      end
     end
   end
 end

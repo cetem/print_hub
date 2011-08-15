@@ -194,6 +194,14 @@ class CustomerTest < ActiveSupport::TestCase
     ], @customer.errors[:free_monthly_bonus]
   end
   
+  test 'activate' do
+    customer = Customer.unscoped.find(ActiveRecord::Fixtures.identify(:disabled_student))
+    
+    assert !customer.enable
+    assert customer.activate!
+    assert customer.reload.enable
+  end
+  
   test 'current bonuses' do
     assert_equal 2, @customer.bonuses.count
     assert_equal 1, @customer.current_bonuses.size

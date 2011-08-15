@@ -82,6 +82,11 @@ class Customer < ActiveRecord::Base
     attributes['amount'].to_f <= 0 || !UserSession.find.try(:record)
   end
   
+  def activate!
+    self.enable = true
+    self.save
+  end
+  
   def current_bonuses
     self.bonuses.select { |b| b.new_record? || b.marked_for_destruction? } |
       self.bonuses.valids

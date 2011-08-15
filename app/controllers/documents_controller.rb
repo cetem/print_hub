@@ -108,7 +108,7 @@ class DocumentsController < ApplicationController
 
     respond_to do |format|
       if @document.save
-        format.html { redirect_to(documents_path, :notice => t(:'view.documents.correctly_created')) }
+        format.html { redirect_to(documents_url, :notice => t(:'view.documents.correctly_created')) }
         format.xml  { render :xml => @document, :status => :created, :location => @document }
       else
         format.html { render :action => :new }
@@ -126,7 +126,7 @@ class DocumentsController < ApplicationController
 
     respond_to do |format|
       if @document.update_attributes(params[:document])
-        format.html { redirect_to(documents_path, :notice => t(:'view.documents.correctly_updated')) }
+        format.html { redirect_to(documents_url, :notice => t(:'view.documents.correctly_updated')) }
         format.xml  { head :ok }
       else
         format.html { render :action => :edit }
