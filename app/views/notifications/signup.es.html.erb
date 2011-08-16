@@ -1,6 +1,13 @@
 <h1>Bienvenido a nuestro sistema de pedidos</h1>
 
-<p><%= link_to 'Activá tu cuenta', activate_customer_url(:token => @customer.perishable_token) %></p>
-
-<p>Si tenés problemas con el enlace anterior probá copiando lo siguiente en la barra de dirección de tu navegador:</p>
-<p><pre><%= activate_customer_url(:token => @customer.perishable_token) %></pre></p>
+<p>
+  <%= link_to 'Activá tu cuenta', activate_customer_url(:token => @customer.perishable_token) %>
+  para poder ingresar
+</p>
+<footer>
+  <p>
+    Si tenés problemas con el enlace anterior probá copiando lo siguiente
+    en la barra de dirección de tu navegador:
+  </p>
+  <p><%= activate_customer_url(:token => @customer.perishable_token) %></p>
+</footer>
