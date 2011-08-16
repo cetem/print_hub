@@ -4,6 +4,7 @@ section.explanation {
   margin: 2em 0em;
   padding: 1em;
   background: #f6f6f6;
+  border-left: 2px solid $main-color;
   @include rounded-corners(3px);
 
   div.image_container {
@@ -34,12 +35,13 @@ section.explanation {
   header {
     clear: both;
     margin: -1em -1em 1em -1em;
-    padding: 1em;
-    background: #e8e8e8;
+    padding: 0em 1em;
     
     h2 {
-      font-size: 1.5em;
-      font-weight: normal;
+      font-size: 2em;
+      font-weight: 100;
+      font-family: Raleway, 'Helvetica Neue', Helvetica, sans-serif;
+      line-height: 1.25em;
     }
   }
 
@@ -70,12 +72,12 @@ section.explanation {
 
     p {
       line-height: 1.75em;
-      margin: .5em 0em 0em 1.5em;
+      margin: .5em 3em 0em 3em;
     }
 
     ul {
       line-height: 1.75em;
-      margin: .5em 0em 0em 3em;
+      margin: .5em 3em 0em 3em;
     }
   }
 }

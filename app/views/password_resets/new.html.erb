@@ -8,5 +8,7 @@
 
   <div class="actions">
     <%= f.submit t(:request_reset, :scope => [:view, :password_resets]) %>
+    <%= t(:or, :scope => [:label]) %>
+    <%= link_to t(:'label.back'), new_customer_session_path %>
   </div>
 <% end %>

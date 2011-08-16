@@ -1,4 +1,4 @@
-<section id="new_customer">
+<section id="customer_registration">
   <div id="public_customer_form">
     <%= form_for(@customer) do |f| %>
       <%= show_error_messages(@customer) %>
@@ -30,6 +30,8 @@
 
       <div class="actions">
         <%= f.submit t(:register, :scope => [:view, :customers]) %>
+        <%= t(:or, :scope => [:label]) %>
+        <%= link_to t(:'label.back'), new_customer_session_path %>
       </div>
     <% end %>
   </div>

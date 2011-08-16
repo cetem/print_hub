@@ -24,3 +24,29 @@
   text-align: right;
   padding-top: 4em;
 }
+
+#customer_registration {
+  #error_explanation {
+    position: fixed;
+    width: 95%;
+    left: auto;
+    right: auto;
+    bottom: 0%;
+  }
+
+  #public_customer_form {
+    float: left;
+    margin-right: 2em;
+  }
+
+  h2 {
+    margin-bottom: 1em;
+  }
+
+  section.explanation {
+    float: left;
+    margin: 0em;
+    max-width: 450px;
+    text-align: justify;
+  }
+}

@@ -370,6 +370,7 @@
     list: 'Listado'
     new: 'Nuevo'
     next: 'Siguiente'
+    or: 'o'
     previous: 'Anterior'
     search: 'Buscar'
     show: 'Ver'
@@ -626,6 +627,7 @@
       email_not_found: 'No encontramos ninguna cuenta con ese correo'
       request_reset: 'Enviar'
       update_password: 'Actualizar contraseña'
+      instructions_delivered: 'Te enviamos un correo con las instrucciones para restablecer tu contraseña'
     payments:
       date_filter:
         start: 'Inicio'
