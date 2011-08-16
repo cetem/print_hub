@@ -61,6 +61,18 @@ a.add_link, a.remove_link {
   }
 }
 
+a.large_link {
+  font-size: 1.25em;
+  font-weight: bold;
+  color: #fff;
+  padding: .75em 2em;
+  text-decoration: none;
+  background: $main-color;
+  text-shadow: 1px 1px 1px rgba(0, 0, 0, .3);
+  box-shadow: 0 2px 2px -1px rgba(0, 0, 0, .4), 0 .9em .5em -0.2em rgba(255, 255, 255, .2) inset;
+  @include rounded-corners(1em);
+}
+
 a.remove_link {
   color: $main-color;
   border: 2px solid $main-color;

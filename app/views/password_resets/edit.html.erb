@@ -1,11 +1,11 @@
 <% if @customer %>
-  <% url = update_password_customer_path(:token => params[:token]) %>
+  <% url = password_resets_path(:token => params[:token]) %>
   <%= form_for(@customer, :url => url, :html => { :method => :put }) do |f| %>
     <%= show_error_messages(@customer) %>
 
     <div class="field">
       <%= f.label :password %>
-      <%= f.password_field :password, :maxlength => 255 %>
+      <%= f.password_field :password, :maxlength => 255, :autofocus => true %>
     </div>
     <div class="field">
       <%= f.label :password_confirmation %>
@@ -13,9 +13,9 @@
     </div>
 
     <div class="actions">
-      <%= f.submit t(:update_password, :scope => [:view, :customers]) %>
+      <%= f.submit t(:update_password, :scope => [:view, :password_resets]) %>
     </div>
   <% end %>
 <% else %>
-  <p><%= t(:customer_not_found, :scope => [:view, :customers]) %></p>
+  <p><%= t(:customer_not_found, :scope => [:view, :password_resets]) %></p>
 <% end %>

@@ -545,11 +545,9 @@
       show_title: 'Detalle de cliente'
       new_title: 'Nuevo cliente'
       edit_title: 'Modificar cliente'
-      reset_password_title: 'Cambiar contraseña'
       correctly_created: 'Cliente agregado correctamente.'
       correctly_updated: 'Cliente actualizado correctamente.'
       correctly_registered: 'Te has registrado correctamente, te enviamos un correo para que actives tu cuenta.'
-      password_correctly_updated: 'Contraseña actualizada correctamente'
       correctly_activated: 'Tu cuenta ahora está activa, ingresá y hacé tu pedido'
       can_not_be_activated: 'La cuenta no se puede activar, es posible que haya expirado, registrate nuevamente'
       stale_object_error: 'El cliente no pudo ser actualizado, intente nuevamente.'
@@ -558,8 +556,7 @@
       add_deposit: 'Agregar depósito'
       add_deposit_title: 'Agregar depósito (CTRL + ALT + D)'
       register: 'Registrarse'
-      update_password: 'Actualizar contraseña'
-      customer_not_found: 'No pudimos encontrar tu cuenta, es posible que haya expirado, registrate nuevamente'
+      forgot_password: 'Olvidé mi contraseña'
       current_bonuses:
         one: 'Bonificación vigente'
         other: 'Bonificaciones vigentes'
@@ -621,6 +618,14 @@
         pending: 'Pendiente'
         completed: 'Impreso'
         cancelled: 'Anulado'
+    password_resets:
+      new_title: 'Restaurar contraseña'
+      edit_title: 'Modificar contraseña'
+      correctly_updated: 'Contraseña actualizada correctamente'
+      customer_not_found: 'No pudimos encontrar tu cuenta, es posible que haya expirado, registrate nuevamente'
+      email_not_found: 'No encontramos ninguna cuenta con ese correo'
+      request_reset: 'Enviar'
+      update_password: 'Actualizar contraseña'
     payments:
       date_filter:
         start: 'Inicio'

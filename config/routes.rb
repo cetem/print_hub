@@ -15,10 +15,14 @@ PrintHubApp::Application.routes.draw do
     
     match 'customers/activate/:token' => 'customers#activate',
       :as => 'activate_customer', :via => :get
-    match 'customers/reset_password/:token' => 'customers#reset_password',
-      :as => 'reset_password_customer', :via => :get
-    match 'customers/update_password/:token' => 'customers#update_password',
-      :as => 'update_password_customer', :via => :put
+    
+    match 'password_resets/new' => 'password_resets#new',
+      :as => 'new_password_reset', :via => :get
+    match 'password_resets' => 'password_resets#create',
+      :as => 'password_resets', :via => :post
+    match 'password_resets/:token/edit' => 'password_resets#edit',
+      :as => 'edit_password_reset', :via => :get
+    match 'password_resets/:token' => 'password_resets#update', :via => :put
     
     resources :orders, :except => [:destroy]
     

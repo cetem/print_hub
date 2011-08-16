@@ -180,26 +180,4 @@ class CustomersControllerTest < ActionController::TestCase
     assert I18n.t(:'view.customers.correctly_activated'), flash.notice
     assert customer.reload.enable
   end
-  
-  test 'should get the reset password form' do
-    @request.host = "#{CUSTOMER_SUBDOMAIN}.printhub.local"
-    get :reset_password, :token => @customer.perishable_token
-    assert_response :success
-    assert_not_nil assigns(:customer)
-    assert_select '#error_body', false
-    assert_template 'customers/reset_password'
-  end
-  
-  test 'should update customer password' do
-    @request.host = "#{CUSTOMER_SUBDOMAIN}.printhub.local"
-    put :update_password, :token => @customer.perishable_token, :customer => {
-      :password => 'updated_password',
-      :password_confirmation => 'updated_password'
-    }
-
-    assert_redirected_to new_customer_session_url
-    assert_equal I18n.t(:'view.customers.password_correctly_updated'),
-      flash.notice
-    assert @customer.reload.valid_password?('updated_password')
-  end
 end

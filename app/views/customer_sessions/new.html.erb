@@ -20,6 +20,12 @@
   <%= render 'welcome' %>
 </section>
 
+<nav id="customer_login_links" class="links">
+  <%= link_to t(:forgot_password, :scope => [:view, :customers]), new_password_reset_path %> | 
+  <%= link_to t(:register, :scope => [:view, :customers]), new_customer_path,
+    :class => 'large_link' %>
+</nav>
+
 <% if @customer_session.errors.any? %>
   <div id="login_error">
     <p><%= @customer_session.errors.full_messages.join('; ') %></p>

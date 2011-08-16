@@ -8,6 +8,7 @@ class AddAuthFieldsToCustomer < ActiveRecord::Migration
     add_column :customers, :enable, :boolean, :default => true
     
     add_index :customers, :email, :unique => true
+    add_index :customers, :perishable_token
     add_index :customers, :enable
   end
 end

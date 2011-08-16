@@ -202,6 +202,12 @@ class CustomerTest < ActiveSupport::TestCase
     assert customer.reload.enable
   end
   
+  test 'deliver password reset instructions' do
+    assert_difference 'ActionMailer::Base.deliveries.size' do
+      @customer.deliver_password_reset_instructions!
+    end
+  end
+  
   test 'current bonuses' do
     assert_equal 2, @customer.bonuses.count
     assert_equal 1, @customer.current_bonuses.size
@@ -295,5 +301,11 @@ class CustomerTest < ActiveSupport::TestCase
     assert Customer.find(customers(:student_without_bonus).id).bonuses.empty?
     assert student.bonuses.any? { |b| b.valid_until == valid_until }
     assert teacher.bonuses.any? { |b| b.valid_until == valid_until }
+  end
+  
+  test 'destroy inactive accounts' do
+    assert_difference 'Customer.disable.count', -1 do
+      Customer.destroy_inactive_accounts
+    end
   end
 end

@@ -73,6 +73,7 @@ ActiveRecord::Schema.define(:version => 20110804224507) do
   add_index "customers", ["email"], :name => "index_customers_on_email", :unique => true
   add_index "customers", ["enable"], :name => "index_customers_on_enable"
   add_index "customers", ["identification"], :name => "index_customers_on_identification", :unique => true
+  add_index "customers", ["perishable_token"], :name => "index_customers_on_perishable_token"
 
   create_table "documents", :force => true do |t|
     t.integer  "code",                                 :null => false

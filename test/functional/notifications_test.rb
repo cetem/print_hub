@@ -2,7 +2,7 @@ require 'test_helper'
 
 class NotificationsTest < ActionMailer::TestCase
   test 'signup' do
-    customer = Customer.find(customers(:student))
+    customer = Customer.find(customers(:student).id)
     mail = Notifications.signup(customer)
     assert_equal I18n.t('notifications.signup.subject'), mail.subject
     assert_equal [customer.email], mail.to
@@ -15,7 +15,7 @@ class NotificationsTest < ActionMailer::TestCase
   end
 
   test 'forgot password' do
-    customer = Customer.find(customers(:student))
+    customer = Customer.find(customers(:student).id)
     mail = Notifications.forgot_password(customer)
     assert_equal I18n.t('notifications.forgot_password.subject'), mail.subject
     assert_equal [customer.email], mail.to

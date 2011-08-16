@@ -7,7 +7,7 @@ GIT
 
 GIT
   remote: https://github.com/rails/rails.git
-  revision: e749abcc45e3e37e23c970dd5868727350f3483c
+  revision: 3594102f3b97e5758f06a52e7bed549c85d50555
   branch: 3-1-stable
   specs:
     actionmailer (3.1.0.rc5)
@@ -32,7 +32,7 @@ GIT
     activerecord (3.1.0.rc5)
       activemodel (= 3.1.0.rc5)
       activesupport (= 3.1.0.rc5)
-      arel (~> 2.2.0)
+      arel (~> 2.2.1)
       tzinfo (~> 0.3.29)
     activeresource (3.1.0.rc5)
       activemodel (= 3.1.0.rc5)

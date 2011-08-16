@@ -20,7 +20,7 @@ class Customer < ActiveRecord::Base
   alias_attribute :informal, :identification
 
   # Callbacks
-  before_create :build_monthly_bonus, :send_welcome_email
+  before_create :build_monthly_bonus, :send_welcome_email!
   before_destroy :has_no_orders?
   
   # Restricciones
@@ -108,8 +108,12 @@ class Customer < ActiveRecord::Base
     end
   end
   
-  def send_welcome_email
+  def send_welcome_email!
     Notifications.signup(self).deliver
+  end
+  
+  def deliver_password_reset_instructions!
+    Notifications.forgot_password(self).deliver
   end
   
   def has_no_orders?
@@ -160,6 +164,21 @@ class Customer < ActiveRecord::Base
         end
 
       rescue ActiveRecord::RecordInvalid
+        raise ActiveRecord::Rollback
+      end
+    end
+  end
+  
+  def self.destroy_inactive_accounts
+    Customer.transaction do
+      begin
+        customers = Customer.disable.where('updated_at <= ?', 1.day.ago.to_date)
+        
+        customers.find_each do |customer|
+          raise "#{customer} can not be destroyed" unless customer.destroy
+        end
+
+      rescue
         raise ActiveRecord::Rollback
       end
     end
