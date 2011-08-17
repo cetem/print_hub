@@ -1,14 +1,23 @@
-<% url = password_resets_path %>
-<%= form_for(:customer, :url => url, :html => { :method => :post }) do |f| %>
-  <div class="field">
-    <%= f.label :email, Customer.human_attribute_name(:email) %>
-    <%= f.text_field :email, :name => :email, :maxlength => 255,
-      :autofocus => true %>
-  </div>
+<section id="password_reset">
+  <header>
+    <hgroup>
+      <h1><%= t(:reset_title, :scope => [:view, :password_resets]) %></h1>
+      <h3><%= t(:reset_subtitle, :scope => [:view, :password_resets]) %></h3>
+    </hgroup>
+  </header>
 
-  <div class="actions">
-    <%= f.submit t(:request_reset, :scope => [:view, :password_resets]) %>
-    <%= t(:or, :scope => [:label]) %>
-    <%= link_to t(:'label.back'), new_customer_session_path %>
-  </div>
-<% end %>
+  <% url = password_resets_path %>
+  <%= form_for(:customer, :url => url, :html => { :method => :post }) do |f| %>
+    <div class="field">
+      <%= f.label :email, Customer.human_attribute_name(:email) %>
+      <%= f.text_field :email, :name => :email, :maxlength => 255,
+        :autofocus => true %>
+    </div>
+
+    <div class="actions">
+      <%= f.submit t(:request_reset, :scope => [:view, :password_resets]) %>
+      <%= t(:or, :scope => [:label]) %>
+      <%= link_to t(:'label.back'), new_customer_session_path %>
+    </div>
+  <% end %>
+</section>

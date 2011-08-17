@@ -1,15 +1,21 @@
-<h1>Bienvenido a nuestro sistema de pedidos</h1>
+<% url = activate_customer_url(:token => @customer.perishable_token) %>
+<h2>Bienvenido a nuestro sistema de pedidos</h2>
+
+<p>Hola <strong><%= @customer.name %></strong>,</p>
+
+<p>Nos alegra tenerte con nosotros...</p>
 
 <p>
-  <%= link_to 'Activá tu cuenta', activate_customer_url(:token => @customer.perishable_token) %>
-  para poder ingresar
+  Para <strong>activar</strong> tu cuenta <strong>hacé click</strong> en el
+  siguiente enlace:<br />
+  <%= link_to url, url %>
 </p>
+<br />
+<br />
+
 <footer>
-  <br />
-  <br />
   <p>
-    Si tenés problemas con el enlace anterior probá copiando lo siguiente
-    en la barra de dirección de tu navegador:
+    Si tenés problemas con el enlace anterior probá copiándolo en la barra de
+    direcciones de tu navegador.
   </p>
-  <p><%= activate_customer_url(:token => @customer.perishable_token) %></p>
 </footer>

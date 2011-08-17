@@ -626,6 +626,8 @@
       customer_not_found: 'No pudimos encontrar tu cuenta, es posible que haya expirado, registrate nuevamente'
       email_not_found: 'No encontramos ninguna cuenta con ese correo'
       request_reset: 'Enviar'
+      reset_title: '¿Olvidaste tu contraseña?'
+      reset_subtitle: 'Ingresá tu dirección de correo y te enviamos un correo con instrucciones para reestablecerla'
       update_password: 'Actualizar contraseña'
       instructions_delivered: 'Te enviamos un correo con las instrucciones para restablecer tu contraseña'
     payments:
