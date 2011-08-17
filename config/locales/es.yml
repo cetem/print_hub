@@ -57,6 +57,7 @@
       customer: 'Cliente'
       deposit: 'Depósito'
       document: 'Documento'
+      feedback: 'Retroalimentación'
       order: 'Pedido'
       order_line: 'Línea de pedido'
       payment: 'Pago'
@@ -121,6 +122,10 @@
         private: 'Privado'
         file: 'Archivo'
         file_file_name: 'Archivo'
+      feedback:
+        item: 'Artículo'
+        positive: 'Positivo'
+        comment: 'Comentario'
       order:
         customer: 'Cliente'
         scheduled_at: 'Programado para'
@@ -604,6 +609,11 @@
       media_type:
         a4: 'A4'
         legal: 'Oficio'
+    feedbacks:
+      submit: 'Enviar comentario'
+      positive_return: 'Nos alegra haberte ayudado. Gracias por la retroalimentación.'
+      negative_return: 'Lamentamos que no te haya servido. ¿Podrías decirnos cómo mejorar este artículo?'
+      negative_comment_return: 'Gracias por tus sugerencias, trabajaremos para mejorar este artículo.'
     orders:
       index_title: 'Listado de pedidos'
       show_title: 'Detalle de pedido'

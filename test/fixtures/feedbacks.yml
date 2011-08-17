@@ -1,0 +1,9 @@
+all_ok:
+  item: new_customer_help
+  positive: true
+  comments: ''
+
+needs_polishing:
+  item: empty_order_help
+  positive: false
+  comments: ''

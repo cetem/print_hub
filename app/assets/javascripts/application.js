@@ -14,3 +14,4 @@
 //= require common
 //= require jobs
 //= require catalog
+//= require feedbacks

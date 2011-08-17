@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110804224507) do
+ActiveRecord::Schema.define(:version => 20110817201650) do
 
   create_table "article_lines", :force => true do |t|
     t.integer  "print_id",                                                   :null => false
@@ -104,6 +104,14 @@ ActiveRecord::Schema.define(:version => 20110804224507) do
   end
 
   add_index "documents_tags", ["document_id", "tag_id"], :name => "index_documents_tags_on_document_id_and_tag_id", :unique => true
+
+  create_table "feedbacks", :force => true do |t|
+    t.string   "item"
+    t.boolean  "positive"
+    t.text     "comments"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
 
   create_table "order_lines", :force => true do |t|
     t.integer  "document_id"

@@ -9,6 +9,11 @@ PrintHubApp::Application.routes.draw do
     match 'catalog/:id/remove_from_order' => 'catalog#remove_from_order',
       :as => 'remove_from_order_catalog', :via => :delete
     
+    match 'feedbacks/:item/:score' => 'feedbacks#create', :as => 'new_feedback',
+      :via => :post, :score => /positive|negative/
+    match 'feedbacks/:id' => 'feedbacks#update', :as => 'update_feedback',
+      :via => :put
+    
     resources :customer_sessions, :only => [:new, :create] do
       delete :destroy, :on => :collection
     end

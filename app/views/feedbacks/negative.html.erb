@@ -1,0 +1,13 @@
+<p><%= t(:negative_return, :scope => [:view, :feedbacks]) %></p>
+
+<br />
+
+<%= form_for(@feedback, :url => update_feedback_path(@feedback), :remote => true) do |f| %>
+  <div class="field">
+    <%= f.text_area :comments %>
+  </div>
+  
+  <div class="actions">
+    <%= f.submit t(:submit, :scope => [:view, :feedbacks]) %>
+  </div>
+<% end %>
