@@ -106,12 +106,15 @@ ActiveRecord::Schema.define(:version => 20110817201650) do
   add_index "documents_tags", ["document_id", "tag_id"], :name => "index_documents_tags_on_document_id_and_tag_id", :unique => true
 
   create_table "feedbacks", :force => true do |t|
-    t.string   "item"
-    t.boolean  "positive"
+    t.string   "item",                          :null => false
+    t.boolean  "positive",   :default => false, :null => false
     t.text     "comments"
     t.datetime "created_at"
     t.datetime "updated_at"
   end
+
+  add_index "feedbacks", ["item"], :name => "index_feedbacks_on_item"
+  add_index "feedbacks", ["positive"], :name => "index_feedbacks_on_positive"
 
   create_table "order_lines", :force => true do |t|
     t.integer  "document_id"
