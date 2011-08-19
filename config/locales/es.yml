@@ -374,9 +374,7 @@
     hide: 'Ocultar'
     list: 'Listado'
     new: 'Nuevo'
-    next: 'Siguiente'
     or: 'o'
-    previous: 'Anterior'
     search: 'Buscar'
     show: 'Ver'
 
@@ -738,4 +736,6 @@
       correctly_destroyed: 'Sesión cerrada correctamente.'
   
   will_paginate:
+    previous_label: '&laquo; Anterior'
+    next_label: 'Siguiente &raquo;'
     page_gap: '...'

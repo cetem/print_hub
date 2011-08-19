@@ -223,6 +223,10 @@ jQuery(function($) {
     }
   });
   
+  $('input.file').live('click', function() {
+    $(this).parents('div.field:first').find('input[type="file"]').click();
+  });
+  
   $('a.fancybox').fancybox({type: 'image'});
   
   $('input[type="file"]').filestyle({ 

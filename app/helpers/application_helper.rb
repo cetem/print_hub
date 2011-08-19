@@ -34,9 +34,7 @@ module ApplicationHelper
 
   # Devuelve los mensajes de error con etiquetas HTML
   def show_error_messages(model)
-    unless model.errors.empty?
-      render :partial => 'shared/error_messages', :locals => { :model => model }
-    end
+    render 'shared/error_messages', model: model unless model.errors.empty?
   end
 
   # Devuelve el HTML necesario para insertar un nuevo ítem en un nested form
@@ -57,20 +55,19 @@ module ApplicationHelper
   #                   insertado múltiples veces.
   def generate_html(form_builder, method, user_options = {})
     options = {
-      :object => form_builder.object.class.reflect_on_association(method).klass.new,
-      :partial => method.to_s.singularize,
-      :form_builder_local => :f,
-      :locals => {},
-      :child_index => 'NEW_RECORD',
-      :is_dynamic => true
+      object: form_builder.object.class.reflect_on_association(method).klass.new,
+      partial: method.to_s.singularize,
+      form_builder_local: :f,
+      locals: {},
+      child_index: 'NEW_RECORD',
+      is_dynamic: true
     }.merge(user_options)
 
-    form_builder.fields_for(method, options[:object],
-      :child_index => options[:child_index]) do |f|
-      render(:partial => options[:partial], :locals => {
-          options[:form_builder_local] => f,
-          :is_dynamic => options[:is_dynamic]
-        }.merge(options[:locals]))
+    form_builder.fields_for(method, options[:object], child_index: options[:child_index]) do |f|
+      render(options[:partial], {
+          options[:form_builder_local] => f,:is_dynamic => options[:is_dynamic]
+        }.merge(options[:locals])
+      )
     end
   end
 
@@ -99,16 +96,26 @@ module ApplicationHelper
   #
   # * _objects_:: Objetos con los que se genera la lista paginada
   def pagination_links(objects)
-    previous_label = "&laquo; #{t :'label.previous'}".html_safe
-    next_label = "#{t :'label.next'} &raquo;".html_safe
-
-    result = will_paginate objects, :previous_label => previous_label,
-      :next_label => next_label, :inner_window => 1, :outer_window => 1
-
-    result ||= content_tag(:div, content_tag(:span, previous_label,
-        :class => 'disabled prev_page') + content_tag(:em, 1) +
-        content_tag(:span, next_label, :class => 'disabled next_page'),
-      :class => :pagination)
+    result = will_paginate objects, inner_window: 1, outer_window: 1
+    
+    unless result
+      previous_tag = content_tag(
+        :span,
+        t('will_paginate.previous_label').html_safe,
+        :class => 'disabled prev_page'
+      )
+      next_tag = content_tag(
+        :span,
+        t('will_paginate.next_label').html_safe,
+        :class => 'disabled next_page'
+      )
+      
+      result = content_tag(
+        :div,
+        previous_tag + content_tag(:em, 1) + next_tag,
+        :class => :pagination
+      )
+    end
 
     result
   end
