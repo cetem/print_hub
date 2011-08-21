@@ -1,8 +1,13 @@
+// Mensajes (WOW)
+var Messages = {};
+
 // Mantiene el estado de la aplicación
 var State = {
   // Contador para generar un ID único
-  newIdCounter: 0
-}
+  newIdCounter: 0,
+  // Indicador de que alguna llamada por AJAX está en progreso
+  ajaxInProgress: false
+};
 
 // Funciones de autocompletado
 var AutoComplete = {
@@ -15,15 +20,19 @@ var AutoComplete = {
           return jQuery.ajax({
             url: input.data('autocompleteUrl'),
             dataType: 'json',
-            data: {q: request.term},
+            data: { q: request.term },
             success: function(data) {
               response(jQuery.map(data, function(item) {
-                  var content = $('<div>');
+                  var content = $('<div></div>');
                   
-                  content.append($('<span class="label">').text(item.label));
+                  content.append(
+                    $('<span class="label"></span>').text(item.label)
+                  );
           
                   if(item.informal) {
-                    content.append($('<span class="informal">').text(item.informal));
+                    content.append(
+                      $('<span class="informal"></span>').text(item.informal)
+                    );
                   }
 
                   return {label: content.html(), value: item.label, item: item};
@@ -48,9 +57,9 @@ var AutoComplete = {
       });
       
       input.data('autocomplete')._renderItem = function(ul, item) {
-        return $('<li></li>')
-          .data('item.autocomplete', item)
-          .append($( "<a></a>" ).html(item.label)).appendTo( ul );
+        return $('<li></li>').data('item.autocomplete', item).append(
+          $('<a></a>').html(item.label)
+        ).appendTo(ul);
       }
     }).data('observed', true);
   }
@@ -122,15 +131,6 @@ var Helper = {
   },
 
   /**
-     * Oculta el elemento que indica que algo se está cargando
-     */
-  hideLoading: function(element) {
-    $('#loading_image').hide();
-
-    $(element).attr('disabled', false);
-  },
-
-  /**
      * Elimina el elemento indicado
      */
   remove: function(element, callback) {
@@ -150,15 +150,6 @@ var Helper = {
     if(e.is(':visible').length != 0) {
       e.stop().slideDown(500, callback);
     }
-  },
-
-  /**
-     * Muestra una imagen para indicar que una operación está en curso
-     */
-  showLoading: function(element) {
-    $('#loading_image').show();
-
-    if( $(element).is(':visible')) {$(element).attr('disabled', true);}
   }
 }
 
@@ -207,9 +198,14 @@ jQuery(function($) {
     }
   });
   
-  $('#loading_image').bind({
-    ajaxStart: function() {$(this).show();},
-    ajaxStop: function() {$(this).hide();}
+  $('#loading_caption').bind({
+    ajaxStart: function() { $(this).stop(true, true).slideDown(100); },
+    ajaxStop: function() { $(this).stop(true, true).slideUp(100); }
+  });
+  
+  $(document).bind({
+    ajaxStart: function() { State.ajaxInProgress = true; },
+    ajaxStop: function() { State.ajaxInProgress = false; }
   });
   
   $('input.calendar:not(.hasDatepicker)').live('focus', function() {
@@ -240,6 +236,16 @@ jQuery(function($) {
     $(this).find('input[type="submit"], input[name="utf8"]').attr(
       'disabled', true
     );
+  });
+  
+  // Verifica el estado de las llamadas AJAX antes de cerrar la ventana o
+  // cambiar de página
+  $(window).bind('beforeunload', function() {
+    if (State.ajaxInProgress) {
+      return Messages.ajaxInProgressWarning;
+    } else {
+      return undefined;
+    }
   });
 
   AutoComplete.observeAll();

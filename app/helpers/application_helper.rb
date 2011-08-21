@@ -18,14 +18,6 @@ module ApplicationHelper
     textiled.html_safe
   end
 
-  def default_stylesheets
-    stylesheet_link_tag 'application'
-  end
-
-  def default_javascripts
-    javascript_include_tag 'application'
-  end
-
   # Devuelve una etiqueta con el mismo nombre que el del objeto para que sea
   # reemplazado con un ID único por la rutina que reemplaza todo en el navegador
   def dynamic_object_id(prefix, form_builder)

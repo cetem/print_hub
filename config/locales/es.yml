@@ -400,6 +400,7 @@
   messages:
     confirmation: '¿Está seguro?'
     loading: 'Cargando'
+    ajax_in_progress_warning: 'Algunos pedidos todavía se están procesando\nSi abandona esta página puede dejar operaciones inconclusas'
     must_be_admin: 'Debe tener privilegios de administrador para poder ver el contenido requerido'
     must_be_logged_in: 'Debe ingresar para poder ver el contenido requerido'
     must_be_logged_out: 'Debe salir para poder ver el contenido requerido'

@@ -162,14 +162,22 @@ div#error_explanation {
   }
 }
 
-div#loading_image {
+div#loading_caption {
+  background-color: $main-color;
+  color: #fff;
+  font-weight: bold;
+  font-size: 1.1em;
+  text-align: center;
   position: fixed;
-  width: 43px;
-  margin: 0 0 0 -21px;
-  bottom: .5em;
-  left: 48%;
-  padding: 1px 5px;
+  bottom: 0%;
+  left: 50%;
+  width: 10em;
+  letter-spacing: 2px;
+  margin: 0em 0em 0em -4em;
+  padding: .25em 1em;
   z-index: 1;
+  text-shadow: 1px 1px 1px rgba(0, 0, 0, .3);
+  @include rounded-corners(.5em .5em 0em 0em);
 }
 
 div#main_container {

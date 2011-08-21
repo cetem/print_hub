@@ -2,36 +2,37 @@
 <html>
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-  <title><%= [t(:app_name), @title].compact.join(' | ') %></title>
+  <title><%= [t('app_name'), @title].compact.join(' | ') %></title>
   <!--[if lt IE 9]>
   <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
   <![endif]-->
-  <%= default_stylesheets %>
-  <%= default_javascripts %>
+  <%= stylesheet_link_tag 'application' %>
+  <%= javascript_include_tag 'application' %>
   <%= favicon_link_tag %>
   <%= csrf_meta_tag %>
   <%= javascript_tag do %>
+    <%= "Messages.ajaxInProgressWarning = '#{t('messages.ajax_in_progress_warning')}';" %>
     <%= yield :js_extra %>
   <% end %>
 </head>
 <body>
-  <div id="loading_image" style="display: none;">
-    <%= image_tag 'loading.gif', :size => '43x11', :alt => t(:'messages.loading') %>
+  <div id="loading_caption" style="display: none;">
+    <%= t('messages.loading') %>
   </div>
   <% if current_user %>
     <div id="main_menu">
-      <%= render :partial => 'shared/menu' %>
+      <%= render 'shared/menu' %>
     </div>
   <% elsif current_customer %>
     <div id="main_menu">
-      <%= render :partial => 'shared/customer_menu' %>
+      <%= render 'shared/customer_menu' %>
     </div>
   <% end %>
   <div id="main_container">
     <%= yield %>
     <div style="clear: both;"></div>
   </div>
-  <%= render :partial => 'shared/notice' if flash.notice %>
-  <%= render :partial => 'shared/alert' if flash.alert %>
+  <%= render 'shared/notice' if flash.notice %>
+  <%= render 'shared/alert' if flash.alert %>
 </body>
 </html>
