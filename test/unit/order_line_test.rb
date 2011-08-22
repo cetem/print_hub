@@ -19,8 +19,6 @@ class OrderLineTest < ActiveSupport::TestCase
       @order_line.copies
     assert_equal order_lines(:from_yesterday_math_notes).price_per_copy,
       @order_line.price_per_copy
-    assert_equal order_lines(:from_yesterday_math_notes).range,
-      @order_line.range
     assert_equal order_lines(:from_yesterday_math_notes).two_sided,
       @order_line.two_sided
     assert_equal order_lines(:from_yesterday_math_notes).document_id,
@@ -35,7 +33,6 @@ class OrderLineTest < ActiveSupport::TestCase
       @order_line = OrderLine.create(
         :copies => 2,
         :price_per_copy => 1.10,
-        :range => nil,
         :two_sided => false,
         :document => documents(:math_book)
       )
@@ -94,16 +91,6 @@ class OrderLineTest < ActiveSupport::TestCase
       @order_line.errors[:copies]
   end
 
-  # Prueba que las validaciones del modelo se cumplan como es esperado
-  test 'validates attributes length' do
-    @order_line.range = 'abcde' * 52
-    assert @order_line.invalid?
-    assert_equal 2, @order_line.errors.count
-    assert_equal [error_message_from_model(@order_line, :range, :too_long,
-        :count => 255), error_message_from_model(@order_line, :range,
-        :invalid)].sort, @order_line.errors[:range].sort
-  end
-
   test 'validates correct range of attributes' do
     @order_line.copies = '0'
     @order_line.price_per_copy = '-0.01'
@@ -115,134 +102,28 @@ class OrderLineTest < ActiveSupport::TestCase
         :greater_than_or_equal_to, :count => 0)],
       @order_line.errors[:price_per_copy]
   end
-
-  # Prueba que las validaciones del modelo se cumplan como es esperado
-  test 'validates ranges' do
-    @order_line.range = '1x'
-    assert @order_line.invalid?
-    assert_equal 1, @order_line.errors.count
-    assert_equal [error_message_from_model(@order_line, :range, :invalid)],
-      @order_line.errors[:range]
-
-    @order_line.range = '0'
-    assert @order_line.invalid?
-    assert_equal 1, @order_line.errors.count
-    assert_equal [error_message_from_model(@order_line, :range, :invalid)],
-      @order_line.errors[:range]
-
-    @order_line.range = '1-'
-    assert @order_line.invalid?
-    assert_equal 1, @order_line.errors.count
-    assert_equal [error_message_from_model(@order_line, :range, :invalid)],
-      @order_line.errors[:range]
-
-    @order_line.range = '1, 2-'
-    assert @order_line.invalid?
-    assert_equal 1, @order_line.errors.count
-    assert_equal [error_message_from_model(@order_line, :range, :invalid)],
-      @order_line.errors[:range]
-
-    @order_line.range = '2x, 10'
-    assert @order_line.invalid?
-    assert_equal 1, @order_line.errors.count
-    assert_equal [error_message_from_model(@order_line, :range, :invalid)],
-      @order_line.errors[:range]
-  end
-
-  # Prueba que las validaciones del modelo se cumplan como es esperado
-  test 'validates ranges overlap' do
-    @order_line.range = '1,2-4,4-5'
-    assert @order_line.invalid?
-    assert_equal 1, @order_line.errors.count
-    assert_equal [error_message_from_model(@order_line, :range, :overlapped)],
-      @order_line.errors[:range]
-  end
-
-  # Prueba que las validaciones del modelo se cumplan como es esperado
-  test 'validates too long ranges' do
-    @order_line.range = '1,1500'
-    assert @order_line.invalid?
-    assert_equal 1, @order_line.errors.count
-    assert_equal [error_message_from_model(@order_line, :range, :too_long,
-        :count => @order_line.document.pages)], @order_line.errors[:range]
-  end
-  
-  test 'extract ranges' do
-    @order_line.range = ' '
-    assert @order_line.valid?
-    assert_equal [], @order_line.extract_ranges
-
-    @order_line.range = '1'
-    assert @order_line.valid?
-    assert_equal [1], @order_line.extract_ranges
-
-    @order_line.range = '1,2-7'
-    assert @order_line.valid?
-    assert_equal [1, [2, 7]], @order_line.extract_ranges
-
-    @order_line.range = '1,3-7,2,10'
-    assert @order_line.valid?
-    assert_equal [1, 2, [3, 7], 10], @order_line.extract_ranges
-  end
-  
-  test 'range pages' do
-    @order_line.range = ' '
-    assert @order_line.valid?
-    assert_equal @order_line.document.pages, @order_line.range_pages
-
-    @order_line.range = '1'
-    assert @order_line.valid?
-    assert_equal 1, @order_line.range_pages
-
-    @order_line.range = '1,2'
-    assert @order_line.valid?
-    assert_equal 2, @order_line.range_pages
-
-    @order_line.range = '1,2-7'
-    assert @order_line.valid?
-    assert_equal 7, @order_line.range_pages
-
-    @order_line.range = '2-7'
-    assert @order_line.valid?
-    assert_equal 6, @order_line.range_pages
-
-    @order_line.range = '2-7,8-9'
-    assert @order_line.valid?
-    assert_equal 8, @order_line.range_pages
-
-    @order_line.range = '1,2-7,8-9,10'
-    assert @order_line.valid?
-    assert_equal 10, @order_line.range_pages
-  end
   
   test 'price' do
     @order_line.copies = 1
     @order_line.price_per_copy = 0.10
-    @order_line.range = ''
     assert @order_line.valid?
-    assert_equal 350, @order_line.range_pages
     assert_equal '35.00', '%.2f' % @order_line.price
 
     @order_line.copies = 1
     @order_line.price_per_copy = 0.00
-    @order_line.range = ''
     assert @order_line.valid?
-    assert_equal 350, @order_line.range_pages
     assert_equal '0.00', '%.2f' % @order_line.price
 
-    @order_line.copies = 15
+    @order_line.copies = 2
     @order_line.price_per_copy = 0.10
-    @order_line.range = '1'
     assert @order_line.valid?
-    assert_equal 1, @order_line.range_pages
-    assert_equal '1.50', '%.2f' % @order_line.price
+    assert_equal '70.00', '%.2f' % @order_line.price
 
     @order_line.copies = 1
     @order_line.price_per_copy = 0.07
-    @order_line.range = '1-11'
     @order_line.two_sided = true
+    @order_line.document.pages = 11
     assert @order_line.valid?
-    assert_equal 11, @order_line.range_pages
     assert_equal '0.80', '%.2f' % @order_line.price # 0.70 + 0.10
   end
 end

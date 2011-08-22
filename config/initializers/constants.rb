@@ -8,5 +8,5 @@ DB_ADAPTER = ActiveRecord::Base.connection.adapter_name
 EMAIL_REGEXP = /^([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})$/i
 # Idiomas disponibles
 LANGUAGES = [:es]
-# Dirección de email para las notificaciones
-NOTIFICATIONS_EMAIL = 'fotocopia@frm.utn.edu.ar'
+# Umbral crédito / precio para determinar si se imprime o no un pedido
+CREDIT_THRESHOLD = 0.7

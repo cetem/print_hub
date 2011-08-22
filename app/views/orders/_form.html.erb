@@ -14,7 +14,6 @@
       <h3><%= OrderLine.human_attribute_name :copies %></h3>
       <h3><%= Document.human_attribute_name :pages %></h3>
       <h3><%= OrderLine.human_attribute_name :price_per_copy %></h3>
-      <h3><%= OrderLine.human_attribute_name :range %></h3>
       <h3><%= OrderLine.human_attribute_name :two_sided %></h3>
       <br class="break" />
     </div>
@@ -59,11 +58,9 @@
     var pricePerOneSidedCopy = parseFloat(
       orderLine.find('input[name$="[two_sided]"].price_modifier').data('pricePerOneSided')
     );
-    var rangePages = parseInt(
-      orderLine.find('input[name$="[range]"]').data('rangePages')
-    );
-    var evenRange = rangePages - (rangePages % 2);
-    var rest = (rangePages % 2) * pricePerOneSidedCopy;
+    var pages = parseInt(orderLine.find('input[name$="[pages]"]').val());
+    var evenRange = pages - (pages % 2);
+    var rest = (pages % 2) * pricePerOneSidedCopy;
     var olPrice = (copies * (pricePerCopy * evenRange + rest)) || 0;
     var money = orderLine.find('span.money');
 

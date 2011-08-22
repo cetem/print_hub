@@ -4,7 +4,6 @@ class CreateOrderLines < ActiveRecord::Migration
       t.references :document
       t.integer :copies, :null => false
       t.decimal :price_per_copy, :null => false, :precision => 15, :scale => 3
-      t.string :range, :null => true
       t.boolean :two_sided, :default => true
       t.references :order, :null => true
       t.integer :lock_version, :default => 0

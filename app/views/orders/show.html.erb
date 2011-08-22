@@ -19,7 +19,6 @@
           <th><%= OrderLine.human_attribute_name :copies %></th>
           <th><%= Document.human_attribute_name :pages %></th>
           <th><%= OrderLine.human_attribute_name :price_per_copy %></th>
-          <th><%= OrderLine.human_attribute_name :range %></th>
           <th><%= OrderLine.human_attribute_name :two_sided %></th>
         </tr>
       </thead>
@@ -30,7 +29,6 @@
             <td><%= order_line.copies %></td>
             <td><%= order_line.document.try(:pages) %></td>
             <td><%= number_to_currency order_line.price_per_copy %></td>
-            <td><%= order_line.range %></td>
             <td><%= t(order_line.two_sided ? :yes : :no, :scope => :label) %></td>
           </tr>
         <% end %>

@@ -120,7 +120,6 @@ ActiveRecord::Schema.define(:version => 20110817201650) do
     t.integer  "document_id"
     t.integer  "copies",                                                          :null => false
     t.decimal  "price_per_copy", :precision => 15, :scale => 3,                   :null => false
-    t.string   "range"
     t.boolean  "two_sided",                                     :default => true
     t.integer  "order_id"
     t.integer  "lock_version",                                  :default => 0

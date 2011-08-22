@@ -135,13 +135,11 @@
           other: 'Líneas de pedido'
           copies: 'Copias'
           price_per_copy: 'Precio por hoja'
-          range: 'Rango'
           two_sided: 'Doble faz'
           document_id: 'Documento'
       order_line:
         copies: 'Copias'
         price_per_copy: 'Precio por hoja'
-        range: 'Rango'
         two_sided: 'Doble faz'
         document_id: 'Documento'
       payment:
