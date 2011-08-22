@@ -1,43 +1,42 @@
-<p>
-  <b><%= Order.human_attribute_name :status %>:</b>
-  <%= @order.status_text %>
-</p>
+<section id="show_order">
+  <header>
+    <h2><%= t('view.orders.order_number', number: @order.id, status: @order.status_text) %></h2>
+    <h3>
+      <%= l @order.scheduled_at, :format => :long if @order.scheduled_at %>
+    </h3>
+  </header>
 
-<p>
-  <b><%= Order.human_attribute_name :scheduled_at %>:</b>
-  <%= l @order.scheduled_at, :format => :long if @order.scheduled_at %>
-</p>
+  <% unless @order.order_lines.empty? %>
+    <section class="nested_items">
+      <h2><%= t :order_lines, :scope => [:view, :orders] %></h2>
 
-<% unless @order.order_lines.empty? %>
-  <section class="nested_items">
-    <h2><%= t :order_lines, :scope => [:view, :orders] %></h2>
-
-    <table class="summary">
-      <thead>
-        <tr>
-          <th><%= OrderLine.human_attribute_name :document_id %></th>
-          <th><%= OrderLine.human_attribute_name :copies %></th>
-          <th><%= Document.human_attribute_name :pages %></th>
-          <th><%= OrderLine.human_attribute_name :price_per_copy %></th>
-          <th><%= OrderLine.human_attribute_name :two_sided %></th>
-        </tr>
-      </thead>
-      <tbody>
-        <% @order.order_lines.each do |order_line| %>
+      <table class="summary">
+        <thead>
           <tr>
-            <td><%= order_line.document %></td>
-            <td><%= order_line.copies %></td>
-            <td><%= order_line.document.try(:pages) %></td>
-            <td><%= number_to_currency order_line.price_per_copy %></td>
-            <td><%= t(order_line.two_sided ? :yes : :no, :scope => :label) %></td>
+            <th><%= OrderLine.human_attribute_name :document_id %></th>
+            <th><%= OrderLine.human_attribute_name :copies %></th>
+            <th><%= Document.human_attribute_name :pages %></th>
+            <th><%= OrderLine.human_attribute_name :price_per_copy %></th>
+            <th><%= OrderLine.human_attribute_name :two_sided %></th>
           </tr>
-        <% end %>
-      </tbody>
-    </table>
-  </section>
-<% end %>
+        </thead>
+        <tbody>
+          <% @order.order_lines.each do |order_line| %>
+            <tr>
+              <td><%= order_line.document %></td>
+              <td><%= order_line.copies %></td>
+              <td><%= order_line.document.try(:pages) %></td>
+              <td><%= number_to_currency order_line.price_per_copy %></td>
+              <td><%= t(order_line.two_sided ? :yes : :no, :scope => :label) %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </section>
+  <% end %>
 
-<%= render :partial => 'total', :locals => { :order => @order } %>
+  <%= render :partial => 'total', :locals => { :order => @order } %>
+</section>
 
 <nav class="links">
   <% if current_customer %>

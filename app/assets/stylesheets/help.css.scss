@@ -4,7 +4,6 @@ section.explanation {
   margin: 2em 0em;
   padding: 1em;
   border-left: 2px solid $main-color;
-  @include rounded-corners(3px);
 
   div.image_container {
     margin-left: 1em;
@@ -46,6 +45,10 @@ section.explanation {
       font-weight: 100;
       font-family: Raleway, 'Helvetica Neue', Helvetica, sans-serif;
       line-height: 1.25em;
+      
+      strong {
+        font-weight: bold;
+      }
     }
   }
 

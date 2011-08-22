@@ -627,6 +627,7 @@
       order_lines: 'Trabajos a encargar'
       total: 'Total'
       new_print: 'Crear impresión'
+      order_number: 'Pedido %{number} (%{status})'
       status:
         pending: 'Pendiente'
         completed: 'Impreso'

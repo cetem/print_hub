@@ -1,9 +1,11 @@
 <% if @order.order_lines.blank? %>
   <%= render 'help/empty_order' %>
 <% else %>
-  <%= render 'form' %>
+  <section id="check_order">
+    <%= render 'form' %>
 
-  <nav class="links">
-    <%= link_to t(:'label.back'), catalog_path %>
-  </nav>
+    <nav class="links">
+      <%= link_to t('label.back'), catalog_path %>
+    </nav>
+  </section>
 <% end %>

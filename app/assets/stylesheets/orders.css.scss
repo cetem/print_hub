@@ -1,0 +1,22 @@
+#check_order {
+  div.field {
+    label {
+      display: inline;
+      margin-right: 1em;
+    }
+    
+    input.calendar {
+      width: 12em;
+    }
+  }
+}
+
+#show_order {
+  header {
+    margin-bottom: .5em;
+
+    h3 {
+      font-weight: normal;
+    }
+  }
+}
