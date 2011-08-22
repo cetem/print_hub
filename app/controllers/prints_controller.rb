@@ -151,7 +151,7 @@ class PrintsController < ApplicationController
 
   # GET /prints/autocomplete_for_article_name
   def autocomplete_for_article_name
-    query = params[:q].strip.gsub(/\s*([&|])\s*/, '\1').gsub(/[|&!]$/, '')
+    query = params[:q].sanitized_for_text_query
     @query_terms = query.split(/\s+/).reject(&:blank?)
     @articles = Article.scoped
 
@@ -194,7 +194,7 @@ class PrintsController < ApplicationController
   
   # GET /prints/autocomplete_for_customer_name
   def autocomplete_for_customer_name
-    query = params[:q].strip.gsub(/\s*([&|])\s*/, '\1').gsub(/[|&!]$/, '')
+    query = params[:q].sanitized_for_text_query
     @query_terms = query.split(/\s+/).reject(&:blank?)
     @customers = Customer.scoped
 
