@@ -26,6 +26,10 @@
       # custom blank validation message for login attribute of User model.
       #models:
       models:
+        order:
+          attributes:
+            base:
+              must_have_one_item: 'El pedido debe tener al menos un ítem'
         print:
           attributes:
             base:

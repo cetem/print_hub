@@ -20,11 +20,20 @@ class OrderTest < ActiveSupport::TestCase
 
   # Prueba la creación de un pedido
   test 'create' do
-    assert_difference ['Order.count', 'Version.count'] do
-      @order = Order.create(
-        :scheduled_at => 10.days.from_now,
-        :customer => customers(:student_without_bonus)
-      )
+    assert_difference ['Order.count', 'OrderLine.count'] do
+      assert_difference 'Version.count', 2 do
+        @order = Order.create(
+          :scheduled_at => 10.days.from_now,
+          :customer => customers(:student_without_bonus),
+          :order_lines_attributes => {
+            :new_1 => {
+              :copies => 2,
+              :two_sided => false,
+              :document => documents(:math_book)
+            }
+          }
+        )
+      end
     end
   end
   
@@ -97,6 +106,15 @@ class OrderTest < ActiveSupport::TestCase
     assert_equal 1, @order.errors.count
     assert_equal [error_message_from_model(@order, :status, :inclusion)],
       @order.errors[:status]
+  end
+  
+  # Prueba que las validaciones del modelo se cumplan como es esperado
+  test 'validates that has at least one item' do
+    @order.order_lines.destroy_all
+    assert @order.invalid?
+    assert_equal 1, @order.errors.count
+    assert_equal [error_message_from_model(@order, :base, :must_have_one_item)],
+      @order.errors[:base]
   end
   
   test 'price' do

@@ -26,6 +26,7 @@ class Order < ActiveRecord::Base
     :allow_blank => true
   validates_datetime :scheduled_at, :allow_nil => true, :allow_blank => true,
     :after => lambda { 12.hours.from_now }
+  validate :must_have_one_item
   
   # Relaciones
   belongs_to :customer
@@ -53,6 +54,12 @@ class Order < ActiveRecord::Base
   
   def can_be_modified?
     self.pending? || self.status_was == STATUS[:pending]
+  end
+  
+  def must_have_one_item
+    if self.order_lines.reject(&:marked_for_destruction?).empty?
+      self.errors.add :base, :must_have_one_item
+    end
   end
   
   def status_text

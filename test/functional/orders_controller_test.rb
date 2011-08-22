@@ -47,9 +47,16 @@ class OrdersControllerTest < ActionController::TestCase
     
     CustomerSession.create(customer)
     
-    assert_difference 'customer.orders.count' do
+    assert_difference ['customer.orders.count', 'OrderLine.count'] do
       post :create, order: {
-        scheduled_at: I18n.l(10.days.from_now, :format => :minimal)
+        scheduled_at: I18n.l(10.days.from_now, :format => :minimal),
+        order_lines_attributes: {
+          new_1: {
+            copies: '2',
+            two_sided: '0',
+            document_id: documents(:math_book).id.to_s
+          }
+        }
       }
     end
 
