@@ -5,7 +5,7 @@
   <section class="spot">
     <h3>Completá los datos del formulario</h3>
     <p>
-      Cuando presiones <strong><%= t(:register, :scope => [:view, :customers]) %></strong>
+      Cuando presiones <strong><%= t('view.customers.register') %></strong>
       te enviaremos un correo para que actives tu cuenta.
     </p>
   </section>
@@ -26,5 +26,5 @@
     <h3>Saldo</h3>
     <p>Para cargar saldo en tu cuenta acercate al centro de copiado.</p>
   </section>
-  <%= render 'help/footer', :item => 'new_customer' %>
+  <%= render 'help/footer', item: 'new_customer' %>
 </section>

@@ -6,24 +6,24 @@
   <section class="spot">
     <h3>Decinos <strong>que buscás</strong>...</h3>
     <div class="image_container">
-      <%= image_tag 'help/example_search.gif', :size => '210x35',
-        :alt => "Buscar, por ejemplo, 'física 2011'",
-        :title => "Buscar, por ejemplo, 'física 2011'" %>
+      <%= image_tag 'help/example_search.gif', size: '366x31',
+        alt: "Buscar, por ejemplo, 'física 2011'",
+        title: "Buscar, por ejemplo, 'física 2011'" %>
     </div>
   </section>
   <section class="spot">
     <h3>y de los resultados, <strong>seleccioná</strong> lo que te interesa.</h3>
     <div class="image_container">
-      <%= image_tag 'help/example_document_grid.gif', :size => '600x44',
-        :alt => 'Seleccionar documentos con el signo +',
-        :title => 'Seleccionar documentos con el signo +' %>
+      <%= image_tag 'help/example_document_grid.gif', size: '600x44',
+        alt: 'Seleccionar documentos con el signo +',
+        title: 'Seleccionar documentos con el signo +' %>
     </div>
   </section>
   <section class="spot">
     <h3>
       Después confirmanos tu pedido desde
-      <strong><%= link_to(t(:'view.catalog.new_order'), new_order_path) %></strong>
+      <strong><%= link_to t('view.catalog.new_order'), new_order_path %></strong>
     </h3>
   </section>
-  <%= render 'help/footer', :item => 'empty_catalog' %>
+  <%= render 'help/footer', item: 'empty_catalog' %>
 </section>

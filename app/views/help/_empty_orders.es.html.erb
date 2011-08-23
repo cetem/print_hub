@@ -6,9 +6,9 @@
   <section class="spot">
     <h3>
       Para relizar uno seleccioná
-      <strong><%= link_to t(:catalog, :scope => :customer_menu), catalog_path %></strong>
+      <strong><%= link_to t('customer_menu.catalog'), catalog_path %></strong>
       y seguí las instrucciones.
     </h3>
   </section>
-  <%= render 'help/footer', :item => 'empty_orders' %>
+  <%= render 'help/footer', item: 'empty_orders' %>
 </section>
