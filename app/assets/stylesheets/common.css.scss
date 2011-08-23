@@ -677,6 +677,12 @@ table.list {
   width: 100%;
   border: 2px solid #666;
   border-collapse: collapse;
+  
+  caption {
+    text-align: left;
+    font-size: 1.5em;
+    margin-bottom: .5em;
+  }
 
   td {
     padding: .25em .5em;

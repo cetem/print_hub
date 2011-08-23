@@ -131,6 +131,7 @@
         positive: 'Positivo'
         comment: 'Comentario'
       order:
+        id: 'Número'
         customer: 'Cliente'
         scheduled_at: 'Programado para'
         status: 'Estado'
@@ -628,6 +629,8 @@
       correctly_cancelled: 'Pedido cancelado correctamente.'
       stale_object_error: 'El pedido no pudo ser actualizado, intente nuevamente.'
       order_lines: 'Trabajos a encargar'
+      show_all: 'Ver *todos* los pedidos'
+      show_print: 'Ver pedidos para *imprimir*'
       total: 'Total'
       new_print: 'Crear impresión'
       order_number: 'Pedido %{number} (%{status})'
@@ -637,6 +640,9 @@
         pending: 'Pendiente'
         completed: 'Impreso'
         cancelled: 'Cancelado'
+      type:
+        print: 'Pedidos para *imprimir*'
+        all: 'Pedidos'
     password_resets:
       new_title: 'Restaurar contraseña'
       edit_title: 'Modificar contraseña'

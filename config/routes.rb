@@ -1,69 +1,71 @@
 PrintHubApp::Application.routes.draw do
-  constraints :subdomain => /\A#{CUSTOMER_SUBDOMAIN}/i do
-    match 'catalog' => 'catalog#index', :as => 'catalog', :via => :get
-    match 'catalog/:id' => 'catalog#show', :as => 'show_catalog', :via => :get
+  constraints subdomain: /\A#{CUSTOMER_SUBDOMAIN}/i do
+    match 'catalog' => 'catalog#index', as: 'catalog', via: :get
+    match 'catalog/:id' => 'catalog#show', as: 'show_catalog', via: :get
     match 'catalog/:id/:style/download' => 'catalog#download',
-      :as => 'download_catalog', :via => :get
+      as: 'download_catalog', via: :get
     match 'catalog/:id/add_to_order' => 'catalog#add_to_order',
-      :as => 'add_to_order_catalog', :via => :post
+      as: 'add_to_order_catalog', via: :post
     match 'catalog/:id/remove_from_order' => 'catalog#remove_from_order',
-      :as => 'remove_from_order_catalog', :via => :delete
+      as: 'remove_from_order_catalog', via: :delete
     
-    match 'feedbacks/:item/:score' => 'feedbacks#create', :as => 'new_feedback',
-      :via => :post, :score => /positive|negative/
-    match 'feedbacks/:id' => 'feedbacks#update', :as => 'update_feedback',
-      :via => :put
+    match 'feedbacks/:item/:score' => 'feedbacks#create', as: 'new_feedback',
+      via: :post, score: /positive|negative/
+    match 'feedbacks/:id' => 'feedbacks#update', as: 'update_feedback',
+      via: :put
     
-    resources :customer_sessions, :only => [:new, :create] do
-      delete :destroy, :on => :collection
+    resources :customer_sessions, only: [:new, :create] do
+      delete :destroy, on: :collection
     end
     
     match 'customers/activate/:token' => 'customers#activate',
-      :as => 'activate_customer', :via => :get
+      as: 'activate_customer', via: :get
     
     match 'password_resets/new' => 'password_resets#new',
-      :as => 'new_password_reset', :via => :get
+      as: 'new_password_reset', via: :get
     match 'password_resets' => 'password_resets#create',
-      :as => 'password_resets', :via => :post
+      as: 'password_resets', via: :post
     match 'password_resets/:token/edit' => 'password_resets#edit',
-      :as => 'edit_password_reset', :via => :get
+      as: 'edit_password_reset', via: :get
     match 'password_resets/:token' => 'password_resets#update',
-      :as => 'update_password_reset', :via => :put
+      as: 'update_password_reset', via: :put
     
     resources :orders
     
-    resources :customers, :only => [:new, :create]
+    resources :customers, only: [:new, :create]
     
-    root :to => 'customer_sessions#new'
+    root to: 'customer_sessions#new'
   end
   
-  constraints :subdomain => '' do
-    match 'printer_stats(.:format)' => 'stats#printers', :as => 'printer_stats',
-      :via => :get
-    match 'user_stats(.:format)' => 'stats#users', :as => 'user_stats',
-      :via => :get
+  constraints subdomain: '' do
+    match 'printer_stats(.:format)' => 'stats#printers', as: 'printer_stats',
+      via: :get
+    match 'user_stats(.:format)' => 'stats#users', as: 'user_stats',
+      via: :get
 
-    resources :orders, :only => [:index, :show, :destroy]
-
-    resources :bonuses, :only => [:index]
+    resources :bonuses, only: [:index]
 
     resources :articles
 
-    resources :payments, :only => [:index]
+    resources :payments, only: [:index]
 
     resources :customers do
-      resources :prints, :only => [:index]
-      resources :bonuses, :only => [:index]
+      resources :prints, only: [:index]
+      resources :bonuses, only: [:index]
 
-      get :credit_detail, :on => :member
+      get :credit_detail, on: :member
     end
 
-    resources :settings, :only => [:index, :show, :edit, :update]
+    resources :settings, only: [:index, :show, :edit, :update]
+    
+    scope ':type', defaults: {type: 'print'}, constraints: {type: /print|all/} do
+      resources :orders, only: [:index, :show, :destroy], as: 'review_orders'
+    end
 
-    scope ':status', :defaults => {:status => 'all'},
-      :constraints => {:status => /pending|scheduled|all/} do
-      resources :prints, :except => [:destroy] do
-        put :cancel_job, :on => :member
+    scope ':status', defaults: {status: 'all'},
+      constraints: {status: /pending|scheduled|all/} do
+      resources :prints, except: [:destroy] do
+        put :cancel_job, on: :member
 
         collection do
           get :autocomplete_for_customer_name
@@ -74,7 +76,7 @@ PrintHubApp::Application.routes.draw do
     end
 
     resources :documents do
-      get :autocomplete_for_tag_name, :on => :collection
+      get :autocomplete_for_tag_name, on: :collection
 
       member do
         post :add_to_next_print
@@ -87,17 +89,17 @@ PrintHubApp::Application.routes.draw do
     end
 
     resources :tags do
-      resources :documents, :only => [:index]
+      resources :documents, only: [:index]
     end
 
-    resources :user_sessions, :only => [:new, :create] do
-      delete :destroy, :on => :collection
+    resources :user_sessions, only: [:new, :create] do
+      delete :destroy, on: :collection
     end
 
-    resources :users, :except => [:destroy] do
-      get :avatar, :on => :member, :path => '/avatar/:style'
+    resources :users, except: [:destroy] do
+      get :avatar, on: :member, path: '/avatar/:style'
     end
   
-    root :to => 'user_sessions#new'
+    root to: 'user_sessions#new'
   end
 end

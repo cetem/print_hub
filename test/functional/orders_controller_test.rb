@@ -11,11 +11,23 @@ class OrdersControllerTest < ActionController::TestCase
   test 'should get user index' do
     @request.host = 'localhost'
     UserSession.create(users(:administrator))
-    get :index
+    get :index, :type => 'all'
     assert_response :success
     assert_not_nil assigns(:orders)
     # Se listan órdenes de mas de un cliente
     assert assigns(:orders).map(&:customer_id).uniq.size > 1
+    assert assigns(:orders).any? { |o| !o.print }
+    assert_select '#error_body', false
+    assert_template 'orders/index'
+  end
+  
+  test 'should get user for print index' do
+    @request.host = 'localhost'
+    UserSession.create(users(:administrator))
+    get :index, :type => 'print'
+    assert_response :success
+    assert_not_nil assigns(:orders)
+    assert assigns(:orders).all? { |o| o.print }
     assert_select '#error_body', false
     assert_template 'orders/index'
   end

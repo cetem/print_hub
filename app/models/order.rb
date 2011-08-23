@@ -21,6 +21,8 @@ class Order < ActiveRecord::Base
   scope :pending, where(:status => STATUS[:pending])
   scope :completed, where(:status => STATUS[:completed])
   scope :cancelled, where(:status => STATUS[:cancelled])
+  scope :for_print, where(:print => true)
+  scope :scheduled_soon, where('scheduled_at >= ?', 1.hour.ago)
   
   # Restricciones
   validates :scheduled_at, :customer, :presence => true

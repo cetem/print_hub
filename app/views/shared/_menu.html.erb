@@ -31,15 +31,18 @@
         :class => (:selected if current_controller == :tags)) %>
       <%= content_tag(:li, link_to(t(:articles, :scope => :menu), articles_path),
         :class => (:selected if current_controller == :articles)) %>
-      <%= content_tag(:li, link_to(t(:orders, :scope => :menu), orders_path),
+      <%= content_tag(:li, link_to(t(:orders, :scope => :menu), review_orders_path),
         :class => (:selected if current_controller == :orders)) %>
     </ul>
   </nav>
 <% end %>
 <nav id="user_actions">
-  <div id="username"><%= current_user.username %></div>
+  <div id="user"><%= current_user.username %></div>
   <ul>
-    <li><%= link_to t(:logout, :scope => [:menu, :actions]),
-      user_sessions_path, :method => :delete %></li>
+    <li>
+      <%= link_to(
+        t('menu.actions.logout'), user_sessions_path, method: :delete
+      ) %>
+    </li>
   </ul>
 </nav>

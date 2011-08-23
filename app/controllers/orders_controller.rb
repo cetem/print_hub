@@ -107,6 +107,10 @@ class OrdersController < ApplicationController
   private
   
   def load_scope
-    @order_scope = current_customer ? current_customer.orders : Order.scoped
+    if current_customer
+      @order_scope = current_customer.orders
+    else
+      @order_scope = params[:type] == 'print' ? Order.for_print : Order.scoped
+    end
   end
 end
