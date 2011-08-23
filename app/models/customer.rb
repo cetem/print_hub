@@ -123,6 +123,14 @@ class Customer < ActiveRecord::Base
   def free_credit
     self.credits.valids.sum('remaining')
   end
+  
+  def free_credit_minus_pendings
+    self.free_credit - self.orders.pending.to_a.sum(&:price)
+  end
+  
+  def can_afford?(price)
+    self.free_credit_minus_pendings >= (price * CREDIT_THRESHOLD)
+  end
 
   def use_credit(amount, password = '', options = {})
     if self.valid_password?(password) || options[:avoid_password_check]

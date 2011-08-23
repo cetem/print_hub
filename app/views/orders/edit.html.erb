@@ -2,6 +2,8 @@
   <%= render 'form' %>
 </section>
 
+<%= render 'printed_footer' %>
+
 <nav class="links">
   <%= link_to t('label.show'), @order %> |
   <%= link_to_if @order.pending?, t('view.orders.cancel'), @order,

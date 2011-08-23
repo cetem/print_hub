@@ -232,6 +232,33 @@ class CustomerTest < ActiveSupport::TestCase
     # Un cliente nuevo no debería tener crédito
     assert_equal '0.0', Customer.new.free_credit.to_s
   end
+  
+  test 'free credit minus pendings' do
+    assert_equal '1000.0', @customer.free_credit_minus_pendings.to_s
+    
+    assert_difference '@customer.orders.count' do
+      prepare_settings
+      @customer.orders.create(
+        :scheduled_at => 10.days.from_now,
+        :order_lines_attributes => {
+          :new_1 => {
+            :copies => 1,
+            :two_sided => false,
+            :document => documents(:math_book)
+          }
+        }
+      )
+    end
+    
+    assert_equal '965.0', @customer.reload.free_credit_minus_pendings.to_s
+  end
+  
+  test 'can afford' do
+    assert_equal '1000.0', @customer.free_credit_minus_pendings.to_s
+    assert @customer.can_afford?(1000)
+    assert @customer.can_afford?(1000 / CREDIT_THRESHOLD)
+    assert !@customer.can_afford?((1000 / CREDIT_THRESHOLD) + 1)
+  end
 
   test 'use credit' do
     UserSession.create(users(:operator))

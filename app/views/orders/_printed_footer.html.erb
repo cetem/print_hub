@@ -1,0 +1,6 @@
+<div id="printed" <%= raw 'style="display: none"' unless @order.print %>>
+  <%= textilize t('view.orders.can_be_printed') %>
+</div>
+<div id="not_printed" <%= raw 'style="display: none"' if @order.print %>>
+  <%= textilize t('view.orders.can_not_be_printed', number: @order.id || '.') %>
+</div>

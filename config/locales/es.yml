@@ -630,6 +630,8 @@
       new_print: 'Crear impresión'
       order_number: 'Pedido %{number} (%{status})'
       cancel: 'Cancelar'
+      can_be_printed: 'El pedido estará *impreso* y listo para la fecha programada'
+      can_not_be_printed: 'Para imprimir los documentos *acercate* personalmente hasta el centro de copiado y consultá por el pedido *%{number}*'
       status:
         pending: 'Pendiente'
         completed: 'Impreso'

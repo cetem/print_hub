@@ -3,9 +3,11 @@
 <% else %>
   <section id="check_order">
     <%= render 'form' %>
-
-    <nav class="links">
-      <%= link_to t('label.back'), catalog_path %>
-    </nav>
   </section>
+
+  <%= render 'printed_footer' %>
+
+  <nav class="links">
+    <%= link_to t('label.back'), catalog_path %>
+  </nav>
 <% end %>

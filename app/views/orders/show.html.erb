@@ -38,6 +38,8 @@
   <%= render 'total', order: @order %>
 </section>
 
+<%= render 'printed_footer' %>
+
 <nav class="links">
   <% if current_customer %>
     <%= link_to_if @order.pending?, t('label.edit'), edit_order_path(@order) %> |

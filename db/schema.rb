@@ -132,14 +132,17 @@ ActiveRecord::Schema.define(:version => 20110817201650) do
 
   create_table "orders", :force => true do |t|
     t.datetime "scheduled_at",                             :null => false
+    t.string   "status",       :limit => 1,                :null => false
+    t.boolean  "print",                                    :null => false
+    t.text     "notes"
     t.integer  "lock_version",              :default => 0
     t.integer  "customer_id",                              :null => false
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "status",       :limit => 1,                :null => false
   end
 
   add_index "orders", ["customer_id"], :name => "index_orders_on_customer_id"
+  add_index "orders", ["print"], :name => "index_orders_on_print"
   add_index "orders", ["scheduled_at"], :name => "index_orders_on_scheduled_at"
   add_index "orders", ["status"], :name => "index_orders_on_status"
 

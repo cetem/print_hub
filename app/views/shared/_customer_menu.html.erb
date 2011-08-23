@@ -2,19 +2,21 @@
 <% cache "customer_menu_#{locale}_#{current_controller}" do %>
   <nav id="menu_links">
     <ul>
-      <%= content_tag(:li, link_to(t(:catalog, :scope => :customer_menu), catalog_path),
+      <%= content_tag(:li, link_to(t('customer_menu.catalog'), catalog_path),
         :class => (:selected if current_controller == :catalog)) %>
-      <%= content_tag(:li, link_to(t(:orders, :scope => :customer_menu), orders_path),
+      <%= content_tag(:li, link_to(t('customer_menu.orders'), orders_path),
         :class => (:selected if current_controller == :orders)) %>
-      <%= content_tag(:li, link_to(t(:'view.catalog.new_order'), new_order_path),
+      <%= content_tag(:li, link_to(t('view.catalog.new_order'), new_order_path),
         :class => 'strong') %>
     </ul>
   </nav>
 <% end %>
 <nav id="user_actions">
-  <div id="username"><%= current_customer.email %></div>
+  <div id="user" data-credit="<%= current_customer.free_credit_minus_pendings %>">
+    <%= current_customer.email %>
+  </div>
   <ul>
-    <li><%= link_to t(:logout, :scope => [:menu, :actions]),
-      customer_sessions_path, :method => :delete %></li>
+    <li><%= link_to t('menu.actions.logout'),
+      customer_sessions_path, method: :delete %></li>
   </ul>
 </nav>

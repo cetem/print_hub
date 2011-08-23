@@ -35,6 +35,8 @@
 <script type="text/javascript">
   function updateTotalPrice() {
     var totalPrice = 0.0;
+    var threshold = <%= CREDIT_THRESHOLD %>;
+    var credit = parseFloat($('#user').data('credit')) || 0;
     
     $('.order_line').each(function(i, e) {
       var olPrice = $(e).data('excludeFromTotal')
@@ -42,6 +44,14 @@
 
       totalPrice += olPrice;
     });
+    
+    if(totalPrice > 0 && (credit >= (totalPrice * threshold))) {
+      $('#not_printed').hide();
+      $('#printed').show();
+    } else if(totalPrice > 0) {
+      $('#printed').hide();
+      $('#not_printed').show();
+    }
     
     var money = $('#total span.money');
     

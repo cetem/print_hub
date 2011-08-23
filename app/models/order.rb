@@ -15,7 +15,7 @@ class Order < ActiveRecord::Base
   # Atributos no persistentes
   attr_accessor :include_documents
   # Atributos protegidos
-  attr_protected :status
+  attr_protected :status, :print
   
   # Scopes
   scope :pending, where(:status => STATUS[:pending])
@@ -40,14 +40,16 @@ class Order < ActiveRecord::Base
   def initialize(attributes = nil, options = {})
     super(attributes, options)
     
-    self.status ||= STATUS[:pending]
     self.scheduled_at ||= 1.day.from_now
+    self.status ||= STATUS[:pending]
     
     if self.include_documents.present?
       self.include_documents.each do |document_id|
         self.order_lines.build(:document_id => document_id)
       end
     end
+    
+    self.print = !!self.customer.try(:can_afford?, self.price)
   end
   
   def avoid_destruction

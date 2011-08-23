@@ -35,6 +35,29 @@ class OrderTest < ActiveSupport::TestCase
         )
       end
     end
+    
+    assert !@order.reload.print
+  end
+  
+  # Prueba la creación de un pedido
+  test 'create with credit and allow printing' do
+    assert_difference ['Order.count', 'OrderLine.count'] do
+      assert_difference 'Version.count', 2 do
+        @order = Order.create(
+          :scheduled_at => 10.days.from_now,
+          :customer => customers(:student),
+          :order_lines_attributes => {
+            :new_1 => {
+              :copies => 2,
+              :two_sided => false,
+              :document => documents(:math_book)
+            }
+          }
+        )
+      end
+    end
+    
+    assert @order.reload.print
   end
   
   test 'create with included documents' do
