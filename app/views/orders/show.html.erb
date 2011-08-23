@@ -5,6 +5,13 @@
       <%= l @order.scheduled_at, format: :long if @order.scheduled_at %>
     </h3>
   </header>
+  
+  <% if @order.notes.present? %>
+    <section>
+      <h3><%= Order.human_attribute_name :notes %></h3>
+      <%= simple_format @order.notes %>
+    </section>
+  <% end %>
 
   <% unless @order.order_lines.empty? %>
     <section class="nested_items">
@@ -38,8 +45,6 @@
   <%= render 'total', order: @order %>
 </section>
 
-<%= render 'printed_footer' %>
-
 <nav class="links">
   <% if current_customer %>
     <%= link_to_if @order.pending?, t('label.edit'), edit_order_path(@order) %> |
@@ -54,3 +59,5 @@
     <%= link_to t('label.list'), orders_path %>
   <% end %>
 </nav>
+
+<%= render 'printed_footer' if current_customer %>

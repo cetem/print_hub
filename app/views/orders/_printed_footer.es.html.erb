@@ -1,0 +1,28 @@
+<footer id="order_meta">
+  <% if @order.pending? %>
+    <div id="printed" <%= raw 'style="display: none"' unless @order.print %>>
+      <p>
+        El pedido estará <strong>impreso</strong> y listo para la fecha
+        programada
+      </p>
+    </div>
+  
+    <div id="not_printed" <%= raw 'style="display: none"' if @order.print %>>
+      <p>
+        Para imprimir los documentos <strong>acercate</strong> personalmente
+        hasta el centro de copiado y consultá por el pedido
+        <strong><%= @order.id %></strong>
+      </p>
+    </div>
+  <% end %>
+  
+  <div id="credit">
+    <p>
+      Tenés
+      <span class="money">
+        <%= number_to_currency current_customer.free_credit_minus_pendings %>
+      </span>
+      disponibles en tu cuenta
+    </p>
+  </div>
+</footer>

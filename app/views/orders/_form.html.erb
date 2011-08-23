@@ -26,6 +26,15 @@
   </section>
 
   <%= render 'total', order: @order %>
+
+  <div class="field">
+    <%= link_to t('view.orders.notes_link'), '#', 'class' => 'show',
+      'data-target' => '#notes' %>
+    <div id="notes" style="display: none;">
+      <br />
+      <%= f.text_area :notes, autofocus: true %>
+    </div>
+  </div>
   
   <div class="actions">
     <%= f.hidden_field :lock_version %>

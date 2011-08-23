@@ -134,16 +134,18 @@
         customer: 'Cliente'
         scheduled_at: 'Programado para'
         status: 'Estado'
+        notes: 'Notas'
+        print: 'Imprimir'
         order_lines:
           one: 'Línea de pedido'
           other: 'Líneas de pedido'
           copies: 'Copias'
-          price_per_copy: 'Precio por hoja'
+          price_per_copy: 'Precio por página'
           two_sided: 'Doble faz'
           document_id: 'Documento'
       order_line:
         copies: 'Copias'
-        price_per_copy: 'Precio por hoja'
+        price_per_copy: 'Precio por página'
         two_sided: 'Doble faz'
         document_id: 'Documento'
       payment:
@@ -630,8 +632,7 @@
       new_print: 'Crear impresión'
       order_number: 'Pedido %{number} (%{status})'
       cancel: 'Cancelar'
-      can_be_printed: 'El pedido estará *impreso* y listo para la fecha programada'
-      can_not_be_printed: 'Para imprimir los documentos *acercate* personalmente hasta el centro de copiado y consultá por el pedido *%{number}*'
+      notes_link: '¿Necesitás aclarar algo sobre el pedido?'
       status:
         pending: 'Pendiente'
         completed: 'Impreso'

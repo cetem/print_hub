@@ -13,17 +13,26 @@
   }
 }
 
-#not_printed {
-  color: #c00;
-}
-
-#printed, #not_printed {
-  font-size: 1.25em;
+#order_meta {
   margin-top: 1em;
-  padding: .5em 1em;
-  text-align: center;
-  background: $highlight-color;
-  @include rounded-corners(.5em);
+  border-top: 1px dotted $main-color;
+  padding-top: 1em;
+  
+  #credit {
+    margin: .5em 0em;
+  }
+
+  #not_printed {
+    color: #c00;
+  }
+  
+  #printed, #not_printed {
+    font-size: 1.25em;
+    padding: .5em 1em;
+    text-align: center;
+    background: $highlight-color;
+    @include rounded-corners(.5em);
+  }
 }
 
 #show_order {

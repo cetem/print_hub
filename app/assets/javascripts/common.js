@@ -225,6 +225,15 @@ jQuery(function($) {
   
   $('a.fancybox').fancybox({type: 'image'});
   
+  $('a.show').live('click', function(event) {
+    $($(this).data('target')).stop(true, true).slideDown(300, function() {
+      $(this).find('*[autofocus]:not([readonly]):not([disabled]):visible:first').focus()
+    });
+    
+    event.preventDefault();
+    event.stopPropagation();
+  });
+  
   $('input[type="file"]').filestyle({ 
     image: '/assets/choose-file.png',
     imageheight : 16,
