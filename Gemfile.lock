@@ -16,7 +16,7 @@ GIT
 
 GIT
   remote: https://github.com/rails/rails.git
-  revision: d81fe8d74ef138e2a72082e953f4cb020e556dd0
+  revision: b938b042115c31f246b8c7002808cc0c9656fb4f
   branch: 3-1-stable
   specs:
     actionmailer (3.1.0.rc6)
@@ -66,7 +66,7 @@ GIT
 
 GIT
   remote: https://github.com/rails/sass-rails.git
-  revision: 231eb6703980d0fd939f786ff2c9d3db7e8f98e1
+  revision: fa76559e3e4808ee3b4b15f1fa6c8cc64a52d964
   branch: 3-1-stable
   specs:
     sass-rails (3.1.0.rc.6)

@@ -60,7 +60,7 @@ class OrdersControllerTest < ActionController::TestCase
       }
     end
 
-    assert_redirected_to order_path(assigns(:order))
+    assert_redirected_to order_url(assigns(:order))
     # Prueba básica para "asegurar" el funcionamiento del versionado
     assert_nil Version.last.whodunnit
   end
@@ -96,7 +96,17 @@ class OrdersControllerTest < ActionController::TestCase
       scheduled_at: I18n.l(5.days.from_now.at_midnight, :format => :minimal)
     }
     
-    assert_redirected_to order_path(assigns(:order))
+    assert_redirected_to order_url(assigns(:order))
     assert_equal 5.days.from_now.at_midnight, @order.reload.scheduled_at
+  end
+  
+  test 'should cancel order' do
+    CustomerSession.create(customers(:student_without_bonus))
+    assert_no_difference 'Order.count' do
+      delete :destroy, id: @order.to_param
+    end
+    
+    assert_redirected_to order_url(assigns(:order))
+    assert @order.reload.cancelled?
   end
 end

@@ -131,14 +131,33 @@ class OrderTest < ActiveSupport::TestCase
     assert !@order.completed?
     assert !@order.cancelled?
     
-    @order.completed!
+    assert @order.completed!
     assert !@order.pending?
     assert @order.completed?
     assert !@order.cancelled?
     
-    @order.cancelled!
+    assert @order.reload.cancelled!
     assert !@order.pending?
     assert !@order.completed?
     assert @order.cancelled?
+    
+    assert !@order.completed!
+  end
+  
+  test 'allow status' do
+    assert @order.pending?
+    assert @order.allow_status?(Order::STATUS[:completed])
+    assert @order.allow_status?(Order::STATUS[:cancelled])
+    assert @order.allow_status?(Order::STATUS[:pending])
+    
+    assert @order.completed!
+    assert !@order.allow_status?(Order::STATUS[:completed])
+    assert !@order.allow_status?(Order::STATUS[:cancelled])
+    assert !@order.allow_status?(Order::STATUS[:pending])
+    
+    assert @order.reload.cancelled!
+    assert !@order.allow_status?(Order::STATUS[:completed])
+    assert !@order.allow_status?(Order::STATUS[:cancelled])
+    assert !@order.allow_status?(Order::STATUS[:pending])
   end
 end

@@ -7,7 +7,7 @@
   </div>
   
   <section class="nested_items">
-    <h2><%= t :order_lines, :scope => [:view, :orders] %></h2>
+    <h2><%= t 'view.orders.order_lines' %></h2>
     
     <div id="order_lines_headers" class="headers">
       <h3><%= OrderLine.human_attribute_name :document_id %></h3>
@@ -20,14 +20,12 @@
     
     <div id="order_lines" class="items">
       <%= f.fields_for :order_lines do |ol_f| %>
-        <%= render :partial => 'order_line', :locals => {
-          :f => ol_f, :disabled => !@order.new_record?
-        } %>
+        <%= render 'order_line', f: ol_f, disabled: !@order.new_record? %>
       <% end %>
     </div>
   </section>
 
-  <%= render :partial => 'total', :locals => { :order => @order } %>
+  <%= render 'total', order: @order %>
   
   <div class="actions">
     <%= f.hidden_field :lock_version %>

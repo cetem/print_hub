@@ -14,6 +14,8 @@ class Order < ActiveRecord::Base
   
   # Atributos no persistentes
   attr_accessor :include_documents
+  # Atributos protegidos
+  attr_protected :status
   
   # Scopes
   scope :pending, where(:status => STATUS[:pending])
@@ -68,7 +70,16 @@ class Order < ActiveRecord::Base
   
   STATUS.each do |status, value|
     define_method(:"#{status}?") { self.status == value }
-    define_method(:"#{status}!") { self.status = value }
+    define_method(:"#{status}!") { self.status = value if allow_status?(value) }
+  end
+  
+  def allow_status?(status)
+    case status
+      when STATUS[:cancelled] then self.pending?
+      when STATUS[:completed] then self.pending?
+      when STATUS[:pending]   then !self.completed? && !self.cancelled?
+      else false
+    end
   end
   
   def price

@@ -1,14 +1,14 @@
 <section id="show_order">
   <header>
-    <h2><%= t('view.orders.order_number', number: @order.id, status: @order.status_text) %></h2>
+    <h2><%= t 'view.orders.order_number', number: @order.id, status: @order.status_text %></h2>
     <h3>
-      <%= l @order.scheduled_at, :format => :long if @order.scheduled_at %>
+      <%= l @order.scheduled_at, format: :long if @order.scheduled_at %>
     </h3>
   </header>
 
   <% unless @order.order_lines.empty? %>
     <section class="nested_items">
-      <h2><%= t :order_lines, :scope => [:view, :orders] %></h2>
+      <h2><%= t 'view.orders.order_lines' %></h2>
 
       <table class="summary">
         <thead>
@@ -27,7 +27,7 @@
               <td><%= order_line.copies %></td>
               <td><%= order_line.document.try(:pages) %></td>
               <td><%= number_to_currency order_line.price_per_copy %></td>
-              <td><%= t(order_line.two_sided ? :yes : :no, :scope => :label) %></td>
+              <td><%= t(order_line.two_sided ? :yes : :no, scope: :label) %></td>
             </tr>
           <% end %>
         </tbody>
@@ -35,16 +35,18 @@
     </section>
   <% end %>
 
-  <%= render :partial => 'total', :locals => { :order => @order } %>
+  <%= render 'total', order: @order %>
 </section>
 
 <nav class="links">
   <% if current_customer %>
-    <%= link_to_if @order.pending?, t(:'label.edit'), edit_order_path(@order) %> |
-    <%= link_to t(:'label.back'), catalog_path %>
+    <%= link_to_if @order.pending?, t('label.edit'), edit_order_path(@order) %> |
+    <%= link_to_if @order.pending?, t('view.orders.cancel'), @order,
+      confirm: t('messages.confirmation'), method: :delete %> |
+    <%= link_to t('label.back'), catalog_path %>
   <% else %>
-    <%= link_to t(:new_print, :scope => [:view, :orders]),
-      new_print_path(:order_id => @order.id) %> |
-    <%= link_to t(:'label.list'), orders_path %>
+    <%= link_to_if @order.pending?, t('view.orders.new_print'),
+      new_print_path(order_id: @order.id) %> |
+    <%= link_to t('label.list'), orders_path %>
   <% end %>
 </nav>

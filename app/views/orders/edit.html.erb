@@ -3,6 +3,8 @@
 </section>
 
 <nav class="links">
-  <%= link_to t(:'label.show'), @order %> |
-  <%= link_to t(:'label.back'), catalog_path %>
+  <%= link_to t('label.show'), @order %> |
+  <%= link_to_if @order.pending?, t('view.orders.cancel'), @order,
+    confirm: t('messages.confirmation'), method: :delete %> |
+  <%= link_to t('label.back'), catalog_path %>
 </nav>

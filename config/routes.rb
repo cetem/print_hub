@@ -30,7 +30,7 @@ PrintHubApp::Application.routes.draw do
     match 'password_resets/:token' => 'password_resets#update',
       :as => 'update_password_reset', :via => :put
     
-    resources :orders, :except => [:destroy]
+    resources :orders
     
     resources :customers, :only => [:new, :create]
     
@@ -43,7 +43,7 @@ PrintHubApp::Application.routes.draw do
     match 'user_stats(.:format)' => 'stats#users', :as => 'user_stats',
       :via => :get
 
-    resources :orders, :only => [:index, :show]
+    resources :orders, :only => [:index, :show, :destroy]
 
     resources :bonuses, :only => [:index]
 

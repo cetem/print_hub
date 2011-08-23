@@ -623,15 +623,17 @@
       edit_title: 'Modificar pedido'
       correctly_created: 'Pedido agregado correctamente.'
       correctly_updated: 'Pedido actualizado correctamente.'
+      correctly_cancelled: 'Pedido cancelado correctamente.'
       stale_object_error: 'El pedido no pudo ser actualizado, intente nuevamente.'
       order_lines: 'Trabajos a encargar'
       total: 'Total'
       new_print: 'Crear impresión'
       order_number: 'Pedido %{number} (%{status})'
+      cancel: 'Cancelar'
       status:
         pending: 'Pendiente'
         completed: 'Impreso'
-        cancelled: 'Anulado'
+        cancelled: 'Cancelado'
     password_resets:
       new_title: 'Restaurar contraseña'
       edit_title: 'Modificar contraseña'
