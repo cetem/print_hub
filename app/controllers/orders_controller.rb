@@ -110,7 +110,8 @@ class OrdersController < ApplicationController
     if current_customer
       @order_scope = current_customer.orders
     else
-      @order_scope = params[:type] == 'print' ? Order.for_print : Order.scoped
+      @order_scope = params[:type] == 'print' ?
+        Order.pending.for_print : Order.scoped
     end
   end
 end

@@ -22,7 +22,7 @@ class Order < ActiveRecord::Base
   scope :completed, where(:status => STATUS[:completed])
   scope :cancelled, where(:status => STATUS[:cancelled])
   scope :for_print, where(:print => true)
-  scope :scheduled_soon, where('scheduled_at >= ?', 1.hour.ago)
+  scope :scheduled_soon, where('scheduled_at <= ?', 1.hour.from_now)
   
   # Restricciones
   validates :scheduled_at, :customer, :presence => true
@@ -88,5 +88,9 @@ class Order < ActiveRecord::Base
   
   def price
     self.order_lines.to_a.sum(&:price)
+  end
+  
+  def self.pending_for_print_count
+    self.pending.for_print.scheduled_soon.count
   end
 end

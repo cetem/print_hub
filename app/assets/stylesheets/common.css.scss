@@ -531,8 +531,26 @@ nav#menu_links {
   }
 
   > ul, > ul > li{
+    position: relative;
     float: left;
     list-style: none;
+  }
+
+  #orders_count {
+    background: inherit;
+    position: absolute;
+    font-weight: normal;
+    top: -.5em;
+    margin-left: .5em;
+    padding: .5em;
+    border-left: 2px dotted #666;
+
+    &.look_me {
+      background: #c00;
+      color: #fff;
+      font-weight: bold;
+      border-left: none;
+    }
   }
 }
 

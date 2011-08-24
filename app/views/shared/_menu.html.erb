@@ -1,41 +1,40 @@
 <% current_controller = controller.controller_name.to_sym %>
-<% cache "menu_#{locale}_#{current_controller}_#{!!current_user.admin?}" do %>
-  <nav id="menu_links">
-    <ul>
-      <% if current_user.admin %>
-        <li class="submenu">
-          <%= link_to_menu_with_nested_menu(:admin, :submenu_admin) %>
-          <div id="submenu_admin" style="display: none;">
-            <ul>
-              <%= content_tag(:li, link_to(t(:users, :scope => :menu), users_path),
-                :class => (:selected if current_controller == :users)) %>
-              <%= content_tag(:li, link_to(t(:customers, :scope => :menu), customers_path),
-                :class => (:selected if current_controller == :customers)) %>
-              <%= content_tag(:li, link_to(t(:bonuses, :scope => :menu), bonuses_path),
-                :class => (:selected if current_controller == :bonuses)) %>
-              <%= content_tag(:li, link_to(t(:settings, :scope => :menu), settings_path),
-                :class => (:selected if current_controller == :settings)) %>
-              <%= content_tag(:li, link_to(t(:payments, :scope => :menu), payments_path),
-                :class => (:selected if current_controller == :payments)) %>
-              <%= content_tag(:li, link_to(t(:stats, :scope => :menu), printer_stats_path),
-                :class => (:selected if current_controller == :stats)) %>
-            </ul>
-          </div>
-        </li>
-      <% end %>
-      <%= content_tag(:li, link_to(t(:prints, :scope => :menu), prints_path),
-        :class => (:selected if current_controller == :prints)) %>
-      <%= content_tag(:li, link_to(t(:documents, :scope => :menu), documents_path),
-        :class => (:selected if current_controller == :documents)) %>
-      <%= content_tag(:li, link_to(t(:tags, :scope => :menu), tags_path),
-        :class => (:selected if current_controller == :tags)) %>
-      <%= content_tag(:li, link_to(t(:articles, :scope => :menu), articles_path),
-        :class => (:selected if current_controller == :articles)) %>
-      <%= content_tag(:li, link_to(t(:orders, :scope => :menu), review_orders_path),
-        :class => (:selected if current_controller == :orders)) %>
-    </ul>
-  </nav>
-<% end %>
+<nav id="menu_links">
+  <ul>
+    <% if current_user.admin %>
+      <li class="submenu">
+        <%= link_to_menu_with_nested_menu(:admin, :submenu_admin) %>
+        <div id="submenu_admin" style="display: none;">
+          <ul>
+            <%= content_tag(:li, link_to(t(:users, :scope => :menu), users_path),
+              :class => (:selected if current_controller == :users)) %>
+            <%= content_tag(:li, link_to(t(:customers, :scope => :menu), customers_path),
+              :class => (:selected if current_controller == :customers)) %>
+            <%= content_tag(:li, link_to(t(:bonuses, :scope => :menu), bonuses_path),
+              :class => (:selected if current_controller == :bonuses)) %>
+            <%= content_tag(:li, link_to(t(:settings, :scope => :menu), settings_path),
+              :class => (:selected if current_controller == :settings)) %>
+            <%= content_tag(:li, link_to(t(:payments, :scope => :menu), payments_path),
+              :class => (:selected if current_controller == :payments)) %>
+            <%= content_tag(:li, link_to(t(:stats, :scope => :menu), printer_stats_path),
+              :class => (:selected if current_controller == :stats)) %>
+          </ul>
+        </div>
+      </li>
+    <% end %>
+    <%= content_tag(:li, link_to(t(:prints, :scope => :menu), prints_path),
+      :class => (:selected if current_controller == :prints)) %>
+    <%= content_tag(:li, link_to(t(:documents, :scope => :menu), documents_path),
+      :class => (:selected if current_controller == :documents)) %>
+    <%= content_tag(:li, link_to(t(:tags, :scope => :menu), tags_path),
+      :class => (:selected if current_controller == :tags)) %>
+    <%= content_tag(:li, link_to(t(:articles, :scope => :menu), articles_path),
+      :class => (:selected if current_controller == :articles)) %>
+    <%= content_tag(:li, link_to(review_orders_text, review_orders_path),
+      :class => (:selected if current_controller == :orders)) %>
+  </ul>
+</nav>
+
 <nav id="user_actions">
   <div id="user"><%= current_user.username %></div>
   <ul>

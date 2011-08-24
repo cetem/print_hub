@@ -35,4 +35,13 @@ module OrdersHelper
       )
     end
   end
+  
+  def review_orders_text
+    count = Order.pending_for_print_count
+    count_tag = content_tag(
+      :span, count, :id => 'orders_count', :class => ('look_me' if count > 0)
+    )
+    
+    raw(t('menu.orders') + count_tag)
+  end
 end
