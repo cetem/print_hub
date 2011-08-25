@@ -12,6 +12,7 @@
  *= require tags
  *= require users
  *= require customers
+ *= require customer_sessions
  *= require password_resets
  *= require jquery/fancybox
  *= require jquery/ui-custom

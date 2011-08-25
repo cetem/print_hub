@@ -1,0 +1,32 @@
+#ph_customer_sessions {
+  section.details {
+    footer {
+      margin-top: 2em;
+    }
+    
+    header {
+      h2 {
+        font-size: 1.5em;
+        margin-bottom: 1em;
+      }
+    }
+
+    p {
+      margin: 1em 0em;
+    }
+
+    section {
+      header {
+        h3 {
+          font-size: 1.25em;
+          font-weight: bold;
+        }
+      }
+
+      figure {
+        float: left;
+        width: 70px;
+      }
+    }
+  }
+}

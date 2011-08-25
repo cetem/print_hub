@@ -15,7 +15,7 @@
     <%= yield :js_extra %>
   <% end %>
 </head>
-<body>
+<body id="<%= "ph_#{controller_name}" %>">
   <div id="loading_caption" style="display: none;">
     <%= t('messages.loading') %>
   </div>
