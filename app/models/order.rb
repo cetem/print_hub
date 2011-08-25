@@ -22,7 +22,7 @@ class Order < ActiveRecord::Base
   scope :completed, where(:status => STATUS[:completed])
   scope :cancelled, where(:status => STATUS[:cancelled])
   scope :for_print, where(:print => true)
-  scope :scheduled_soon, where('scheduled_at <= ?', 1.hour.from_now)
+  scope :scheduled_soon, where('scheduled_at <= ?', 6.hour.from_now)
   
   # Restricciones
   validates :scheduled_at, :customer, :presence => true

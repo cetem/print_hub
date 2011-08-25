@@ -10,4 +10,4 @@
   </nav>
 <% end %>
 
-<%= render 'printed_footer' %>
+<%= render 'printed_footer' unless @order.order_lines.empty? %>
