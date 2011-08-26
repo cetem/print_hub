@@ -1,29 +1,26 @@
 #customer_login {
-  #login {
-    float: right;
-    margin: 0em 0em 0em 2em;
-  }
+  float: right;
 
   h2 {
     margin-bottom: 1em;
   }
 
-  img {
-    float: left;
-    margin: 0em 1em .5em 0em;
-  }
-
-  section.explanation {
-    background: #fff;
-    margin-right: 2em;
-    text-align: justify;
-    border: none;
+  #login {
+    float: right;
+    margin: 0em 0em 0em 2em;
   }
 }
 
 #customer_login_links {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  right: 0px;
+  background: #e8e8e8;
+  border-bottom: 2px solid #cdcdcd;
   text-align: right;
-  padding-top: 2em;
+  padding: 1em 2em;
+  margin: 0em;
 }
 
 #customer_registration {
