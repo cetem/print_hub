@@ -566,7 +566,8 @@
       add_bonus_title: 'Agregar bonificación (CTRL + ALT + B)'
       add_deposit: 'Agregar depósito'
       add_deposit_title: 'Agregar depósito (CTRL + ALT + D)'
-      register: 'Registrarse'
+      register: 'Crear cuenta'
+      registration_text: '¿No tenés una cuenta?'
       forgot_password: 'Olvidé mi contraseña'
       current_bonuses:
         one: 'Bonificación vigente'

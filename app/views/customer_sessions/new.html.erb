@@ -1,11 +1,13 @@
-<nav id="customer_login_links" class="links">
-  <%= link_to t('view.customers.register'), new_customer_path,
-    :class => 'large_link' %>
-</nav>
-
-<figure>
-  <%= image_tag 'welcome/logo.gif', size: '162x95' %>
-</figure>
+<header id="top_bar">
+  <nav class="links">
+    <p>
+      <%= t('view.customers.registration_text') %>
+      <%= link_to t('view.customers.register'), new_customer_path,
+        :class => 'large_link' %>
+    </p>
+  </nav>
+  <%= render 'organization_header' %>
+</header>
 
 <section id="customer_login">
   <div id="login">

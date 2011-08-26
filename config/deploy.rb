@@ -22,7 +22,8 @@ role :db,  'fotocopia.frm.utn.edu.ar', :primary => true # This is where Rails mi
 # if you're still using the script/reapear helper you will need
 # these http://github.com/rails/irs_process_scripts
 
-after 'deploy:symlink', 'deploy:create_shared_symlinks'
+after 'deploy:symlink', 'deploy:create_shared_symlinks',
+  'deploy:precomplile_assets'
 
 namespace :deploy do
   task :start do
@@ -45,5 +46,11 @@ namespace :deploy do
 
       run "ln -s #{shared_files_path} #{release_files_path}"
     end
+  end
+  
+  desc 'precompile the assets'
+  task :precomplile_assets, roles: :web, except: { no_release: true } do
+    run "cd #{current_path}; rm -rf public/assets/*"
+    run "cd #{current_path}; RAILS_ENV=production bundle exec rake assets:precompile"
   end
 end

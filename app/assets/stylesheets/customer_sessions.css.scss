@@ -2,6 +2,10 @@
   section.details {
     footer {
       margin-top: 2em;
+      
+      p {
+        text-align: center;
+      }
     }
     
     header {
@@ -32,5 +36,40 @@
   
   #main_container {
     margin: 5em auto;
+    min-width: 750px;
+    padding: 0em 1em;
+  }
+
+  #top_bar {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    right: 0px;
+    background: #e8e8e8;
+    border-bottom: 2px solid #cdcdcd;
+    padding: 1em 2em;
+    min-width: 750px;
+
+    hgroup {
+      h1, h2 {
+        display: inline;
+      }
+
+      h1 {
+        font-size: 1.5em;
+        font-style: italic;
+        margin-right: .25em;
+      }
+
+      h2 {
+        font-size: .8em;
+        font-weight: normal;
+      }
+    }
+
+    nav {
+      float: right;
+      margin: 0em;
+    }
   }
 }
