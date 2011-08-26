@@ -13,6 +13,17 @@ class CustomersControllerTest < ActionController::TestCase
     assert_select '#error_body', false
     assert_template 'customers/index'
   end
+  
+  test 'should get filtered index' do
+    UserSession.create(users(:administrator))
+    get :index, q: 'Anakin|Darth'
+    assert_response :success
+    assert_not_nil assigns(:customers)
+    assert_equal 2, assigns(:customers).size
+    assert assigns(:customers).all? { |c| c.to_s.match /anakin|darth/i }
+    assert_select '#error_body', false
+    assert_template 'customers/index'
+  end
 
   test 'should get new' do
     UserSession.create(users(:administrator))

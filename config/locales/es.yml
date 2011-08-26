@@ -522,7 +522,7 @@
     formats:
       default: '%A, %e de %B de %Y %H:%M:%S %z'
       short: '%e de %b %H:%M'
-      long: '%e de %B de %Y %H:%M'
+      long: '%e de %B de %Y a las %H:%M'
       minimal: '%d/%m/%Y %H:%M'
     am: 'am'
     pm: 'pm'

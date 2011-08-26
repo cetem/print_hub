@@ -11,7 +11,7 @@ class OrdersControllerTest < ActionController::TestCase
   test 'should get user index' do
     @request.host = 'localhost'
     UserSession.create(users(:administrator))
-    get :index, :type => 'all'
+    get :index, type: 'all'
     assert_response :success
     assert_not_nil assigns(:orders)
     # Se listan órdenes de mas de un cliente
@@ -24,10 +24,22 @@ class OrdersControllerTest < ActionController::TestCase
   test 'should get user for print index' do
     @request.host = 'localhost'
     UserSession.create(users(:administrator))
-    get :index, :type => 'print'
+    get :index, type: 'print'
     assert_response :success
     assert_not_nil assigns(:orders)
     assert assigns(:orders).all? { |o| o.print }
+    assert_select '#error_body', false
+    assert_template 'orders/index'
+  end
+  
+  test 'should get user filtered index' do
+    @request.host = 'localhost'
+    UserSession.create(users(:administrator))
+    get :index, type: 'all', q: 'darth'
+    assert_response :success
+    assert_not_nil assigns(:orders)
+    assert assigns(:orders).size > 0
+    assert assigns(:orders).all? { |o| o.customer.to_s.match /darth/i }
     assert_select '#error_body', false
     assert_template 'orders/index'
   end
@@ -61,7 +73,7 @@ class OrdersControllerTest < ActionController::TestCase
     
     assert_difference ['customer.orders.count', 'OrderLine.count'] do
       post :create, order: {
-        scheduled_at: I18n.l(10.days.from_now, :format => :minimal),
+        scheduled_at: I18n.l(10.days.from_now, format: :minimal),
         order_lines_attributes: {
           new_1: {
             copies: '2',
@@ -105,7 +117,7 @@ class OrdersControllerTest < ActionController::TestCase
   test 'should update order' do
     CustomerSession.create(customers(:student_without_bonus))
     put :update, id: @order.to_param, order: {
-      scheduled_at: I18n.l(5.days.from_now.at_midnight, :format => :minimal)
+      scheduled_at: I18n.l(5.days.from_now.at_midnight, format: :minimal)
     }
     
     assert_redirected_to order_url(assigns(:order))

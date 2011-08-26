@@ -194,4 +194,21 @@ class ApplicationControllerTest < ActionController::TestCase
     assert_equal [to_datetime.to_s(:db), from_datetime.to_s(:db)],
       generated_range
   end
+  
+  test 'pg text query' do
+    expected = "to_tsvector('spanish', coalesce(a,'') || ' ' || coalesce(b,''))"
+    expected << " @@ to_tsquery('spanish', :and_term)"
+    
+    assert_equal expected, @controller.send(:pg_text_query, 'a', 'b')[:query]
+    
+    expected = "ts_rank_cd(#{expected.sub(' @@', ',')})"
+    
+    assert_equal expected, @controller.send(:pg_text_query, 'a', 'b')[:order]
+  end
+  
+  test 'simple text query' do
+    expected = 'LOWER(a) LIKE :wilcard_term OR LOWER(b) LIKE :wilcard_term'
+    
+    assert_equal expected, @controller.send(:simple_text_query, 'a', 'b')
+  end
 end

@@ -30,19 +30,19 @@ class DocumentsController < ApplicationController
       unless @query_terms.empty?
         parameters = {
           :and_term => @query_terms.join(' & '),
-          :wilcard_term => "%#{@query_terms.join('%')}%"
+          :wilcard_term => "%#{@query_terms.join('%')}%".downcase
         }
 
         if DB_ADAPTER == 'PostgreSQL'
-          lang = "'spanish'" # TODO: implementar con I18n
-          query = "to_tsvector(#{lang}, coalesce(name,'') || ' ' || coalesce(tag_path,'')) @@ to_tsquery(#{lang}, :and_term)"
-          order = "ts_rank_cd(#{query.sub(' @@', ',')})"
+          pg_query = pg_text_query('name', 'tag_path')
+          query, order = pg_query[:query], pg_query[:order]
 
           order = Document.send(:sanitize_sql_for_conditions, [order, parameters])
         else
-          query = "LOWER(name) LIKE LOWER(:wilcard_term) OR LOWER(tag_path) LIKE LOWER(:wilcard_term)"
+          query = simple_text_query('name', 'tag_path')
           order = 'name ASC'
         end
+        
         conditions = [query]
 
         @query_terms.each_with_index do |term, i|

@@ -1,6 +1,7 @@
 <% if current_customer && @orders.empty? %>
   <%= render 'help/empty_orders' %>
 <% else %>
+  <%= render 'shared/search' unless current_customer %>
   <table class="list">
     <%= show_orders_table_caption %>
     <thead>

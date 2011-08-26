@@ -6,7 +6,53 @@ class OrdersController < ApplicationController
   # GET /orders.json
   def index
     @title = t 'view.orders.index_title'
-    @orders = @order_scope.order('scheduled_at ASC').paginate(
+    @orders = @order_scope.order('scheduled_at ASC')
+    
+    if params[:q].present? && current_user
+      query = params[:q].sanitized_for_text_query
+      @query_terms = query.split(/\s+/).reject(&:blank?)
+      
+      unless @query_terms.empty?
+        @orders = @orders.includes(:customer)
+        parameters = {
+          and_term: @query_terms.join(' & '),
+          wilcard_term: "%#{@query_terms.join('%')}%".downcase
+        }
+
+        if DB_ADAPTER == 'PostgreSQL'
+          pg_query = pg_text_query(
+            "#{Customer.table_name}.identification",
+            "#{Customer.table_name}.name",
+            "#{Customer.table_name}.lastname"
+          )
+          query, order = pg_query[:query], pg_query[:order]
+
+          order = Order.send(:sanitize_sql_for_conditions, [order, parameters])
+        else
+          query = simple_text_query(
+            "#{Customer.table_name}.identification",
+            "#{Customer.table_name}.name",
+            "#{Customer.table_name}.lastname"
+          )
+          order = "#{Customer.table_name}.lastname ASC"
+        end
+        
+        conditions = [query]
+
+        @query_terms.each_with_index do |term, i|
+          if term =~ /^\d+$/ # Sólo si es un número vale la pena la condición
+            conditions << "#{Order.table_name}.id = :clean_term_#{i}"
+            parameters[:"clean_term_#{i}"] = term.to_i
+          end
+        end
+
+        @orders = @orders.where(
+          conditions.map { |c| "(#{c})" }.join(' OR '), parameters
+        )
+      end
+    end
+    
+    @orders = @orders.paginate(
       page: params[:page],
       per_page: APP_LINES_PER_PAGE
     )
@@ -34,7 +80,7 @@ class OrdersController < ApplicationController
   def new
     @title = t 'view.orders.new_title'
     @order = current_customer.orders.build(
-      :include_documents => session[:documents_to_order]
+      include_documents: session[:documents_to_order]
     )
 
     respond_to do |format|

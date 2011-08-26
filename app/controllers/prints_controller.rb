@@ -6,7 +6,7 @@ class PrintsController < ApplicationController
   # GET /prints
   # GET /prints.xml
   def index
-    @title = t :'view.prints.index_title'
+    @title = t('view.prints.index_title')
     order = params[:status] == 'scheduled' ? 'scheduled_at ASC' :
       'created_at DESC'
     
@@ -24,7 +24,7 @@ class PrintsController < ApplicationController
   # GET /prints/1
   # GET /prints/1.xml
   def show
-    @title = t :'view.prints.show_title'
+    @title = t('view.prints.show_title')
     @print = prints_scope.find(params[:id])
 
     respond_to do |format|
@@ -36,7 +36,7 @@ class PrintsController < ApplicationController
   # GET /prints/new
   # GET /prints/new.xml
   def new
-    @title = t :'view.prints.new_title'
+    @title = t('view.prints.new_title')
     
     unless params[:clear_documents_for_printing].blank?
       session[:documents_for_printing].try(:clear)
@@ -55,7 +55,7 @@ class PrintsController < ApplicationController
 
   # GET /prints/1/edit
   def edit
-    @title = t :'view.prints.edit_title'
+    @title = t('view.prints.edit_title')
     @print = prints_scope.find(params[:id])
 
     if !@print.pending_payment && !@print.scheduled?
@@ -66,13 +66,13 @@ class PrintsController < ApplicationController
   # POST /prints
   # POST /prints.xml
   def create
-    @title = t :'view.prints.new_title'
+    @title = t('view.prints.new_title')
     @print = current_user.prints.build(params[:print])
     session[:documents_for_printing].try(:clear)
 
     respond_to do |format|
       if @print.save
-        format.html { redirect_to(@print, :notice => t(:'view.prints.correctly_created')) }
+        format.html { redirect_to(@print, :notice => t('view.prints.correctly_created')) }
         format.xml  { render :xml => @print, :status => :created, :location => @print }
       else
         format.html { render :action => :new }
@@ -84,7 +84,7 @@ class PrintsController < ApplicationController
   # PUT /prints/1
   # PUT /prints/1.xml
   def update
-    @title = t :'view.prints.edit_title'
+    @title = t('view.prints.edit_title')
     @print = prints_scope.find(params[:id])
 
     if !@print.pending_payment && !@print.scheduled?
@@ -93,7 +93,7 @@ class PrintsController < ApplicationController
 
     respond_to do |format|
       if @print.update_attributes(params[:print])
-        format.html { redirect_to(@print, :notice => t(:'view.prints.correctly_updated')) }
+        format.html { redirect_to(@print, :notice => t('view.prints.correctly_updated')) }
         format.xml  { head :ok }
       else
         format.html { render :action => :edit }
@@ -102,7 +102,7 @@ class PrintsController < ApplicationController
     end
 
   rescue ActiveRecord::StaleObjectError
-    flash.alert = t :'view.prints.stale_object_error'
+    flash.alert = t('view.prints.stale_object_error')
     redirect_to edit_print_url(@print)
   end
 
@@ -115,19 +115,19 @@ class PrintsController < ApplicationController
     unless @query_terms.empty?
       parameters = {
         :and_term => @query_terms.join(' & '),
-        :wilcard_term => "%#{@query_terms.join('%')}%"
+        :wilcard_term => "%#{@query_terms.join('%')}%".downcase
       }
 
       if DB_ADAPTER == 'PostgreSQL'
-        lang = "'spanish'" # TODO: implementar con I18n
-        query = "to_tsvector(#{lang}, coalesce(name,'') || ' ' || coalesce(tag_path,'')) @@ to_tsquery(#{lang}, :and_term)"
-        order = "ts_rank_cd(#{query.sub(' @@', ',')})"
+        pg_query = pg_text_query('name', 'tag_path')
+        query, order = pg_query[:query], pg_query[:order]
 
         order = Document.send(:sanitize_sql_for_conditions, [order, parameters])
       else
-        query = "LOWER(name) LIKE LOWER(:wilcard_term) OR LOWER(tag_path) LIKE LOWER(:wilcard_term)"
+        query = simple_text_query('name', 'tag_path')
         order = 'name ASC'
       end
+      
       conditions = [query]
 
       @query_terms.each_with_index do |term, i|
@@ -158,17 +158,16 @@ class PrintsController < ApplicationController
     unless @query_terms.empty?
       parameters = {
         :and_term => @query_terms.join(' & '),
-        :wilcard_term => "%#{@query_terms.join('%')}%"
+        :wilcard_term => "%#{@query_terms.join('%')}%".downcase
       }
 
       if DB_ADAPTER == 'PostgreSQL'
-        lang = "'spanish'" # TODO: implementar con I18n
-        query = "to_tsvector(#{lang}, name) @@ to_tsquery(#{lang}, :and_term)"
-        order = "ts_rank_cd(#{query.sub(' @@', ',')})"
+        pg_query = pg_text_query('name')
+        query, order = pg_query[:query], pg_query[:order]
 
         order = Article.send(:sanitize_sql_for_conditions, [order, parameters])
       else
-        query = "LOWER(name) LIKE LOWER(:wilcard_term)"
+        query = simple_text_query('name')
         order = 'name ASC'
       end
       conditions = [query]
@@ -205,19 +204,15 @@ class PrintsController < ApplicationController
       }
 
       if DB_ADAPTER == 'PostgreSQL'
-        lang = "'spanish'" # TODO: implementar con I18n
-        query = "to_tsvector(#{lang}, coalesce(identification,'') || ' ' || coalesce(name,'') || ' ' || coalesce(lastname,'')) @@ to_tsquery(#{lang}, :and_term)"
-        order = "ts_rank_cd(#{query.sub(' @@', ',')})"
+        pg_query = pg_text_query('identification', 'name', 'lastname')
+        query, order = pg_query[:query], pg_query[:order]
 
         order = Customer.send(:sanitize_sql_for_conditions, [order, parameters])
       else
-        query = [
-          "LOWER(name) LIKE LOWER(:wilcard_term)",
-          "LOWER(lastname) LIKE LOWER(:wilcard_term)",
-          "LOWER(identification) LIKE LOWER(:wilcard_term)"
-        ].join(' OR ')
+        query = simple_text_query('identification', 'name', 'lastname')
         order = 'name ASC'
       end
+      
       conditions = [query]
 
       @customers = @customers.where(

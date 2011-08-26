@@ -14,7 +14,7 @@ class ApplicationController < ActionController::Base
       logger.error(error)
 
       unless response.redirect_url
-        render :template => 'shared/show_error', :locals => {:error => exception}
+        render template: 'shared/show_error', locals: {error: exception}
       end
 
     # En caso que la presentación misma de la excepción no salga como se espera
@@ -136,10 +136,10 @@ class ApplicationController < ActionController::Base
   def make_datetime_range(parameters = nil)
     if parameters
       from_datetime = Timeliness::Parser.parse(
-        parameters[:from], :datetime, :zone => :local
+        parameters[:from], :datetime, zone: :local
       )
       to_datetime = Timeliness::Parser.parse(
-        parameters[:to], :datetime, :zone => :local
+        parameters[:to], :datetime, zone: :local
       )
     end
 
@@ -147,5 +147,24 @@ class ApplicationController < ActionController::Base
     to_datetime ||= Time.now
 
     [from_datetime.to_datetime, to_datetime.to_datetime].sort
+  end
+  
+  def pg_text_query(*args)
+    options = args.extract_options!
+    lang = "'spanish'" # TODO: implementar con I18n
+    vector_args = args.map { |a| "coalesce(#{a},'')" }.join(" || ' ' || ")
+    term_name = options[:term_name] || 'and_term'
+    query = "to_tsvector(#{lang}, #{vector_args})"
+    query << " @@ to_tsquery(#{lang}, :#{term_name})"
+    order = "ts_rank_cd(#{query.sub(' @@', ',')})"
+    
+    {query: query, order: order}
+  end
+  
+  def simple_text_query(*args)
+    options = args.extract_options!
+    term_name = options[:term_name] || 'wilcard_term'
+    
+    args.map{ |a| "LOWER(#{a}) LIKE :#{term_name}" }.join(' OR ')
   end
 end

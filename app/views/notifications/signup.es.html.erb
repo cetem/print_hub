@@ -6,10 +6,13 @@
 <p>Nos alegra tenerte con nosotros...</p>
 
 <p>
-  Para <strong>activar</strong> tu cuenta <strong>hacé click</strong> en el
+  Para <strong>activar</strong> tu cuenta <strong>hacé clic</strong> en el
   siguiente enlace:<br />
   <%= link_to url, url %>
 </p>
+
+<%= render 'valid_until', date: TOKEN_VALIDITY.from_now %>
+
 <br />
 <br />
 
