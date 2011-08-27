@@ -39,3 +39,5 @@
       "$('#login_error').slideUp()", :title => t(:'label.close') %></div>
   </div>
 <% end %>
+
+<%= render 'unsupported_warning' if request.env['HTTP_USER_AGENT'] =~ /msie/i %>

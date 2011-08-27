@@ -72,4 +72,15 @@
       margin: 0em;
     }
   }
+
+  #unsupported_warning {
+    clear: both;
+    padding: 0em 2em;
+    border: 4px solid #c00;
+    background: #e8e8e8;
+    
+    p {
+      margin: 1em 0em;
+    }
+  }
 }
