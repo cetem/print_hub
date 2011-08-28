@@ -45,6 +45,7 @@ class PrintJob < ActiveRecord::Base
 
   def options
     options = {
+      'Collate' => 'True',
       'sides' => self.two_sided ? 'two-sided-long-edge' : 'one-sided'
     }
     
