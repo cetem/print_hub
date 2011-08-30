@@ -1,9 +1,19 @@
 class String
   def sanitized_for_text_query
-    or_regex = %r{\s+#{I18n.t('label.or')}\s+}i
-    and_regex = %r{\s+#{I18n.t('label.and')}\s+}i
-    replaced = self.strip.gsub(or_regex, '|').gsub(and_regex, '&')
+    sanitized = self.strip
+    replacements = [
+      [%r{\s+#{I18n.t('label.or')}\s+}i, '|'],
+      [%r{\s+#{I18n.t('label.and')}\s+}i, '&'],
+      [/[()]/, ''],
+      [/\s*([&|])\s*/, '\1'],
+      [/[|&!\\]+$/, ''],
+      [/^[|&!]+/, ''],
+      [/[|&!\\]+\W+/, ''],
+      [/\W+[|&!\\]+/, ''],
+    ]
     
-    replaced.gsub(/\s*([&|])\s*/, '\1').gsub(/[|&!\\]$/, '').gsub(/^[|&!]/, '')
+    replacements.each { |regex, replace| sanitized.gsub!(regex, replace) }
+    
+    sanitized
   end
 end
