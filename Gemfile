@@ -1,6 +1,6 @@
 source 'http://rubygems.org'
 
-gem 'rails', git: 'https://github.com/rails/rails.git', branch: '3-1-stable'
+gem 'rails', '3.1.0'
 
 gem 'pg'
 gem 'authlogic'
@@ -22,10 +22,8 @@ gem 'pdf-reader'
 
 group :assets do
   gem 'sass'
-  gem 'sass-rails', git: 'https://github.com/rails/sass-rails.git',
-    branch: '3-1-stable'
-  gem 'coffee-rails', git: 'https://github.com/rails/coffee-rails',
-    branch: '3-1-stable'
+  gem 'sass-rails'
+  gem 'coffee-rails'
   gem 'therubyracer', require: false
   gem 'uglifier'
 end

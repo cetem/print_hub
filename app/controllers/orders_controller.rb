@@ -1,6 +1,7 @@
 class OrdersController < ApplicationController
-  before_filter :require_customer_or_user, :load_scope, only: [:index, :show]
-  before_filter :require_customer, except: [:index, :show]
+  before_filter :require_customer_or_user, :load_scope,
+    only: [:index, :show, :destroy]
+  before_filter :require_customer, except: [:index, :show, :destroy]
   
   # GET /orders
   # GET /orders.json
@@ -137,7 +138,7 @@ class OrdersController < ApplicationController
   # DELETE /orders/1
   # DELETE /orders/1.xml
   def destroy
-    @order = current_customer.orders.find(params[:id])
+    @order = @order_scope.find(params[:id])
     
     respond_to do |format|
       if @order.cancelled! && @order.save
