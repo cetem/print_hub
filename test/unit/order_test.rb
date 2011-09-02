@@ -69,16 +69,44 @@ class OrderTest < ActiveSupport::TestCase
       )
     end
   end
+  
+  # Prueba la creación de un pedido
+  test 'can not create for current date' do
+    assert_no_difference ['Order.count', 'OrderLine.count'] do
+      @order = Order.create(
+        :scheduled_at => Time.now,
+        :customer => customers(:student_without_bonus),
+        :order_lines_attributes => {
+          :new_1 => {
+            :copies => 2,
+            :two_sided => false,
+            :document => documents(:math_book)
+          }
+        }
+      )
+    end
+    
+    assert_equal 1, @order.errors.size
+    assert_equal [
+      error_message_from_model(
+        @order, :scheduled_at, :after,
+        :restriction => 12.hours.from_now.strftime('%d/%m/%Y %H:%M:%S')
+      )
+    ], @order.errors[:scheduled_at]
+  end
 
   # Prueba de actualización de un pedido
   test 'update' do
     assert_no_difference 'Order.count' do
       assert @order.update_attributes(
-        :scheduled_at => 5.days.from_now.at_midnight
+        :scheduled_at => 5.days.from_now.at_midnight,
+        :notes => 'Updated notes'
       ), @order.errors.full_messages.join('; ')
     end
 
-    assert_equal 5.days.from_now.at_midnight, @order.reload.scheduled_at
+    # This attribute can not be altered
+    assert_not_equal 5.days.from_now.at_midnight, @order.reload.scheduled_at
+    assert_equal 'Updated notes', @order.notes
   end
   
   # Prueba de actualización de un pedido

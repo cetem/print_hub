@@ -119,9 +119,10 @@ module ApplicationHelper
     )
   end
   
-  def calendar_text_field(form, attribute, time = false, value = nil)
-    value ||= form.object.send(attribute)
-    options = {:class => :calendar}
+  def calendar_text_field(form, attribute, user_options = {})
+    value = user_options.delete(:value) || form.object.send(attribute)
+    time = user_options.delete(:time)
+    options = { :class => :calendar }.merge(user_options)
     
     options[:value] = l(value, :format => time ? :minimal : :default) if value
     options[:'data-time'] = true if time

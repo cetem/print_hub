@@ -14,12 +14,12 @@
         <tr>
           <td>
             <div class="field">
-              <%= calendar_text_field f, :from, true, from_date %>
+              <%= calendar_text_field f, :from, :time => true, :value => from_date %>
             </div>
           </td>
           <td>
             <div class="field">
-              <%= calendar_text_field f, :to, true, to_date %>
+              <%= calendar_text_field f, :to, :time => true, :value => to_date %>
             </div>
           </td>
           <td>

@@ -142,7 +142,8 @@ class OrdersController < ApplicationController
     
     respond_to do |format|
       if @order.cancelled! && @order.save
-        format.html { redirect_to @order, notice: t('view.orders.correctly_cancelled') }
+        path = current_customer ? @order : review_order_path(@order, type: params[:type])
+        format.html { redirect_to path, notice: t('view.orders.correctly_cancelled') }
         format.xml  { head :ok }
       else
         format.html { render action: 'show' }

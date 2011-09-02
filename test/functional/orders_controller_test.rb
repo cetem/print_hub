@@ -117,20 +117,34 @@ class OrdersControllerTest < ActionController::TestCase
   test 'should update order' do
     CustomerSession.create(customers(:student_without_bonus))
     put :update, id: @order.to_param, order: {
-      scheduled_at: I18n.l(5.days.from_now.at_midnight, format: :minimal)
+      scheduled_at: I18n.l(5.days.from_now.at_midnight, format: :minimal),
+      notes: 'Updated notes'
     }
     
     assert_redirected_to order_url(assigns(:order))
-    assert_equal 5.days.from_now.at_midnight, @order.reload.scheduled_at
+    # This attribute can not be altered
+    assert_not_equal 5.days.from_now.at_midnight, @order.reload.scheduled_at
+    assert_equal 'Updated notes', @order.notes
   end
   
-  test 'should cancel order' do
+  test 'should cancel order as customer' do
     CustomerSession.create(customers(:student_without_bonus))
     assert_no_difference 'Order.count' do
       delete :destroy, id: @order.to_param
     end
     
     assert_redirected_to order_url(assigns(:order))
+    assert @order.reload.cancelled?
+  end
+  
+  test 'should cancel order as user' do
+    @request.host = 'localhost'
+    UserSession.create(users(:administrator))
+    assert_no_difference 'Order.count' do
+      delete :destroy, id: @order.to_param, type: 'all'
+    end
+    
+    assert_redirected_to review_order_url(assigns(:order), type: 'all')
     assert @order.reload.cancelled?
   end
 end

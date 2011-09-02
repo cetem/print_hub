@@ -16,6 +16,8 @@ class Order < ActiveRecord::Base
   attr_accessor :include_documents
   # Atributos protegidos
   attr_protected :status, :print
+  # Atributos de sólo lectura
+  attr_readonly :scheduled_at
   
   # Scopes
   scope :pending, where(:status => STATUS[:pending])
@@ -28,8 +30,9 @@ class Order < ActiveRecord::Base
   validates :scheduled_at, :customer, :presence => true
   validates :status, :inclusion => { :in => STATUS.values }, :allow_nil => true,
     :allow_blank => true
+  validates_datetime :scheduled_at, :allow_nil => true, :allow_blank => true
   validates_datetime :scheduled_at, :allow_nil => true, :allow_blank => true,
-    :after => lambda { 12.hours.from_now }
+    :after => lambda { 12.hours.from_now }, :on => :create
   validate :must_have_one_item
   
   # Relaciones
