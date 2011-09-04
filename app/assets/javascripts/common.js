@@ -93,9 +93,9 @@ var EventHandler = {
   removeItem: function(e) {
     var target = e.parents(e.data('target'));
 
-    Helper.remove(target);
-
-    target.trigger('item:removed', target);
+    Helper.remove(target, function() {
+      target.trigger('item:removed', target);
+    });
   },
   
   toggleMenu: function(e) {

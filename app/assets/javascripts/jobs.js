@@ -1,10 +1,10 @@
 var Jobs = {
-  listenRangeChanges: function(parent) {
+  listenRangeChanges: function() {
     $('input[name$="[range]"]').live('keyup', function() {
       var element = $(this);
       var validRanges = true, maxPage = undefined, rangePages = 0;
       var pages = parseInt(
-        element.parents(parent).find('input[name$="[pages]"]').val()
+        element.parents('.nested_item').find('input[name$="[pages]"]').val()
       );
       var ranges = element.val().trim().split(/\s*,\s*/).sort(function(r1, r2) {
         var r1Value = parseInt(r1.match(/^\d+/)) || 0;
@@ -13,7 +13,7 @@ var Jobs = {
         return r1Value - r2Value;
       });
 
-      jQuery.each(ranges, function(i, r) {
+      $.each(ranges, function(i, r) {
         var data = r.match(/^(\d+)(-(\d+))?$/);
         var n1 = data ? parseInt(data[1]) : undefined;
         var n2 = data ? parseInt(data[3]) : undefined;
@@ -22,7 +22,7 @@ var Jobs = {
         validRanges = validRanges && (!maxPage || maxPage < n1);
 
         maxPage = n2 || n1;
-        rangePages += n2 ? n2 + 1 - n1 : 1
+        rangePages += n2 ? n2 + 1 - n1 : 1;
       });
 
       if((/^\s*$/.test(element.val()) || validRanges) &&
@@ -40,18 +40,24 @@ var Jobs = {
     });
   },
   
-  listenTwoSidedChanges: function(parent) {
+  listenTwoSidedChanges: function() {
     $('input[name$="[two_sided]"]').live('change', function() {
-      var element = $(this);
-      var priceElement = element.parents(parent).find(
-        'input[name$="[price_per_copy]"]'
+      Jobs.updatePricePerCopy();
+    });
+  },
+  
+  updatePricePerCopy: function() {
+    $('input[name$="[price_per_copy]"]').each(function(i, ppc) {
+      var twoSidedElement = $(ppc).parents('.nested_item:first').find(
+        'input[name$="[two_sided]"].price_modifier'
       );
+      var setting = twoSidedElement.is(':checked') ?
+        $('#total_pages').data('pricePerTwoSided') :
+        $('#total_pages').data('pricePerOneSided');
 
-      if(element.is(':checked')) {
-        priceElement.val(element.data('pricePerTwoSided')).trigger('change');
-      } else {
-        priceElement.val(element.data('pricePerOneSided')).trigger('change');
-      }
+      $(ppc).val(
+        PriceChooser.choose(setting, parseInt($('#total_pages').val()))
+      );
     });
   }
 };

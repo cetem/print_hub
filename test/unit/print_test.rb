@@ -487,6 +487,15 @@ class PrintTest < ActiveSupport::TestCase
     assert @print.price > 0
     assert_equal @print.price, price
   end
+  
+  test 'total pages' do
+    total_pages = @print.print_jobs.inject(0) do |t, j|
+      t + j.copies * j.range_pages
+    end
+    
+    assert total_pages > 0
+    assert_equal total_pages, @print.total_pages
+  end
 
   test 'print all jobs' do
     cups_count = 'Cups.all_jobs(@printer).keys.sort.last'

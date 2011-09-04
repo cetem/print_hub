@@ -6,23 +6,21 @@
       <%= f.hidden_field :document_id %>
     </div>
     <div class="nested_item_field">
-      <%= f.text_field :copies, :maxlength => 5, :class => :price_modifier,
-        :autocomplete => :off %>
+      <%= f.text_field :copies, :maxlength => 5,
+        :class => 'price_modifier page_modifier', :autocomplete => :off %>
     </div>
     <div class="nested_item_field">
       <%= text_field_tag "document[#{f.object.document_id}][pages]",
         f.object.document.try(:pages),
         :id => "order_line_pages_#{f.object.document_id}",
-        :class => :price_modifier, :disabled => true %>
+        :class => 'price_modifier page_modifier', :disabled => true %>
     </div>
     <div class="nested_item_field">
       <%= f.text_field :price_per_copy, :disabled => true,
         :class => :price_modifier, :autocomplete => :off %>
     </div>
     <div class="nested_item_field">
-      <%= f.check_box :two_sided, :class => :price_modifier,
-        :'data-price-per-one-sided' => f.object.price_per_one_sided_copy,
-        :'data-price-per-two-sided' => f.object.price_per_two_sided_copy %>
+      <%= f.check_box :two_sided, :class => :price_modifier %>
     </div>
     <div class="nested_item_actions">
       <span class="money"><%= number_to_currency f.object.price %></span>

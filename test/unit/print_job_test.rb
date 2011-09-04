@@ -50,7 +50,7 @@ class PrintJobTest < ActiveSupport::TestCase
     assert @print_job.reload.two_sided == false
     assert_equal document.pages * 2, @print_job.printed_pages
     # El precio por copia no se puede alterar
-    assert_equal Setting.price_per_one_sided_copy.to_s,
+    assert_equal '%.2f' % @print_job.price_per_one_sided_copy,
       '%.2f' % @print_job.price_per_copy
   end
 
@@ -71,7 +71,7 @@ class PrintJobTest < ActiveSupport::TestCase
     assert_equal '5.0', @print_job.price.to_s
     assert_equal 50, @print_job.printed_pages
     # El precio por copia no se puede alterar
-    assert_equal Setting.price_per_one_sided_copy.to_s,
+    assert_equal '%.2f' % @print_job.price_per_one_sided_copy,
       '%.2f' % @print_job.price_per_copy
   end
 

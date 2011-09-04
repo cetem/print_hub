@@ -3,9 +3,9 @@ class Order < ActiveRecord::Base
   
   # Constantes
   STATUS = {
-    :pending => 'P',
-    :completed => 'C',
-    :cancelled => 'X'
+    pending: 'P',
+    completed: 'C',
+    cancelled: 'X'
   }
   
   # Callbacks
@@ -18,26 +18,26 @@ class Order < ActiveRecord::Base
   attr_protected :status, :print
   
   # Scopes
-  scope :pending, where(:status => STATUS[:pending])
-  scope :completed, where(:status => STATUS[:completed])
-  scope :cancelled, where(:status => STATUS[:cancelled])
-  scope :for_print, where(:print => true)
+  scope :pending, where(status: STATUS[:pending])
+  scope :completed, where(status: STATUS[:completed])
+  scope :cancelled, where(status: STATUS[:cancelled])
+  scope :for_print, where(print: true)
   scope :scheduled_soon, where('scheduled_at <= ?', 6.hour.from_now)
   
   # Restricciones
-  validates :scheduled_at, :customer, :presence => true
-  validates :status, :inclusion => { :in => STATUS.values }, :allow_nil => true,
-    :allow_blank => true
-  validates_datetime :scheduled_at, :allow_nil => true, :allow_blank => true,
-    :after => lambda { 12.hours.from_now }
+  validates :scheduled_at, :customer, presence: true
+  validates :status, inclusion: { in: STATUS.values }, allow_nil: true,
+    allow_blank: true
+  validates_datetime :scheduled_at, allow_nil: true, allow_blank: true,
+    after: lambda { 12.hours.from_now }
   validate :must_have_one_item
   
   # Relaciones
   belongs_to :customer
-  has_many :order_lines, :inverse_of => :order, :dependent => :destroy
+  has_many :order_lines, inverse_of: :order, dependent: :destroy
   
-  accepts_nested_attributes_for :order_lines, :allow_destroy => true,
-    :reject_if => lambda { |attributes| attributes['copies'].to_i <= 0 }
+  accepts_nested_attributes_for :order_lines, allow_destroy: true,
+    reject_if: lambda { |attributes| attributes['copies'].to_i <= 0 }
   
   def initialize(attributes = nil, options = {})
     super(attributes, options)
@@ -47,11 +47,17 @@ class Order < ActiveRecord::Base
     
     if self.include_documents.present?
       self.include_documents.each do |document_id|
-        self.order_lines.build(:document_id => document_id)
+        self.order_lines.build(document_id: document_id)
       end
     end
     
     self.print = !!self.customer.try(:can_afford?, self.price)
+    
+    self.order_lines.each do |ol|
+      ol.price_per_copy = PriceChooser.choose(
+        one_sided: !ol.two_sided, copies: self.total_pages
+      )
+    end
   end
   
   def avoid_destruction
@@ -87,7 +93,13 @@ class Order < ActiveRecord::Base
   end
   
   def price
-    self.order_lines.to_a.sum(&:price)
+    self.order_lines.reject(&:marked_for_destruction?).to_a.sum(&:price)
+  end
+  
+  def total_pages
+    self.order_lines.reject(&:marked_for_destruction?).sum do |ol|
+      ol.document.try(:pages) || 0
+    end
   end
   
   def self.pending_for_print_count

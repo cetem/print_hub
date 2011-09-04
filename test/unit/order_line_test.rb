@@ -39,7 +39,10 @@ class OrderLineTest < ActiveSupport::TestCase
     end
 
     # El precio por copia no se puede alterar
-    assert_equal Setting.price_per_one_sided_copy.to_s,
+    price = PriceChooser.choose(
+      one_sided: true, copies: documents(:math_book).pages * 2
+    )
+    assert_equal '%.2f' % price,
       '%.2f' % @order_line.reload.price_per_copy
   end
 

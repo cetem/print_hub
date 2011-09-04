@@ -13,5 +13,6 @@
 //= require jquery.filestyle
 //= require common
 //= require jobs
+//= require price-chooser
 //= require catalog
 //= require feedbacks

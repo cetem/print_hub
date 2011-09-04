@@ -60,4 +60,40 @@ class SettingTest < ActiveSupport::TestCase
     assert_equal [error_message_from_model(@setting, :value, :blank)],
       @setting.errors[:value]
   end
+  
+  test 'price parser and chooser' do
+    Setting.price_per_one_sided_copy = '.10; >= 100 @ .08; >= 1000 @ .06'
+    
+    assert_equal '0.10', '%.2f' % PriceChooser.choose(one_sided: true)
+    
+    assert_equal(
+      '0.10',
+      '%.2f' % PriceChooser.choose(one_sided: true, copies: 2)
+    )
+    
+    assert_equal(
+      '0.08',
+      '%.2f' % PriceChooser.choose(one_sided: true, copies: 100)
+    )
+    
+    assert_equal(
+      '0.08',
+      '%.2f' % PriceChooser.choose(one_sided: true, copies: 101)
+    )
+    
+    assert_equal(
+      '0.08',
+      '%.2f' % PriceChooser.choose(one_sided: true, copies: 999)
+    )
+    
+    assert_equal(
+      '0.06',
+      '%.2f' % PriceChooser.choose(one_sided: true, copies: 1000)
+    )
+    
+    assert_equal(
+      '0.06',
+      '%.2f' % PriceChooser.choose(one_sided: true, copies: 10000)
+    )
+  end
 end

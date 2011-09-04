@@ -2,16 +2,16 @@ class Print < ActiveRecord::Base
   has_paper_trail
   
   # Callbacks
-  before_save :mark_order_as_completed, :on => :create
+  before_save :mark_order_as_completed, on: :create
   before_save :remove_unnecessary_payments, :update_customer_credit,
     :mark_as_pending, :print_all_jobs
   before_destroy :can_be_destroyed?
 
   # Scopes
-  scope :pending, where(:pending_payment => true)
+  scope :pending, where(pending_payment: true)
   scope :scheduled, where(
     '(printer = :blank OR printer IS NULL) AND scheduled_at IS NOT NULL',
-    :blank => ''
+    blank: ''
   )
 
   # Atributos no persistentes
@@ -23,13 +23,13 @@ class Print < ActiveRecord::Base
   attr_protected :pending_payment
 
   # Restricciones
-  validates :printer, :presence => true, :if => lambda { |p|
+  validates :printer, presence: true, if: lambda { |p|
     p.scheduled_at.blank? && !p.print_jobs.reject(&:marked_for_destruction?).empty?
   }
-  validates :printer, :length => { :maximum => 255 }, :allow_nil => true,
-    :allow_blank => true
-  validates_datetime :scheduled_at, :allow_nil => true, :allow_blank => true,
-    :after => lambda { Time.now }
+  validates :printer, length: { maximum: 255 }, allow_nil: true,
+    allow_blank: true
+  validates_datetime :scheduled_at, allow_nil: true, allow_blank: true,
+    after: lambda { Time.now }
   validates_each :printer do |record, attr, value|
     printer_changed = !record.printer_was.blank? && record.printer_was != value
     print_and_schedule_new_record = record.new_record? &&
@@ -43,19 +43,19 @@ class Print < ActiveRecord::Base
 
   # Relaciones
   belongs_to :user
-  belongs_to :customer, :autosave => true
-  belongs_to :order, :autosave => true
-  has_many :payments, :as => :payable
-  has_many :print_jobs
+  belongs_to :customer, autosave: true
+  belongs_to :order, autosave: true
+  has_many :payments, as: :payable
+  has_many :print_jobs, inverse_of: :print
   has_many :article_lines
-  autocomplete_for :customer, :name, :name => :auto_customer
+  autocomplete_for :customer, :name, name: :auto_customer
 
-  accepts_nested_attributes_for :print_jobs, :allow_destroy => false,
-    :reject_if => :reject_print_job_attributes?
-  accepts_nested_attributes_for :article_lines, :allow_destroy => false,
-    :reject_if => proc { |attributes| attributes['article_id'].blank? }
-  accepts_nested_attributes_for :payments, :allow_destroy => false,
-    :reject_if => proc { |attributes| attributes['amount'].to_f <= 0 }
+  accepts_nested_attributes_for :print_jobs, allow_destroy: false,
+    reject_if: :reject_print_job_attributes?
+  accepts_nested_attributes_for :article_lines, allow_destroy: false,
+    reject_if: proc { |attributes| attributes['article_id'].blank? }
+  accepts_nested_attributes_for :payments, allow_destroy: false,
+    reject_if: proc { |attributes| attributes['amount'].to_f <= 0 }
 
   def initialize(attributes = nil, options = {})
     super(attributes, options)
@@ -71,8 +71,14 @@ class Print < ActiveRecord::Base
       end
     elsif self.include_documents.present?
       self.include_documents.each do |document_id|
-        self.print_jobs.build(:document_id => document_id)
+        self.print_jobs.build(document_id: document_id)
       end
+    end
+    
+    self.print_jobs.each do |pj|
+      pj.price_per_copy = PriceChooser.choose(
+        one_sided: !pj.two_sided, copies: self.total_pages
+      )
     end
 
     self.payment(:cash)
@@ -85,7 +91,7 @@ class Print < ActiveRecord::Base
 
   def payment(type)
     self.payments.detect(&:"#{type}?") ||
-      self.payments.build(:paid_with => Payment::PAID_WITH[type])
+      self.payments.build(paid_with: Payment::PAID_WITH[type])
   end
 
   def avoid_printing?
@@ -117,6 +123,12 @@ class Print < ActiveRecord::Base
       self.article_lines.reject(&:marked_for_destruction?).to_a.sum(&:price)
   end
   
+  def total_pages
+    self.print_jobs.reject(&:marked_for_destruction?).sum do |pj|
+      pj.copies * pj.range_pages
+    end
+  end
+  
   def reject_print_job_attributes?(attributes)
     has_document = !attributes['document_id'].blank? ||
       !attributes['document'].blank?
@@ -135,8 +147,8 @@ class Print < ActiveRecord::Base
 
   def must_have_valid_payments
     unless (payment = self.payments.to_a.sum(&:amount)) == self.price
-      self.errors.add :payments, :invalid, :price => '%.3f' % self.price,
-        :payment => '%.3f' % payment
+      self.errors.add :payments, :invalid, price: '%.3f' % self.price,
+        payment: '%.3f' % payment
     end
   end
 
@@ -157,7 +169,7 @@ class Print < ActiveRecord::Base
       remaining = self.customer.use_credit(
         credit.amount,
         self.credit_password,
-        :avoid_password_check => self.order.present?
+        avoid_password_check: self.order.present?
       )
 
       if remaining == false

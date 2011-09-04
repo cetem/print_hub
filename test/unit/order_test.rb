@@ -148,6 +148,15 @@ class OrderTest < ActiveSupport::TestCase
     assert_equal @order.price, price
   end
   
+  test 'total pages' do
+    total_pages = @order.order_lines.inject(0) do |t, ol|
+      t + ol.document.pages
+    end
+    
+    assert total_pages > 0
+    assert_equal total_pages, @order.total_pages
+  end
+  
   test 'status methods' do
     assert_equal Order::STATUS[:pending], @order.status
     assert @order.pending?

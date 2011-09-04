@@ -1,0 +1,27 @@
+body {
+  color: #000;
+  background: #fff;
+  font-family: georgia, serif;
+  font-size: 12px;
+}
+
+nav {
+  display: none;
+}
+
+table {
+  border: 2px solid #333;
+
+  th {
+    padding: .25em 1em;
+    text-align: left;
+  }
+
+  td {
+    padding: .1em 1em;
+  }
+}
+
+td, th, h1, h2, h3, h4, h5, h6 {
+  font-family: helvetica, sans-serif;
+}

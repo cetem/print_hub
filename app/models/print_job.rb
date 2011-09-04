@@ -14,20 +14,20 @@ class PrintJob < ActiveRecord::Base
     :two_sided, :print_id
 
   # Restricciones
-  validates :copies, :pages, :price_per_copy, :presence => true
+  validates :copies, :pages, :price_per_copy, presence: true
   validates :copies, :pages,
-    :numericality => {:only_integer => true, :greater_than => 0},
-    :allow_nil => true, :allow_blank => true
-  validates :price_per_copy, :numericality => {:greater_than_or_equal_to => 0},
-    :allow_nil => true, :allow_blank => true
-  validates :range, :job_id, :length => { :maximum => 255 },
-    :allow_nil => true, :allow_blank => true
-  validates :range, :page_range => true
+    numericality: { only_integer: true, greater_than: 0 },
+    allow_nil: true, allow_blank: true
+  validates :price_per_copy, numericality: { greater_than_or_equal_to: 0 },
+    allow_nil: true, allow_blank: true
+  validates :range, :job_id, length: { maximum: 255 },
+    allow_nil: true, allow_blank: true
+  validates :range, page_range: true
 
   # Relaciones
-  belongs_to :print
+  belongs_to :print, inverse_of: :print_jobs
   belongs_to :document
-  autocomplete_for :document, :name, :name => :auto_document
+  autocomplete_for :document, :name, name: :auto_document
 
   def initialize(attributes = nil, options = {})
     super(attributes, options)
@@ -35,8 +35,9 @@ class PrintJob < ActiveRecord::Base
     self.two_sided = true if self.two_sided.nil?
     self.copies ||= 1
     self.pages = self.document.pages if self.document
-    self.price_per_copy = self.two_sided ?
-      Setting.price_per_two_sided_copy : Setting.price_per_one_sided_copy
+    self.price_per_copy ||= PriceChooser.choose(
+      one_sided: !self.two_sided, copies: self.print.try(:total_pages)
+    )
   end
   
   def put_printed_pages
@@ -69,7 +70,7 @@ class PrintJob < ActiveRecord::Base
     pages = 0
 
     if self.range.blank?
-      pages = self.pages
+      pages = self.pages || 0
     else
       self.extract_ranges.each do |r|
         pages += r.kind_of?(Array) ? r[1].next - r[0] : 1
@@ -82,17 +83,17 @@ class PrintJob < ActiveRecord::Base
   def price
     r_pages = self.range_pages || 0
     even_range = r_pages - (r_pages % 2)
-    rest = (r_pages % 2) * BigDecimal.new(price_per_one_sided_copy)
+    rest = (r_pages % 2) * price_per_one_sided_copy
 
     (self.copies || 0) * ((self.price_per_copy || 0) * even_range + rest)
   end
 
   def price_per_one_sided_copy
-    Setting.price_per_one_sided_copy
+    PriceChooser.choose one_sided: true, copies: self.print.try(:total_pages)
   end
 
   def price_per_two_sided_copy
-    Setting.price_per_two_sided_copy
+    PriceChooser.choose one_sided: false, copies: self.print.try(:total_pages)
   end
 
   def send_to_print(printer, user = nil)
