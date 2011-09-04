@@ -1,16 +1,15 @@
-<% current_controller = controller.controller_name.to_sym %>
-<% cache "customer_menu_#{locale}_#{current_controller}" do %>
-  <nav id="menu_links">
-    <ul>
-      <%= content_tag(:li, link_to(t('customer_menu.catalog'), catalog_path),
-        :class => (:selected if current_controller == :catalog)) %>
-      <%= content_tag(:li, link_to(t('customer_menu.orders'), orders_path),
-        :class => (:selected if current_controller == :orders)) %>
-      <%= content_tag(:li, link_to(t('view.catalog.new_order'), new_order_path),
-        :class => 'strong') %>
-    </ul>
-  </nav>
-<% end %>
+<% current_controller = controller_name.to_sym %>
+<% current_action = action_name.to_sym %>
+<nav id="menu_links">
+  <ul>
+    <%= content_tag(:li, link_to(t('customer_menu.catalog'), catalog_path),
+      :class => (:selected if current_controller == :catalog)) %>
+    <%= content_tag(:li, link_to(t('customer_menu.orders'), orders_path),
+      :class => (:selected if current_controller == :orders && [:new, :create].exclude?(current_action))) %>
+    <%= content_tag(:li, link_to(t('view.catalog.new_order'), new_order_path),
+      :class => "strong #{(:selected if current_controller == :orders && [:new, :create].include?(current_action))}") %>
+  </ul>
+</nav>
 <nav id="user_actions">
   <div id="user" data-credit="<%= current_customer.free_credit_minus_pendings %>">
     <%= current_customer.email %>

@@ -3,7 +3,8 @@
 
   <div class="field">
     <%= f.label :scheduled_at %>
-    <%= calendar_text_field f, :scheduled_at, true %>
+    <%= calendar_text_field f, :scheduled_at, :time => true,
+      :disabled => !@order.new_record? %>
   </div>
   
   <section class="nested_items">
