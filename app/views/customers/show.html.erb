@@ -65,7 +65,7 @@
         <tr>
           <th><%= Deposit.human_attribute_name :amount %></th>
           <th><%= Deposit.human_attribute_name :remaining %></th>
-          <th><%= Deposit.human_attribute_name :valid_until %></th>
+          <th><%= Deposit.human_attribute_name :created_at %></th>
         </tr>
       </thead>
       <tbody>
@@ -73,7 +73,7 @@
           <tr>
             <td><%= number_to_currency deposit.amount %></td>
             <td><%= number_to_currency deposit.remaining %></td>
-            <td><%= l deposit.valid_until if deposit.valid_until %></td>
+            <td><%= l deposit.created_at, :format => :minimal if deposit.created_at %></td>
           </tr>
         <% end %>
       </tbody>

@@ -562,6 +562,7 @@
       correctly_activated: 'Tu cuenta ahora está activa, ingresá y hacé tu pedido'
       can_not_be_activated: 'La cuenta no se puede activar, es posible que haya expirado, registrate nuevamente'
       stale_object_error: 'El cliente no pudo ser actualizado, intente nuevamente.'
+      show_bonuses: 'Ver bonificaciones'
       add_bonus: 'Agregar bonificación'
       add_bonus_title: 'Agregar bonificación (CTRL + ALT + B)'
       add_deposit: 'Agregar depósito'
