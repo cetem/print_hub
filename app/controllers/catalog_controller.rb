@@ -1,5 +1,6 @@
 class CatalogController < ApplicationController
   before_filter :require_customer, :load_documents_to_order, :load_tag
+  helper_method :sort_column, :sort_direction
   
   layout lambda { |controller| controller.request.xhr? ? false : 'application' }
   
@@ -13,8 +14,8 @@ class CatalogController < ApplicationController
       
       unless @query_terms.empty?
         parameters = {
-          :and_term => @query_terms.join(' & '),
-          :wilcard_term => "%#{@query_terms.join('%')}%".downcase
+          and_term: @query_terms.join(' & '),
+          wilcard_term: "%#{@query_terms.join('%')}%".downcase
         }
 
         if DB_ADAPTER == 'PostgreSQL'
@@ -41,15 +42,14 @@ class CatalogController < ApplicationController
         )
       end
       
-      @documents = @documents.order("#{Document.table_name}.code ASC").paginate(
-        :page => params[:page],
-        :per_page => (APP_LINES_PER_PAGE / 2).round
-      )
+      @documents = @documents.order(
+        "#{Document.table_name}.#{sort_column} #{sort_direction.upcase}"
+      ).paginate(page: params[:page], per_page: (APP_LINES_PER_PAGE / 2).round)
     end
 
     respond_to do |format|
       format.html # index.html.erb
-      format.xml  { render :xml => @documents }
+      format.xml  { render xml: @documents }
     end
   end
 
@@ -59,7 +59,7 @@ class CatalogController < ApplicationController
 
     respond_to do |format|
       format.html # show.html.erb
-      format.xml  { render :xml => @document }
+      format.xml  { render xml: @document }
     end
   end
   
@@ -79,9 +79,9 @@ class CatalogController < ApplicationController
       response.headers['Last-Modified'] = File.mtime(file).httpdate
       response.headers['Cache-Control'] = 'private, no-store'
 
-      send_file file, :type => (mime_type || 'application/octet-stream')
+      send_file file, type: (mime_type || 'application/octet-stream')
     else
-      redirect_to catalog_url, :notice => t(:'view.documents.non_existent')
+      redirect_to catalog_url, notice: t(:'view.documents.non_existent')
     end
   end
   
@@ -116,5 +116,13 @@ class CatalogController < ApplicationController
   
   def document_scope
     @tag ? @tag.documents.publicly_visible : Document.publicly_visible
+  end
+  
+  def sort_column
+    %w[code name].include?(params[:sort]) ? params[:sort] : 'code'
+  end
+  
+  def sort_direction
+    %w[asc desc].include?(params[:direction]) ? params[:direction] : 'asc'
   end
 end

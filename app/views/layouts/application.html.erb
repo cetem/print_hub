@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html>
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
@@ -19,19 +19,17 @@
   <div id="loading_caption" style="display: none;">
     <%= t('messages.loading') %>
   </div>
+  
   <% if current_user %>
-    <div id="main_menu">
-      <%= render 'shared/menu' %>
-    </div>
+    <div id="main_menu"><%= render 'shared/menu' %></div>
   <% elsif current_customer %>
-    <div id="main_menu">
-      <%= render 'shared/customer_menu' %>
-    </div>
+    <div id="main_menu"><%= render 'shared/customer_menu' %></div>
   <% end %>
+  
   <div id="main_container">
-    <%= yield %>
-    <div style="clear: both;"></div>
+    <%= yield %><div style="clear: both;"></div>
   </div>
+  
   <%= render 'shared/notice' if flash.notice %>
   <%= render 'shared/alert' if flash.alert %>
 </body>

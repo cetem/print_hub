@@ -1,9 +1,9 @@
 <table class="list">
   <thead>
     <tr>
-      <th><%= Document.human_attribute_name :code %></th>
-      <th><%= Document.model_name.human %></th>
-      <th><%= t(:'menu.tags') %></th>
+      <th><%= sortable 'code', Document.human_attribute_name(:code) %></th>
+      <th><%= sortable 'name', Document.model_name.human %></th>
+      <th><%= t('menu.tags') %></th>
       <th><%= Document.human_attribute_name :pages %></th>
       <th></th>
     </tr>
