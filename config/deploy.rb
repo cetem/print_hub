@@ -14,15 +14,11 @@ set :use_sudo, false
 set :scm, :git
 set :branch, 'master'
 
-role :web, 'fotocopia.frm.utn.edu.ar' # Your HTTP server, Apache/etc
-role :app, 'fotocopia.frm.utn.edu.ar' # This may be the same as your `Web` server
-role :db,  'fotocopia.frm.utn.edu.ar', :primary => true # This is where Rails migrations will run
+role :web, 'fotocopia.frm.utn.edu.ar'
+role :app, 'fotocopia.frm.utn.edu.ar'
+role :db,  'fotocopia.frm.utn.edu.ar', primary: true
 
-# If you are using Passenger mod_rails uncomment this:
-# if you're still using the script/reapear helper you will need
-# these http://github.com/rails/irs_process_scripts
-
-after 'deploy:symlink', 'deploy:create_shared_symlinks'
+before 'deploy:finalize_update', 'deploy:create_shared_symlinks'
 
 namespace :deploy do
   task :start do
@@ -31,12 +27,12 @@ namespace :deploy do
   task :stop do
   end
 
-  task :restart, :roles => :app, :except => { :no_release => true } do
+  task :restart, roles: :app, except: { no_release: true } do
     run "touch #{File.join(current_path, 'tmp', 'restart.txt')}"
   end
 
   desc 'Creates the symlinks for the shared folders'
-  task :create_shared_symlinks do
+  task :create_shared_symlinks, roles: :app, except: { no_release: true } do
     shared_paths = [['private'], ['config', 'app_config.yml']]
 
     shared_paths.each do |path|

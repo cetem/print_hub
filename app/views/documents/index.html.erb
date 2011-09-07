@@ -7,8 +7,8 @@
 <table class="list">
   <thead>
     <tr>
-      <th><%= Document.human_attribute_name :code %></th>
-      <th><%= Document.human_attribute_name :name %></th>
+      <th><%= sortable 'code', Document.human_attribute_name(:code) %></th>
+      <th><%= sortable 'name', Document.human_attribute_name(:name) %></th>
       <th><%= Document.human_attribute_name :pages %></th>
       <th colspan="4"></th>
     </tr>

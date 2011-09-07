@@ -1,13 +1,14 @@
 class DocumentsController < ApplicationController
   before_filter :require_user, :load_documents_for_printing
+  helper_method :sort_column, :sort_direction
   
   layout lambda { |controller| controller.request.xhr? ? false : 'application' }
 
-  autocomplete_for(:tag, :name, :limit => 10, :order => 'name ASC',
-    :query => DB_ADAPTER == 'PostgreSQL' ?
+  autocomplete_for(:tag, :name, limit: 10, order: 'name ASC',
+    query: DB_ADAPTER == 'PostgreSQL' ?
       "to_tsvector('spanish', %{field}) @@ plainto_tsquery('spanish', %{query})" : nil,
-    :mask => DB_ADAPTER == 'PostgreSQL' ? '%{value}' : nil) do |tags|
-      render :json => tags
+    mask: DB_ADAPTER == 'PostgreSQL' ? '%{value}' : nil) do |tags|
+      render json: tags
   end
 
   # GET /documents
@@ -29,8 +30,8 @@ class DocumentsController < ApplicationController
 
       unless @query_terms.empty?
         parameters = {
-          :and_term => @query_terms.join(' & '),
-          :wilcard_term => "%#{@query_terms.join('%')}%".downcase
+          and_term: @query_terms.join(' & '),
+          wilcard_term: "%#{@query_terms.join('%')}%".downcase
         }
 
         if DB_ADAPTER == 'PostgreSQL'
@@ -58,14 +59,13 @@ class DocumentsController < ApplicationController
       end
     end
 
-    @documents = @documents.order("#{Document.table_name}.code ASC").paginate(
-      :page => params[:page],
-      :per_page => APP_LINES_PER_PAGE
-    )
+    @documents = @documents.order(
+      "#{Document.table_name}.#{sort_column} #{sort_direction.upcase}"
+    ).paginate(page: params[:page], per_page: APP_LINES_PER_PAGE)
 
     respond_to do |format|
       format.html # index.html.erb
-      format.xml  { render :xml => @documents }
+      format.xml  { render xml: @documents }
     end
   end
 
@@ -77,7 +77,7 @@ class DocumentsController < ApplicationController
 
     respond_to do |format|
       format.html # show.html.erb
-      format.xml  { render :xml => @document }
+      format.xml  { render xml: @document }
     end
   end
 
@@ -89,7 +89,7 @@ class DocumentsController < ApplicationController
 
     respond_to do |format|
       format.html # new.html.erb
-      format.xml  { render :xml => @document }
+      format.xml  { render xml: @document }
     end
   end
 
@@ -108,11 +108,11 @@ class DocumentsController < ApplicationController
 
     respond_to do |format|
       if @document.save
-        format.html { redirect_to(documents_url, :notice => t(:'view.documents.correctly_created')) }
-        format.xml  { render :xml => @document, :status => :created, :location => @document }
+        format.html { redirect_to(documents_url, notice: t(:'view.documents.correctly_created')) }
+        format.xml  { render xml: @document, status: :created, location: @document }
       else
-        format.html { render :action => :new }
-        format.xml  { render :xml => @document.errors, :status => :unprocessable_entity }
+        format.html { render action: :new }
+        format.xml  { render xml: @document.errors, status: :unprocessable_entity }
       end
     end
   end
@@ -126,11 +126,11 @@ class DocumentsController < ApplicationController
 
     respond_to do |format|
       if @document.update_attributes(params[:document])
-        format.html { redirect_to(documents_url, :notice => t(:'view.documents.correctly_updated')) }
+        format.html { redirect_to(documents_url, notice: t(:'view.documents.correctly_updated')) }
         format.xml  { head :ok }
       else
-        format.html { render :action => :edit }
-        format.xml  { render :xml => @document.errors, :status => :unprocessable_entity }
+        format.html { render action: :edit }
+        format.xml  { render xml: @document.errors, status: :unprocessable_entity }
       end
     end
 
@@ -165,9 +165,9 @@ class DocumentsController < ApplicationController
       response.headers['Last-Modified'] = File.mtime(file).httpdate
       response.headers['Cache-Control'] = 'private, no-store'
 
-      send_file file, :type => (mime_type || 'application/octet-stream')
+      send_file file, type: (mime_type || 'application/octet-stream')
     else
-      redirect_to documents_url, :notice => t(:'view.documents.non_existent')
+      redirect_to documents_url, notice: t(:'view.documents.non_existent')
     end
   end
   
@@ -194,5 +194,13 @@ class DocumentsController < ApplicationController
   def load_documents_for_printing
     session[:documents_for_printing] ||= []
     @documents_for_printing = session[:documents_for_printing]
+  end
+  
+  def sort_column
+    %w[code name].include?(params[:sort]) ? params[:sort] : 'code'
+  end
+  
+  def sort_direction
+    %w[asc desc].include?(params[:direction]) ? params[:direction] : 'asc'
   end
 end
