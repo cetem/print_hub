@@ -1,10 +1,16 @@
+@import "mixins";
+
 #ph_customer_sessions {
   section.details {
+    margin-right: 35em;
+    
     footer {
       margin-top: 2em;
       
       p {
         text-align: center;
+        background: $highlight-color;
+        padding: .25em 1em;
       }
     }
     
