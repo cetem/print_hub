@@ -713,6 +713,12 @@
       names:
         price_per_one_sided_copy: 'Precio por hoja simple faz'
         price_per_two_sided_copy: 'Precio por hoja doble faz'
+      conditions:
+        greater_than: 'si la cantidad de copias es mayor que *%{count}* el precio es *%{price}*'
+        greater_than_or_equal_to: 'si la cantidad de copias es mayor que o igual a *%{count}* el precio es *%{price}*'
+        equal_to: 'si la cantidad de copias es igual a *%{count}* el precio es *%{price}*'
+        less_than: 'si la cantidad de copias es menor que *%{count}* el precio es *%{price}*'
+        less_than_or_equal_to: 'si la cantidad de copias es menor que o igual a *%{count}* el precio es *%{price}*'
     stats:
       date_filter:
         start: 'Inicio'

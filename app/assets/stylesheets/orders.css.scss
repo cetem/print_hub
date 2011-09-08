@@ -25,6 +25,23 @@
   #not_printed {
     color: #c00;
   }
+
+  #prices {
+    padding: 1em 2em;
+    margin-top: 2em;
+    border: 4px dotted $main-color;
+    
+    p {
+      line-height: 1.5em;
+      margin: 1.5em 0em;
+
+      strong {
+        background: $highlight-color;
+        padding: .1em .5em;
+        @include rounded-corners(.25em);
+      }
+    }
+  }
   
   #printed, #not_printed {
     font-size: 1.25em;

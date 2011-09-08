@@ -96,4 +96,14 @@ class SettingTest < ActiveSupport::TestCase
       '%.2f' % PriceChooser.choose(one_sided: true, copies: 10000)
     )
   end
+  
+  test 'humanize price' do
+    Setting.price_per_one_sided_copy = '.10; >= 100 @ .08; >= 1000 @ .06'
+    Setting.price_per_two_sided_copy = '.10; >= 100 @ .08; >= 1000 @ .06'
+    
+    humanized = PriceChooser.humanize
+    
+    assert_equal 2, humanized.size
+    assert humanized.all? { |type, values| values.size == 3 }
+  end
 end

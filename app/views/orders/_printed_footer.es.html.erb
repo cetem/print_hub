@@ -38,7 +38,17 @@
       <span class="money">
         <%= number_to_currency current_customer.free_credit_minus_pendings %>
       </span>
-      disponibles en tu cuenta
+      disponibles en tu cuenta.
+      <%= link_to_function 'Nuestros precios', "$('#prices').fadeIn(200)" %>
     </p>
+  </div>
+  
+  <div id="prices" style="display: none;">
+    <% PriceChooser.humanize.each do |setting, values| %>
+      <p>
+        <%= setting %>:
+        <%= raw values.map { |v| textilize_without_paragraph v }.to_sentence %>
+      </p>
+    <% end %>
   </div>
 </footer>
