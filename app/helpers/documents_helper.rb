@@ -59,8 +59,8 @@ module DocumentsHelper
   def document_file_label(form)
     label = Document.human_attribute_name :file
     
-    if @document.file?
-      label += " | #{link_to t(:'view.documents.download'), @document.file.url}"
+    if @document.file? && !@document.new_record?
+      label += " | #{link_to t('view.documents.download'), @document.file.url}"
     end
     
     form.label :file, raw(label),

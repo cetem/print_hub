@@ -93,6 +93,7 @@
         remaining: 'Restante'
         valid_until: 'Válido hasta'
       credit:
+        customer_id: 'Cliente'
         amount: 'Monto'
         remaining: 'Restante'
         valid_until: 'Válido hasta'

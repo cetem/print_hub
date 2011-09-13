@@ -16,7 +16,7 @@
 
     <% unless @document.tags.empty? %>
       <section>
-        <h3 class="title"><%= t(:'menu.tags') %></h3>
+        <h3 class="title"><%= t('menu.tags') %></h3>
 
         <ul class="raw">
           <% @document.tags.each do |tag| %>
@@ -31,15 +31,15 @@
 
   <nav class="links">
     <% if request.xhr? %>
-      <%= link_to_function t(:'label.hide'), "Helper.remove('##{id}')" %>
+      <%= link_to_function t('label.hide'), "Helper.remove('##{id}')" %>
     <% else %>
       <%= catalog_document_to_order @document %> |
-      <%= link_to t(:'label.list'), catalog_path %>
+      <%= link_to t('label.list'), catalog_path %>
     <% end %>
   </nav>
 </div>
 <% if request.xhr? %>
   <script type="text/javascript">
-    $('a.fancybox', $('#<%= id %>')).fancybox({type: 'image'});
+    $('#<%= id %>').find('a.fancybox').fancybox({type: 'image'});
   </script>
 <% end %>

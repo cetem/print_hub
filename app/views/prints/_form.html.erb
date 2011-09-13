@@ -2,9 +2,9 @@
   <% if @print.new_record? %>
     <%= content_for :js_extra do -%>
       <%= raw "var print_job='#{generate_template(f, :print_jobs,
-        :locals => {:disabled => false})}';" %>
+        locals: { disabled: false })}';" %>
       <%= raw "var article_line='#{generate_template(f, :article_lines,
-        :locals => {:disabled => false})}';" %>
+        locals: { disabled: false })}';" %>
     <% end -%>
   <% end %>
   <%= show_error_messages(@print) %>
@@ -14,7 +14,7 @@
     <%= print_destinations_field(f) %>
   </div>
   <div class="field column_right">
-    <%= f.label :customer, raw(Print.human_attribute_name(:customer) + ' ' + link_to_customer_credit_detail(@print.customer)), :for => :print_auto_customer_name %>
+    <%= f.label :customer, raw(Print.human_attribute_name(:customer) + ' ' + link_to_customer_credit_detail(@print.customer)), for: :print_auto_customer_name %>
     <% field_classes = [:autocomplete_field] %>
     <% field_classes << :field_with_errors unless @print.errors[:customer_id].blank? %>
     <%= f.text_field :auto_customer_name, :value => @print.customer,
@@ -26,13 +26,13 @@
     <% end %>
     <%= f.hidden_field :customer_id, :class => :autocomplete_id %>
     <%= hidden_field_tag :customer_free_credit,
-      @print.customer.try(:free_credit), :id => :customer_free_credit %>
+      @print.customer.try(:free_credit), id: :customer_free_credit %>
   </div>
 
   <div class="clear">
     <div class="field column_left">
       <%= f.label :scheduled_at %>
-      <%= calendar_text_field f, :scheduled_at, :time => true %>
+      <%= calendar_text_field f, :scheduled_at, time: true %>
     </div>
 
     <div class="field column_right">
@@ -57,8 +57,8 @@
     <div id="print_jobs" class="items">
       <% @print.print_jobs.build if @print.print_jobs.empty? %>
       <%= f.fields_for :print_jobs do |pj_f| %>
-        <%= render :partial => 'print_job', :locals => {
-          :f => pj_f, :is_dynamic => false, :disabled => !@print.new_record?
+        <%= render partial: 'print_job', locals: {
+          f: pj_f, is_dynamic: false, disabled: !@print.new_record?
         } %>
       <% end %>
     </div>
@@ -67,8 +67,8 @@
   <div class="add_nested_item">
     <%= link_to_if @print.new_record?, t('view.prints.add_print_job'), '#',
       'data-template' => 'print_job', 'data-container' => '#print_jobs',
-      'data-event' => 'addNestedItem', :id => 'add_print_job_link',
-      :title => t('view.prints.add_print_job_title') %>
+      'data-event' => 'addNestedItem', id: 'add_print_job_link',
+      title: t('view.prints.add_print_job_title') %>
   </div>
 
   <section class="nested_items">
@@ -84,8 +84,8 @@
     <div id="article_lines" class="items">
       <% @print.article_lines.build if @print.article_lines.empty? %>
       <%= f.fields_for :article_lines do |pj_f| %>
-        <%= render :partial => 'article_line', :locals => {
-          :f => pj_f, :is_dynamic => false, :disabled => !@print.new_record?
+        <%= render partial: 'article_line', locals: {
+          f: pj_f, is_dynamic: false, disabled: !@print.new_record?
         } %>
       <% end %>
     </div>
@@ -94,11 +94,11 @@
   <div class="add_nested_item">
     <%= link_to_if @print.new_record?, t('view.prints.add_article_line'), '#',
       'data-template' => 'article_line', 'data-container' => '#article_lines',
-      'data-event' => 'addNestedItem', :id => 'add_article_line_link',
-      :title => t('view.prints.add_article_line_title') %>
+      'data-event' => 'addNestedItem', id: 'add_article_line_link',
+      title: t('view.prints.add_article_line_title') %>
   </div>
   <section id="payments" class="nested_items">
-    <h2><%= t :payment, :scope => [:view, :prints] %></h2>
+    <h2><%= t :payment, scope: [:view, :prints] %></h2>
     <table class="summary">
       <thead>
         <tr class="payment_headers">
@@ -113,23 +113,23 @@
           <tr class="payment">
             <td>
               <div class="nested_item_field">
-                <%= p_f.text_field :amount, :value => '%.3f' % p_f.object.amount,
-                  :id => "payment_#{p_f.object.paid_with}_amount",
-                  :maxlength => 15, :size => nil, :readonly => true %>
+                <%= p_f.text_field :amount, value: '%.3f' % p_f.object.amount,
+                  id: "payment_#{p_f.object.paid_with}_amount",
+                  maxlength: 15, size: nil, readonly: true %>
               </div>
             </td>
             <td>
               <div class="nested_item_field">
-                <%= p_f.text_field :paid, :value => '%.3f' % p_f.object.paid,
-                  :id => "payment_#{p_f.object.paid_with}_paid",
-                  :maxlength => 15, :size => nil, :readonly => p_f.object.credit? %>
+                <%= p_f.text_field :paid, value: '%.3f' % p_f.object.paid,
+                  id: "payment_#{p_f.object.paid_with}_paid",
+                  maxlength: 15, size: nil, readonly: p_f.object.credit? %>
               </div>
             </td>
             <td>
               <% if p_f.object.credit? %>
                 <div class="nested_item_field">
-                  <%= f.password_field :credit_password, :value => '',
-                    :size => nil, :maxlength => 255 %>
+                  <%= f.password_field :credit_password, value: '',
+                    size: nil, maxlength: 255 %>
                 </div>
               <% else %>
                 &nbsp;
@@ -149,258 +149,16 @@
   <div class="actions">
     <%= f.hidden_field :order_id %>
     <%= f.hidden_field :lock_version %>
-    <%= hidden_field_tag :total_pages, @print.total_pages, :id => 'total_pages',
+    <%= hidden_field_tag :total_pages, @print.total_pages, id: 'total_pages',
       'data-price-per-one-sided' => Setting.price_per_one_sided_copy,
       'data-price-per-two-sided' => Setting.price_per_two_sided_copy %>
-    <%= f.submit nil, :id => :print_submit,
-      :title => t('view.prints.print_title') %>
+    <%= f.submit nil, id: :print_submit, title: t('view.prints.print_title') %>
   </div>
 <% end %>
+<%= javascript_tag 'jQuery(function() {Print.updateTotalPrice();});' if @print.new_record? %>
 <script type="text/javascript">
-  function updateTotalPrice() {
-    var cashPrefix = '#payment_<%= Payment::PAID_WITH[:cash] %>';
-    var creditPrefix = '#payment_<%= Payment::PAID_WITH[:credit] %>';
-    var freeCredit = parseFloat($('#customer_free_credit').val()) || 0.0;
-    var payWithCash = 0.0, payWithBonus = 0.0;
-    var totalPrice = 0.0;
-    
-    $('.print_job:not([data-exclude-from-total])').each(function() {
-      totalPrice += parseFloat($(this).data('price')) || 0;
-    });
-
-    $('.article_line:not([data-exclude-from-total])').each(function() {
-      totalPrice += parseFloat($(this).data('price')) || 0;
-    });
-
-    if(freeCredit > totalPrice) {
-      payWithCash = 0.0;
-      payWithBonus = totalPrice;
-    } else {
-      payWithCash = totalPrice - freeCredit;
-      payWithBonus = freeCredit;
-    }
-
-    $(cashPrefix + '_amount').val(payWithCash.toFixed(3));
-    $(cashPrefix + '_paid').val(payWithCash.toFixed(3));
-    $(creditPrefix + '_amount').val(payWithBonus.toFixed(3));
-    $(creditPrefix + '_paid').val(payWithBonus.toFixed(3));
-  }
-
-  function updatePrintJobPrice(printJob) {
-    Jobs.updatePricePerCopy();
-    
-    var copies = parseInt(printJob.find('input[name$="[copies]"]').val());
-    var pricePerCopy = parseFloat(
-      printJob.find('input[name$="[price_per_copy]"]').val()
-    );
-    var rangePages = parseInt(
-      printJob.find('input[name$="[range]"]').data('rangePages')
-    );
-    var pricePerOneSidedCopy = PriceChooser.choose(
-      $('#total_pages').data('pricePerOneSided'), parseInt($('#total_pages').val())
-    );
-    var evenRange = rangePages - (rangePages % 2);
-    var rest = (rangePages % 2) * pricePerOneSidedCopy;
-    var jobPrice = (copies * (pricePerCopy * evenRange + rest)) || 0;
-    var money = printJob.find('span.money');
-
-    printJob.data('price', jobPrice);
-    money.html(money.html().replace(/(\d+.)+\d+/, jobPrice.toFixed(3)));
-
-    updateTotalPrice();
-  }
-
-  function updateArticleLinePrice(articleLine) {
-    var units = parseInt(articleLine.find('input[name$="[units]"]').val());
-    var unitPrice = parseFloat(
-      articleLine.find('input[name$="[unit_price]"]').val()
-    );
-    var articlePrice = (units * unitPrice) || 0;
-    var money = articleLine.find('span.money');
-
-    articleLine.data('price', articlePrice);
-    money.html(money.html().replace(/(\d+.)+\d+/, articlePrice.toFixed(3)));
-
-    updateTotalPrice();
-  }
-  
-  function clearCustomer() {
-    $('#print_auto_customer_name').val('');
-    $('#print_customer_id').val('');
-    $('#customer_free_credit').val('');
-    $('#link_to_customer_credit_detail').hide();
-    
-    updateTotalPrice();
-  }
-
-  $('.print_job').live('item:removed', function() {
-    $(this).data('excludeFromTotal', true).find(
-      '.page_modifier:first'
-    ).trigger('ph:page_modification');
-
-    updateTotalPrice();
-  });
-
-  $('.article_line').live('item:removed', function() {
-    $(this).data('excludeFromTotal', true);
-
-    updateTotalPrice();
-  });
-
-  $('input.autocomplete_field').live('autocomplete:update', function() {
-    var item = $(this).data('item');
-    
-    if (item.pages) {
-      var pages = item.pages;
-      var printJob = $(this).parents('.print_job:first');
-      var detailsLink = printJob.find('a.details_link');
-
-      printJob.find('input[name$="[pages]"]').val(pages).attr('disabled', true);
-      detailsLink.attr(
-        'href', detailsLink.attr('href').replace(/\d+$/, item.id)
-      ).show();
-      printJob.find('.dynamic_details').text('');
-      printJob.find('input[name$="[range]"]').val('').data(
-        'rangePages', pages
-      ).trigger('ph:page_modification');
-
-      updatePrintJobPrice(printJob);
-    } else if (item.unit_price) {
-      var unitPrice = parseFloat(item.unit_price).toFixed(3);
-      var articleLine = $(this).parents('.article_line');
-
-      articleLine.find('input[name$="[unit_price]"]').val(unitPrice);
-
-      updateArticleLinePrice(articleLine);
-    } else if (item.free_credit) {
-      $('#customer_free_credit').val(item.free_credit);
-      var detailsLink = $('#link_to_customer_credit_detail');
-      detailsLink.attr(
-        'href', detailsLink.attr('href').replace(/\d+/, item.id)
-      ).show();
-
-      updateTotalPrice();
-    }
-  });
-
-  $('#print_printer').change(function() {
-    var submit = $('#print_submit');
-
-    if(/^\s*$/.test($(this).val())) {
-      if(submit.data('originalValue')) {
-        submit.attr('value', submit.data('originalValue'));
-      }
-    } else {
-      if(!submit.data('originalValue')) {
-        submit.data('originalValue', submit.attr('value'));
-      }
-
-      submit.attr('value', '<%= t(:'view.prints.print') %>');
-    }
-  });
-  
-  $('input[name="[print_auto_customer_name]"]').live('change', function() {
-    if(/^\s*$/.test($(this).val())) { clearCustomer(); }
-  });
-
-  $('input[name$="[auto_document_name]"]').live('change', function() {
-    var element = $(this);
-    var printJob = element.parents('.print_job');
-
-    if(printJob.length > 0 && /^\s*$/.test(element.val())) {
-      $('input[name$="[range]"]', printJob).data('rangePages', 0);
-      $('input[name$="[pages]"]', printJob).val('').attr('disabled', false);
-      $('.dynamic_details', printJob).html('');
-      $('a.details_link', printJob).hide();
-
-      updatePrintJobPrice(printJob);
-    }
-  });
-
-  $('input[name$="[auto_article_name]"]').live('change', function() {
-    var element = $(this);
-    var articleLine = element.parents('.article_line');
-
-    if(articleLine.length > 0 && /^\s*$/.test(element.val())) {
-      $('input[name$="[units]"]', articleLine).val('0');
-      $('input[name$="[unit_price]"]', articleLine).val('');
-
-      updateArticleLinePrice(articleLine);
-    }
-  });
-
-  $('input[name$="[pages]"]').live('change', function() {
-    var element = $(this);
-    var printJob = element.parents('.print_job');
-
-    if(!element.attr('disabled') && parseInt(element.val()) > 0) {
-      var range = $('input[name$="[range]"]', printJob);
-
-      range.data('rangePages', parseInt(element.val())).attr('disabled', true);
-      $('input[name$="[auto_document_name]"]', printJob).attr('disabled', true);
-    } else {
-      $('input[name$="[range]"]', printJob).removeAttr('disabled');
-      $('input[name$="[auto_document_name]"]', printJob).removeAttr('disabled');
-    }
-
-    updatePrintJobPrice(printJob);
-  });
-  
-  Jobs.listenRangeChanges();
-  Jobs.listenTwoSidedChanges();
-  
-  $('.page_modifier').live('change keyup ph:page_modification', function() {
-    var totalPages = 0;
-    
-    $('.print_job').each(function(i, pj) {
-      var copies = parseInt($(pj).find('input[name$="[copies]"]').val());
-      var rangePages = parseInt(
-        $(pj).find('input[name$="[range]"]').data('rangePages')
-      );
-      
-      totalPages += (copies || 0) * (rangePages || 0);
-    });
-    
-    $('#total_pages').val(totalPages);
-    
-    $('.print_job').each(function(i, pj) { updatePrintJobPrice($(pj)); });
-  });
-
-  $('.price_modifier').live('change keyup', function() {
-    var element = $(this);
-    
-    if (element.parents('.print_job').length > 0) {
-      updatePrintJobPrice(element.parents('.print_job'));
-    } else if (element.parents('.article_line').length > 0) {
-      updateArticleLinePrice(element.parents('.article_line'));
-    }
-  });
-  
-  $('a.details_link').live('ajax:success', function(event, data) {
-    Helper.show($(this).parents('.print_job').find('.dynamic_details').hide().html(data));
-  });
-  
-  $('#link_to_customer_credit_detail').live('ajax:success', function(event, data) {
-    $.fancybox({ 'padding': 24, 'content': data });
-  });
-
-  // Captura de atajos de teclado
-  $(document).keydown(function(e) {
-    var key = e.which;
-
-    // CTRL + ALT + I = Agregar un trabajo
-    if((key == 73 || key == 105) && e.ctrlKey && e.altKey) {
-      $('#add_print_job_link').click();
-      e.preventDefault();
-    // CTRL + ALT + A = Agregar un artículo
-    } else if((key == 65 || key == 97) && e.ctrlKey && e.altKey) {
-      $('#add_article_line_link').click();
-      e.preventDefault();
-    // CTRL + ALT + P = Imprimir
-    } else if((key == 80 || key == 112) && e.ctrlKey && e.altKey) {
-      $('#print_submit').click();
-      e.preventDefault();
-    }
-  });
+  Print.cashPrefix = '#payment_<%= Payment::PAID_WITH[:cash] %>';
+  Print.creditPrefix = '#payment_<%= Payment::PAID_WITH[:credit] %>';
+  Print.printMessage = '<%= t('view.prints.print') %>';
+  Print.saveMessage = '<%= t('helpers.submit.create', model: Print.model_name.human) %>';
 </script>
-<%= javascript_tag 'jQuery(function() { updateTotalPrice(); });' if @print.new_record? %>

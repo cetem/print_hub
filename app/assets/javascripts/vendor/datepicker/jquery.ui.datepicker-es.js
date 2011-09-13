@@ -22,14 +22,16 @@ jQuery(function($){
 	$.datepicker.setDefaults($.datepicker.regional['es']);
         
         $.timepicker.regional['es'] = {
-                timeOnlyTitle: 'Seleccione horario',
-                timeText: 'Tiempo',
-                hourText: 'Hora',
-                minuteText: 'Minuto',
-                secondText: 'Segundo',
-                currentText: 'Ahora',
-                closeText: 'Listo',
-                ampm: false
-        };
-        $.timepicker.setDefaults($.timepicker.regional['es']);
+		timeOnlyTitle: 'Elegir una hora',
+		timeText: 'Hora',
+		hourText: 'Horas',
+		minuteText: 'Minutos',
+		secondText: 'Segundos',
+		timezoneText: 'Huso horario',
+		currentText: 'Ahora',
+		closeText: 'Cerrar',
+		timeFormat: 'hh:mm',
+		ampm: false
+	};
+	$.timepicker.setDefaults($.timepicker.regional['es']);
 });

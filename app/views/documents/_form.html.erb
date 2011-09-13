@@ -1,21 +1,21 @@
-<%= form_for(@document, :html => { :multipart => true }) do |f| %>
+<%= form_for(@document, html: { multipart: true }) do |f| %>
   <%= content_for :js_extra do -%>
-    <%= raw "var tag='#{escape_javascript render(:partial => 'tag',
-      :locals => {:is_dynamic => true, :f => f, :tag => nil})}';" %>
+    <%= raw "var tag='#{escape_javascript render(partial: 'tag',
+      locals: {is_dynamic: true, f: f, tag: nil})}';" %>
   <% end -%>
   <%= show_error_messages(@document) %>
 
   <div class="field">
     <%= f.label :code %>
-    <%= f.text_field :code, :autofocus => true, :maxlength => 10 %>
+    <%= f.text_field :code, autofocus: true, maxlength: 10 %>
   </div>
   <div class="field">
     <%= f.label :name %>
-    <%= f.text_field :name, :maxlength => 255 %>
+    <%= f.text_field :name, maxlength: 255 %>
   </div>
   <div class="field">
     <%= f.label :pages %>
-    <%= f.text_field :pages, :maxlength => 5, :readonly => true %>
+    <%= f.text_field :pages, maxlength: 5, readonly: true %>
   </div>
   <div class="field">
     <%= f.label :media %>
@@ -39,19 +39,19 @@
 
     <div id="tags" class="items">
       <% @document.tags.each do |tag| %>
-        <%= render :partial => 'tag',
-          :locals => { :is_dynamic => false, :f => f, :tag => tag } %>
+        <%= render partial: 'tag',
+          locals: { is_dynamic: false, f: f, tag: tag } %>
       <% end %>
-      <%= render :partial => 'tag',
-        :locals => { :is_dynamic => false, :f => f, :tag => nil } %>
+      <%= render partial: 'tag',
+        locals: { is_dynamic: false, f: f, tag: nil } %>
     </div>
   </section>
 
   <div class="add_nested_item">
-    <%= link_to t(:'view.documents.add_tag'), '#', :id => :add_tag_link,
-      :'data-template' => :tag, :'data-container' => '#tags',
-      :'data-event' => 'addNestedItem',
-      :title => t(:'view.documents.add_tag_title') %>
+    <%= link_to t('view.documents.add_tag'), '#', id: 'add_tag_link',
+      'data-template' => 'tag', 'data-container' => '#tags',
+      'data-event' => 'addNestedItem',
+      title: t('view.documents.add_tag_title') %>
   </div>
 
   <div class="actions">
@@ -59,14 +59,12 @@
     <%= f.submit %>
   </div>
 <% end %>
-<%= render :partial => 'shared/notice', :locals => {
-  :hide => true,
-  :message => t(:'view.documents.processing_document')
+<%= render partial: 'shared/notice', locals: {
+  hide: true,
+  message: t('view.documents.processing_document')
 } %>
 <script type="text/javascript">
-  $('form').submit(function() {
-    $('#notice').slideDown();
-  });
+  $('form').submit(function() { $('#notice').slideDown(); });
   
   // Captura de atajos de teclado
   $(document).keydown(function(e) {

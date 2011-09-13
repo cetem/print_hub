@@ -210,11 +210,15 @@ jQuery(function($) {
   
   $('input.calendar:not(.hasDatepicker)').live('focus', function() {
     if($(this).data('time')) {
-      $(this).datetimepicker({showOn: 'both'}).focus();
+      $(this).datetimepicker({
+        showOn: 'both',
+        stepHour: 1,
+        stepMinute: 5
+      }).focus();
     } else {
       $(this).datepicker({
         showOn: 'both',
-        onSelect: function() {$(this).datepicker('hide');}
+        onSelect: function() { $(this).datepicker('hide'); }
       }).focus();
     }
   });
