@@ -4,17 +4,10 @@ class DocumentsController < ApplicationController
   
   layout lambda { |controller| controller.request.xhr? ? false : 'application' }
 
-  autocomplete_for(:tag, :name, limit: 10, order: 'name ASC',
-    query: DB_ADAPTER == 'PostgreSQL' ?
-      "to_tsvector('spanish', %{field}) @@ plainto_tsquery('spanish', %{query})" : nil,
-    mask: DB_ADAPTER == 'PostgreSQL' ? '%{value}' : nil) do |tags|
-      render json: tags
-  end
-
   # GET /documents
   # GET /documents.xml
   def index
-    @title = t :'view.documents.index_title'
+    @title = t('view.documents.index_title')
     @tag = Tag.find(params[:tag_id]) if params[:tag_id]
     @documents = @tag ? @tag.documents : Document.scoped
     
@@ -72,7 +65,7 @@ class DocumentsController < ApplicationController
   # GET /documents/1
   # GET /documents/1.xml
   def show
-    @title = t :'view.documents.show_title'
+    @title = t('view.documents.show_title')
     @document = Document.find(params[:id])
 
     respond_to do |format|
@@ -84,7 +77,7 @@ class DocumentsController < ApplicationController
   # GET /documents/new
   # GET /documents/new.xml
   def new
-    @title = t :'view.documents.new_title'
+    @title = t('view.documents.new_title')
     @document = Document.new
 
     respond_to do |format|
@@ -95,20 +88,20 @@ class DocumentsController < ApplicationController
 
   # GET /documents/1/edit
   def edit
-    @title = t :'view.documents.edit_title'
+    @title = t('view.documents.edit_title')
     @document = Document.find(params[:id])
   end
 
   # POST /documents
   # POST /documents.xml
   def create
-    @title = t :'view.documents.new_title'
+    @title = t('view.documents.new_title')
     params[:document][:tag_ids] ||= []
     @document = Document.new(params[:document])
 
     respond_to do |format|
       if @document.save
-        format.html { redirect_to(documents_url, notice: t(:'view.documents.correctly_created')) }
+        format.html { redirect_to(documents_url, notice: t('view.documents.correctly_created')) }
         format.xml  { render xml: @document, status: :created, location: @document }
       else
         format.html { render action: :new }
@@ -120,13 +113,13 @@ class DocumentsController < ApplicationController
   # PUT /documents/1
   # PUT /documents/1.xml
   def update
-    @title = t :'view.documents.edit_title'
+    @title = t('view.documents.edit_title')
     @document = Document.find(params[:id])
     params[:document][:tag_ids] ||= []
 
     respond_to do |format|
       if @document.update_attributes(params[:document])
-        format.html { redirect_to(documents_url, notice: t(:'view.documents.correctly_updated')) }
+        format.html { redirect_to(documents_url, notice: t('view.documents.correctly_updated')) }
         format.xml  { head :ok }
       else
         format.html { render action: :edit }
@@ -135,7 +128,7 @@ class DocumentsController < ApplicationController
     end
 
   rescue ActiveRecord::StaleObjectError
-    flash.alert = t :'view.documents.stale_object_error'
+    flash.alert = t('view.documents.stale_object_error')
     redirect_to edit_document_url(@document)
   end
 
@@ -167,7 +160,7 @@ class DocumentsController < ApplicationController
 
       send_file file, type: (mime_type || 'application/octet-stream')
     else
-      redirect_to documents_url, notice: t(:'view.documents.non_existent')
+      redirect_to documents_url, notice: t('view.documents.non_existent')
     end
   end
   
@@ -189,6 +182,22 @@ class DocumentsController < ApplicationController
     session[:documents_for_printing].delete(@document.id)
   end
   
+  def self.tag_autocomplete_options
+    pg_query = "to_tsvector('spanish', %{field})"
+    pg_query << " @@ plainto_tsquery('spanish', %{query})"
+    
+    {
+      limit: 10,
+      order: 'name ASC',
+      query: DB_ADAPTER == 'PostgreSQL' ? pg_query : nil,
+      mask: DB_ADAPTER == 'PostgreSQL' ? '%{value}' : nil
+    }
+  end
+  
+  autocomplete_for(:tag, :name, tag_autocomplete_options) do |tags|
+    render json: tags
+  end
+  
   private
   
   def load_documents_for_printing
@@ -201,6 +210,10 @@ class DocumentsController < ApplicationController
   end
   
   def sort_direction
-    %w[asc desc].include?(params[:direction]) ? params[:direction] : 'asc'
+    %w[asc desc].include?(params[:direction]) ? params[:direction] : default_direction
+  end
+  
+  def default_direction
+    sort_column == 'code' ? 'desc' : 'asc'
   end
 end

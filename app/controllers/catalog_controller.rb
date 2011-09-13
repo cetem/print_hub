@@ -5,7 +5,7 @@ class CatalogController < ApplicationController
   layout lambda { |controller| controller.request.xhr? ? false : 'application' }
   
   def index
-    @title = t :'view.catalog.index_title'
+    @title = t('view.catalog.index_title')
     
     if params[:q].present? || @tag
       query = params[:q].try(:sanitized_for_text_query) || ''
@@ -54,7 +54,7 @@ class CatalogController < ApplicationController
   end
 
   def show
-    @title = t :'view.catalog.show_title'
+    @title = t('view.catalog.show_title')
     @document = document_scope.find(params[:id])
 
     respond_to do |format|
@@ -81,7 +81,7 @@ class CatalogController < ApplicationController
 
       send_file file, type: (mime_type || 'application/octet-stream')
     else
-      redirect_to catalog_url, notice: t(:'view.documents.non_existent')
+      redirect_to catalog_url, notice: t('view.documents.non_existent')
     end
   end
   
@@ -123,6 +123,11 @@ class CatalogController < ApplicationController
   end
   
   def sort_direction
-    %w[asc desc].include?(params[:direction]) ? params[:direction] : 'asc'
+    %w[asc desc].include?(params[:direction]) ?
+      params[:direction] : default_direction
+  end
+  
+  def default_direction
+    params[:sort] == 'code' ? 'desc' : 'asc'
   end
 end

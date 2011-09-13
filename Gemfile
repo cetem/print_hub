@@ -15,6 +15,7 @@ gem 'foreigner'
 gem 'memcache-client'
 gem 'paper_trail'
 gem 'RedCloth'
+gem 'newrelic_rpm'
 gem 'whenever', require: false
 # Previo sudo apt-get install libcupsys2-dev
 gem 'cups'

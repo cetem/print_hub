@@ -7,7 +7,7 @@ class ApplicationController < ActionController::Base
   # para mostrar un mensaje de error personalizado
   rescue_from Exception do |exception|
     begin
-      @title = t :'errors.title'
+      @title = t('errors.title')
       error = "#{exception.class}: #{exception.message}\n\n"
       exception.backtrace.each { |l| error << "#{l}\n" }
 
@@ -50,7 +50,7 @@ class ApplicationController < ActionController::Base
   
   def require_customer
     unless current_customer
-      flash.notice = t(:'messages.must_be_logged_in')
+      flash.notice = t('messages.must_be_logged_in')
 
       store_location
       redirect_to new_customer_session_url
@@ -63,7 +63,7 @@ class ApplicationController < ActionController::Base
 
   def require_no_customer
     if current_customer
-      flash.notice = t(:'messages.must_be_logged_out')
+      flash.notice = t('messages.must_be_logged_out')
 
       store_location
       redirect_to catalog_url
@@ -76,7 +76,7 @@ class ApplicationController < ActionController::Base
 
   def require_user
     unless current_user
-      flash.notice = t(:'messages.must_be_logged_in')
+      flash.notice = t('messages.must_be_logged_in')
 
       store_location
       redirect_to new_user_session_url
@@ -89,7 +89,7 @@ class ApplicationController < ActionController::Base
 
   def require_no_user
     if current_user
-      flash.notice = t(:'messages.must_be_logged_out')
+      flash.notice = t('messages.must_be_logged_out')
 
       store_location
       redirect_to prints_url
@@ -112,7 +112,7 @@ class ApplicationController < ActionController::Base
 
   def require_admin_user
     unless current_user.try(:admin) == true
-      flash.alert = t(:'messages.must_be_admin')
+      flash.alert = t('messages.must_be_admin')
 
       store_location
       redirect_to(current_user ? prints_url : new_user_session_url)
