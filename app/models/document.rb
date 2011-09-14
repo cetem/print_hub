@@ -1,20 +1,20 @@
 class Document < ActiveRecord::Base
   has_paper_trail
   has_attached_file :file,
-    :path => ':rails_root/private/:attachment/:id_partition/:basename_:style.:extension',
-    :url => '/documents/:id/:style/download',
-    :styles => lambda { |attachment| attachment.instance.choose_styles }
+    path: ':rails_root/private/:attachment/:id_partition/:basename_:style.:extension',
+    url: '/documents/:id/:style/download',
+    styles: lambda { |attachment| attachment.instance.choose_styles }
   find_by_autocomplete :name
 
   # Constantes
-  MEDIA_TYPES = { :a4 => 'A4', :legal => 'na_legal_8.5x14in' }.freeze
+  MEDIA_TYPES = { a4: 'A4', legal: 'na_legal_8.5x14in' }.freeze
 
   # Scopes
-  default_scope where(:enable => true)
+  default_scope where(enable: true)
   scope :with_tag, lambda { |tag_id|
     includes(:tags).where("#{Tag.table_name}.id" => tag_id)
   }
-  scope :publicly_visible, where(:private => false)
+  scope :publicly_visible, where(private: false)
 
   # Atributos no persistentes
   attr_accessor :auto_tag_name
@@ -29,25 +29,26 @@ class Document < ActiveRecord::Base
   before_file_post_process :extract_page_count
 
   # Restricciones
-  validates :name, :code, :pages, :media, :presence => true
-  validates :code, :uniqueness => true, :if => :enable, :allow_nil => true,
-    :allow_blank => true
-  validates :name, :media, :length => { :maximum => 255 }, :allow_nil => true,
-    :allow_blank => true
-  validates :media, :inclusion => { :in => MEDIA_TYPES.values },
-    :allow_nil => true, :allow_blank => true
-  validates :pages, :code,
-    :numericality => { :only_integer => true, :greater_than => 0 },
-    :allow_nil => true, :allow_blank => true
-  validates_attachment_content_type :file, :content_type => /pdf/i,
-    :allow_nil => true, :allow_blank => true
+  validates :name, :code, :pages, :media, presence: true
+  validates :code, uniqueness: true, if: :enable, allow_nil: true,
+    allow_blank: true
+  validates :name, :media, length: { maximum: 255 }, allow_nil: true,
+    allow_blank: true
+  validates :media, inclusion: {:in => MEDIA_TYPES.values},
+    allow_nil: true, allow_blank: true
+  validates :pages, :code, allow_nil: true, allow_blank: true,
+    numericality: { only_integer: true, greater_than: 0 }
+  validates :stock, allow_nil: true, allow_blank: true,
+    numericality: { only_integer: true, greater_than_or_equal_to: 0 }
+  validates_attachment_content_type :file, content_type: /pdf/i,
+    allow_nil: true, allow_blank: true
   validates_attachment_presence :file,
-    :message => ::I18n.t(:'errors.messages.blank')
+    message: ::I18n.t('errors.messages.blank')
 
   # Relaciones
   has_many :print_jobs
-  has_and_belongs_to_many :tags, :order => 'name ASC'
-  autocomplete_for :tag, :name, :name => :auto_tag
+  has_and_belongs_to_many :tags, order: 'name ASC'
+  autocomplete_for :tag, :name, name: :auto_tag
 
   def initialize(attributes = nil, options = {})
     super(attributes, options)
@@ -63,8 +64,8 @@ class Document < ActiveRecord::Base
   
   def as_json(options = nil)
     default_options = {
-      :only => [:id, :pages],
-      :methods => [:label, :informal]
+      only: [:id, :pages],
+      methods: [:label, :informal]
     }
     
     super(default_options.merge(options || {}))
@@ -97,27 +98,27 @@ class Document < ActiveRecord::Base
       true
     else
       self.errors.add :base,
-        I18n.t(:has_related_print_jobs, :scope => [:view, :documents])
+        I18n.t(:has_related_print_jobs, scope: [:view, :documents])
 
       false
     end
   end
 
   def choose_styles
-    thumb_opts = {:processors => [:pdf_thumb], :format => :png}
+    thumb_opts = {processors: [:pdf_thumb], format: :png}
     styles = {
-      :pdf_thumb => thumb_opts.merge({:resolution => 48, :page => 1}),
-      :pdf_mini_thumb => thumb_opts.merge({:resolution => 24, :page => 1})
+      pdf_thumb: thumb_opts.merge({resolution: 48, page: 1}),
+      pdf_mini_thumb: thumb_opts.merge({resolution: 24, page: 1})
     }
 
     styles.merge!(
-      :pdf_thumb_2 => thumb_opts.merge({:resolution => 48, :page => 2}),
-      :pdf_mini_thumb_2 => thumb_opts.merge({:resolution => 24, :page => 2})
+      pdf_thumb_2: thumb_opts.merge({resolution: 48, page: 2}),
+      pdf_mini_thumb_2: thumb_opts.merge({resolution: 24, page: 2})
     ) if self.pages && self.pages > 1
 
     styles.merge!(
-      :pdf_thumb_3 => thumb_opts.merge({:resolution => 48, :page => 3}),
-      :pdf_mini_thumb_3 => thumb_opts.merge({:resolution => 24, :page => 3})
+      pdf_thumb_3: thumb_opts.merge({resolution: 48, page: 3}),
+      pdf_mini_thumb_3: thumb_opts.merge({resolution: 24, page: 3})
     ) if self.pages && self.pages > 2
 
     styles
@@ -130,7 +131,7 @@ class Document < ActiveRecord::Base
 
   def extract_page_count
     ::PDF::Reader.file(self.file.queued_for_write[:original].path, self,
-      :pages => false)
+      pages: false)
 
   rescue PDF::Reader::MalformedPDFError
     false

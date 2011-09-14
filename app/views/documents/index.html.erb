@@ -1,14 +1,15 @@
 <% if @tag %>
   <h2 class="title">
-    <%= t(:documents_with_tag, :scope => [:view, :documents], :tag => @tag.to_s) %>
+    <%= t('view.documents.documents_with_tag', tag: @tag.to_s) %>
   </h2>
 <% end %>
-<%= render :partial => 'shared/search' %>
+<%= render partial: 'shared/search' %>
 <table class="list">
   <thead>
     <tr>
       <th><%= sortable 'code', Document.human_attribute_name(:code) %></th>
       <th><%= sortable 'name', Document.human_attribute_name(:name) %></th>
+      <th><%= Document.human_attribute_name :stock %></th>
       <th><%= Document.human_attribute_name :pages %></th>
       <th colspan="4"></th>
     </tr>
@@ -20,12 +21,13 @@
       <tr class="<%= classes.join(' ') %>">
         <td><%= document.code %></td>
         <td><%= document.name %></td>
+        <td><%= document.stock %></td>
         <td><%= document.pages %></td>
         <td><%= document_link_for_use_in_next_print document %></td>
-        <td><%= link_to t(:'label.show'), document %></td>
-        <td><%= link_to t(:'label.edit'), edit_document_path(document) %></td>
-        <td><%= button_to t(:'label.delete'), document,
-          :confirm => t(:'messages.confirmation'), :method => :delete %></td>
+        <td><%= link_to t('label.show'), document %></td>
+        <td><%= link_to t('label.edit'), edit_document_path(document) %></td>
+        <td><%= button_to t('label.delete'), document,
+          confirm: t('messages.confirmation'), method: :delete %></td>
       </tr>
     <% end %>
   </tbody>
@@ -33,8 +35,8 @@
 
 <nav class="links">
   <%= pagination_links(@documents) %>
-  <%= link_to t(:'label.new'), new_document_path %> |
-  <%= link_to t(:new_print, :scope => [:view, :documents]), new_print_path %> |
-  <%= link_to t(:clear_documents_for_printing, :scope => [:view, :documents]),
-    request.parameters.merge(:clear_documents_for_printing => true) %>
+  <%= link_to t('label.new'), new_document_path %> |
+  <%= link_to t('view.documents.new_print'), new_print_path %> |
+  <%= link_to t('view.documents.clear_documents_for_printing'),
+    request.parameters.merge(clear_documents_for_printing: true) %>
 </nav>

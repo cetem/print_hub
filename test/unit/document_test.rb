@@ -16,6 +16,7 @@ class DocumentTest < ActiveSupport::TestCase
     assert_kind_of Document, @document
     assert_equal documents(:math_book).code, @document.code
     assert_equal documents(:math_book).name, @document.name
+    assert_equal documents(:math_book).stock, @document.stock
     assert_equal documents(:math_book).pages, @document.pages
     assert_equal documents(:math_book).media, @document.media
     assert_equal documents(:math_book).enable, @document.enable
@@ -32,14 +33,15 @@ class DocumentTest < ActiveSupport::TestCase
       )
 
       @document = Document.new(
-        :code => '00001234',
-        :name => 'New name',
-        :pages => '5',
-        :media => Document::MEDIA_TYPES.values.first,
-        :description => 'New description',
-        :enable => true,
-        :tags => [tags(:books), tags(:notes)],
-        :file => file
+        code: '00001234',
+        name: 'New name',
+        stock: 1,
+        pages: 5,
+        media: Document::MEDIA_TYPES.values.first,
+        description: 'New description',
+        enable: true,
+        tags: [tags(:books), tags(:notes)],
+        file: file
       )
 
       assert @document.save
@@ -63,13 +65,14 @@ class DocumentTest < ActiveSupport::TestCase
   test 'create a multipage document' do
     assert_difference 'Document.count' do
       @document = Document.new(
-        :code => '00001234',
-        :name => 'New name',
-        :pages => '1',
-        :media => Document::MEDIA_TYPES.values.first,
-        :enable => true,
-        :description => 'New description',
-        :tags => [tags(:books), tags(:notes)]
+        code: '00001234',
+        name: 'New name',
+        stock: 1,
+        pages: 1,
+        media: Document::MEDIA_TYPES.values.first,
+        enable: true,
+        description: 'New description',
+        tags: [tags(:books), tags(:notes)]
       )
 
       @document.file = Rack::Test::UploadedFile.new(
@@ -96,7 +99,7 @@ class DocumentTest < ActiveSupport::TestCase
   # Prueba de actualización de un documento
   test 'update' do
     assert_no_difference 'Document.count' do
-      assert @document.update_attributes(:name => 'Updated name'),
+      assert @document.update_attributes(name: 'Updated name'),
         @document.errors.full_messages.join('; ')
     end
 
@@ -113,7 +116,7 @@ class DocumentTest < ActiveSupport::TestCase
     thumbs_dir = Pathname.new(@document.file.path).dirname.rmtree
 
     assert_no_difference 'Document.count' do
-      assert @document.update_attributes(:file => file),
+      assert @document.update_attributes(file: file),
         @document.errors.full_messages.join('; ')
     end
 
@@ -128,7 +131,7 @@ class DocumentTest < ActiveSupport::TestCase
     )
 
     assert_no_difference 'Document.count' do
-      assert @document.update_attributes(:file => file),
+      assert @document.update_attributes(file: file),
         @document.errors.full_messages.join('; ')
     end
 
@@ -151,7 +154,7 @@ class DocumentTest < ActiveSupport::TestCase
 
   test 'disable a document' do
     assert_difference('Document.count', -1) do
-      @document.update_attributes(:enable => false)
+      @document.update_attributes(enable: false)
     end
   end
 
@@ -195,9 +198,9 @@ class DocumentTest < ActiveSupport::TestCase
     assert @document.invalid?
     assert_equal 3, @document.errors.count
     assert_equal [error_message_from_model(@document, :name, :too_long,
-      :count => 255)], @document.errors[:name]
+      count: 255)], @document.errors[:name]
     assert_equal [error_message_from_model(@document, :media, :too_long,
-      :count => 255), error_message_from_model(@document, :media,
+      count: 255), error_message_from_model(@document, :media,
       :inclusion)].sort, @document.errors[:media].sort
   end
 
@@ -214,30 +217,42 @@ class DocumentTest < ActiveSupport::TestCase
   test 'validates formatted attributes' do
     @document.pages = '?xx'
     @document.code = '?xx'
+    @document.stock = '?xx'
     assert @document.invalid?
-    assert_equal 2, @document.errors.count
+    assert_equal 3, @document.errors.count
     assert_equal [error_message_from_model(@document, :pages, :not_a_number)],
       @document.errors[:pages]
     assert_equal [error_message_from_model(@document, :code, :not_a_number)],
       @document.errors[:code]
+    assert_equal [error_message_from_model(@document, :stock, :not_a_number)],
+      @document.errors[:stock]
 
     @document.pages = '41.23'
     @document.code = '41.23'
+    @document.stock = '41.23'
     assert @document.invalid?
-    assert_equal 2, @document.errors.count
+    assert_equal 3, @document.errors.count
     assert_equal [error_message_from_model(@document, :pages, :not_an_integer)],
       @document.errors[:pages]
     assert_equal [error_message_from_model(@document, :code, :not_an_integer)],
       @document.errors[:code]
+    assert_equal [error_message_from_model(@document, :stock, :not_an_integer)],
+      @document.errors[:stock]
 
     @document.pages = '0'
     @document.code = '0'
+    @document.stock = '-1'
     assert @document.invalid?
-    assert_equal 2, @document.errors.count
+    assert_equal 3, @document.errors.count
     assert_equal [error_message_from_model(@document, :pages, :greater_than,
-        :count => 0)], @document.errors[:pages]
+        count: 0)], @document.errors[:pages]
     assert_equal [error_message_from_model(@document, :code, :greater_than,
-        :count => 0)], @document.errors[:code]
+        count: 0)], @document.errors[:code]
+    assert_equal [
+      error_message_from_model(
+        @document, :stock, :greater_than_or_equal_to, count: 0
+      )
+    ], @document.errors[:stock]
   end
 
   test 'update tag path' do

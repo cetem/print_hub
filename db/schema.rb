@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110817201650) do
+ActiveRecord::Schema.define(:version => 20110914202945) do
 
   create_table "article_lines", :force => true do |t|
     t.integer  "print_id",                                                   :null => false
@@ -92,6 +92,7 @@ ActiveRecord::Schema.define(:version => 20110817201650) do
     t.boolean  "enable",            :default => true,  :null => false
     t.string   "file_fingerprint"
     t.boolean  "private",           :default => false
+    t.integer  "stock",             :default => 0,     :null => false
   end
 
   add_index "documents", ["code"], :name => "index_documents_on_code"

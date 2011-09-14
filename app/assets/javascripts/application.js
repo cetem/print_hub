@@ -13,6 +13,7 @@
 //= require vendor/jquery.filestyle
 //= require common
 //= require catalog
+//= require documents
 //= require feedbacks
 //= require jobs
 //= require orders

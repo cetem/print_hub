@@ -9,13 +9,13 @@ module CatalogHelper
           :size => thumb_dimensions.to_s
         )
 
-        thumb = content_tag(:div, thumb_image_tag, :class => :image_container)
+        thumb = content_tag(:div, thumb_image_tag, :class => 'image_container')
         image_style = style.to_s.sub(/_mini/, '').to_sym
 
         content_tag :a, thumb,
           :href => download_catalog_path(document, :style => image_style),
-          :'data-rel' => "doc_image_#{document.id}", :title => document.name,
-          :class => :fancybox
+          'data-rel' => "doc_image_#{document.id}", :title => document.name,
+          :class => 'fancybox'
       end
     end
     
@@ -23,8 +23,8 @@ module CatalogHelper
       if document.file.file? && File.exists?(document.file.path(style))
         content_tag :a, '',
           :href => download_catalog_path(document, :style => style),
-          :'data-rel' => "doc_image_#{document.id}", :title => document.name,
-          :class => :fancybox, :style => 'display: none;'
+          'data-rel' => "doc_image_#{document.id}", :title => document.name,
+          :class => 'fancybox', :style => 'display: none;'
       end
     end
     
@@ -35,7 +35,7 @@ module CatalogHelper
     link_to(
       truncate(document.name, :length => 50, :omission => '...'),
       show_catalog_path(document),
-      :title => t(:'view.catalog.show')
+      :title => t('view.catalog.show')
     )
   end
   
@@ -46,7 +46,7 @@ module CatalogHelper
       content << link_to(
         '-',
         remove_from_order_catalog_path(document),
-        :title => t(:title, :scope => [:view, :catalog, :remove_from_order]),
+        :title => t('view.catalog.remove_from_order.title'),
         :remote => true, :method => :delete,
         :class => 'remove_link remove_from_order'
       )
@@ -54,7 +54,7 @@ module CatalogHelper
       content << link_to(
         '+',
         add_to_order_catalog_path(document),
-        :title => t(:title, :scope => [:view, :catalog, :add_to_order]),
+        :title => t('view.catalog.add_to_order.title'),
         :remote => true, :method => :post, :class => 'add_link add_to_order'
       )
     end
@@ -69,15 +69,15 @@ module CatalogHelper
     out = clean_tags.map do |tag, long_tag|
       name = truncate(tag, :length => 15, :omission => '...')
       
-      content_tag(:span, name, :title => long_tag, :class => :tag)
+      content_tag(:span, name, :title => long_tag, :class => 'tag')
     end.join
     
     if tags.size > 3
-      title = t :more_tags, :scope => [:view, :catalog], :count => tags.size - 3
+      title = t 'view.catalog.more_tags', :count => tags.size - 3
       
       out << content_tag(:span, '...', :title => title)
     end
     
-    raw content_tag(:div, raw(out), :class => :nowrap)
+    raw content_tag(:div, raw(out), :class => 'nowrap')
   end
 end

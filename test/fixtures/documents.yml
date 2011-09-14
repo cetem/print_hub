@@ -1,6 +1,7 @@
 math_notes:
   code: 1
   name: Math
+  stock: 0
   pages: 12
   media: <%= Document::MEDIA_TYPES[:a4] %>
   description: Math Notes description
@@ -13,6 +14,7 @@ math_notes:
 math_book:
   code: 2
   name: Math Book
+  stock: 0
   pages: 350
   media: <%= Document::MEDIA_TYPES[:a4] %>
   description: Math Book description
@@ -25,6 +27,7 @@ math_book:
 physics_notes:
   code: 3
   name: Physics
+  stock: 0
   pages: 14
   media: <%= Document::MEDIA_TYPES[:a4] %>
   description: Physics Notes description
@@ -37,6 +40,7 @@ physics_notes:
 unused_book:
   code: 4
   name: Unused Book
+  stock: 0
   pages: 10
   media: <%= Document::MEDIA_TYPES[:a4] %>
   description: Unused Book description

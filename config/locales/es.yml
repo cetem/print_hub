@@ -121,6 +121,7 @@
         code: 'Código'
         name: 'Nombre'
         enable: 'Habilitado'
+        stock: 'Existencia'
         pages: 'Páginas'
         media: 'Tamaño de papel'
         description: 'Descripción'

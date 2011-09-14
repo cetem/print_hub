@@ -21,7 +21,7 @@ class DocumentsControllerTest < ActionController::TestCase
     UserSession.create(users(:administrator))
     tag = Tag.find(tags(:notes).id)
 
-    get :index, :tag_id => tag.to_param
+    get :index, tag_id: tag.to_param
     assert_response :success
     assert_not_nil assigns(:documents)
     assert_equal tag.documents.count, assigns(:documents).size
@@ -32,7 +32,7 @@ class DocumentsControllerTest < ActionController::TestCase
 
   test 'should get index with search filter' do
     UserSession.create(users(:administrator))
-    get :index, :q => 'Math'
+    get :index, q: 'Math'
     assert_response :success
     assert_not_nil assigns(:documents)
     assert_equal 2, assigns(:documents).size
@@ -45,8 +45,8 @@ class DocumentsControllerTest < ActionController::TestCase
     UserSession.create(users(:administrator))
     session[:documents_for_printing] = [@document.id]
     
-    get :index, :clear_documents_for_printing => true
-    assert_redirected_to :action => :index
+    get :index, clear_documents_for_printing: true
+    assert_redirected_to action: :index
     assert session[:documents_for_printing].blank?
   end
 
@@ -61,16 +61,17 @@ class DocumentsControllerTest < ActionController::TestCase
   test 'should create document' do
     UserSession.create(users(:administrator))
     assert_difference ['Document.count', 'Version.count'] do
-      post :create, :document => {
-        :code => '0001234',
-        :name => 'New Name',
-        :pages => '15',
-        :media => Document::MEDIA_TYPES.values.first,
-        :enable => '1',
-        :description => 'New description',
-        :auto_tag_name => 'Some name given in autocomplete',
-        :tag_ids => [tags(:books).id, tags(:notes).id],
-        :file => fixture_file_upload('/files/test.pdf', 'application/pdf')
+      post :create, document: {
+        code: '0001234',
+        name: 'New Name',
+        stock: '1',
+        pages: '15',
+        media: Document::MEDIA_TYPES.values.first,
+        enable: '1',
+        description: 'New description',
+        auto_tag_name: 'Some name given in autocomplete',
+        tag_ids: [tags(:books).id, tags(:notes).id],
+        file: fixture_file_upload('/files/test.pdf', 'application/pdf')
       }
     end
 
@@ -84,7 +85,7 @@ class DocumentsControllerTest < ActionController::TestCase
 
   test 'should show document' do
     UserSession.create(users(:administrator))
-    get :show, :id => @document.to_param
+    get :show, id: @document.to_param
     assert_response :success
     assert_select '#error_body', false
     assert_template 'documents/show'
@@ -92,7 +93,7 @@ class DocumentsControllerTest < ActionController::TestCase
 
   test 'should get edit' do
     UserSession.create(users(:administrator))
-    get :edit, :id => @document.to_param
+    get :edit, id: @document.to_param
     assert_response :success
     assert_select '#error_body', false
     assert_template 'documents/edit'
@@ -100,14 +101,15 @@ class DocumentsControllerTest < ActionController::TestCase
 
   test 'should update document' do
     UserSession.create(users(:administrator))
-    put :update, :id => @document.to_param, :document => {
-      :code => '003456',
-      :name => 'Updated name',
-      :pages => '15',
-      :media => Document::MEDIA_TYPES.values.first,
-      :enable => '1',
-      :description => 'Updated description',
-      :auto_tag_name => 'Some name given in autocomplete'
+    put :update, id: @document.to_param, document: {
+      code: '003456',
+      name: 'Updated name',
+      stock: '1',
+      pages: '15',
+      media: Document::MEDIA_TYPES.values.first,
+      enable: '1',
+      description: 'Updated description',
+      auto_tag_name: 'Some name given in autocomplete'
     }
     assert_redirected_to documents_path
     assert_equal 'Updated name', @document.reload.name
@@ -118,7 +120,7 @@ class DocumentsControllerTest < ActionController::TestCase
 
     UserSession.create(users(:administrator))
     assert_difference('Document.count', -1) do
-      delete :destroy, :id => document.to_param
+      delete :destroy, id: document.to_param
     end
 
     assert_redirected_to documents_path
@@ -127,7 +129,7 @@ class DocumentsControllerTest < ActionController::TestCase
   test 'should not destroy document' do
     UserSession.create(users(:administrator))
     assert_no_difference('Document.count') do
-      delete :destroy, :id => @document.to_param
+      delete :destroy, id: @document.to_param
     end
 
     assert_redirected_to documents_path
@@ -138,17 +140,17 @@ class DocumentsControllerTest < ActionController::TestCase
     FileUtils.rm @document.file.path if File.exists?(@document.file.path)
 
     assert !File.exists?(@document.file.path)
-    get :download, :id => @document.to_param, :style => :original
-    assert_redirected_to :action => :index
-    assert_equal I18n.t(:'view.documents.non_existent'), flash.notice
+    get :download, id: @document.to_param, style: :original
+    assert_redirected_to action: :index
+    assert_equal I18n.t('view.documents.non_existent'), flash.notice
   end
 
   test 'should download document' do
     UserSession.create(users(:administrator))
-    get :download, :id => @document.to_param, :style => :original
+    get :download, id: @document.to_param, style: :original
     assert_response :success
     assert_equal(
-      File.open(@document.reload.file.path, :encoding => 'ASCII-8BIT').read,
+      File.open(@document.reload.file.path, encoding: 'ASCII-8BIT').read,
       @response.body
     )
   end
@@ -159,9 +161,9 @@ class DocumentsControllerTest < ActionController::TestCase
     
     i18n_scope = [:view, :documents, :remove_from_next_print]
     
-    xhr :post, :add_to_next_print, :id => @document.to_param
+    xhr :post, :add_to_next_print, id: @document.to_param
     assert_response :success
-    assert_match %r{#{I18n.t(:link, :scope => i18n_scope)}}, @response.body
+    assert_match %r{#{I18n.t(:title, scope: i18n_scope)}}, @response.body
     assert session[:documents_for_printing].include?(@document.id)
   end
   
@@ -172,9 +174,9 @@ class DocumentsControllerTest < ActionController::TestCase
     session[:documents_for_printing] = [@document.id]
     i18n_scope = [:view, :documents, :add_to_next_print]
     
-    xhr :delete, :remove_from_next_print, :id => @document.to_param
+    xhr :delete, :remove_from_next_print, id: @document.to_param
     assert_response :success
-    assert_match %r{#{I18n.t(:link, :scope => i18n_scope)}},
+    assert_match %r{#{I18n.t(:title, scope: i18n_scope)}},
       @response.body
     assert !session[:documents_for_printing].include?(@document.id)
     
@@ -183,7 +185,7 @@ class DocumentsControllerTest < ActionController::TestCase
 
   test 'should get autocomplete tag list' do
     UserSession.create(users(:administrator))
-    get :autocomplete_for_tag_name, :q => 'note'
+    get :autocomplete_for_tag_name, q: 'note'
     assert_response :success
     
     tags = ActiveSupport::JSON.decode(@response.body)
@@ -191,7 +193,7 @@ class DocumentsControllerTest < ActionController::TestCase
     assert_equal 2, tags.size
     assert tags.all? { |t| t['label'].match /note/i }
 
-    get :autocomplete_for_tag_name, :q => 'books'
+    get :autocomplete_for_tag_name, q: 'books'
     assert_response :success
     
     tags = ActiveSupport::JSON.decode(@response.body)
@@ -199,7 +201,7 @@ class DocumentsControllerTest < ActionController::TestCase
     assert_equal 1, tags.size
     assert tags.all? { |t| t['label'].match /books/i }
 
-    get :autocomplete_for_tag_name, :q => 'boxyz'
+    get :autocomplete_for_tag_name, q: 'boxyz'
     assert_response :success
     
     tags = ActiveSupport::JSON.decode(@response.body)

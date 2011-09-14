@@ -38,17 +38,17 @@ module DocumentsHelper
     
     if @documents_for_printing.include?(document.id)
       content << link_to(
-        t(:link, :scope => [:view, :documents, :remove_from_next_print]),
+        '-',
         remove_from_next_print_document_path(document),
-        :title => t(:title, :scope => [:view, :documents, :remove_from_next_print]),
-        :remote => true, :method => :delete, :class => :red
+        :title => t('view.documents.remove_from_next_print.title'),
+        :remote => true, :method => :delete, :class => 'remove_link'
       )
     else
       content << link_to(
-        t(:link, :scope => [:view, :documents, :add_to_next_print]),
+        '+',
         add_to_next_print_document_path(document),
-        :title => t(:title, :scope => [:view, :documents, :add_to_next_print]),
-        :remote => true, :method => :post
+        :title => t('view.documents.add_to_next_print.title'),
+        :remote => true, :method => :post, :class => 'add_link'
       )
     end
     

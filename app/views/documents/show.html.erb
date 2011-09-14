@@ -4,9 +4,12 @@
     <h2 class="title"><%= @document %></h2>
     
     <dl class="details">
+      <dt><%= Document.human_attribute_name :stock %>:</dt>
+      <dd><%= @document.stock %></dd>
+      
       <dt><%= Document.human_attribute_name :pages %>:</dt>
       <dd><%= @document.pages %></dd>
-
+      
       <dt><%= Document.human_attribute_name :media %>:</dt>
       <dd><%= show_document_media_text @document.media %></dd>
 
