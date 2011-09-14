@@ -265,4 +265,16 @@ class DocumentTest < ActiveSupport::TestCase
     assert @document.save
     assert_not_equal original_path, @document.tag_path
   end
+  
+  test 'use stock' do
+    assert_equal 5, @document.use_stock(5)
+    assert_equal 0, @document.stock
+    
+    @document.stock = 10
+    
+    assert_equal 0, @document.use_stock(8)
+    assert_equal 2, @document.stock
+    assert_equal 4, @document.use_stock(6)
+    assert_equal 0, @document.stock
+  end
 end

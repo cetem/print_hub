@@ -64,7 +64,7 @@ class Document < ActiveRecord::Base
   
   def as_json(options = nil)
     default_options = {
-      only: [:id, :pages],
+      only: [:id, :pages, :stock],
       methods: [:label, :informal]
     }
     
@@ -102,6 +102,18 @@ class Document < ActiveRecord::Base
 
       false
     end
+  end
+  
+  def use_stock(amount)
+    if self.stock >= amount
+      remaining = 0
+      self.stock -= amount
+    else
+      remaining = amount - self.stock
+      self.stock = 0
+    end
+    
+    remaining
   end
 
   def choose_styles

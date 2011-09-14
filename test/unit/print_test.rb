@@ -31,32 +31,32 @@ class PrintTest < ActiveSupport::TestCase
     
     assert_difference counts do
       @print = Print.create(
-        :printer => @printer,
-        :user => users(:administrator),
-        :scheduled_at => '',
-        :print_jobs_attributes => {
+        printer: @printer,
+        user: users(:administrator),
+        scheduled_at: '',
+        print_jobs_attributes: {
           '1' => {
-            :copies => 1,
+            copies: 1,
             # No importa el precio, se establece desde la configuración
-            :price_per_copy => 1000,
+            price_per_copy: 1000,
             # No importan las páginas, se establecen desde el documento
-            :pages => 1,
-            :two_sided => false,
-            :document => documents(:math_book)
+            pages: 1,
+            two_sided: false,
+            document: documents(:math_book)
           }
         },
-        :article_lines_attributes => {
+        article_lines_attributes: {
           '1' => {
-            :article_id => articles(:binding).id,
-            :units => 1,
+            article_id: articles(:binding).id,
+            units: 1,
             # No importa el precio, se establece desde el artículo
-            :unit_price => 12.0
+            unit_price: 12.0
           }
         },
-        :payments_attributes => {
+        payments_attributes: {
           '1' => {
-            :amount => 36.79,
-            :paid => 36.79
+            amount: 36.79,
+            paid: 36.79
           }
         }
       )
@@ -78,21 +78,21 @@ class PrintTest < ActiveSupport::TestCase
     
     assert_difference counts do
       @print = Print.create(
-        :printer => @printer,
-        :user => users(:administrator),
-        :scheduled_at => '',
-        :article_lines_attributes => {
+        printer: @printer,
+        user: users(:administrator),
+        scheduled_at: '',
+        article_lines_attributes: {
           '1' => {
-            :article_id => articles(:binding).id,
-            :units => 1,
+            article_id: articles(:binding).id,
+            units: 1,
             # No importa el precio, se establece desde el artículo
-            :unit_price => 12.0
+            unit_price: 12.0
           }
         },
-        :payments_attributes => {
+        payments_attributes: {
           '1' => {
-            :amount => 1.79,
-            :paid => 1.79
+            amount: 1.79,
+            paid: 1.79
           }
         }
       )
@@ -113,24 +113,24 @@ class PrintTest < ActiveSupport::TestCase
     assert_difference ['Print.count', 'PrintJob.count', 'Payment.count'] do
       assert_no_difference 'Cups.all_jobs(@printer).keys.sort.last' do
         @print = Print.create(
-          :printer => '',
-          :user => users(:administrator),
-          :scheduled_at => 2.hours.from_now,
-          :print_jobs_attributes => {
+          printer: '',
+          user: users(:administrator),
+          scheduled_at: 2.hours.from_now,
+          print_jobs_attributes: {
             '1' => {
-              :copies => 1,
+              copies: 1,
               # No importa el precio, se establece desde la configuración
-              :price_per_copy => 1000,
+              price_per_copy: 1000,
               # No importan las páginas, se establecen desde el documento
-              :pages => 1,
-              :two_sided => false,
-              :document => documents(:math_book)
+              pages: 1,
+              two_sided: false,
+              document: documents(:math_book)
             }
           },
-          :payments_attributes => {
+          payments_attributes: {
             '1' => {
-              :amount => 35.00,
-              :paid => 35.00
+              amount: 35.00,
+              paid: 35.00
             }
           }
         )
@@ -152,25 +152,25 @@ class PrintTest < ActiveSupport::TestCase
     assert_difference ['Print.count', 'PrintJob.count', 'Payment.count'] do
       assert_no_difference 'Cups.all_jobs(@printer).keys.sort.last' do
         @print = Print.create(
-          :printer => @printer,
-          :user => users(:administrator),
-          :scheduled_at => '',
-          :avoid_printing => true,
-          :print_jobs_attributes => {
+          printer: @printer,
+          user: users(:administrator),
+          scheduled_at: '',
+          avoid_printing: true,
+          print_jobs_attributes: {
             '1' => {
-              :copies => 1,
+              copies: 1,
               # No importa el precio, se establece desde la configuración
-              :price_per_copy => 1000,
+              price_per_copy: 1000,
               # No importan las páginas, se establecen desde el documento
-              :pages => 1,
-              :two_sided => false,
-              :document => documents(:math_book)
+              pages: 1,
+              two_sided: false,
+              document: documents(:math_book)
             }
           },
-          :payments_attributes => {
+          payments_attributes: {
             '1' => {
-              :amount => 35.00,
-              :paid => 35.00
+              amount: 35.00,
+              paid: 35.00
             }
           }
         )
@@ -186,6 +186,49 @@ class PrintTest < ActiveSupport::TestCase
     assert_equal '35.0', payment.paid.to_s
     assert_equal false, @print.pending_payment
   end
+  
+  # Prueba la creación de una impresión de documentos con existencia suficiente
+  test 'create with stock' do
+    document = documents(:book_with_stock)
+    original_stock = document.stock
+    
+    assert_difference ['Print.count', 'PrintJob.count', 'Payment.count'] do
+      assert_no_difference 'Cups.all_jobs(@printer).keys.sort.last' do
+        @print = Print.create(
+          printer: @printer,
+          user: users(:administrator),
+          scheduled_at: '',
+          print_jobs_attributes: {
+            '1' => {
+              copies: 1,
+              # No importa el precio, se establece desde la configuración
+              price_per_copy: 1000,
+              # No importan las páginas, se establecen desde el documento
+              pages: 1,
+              two_sided: false,
+              document: document
+            }
+          },
+          payments_attributes: {
+            '1' => {
+              amount: 1.00,
+              paid: 1.00
+            }
+          }
+        )
+      end
+    end
+
+    assert_equal 1, @print.reload.payments.size
+
+    payment = @print.payments.first
+
+    assert payment.cash?
+    assert_equal '1.0', payment.amount.to_s
+    assert_equal '1.0', payment.paid.to_s
+    assert_equal false, @print.pending_payment
+    assert_equal original_stock - 1, document.reload.stock
+  end
 
   test 'create with free credit' do
     UserSession.create(users(:operator))
@@ -194,32 +237,32 @@ class PrintTest < ActiveSupport::TestCase
 
     assert_difference counts do
       @print = Print.create(
-        :printer => @printer,
-        :user => users(:administrator),
-        :customer => customers(:student),
-        :scheduled_at => '',
-        :credit_password => 'student123',
-        :print_jobs_attributes => {
+        printer: @printer,
+        user: users(:administrator),
+        customer: customers(:student),
+        scheduled_at: '',
+        credit_password: 'student123',
+        print_jobs_attributes: {
           '1' => {
-            :copies => 1,
-            :price_per_copy => 0.10,
-            :two_sided => false,
-            :document => documents(:math_book)
+            copies: 1,
+            price_per_copy: 0.10,
+            two_sided: false,
+            document: documents(:math_book)
           } # 350 páginas = $35.00
         },
-        :article_lines_attributes => {
+        article_lines_attributes: {
           '1' => {
-            :article_id => articles(:binding).id,
-            :units => 1,
+            article_id: articles(:binding).id,
+            units: 1,
             # No importa el precio, se establece desde el artículo
-            :unit_price => 12.0
+            unit_price: 12.0
           }
         },
-        :payments_attributes => {
+        payments_attributes: {
           '1' => {
-            :amount => 36.79,
-            :paid => 36.79,
-            :paid_with => Payment::PAID_WITH[:credit]
+            amount: 36.79,
+            paid: 36.79,
+            paid_with: Payment::PAID_WITH[:credit]
           }
         }
       )
@@ -242,24 +285,24 @@ class PrintTest < ActiveSupport::TestCase
 
     assert_no_difference counts do
       @print = Print.create(
-        :printer => @printer,
-        :user => users(:administrator),
-        :customer => customers(:student),
-        :scheduled_at => '',
-        :credit_password => 'wrong_password',
-        :print_jobs_attributes => {
+        printer: @printer,
+        user: users(:administrator),
+        customer: customers(:student),
+        scheduled_at: '',
+        credit_password: 'wrong_password',
+        print_jobs_attributes: {
           '1' => {
-            :copies => 1,
-            :price_per_copy => 0.10,
-            :two_sided => false,
-            :document => documents(:math_book)
+            copies: 1,
+            price_per_copy: 0.10,
+            two_sided: false,
+            document: documents(:math_book)
           } # 350 páginas = $35.00
         },
-        :payments_attributes => {
+        payments_attributes: {
           '1' => {
-            :amount => 35.00,
-            :paid => 35.00,
-            :paid_with => Payment::PAID_WITH[:credit]
+            amount: 35.00,
+            paid: 35.00,
+            paid_with: Payment::PAID_WITH[:credit]
           }
         }
       )
@@ -276,36 +319,36 @@ class PrintTest < ActiveSupport::TestCase
       assert_difference cups_count, 1 do
         assert_difference 'Payment.count', 2 do
           @print = Print.create(
-            :printer => @printer,
-            :user => users(:administrator),
-            :customer => customers(:student),
-            :scheduled_at => '',
-            :credit_password => 'student123',
-            :print_jobs_attributes => {
+            printer: @printer,
+            user: users(:administrator),
+            customer: customers(:student),
+            scheduled_at: '',
+            credit_password: 'student123',
+            print_jobs_attributes: {
               '1' => {
-                :copies => 100,
-                :price_per_copy => 0.10,
-                :two_sided => false,
-                :document => documents(:math_book)
+                copies: 100,
+                price_per_copy: 0.10,
+                two_sided: false,
+                document: documents(:math_book)
               } # 35000 páginas = $3500.00
             },
-            :article_lines_attributes => {
+            article_lines_attributes: {
               '1' => {
-                :article_id => articles(:binding).id,
-                :units => 1,
+                article_id: articles(:binding).id,
+                units: 1,
                 # No importa el precio, se establece desde el artículo
-                :unit_price => 12.0
+                unit_price: 12.0
               }
             },
-            :payments_attributes => {
+            payments_attributes: {
               '1' => {
-                :amount => 3001.79,
-                :paid => 3001.79
+                amount: 3001.79,
+                paid: 3001.79
               },
               '2' => {
-                :amount => 500.00,
-                :paid => 500.00,
-                :paid_with => Payment::PAID_WITH[:credit]
+                amount: 500.00,
+                paid: 500.00,
+                paid_with: Payment::PAID_WITH[:credit]
               }
             }
           )
@@ -331,15 +374,15 @@ class PrintTest < ActiveSupport::TestCase
     assert_difference ['Print.count', 'PrintJob.count', 'Payment.count'] do
       assert_no_difference 'Cups.all_jobs(@printer).keys.sort.last' do
         @print = Print.create(
-          :printer => @printer,
-          :user => users(:administrator),
-          :scheduled_at => '',
-          :avoid_printing => true,
-          :include_documents => [documents(:math_book).id],
-          :payments_attributes => {
+          printer: @printer,
+          user: users(:administrator),
+          scheduled_at: '',
+          avoid_printing: true,
+          include_documents: [documents(:math_book).id],
+          payments_attributes: {
             '1' => {
-              :amount => 24.50,
-              :paid => 24.50
+              amount: 24.50,
+              paid: 24.50
             }
           }
         )
@@ -365,15 +408,15 @@ class PrintTest < ActiveSupport::TestCase
     assert_difference ['Print.count', 'PrintJob.count', 'Payment.count'] do
       assert_no_difference 'Cups.all_jobs(@printer).keys.sort.last' do
         @print = Print.create(
-          :printer => @printer,
-          :user => users(:administrator),
-          :scheduled_at => '',
-          :avoid_printing => true,
-          :order => order,
-          :payments_attributes => {
+          printer: @printer,
+          user: users(:administrator),
+          scheduled_at: '',
+          avoid_printing: true,
+          order: order,
+          payments_attributes: {
             '1' => {
-              :amount => '24.5',
-              :paid => '24.5'
+              amount: '24.5',
+              paid: '24.5'
             }
           }
         )
@@ -400,7 +443,7 @@ class PrintTest < ActiveSupport::TestCase
     assert_not_equal customers(:teacher).id, @print.customer_id
 
     assert_no_difference counts do
-      assert @print.update_attributes(:customer => customers(:teacher)),
+      assert @print.update_attributes(customer: customers(:teacher)),
         @print.errors.full_messages.join('; ')
     end
 
@@ -450,7 +493,7 @@ class PrintTest < ActiveSupport::TestCase
     assert @print.invalid?
     assert_equal 1, @print.errors.count
     assert_equal [error_message_from_model(@print, :scheduled_at, :after,
-        :restriction => Time.now.strftime('%d/%m/%Y %H:%M:%S'))],
+        restriction: Time.now.strftime('%d/%m/%Y %H:%M:%S'))],
       @print.errors[:scheduled_at]
   end
 
@@ -460,7 +503,7 @@ class PrintTest < ActiveSupport::TestCase
     assert @print.invalid?
     assert_equal 2, @print.errors.count
     assert_equal [error_message_from_model(@print, :printer, :must_be_blank),
-      error_message_from_model(@print, :printer, :too_long, :count => 255)].sort,
+      error_message_from_model(@print, :printer, :too_long, count: 255)].sort,
       @print.errors[:printer].sort
   end
 
@@ -519,11 +562,11 @@ class PrintTest < ActiveSupport::TestCase
     assert @print.pending_payment
     
     assert @print.update_attributes(
-      :payments_attributes => {
+      payments_attributes: {
         '0' => {
-          :id => payments(:math_payment).id,
-          :amount => payments(:math_payment).amount,
-          :paid => payments(:math_payment).amount
+          id: payments(:math_payment).id,
+          amount: payments(:math_payment).amount,
+          paid: payments(:math_payment).amount
         }
       }
     )
@@ -550,7 +593,7 @@ class PrintTest < ActiveSupport::TestCase
       new_print.article_lines.build(al.attributes.except(:id))
     end
 
-    new_print.payments.build(:amount => new_print.price)
+    new_print.payments.build(amount: new_print.price)
 
     new_print
   end

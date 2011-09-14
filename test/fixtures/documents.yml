@@ -49,3 +49,16 @@ unused_book:
   tag_path: 'Basics ## Books'
   file_file_name: unused_book.pdf
   tags: books, basics
+  
+book_with_stock:
+  code: 5
+  name: Book with stock
+  stock: 3
+  pages: 10
+  media: <%= Document::MEDIA_TYPES[:a4] %>
+  description: Book with stock description
+  enable: true
+  private: false
+  tag_path: 'Basics ## Books'
+  file_file_name: book_with_stock.pdf
+  tags: books, basics

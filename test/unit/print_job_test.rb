@@ -36,14 +36,14 @@ class PrintJobTest < ActiveSupport::TestCase
 
     assert_difference 'PrintJob.count' do
       @print_job = PrintJob.create(
-        :copies => 2,
-        :pages => document.pages,
-        :price_per_copy => 0.10,
-        :range => nil,
-        :two_sided => false,
-        :job_id => 1,
-        :print => prints(:math_print),
-        :document => document
+        copies: 2,
+        pages: document.pages,
+        price_per_copy: 0.10,
+        range: nil,
+        two_sided: false,
+        job_id: 1,
+        print: prints(:math_print),
+        document: document
       )
     end
 
@@ -58,13 +58,13 @@ class PrintJobTest < ActiveSupport::TestCase
   test 'create without document' do
     assert_difference 'PrintJob.count' do
       @print_job = PrintJob.create(
-        :copies => 1,
-        :pages => 50,
-        :price_per_copy => 1111,
-        :range => nil,
-        :two_sided => false,
-        :job_id => 1,
-        :print => prints(:math_print)
+        copies: 1,
+        pages: 50,
+        price_per_copy: 1111,
+        range: nil,
+        two_sided: false,
+        job_id: 1,
+        print: prints(:math_print)
       )
     end
 
@@ -78,7 +78,7 @@ class PrintJobTest < ActiveSupport::TestCase
   # Prueba de actualización de un trabajo de impresión
   test 'update' do
     assert_no_difference 'PrintJob.count' do
-      assert @print_job.update_attributes(:copies => 20),
+      assert @print_job.update_attributes(copies: 20),
         @print_job.errors.full_messages.join('; ')
     end
 
@@ -140,10 +140,10 @@ class PrintJobTest < ActiveSupport::TestCase
     assert @print_job.invalid?
     assert_equal 3, @print_job.errors.count
     assert_equal [error_message_from_model(@print_job, :range, :too_long,
-        :count => 255), error_message_from_model(@print_job, :range,
+        count: 255), error_message_from_model(@print_job, :range,
         :invalid)].sort, @print_job.errors[:range].sort
     assert_equal [error_message_from_model(@print_job, :job_id, :too_long,
-        :count => 255)], @print_job.errors[:job_id]
+        count: 255)], @print_job.errors[:job_id]
   end
 
   test 'validates correct range of attributes' do
@@ -153,11 +153,11 @@ class PrintJobTest < ActiveSupport::TestCase
     assert @print_job.invalid?
     assert_equal 3, @print_job.errors.count
     assert_equal [error_message_from_model(@print_job, :copies, :greater_than,
-        :count => 0)], @print_job.errors[:copies]
+        count: 0)], @print_job.errors[:copies]
     assert_equal [error_message_from_model(@print_job, :pages, :greater_than,
-        :count => 0)], @print_job.errors[:pages]
+        count: 0)], @print_job.errors[:pages]
     assert_equal [error_message_from_model(@print_job, :price_per_copy,
-        :greater_than_or_equal_to, :count => 0)],
+        :greater_than_or_equal_to, count: 0)],
       @print_job.errors[:price_per_copy]
   end
 
@@ -209,7 +209,7 @@ class PrintJobTest < ActiveSupport::TestCase
     assert @print_job.invalid?
     assert_equal 1, @print_job.errors.count
     assert_equal [error_message_from_model(@print_job, :range, :too_long,
-        :count => @print_job.document.pages)], @print_job.errors[:range]
+        count: @print_job.document.pages)], @print_job.errors[:range]
   end
 
   test 'options' do
@@ -311,6 +311,30 @@ class PrintJobTest < ActiveSupport::TestCase
     assert_difference cups_count do
       @print_job.send_to_print(@printer)
     end
+  end
+  
+  test 'not print if there is stock available' do
+    cups_count = 'Cups.all_jobs(@printer).keys.sort.last'
+    
+    assert @print_job.document.stock = @print_job.copies
+    
+    assert_no_difference cups_count do
+      assert_difference '@print_job.document.stock', -@print_job.copies do
+        @print_job.send_to_print(@printer)
+      end
+    end
+  end
+  
+  test 'print if the stock is not enough' do
+    cups_count = 'Cups.all_jobs(@printer).keys.sort.last'
+    
+    assert @print_job.document.stock = @print_job.copies - 1
+    
+    assert_difference cups_count do
+      @print_job.send_to_print(@printer)
+    end
+    
+    assert_equal 0, @print_job.document.stock
   end
 
   test 'cancel print' do

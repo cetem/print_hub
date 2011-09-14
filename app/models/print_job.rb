@@ -26,7 +26,7 @@ class PrintJob < ActiveRecord::Base
 
   # Relaciones
   belongs_to :print, inverse_of: :print_jobs
-  belongs_to :document
+  belongs_to :document, autosave: true
   autocomplete_for :document, :name, name: :auto_document
 
   def initialize(attributes = nil, options = {})
@@ -46,10 +46,10 @@ class PrintJob < ActiveRecord::Base
 
   def options
     options = {
-      'Collate' => 'True',
       'sides' => self.two_sided ? 'two-sided-long-edge' : 'one-sided'
     }
     
+    options['Collate'] = 'True' unless self.two_sided
     options['media'] = self.document.media if self.document
     options['page-ranges'] = self.range unless self.range.blank?
     options['job-hold-until'] = self.job_hold_until if self.job_hold_until
@@ -99,14 +99,18 @@ class PrintJob < ActiveRecord::Base
   def send_to_print(printer, user = nil)
     # Imprimir solamente si el archivo existe
     if self.document.try(:file?) && File.exists?(self.document.file.path)
-      timestamp = Time.now.utc.strftime('%Y%m%d%H%M%S')
-      user = user.try(:username)
-      options = "-d #{printer} -n #{self.copies} -o fit-to-page "
-      options += "-t #{user || 'ph'}-#{timestamp} "
-      options += self.options.map { |o, v| "-o #{o}=#{v}" }.join(' ')
-      out = %x{lp #{options} "#{self.document.file.path}" 2>&1}
+      copies_to_print = self.document.use_stock self.copies
+      
+      if copies_to_print > 0
+        timestamp = Time.now.utc.strftime('%Y%m%d%H%M%S')
+        user = user.try(:username)
+        options = "-d #{printer} -n #{copies_to_print} -o fit-to-page "
+        options += "-t #{user || 'ph'}-#{timestamp} "
+        options += self.options.map { |o, v| "-o #{o}=#{v}" }.join(' ')
+        out = %x{lp #{options} "#{self.document.file.path}" 2>&1}
 
-      self.job_id = out.match(/#{Regexp.escape(printer)}-\d+/).to_a[0] || '-'
+        self.job_id = out.match(/#{Regexp.escape(printer)}-\d+/).to_a[0] || '-'
+      end
     end
   end
 
