@@ -10,18 +10,26 @@ nav {
 }
 
 table {
-  border: 2px solid #333;
+  border-collapse: collapse;
+
+  td {
+    padding: .1em 1em;
+  }
+
+  td, th {
+    border: 2px solid #333;
+  }
 
   th {
     padding: .25em 1em;
     text-align: left;
   }
-
-  td {
-    padding: .1em 1em;
-  }
 }
 
 td, th, h1, h2, h3, h4, h5, h6 {
   font-family: helvetica, sans-serif;
+}
+
+.not_printable {
+  display: none;
 }

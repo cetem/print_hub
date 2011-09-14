@@ -69,6 +69,7 @@ class OrdersController < ApplicationController
   def show
     @title = t 'view.orders.show_title'
     @order = @order_scope.find(params[:id])
+    @can_print = true
 
     respond_to do |format|
       format.html # show.html.erb

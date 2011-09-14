@@ -6,7 +6,8 @@
   <!--[if lt IE 9]>
   <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
   <![endif]-->
-  <%= stylesheet_link_tag 'application' %>
+  <%= stylesheet_link_tag 'application', media: 'screen' %>
+  <%= stylesheet_link_tag 'print', media: 'print' if @can_print %>
   <%= javascript_include_tag 'application' %>
   <%= favicon_link_tag %>
   <%= csrf_meta_tag %>

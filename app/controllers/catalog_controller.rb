@@ -128,6 +128,6 @@ class CatalogController < ApplicationController
   end
   
   def default_direction
-    params[:sort] == 'code' ? 'desc' : 'asc'
+    sort_column == 'code' ? 'desc' : 'asc'
   end
 end
