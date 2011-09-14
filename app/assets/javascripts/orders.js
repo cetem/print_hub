@@ -43,7 +43,7 @@ var Order = {
   }
 };
 
-jQuery(function() {
+jQuery(function($) {
   if($('#ph_orders').length > 0) {
     $('a.details_link').live('ajax:success', function(event, data) {
       Helper.show(

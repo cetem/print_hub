@@ -147,7 +147,7 @@ jQuery(function($) {
 
       if(printJob.length > 0 && /^\s*$/.test(element.val())) {
         printJob.find('input[name$="[range]"]').data('rangePages', 0);
-        printJob.find('input[name$="[pages]"]').val('').attr('disabled', false);
+        printJob.find('input[name$="[pages]"]').val('').removeAttr('disabled');
         printJob.find('.dynamic_details').html('');
         printJob.find('a.details_link').hide();
 
@@ -167,21 +167,21 @@ jQuery(function($) {
       }
     });
 
-    $('input[name$="[pages]"]').live('change', function() {
+    $('input[name$="[pages]"]').live('change keyup', function() {
       var element = $(this);
       var printJob = element.parents('.print_job');
+      var range = printJob.find('input[name$="[range]"]');
+      var autoDocument = printJob.find('input[name$="[auto_document_name]"]');
 
       if(!element.attr('disabled') && parseInt(element.val()) > 0) {
-        var range = printJob.find('input[name$="[range]"]');
-
-        range.data('rangePages', parseInt(element.val())).attr('disabled', true);
-        printJob.find('input[name$="[auto_document_name]"]').attr(
-          'disabled', true
-        );
+        range.attr('disabled', true);
+        autoDocument.attr('disabled', true);
       } else {
-        printJob.find('input[name$="[range]"]').removeAttr('disabled');
-        printJob.find('input[name$="[auto_document_name]"]').removeAttr('disabled');
+        range.removeAttr('disabled');
+        autoDocument.removeAttr('disabled');
       }
+      
+      range.data('rangePages', parseInt(element.val()));
 
       Print.updatePrintJobPrice(printJob);
     });
