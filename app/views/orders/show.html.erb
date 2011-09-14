@@ -4,6 +4,9 @@
     <h3>
       <%= l @order.scheduled_at, format: :long if @order.scheduled_at %>
     </h3>
+    <p class="not_printable">
+      <%= link_to_function t('view.orders.print'), 'window.print()' %>
+    </p>
   </header>
   
   <% if @order.notes.present? %>

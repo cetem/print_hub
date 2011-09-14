@@ -639,6 +639,7 @@
       order_number: 'Pedido %{number} (%{status})'
       cancel: 'Cancelar'
       notes_link: '¿Necesitás aclarar algo sobre el pedido?'
+      print: 'Imprimir comprobante'
       status:
         pending: 'Pendiente'
         completed: 'Impreso'
