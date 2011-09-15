@@ -15,12 +15,12 @@
 
 <p>
   <b><%= Print.human_attribute_name :scheduled_at %></b>:
-  <%= l @print.scheduled_at, :format => :long if @print.scheduled_at %>
+  <%= l @print.scheduled_at, format: :long if @print.scheduled_at %>
 </p>
 
 <% unless @print.print_jobs.empty? %>
   <section class="nested_items">
-    <h2><%= t :print_jobs, :scope => [:view, :prints] %></h2>
+    <h2><%= t 'view.prints.print_jobs' %></h2>
 
     <table class="summary">
       <thead>
@@ -42,7 +42,7 @@
             <td><%= print_job.pages %></td>
             <td><%= number_to_currency print_job.price_per_copy %></td>
             <td><%= print_job.range %></td>
-            <td><%= t(print_job.two_sided ? :yes : :no, :scope => :label) %></td>
+            <td><%= t(print_job.two_sided ? 'label.yes' : 'label.no') %></td>
             <td><%= link_to_cancel_print_job(print_job) %></td>
           </tr>
         <% end %>
@@ -53,7 +53,7 @@
 
 <% unless @print.article_lines.empty? %>
   <section class="nested_items">
-    <h2><%= t :article_lines, :scope => [:view, :prints] %></h2>
+    <h2><%= t 'view.prints.article_lines' %></h2>
 
     <table class="summary">
       <thead>
@@ -77,7 +77,7 @@
 <% end %>
 
 <section class="nested_items">
-  <h2><%= t :payment, :scope => [:view, :prints] %></h2>
+  <h2><%= t 'view.prints.payment' %></h2>
 
   <table class="summary">
     <thead>
@@ -100,9 +100,9 @@
 </section>
 
 <nav class="links">
-  <%= link_to raw("<b>#{t(:'view.prints.new')}</b>"), new_print_path %> |
+  <%= link_to raw("<b>#{t('view.prints.new')}</b>"), new_print_path %> |
   <% if @print.pending_payment %>
-    <%= link_to t(:'label.edit'), edit_print_path(@print) %> |
+    <%= link_to t('label.edit'), edit_print_path(@print) %> |
   <% end %>
-  <%= link_to t(:'label.list'), prints_path %>
+  <%= link_to t('label.list'), prints_path %>
 </nav>

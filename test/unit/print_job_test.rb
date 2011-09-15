@@ -306,35 +306,48 @@ class PrintJobTest < ActiveSupport::TestCase
   end
 
   test 'print' do
-    cups_count = 'Cups.all_jobs(@printer).keys.sort.last'
-    
-    assert_difference cups_count do
+    assert_difference 'Cups.all_jobs(@printer).keys.sort.last' do
       @print_job.send_to_print(@printer)
     end
+    
+    assert_equal @print_job.copies, @print_job.printed_copies
   end
   
   test 'not print if there is stock available' do
-    cups_count = 'Cups.all_jobs(@printer).keys.sort.last'
+    @print_job.document.stock = @print_job.copies
     
-    assert @print_job.document.stock = @print_job.copies
-    
-    assert_no_difference cups_count do
+    assert_no_difference 'Cups.all_jobs(@printer).keys.sort.last' do
       assert_difference '@print_job.document.stock', -@print_job.copies do
         @print_job.send_to_print(@printer)
       end
     end
+    
+    assert_equal 0, @print_job.printed_copies
   end
   
   test 'print if the stock is not enough' do
-    cups_count = 'Cups.all_jobs(@printer).keys.sort.last'
+    @print_job.document.stock = @print_job.copies - 1
     
-    assert @print_job.document.stock = @print_job.copies - 1
-    
-    assert_difference cups_count do
+    assert_difference 'Cups.all_jobs(@printer).keys.sort.last' do
       @print_job.send_to_print(@printer)
     end
     
     assert_equal 0, @print_job.document.stock
+    assert_equal 1, @print_job.printed_copies
+  end
+  
+  test 'print if there is stock but the range is set' do
+    @print_job.document.stock = @print_job.copies
+    @print_job.range = '1,2'
+    
+    assert_difference 'Cups.all_jobs(@printer).keys.sort.last' do
+      assert_no_difference '@print_job.document.stock' do
+        @print_job.send_to_print(@printer)
+      end
+    end
+    
+    assert_equal @print_job.copies, @print_job.document.stock
+    assert_equal @print_job.copies, @print_job.printed_copies
   end
 
   test 'cancel print' do

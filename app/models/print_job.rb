@@ -6,7 +6,7 @@ class PrintJob < ActiveRecord::Base
   
   # Atributos no persistentes
   attr_writer :range_pages
-  attr_accessor :auto_document_name, :job_hold_until
+  attr_accessor :auto_document_name, :job_hold_until, :printed_copies
 
   # Restricciones de atributos
   attr_protected :job_id, :price_per_copy
@@ -99,12 +99,17 @@ class PrintJob < ActiveRecord::Base
   def send_to_print(printer, user = nil)
     # Imprimir solamente si el archivo existe
     if self.document.try(:file?) && File.exists?(self.document.file.path)
-      copies_to_print = self.document.use_stock self.copies
+      # Solamente usar documentos en existencia si no se especifica un rango
+      if self.range_pages == self.pages
+        self.printed_copies = self.document.use_stock self.copies
+      else
+        self.printed_copies = self.copies
+      end
       
-      if copies_to_print > 0
+      if self.printed_copies > 0
         timestamp = Time.now.utc.strftime('%Y%m%d%H%M%S')
         user = user.try(:username)
-        options = "-d #{printer} -n #{copies_to_print} -o fit-to-page "
+        options = "-d #{printer} -n #{self.printed_copies} -o fit-to-page "
         options += "-t #{user || 'ph'}-#{timestamp} "
         options += self.options.map { |o, v| "-o #{o}=#{v}" }.join(' ')
         out = %x{lp #{options} "#{self.document.file.path}" 2>&1}
