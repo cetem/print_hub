@@ -6,17 +6,20 @@ class PrintJob < ActiveRecord::Base
   
   # Atributos no persistentes
   attr_writer :range_pages
-  attr_accessor :auto_document_name, :job_hold_until, :printed_copies
+  attr_accessor :auto_document_name, :job_hold_until
 
   # Restricciones de atributos
-  attr_protected :job_id, :price_per_copy
+  attr_protected :job_id, :price_per_copy, :printed_copies
   attr_readonly :document_id, :copies, :pages, :price_per_copy, :range, :job_id,
     :two_sided, :print_id
 
   # Restricciones
-  validates :copies, :pages, :price_per_copy, presence: true
+  validates :copies, :pages, :price_per_copy, :printed_copies, presence: true
   validates :copies, :pages,
     numericality: { only_integer: true, greater_than: 0 },
+    allow_nil: true, allow_blank: true
+  validates :printed_copies,
+    numericality: { only_integer: true, greater_than_or_equal_to: 0 },
     allow_nil: true, allow_blank: true
   validates :price_per_copy, numericality: { greater_than_or_equal_to: 0 },
     allow_nil: true, allow_blank: true
@@ -34,6 +37,7 @@ class PrintJob < ActiveRecord::Base
 
     self.two_sided = true if self.two_sided.nil?
     self.copies ||= 1
+    self.printed_copies ||= 0
     self.pages = self.document.pages if self.document
     self.price_per_copy ||= PriceChooser.choose(
       one_sided: !self.two_sided, copies: self.print.try(:total_pages)

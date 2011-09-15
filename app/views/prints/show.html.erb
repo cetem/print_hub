@@ -27,6 +27,7 @@
         <tr>
           <th><%= PrintJob.human_attribute_name :document_id %></th>
           <th><%= PrintJob.human_attribute_name :copies %></th>
+          <th><%= PrintJob.human_attribute_name :printed_copies %></th>
           <th><%= PrintJob.human_attribute_name :pages %></th>
           <th><%= PrintJob.human_attribute_name :price_per_copy %></th>
           <th><%= PrintJob.human_attribute_name :range %></th>
@@ -39,6 +40,7 @@
           <tr>
             <td><%= print_job.document %></td>
             <td><%= print_job.copies %></td>
+            <td><%= print_job.printed_copies %></td>
             <td><%= print_job.pages %></td>
             <td><%= number_to_currency print_job.price_per_copy %></td>
             <td><%= print_job.range %></td>

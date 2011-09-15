@@ -181,6 +181,7 @@
           one: 'Trabajo de impresión'
           other: 'Trabajos de impresión'
           copies: 'Copias'
+          printed_copies: 'Copias impresas'
           pages: 'Páginas'
           price_per_copy: 'Precio por hoja'
           range: 'Rango'
@@ -188,6 +189,7 @@
           document_id: 'Documento'
       print_job:
         copies: 'Copias'
+        printed_copies: 'Copias impresas'
         pages: 'Páginas'
         price_per_copy: 'Precio por hoja'
         range: 'Rango'

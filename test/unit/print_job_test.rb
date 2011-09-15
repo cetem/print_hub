@@ -95,42 +95,58 @@ class PrintJobTest < ActiveSupport::TestCase
   test 'validates blank attributes' do
     @print_job.copies = '  '
     @print_job.pages = nil
+    @print_job.printed_copies = '  '
     @print_job.price_per_copy = '  '
     assert @print_job.invalid?
-    assert_equal 3, @print_job.errors.count
+    assert_equal 4, @print_job.errors.count
     assert_equal [error_message_from_model(@print_job, :copies, :blank)],
       @print_job.errors[:copies]
     assert_equal [error_message_from_model(@print_job, :pages, :blank)],
       @print_job.errors[:pages]
-    assert_equal [error_message_from_model(@print_job, :price_per_copy,
-        :blank)], @print_job.errors[:price_per_copy]
+    assert_equal [
+      error_message_from_model(@print_job, :printed_copies, :blank)
+    ], @print_job.errors[:printed_copies]
+    assert_equal [
+      error_message_from_model(@print_job, :price_per_copy, :blank)
+    ], @print_job.errors[:price_per_copy]
   end
 
   # Prueba que las validaciones del modelo se cumplan como es esperado
   test 'validates well formated attributes' do
     @print_job.copies = '?xx'
     @print_job.pages = '?xx'
+    @print_job.printed_copies = '?xx'
     @print_job.price_per_copy = '?xx'
     assert @print_job.invalid?
-    assert_equal 3, @print_job.errors.count
+    assert_equal 4, @print_job.errors.count
     assert_equal [error_message_from_model(@print_job, :copies, :not_a_number)],
       @print_job.errors[:copies]
     assert_equal [error_message_from_model(@print_job, :pages, :not_a_number)],
       @print_job.errors[:pages]
-    assert_equal [error_message_from_model(@print_job, :price_per_copy,
-        :not_a_number)], @print_job.errors[:price_per_copy]
+    assert_equal [
+      error_message_from_model(@print_job, :printed_copies, :not_a_number)
+    ], @print_job.errors[:printed_copies]
+    assert_equal [
+      error_message_from_model(@print_job, :price_per_copy, :not_a_number)
+    ], @print_job.errors[:price_per_copy]
   end
 
   test 'validates integer attributes' do
     @print_job.copies = '1.23'
     @print_job.pages = '1.23'
+    @print_job.printed_copies = '1.23'
     @print_job.price_per_copy = '1.23'
     assert @print_job.invalid?
-    assert_equal 2, @print_job.errors.count
-    assert_equal [error_message_from_model(@print_job, :copies, :not_an_integer)],
-      @print_job.errors[:copies]
-    assert_equal [error_message_from_model(@print_job, :pages, :not_an_integer)],
-      @print_job.errors[:pages]
+    assert_equal 3, @print_job.errors.count
+    assert_equal [
+      error_message_from_model(@print_job, :copies, :not_an_integer)
+    ], @print_job.errors[:copies]
+    assert_equal [
+      error_message_from_model(@print_job, :pages, :not_an_integer)
+    ], @print_job.errors[:pages]
+    assert_equal [
+      error_message_from_model(@print_job, :printed_copies, :not_an_integer)
+    ], @print_job.errors[:printed_copies]
   end
 
   # Prueba que las validaciones del modelo se cumplan como es esperado
@@ -149,16 +165,20 @@ class PrintJobTest < ActiveSupport::TestCase
   test 'validates correct range of attributes' do
     @print_job.copies = '0'
     @print_job.pages = '0'
+    @print_job.printed_copies = '-1'
     @print_job.price_per_copy = '-0.01'
     assert @print_job.invalid?
-    assert_equal 3, @print_job.errors.count
+    assert_equal 4, @print_job.errors.count
     assert_equal [error_message_from_model(@print_job, :copies, :greater_than,
         count: 0)], @print_job.errors[:copies]
     assert_equal [error_message_from_model(@print_job, :pages, :greater_than,
         count: 0)], @print_job.errors[:pages]
+    assert_equal [error_message_from_model(@print_job, :printed_copies,
+        :greater_than_or_equal_to, count: 0)
+    ], @print_job.errors[:printed_copies]
     assert_equal [error_message_from_model(@print_job, :price_per_copy,
-        :greater_than_or_equal_to, count: 0)],
-      @print_job.errors[:price_per_copy]
+        :greater_than_or_equal_to, count: 0)
+    ], @print_job.errors[:price_per_copy]
   end
 
   # Prueba que las validaciones del modelo se cumplan como es esperado
