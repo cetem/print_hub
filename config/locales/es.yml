@@ -692,6 +692,7 @@
       add_article_line_title: 'Agregar artículo (CTRL + ALT + A)'
       payment: 'Pago'
       document_details: 'Ver detalles del documento'
+      document_stock: 'Existencia disponible del documento'
       print: 'Imprimir'
       print_title: 'Imprimir (CTRL + ALT + P)'
       show_pending: 'Ver impresiones con *pagos pendientes*'

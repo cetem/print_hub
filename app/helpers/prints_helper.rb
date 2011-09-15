@@ -25,6 +25,22 @@ module PrintsHelper
       :style => ('display: none;' unless customer)
   end
   
+  def link_to_document_details(document)
+    link_to '...', document || document_path(:id => 0),
+      :class => 'details_link action_link', :remote => true,
+      :title => t('view.prints.document_details'),
+      :style => ('display: none;' unless document)
+  end
+  
+  def show_document_stock(document)
+    stock = document.try(:stock) || 0
+    
+    content_tag :span, "##{stock}",
+      :class => 'document_stock',
+      :title => t('view.prints.document_stock'),
+      :style => ('display: none;' if stock == 0)
+  end
+  
   def there_are_documents_for_printing?
     !session[:documents_for_printing].blank?
   end

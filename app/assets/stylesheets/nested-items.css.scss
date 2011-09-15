@@ -18,9 +18,9 @@
 @include nested-column(print_jobs_headers, print_job, 2, 9%);
 @include nested-column(print_jobs_headers, print_job, 3, 7%);
 @include nested-column(print_jobs_headers, print_job, 4, 7%);
-@include nested-column(print_jobs_headers, print_job, 5, 15%);
+@include nested-column(print_jobs_headers, print_job, 5, 10%);
 @include nested-column(print_jobs_headers, print_job, 6, 7%);
-@include nested-column(print_jobs_headers, print_job, 7, 10%);
+@include nested-column(print_jobs_headers, print_job, 7, 15%);
 
 @include nested-column(order_lines_headers, order_line, 1, 42%);
 @include nested-column(order_lines_headers, order_line, 2, 9%);

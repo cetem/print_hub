@@ -11,11 +11,11 @@ class ApplicationController < ActionController::Base
       error = "#{exception.class}: #{exception.message}\n\n"
       exception.backtrace.each { |l| error << "#{l}\n" }
 
-      logger.error(error)
-
       unless response.redirect_url
         render template: 'shared/show_error', locals: {error: exception}
       end
+      
+      logger.error(error)
 
     # En caso que la presentación misma de la excepción no salga como se espera
     rescue => ex

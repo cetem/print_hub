@@ -103,6 +103,7 @@ jQuery(function($) {
         var pages = item.pages;
         var printJob = $(this).parents('.print_job:first');
         var printJobDetailsLink = printJob.find('a.details_link');
+        var printJobStockDetails = printJob.find('.document_stock');
 
         printJob.find('input[name$="[pages]"]').val(pages).attr('disabled', true);
         printJobDetailsLink.attr(
@@ -112,6 +113,14 @@ jQuery(function($) {
         printJob.find('input[name$="[range]"]').val('').data(
           'rangePages', pages
         ).trigger('ph:page_modification');
+          
+        if(parseInt(item.stock) > 0) {
+          printJobStockDetails.html(
+            printJobStockDetails.html().replace(/\d+$/, item.stock)
+          ).show();
+        } else {
+          printJobStockDetails.hide();
+        }
 
         Print.updatePrintJobPrice(printJob);
       } else if (item.unit_price) {
@@ -150,6 +159,7 @@ jQuery(function($) {
         printJob.find('input[name$="[pages]"]').val('').removeAttr('disabled');
         printJob.find('.dynamic_details').html('');
         printJob.find('a.details_link').hide();
+        printJob.find('.document_stock').hide();
 
         Print.updatePrintJobPrice(printJob);
       }

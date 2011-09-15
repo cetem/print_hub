@@ -1,5 +1,18 @@
-#payments {
-  th {
-    width: 20%;
+@import "mixins";
+
+#ph_prints {
+  .document_stock {
+    background: #c00;
+    color: #fff;
+    font-weight: bold;
+    cursor: help;
+    padding: .1em .25em;
+    @include rounded-corners(.25em);
+  }
+  
+  #payments {
+    th {
+      width: 25%;
+    }
   }
 }
