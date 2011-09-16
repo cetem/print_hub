@@ -2,4 +2,4 @@
   t('view.prints.job_canceled') : t('view.prints.job_not_canceled') %>
 <% id = "#cancel_print_job_#{@print_job.id}" %>
 $('<%= id %>').html('<%= message %>');
-$('<%= id %>').addClass('<%= @cancelled ? 'green' : 'red' %>');
+$('<%= id %>').addClass('<%= @cancelled ? 'good' : 'warning' %>');

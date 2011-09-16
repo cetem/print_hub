@@ -1,9 +1,14 @@
 @import "mixins";
 
 #ph_prints {
+  span.money {
+    margin: 0em;
+  }
+
   .document_stock {
-    background: #c00;
+    background: $warning-color;
     color: #fff;
+    font-size: .8em;
     font-weight: bold;
     cursor: help;
     padding: .1em .25em;

@@ -101,6 +101,7 @@ jQuery(function($) {
 
       if (item.pages) {
         var pages = item.pages;
+        var stock = parseInt(item.stock);
         var printJob = $(this).parents('.print_job:first');
         var printJobDetailsLink = printJob.find('a.details_link');
         var printJobStockDetails = printJob.find('.document_stock');
@@ -114,10 +115,13 @@ jQuery(function($) {
           'rangePages', pages
         ).trigger('ph:page_modification');
           
-        if(parseInt(item.stock) > 0) {
+        if(stock > 0) {
+          var copies = parseInt(printJob.find('input[name$="[copies]"]').val());
+          var printedCopies = stock > copies ? 0 : copies - stock;
+          
           printJobStockDetails.html(
-            printJobStockDetails.html().replace(/\d+$/, item.stock)
-          ).show();
+            '#' + stock + '!' + printedCopies
+          ).data('stock', stock).show();
         } else {
           printJobStockDetails.hide();
         }
@@ -194,6 +198,20 @@ jQuery(function($) {
       range.data('rangePages', parseInt(element.val()));
 
       Print.updatePrintJobPrice(printJob);
+    });
+    
+    $('input[name$="[copies]"]').live('change keyup', function() {
+      var element = $(this);
+      var printJob = element.parents('.print_job');
+      var printJobStockDetails = printJob.find('.document_stock');
+      var stock = parseInt(printJobStockDetails.data('stock'));
+      
+      if(stock > 0) {
+        var copies = parseInt(element.val());
+        var printedCopies = stock > copies ? 0 : copies - stock;
+
+        printJobStockDetails.html('#' + stock + '!' + printedCopies);
+      }
     });
 
     Jobs.listenRangeChanges();

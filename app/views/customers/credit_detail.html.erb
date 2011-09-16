@@ -1,16 +1,16 @@
 <div id="customer_credit_detail">
   <div>
     <% if @customer.current_bonuses.empty? %>
-      <p class="red">
-        <%= t(:without_bonuses, :scope => [:view, :customers]) %>
+      <p class="warning">
+        <%= t('view.customers.without_bonuses') %>
       </p>
     <% else %>
       <section class="nested_items">
         <h2>
-          <%= t(:current_bonuses,
-            :count => @customer.current_bonuses.size,
-            :scope => [:view, :customers])
-          %>
+          <%= t(
+            'view.customers.current_bonuses',
+            count: @customer.current_bonuses.size
+          ) %>
         </h2>
 
         <table class="summary">
@@ -35,16 +35,16 @@
     <% end %>
     
     <% if @customer.current_deposits.empty? %>
-      <p class="red">
-        <%= t(:without_deposits, :scope => [:view, :customers]) %>
+      <p class="warning">
+        <%= t('view.customers.without_deposits') %>
       </p>
     <% else %>
       <section class="nested_items">
         <h2>
-          <%= t(:current_deposits,
-            :count => @customer.current_deposits.size,
-            :scope => [:view, :customers])
-          %>
+          <%= t(
+            'view.customers.current_deposits',
+            count: @customer.current_deposits.size
+          ) %>
         </h2>
 
         <table class="summary">

@@ -462,13 +462,13 @@ h3.title.clear {
 }
 
 input.field_with_errors, select.field_with_errors, text_area.field_with_errors {
-  border: 1px solid #c00 !important;
-  @include box-shadow(0em, 0em, .25em, #c00 !important);
+  border: 1px solid $warning-color !important;
+  @include box-shadow(0em, 0em, .25em, $warning-color !important);
 }
 
 label.field_with_errors {
-  color: #c00;
-  text-shadow: 0px 0px .1em #c00;
+  color: $warning-color;
+  text-shadow: 0px 0px .1em $warning-color;
 }
 
 nav#menu_links {
@@ -546,7 +546,7 @@ nav#menu_links {
     border-left: 2px dotted #666;
 
     &.look_me {
-      background: #c00;
+      background: $warning-color;
       color: #fff;
       font-weight: bold;
       border-left: none;
@@ -807,7 +807,7 @@ ul.raw {
   clear: both;
 }
 
-.green {
+.good {
   color: #0c0;
 }
 
@@ -815,10 +815,10 @@ ul.raw {
   white-space: nowrap;
 }
 
-.red {
-  color: #c00;
-}
-
 .strong {
   font-weight: bold;
+}
+
+.warning {
+  color: $warning-color;
 }

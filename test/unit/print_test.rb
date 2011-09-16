@@ -228,6 +228,7 @@ class PrintTest < ActiveSupport::TestCase
     assert_equal '1.0', payment.paid.to_s
     assert_equal false, @print.pending_payment
     assert_equal original_stock - 1, document.reload.stock
+    assert_equal 0, @print.print_jobs.first.printed_copies
   end
 
   test 'create with free credit' do
