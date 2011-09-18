@@ -17,6 +17,7 @@ class UserTest < ActiveSupport::TestCase
     assert_equal users(:administrator).language, @user.language
     assert_equal users(:administrator).email, @user.email
     assert_equal users(:administrator).default_printer, @user.default_printer
+    assert_equal users(:administrator).lines_per_page, @user.lines_per_page
     assert_equal users(:administrator).username, @user.username
     assert_equal users(:administrator).crypted_password, @user.crypted_password
     assert_equal users(:administrator).admin, @user.admin
@@ -32,17 +33,18 @@ class UserTest < ActiveSupport::TestCase
       )
       
       @user = User.create(
-        :name => 'New name',
-        :last_name => 'New last name',
-        :email => 'new_user@printhub.com',
-        :default_printer => '',
-        :language => LANGUAGES.first.to_s,
-        :username => 'new_user',
-        :password => 'new_password',
-        :password_confirmation => 'new_password',
-        :admin => true,
-        :enable => true,
-        :avatar => avatar
+        name: 'New name',
+        last_name: 'New last name',
+        email: 'new_user@printhub.com',
+        default_printer: '',
+        lines_per_page: 12,
+        language: LANGUAGES.first.to_s,
+        username: 'new_user',
+        password: 'new_password',
+        password_confirmation: 'new_password',
+        admin: true,
+        enable: true,
+        avatar: avatar
       )
       
       thumbs_dir = Pathname.new(@user.reload.avatar.path).dirname
@@ -57,7 +59,7 @@ class UserTest < ActiveSupport::TestCase
   # Prueba de actualización de un usuario
   test 'update' do
     assert_no_difference 'User.count' do
-      assert @user.update_attributes(:name => 'Updated name'),
+      assert @user.update_attributes(name: 'Updated name'),
         @user.errors.full_messages.join('; ')
     end
 
@@ -91,14 +93,16 @@ class UserTest < ActiveSupport::TestCase
   test 'validates well formated attributes' do
     @user.username = 'sla&& / )'
     @user.email = 'incorrect@format'
+    @user.lines_per_page = '1x'
     assert @user.invalid?
-    assert_equal 2, @user.errors.count
-    assert_equal [I18n.t(:login_invalid,
-        :scope => [:authlogic, :error_messages])],
+    assert_equal 3, @user.errors.count
+    assert_equal [I18n.t(:login_invalid, scope: [:authlogic, :error_messages])],
       @user.errors[:username]
-    assert_equal [I18n.t(:email_invalid,
-        :scope => [:authlogic, :error_messages])],
+    assert_equal [I18n.t(:email_invalid, scope: [:authlogic, :error_messages])],
       @user.errors[:email]
+    assert_equal [
+      error_message_from_model(@user, :lines_per_page, :not_a_number)
+    ], @user.errors[:lines_per_page]
   end
 
   # Prueba que las validaciones del modelo se cumplan como es esperado
@@ -131,11 +135,11 @@ class UserTest < ActiveSupport::TestCase
     assert @user.invalid?
     assert_equal 3, @user.errors.count
     assert_equal [error_message_from_model(@user, :username, :too_short,
-      :count => 3)], @user.errors[:username]
+      count: 3)], @user.errors[:username]
     assert_equal [error_message_from_model(@user, :password, :too_short,
-      :count => 4)], @user.errors[:password]
+      count: 4)], @user.errors[:password]
     assert_equal [error_message_from_model(@user, :password_confirmation,
-        :too_short, :count => 4)], @user.errors[:password_confirmation]
+        :too_short, count: 4)], @user.errors[:password_confirmation]
 
     @user.reload
 
@@ -147,15 +151,15 @@ class UserTest < ActiveSupport::TestCase
     assert @user.invalid?
     assert_equal 8, @user.errors.count
     assert_equal [error_message_from_model(@user, :username, :too_long,
-      :count => 100)], @user.errors[:username]
+      count: 100)], @user.errors[:username]
     assert_equal [error_message_from_model(@user, :name, :too_long,
-      :count => 100)], @user.errors[:name]
+      count: 100)], @user.errors[:name]
     assert_equal [error_message_from_model(@user, :last_name, :too_long,
-      :count => 100)], @user.errors[:last_name]
+      count: 100)], @user.errors[:last_name]
     assert_equal [error_message_from_model(@user, :email, :too_long,
-      :count => 100)], @user.errors[:email]
+      count: 100)], @user.errors[:email]
     assert_equal [error_message_from_model(@user, :language, :inclusion),
-      error_message_from_model(@user, :language, :too_long, :count => 10)].sort,
+      error_message_from_model(@user, :language, :too_long, count: 10)].sort,
       @user.errors[:language].sort
   end
 
@@ -166,5 +170,22 @@ class UserTest < ActiveSupport::TestCase
     assert_equal 1, @user.errors.count
     assert_equal [error_message_from_model(@user, :language, :inclusion)],
       @user.errors[:language]
+  end
+  
+  # Prueba que las validaciones del modelo se cumplan como es esperado
+  test 'validates range of attributes' do
+    @user.lines_per_page = '0'
+    assert @user.invalid?
+    assert_equal 1, @user.errors.count
+    assert_equal [
+      error_message_from_model(@user, :lines_per_page, :greater_than, count: 0)
+    ], @user.errors[:lines_per_page]
+    
+    @user.lines_per_page = '100'
+    assert @user.invalid?
+    assert_equal 1, @user.errors.count
+    assert_equal [
+      error_message_from_model(@user, :lines_per_page, :less_than, count: 100)
+    ], @user.errors[:lines_per_page]
   end
 end

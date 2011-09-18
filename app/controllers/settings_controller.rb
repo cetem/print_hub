@@ -6,8 +6,7 @@ class SettingsController < ApplicationController
   def index
     @title = t :'view.settings.index_title'
     @settings = Setting.order('created_at ASC').paginate(
-      :page => params[:page],
-      :per_page => APP_LINES_PER_PAGE
+      :page => params[:page], :per_page => lines_per_page
     )
 
     respond_to do |format|

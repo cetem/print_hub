@@ -7,8 +7,7 @@ class BonusesController < ApplicationController
     bonuses_scope = @customer ? @customer.bonuses : Bonus.scoped
     
     @bonuses = bonuses_scope.order('created_at DESC').paginate(
-      :page => params[:page],
-      :per_page => APP_LINES_PER_PAGE
+      :page => params[:page], :per_page => lines_per_page
     )
 
     respond_to do |format|

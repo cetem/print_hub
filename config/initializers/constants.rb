@@ -1,5 +1,5 @@
 # Cantidad de líneas por página
-APP_LINES_PER_PAGE = 32
+APP_LINES_PER_PAGE = 16
 # Subdominio donde ingresan los clientes
 CUSTOMER_SUBDOMAIN = 'fotocopia'
 # Umbral crédito / precio para determinar si se imprime o no un pedido

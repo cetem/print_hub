@@ -209,6 +209,7 @@
         language: 'Idioma'
         email: 'Correo electrónico'
         default_printer: 'Impresora predeterminada'
+        lines_per_page: 'Máximo de filas por listado'
         username: 'Usuario'
         password: 'Contraseña'
         password_confirmation: 'Confirmación'

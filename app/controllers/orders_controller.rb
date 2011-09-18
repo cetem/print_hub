@@ -53,10 +53,7 @@ class OrdersController < ApplicationController
       end
     end
     
-    @orders = @orders.paginate(
-      page: params[:page],
-      per_page: APP_LINES_PER_PAGE
-    )
+    @orders = @orders.paginate(page: params[:page], per_page: lines_per_page)
 
     respond_to do |format|
       format.html # index.html.erb

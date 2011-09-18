@@ -28,18 +28,19 @@ class UsersControllerTest < ActionController::TestCase
   test 'should create user' do
     UserSession.create(@user)
     assert_difference ['User.count', 'Version.count'] do
-      post :create, :user => {
-        :name => 'New name',
-        :last_name => 'New last name',
-        :email => 'new_user@printhub.com',
-        :default_printer => '',
-        :language => LANGUAGES.first.to_s,
-        :username => 'new_user',
-        :password => 'new_password',
-        :password_confirmation => 'new_password',
-        :admin => '1',
-        :enable => '1',
-        :avatar => fixture_file_upload('/files/test.gif', 'image/gif')
+      post :create, user: {
+        name: 'New name',
+        last_name: 'New last name',
+        email: 'new_user@printhub.com',
+        default_printer: '',
+        lines_per_page: '12',
+        language: LANGUAGES.first.to_s,
+        username: 'new_user',
+        password: 'new_password',
+        password_confirmation: 'new_password',
+        admin: '1',
+        enable: '1',
+        avatar: fixture_file_upload('/files/test.gif', 'image/gif')
       }
     end
 
@@ -50,7 +51,7 @@ class UsersControllerTest < ActionController::TestCase
 
   test 'should show user' do
     UserSession.create(@user)
-    get :show, :id => @user.to_param
+    get :show, id: @user.to_param
     assert_response :success
     assert_not_nil assigns(:user)
     assert_select '#error_body', false
@@ -59,7 +60,7 @@ class UsersControllerTest < ActionController::TestCase
 
   test 'should get edit' do
     UserSession.create(@user)
-    get :edit, :id => @user.to_param
+    get :edit, id: @user.to_param
     assert_response :success
     assert_not_nil assigns(:user)
     assert_select '#error_body', false
@@ -68,16 +69,17 @@ class UsersControllerTest < ActionController::TestCase
 
   test 'should update user' do
     UserSession.create(@user)
-    put :update, :id => @user.to_param, :user => {
-      :name => 'Updated name',
-      :last_name => 'Updated last name',
-      :email => 'updated_user@printhub.com',
-      :default_printer => '',
-      :language => LANGUAGES.first.to_s,
-      :password => 'updated_password',
-      :password_confirmation => 'updated_password',
-      :admin => '1',
-      :enable => '1'
+    put :update, id: @user.to_param, user: {
+      name: 'Updated name',
+      last_name: 'Updated last name',
+      email: 'updated_user@printhub.com',
+      default_printer: '',
+      lines_per_page: '12',
+      language: LANGUAGES.first.to_s,
+      password: 'updated_password',
+      password_confirmation: 'updated_password',
+      admin: '1',
+      enable: '1'
     }
     assert_redirected_to users_path
     assert_equal 'Updated name', @user.reload.name
@@ -88,17 +90,17 @@ class UsersControllerTest < ActionController::TestCase
     FileUtils.rm @user.avatar.path if File.exists?(@user.avatar.path)
 
     assert !File.exists?(@user.avatar.path)
-    get :avatar, :id => @user.to_param, :style => :original
-    assert_redirected_to :action => :index
+    get :avatar, id: @user.to_param, style: :original
+    assert_redirected_to action: :index
     assert_equal I18n.t(:'view.users.non_existent_avatar'), flash.notice
   end
 
   test 'should download avatar' do
     UserSession.create(users(:administrator))
-    get :avatar, :id => @user.to_param, :style => :original
+    get :avatar, id: @user.to_param, style: :original
     assert_response :success
     assert_equal(
-      File.open(@user.reload.avatar.path, :encoding => 'ASCII-8BIT').read,
+      File.open(@user.reload.avatar.path, encoding: 'ASCII-8BIT').read,
       @response.body
     )
   end

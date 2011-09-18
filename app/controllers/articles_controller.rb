@@ -6,8 +6,7 @@ class ArticlesController < ApplicationController
   def index
     @title = t :'view.articles.index_title'
     @articles = Article.order("#{Article.table_name}.name ASC").paginate(
-      :page => params[:page],
-      :per_page => APP_LINES_PER_PAGE
+      :page => params[:page], :per_page => lines_per_page
     )
 
     respond_to do |format|

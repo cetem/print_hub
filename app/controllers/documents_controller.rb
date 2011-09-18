@@ -54,7 +54,7 @@ class DocumentsController < ApplicationController
 
     @documents = @documents.order(
       "#{Document.table_name}.#{sort_column} #{sort_direction.upcase}"
-    ).paginate(page: params[:page], per_page: APP_LINES_PER_PAGE)
+    ).paginate(page: params[:page], per_page: lines_per_page)
 
     respond_to do |format|
       format.html # index.html.erb

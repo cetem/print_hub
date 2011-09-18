@@ -43,7 +43,7 @@ class CustomersController < ApplicationController
     end
     
     @customers = @customers.paginate(
-      page: params[:page], per_page: APP_LINES_PER_PAGE
+      page: params[:page], per_page: lines_per_page
     )
 
     respond_to do |format|

@@ -19,6 +19,16 @@
 </p>
 
 <p>
+  <b><%= User.human_attribute_name :default_printer %></b>:
+  <%= @user.default_printer %>
+</p>
+
+<p>
+  <b><%= User.human_attribute_name :lines_per_page %></b>:
+  <%= @user.lines_per_page %>
+</p>
+
+<p>
   <b><%= User.human_attribute_name :admin %></b>:
   <%= t(@user.admin ? :yes : :no, :scope => [:label]) %>
 </p>

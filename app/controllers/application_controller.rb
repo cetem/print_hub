@@ -132,6 +132,10 @@ class ApplicationController < ActionController::Base
 
     session[:return_to] = nil
   end
+  
+  def lines_per_page
+    current_user.try(:lines_per_page) || APP_LINES_PER_PAGE
+  end
 
   def make_datetime_range(parameters = nil)
     if parameters

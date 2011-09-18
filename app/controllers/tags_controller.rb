@@ -10,7 +10,7 @@ class TagsController < ApplicationController
     @tags = (@parent_tag.try(:children) || Tag).where(
       ('parent_id IS NULL' unless @parent_tag)
     ).order("#{Tag.table_name}.name ASC").paginate(
-      page: params[:page], per_page: APP_LINES_PER_PAGE
+      page: params[:page], per_page: lines_per_page
     )
 
     respond_to do |format|
