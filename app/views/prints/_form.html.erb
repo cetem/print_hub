@@ -21,7 +21,7 @@
       :class => field_classes.join(' '),
       'data-autocomplete-url' => autocomplete_for_customer_name_prints_path %>
     <% if @print.customer %>
-      <%= link_to_function 'X', "clearCustomer(); $(this).remove()",
+      <%= link_to_function 'X', "Print.clearCustomer(); $(this).remove()",
         :class => :remove %>
     <% end %>
     <%= f.hidden_field :customer_id, :class => :autocomplete_id %>
