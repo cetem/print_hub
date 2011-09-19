@@ -22,7 +22,7 @@
       'data-autocomplete-url' => autocomplete_for_customer_name_prints_path %>
     <% if @print.customer %>
       <%= link_to_function 'X', "Print.clearCustomer(); $(this).remove()",
-        :class => :remove %>
+        :class => 'remove' %>
     <% end %>
     <%= f.hidden_field :customer_id, :class => :autocomplete_id %>
     <%= hidden_field_tag :customer_free_credit,

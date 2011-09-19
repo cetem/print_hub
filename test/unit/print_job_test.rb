@@ -324,6 +324,18 @@ class PrintJobTest < ActiveSupport::TestCase
     assert_equal 11, @print_job.range_pages
     assert_equal '0.80', '%.2f' % @print_job.price # 0.70 + 0.10
   end
+  
+  test 'full document' do
+    assert @print_job.full_document?
+    
+    @print_job.range = "1-#{@print_job.pages - 1}"
+    
+    assert !@print_job.full_document?
+    
+    @print_job.range = "1-#{@print_job.pages}"
+    
+    assert @print_job.full_document?
+  end
 
   test 'print' do
     assert_difference 'Cups.all_jobs(@printer).keys.sort.last' do

@@ -42,7 +42,7 @@
         <%= link_to_remove_nested_item(f) %>
       <% end %>
       <%= link_to_document_details f.object.document %>
-      <%= show_document_stock f.object.document, f.object.copies %>
+      <%= show_document_stock f.object %>
       <%= f.hidden_field :lock_version %>
     </div>
     <div class="dynamic_details" id="<%= "document_details_#{id}" %>"></div>

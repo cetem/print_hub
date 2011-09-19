@@ -36,14 +36,15 @@ module PrintsHelper
       :style => ('display: none;' unless document)
   end
   
-  def show_document_stock(document, copies)
-    stock = document.try(:stock) || 0
+  def show_document_stock(print_job)
+    stock = print_job.document.try(:stock) || 0
+    copies = print_job.copies
     printed_copies = stock > copies ? 0 : copies - stock;
     
     content_tag :span, "##{stock}!#{printed_copies}",
       :class => 'document_stock',
       :title => t('view.prints.document_stock'),
-      :style => ('display: none;' if stock == 0),
+      :style => ('display: none;' if stock == 0 || !print_job.full_document?),
       'data-stock' => stock
   end
   

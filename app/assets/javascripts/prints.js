@@ -1,4 +1,16 @@
 var Print = {
+  updateStock: function(printJob) {
+    var copies = parseInt(printJob.find('input[name$="[copies]"]').val());
+    var printJobStockDetails = printJob.find('.document_stock');
+    var stock = parseInt(printJobStockDetails.data('stock'));
+
+    if(stock > 0) {
+      var printedCopies = stock > copies ? 0 : copies - stock;
+
+      printJobStockDetails.html('#' + stock + '!' + printedCopies);
+    }
+  },
+  
   updateTotalPrice: function() {
     var freeCredit = parseFloat($('#customer_free_credit').val()) || 0.0;
     var payWithCash = 0.0, payWithBonus = 0.0, totalPrice = 0.0;
@@ -116,12 +128,8 @@ jQuery(function($) {
         ).trigger('ph:page_modification');
           
         if(stock > 0) {
-          var copies = parseInt(printJob.find('input[name$="[copies]"]').val());
-          var printedCopies = stock > copies ? 0 : copies - stock;
-          
-          printJobStockDetails.html(
-            '#' + stock + '!' + printedCopies
-          ).data('stock', stock).show();
+          printJobStockDetails.data('stock', stock).show();
+          Print.updateStock(printJob);
         } else {
           printJobStockDetails.hide();
         }
@@ -203,19 +211,26 @@ jQuery(function($) {
     $('input[name$="[copies]"]').live('change keyup', function() {
       var element = $(this);
       var printJob = element.parents('.print_job');
-      var printJobStockDetails = printJob.find('.document_stock');
-      var stock = parseInt(printJobStockDetails.data('stock'));
       
-      if(stock > 0) {
-        var copies = parseInt(element.val());
-        var printedCopies = stock > copies ? 0 : copies - stock;
-
-        printJobStockDetails.html('#' + stock + '!' + printedCopies);
-      }
+      Print.updateStock(printJob);
     });
-
+    
     Jobs.listenRangeChanges();
     Jobs.listenTwoSidedChanges();
+    
+    $('input[name$="[range]"]').live('keyup', function() {
+      var printJob = $(this).parents('.print_job');
+      var printJobStockDetails = printJob.find('.document_stock');
+      var stock = parseInt(printJobStockDetails.data('stock'));
+      var rangePages = parseInt($(this).data('rangePages'));
+      var pages = parseInt(printJob.find('input[name$="[pages]"]').val());
+      
+      if(rangePages == pages && stock > 0) {
+        printJobStockDetails.show();
+      } else {
+        printJobStockDetails.hide();
+      }
+    });
 
     $('.page_modifier').live('change keyup ph:page_modification', function() {
       var totalPages = 0;

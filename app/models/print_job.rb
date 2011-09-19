@@ -91,6 +91,10 @@ class PrintJob < ActiveRecord::Base
 
     (self.copies || 0) * ((self.price_per_copy || 0) * even_range + rest)
   end
+  
+  def full_document?
+    self.range_pages == self.pages
+  end
 
   def price_per_one_sided_copy
     PriceChooser.choose one_sided: true, copies: self.print.try(:total_pages)
@@ -104,7 +108,7 @@ class PrintJob < ActiveRecord::Base
     # Imprimir solamente si el archivo existe
     if self.document.try(:file?) && File.exists?(self.document.file.path)
       # Solamente usar documentos en existencia si no se especifica un rango
-      if self.range_pages == self.pages
+      if self.full_document?
         self.printed_copies = self.document.use_stock self.copies
       else
         self.printed_copies = self.copies
