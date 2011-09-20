@@ -87,8 +87,9 @@ module ApplicationHelper
   # Devuelve el HTML con los links para navegar una lista paginada
   #
   # * _objects_:: Objetos con los que se genera la lista paginada
-  def pagination_links(objects)
-    result = will_paginate objects, inner_window: 1, outer_window: 1
+  def pagination_links(objects, params = nil)
+    result = will_paginate objects, inner_window: 1, outer_window: 1,
+      params: params
     
     unless result
       previous_tag = content_tag(

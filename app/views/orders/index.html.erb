@@ -30,15 +30,15 @@
   <nav class="links">
     <%= pagination_links(@orders) %>
     <% unless current_customer %>
-      <% if params[:type] != 'all' %>
+      <% if order_type == 'print' %>
         <%= link_to(
           textilize_without_paragraph(t('view.orders.show_all')),
-          review_orders_path(type: 'all')
+          orders_path(type: 'all')
         ) %>
-      <% elsif params[:type] != 'print' %>
+      <% else %>
         <%= link_to(
           textilize_without_paragraph(t('view.orders.show_print')),
-          review_orders_path(type: 'print')
+          orders_path(type: 'print')
         ) %>
       <% end %>
     <% end %>

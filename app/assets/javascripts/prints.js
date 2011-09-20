@@ -1,6 +1,6 @@
 var Print = {
   updateStock: function(printJob) {
-    var copies = parseInt(printJob.find('input[name$="[copies]"]').val());
+    var copies = parseInt(printJob.find('input[name$="[copies]"]').val()) || 0;
     var printJobStockDetails = printJob.find('.document_stock');
     var stock = parseInt(printJobStockDetails.data('stock'));
 

@@ -1,7 +1,7 @@
 module OrdersHelper
   def link_to_show_order(text, order)
     link_to(text,
-      current_customer ? order : review_order_path(order, type: params[:type])
+      current_customer ? order : order_path(order, type: order_type)
     )
   end
   
@@ -19,10 +19,10 @@ module OrdersHelper
         new_print_path(order_id: order.id)
       )
       out << link_to_if(order.pending?, t('view.orders.cancel'),
-        review_order_path(order, type: params[:type]),
+        order_path(order, type: order_type),
         confirm: t('messages.confirmation'), method: :delete
       )
-      out << link_to(t('label.list'), review_orders_path(type: params[:type]))
+      out << link_to(t('label.list'), orders_path(type: order_type))
     end
     
     raw out.join(' | ')
@@ -31,12 +31,12 @@ module OrdersHelper
   def show_orders_table_caption
     unless current_customer
       content_tag(:caption,
-        raw(textilize_without_paragraph(t("view.orders.type.#{params[:type]}")))
+        raw(textilize_without_paragraph(t("view.orders.type.#{order_type}")))
       )
     end
   end
   
-  def review_orders_text
+  def orders_text
     count = Order.pending_for_print_count
     count_tag = content_tag(
       :span, count, :id => 'orders_count', :class => ('look_me' if count > 0)

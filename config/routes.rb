@@ -58,9 +58,7 @@ PrintHubApp::Application.routes.draw do
 
     resources :settings, only: [:index, :show, :edit, :update]
     
-    scope ':type', defaults: {type: 'print'}, constraints: {type: /print|all/} do
-      resources :orders, only: [:index, :show, :destroy], as: 'review_orders'
-    end
+    resources :orders, only: [:index, :show, :destroy]
 
     scope ':status', defaults: {status: 'all'},
       constraints: {status: /pending|scheduled|all/} do

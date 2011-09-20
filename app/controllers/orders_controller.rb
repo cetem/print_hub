@@ -1,4 +1,5 @@
 class OrdersController < ApplicationController
+  helper_method :order_type
   before_filter :require_customer_or_user, :load_scope,
     only: [:index, :show, :destroy]
   before_filter :require_customer, except: [:index, :show, :destroy]
@@ -140,7 +141,7 @@ class OrdersController < ApplicationController
     
     respond_to do |format|
       if @order.cancelled! && @order.save
-        path = current_customer ? @order : review_order_path(@order, type: params[:type])
+        path = current_customer ? @order : order_path(@order, type: order_type)
         format.html { redirect_to path, notice: t('view.orders.correctly_cancelled') }
         format.xml  { head :ok }
       else
@@ -156,8 +157,12 @@ class OrdersController < ApplicationController
     if current_customer
       @order_scope = current_customer.orders
     else
-      @order_scope = params[:type] == 'print' ?
+      @order_scope = order_type == 'print' ?
         Order.pending.for_print : Order.scoped
     end
+  end
+  
+  def order_type
+    %w[print all].include?(params[:type]) ? params[:type] : 'print'
   end
 end

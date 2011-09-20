@@ -92,7 +92,7 @@ class OrdersControllerTest < ActionController::TestCase
   test 'should show user order' do
     @request.host = 'localhost'
     UserSession.create(users(:administrator))
-    get :show, id: @order.to_param
+    get :show, type: 'all', id: @order.to_param
     assert_response :success
     assert_select '#error_body', false
     assert_template 'orders/show'
@@ -144,7 +144,7 @@ class OrdersControllerTest < ActionController::TestCase
       delete :destroy, id: @order.to_param, type: 'all'
     end
     
-    assert_redirected_to review_order_url(assigns(:order), type: 'all')
+    assert_redirected_to order_url(assigns(:order), type: 'all')
     assert @order.reload.cancelled?
   end
 end
