@@ -3,6 +3,10 @@
   <div class="document_data">
     <h2 class="title"><%= @document %></h2>
     
+    <% unless request.xhr? %>
+      <figure class="barcode"><%= show_document_barcode @document %></figure>
+    <% end %>
+    
     <dl class="details">
       <dt><%= Document.human_attribute_name :stock %>:</dt>
       <dd><%= @document.stock %></dd>

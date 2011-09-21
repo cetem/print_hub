@@ -4,6 +4,12 @@ APP_LINES_PER_PAGE = 16
 CUSTOMER_SUBDOMAIN = 'fotocopia'
 # Umbral crédito / precio para determinar si se imprime o no un pedido
 CREDIT_THRESHOLD = 0.7
+# Dominio público
+PUBLIC_DOMAIN = APP_CONFIG['public_host'].split(':').first
+# Puerto público
+PUBLIC_PORT = APP_CONFIG['public_host'].split(':').last.try(:to_i) || 80
+# Protocolo público
+PUBLIC_PROTOCOL = 'http'
 # Adaptador de base de datos
 DB_ADAPTER = ActiveRecord::Base.connection.adapter_name
 # Expresión regular para validar direcciones de correo

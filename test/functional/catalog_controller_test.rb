@@ -109,4 +109,23 @@ class CatalogControllerTest < ActionController::TestCase
     
     assert session[:documents_to_order].blank?
   end
+  
+  test 'should add document by code to a new order' do
+    CustomerSession.create(customers(:student))
+    assert session[:documents_to_order].blank?
+    
+    get :add_to_order_by_code, :id => @document.code
+    assert_redirected_to new_order_url
+    assert session[:documents_to_order].include?(@document.id)
+  end
+  
+  test 'should not add document by code to a new order if not exists' do
+    CustomerSession.create(customers(:student))
+    assert session[:documents_to_order].blank?
+    
+    get :add_to_order_by_code, :id => 'wrong_code'
+    assert_redirected_to catalog_url
+    assert_equal I18n.t('view.documents.non_existent'), flash.notice
+    assert session[:documents_to_order].blank?
+  end
 end

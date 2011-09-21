@@ -33,6 +33,21 @@ module DocumentsHelper
       :scope => [:view, :documents, :media_type]
   end
   
+  def show_document_barcode(document)
+    barcode = Barby::QrCode.new(
+      add_to_order_by_code_catalog_url(
+        document.code,
+        host: PUBLIC_DOMAIN, port: PUBLIC_PORT, protocol: PUBLIC_PROTOCOL
+      )
+    )
+    outputter = barcode.outputter_for(:to_svg)
+    
+    outputter.title = document.to_s
+    outputter.xdim = outputter.ydim = 4
+    
+    raw outputter.to_svg.split("\n")[1..-1].join("\n")
+  end
+  
   def document_link_for_use_in_next_print(document)
     content = ''
     

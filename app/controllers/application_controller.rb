@@ -57,7 +57,7 @@ class ApplicationController < ActionController::Base
 
       false
     else
-      expires_now
+      response.headers['Cache-Control'] = 'no-cache, no-store'
     end
   end
 
@@ -83,7 +83,7 @@ class ApplicationController < ActionController::Base
 
       false
     else
-      expires_now
+      response.headers['Cache-Control'] = 'no-cache, no-store'
     end
   end
 
@@ -119,7 +119,7 @@ class ApplicationController < ActionController::Base
 
       false
     else
-      expires_now
+      response.headers['Cache-Control'] = 'no-cache, no-store'
     end
   end
 
@@ -127,8 +127,8 @@ class ApplicationController < ActionController::Base
     session[:return_to] = request.fullpath
   end
 
-  def redirect_back_or_default(default)
-    redirect_to(session[:return_to] || default)
+  def redirect_back_or_default(default, *args)
+    redirect_to(session[:return_to] || default, *args)
 
     session[:return_to] = nil
   end

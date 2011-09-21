@@ -15,10 +15,10 @@ class CustomerSessionsController < ApplicationController
     
     respond_to do |format|
       if @customer_session.save
-        format.html { redirect_to(catalog_url, notice: t('view.customer_sessions.correctly_created')) }
+        format.html { redirect_back_or_default(catalog_url, notice: t('view.customer_sessions.correctly_created')) }
         format.xml  { render xml: @customer_session, status: :created, location: catalog_url }
       else
-        format.html { render action: :new }
+        format.html { render action: 'new' }
         format.xml  { render xml: @customer_session.errors, status: :unprocessable_entity }
       end
     end

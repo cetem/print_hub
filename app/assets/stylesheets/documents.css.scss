@@ -5,6 +5,12 @@ div.document_data {
   margin-right: 1em;
 }
 
+figure.barcode {
+  float: right;
+  border: 2px solid #ccc;
+  margin: 0em 0em .5em .5em;
+}
+
 span.tag {
   color: $main-text-color;
   background: #dedede;

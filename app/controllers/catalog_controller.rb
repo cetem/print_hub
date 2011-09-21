@@ -103,6 +103,23 @@ class CatalogController < ApplicationController
     session[:documents_to_order].delete(@document.id)
   end
   
+  # GET /catalog/1/add_to_order_by_code
+  def add_to_order_by_code
+    @document = document_scope.find_by_code(params[:id])
+    
+    if @document
+      session[:documents_to_order] ||= []
+
+      unless session[:documents_to_order].include?(@document.id)
+        session[:documents_to_order] << @document.id
+      end
+
+      redirect_to new_order_url
+    else
+      redirect_to catalog_url, notice: t('view.documents.non_existent')
+    end
+  end
+  
   private
   
   def load_documents_to_order
