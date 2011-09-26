@@ -18,6 +18,7 @@ gem 'RedCloth'
 gem 'newrelic_rpm'
 gem 'barby'
 gem 'rqrcode'
+gem 'capistrano'
 gem 'whenever', require: false
 # Previo sudo apt-get install libcupsys2-dev
 gem 'cups'
@@ -32,7 +33,6 @@ group :assets do
 end
 
 group :development do
-  gem 'capistrano'
   gem 'ruby-debug19', require: 'ruby-debug'
   gem 'mongrel', '1.2.0.pre2'
 end
