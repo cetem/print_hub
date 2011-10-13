@@ -1,6 +1,6 @@
 source 'http://rubygems.org'
 
-gem 'rails', '3.1.1.rc1'
+gem 'rails', '3.1.1'
 
 gem 'pg'
 gem 'authlogic'
@@ -39,5 +39,6 @@ end
 
 group :test do
   gem 'turn', require: false
+  gem 'minitest', require: false
   gem 'ruby-prof'
 end
