@@ -38,14 +38,24 @@ module DocumentsHelper
       add_to_order_by_code_catalog_url(
         document.code,
         host: PUBLIC_DOMAIN, port: PUBLIC_PORT, protocol: PUBLIC_PROTOCOL
-      )
+      ), level: :h
     )
     outputter = barcode.outputter_for(:to_svg)
     
     outputter.title = document.to_s
-    outputter.xdim = outputter.ydim = 4
+    outputter.xdim = outputter.ydim = 3
     
     raw outputter.to_svg.split("\n")[1..-1].join("\n")
+  end
+  
+  def document_link_to_barcode(code)
+    out = link_to(
+      t('view.documents.barcode'), barcode_document_path(code),
+      'class' => 'show_barcode', 'remote' => true, 'data-type' => 'html'
+    )
+    out << content_tag(:div, nil, 'class' => 'barcode_container')
+    
+    raw out
   end
   
   def document_link_for_use_in_next_print(document)

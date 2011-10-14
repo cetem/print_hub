@@ -4,7 +4,9 @@
       locals: {is_dynamic: true, f: f, tag: nil})}';" %>
   <% end -%>
   <%= show_error_messages(@document) %>
-
+  <div class="field column_right">
+    <%= document_link_to_barcode(@document.code.blank? ? 0 : @document.code) %>
+  </div>
   <div class="field">
     <%= f.label :code %>
     <%= f.text_field :code, autofocus: true, maxlength: 10 %>
@@ -29,6 +31,7 @@
     <%= f.label :description %>
     <%= f.text_area :description %>
   </div>
+  
   <div class="field">
     <%= document_file_label f %>
     <%= f.file_field :file,

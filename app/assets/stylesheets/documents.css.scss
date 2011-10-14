@@ -2,13 +2,19 @@
 
 div.document_data {
   float: left;
-  margin-right: 1em;
+  margin: 0em 1em 1em 0em;
 }
 
 figure.barcode {
-  float: right;
-  border: 2px solid #ccc;
-  margin: 0em 0em .5em .5em;
+  float: left;
+  margin: 1em 0em;
+  border: 1px dotted $main-text-color;
+
+  figcaption {
+    font-size: 2em;
+    font-weight: bold;
+    text-align: center;
+  }
 }
 
 span.tag {

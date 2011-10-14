@@ -3,10 +3,6 @@
   <div class="document_data">
     <h2 class="title"><%= @document %></h2>
     
-    <% unless request.xhr? %>
-      <figure class="barcode"><%= show_document_barcode @document %></figure>
-    <% end %>
-    
     <dl class="details">
       <dt><%= Document.human_attribute_name :stock %>:</dt>
       <dd><%= @document.stock %></dd>
@@ -23,6 +19,10 @@
       <dt><%= Document.human_attribute_name :file %>:</dt>
       <dd><%= link_to_if @document.file.file?, t('label.download'), @document.file.url %></dd>
     </dl>
+    
+    <div>
+      <%= document_link_to_barcode @document.code %>
+    </div>
 
     <% unless @document.tags.empty? %>
       <section>
