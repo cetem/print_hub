@@ -32,7 +32,7 @@ class Order < ActiveRecord::Base
     allow_blank: true
   validates_datetime :scheduled_at, allow_nil: true, allow_blank: true
   validates_datetime :scheduled_at, allow_nil: true, allow_blank: true,
-    after: lambda { 12.hours.from_now }, on: :create
+    after: -> { 12.hours.from_now }, on: :create
   validate :must_have_one_item
   
   # Relaciones
@@ -40,7 +40,7 @@ class Order < ActiveRecord::Base
   has_many :order_lines, inverse_of: :order, dependent: :destroy
   
   accepts_nested_attributes_for :order_lines, allow_destroy: true,
-    reject_if: lambda { |attributes| attributes['copies'].to_i <= 0 }
+    reject_if: ->(attributes) { attributes['copies'].to_i <= 0 }
   
   def initialize(attributes = nil, options = {})
     super(attributes, options)

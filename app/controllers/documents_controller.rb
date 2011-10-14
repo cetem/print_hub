@@ -2,7 +2,7 @@ class DocumentsController < ApplicationController
   before_filter :require_user, :load_documents_for_printing
   helper_method :sort_column, :sort_direction
   
-  layout lambda { |controller| controller.request.xhr? ? false : 'application' }
+  layout ->(controller) { controller.request.xhr? ? false : 'application' }
 
   # GET /documents
   # GET /documents.xml

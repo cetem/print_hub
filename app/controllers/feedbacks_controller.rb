@@ -1,5 +1,5 @@
 class FeedbacksController < ApplicationController
-  layout lambda { |controller| controller.request.xhr? ? false : 'application' }
+  layout ->(controller) { controller.request.xhr? ? false : 'application' }
   
   # POST /feedbacks/item/score
   def create

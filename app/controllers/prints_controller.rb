@@ -1,7 +1,7 @@
 class PrintsController < ApplicationController
   before_filter :require_user, :load_customer
 
-  layout proc { |controller| controller.request.xhr? ? false : 'application' }
+  layout ->(controller) { controller.request.xhr? ? false : 'application' }
 
   # GET /prints
   # GET /prints.xml
@@ -11,12 +11,12 @@ class PrintsController < ApplicationController
       'created_at DESC'
     
     @prints = prints_scope.order(order).paginate(
-      :page => params[:page], :per_page => lines_per_page
+      page: params[:page], per_page: lines_per_page
     )
 
     respond_to do |format|
       format.html # index.html.erb
-      format.xml  { render :xml => @prints }
+      format.xml  { render xml: @prints }
     end
   end
 
@@ -28,7 +28,7 @@ class PrintsController < ApplicationController
 
     respond_to do |format|
       format.html # show.html.erb
-      format.xml  { render :xml => @print }
+      format.xml  { render xml: @print }
     end
   end
 
@@ -42,13 +42,13 @@ class PrintsController < ApplicationController
     end
     
     @print = current_user.prints.build(
-      :order_id => params[:order_id],
-      :include_documents => session[:documents_for_printing]
+      order_id: params[:order_id],
+      include_documents: session[:documents_for_printing]
     )
 
     respond_to do |format|
       format.html # new.html.erb
-      format.xml  { render :xml => @print }
+      format.xml  { render xml: @print }
     end
   end
 
@@ -71,11 +71,11 @@ class PrintsController < ApplicationController
 
     respond_to do |format|
       if @print.save
-        format.html { redirect_to(@print, :notice => t('view.prints.correctly_created')) }
-        format.xml  { render :xml => @print, :status => :created, :location => @print }
+        format.html { redirect_to(@print, notice: t('view.prints.correctly_created')) }
+        format.xml  { render xml: @print, status: :created, location: @print }
       else
-        format.html { render :action => :new }
-        format.xml  { render :xml => @print.errors, :status => :unprocessable_entity }
+        format.html { render action: :new }
+        format.xml  { render xml: @print.errors, status: :unprocessable_entity }
       end
     end
   end
@@ -92,11 +92,11 @@ class PrintsController < ApplicationController
 
     respond_to do |format|
       if @print.update_attributes(params[:print])
-        format.html { redirect_to(@print, :notice => t('view.prints.correctly_updated')) }
+        format.html { redirect_to(@print, notice: t('view.prints.correctly_updated')) }
         format.xml  { head :ok }
       else
-        format.html { render :action => :edit }
-        format.xml  { render :xml => @print.errors, :status => :unprocessable_entity }
+        format.html { render action: :edit }
+        format.xml  { render xml: @print.errors, status: :unprocessable_entity }
       end
     end
 
@@ -113,8 +113,8 @@ class PrintsController < ApplicationController
 
     unless @query_terms.empty?
       parameters = {
-        :and_term => @query_terms.join(' & '),
-        :wilcard_term => "%#{@query_terms.join('%')}%".downcase
+        and_term: @query_terms.join(' & '),
+        wilcard_term: "%#{@query_terms.join('%')}%".downcase
       }
 
       if DB_ADAPTER == 'PostgreSQL'
@@ -144,7 +144,7 @@ class PrintsController < ApplicationController
     @docs = @docs.limit(10)
     
     respond_to do |format|
-      format.json { render :json => @docs }
+      format.json { render json: @docs }
     end
   end
 
@@ -156,8 +156,8 @@ class PrintsController < ApplicationController
 
     unless @query_terms.empty?
       parameters = {
-        :and_term => @query_terms.join(' & '),
-        :wilcard_term => "%#{@query_terms.join('%')}%".downcase
+        and_term: @query_terms.join(' & '),
+        wilcard_term: "%#{@query_terms.join('%')}%".downcase
       }
 
       if DB_ADAPTER == 'PostgreSQL'
@@ -186,7 +186,7 @@ class PrintsController < ApplicationController
     @articles = @articles.limit(10)
     
     respond_to do |format|
-      format.json { render :json => @articles }
+      format.json { render json: @articles }
     end
   end
   
@@ -198,8 +198,8 @@ class PrintsController < ApplicationController
 
     unless @query_terms.empty?
       parameters = {
-        :and_term => @query_terms.join(' & '),
-        :wilcard_term => "%#{@query_terms.join('%')}%"
+        and_term: @query_terms.join(' & '),
+        wilcard_term: "%#{@query_terms.join('%')}%"
       }
 
       if DB_ADAPTER == 'PostgreSQL'
@@ -222,7 +222,7 @@ class PrintsController < ApplicationController
     @customers = @customers.limit(10)
     
     respond_to do |format|
-      format.json { render :json => @customers }
+      format.json { render json: @customers }
     end
   end
 

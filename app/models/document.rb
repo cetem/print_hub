@@ -3,7 +3,7 @@ class Document < ActiveRecord::Base
   has_attached_file :file,
     path: ':rails_root/private/:attachment/:id_partition/:basename_:style.:extension',
     url: '/documents/:id/:style/download',
-    styles: lambda { |attachment| attachment.instance.choose_styles }
+    styles: ->(attachment) { attachment.instance.choose_styles }
   find_by_autocomplete :name
 
   # Constantes
@@ -11,7 +11,7 @@ class Document < ActiveRecord::Base
 
   # Scopes
   default_scope where(enable: true)
-  scope :with_tag, lambda { |tag_id|
+  scope :with_tag, ->(tag_id) {
     includes(:tags).where("#{Tag.table_name}.id" => tag_id)
   }
   scope :publicly_visible, where(private: false)

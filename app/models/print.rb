@@ -23,13 +23,13 @@ class Print < ActiveRecord::Base
   attr_protected :pending_payment
 
   # Restricciones
-  validates :printer, presence: true, if: lambda { |p|
+  validates :printer, presence: true, if: ->(p) {
     p.scheduled_at.blank? && !p.print_jobs.reject(&:marked_for_destruction?).empty?
   }
   validates :printer, length: { maximum: 255 }, allow_nil: true,
     allow_blank: true
   validates_datetime :scheduled_at, allow_nil: true, allow_blank: true,
-    after: lambda { Time.now }
+    after: -> { Time.now }
   validates_each :printer do |record, attr, value|
     printer_changed = !record.printer_was.blank? && record.printer_was != value
     print_and_schedule_new_record = record.new_record? &&
@@ -53,9 +53,9 @@ class Print < ActiveRecord::Base
   accepts_nested_attributes_for :print_jobs, allow_destroy: false,
     reject_if: :reject_print_job_attributes?
   accepts_nested_attributes_for :article_lines, allow_destroy: false,
-    reject_if: proc { |attributes| attributes['article_id'].blank? }
+    reject_if: ->(attributes) { attributes['article_id'].blank? }
   accepts_nested_attributes_for :payments, allow_destroy: false,
-    reject_if: proc { |attributes| attributes['amount'].to_f <= 0 }
+    reject_if: ->(attributes) { attributes['amount'].to_f <= 0 }
 
   def initialize(attributes = nil, options = {})
     super(attributes, options)

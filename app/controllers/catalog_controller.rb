@@ -2,7 +2,7 @@ class CatalogController < ApplicationController
   before_filter :require_customer, :load_documents_to_order, :load_tag
   helper_method :sort_column, :sort_direction
   
-  layout lambda { |controller| controller.request.xhr? ? false : 'application' }
+  layout ->(controller) { controller.request.xhr? ? false : 'application' }
   
   def index
     @title = t('view.catalog.index_title')

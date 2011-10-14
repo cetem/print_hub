@@ -6,7 +6,7 @@ class CustomersController < ApplicationController
   before_filter :require_no_customer_or_admin, only: [:new, :create]
   before_filter :require_no_customer, only: [:activate]
   
-  layout proc { |controller| controller.request.xhr? ? false : 'application' }
+  layout ->(controller) { controller.request.xhr? ? false : 'application' }
 
   # GET /customers
   # GET /customers.xml

@@ -5,7 +5,7 @@ class Credit < ActiveRecord::Base
   attr_readonly :amount
 
   # Named scopes
-  scope :valids, lambda {
+  scope :valids, -> {
     where(
       [
         'remaining > :zero',
