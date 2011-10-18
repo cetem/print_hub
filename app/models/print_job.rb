@@ -1,6 +1,14 @@
 class PrintJob < ActiveRecord::Base
   has_paper_trail
   
+  # Scopes
+  scope :with_print_between, ->(_start, _end) {
+    includes(:print).where(
+      "#{Print.table_name}.created_at BETWEEN :start AND :end",
+      start: _start, end: _end
+    )
+  }
+  
   # Callbacks
   before_save :put_printed_pages
   

@@ -14,6 +14,9 @@ class Credit < ActiveRecord::Base
       :today => Date.today, :zero => 0
     )
   }
+  scope :between, ->(_start, _end) {
+    where('created_at BETWEEN :start AND :end', start: _start, end: _end)
+  }
 
   # Restricciones
   validates :amount, :presence => true, :numericality => { :greater_than => 0 }
