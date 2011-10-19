@@ -82,8 +82,8 @@ class Order < ActiveRecord::Base
   end
   
   STATUS.each do |status, value|
-    define_method(:"#{status}?") { self.status == value }
-    define_method(:"#{status}!") { self.status = value if allow_status?(value) }
+    define_method("#{status}?") { self.status == value }
+    define_method("#{status}!") { self.status = value if allow_status?(value) }
   end
   
   def allow_status?(status)

@@ -6,8 +6,7 @@ class OrderLine < ActiveRecord::Base
   
   # Restricciones
   validates :copies, :price_per_copy, presence: true
-  validates :copies,
-    numericality: {only_integer: true, greater_than: 0},
+  validates :copies, numericality: {only_integer: true, greater_than: 0},
     allow_nil: true, allow_blank: true
   validates :price_per_copy, numericality: {greater_than_or_equal_to: 0},
     allow_nil: true, allow_blank: true

@@ -74,7 +74,7 @@ class PrintsController < ApplicationController
         format.html { redirect_to(@print, notice: t('view.prints.correctly_created')) }
         format.xml  { render xml: @print, status: :created, location: @print }
       else
-        format.html { render action: :new }
+        format.html { render action: 'new' }
         format.xml  { render xml: @print.errors, status: :unprocessable_entity }
       end
     end
@@ -95,7 +95,7 @@ class PrintsController < ApplicationController
         format.html { redirect_to(@print, notice: t('view.prints.correctly_updated')) }
         format.xml  { head :ok }
       else
-        format.html { render action: :edit }
+        format.html { render action: 'edit' }
         format.xml  { render xml: @print.errors, status: :unprocessable_entity }
       end
     end

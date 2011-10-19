@@ -3,7 +3,7 @@ module ApplicationHelper
     if text.blank?
       ''
     else
-      textilized = RedCloth.new(text, [ :hard_breaks ])
+      textilized = RedCloth.new(text, [:hard_breaks])
       textilized.hard_breaks = true if textilized.respond_to?(:'hard_breaks=')
       textilized.to_html.html_safe
     end
@@ -57,7 +57,7 @@ module ApplicationHelper
 
     form_builder.fields_for(method, options[:object], child_index: options[:child_index]) do |f|
       render(options[:partial], {
-          options[:form_builder_local] => f,:is_dynamic => options[:is_dynamic]
+          options[:form_builder_local] => f, is_dynamic: options[:is_dynamic]
         }.merge(options[:locals])
       )
     end
@@ -75,11 +75,11 @@ module ApplicationHelper
   def link_to_remove_nested_item(fields = nil, class_for_remove = nil)
     new_record = fields.nil? || fields.object.new_record?
     out = String.new
-    out << fields.hidden_field(:_destroy, :class => :destroy,
-      :value => fields.object.marked_for_destruction? ? 1 : 0) unless new_record
-    out << link_to('X', '#', :title => t(:'label.delete'),
-      :'data-target' => ".#{class_for_remove || fields.object.class.name.underscore}",
-      :'data-event' => (new_record ? 'removeItem' : 'hideItem'))
+    out << fields.hidden_field(:_destroy, class: :destroy,
+      value: fields.object.marked_for_destruction? ? 1 : 0) unless new_record
+    out << link_to('X', '#', title: t('label.delete'),
+      'data-target' => ".#{class_for_remove || fields.object.class.name.underscore}",
+      'data-event' => (new_record ? 'removeItem' : 'hideItem'))
 
     raw out
   end
@@ -95,18 +95,18 @@ module ApplicationHelper
       previous_tag = content_tag(
         :span,
         t('will_paginate.previous_label').html_safe,
-        :class => 'disabled prev_page'
+        class: 'disabled prev_page'
       )
       next_tag = content_tag(
         :span,
         t('will_paginate.next_label').html_safe,
-        :class => 'disabled next_page'
+        class: 'disabled next_page'
       )
       
       result = content_tag(
         :div,
         previous_tag + content_tag(:em, 1) + next_tag,
-        :class => :pagination
+        class: 'pagination'
       )
     end
 
@@ -115,18 +115,18 @@ module ApplicationHelper
   
   def link_to_menu_with_nested_menu(name, submenu)
     link_to(
-      raw("#{t(name, :scope => :menu)} <span class=\"arrow_down\"></span>"),
-      '#', :'data-event' => 'toggleMenu', :'data-target' => "##{submenu}"
+      raw("#{t(name, scope: :menu)} <span class=\"arrow_down\"></span>"),
+      '#', 'data-event' => 'toggleMenu', 'data-target' => "##{submenu}"
     )
   end
   
   def calendar_text_field(form, attribute, user_options = {})
     value = user_options.delete(:value) || form.object.send(attribute)
     time = user_options.delete(:time)
-    options = { :class => :calendar }.merge(user_options)
+    options = { class: 'calendar' }.merge(user_options)
     
-    options[:value] = l(value, :format => time ? :minimal : :default) if value
-    options[:'data-time'] = true if time
+    options['value'] = l(value, format: time ? :minimal : :default) if value
+    options['data-time'] = true if time
     
     form.text_field attribute, options
   end
@@ -138,7 +138,7 @@ module ApplicationHelper
     link_to(
       title || column.titleize,
       request.query_parameters.merge(sort: column, direction: direction),
-      {:class => css_class}
+      { class: css_class }
     )
   end
 end

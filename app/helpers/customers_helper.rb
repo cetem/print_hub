@@ -4,11 +4,11 @@ module CustomersHelper
 
     if prints_count > 0
       link_to(
-        t(:print_list, :count => prints_count, :scope => [:view, :customers]),
+        t('view.customers.print_list', count: prints_count),
         customer_prints_path(customer)
       )
     else
-      t(:without_prints, :scope => [:view, :customers])
+      t(:without_prints, scope: [:view, :customers])
     end
   end
   
@@ -17,18 +17,18 @@ module CustomersHelper
 
     if bonuses_count > 0
       link_to(
-        t(:bonus_list, :count => bonuses_count, :scope => [:view, :customers]),
+        t('view.customers.bonus_list', count: bonuses_count),
         customer_bonuses_path(customer)
       )
     else
-      t(:without_bonuses, :scope => [:view, :customers])
+      t('view.customers.without_bonuses')
     end
   end
   
   def show_button_to_destroy(customer)
     if customer.has_no_orders?
-      button_to t(:'label.delete'), customer,
-        :confirm => t(:'messages.confirmation'), :method => :delete
+      button_to t('label.delete'), customer,
+        confirm: t('messages.confirmation'), method: :delete
     end
   end
 end

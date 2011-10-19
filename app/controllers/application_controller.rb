@@ -2,6 +2,8 @@ class ApplicationController < ActionController::Base
   helper_method :current_user_session, :current_user, :current_customer
   
   protect_from_forgery
+  
+  after_filter -> { expires_now if current_user || current_customer }
 
   # Cualquier excepción no contemplada es capturada por esta función. Se utiliza
   # para mostrar un mensaje de error personalizado
@@ -56,8 +58,6 @@ class ApplicationController < ActionController::Base
       redirect_to new_customer_session_url
 
       false
-    else
-      response.headers['Cache-Control'] = 'no-cache, no-store'
     end
   end
 
@@ -82,8 +82,6 @@ class ApplicationController < ActionController::Base
       redirect_to new_user_session_url
 
       false
-    else
-      response.headers['Cache-Control'] = 'no-cache, no-store'
     end
   end
 
@@ -118,8 +116,6 @@ class ApplicationController < ActionController::Base
       redirect_to(current_user ? prints_url : new_user_session_url)
 
       false
-    else
-      response.headers['Cache-Control'] = 'no-cache, no-store'
     end
   end
 

@@ -60,7 +60,7 @@ class TagsController < ApplicationController
         format.html { redirect_to(tags_url(parent: @tag.parent), notice: t('view.tags.correctly_created')) }
         format.xml  { render xml: @tag, status: :created, location: @tag }
       else
-        format.html { render action: :new }
+        format.html { render action: 'new' }
         format.xml  { render xml: @tag.errors, status: :unprocessable_entity }
       end
     end
@@ -77,7 +77,7 @@ class TagsController < ApplicationController
         format.html { redirect_to(tags_url(parent: @tag.parent), notice: t('view.tags.correctly_updated')) }
         format.xml  { head :ok }
       else
-        format.html { render action: :edit }
+        format.html { render action: 'edit' }
         format.xml  { render xml: @tag.errors, status: :unprocessable_entity }
       end
     end

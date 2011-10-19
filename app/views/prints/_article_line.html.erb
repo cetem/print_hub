@@ -5,20 +5,20 @@
     <div class="nested_item_field">
       <% field_classes = [:autocomplete_field] %>
       <% field_classes << :field_with_errors unless f.object.errors[:article_id].blank? %>
-      <%= f.text_field :auto_article_name, :disabled => disabled,
-        :id => "auto_article_line_#{id}", :class => field_classes.join(' '),
-        :value => f.object.article.try(:to_s),
-        :'data-autocomplete-url' => autocomplete_for_article_name_prints_path(:format => :json) %>
-      <%= f.hidden_field :article_id, :class => :autocomplete_id %>
+      <%= f.text_field :auto_article_name, disabled: disabled,
+        id: "auto_article_line_#{id}", class: field_classes.join(' '),
+        value: f.object.article.try(:to_s),
+        'data-autocomplete-url' => autocomplete_for_article_name_prints_path(format: :json) %>
+      <%= f.hidden_field :article_id, class: 'autocomplete_id' %>
     </div>
     <div class="nested_item_field">
-      <%= f.text_field :units, :maxlength => 5, :class => :price_modifier,
-        :autocomplete => :off, :disabled => disabled %>
+      <%= f.text_field :units, maxlength: 5, class: 'price_modifier',
+        autocomplete: :off, disabled: disabled %>
     </div>
     <div class="nested_item_field">
-      <%= f.text_field :unit_price, :disabled => true,
-        :value => ('%.3f' % f.object.unit_price if f.object.unit_price),
-        :class => :price_modifier, :autocomplete => :off %>
+      <%= f.text_field :unit_price, disabled: true,
+        value: ('%.3f' % f.object.unit_price if f.object.unit_price),
+        class: 'price_modifier', autocomplete: 'off' %>
     </div>
     <div class="nested_item_actions">
       <span class="money"><%= number_to_currency f.object.price %></span>

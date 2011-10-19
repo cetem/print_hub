@@ -6,21 +6,20 @@ class Tag < ActiveRecord::Base
   find_by_autocomplete :name
   
   # Scopes
-  scope :publicly_visible, where(:private => false)
+  scope :publicly_visible, where(private: false)
 
   # Callbacks
   before_save :update_related_documents
   before_destroy :remove_from_related_documents
 
   # Restricciones
-  validates :name, :presence => true
-  validates :name, :uniqueness => { :scope => :parent_id }, :allow_nil => true,
-    :allow_blank => true
-  validates :name, :length => { :maximum => 255 }, :allow_nil => true,
-    :allow_blank => true
+  validates :name, presence: true
+  validates :name, uniqueness: { scope: :parent_id }, allow_nil: true,
+    allow_blank: true
+  validates :name, length: { maximum: 255 }, allow_nil: true, allow_blank: true
 
   # Relaciones
-  has_and_belongs_to_many :documents, :autosave => true, :order => 'name ASC'
+  has_and_belongs_to_many :documents, autosave: true, order: 'name ASC'
 
   def to_s
     ([self] + self.ancestors).map(&:name).reverse.join(' | ')
@@ -30,8 +29,8 @@ class Tag < ActiveRecord::Base
   
   def as_json(options = nil)
     default_options = {
-      :only => [:id],
-      :methods => [:label]
+      only: [:id],
+      methods: [:label]
     }
     
     super(default_options.merge(options || {}))

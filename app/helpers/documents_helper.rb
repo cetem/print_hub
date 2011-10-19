@@ -6,16 +6,16 @@ module DocumentsHelper
       if document.file.file? && File.exists?(document.file.path(style))
         thumb_dimensions = Paperclip::Geometry.from_file document.file.path(style)
         thumb_image_tag = image_tag(
-          document.file.url(style), :alt => document.name,
-          :size => thumb_dimensions.to_s
+          document.file.url(style), alt: document.name,
+          size: thumb_dimensions.to_s
         )
 
-        thumb = content_tag(:div, thumb_image_tag, :class => :image_container)
+        thumb = content_tag(:div, thumb_image_tag, class: 'image_container')
         image_style = style.to_s.sub(/_mini/, '').to_sym
 
-        content_tag :a, thumb, :href => document.file.url(image_style),
-          :'data-rel' => "doc_image_#{document.id}", :title => document.name,
-          :class => :fancybox
+        content_tag :a, thumb, href: document.file.url(image_style),
+          'data-rel' => "doc_image_#{document.id}", title: document.name,
+          class: :fancybox
       end
     end.compact.join("\n").html_safe
   end
@@ -25,12 +25,11 @@ module DocumentsHelper
       [show_document_media_text(mt), mt]
     end
 
-    form.select :media, media_types, :prompt => true
+    form.select :media, media_types, prompt: true
   end
 
   def show_document_media_text(media)
-    t Document::MEDIA_TYPES.invert[media],
-      :scope => [:view, :documents, :media_type]
+    t("view.documents.media_type.#{Document::MEDIA_TYPES.invert[media]}")
   end
   
   def show_document_barcode(document)
@@ -65,20 +64,20 @@ module DocumentsHelper
       content << link_to(
         '-',
         remove_from_next_print_document_path(document),
-        :title => t('view.documents.remove_from_next_print.title'),
-        :remote => true, :method => :delete, :class => 'remove_link'
+        title: t('view.documents.remove_from_next_print.title'),
+        remote: true, method: :delete, class: 'remove_link'
       )
     else
       content << link_to(
         '+',
         add_to_next_print_document_path(document),
-        :title => t('view.documents.add_to_next_print.title'),
-        :remote => true, :method => :post, :class => 'add_link'
+        title: t('view.documents.add_to_next_print.title'),
+        remote: true, method: :post, class: 'add_link'
       )
     end
     
     content_tag :span, raw(content),
-      :id => "document_for_use_in_next_print_#{document.id}"
+      id: "document_for_use_in_next_print_#{document.id}"
   end
   
   def document_file_label(form)
@@ -89,6 +88,6 @@ module DocumentsHelper
     end
     
     form.label :file, raw(label),
-      :class => (:field_with_errors unless @document.errors[:file_file_name].blank?)
+      class: ('field_with_errors' unless @document.errors[:file_file_name].blank?)
   end
 end

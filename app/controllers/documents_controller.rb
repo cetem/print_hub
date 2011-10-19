@@ -104,7 +104,7 @@ class DocumentsController < ApplicationController
         format.html { redirect_to(documents_url, notice: t('view.documents.correctly_created')) }
         format.xml  { render xml: @document, status: :created, location: @document }
       else
-        format.html { render action: :new }
+        format.html { render action: 'new' }
         format.xml  { render xml: @document.errors, status: :unprocessable_entity }
       end
     end
@@ -122,7 +122,7 @@ class DocumentsController < ApplicationController
         format.html { redirect_to(documents_url, notice: t('view.documents.correctly_updated')) }
         format.xml  { head :ok }
       else
-        format.html { render action: :edit }
+        format.html { render action: 'edit' }
         format.xml  { render xml: @document.errors, status: :unprocessable_entity }
       end
     end

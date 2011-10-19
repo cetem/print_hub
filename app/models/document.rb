@@ -34,7 +34,7 @@ class Document < ActiveRecord::Base
     allow_blank: true
   validates :name, :media, length: { maximum: 255 }, allow_nil: true,
     allow_blank: true
-  validates :media, inclusion: {:in => MEDIA_TYPES.values},
+  validates :media, inclusion: {in: MEDIA_TYPES.values},
     allow_nil: true, allow_blank: true
   validates :pages, :code, allow_nil: true, allow_blank: true,
     numericality: { only_integer: true, greater_than: 0 }
@@ -98,7 +98,7 @@ class Document < ActiveRecord::Base
       true
     else
       self.errors.add :base,
-        I18n.t(:has_related_print_jobs, scope: [:view, :documents])
+        I18n.t('view.documents.has_related_print_jobs')
 
       false
     end

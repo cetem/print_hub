@@ -113,7 +113,7 @@ class CustomersController < ApplicationController
         format.html { redirect_to(customer_url(@customer), notice: t('view.customers.correctly_updated')) }
         format.xml  { head :ok }
       else
-        format.html { render action: :edit }
+        format.html { render action: 'edit' }
         format.xml  { render xml: @customer.errors, status: :unprocessable_entity }
       end
     end

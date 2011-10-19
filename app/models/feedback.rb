@@ -6,8 +6,8 @@ class Feedback < ActiveRecord::Base
   attr_readonly :positive, :item
   
   # Scopes
-  scope :positive, where(:positive => true)
-  scope :negative, where(:positive => false)
+  scope :positive, where(positive: true)
+  scope :negative, where(positive: false)
   
   def avoid_destruction
     false

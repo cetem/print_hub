@@ -5,10 +5,10 @@ module PaymentsHelper
   
   def show_payments_resume(deposits_amount)
     scope = [:view, :payments]
-    resume = [t(:payments_count, :scope => scope, :count => @payments.count)]
+    resume = [t(:payments_count, scope: scope, count: @payments.count)]
     
     if deposits_amount > 0
-      resume << "(**) #{t(:deposits_count, :scope => scope, :count => @deposits.count)}"
+      resume << "(**) #{t(:deposits_count, scope: scope, count: @deposits.count)}"
     end
     
     resume.to_sentence

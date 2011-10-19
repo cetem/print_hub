@@ -11,7 +11,7 @@ class Credit < ActiveRecord::Base
         'remaining > :zero',
         ['valid_until IS NULL', 'valid_until >= :today'].join(' OR ')
       ].join(' AND '),
-      :today => Date.today, :zero => 0
+      today: Date.today, zero: 0
     )
   }
   scope :between, ->(_start, _end) {
@@ -19,11 +19,12 @@ class Credit < ActiveRecord::Base
   }
 
   # Restricciones
-  validates :amount, :presence => true, :numericality => { :greater_than => 0 }
-  validates :remaining, :presence => true, :numericality => {
-    :less_than_or_equal_to => :amount, :greater_than_or_equal_to => 0 }
-  validates_date :valid_until, :on_or_after => :today,
-    :allow_nil => true, :allow_blank => true
+  validates :amount, presence: true, numericality: { greater_than: 0 }
+  validates :remaining, presence: true, numericality: {
+    less_than_or_equal_to: :amount, greater_than_or_equal_to: 0
+  }
+  validates_date :valid_until, on_or_after: :today, allow_nil: true,
+    allow_blank: true
 
   # Relaciones
   belongs_to :customer

@@ -9,16 +9,16 @@ class ArticleLine < ActiveRecord::Base
   attr_readonly :article_id, :units, :unit_price, :print_id
 
   # Restricciones
-  validates :article_id, :units, :unit_price, :presence => true
-  validates :units, :allow_nil => true, :allow_blank => true,
-    :numericality => {:only_integer => true, :greater_than => 0}
-  validates :unit_price, :numericality => {:greater_than_or_equal_to => 0},
-    :allow_nil => true, :allow_blank => true
+  validates :article_id, :units, :unit_price, presence: true
+  validates :units, allow_nil: true, allow_blank: true,
+    numericality: {only_integer: true, greater_than: 0}
+  validates :unit_price, numericality: {greater_than_or_equal_to: 0},
+    allow_nil: true, allow_blank: true
 
   # Relaciones
   belongs_to :print
   belongs_to :article
-  autocomplete_for :article, :name, :name => :auto_document
+  autocomplete_for :article, :name, name: :auto_document
 
   def initialize(attributes = nil, options = {})
     super(attributes, options)

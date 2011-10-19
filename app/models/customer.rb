@@ -1,17 +1,17 @@
 class Customer < ActiveRecord::Base
-  has_paper_trail :ignore => [:perishable_token]
+  has_paper_trail ignore: [:perishable_token]
   find_by_autocomplete :name
   acts_as_authentic do |c|
     c.maintain_sessions = false
-    c.validates_uniqueness_of_email_field_options = { :case_sensitive => false }
-    c.validates_length_of_email_field_options = { :maximum => 255 }
+    c.validates_uniqueness_of_email_field_options = { case_sensitive: false }
+    c.validates_length_of_email_field_options = { maximum: 255 }
     c.crypto_provider = Authlogic::CryptoProviders::Sha512
   end
 
   # Scopes
-  default_scope where(:enable => true)
-  scope :disable, where(:enable => false)
-  scope :with_monthly_bonus, where('free_monthly_bonus > :zero', :zero => 0)
+  default_scope where(enable: true)
+  scope :disable, where(enable: false)
+  scope :with_monthly_bonus, where('free_monthly_bonus > :zero', zero: 0)
   
   # Atributos protegidos
   attr_protected :enable
@@ -24,38 +24,38 @@ class Customer < ActiveRecord::Base
   before_destroy :has_no_orders?
   
   # Restricciones
-  validates :name, :identification, :presence => true
-  validates :identification, :uniqueness => true, :allow_nil => true,
-    :allow_blank => true
-  validates :name, :uniqueness => {:scope => :lastname}, :allow_nil => true,
-    :allow_blank => true
-  validates :name, :lastname, :identification, :length => {:maximum => 255},
-    :allow_nil => true, :allow_blank => true
-  validates :free_monthly_bonus, :allow_nil => true, :allow_blank => true,
-    :numericality => {:greater_than_or_equal_to => 0}
+  validates :name, :identification, presence: true
+  validates :identification, uniqueness: true, allow_nil: true,
+    allow_blank: true
+  validates :name, uniqueness: {scope: :lastname}, allow_nil: true,
+    allow_blank: true
+  validates :name, :lastname, :identification, length: {maximum: 255},
+    allow_nil: true, allow_blank: true
+  validates :free_monthly_bonus, allow_nil: true, allow_blank: true,
+    numericality: {greater_than_or_equal_to: 0}
   validates_each :free_monthly_bonus do |record, attr, value|
     # Si no es un usuario de tipo admin este atributo no lo puede tocar =)
     if !UserSession.find.try(:record).try(:admin)
-      if record.send(:"#{attr}_changed?") && value.to_f > 0
+      if record.send("#{attr}_changed?") && value.to_f > 0
         record.errors.add attr, :invalid
       end
     end
   end
 
   # Relaciones
-  has_many :orders, :inverse_of => :customer, :dependent => :destroy,
-    :order => 'scheduled_at ASC'
-  has_many :prints, :inverse_of => :customer, :dependent => :nullify
-  has_many :credits, :inverse_of => :customer, :order => 'valid_until ASC'
-  has_many :bonuses, :inverse_of => :customer, :dependent => :destroy,
-    :autosave => true, :class_name => 'Bonus', :order => 'valid_until ASC'
-  has_many :deposits, :inverse_of => :customer, :dependent => :destroy,
-    :autosave => true, :order => 'valid_until ASC'
+  has_many :orders, inverse_of: :customer, dependent: :destroy,
+    order: 'scheduled_at ASC'
+  has_many :prints, inverse_of: :customer, dependent: :nullify
+  has_many :credits, inverse_of: :customer, order: 'valid_until ASC'
+  has_many :bonuses, inverse_of: :customer, dependent: :destroy,
+    autosave: true, class_name: 'Bonus', order: 'valid_until ASC'
+  has_many :deposits, inverse_of: :customer, dependent: :destroy,
+    autosave: true, order: 'valid_until ASC'
   
-  accepts_nested_attributes_for :bonuses, :allow_destroy => true,
-    :reject_if => :reject_credits
-  accepts_nested_attributes_for :deposits, :allow_destroy => true,
-    :reject_if => :reject_credits
+  accepts_nested_attributes_for :bonuses, allow_destroy: true,
+    reject_if: :reject_credits
+  accepts_nested_attributes_for :deposits, allow_destroy: true,
+    reject_if: :reject_credits
   
   def initialize(attributes = nil, options = {})
     super(attributes, options)
@@ -71,8 +71,8 @@ class Customer < ActiveRecord::Base
   
   def as_json(options = nil)
     default_options = {
-      :only => [:id],
-      :methods => [:label, :informal, :free_credit]
+      only: [:id],
+      methods: [:label, :informal, :free_credit]
     }
     
     super(default_options.merge(options || {}))
@@ -102,8 +102,8 @@ class Customer < ActiveRecord::Base
       expiration = Date.today.at_end_of_month
       
       self.bonuses.build(
-        :amount => self.free_monthly_bonus,
-        :valid_until => (expiration unless self.bonus_without_expiration)
+        amount: self.free_monthly_bonus,
+        valid_until: (expiration unless self.bonus_without_expiration)
       )
     end
   end

@@ -4,13 +4,13 @@ class FeedbacksController < ApplicationController
   # POST /feedbacks/item/score
   def create
     @feedback = Feedback.new(
-      :item => params[:item],
-      :positive => params[:score] == 'positive'
+      item: params[:item],
+      positive: params[:score] == 'positive'
     )
 
     respond_to do |format|
       if @feedback.save
-        format.html { render @feedback.positive ? :positive : :negative }
+        format.html { render @feedback.positive ? 'positive' : 'negative' }
       end
     end
   end
@@ -21,7 +21,7 @@ class FeedbacksController < ApplicationController
 
     respond_to do |format|
       if @feedback.update_attributes(params[:feedback])
-        format.html { render :negative_comment }
+        format.html { render 'negative_comment' }
       end
     end
   end

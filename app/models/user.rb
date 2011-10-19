@@ -24,7 +24,7 @@ class User < ActiveRecord::Base
   validates :lines_per_page,
     numericality: { only_integer: true, greater_than: 0, less_than: 100 },
     allow_nil: true, allow_blank: true
-  validates :language, inclusion: { :in => LANGUAGES.map(&:to_s) },
+  validates :language, inclusion: { in: LANGUAGES.map(&:to_s) },
     allow_nil: true, allow_blank: true
   validates_attachment_content_type :avatar, content_type: /^image\/.+$/i,
     allow_nil: true, allow_blank: true
