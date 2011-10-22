@@ -295,6 +295,20 @@ class CustomerTest < ActiveSupport::TestCase
     assert_equal '1000.0', @customer.free_credit.to_s
   end
   
+  test 'add bonus' do
+    initial_bonus_amount = @customer.bonuses.to_a.sum(&:amount)
+    
+    assert_difference '@customer.bonuses.size', 2 do
+      @customer.add_bonus(100)
+      @customer.add_bonus(150, Date.tomorrow)
+    end
+    
+    assert_equal(
+      initial_bonus_amount + 250,
+      @customer.bonuses.to_a.sum(&:amount)
+    )
+  end
+  
   test 'build monthly bonus' do
     assert !@customer.bonus_without_expiration
     assert_nil @customer.bonuses.detect { |b| b.valid_until.blank? }

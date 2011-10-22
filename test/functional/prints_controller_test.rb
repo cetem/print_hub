@@ -483,6 +483,14 @@ class PrintsControllerTest < ActionController::TestCase
     assert_equal math_book.pages, @print.print_jobs.order('id ASC').last.pages
     assert @print.pending_payment == true
   end
+  
+  test 'should revoke print' do
+    UserSession.create(users(:administrator))
+    
+    delete :revoke, :id => @print.to_param
+    assert_redirected_to prints_url
+    assert @print.reload.revoked
+  end
 
   test 'should cancel job' do
     UserSession.create(users(:operator))

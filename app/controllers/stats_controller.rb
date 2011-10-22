@@ -8,7 +8,7 @@ class StatsController < ApplicationController
     @from_date, @to_date = *make_datetime_range(params[:interval])
     @printers_count = PrintJob.with_print_between(
       @from_date, @to_date
-    ).group(:printer).sum(:printed_pages)
+    ).not_revoked.group(:printer).sum(:printed_pages)
     
     respond_to do |format|
       format.html # index.html.erb
@@ -23,7 +23,7 @@ class StatsController < ApplicationController
     @from_date, @to_date = *make_datetime_range(params[:interval])
     @users_count = PrintJob.with_print_between(
       @from_date, @to_date
-    ).group(:user_id).sum(:printed_pages)
+    ).not_revoked.group(:user_id).sum(:printed_pages)
     
     respond_to do |format|
       format.html # index.html.erb

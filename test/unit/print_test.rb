@@ -7,7 +7,7 @@ class PrintTest < ActiveSupport::TestCase
   # Función para inicializar las variables utilizadas en las pruebas
   def setup
     @print = Print.find prints(:math_print).id
-    @printer = Cups.show_destinations.select {|p| p =~ /pdf/i}.first
+    @printer = Cups.show_destinations.detect { |p| p =~ /pdf/i }
 
     raise "Can't find a PDF printer to run tests with." unless @printer
 
@@ -521,6 +521,45 @@ class PrintTest < ActiveSupport::TestCase
 
     new_print.scheduled_at = nil
     assert new_print.valid?
+  end
+  
+  test 'revoke' do
+    UserSession.create(users(:administrator))
+    
+    assert_no_difference 'Bonus.count' do
+      assert @print.revoke!
+    end
+    
+    assert @print.reload.revoked
+    assert @print.payments.reload.all?(&:revoked)
+  end
+  
+  test 'can not revoke if is not admin' do
+    UserSession.create(users(:operator))
+    
+    assert_no_difference 'Bonus.count' do
+      assert_nil @print.revoke!
+    end
+    
+    assert_equal false, @print.reload.revoked
+  end
+  
+  test 'revoke a print paid with credit returns the value to the customer' do
+    UserSession.create(users(:administrator))
+    print = prints(:math_print_with_credit)
+    initial_bonus = print.customer.bonuses.to_a.sum(&:remaining)
+    payments_amount = print.payments.select(&:credit?).sum(&:paid)
+    
+    assert_difference 'Bonus.count' do
+      assert print.revoke!
+    end
+    
+    assert print.reload.revoked
+    assert print.payments.reload.all?(&:revoked)
+    assert_equal(
+      (initial_bonus + payments_amount).to_s,
+      print.customer.bonuses.to_a.sum(&:remaining).to_s
+    )
   end
 
   test 'price' do

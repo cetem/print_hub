@@ -1,5 +1,7 @@
 class PrintsController < ApplicationController
-  before_filter :require_user, :load_customer
+  before_filter :require_user, except: [:revoke]
+  before_filter :require_admin_user, only: [:revoke]
+  before_filter :load_customer
 
   layout ->(controller) { controller.request.xhr? ? false : 'application' }
 
@@ -103,6 +105,18 @@ class PrintsController < ApplicationController
   rescue ActiveRecord::StaleObjectError
     flash.alert = t('view.prints.stale_object_error')
     redirect_to edit_print_url(@print)
+  end
+  
+  # DELETE /prints/1/revoke
+  # DELETE /prints/1/revoke.xml
+  def revoke
+    @print = prints_scope.find(params[:id])
+    @print.revoke!
+    
+    respond_to do |format|
+      format.html { redirect_to(prints_url, notice: t('view.prints.correctly_revoked')) }
+      format.xml  { head :ok }
+    end
   end
 
   # GET /prints/autocomplete_for_document_name

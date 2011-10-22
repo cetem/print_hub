@@ -43,7 +43,7 @@ class Document < ActiveRecord::Base
   validates_attachment_content_type :file, content_type: /pdf/i,
     allow_nil: true, allow_blank: true
   validates_attachment_presence :file,
-    message: ::I18n.t('errors.messages.blank')
+    message: -> { ::I18n.t('errors.messages.blank') }
 
   # Relaciones
   has_many :print_jobs

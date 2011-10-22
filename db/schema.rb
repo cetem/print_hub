@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20110917133233) do
+ActiveRecord::Schema.define(:version => 20111021201403) do
 
   create_table "article_lines", :force => true do |t|
     t.integer  "print_id",                                                   :null => false
@@ -148,19 +148,21 @@ ActiveRecord::Schema.define(:version => 20110917133233) do
   add_index "orders", ["status"], :name => "index_orders_on_status"
 
   create_table "payments", :force => true do |t|
-    t.decimal  "amount",                    :precision => 15, :scale => 3,                :null => false
-    t.decimal  "paid",                      :precision => 15, :scale => 3,                :null => false
-    t.string   "paid_with",    :limit => 1,                                               :null => false
+    t.decimal  "amount",                    :precision => 15, :scale => 3,                    :null => false
+    t.decimal  "paid",                      :precision => 15, :scale => 3,                    :null => false
+    t.string   "paid_with",    :limit => 1,                                                   :null => false
     t.integer  "payable_id"
     t.string   "payable_type"
     t.integer  "lock_version",                                             :default => 0
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.boolean  "revoked",                                                  :default => false, :null => false
   end
 
   add_index "payments", ["created_at"], :name => "index_payments_on_created_at"
   add_index "payments", ["paid_with"], :name => "index_payments_on_paid_with"
   add_index "payments", ["payable_id", "payable_type"], :name => "index_payments_on_payable_id_and_payable_type"
+  add_index "payments", ["revoked"], :name => "index_payments_on_revoked"
 
   create_table "print_jobs", :force => true do |t|
     t.string   "job_id"
@@ -182,15 +184,16 @@ ActiveRecord::Schema.define(:version => 20110917133233) do
   add_index "print_jobs", ["print_id"], :name => "index_print_jobs_on_print_id"
 
   create_table "prints", :force => true do |t|
-    t.string   "printer",                           :null => false
+    t.string   "printer",                            :null => false
     t.integer  "user_id"
     t.integer  "customer_id"
     t.integer  "lock_version",    :default => 0
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.boolean  "pending_payment", :default => true, :null => false
+    t.boolean  "pending_payment", :default => true,  :null => false
     t.datetime "scheduled_at"
     t.integer  "order_id"
+    t.boolean  "revoked",         :default => false, :null => false
   end
 
   add_index "prints", ["created_at"], :name => "index_prints_on_created_at"
@@ -198,6 +201,7 @@ ActiveRecord::Schema.define(:version => 20110917133233) do
   add_index "prints", ["order_id"], :name => "index_prints_on_order_id", :unique => true
   add_index "prints", ["pending_payment"], :name => "index_prints_on_pending_payment"
   add_index "prints", ["printer"], :name => "index_prints_on_printer"
+  add_index "prints", ["revoked"], :name => "index_prints_on_revoked"
   add_index "prints", ["scheduled_at"], :name => "index_prints_on_scheduled_at"
   add_index "prints", ["user_id"], :name => "index_prints_on_user_id"
 

@@ -8,6 +8,7 @@ class PrintJob < ActiveRecord::Base
       start: _start, end: _end
     )
   }
+  scope :not_revoked, includes(:print).where(Print.table_name => {revoked: false})
   
   # Callbacks
   before_save :put_printed_pages

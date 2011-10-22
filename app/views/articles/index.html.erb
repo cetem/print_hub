@@ -10,14 +10,14 @@
 
   <tbody>
     <% @articles.each do |article| %>
-      <tr class="<%= cycle(:even, :odd) %>">
+      <tr class="<%= cycle('even', 'odd') %>">
         <td><%= article.code %></td>
         <td><%= article.name %></td>
         <td><%= number_to_currency article.price %></td>
-        <td><%= link_to t(:'label.show'), article %></td>
-        <td><%= link_to t(:'label.edit'), edit_article_path(article) %></td>
-        <td><%= button_to t(:'label.delete'), article,
-          :confirm => t(:'messages.confirmation'), :method => :delete %></td>
+        <td><%= link_to t('label.show'), article %></td>
+        <td><%= link_to t('label.edit'), edit_article_path(article) %></td>
+        <td><%= button_to t('label.delete'), article,
+          confirm: t('messages.confirmation'), method: :delete %></td>
       </tr>
     <% end %>
   </tbody>
@@ -25,5 +25,5 @@
 
 <nav class="links">
   <%= pagination_links(@articles) %>
-  <%= link_to t(:'label.new'), new_article_path %>
+  <%= link_to t('label.new'), new_article_path %>
 </nav>

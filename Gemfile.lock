@@ -101,7 +101,7 @@ GEM
     newrelic_rpm (3.2.0)
     paper_trail (2.4.0)
       rails (~> 3)
-    paperclip (2.4.4)
+    paperclip (2.4.5)
       activerecord (>= 2.3.0)
       activesupport (>= 2.3.2)
       cocaine (>= 0.0.2)

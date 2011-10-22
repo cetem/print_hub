@@ -65,7 +65,10 @@ PrintHubApp::Application.routes.draw do
     scope ':status', defaults: {status: 'all'},
       constraints: {status: /pending|scheduled|all/} do
       resources :prints, except: [:destroy] do
-        put :cancel_job, on: :member
+        member do
+          put :cancel_job
+          delete :revoke
+        end
 
         collection do
           get :autocomplete_for_customer_name

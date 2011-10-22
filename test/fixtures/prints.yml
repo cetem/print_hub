@@ -1,32 +1,37 @@
 math_print:
-  printer: <%= Cups.show_destinations.select {|p| p =~ /pdf/i}.first %>
+  printer: <%= Cups.show_destinations.detect { |p| p =~ /pdf/i } %>
   user: operator
   customer: student
   pending_payment: true
+  revoked: false
 
 physics_print:
-  printer: <%= Cups.show_destinations.select {|p| p =~ /pdf/i}.first %>
+  printer: <%= Cups.show_destinations.detect { |p| p =~ /pdf/i } %>
   user: operator
   customer: teacher
   pending_payment: true
+  revoked: false
 
 os_print:
-  printer: <%= Cups.show_destinations.select {|p| p =~ /pdf/i}.first %>
+  printer: <%= Cups.show_destinations.detect { |p| p =~ /pdf/i } %>
   user: operator
   customer: teacher
   pending_payment: false
+  revoked: false
 
 second_math_print:
-  printer: <%= Cups.show_destinations.select {|p| p =~ /pdf/i}.first %>
+  printer: <%= Cups.show_destinations.detect { |p| p =~ /pdf/i } %>
   user: second_operator
   customer: student
   pending_payment: true
+  revoked: false
 
 second_physics_print:
-  printer: <%= Cups.show_destinations.select {|p| p =~ /pdf/i}.first %>
+  printer: <%= Cups.show_destinations.detect { |p| p =~ /pdf/i } %>
   user: second_operator
   customer: teacher
   pending_payment: true
+  revoked: false
 
 scheduled_math_print:
   printer: ''
@@ -34,3 +39,11 @@ scheduled_math_print:
   customer: student
   pending_payment: false
   scheduled_at: <%= 1.hour.from_now.to_s(:db) %>
+  revoked: false
+  
+math_print_with_credit:
+  printer: <%= Cups.show_destinations.detect { |p| p =~ /pdf/i } %>
+  user: operator
+  customer: student
+  pending_payment: false
+  revoked: false

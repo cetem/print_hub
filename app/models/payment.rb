@@ -11,9 +11,11 @@ class Payment < ActiveRecord::Base
   scope :between, ->(_start, _end) {
     where('created_at BETWEEN :start AND :end', start: _start, end: _end)
   }
+  scope :not_revoked, where(revoked: false)
 
   # Restricciones de los atributos
   attr_readonly :amount
+  attr_protected :revoked
 
   # Restricciones
   validates :amount, presence: true, numericality: {

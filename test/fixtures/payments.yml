@@ -4,6 +4,7 @@ math_payment:
   paid_with: <%= Payment::PAID_WITH[:cash] %>
   payable_id: <%= ActiveRecord::Fixtures.identify(:math_print) %>
   payable_type: 'Print'
+  revoked: false
 
 physics_payment:
   amount: 4.59
@@ -11,6 +12,7 @@ physics_payment:
   paid_with: <%= Payment::PAID_WITH[:cash] %>
   payable_id: <%= ActiveRecord::Fixtures.identify(:physics_print) %>
   payable_type: 'Print'
+  revoked: false
 
 os_print:
   amount: 1.40
@@ -18,6 +20,7 @@ os_print:
   paid_with: <%= Payment::PAID_WITH[:cash] %>
   payable_id: <%= ActiveRecord::Fixtures.identify(:os_print) %>
   payable_type: 'Print'
+  revoked: false
   created_at: <%= 2.days.ago.to_datetime.to_s(:db) %>
   updated_at: <%= 2.days.ago.to_datetime.to_s(:db) %>
 
@@ -27,6 +30,7 @@ second_math_payment:
   paid_with: <%= Payment::PAID_WITH[:cash] %>
   payable_id: <%= ActiveRecord::Fixtures.identify(:second_math_print) %>
   payable_type: 'Print'
+  revoked: false
 
 second_physics_payment:
   amount: 2.80
@@ -34,6 +38,7 @@ second_physics_payment:
   paid_with: <%= Payment::PAID_WITH[:cash] %>
   payable_id: <%= ActiveRecord::Fixtures.identify(:second_physics_print) %>
   payable_type: 'Print'
+  revoked: false
 
 scheduled_math_payment:
   amount: 42.18
@@ -41,5 +46,16 @@ scheduled_math_payment:
   paid_with: <%= Payment::PAID_WITH[:cash] %>
   payable_id: <%= ActiveRecord::Fixtures.identify(:scheduled_math_print) %>
   payable_type: 'Print'
+  revoked: false
+  created_at: <%= 2.days.ago.to_datetime.to_s(:db) %>
+  updated_at: <%= 2.days.ago.to_datetime.to_s(:db) %>
+  
+math_with_credit_payment:
+  amount: 42.18
+  paid: 42.18
+  paid_with: <%= Payment::PAID_WITH[:credit] %>
+  payable_id: <%= ActiveRecord::Fixtures.identify(:math_print_with_credit) %>
+  payable_type: 'Print'
+  revoked: false
   created_at: <%= 2.days.ago.to_datetime.to_s(:db) %>
   updated_at: <%= 2.days.ago.to_datetime.to_s(:db) %>

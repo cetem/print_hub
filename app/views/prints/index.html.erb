@@ -12,21 +12,22 @@
       <th><%= Print.human_attribute_name :customer %></th>
       <th><%= Print.human_attribute_name :scheduled_at %></th>
       <th><%= Print.human_attribute_name :user %></th>
-      <th colspan="2"></th>
+      <th colspan="3"></th>
     </tr>
   </thead>
 
   <tbody>
     <% @prints.each do |print| %>
-      <tr class="<%= cycle(:even, :odd) %>">
+      <tr class="<%= (print.revoked ? 'revoked ' : '') + cycle('even', 'odd') %>">
         <td><%= print.id %></td>
         <td><%= l print.created_at, format: :short if print.created_at %></td>
         <td><%= print.printer.blank? ? '-' : print.printer %></td>
         <td><%= print.customer || '-' %></td>
         <td><%= l print.scheduled_at, format: :short if print.scheduled_at %></td>
         <td><%= print.user %></td>
-        <td><%= link_to t(:'label.show'), print %></td>
-        <td><%= link_to t(:'label.edit'), edit_print_path(print, status: params[:status]) if print.pending_payment || print.scheduled? %></td>
+        <td><%= link_to t('label.show'), print %></td>
+        <td><%= link_to t('label.edit'), edit_print_path(print, status: params[:status]) if print.pending_payment || print.scheduled? %></td>
+        <td><%= link_to t('view.prints.revoke'), revoke_print_path(print), method: :delete, confirm: t('messages.confirmation') if current_user.admin? && !print.revoked %></td>
       </tr>
     <% end %>
   </tbody>

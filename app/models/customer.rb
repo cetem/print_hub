@@ -35,7 +35,7 @@ class Customer < ActiveRecord::Base
     numericality: {greater_than_or_equal_to: 0}
   validates_each :free_monthly_bonus do |record, attr, value|
     # Si no es un usuario de tipo admin este atributo no lo puede tocar =)
-    if !UserSession.find.try(:record).try(:admin)
+    unless UserSession.find.try(:record).try(:admin)
       if record.send("#{attr}_changed?") && value.to_f > 0
         record.errors.add attr, :invalid
       end
@@ -96,14 +96,16 @@ class Customer < ActiveRecord::Base
     self.deposits.select { |d| d.new_record? || d.marked_for_destruction? } |
       self.deposits.valids
   end
+  
+  def add_bonus(amount, valid_until = nil)
+    self.bonuses.build(amount: amount, valid_until: valid_until)
+  end
 
   def build_monthly_bonus
-    if self.free_monthly_bonus && self.free_monthly_bonus > 0
-      expiration = Date.today.at_end_of_month
-      
-      self.bonuses.build(
-        amount: self.free_monthly_bonus,
-        valid_until: (expiration unless self.bonus_without_expiration)
+    if self.free_monthly_bonus.to_i > 0
+      self.add_bonus(
+        self.free_monthly_bonus,
+        (Date.today.at_end_of_month unless self.bonus_without_expiration)
       )
     end
   end

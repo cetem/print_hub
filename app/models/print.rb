@@ -2,9 +2,8 @@ class Print < ActiveRecord::Base
   has_paper_trail
   
   # Callbacks
-  before_save :mark_order_as_completed, on: :create
-  before_save :remove_unnecessary_payments, :update_customer_credit,
-    :mark_as_pending, :print_all_jobs
+  before_save :mark_order_as_completed, :update_customer_credit, if: :new_record?
+  before_save :remove_unnecessary_payments, :mark_as_pending, :print_all_jobs
   before_destroy :can_be_destroyed?
 
   # Scopes
@@ -20,7 +19,7 @@ class Print < ActiveRecord::Base
 
   # Restricciones en los atributos
   attr_readonly :user_id, :customer_id, :printer
-  attr_protected :pending_payment
+  attr_protected :pending_payment, :revoked
 
   # Restricciones
   validates :printer, presence: true, if: ->(p) {
@@ -93,7 +92,7 @@ class Print < ActiveRecord::Base
     self.payments.detect(&:"#{type}?") ||
       self.payments.build(paid_with: Payment::PAID_WITH[type])
   end
-
+  
   def avoid_printing?
     self.avoid_printing == true || self.avoid_printing == '1'
   end
@@ -116,6 +115,19 @@ class Print < ActiveRecord::Base
     self.order.try(:completed!)
     
     true
+  end
+  
+  def revoke!
+    if UserSession.find.try(:record).try(:admin)
+      self.revoked = true
+      self.payments.each { |p| p.revoked = true }
+
+      if self.customer && self.payments.any?(&:credit?)
+        self.customer.add_bonus self.payments.select(&:credit?).sum(&:paid)
+      end
+      
+      self.save validate: false
+    end
   end
 
   def price

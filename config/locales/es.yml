@@ -712,6 +712,8 @@
         title: 'Ver detalles del crédito vigente'
       new: 'Nueva'
       new_without_stored_documents: 'Nueva impresión *sin* documentos'
+      revoke: 'Revocar'
+      correctly_revoked: 'Impresión revocada correctamente'
     settings:
       index_title: 'Listado de configuraciones'
       show_title: 'Detalle de configuración'
