@@ -7,13 +7,11 @@ CREDIT_THRESHOLD = 0.7
 # Dominio público
 PUBLIC_DOMAIN = APP_CONFIG['public_host'].split(':').first
 # Puerto público
-PUBLIC_PORT = APP_CONFIG['public_host'].split(':').last.try(:to_i) || 80
+PUBLIC_PORT = APP_CONFIG['public_host'].split(':')[1]
 # Protocolo público
 PUBLIC_PROTOCOL = 'http'
 # Adaptador de base de datos
 DB_ADAPTER = ActiveRecord::Base.connection.adapter_name
-# Expresión regular para validar direcciones de correo
-EMAIL_REGEXP = /^([^@\s]+)@((?:[-a-z0-9]+\.)+[a-z]{2,})$/i
 # Idiomas disponibles
 LANGUAGES = [:es]
 # Validez de los tokens para cambiar contraseña y activar cuenta

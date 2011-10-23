@@ -1,0 +1,51 @@
+@media screen and (min-device-width : 320px) and (max-device-width : 480px) {
+  #customer_login {
+    float: none;
+
+    #login {
+      float: none;
+      width: 16em;
+      margin: 0em auto;
+      padding: 1em 2em;
+    }
+  }
+
+  #ph_customer_sessions {
+    section.details {
+      display: none;
+    }
+
+    #main_container {
+      min-width: 200px;
+      padding: 0em;
+      margin: 5em auto;
+    }
+
+    #top_bar {
+      min-width: 200px;
+      padding: 1em .5em .5em .5em;
+
+      hgroup {
+        h2 {
+          display: none;
+        }
+      }
+
+      nav {
+        font-size: .8em;
+      }
+    }
+  }
+  
+  div.actions {
+    margin-left: 1em;
+  }
+  
+  div.field {
+    margin-left: 1em;
+    
+    input[type="text"], input[type="password"], select, textarea, input.file {
+      width: 20em;
+    }
+  }
+}
