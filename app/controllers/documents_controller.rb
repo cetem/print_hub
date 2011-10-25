@@ -20,36 +20,7 @@ class DocumentsController < ApplicationController
     if params[:q].present?
       query = params[:q].sanitized_for_text_query
       @query_terms = query.split(/\s+/).reject(&:blank?)
-
-      unless @query_terms.empty?
-        parameters = {
-          and_term: @query_terms.join(' & '),
-          wilcard_term: "%#{@query_terms.join('%')}%".downcase
-        }
-
-        if DB_ADAPTER == 'PostgreSQL'
-          pg_query = pg_text_query('name', 'tag_path')
-          query, order = pg_query[:query], pg_query[:order]
-
-          order = Document.send(:sanitize_sql_for_conditions, [order, parameters])
-        else
-          query = simple_text_query('name', 'tag_path')
-          order = 'name ASC'
-        end
-        
-        conditions = [query]
-
-        @query_terms.each_with_index do |term, i|
-          if term =~ /^\d+$/ # Sólo si es un número vale la pena la condición
-            conditions << "#{Document.table_name}.code = :clean_term_#{i}"
-            parameters[:"clean_term_#{i}"] = term.to_i
-          end
-        end
-
-        @documents = @documents.where(
-          conditions.map { |c| "(#{c})" }.join(' OR '), parameters
-        )
-      end
+      @documents = @documents.full_text(@query_terms) unless @query_terms.empty?
     end
 
     @documents = @documents.order(

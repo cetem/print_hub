@@ -1,4 +1,4 @@
-class OrderLine < ActiveRecord::Base
+class OrderLine < ApplicationModel
   has_paper_trail
   
   # Restricciones de atributos

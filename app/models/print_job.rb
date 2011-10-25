@@ -1,4 +1,4 @@
-class PrintJob < ActiveRecord::Base
+class PrintJob < ApplicationModel
   has_paper_trail
   
   # Scopes

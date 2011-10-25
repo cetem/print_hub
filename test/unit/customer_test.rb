@@ -327,6 +327,13 @@ class CustomerTest < ActiveSupport::TestCase
     assert_difference('Bonus.count') { @customer.save }
     assert_not_nil @customer.reload.bonuses.detect { |b| b.valid_until.blank? }
   end
+  
+  test 'full text search' do
+    customers = Customer.full_text(['anakin'])
+    
+    assert_equal 1, customers.size
+    assert_equal 'Anakin', customers.first.name
+  end
 
   test 'create monthly bonuses' do
     assert_difference 'Bonus.count', 2 do

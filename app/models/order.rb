@@ -1,4 +1,4 @@
-class Order < ActiveRecord::Base
+class Order < ApplicationModel
   has_paper_trail
   
   # Constantes
@@ -107,5 +107,27 @@ class Order < ActiveRecord::Base
   
   def self.pending_for_print_count
     self.pending.for_print.scheduled_soon.count
+  end
+  
+  def self.full_text(query_terms)
+    options = text_query(
+      query_terms,
+      "#{Customer.table_name}.identification",
+      "#{Customer.table_name}.name",
+      "#{Customer.table_name}.lastname"
+    )
+    conditions = [options[:query]]
+    parameters = options[:parameters]
+    
+    query_terms.each_with_index do |term, i|
+      if term =~ /^\d+$/ # Sólo si es un número vale la pena la condición
+        conditions << "#{table_name}.id = :clean_term_#{i}"
+        parameters[:"clean_term_#{i}"] = term.to_i
+      end
+    end
+    
+    includes(:customer).where(
+      conditions.map { |c| "(#{c})" }.join(' OR '), parameters
+    ).order(options[:order])
   end
 end

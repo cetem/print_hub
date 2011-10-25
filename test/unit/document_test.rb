@@ -278,4 +278,16 @@ class DocumentTest < ActiveSupport::TestCase
     assert_equal 4, @document.use_stock(6)
     assert_equal 0, @document.stock
   end
+  
+  test 'full text search' do
+    documents = Document.full_text(['unused'])
+    
+    assert_equal 1, documents.size
+    assert_equal 'Unused Book', documents.first.name
+    
+    documents = Document.full_text(['2'])
+    
+    assert_equal 1, documents.size
+    assert_equal 2, documents.first.code
+  end
 end

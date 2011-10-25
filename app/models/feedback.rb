@@ -1,4 +1,4 @@
-class Feedback < ActiveRecord::Base
+class Feedback < ApplicationModel
   # Callbacks
   before_destroy :avoid_destruction
   

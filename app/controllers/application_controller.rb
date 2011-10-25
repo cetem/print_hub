@@ -148,23 +148,4 @@ class ApplicationController < ActionController::Base
 
     [from_datetime.to_datetime, to_datetime.to_datetime].sort
   end
-  
-  def pg_text_query(*args)
-    options = args.extract_options!
-    lang = "'spanish'" # TODO: implementar con I18n
-    vector_args = args.map { |a| "coalesce(#{a},'')" }.join(" || ' ' || ")
-    term_name = options[:term_name] || 'and_term'
-    query = "to_tsvector(#{lang}, #{vector_args})"
-    query << " @@ to_tsquery(#{lang}, :#{term_name})"
-    order = "ts_rank_cd(#{query.sub(' @@', ',')})"
-    
-    {query: query, order: order}
-  end
-  
-  def simple_text_query(*args)
-    options = args.extract_options!
-    term_name = options[:term_name] || 'wilcard_term'
-    
-    args.map{ |a| "LOWER(#{a}) LIKE :#{term_name}" }.join(' OR ')
-  end
 end

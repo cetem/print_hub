@@ -1,4 +1,4 @@
-class Print < ActiveRecord::Base
+class Print < ApplicationModel
   has_paper_trail
   
   # Callbacks

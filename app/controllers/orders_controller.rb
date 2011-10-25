@@ -13,45 +13,7 @@ class OrdersController < ApplicationController
     if params[:q].present? && current_user
       query = params[:q].sanitized_for_text_query
       @query_terms = query.split(/\s+/).reject(&:blank?)
-      
-      unless @query_terms.empty?
-        @orders = @orders.includes(:customer)
-        parameters = {
-          and_term: @query_terms.join(' & '),
-          wilcard_term: "%#{@query_terms.join('%')}%".downcase
-        }
-
-        if DB_ADAPTER == 'PostgreSQL'
-          pg_query = pg_text_query(
-            "#{Customer.table_name}.identification",
-            "#{Customer.table_name}.name",
-            "#{Customer.table_name}.lastname"
-          )
-          query, order = pg_query[:query], pg_query[:order]
-
-          order = Order.send(:sanitize_sql_for_conditions, [order, parameters])
-        else
-          query = simple_text_query(
-            "#{Customer.table_name}.identification",
-            "#{Customer.table_name}.name",
-            "#{Customer.table_name}.lastname"
-          )
-          order = "#{Customer.table_name}.lastname ASC"
-        end
-        
-        conditions = [query]
-
-        @query_terms.each_with_index do |term, i|
-          if term =~ /^\d+$/ # Sólo si es un número vale la pena la condición
-            conditions << "#{Order.table_name}.id = :clean_term_#{i}"
-            parameters[:"clean_term_#{i}"] = term.to_i
-          end
-        end
-
-        @orders = @orders.where(
-          conditions.map { |c| "(#{c})" }.join(' OR '), parameters
-        )
-      end
+      @orders = @orders.full_text(@query_terms) unless @query_terms.empty?
     end
     
     @orders = @orders.paginate(page: params[:page], per_page: lines_per_page)

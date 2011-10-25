@@ -1,4 +1,4 @@
-class ArticleLine < ActiveRecord::Base
+class ArticleLine < ApplicationModel
   has_paper_trail
   
   # Atributos no persistentes

@@ -1,4 +1,4 @@
-class User < ActiveRecord::Base
+class User < ApplicationModel
   has_paper_trail
   has_attached_file :avatar,
     path: ':rails_root/private/:attachment/:id_partition/:basename_:style.:extension',

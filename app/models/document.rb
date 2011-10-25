@@ -1,4 +1,4 @@
-class Document < ActiveRecord::Base
+class Document < ApplicationModel
   has_paper_trail
   has_attached_file :file,
     path: ':rails_root/private/:attachment/:id_partition/:basename_:style.:extension',
@@ -135,7 +135,7 @@ class Document < ActiveRecord::Base
 
     styles
   end
-
+  
   # Invocado por PDF::Reader para establecer la cantidad de páginas del PDF
   def page_count(pages)
     self.pages = pages
@@ -147,6 +147,23 @@ class Document < ActiveRecord::Base
 
   rescue PDF::Reader::MalformedPDFError
     false
+  end
+  
+  def self.full_text(query_terms)
+    options = text_query(query_terms, 'name', 'tag_path')
+    conditions = [options[:query]]
+    parameters = options[:parameters]
+    
+    query_terms.each_with_index do |term, i|
+      if term =~ /^\d+$/ # Sólo si es un número vale la pena la condición
+        conditions << "#{table_name}.code = :clean_term_#{i}"
+        parameters[:"clean_term_#{i}"] = term.to_i
+      end
+    end
+    
+    where(
+      conditions.map { |c| "(#{c})" }.join(' OR '), parameters
+    ).order(options[:order])
   end
   
   private

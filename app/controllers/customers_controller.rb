@@ -17,29 +17,7 @@ class CustomersController < ApplicationController
     if params[:q].present?
       query = params[:q].sanitized_for_text_query
       @query_terms = query.split(/\s+/).reject(&:blank?)
-
-      unless @query_terms.empty?
-        parameters = {
-          and_term: @query_terms.join(' & '),
-          wilcard_term: "%#{@query_terms.join('%')}%".downcase
-        }
-
-        if DB_ADAPTER == 'PostgreSQL'
-          pg_query = pg_text_query('identification', 'name', 'lastname')
-          query, order = pg_query[:query], pg_query[:order]
-
-          order = Customer.send(:sanitize_sql_for_conditions, [order, parameters])
-        else
-          query = simple_text_query('identification', 'name', 'lastname')
-          order = 'name ASC'
-        end
-        
-        conditions = [query]
-
-        @customers = @customers.where(
-          conditions.map { |c| "(#{c})" }.join(' OR '), parameters
-        )
-      end
+      @customers = @customers.full_text(@query_terms) unless @query_terms.empty?
     end
     
     @customers = @customers.paginate(

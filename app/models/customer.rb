@@ -1,4 +1,4 @@
-class Customer < ActiveRecord::Base
+class Customer < ApplicationModel
   has_paper_trail ignore: [:perishable_token]
   find_by_autocomplete :name
   acts_as_authentic do |c|
@@ -163,6 +163,15 @@ class Customer < ActiveRecord::Base
     else
       false
     end
+  end
+  
+  def self.full_text(query_terms)
+    options = text_query(query_terms, 'identification', 'name', 'lastname')
+    conditions = [options[:query]]
+    
+    where(
+      conditions.map { |c| "(#{c})" }.join(' OR '), options[:parameters]
+    ).order(options[:order])
   end
 
   def self.create_monthly_bonuses

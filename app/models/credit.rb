@@ -1,4 +1,4 @@
-class Credit < ActiveRecord::Base
+class Credit < ApplicationModel
   has_paper_trail
   
   # Restricciones de atributos

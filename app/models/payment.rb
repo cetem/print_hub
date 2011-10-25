@@ -1,4 +1,4 @@
-class Payment < ActiveRecord::Base
+class Payment < ApplicationModel
   has_paper_trail
   
   # Constantes

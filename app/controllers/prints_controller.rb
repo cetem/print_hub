@@ -124,37 +124,7 @@ class PrintsController < ApplicationController
     query = params[:q].sanitized_for_text_query
     @query_terms = query.split(/\s+/).reject(&:blank?)
     @docs = Document.scoped
-
-    unless @query_terms.empty?
-      parameters = {
-        and_term: @query_terms.join(' & '),
-        wilcard_term: "%#{@query_terms.join('%')}%".downcase
-      }
-
-      if DB_ADAPTER == 'PostgreSQL'
-        pg_query = pg_text_query('name', 'tag_path')
-        query, order = pg_query[:query], pg_query[:order]
-
-        order = Document.send(:sanitize_sql_for_conditions, [order, parameters])
-      else
-        query = simple_text_query('name', 'tag_path')
-        order = 'name ASC'
-      end
-      
-      conditions = [query]
-
-      @query_terms.each_with_index do |term, i|
-        if term =~ /^\d+$/ # Sólo si es un número vale la pena la condición
-          conditions << "#{Document.table_name}.code = :clean_term_#{i}"
-          parameters[:"clean_term_#{i}"] = term.to_i
-        end
-      end
-
-      @docs = @docs.where(
-        conditions.map { |c| "(#{c})" }.join(' OR '), parameters
-      ).order(order)
-    end
-
+    @docs = @docs.full_text(@query_terms) unless @query_terms.empty?
     @docs = @docs.limit(10)
     
     respond_to do |format|
@@ -167,36 +137,7 @@ class PrintsController < ApplicationController
     query = params[:q].sanitized_for_text_query
     @query_terms = query.split(/\s+/).reject(&:blank?)
     @articles = Article.scoped
-
-    unless @query_terms.empty?
-      parameters = {
-        and_term: @query_terms.join(' & '),
-        wilcard_term: "%#{@query_terms.join('%')}%".downcase
-      }
-
-      if DB_ADAPTER == 'PostgreSQL'
-        pg_query = pg_text_query('name')
-        query, order = pg_query[:query], pg_query[:order]
-
-        order = Article.send(:sanitize_sql_for_conditions, [order, parameters])
-      else
-        query = simple_text_query('name')
-        order = 'name ASC'
-      end
-      conditions = [query]
-
-      @query_terms.each_with_index do |term, i|
-        if term =~ /^\d+$/ # Sólo si es un número vale la pena la condición
-          conditions << "#{Article.table_name}.code = :clean_term_#{i}"
-          parameters[:"clean_term_#{i}"] = term.to_i
-        end
-      end
-
-      @articles = @articles.where(
-        conditions.map { |c| "(#{c})" }.join(' OR '), parameters
-      ).order(order)
-    end
-
+    @articles = @articles.full_text(@query_terms) unless @query_terms.empty?
     @articles = @articles.limit(10)
     
     respond_to do |format|
@@ -209,30 +150,7 @@ class PrintsController < ApplicationController
     query = params[:q].sanitized_for_text_query
     @query_terms = query.split(/\s+/).reject(&:blank?)
     @customers = Customer.scoped
-
-    unless @query_terms.empty?
-      parameters = {
-        and_term: @query_terms.join(' & '),
-        wilcard_term: "%#{@query_terms.join('%')}%"
-      }
-
-      if DB_ADAPTER == 'PostgreSQL'
-        pg_query = pg_text_query('identification', 'name', 'lastname')
-        query, order = pg_query[:query], pg_query[:order]
-
-        order = Customer.send(:sanitize_sql_for_conditions, [order, parameters])
-      else
-        query = simple_text_query('identification', 'name', 'lastname')
-        order = 'name ASC'
-      end
-      
-      conditions = [query]
-
-      @customers = @customers.where(
-        conditions.map { |c| "(#{c})" }.join(' OR '), parameters
-      ).order(order)
-    end
-
+    @customers = @customers.full_text(@query_terms) unless @query_terms.empty?
     @customers = @customers.limit(10)
     
     respond_to do |format|

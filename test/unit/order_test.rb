@@ -220,4 +220,17 @@ class OrderTest < ActiveSupport::TestCase
     assert !@order.allow_status?(Order::STATUS[:cancelled])
     assert !@order.allow_status?(Order::STATUS[:pending])
   end
+  
+  test 'full text search' do
+    orders = Order.full_text(['anakin'])
+    
+    assert_equal 1, orders.size
+    assert_equal 'Anakin', orders.first.customer.name
+    
+    id = ActiveRecord::Fixtures.identify(:from_yesterday)
+    orders = Order.full_text([id.to_s])
+    
+    assert_equal 1, orders.size
+    assert_equal id, orders.first.id
+  end
 end
