@@ -19,3 +19,6 @@
 //= require orders
 //= require price-chooser
 //= require prints
+//
+// Mobile js
+//= require mobile

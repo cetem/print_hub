@@ -1,26 +1,37 @@
+@import "mixins";
+
 @media screen and (min-device-width : 320px) and (max-device-width : 480px) {
   #customer_login {
     float: none;
 
     #login {
       float: none;
-      width: 16em;
+      width: 17em;
       margin: 0em auto;
       padding: 1em 2em;
     }
   }
 
+  #customer_registration {
+    #public_customer_form {
+      float: none;
+      margin: 0em;
+    }
+
+    section.explanation {
+      float: none;
+      text-align: justify;
+    }
+  }
+
+  #main_container {
+    width: 100% !important;
+    min-width: 200px !important;
+    padding: 0em !important;
+    margin: 5em auto !important;
+  }
+
   #ph_customer_sessions {
-    section.details {
-      display: none;
-    }
-
-    #main_container {
-      min-width: 200px;
-      padding: 0em;
-      margin: 5em auto;
-    }
-
     #top_bar {
       min-width: 200px;
       padding: 1em .5em .5em .5em;
@@ -45,7 +56,24 @@
     margin-left: 1em;
     
     input[type="text"], input[type="password"], select, textarea, input.file {
-      width: 20em;
+      width: 90%;
     }
+  }
+
+  p.help_link_container {
+    margin: .5em 0em .5em 1em;
+  }
+
+  section.explanation {
+    padding: 1em;
+    border: none;
+  }
+
+  .only_mobile {
+    display: block;
+  }
+
+  .only_mobile_inline {
+    display: inline;
   }
 }

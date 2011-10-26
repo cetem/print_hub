@@ -815,6 +815,10 @@ ul.raw {
   white-space: nowrap;
 }
 
+.only_mobile, .only_mobile_inline {
+  display: none;
+}
+
 .strong {
   font-weight: bold;
 }
