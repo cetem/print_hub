@@ -103,7 +103,7 @@
 
 <nav class="links">
   <%= link_to raw("<b>#{t('view.prints.new')}</b>"), new_print_path %> |
-  <% if @print.pending_payment %>
+  <% if @print.pending_payment? %>
     <%= link_to t('label.edit'), edit_print_path(@print) %> |
   <% end %>
   <%= link_to t('label.list'), prints_path %>

@@ -21,7 +21,7 @@ class PrintTest < ActiveSupport::TestCase
     assert_equal prints(:math_print).printer, @print.printer
     assert_equal prints(:math_print).user_id, @print.user_id
     assert_equal prints(:math_print).customer_id, @print.customer_id
-    assert_equal prints(:math_print).pending_payment, @print.pending_payment
+    assert_equal prints(:math_print).status, @print.status
   end
 
   # Prueba la creación de una impresión
@@ -34,6 +34,7 @@ class PrintTest < ActiveSupport::TestCase
         printer: @printer,
         user: users(:administrator),
         scheduled_at: '',
+        pay_later: false,
         print_jobs_attributes: {
           '1' => {
             copies: 1,
@@ -69,7 +70,7 @@ class PrintTest < ActiveSupport::TestCase
     assert payment.cash?
     assert_equal '36.79', payment.amount.to_s
     assert_equal '36.79', payment.paid.to_s
-    assert_equal false, @print.pending_payment
+    assert_equal false, @print.pending_payment?
   end
   
   # Prueba la creación de una impresión
@@ -81,6 +82,7 @@ class PrintTest < ActiveSupport::TestCase
         printer: @printer,
         user: users(:administrator),
         scheduled_at: '',
+        pay_later: false,
         article_lines_attributes: {
           '1' => {
             article_id: articles(:binding).id,
@@ -105,7 +107,7 @@ class PrintTest < ActiveSupport::TestCase
     assert payment.cash?
     assert_equal '1.79', payment.amount.to_s
     assert_equal '1.79', payment.paid.to_s
-    assert_equal false, @print.pending_payment
+    assert_equal false, @print.pending_payment?
   end
 
   # Prueba la creación de una impresión programada
@@ -116,6 +118,7 @@ class PrintTest < ActiveSupport::TestCase
           printer: '',
           user: users(:administrator),
           scheduled_at: 2.hours.from_now,
+          pay_later: false,
           print_jobs_attributes: {
             '1' => {
               copies: 1,
@@ -144,7 +147,7 @@ class PrintTest < ActiveSupport::TestCase
     assert payment.cash?
     assert_equal '35.0', payment.amount.to_s
     assert_equal '35.0', payment.paid.to_s
-    assert_equal false, @print.pending_payment
+    assert_equal false, @print.pending_payment?
   end
 
   # Prueba la creación de una impresión que evita imprimir =)
@@ -184,7 +187,7 @@ class PrintTest < ActiveSupport::TestCase
     assert payment.cash?
     assert_equal '35.0', payment.amount.to_s
     assert_equal '35.0', payment.paid.to_s
-    assert_equal false, @print.pending_payment
+    assert_equal false, @print.pending_payment?
   end
   
   # Prueba la creación de una impresión de documentos con existencia suficiente
@@ -198,6 +201,7 @@ class PrintTest < ActiveSupport::TestCase
           printer: @printer,
           user: users(:administrator),
           scheduled_at: '',
+          pay_later: false,
           print_jobs_attributes: {
             '1' => {
               copies: 1,
@@ -226,7 +230,7 @@ class PrintTest < ActiveSupport::TestCase
     assert payment.cash?
     assert_equal '1.0', payment.amount.to_s
     assert_equal '1.0', payment.paid.to_s
-    assert_equal false, @print.pending_payment
+    assert_equal false, @print.pending_payment?
     assert_equal original_stock - 1, document.reload.stock
     assert_equal 0, @print.print_jobs.first.printed_copies
   end
@@ -290,6 +294,7 @@ class PrintTest < ActiveSupport::TestCase
         user: users(:administrator),
         customer: customers(:student),
         scheduled_at: '',
+        pay_later: false,
         credit_password: 'wrong_password',
         print_jobs_attributes: {
           '1' => {
@@ -314,10 +319,8 @@ class PrintTest < ActiveSupport::TestCase
   end
 
   test 'create with free credit and cash' do
-    cups_count = 'Cups.all_jobs(@printer).keys.sort.last'
-
     assert_difference ['Print.count', 'PrintJob.count', 'ArticleLine.count'] do
-      assert_difference cups_count, 1 do
+      assert_difference 'Cups.all_jobs(@printer).keys.sort.last' do
         assert_difference 'Payment.count', 2 do
           @print = Print.create(
             printer: @printer,
@@ -379,6 +382,7 @@ class PrintTest < ActiveSupport::TestCase
           user: users(:administrator),
           scheduled_at: '',
           avoid_printing: true,
+          pay_later: false,
           include_documents: [documents(:math_book).id],
           payments_attributes: {
             '1' => {
@@ -397,7 +401,7 @@ class PrintTest < ActiveSupport::TestCase
     assert payment.cash?
     assert_equal '24.5', payment.amount.to_s
     assert_equal '24.5', payment.paid.to_s
-    assert_equal false, @print.pending_payment
+    assert_equal false, @print.pending_payment?
     assert_equal documents(:math_book).id, @print.print_jobs.first.document_id
   end
   
@@ -431,10 +435,47 @@ class PrintTest < ActiveSupport::TestCase
     assert payment.cash?
     assert_equal '24.5', payment.amount.to_s
     assert_equal '24.5', payment.paid.to_s
-    assert_equal false, @print.pending_payment
+    assert_equal false, @print.pending_payment?
     assert_equal order.order_lines.map(&:document_id).sort,
       @print.print_jobs.map(&:document_id).sort
     assert order.reload.completed?
+  end
+  
+  # Prueba la creación de una impresión que evita imprimir =)
+  test 'create with pay later' do
+    assert_difference ['Print.count', 'PrintJob.count'] do
+      assert_difference 'Cups.all_jobs(@printer).keys.sort.last' do
+        assert_no_difference 'Payment.count' do
+          @print = Print.create(
+            printer: @printer,
+            user: users(:administrator),
+            scheduled_at: '',
+            avoid_printing: false,
+            pay_later: true,
+            print_jobs_attributes: {
+              '1' => {
+                copies: 1,
+                # No importa el precio, se establece desde la configuración
+                price_per_copy: 1000,
+                # No importan las páginas, se establecen desde el documento
+                pages: 1,
+                two_sided: false,
+                document: documents(:math_book)
+              }
+            },
+            payments_attributes: {
+              '1' => {
+                amount: 35.00,
+                paid: 35.00
+              }
+            }
+          )
+        end
+      end
+    end
+
+    assert @print.reload.payments.empty?
+    assert @print.pay_later?
   end
 
   # Prueba de actualización de una impresión
@@ -507,6 +548,21 @@ class PrintTest < ActiveSupport::TestCase
       error_message_from_model(@print, :printer, :too_long, count: 255)].sort,
       @print.errors[:printer].sort
   end
+  
+  test 'validates payments' do
+    @print.payments.build(amount: '10.00')
+    assert @print.invalid?
+    assert_equal 1, @print.errors.size
+    assert_equal [
+      error_message_from_model(
+        @print, :payments, :invalid, price: '42.180', payment: '52.180'
+      )
+    ], @print.errors[:payments]
+    
+    # Sólo se valida cuando el pago está pendiente
+    @print.paid!
+    assert @print.valid?
+  end
 
   # Prueba que las validaciones del modelo se cumplan como es esperado
   test 'validates printer and scheduled_at states' do
@@ -526,9 +582,7 @@ class PrintTest < ActiveSupport::TestCase
   test 'revoke' do
     UserSession.create(users(:administrator))
     
-    assert_no_difference 'Bonus.count' do
-      assert @print.revoke!
-    end
+    assert_no_difference('Bonus.count') { assert @print.revoke! }
     
     assert @print.reload.revoked
     assert @print.payments.reload.all?(&:revoked)
@@ -537,9 +591,7 @@ class PrintTest < ActiveSupport::TestCase
   test 'can not revoke if is not admin' do
     UserSession.create(users(:operator))
     
-    assert_no_difference 'Bonus.count' do
-      assert_nil @print.revoke!
-    end
+    assert_no_difference('Bonus.count') { assert_nil @print.revoke! }
     
     assert_equal false, @print.reload.revoked
   end
@@ -599,7 +651,7 @@ class PrintTest < ActiveSupport::TestCase
 
   test 'pending payment' do
     assert @print.has_pending_payment?
-    assert @print.pending_payment
+    assert @print.pending_payment?
     
     assert @print.update_attributes(
       payments_attributes: {
@@ -611,7 +663,7 @@ class PrintTest < ActiveSupport::TestCase
       }
     )
     assert !@print.reload.has_pending_payment?
-    assert !@print.pending_payment
+    assert !@print.pending_payment?
   end
 
   test 'scheduled' do

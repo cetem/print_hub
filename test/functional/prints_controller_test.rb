@@ -32,7 +32,7 @@ class PrintsControllerTest < ActionController::TestCase
     assert_response :success
     assert_not_nil assigns(:prints)
     assert assigns(:prints).size > 0
-    assert assigns(:prints).all?(&:pending_payment)
+    assert assigns(:prints).all?(&:pending_payment?)
     assert_select '#error_body', false
     assert_template 'prints/index'
   end
@@ -59,7 +59,7 @@ class PrintsControllerTest < ActionController::TestCase
     assert_not_nil assigns(:prints)
     assert_equal Print.pending.count, assigns(:prints).size
     assert assigns(:prints).any? { |p| p.user_id != user.id }
-    assert assigns(:prints).all?(&:pending_payment)
+    assert assigns(:prints).all?(&:pending_payment?)
     assert_select '#error_body', false
     assert_template 'prints/index'
   end
@@ -402,7 +402,7 @@ class PrintsControllerTest < ActionController::TestCase
     get :edit, :id => print.to_param
     assert_response :success
     assert_not_nil assigns(:print)
-    assert !assigns(:print).pending_payment && !assigns(:print).scheduled?
+    assert !assigns(:print).pending_payment? && !assigns(:print).scheduled?
     assert_select '#error_body'
     assert_template 'shared/show_error'
   end
@@ -481,7 +481,7 @@ class PrintsControllerTest < ActionController::TestCase
     assert_not_equal 123, @print.print_jobs.find_by_document_id(
       documents(:math_notes).id).copies
     assert_equal math_book.pages, @print.print_jobs.order('id ASC').last.pages
-    assert @print.pending_payment == true
+    assert @print.pending_payment?
   end
   
   test 'should revoke print' do

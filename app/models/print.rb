@@ -1,13 +1,20 @@
 class Print < ApplicationModel
   has_paper_trail
   
+  # Constantes
+  STATUS = {
+    paid: 'P',
+    pending_payment: 'X',
+    pay_later: 'L'
+  }.with_indifferent_access.freeze
+  
   # Callbacks
   before_save :mark_order_as_completed, :update_customer_credit, if: :new_record?
   before_save :remove_unnecessary_payments, :mark_as_pending, :print_all_jobs
   before_destroy :can_be_destroyed?
 
   # Scopes
-  scope :pending, where(pending_payment: true)
+  scope :pending, where(status: STATUS[:pending_payment])
   scope :scheduled, where(
     '(printer = :blank OR printer IS NULL) AND scheduled_at IS NOT NULL',
     blank: ''
@@ -15,11 +22,11 @@ class Print < ApplicationModel
 
   # Atributos no persistentes
   attr_accessor :auto_customer_name, :avoid_printing, :include_documents,
-    :credit_password
+    :credit_password, :pay_later
 
   # Restricciones en los atributos
   attr_readonly :user_id, :customer_id, :printer
-  attr_protected :pending_payment, :revoked
+  attr_protected :status, :revoked
 
   # Restricciones
   validates :printer, presence: true, if: ->(p) {
@@ -61,6 +68,9 @@ class Print < ApplicationModel
 
     self.user = UserSession.find.try(:user) || self.user rescue self.user
     
+    self.pay_later! if self.pay_later == '1' || self.pay_later == true
+    self.status ||= STATUS[:pending_payment]
+    
     if self.order && self.print_jobs.empty?
       self.customer = self.order.customer
       keys = ['document_id', 'copies', 'range', 'two_sided']
@@ -80,8 +90,12 @@ class Print < ApplicationModel
       )
     end
 
-    self.payment(:cash)
-    self.payment(:credit)
+    if self.pay_later?
+      self.payments.clear
+    else
+      self.payment(:cash)
+      self.payment(:credit)
+    end
   end
 
   def can_be_destroyed?
@@ -106,7 +120,11 @@ class Print < ApplicationModel
   end
 
   def mark_as_pending
-    self.pending_payment = self.has_pending_payment?
+    if self.has_pending_payment?
+      self.pending_payment!
+    else
+      self.paid! if self.pending_payment?
+    end
 
     true
   end
@@ -158,9 +176,11 @@ class Print < ApplicationModel
   end
 
   def must_have_valid_payments
-    unless (payment = self.payments.to_a.sum(&:amount)) == self.price
-      self.errors.add :payments, :invalid, price: '%.3f' % self.price,
-        payment: '%.3f' % payment
+    if self.pending_payment?
+      unless (payment = self.payments.to_a.sum(&:amount)) == self.price
+        self.errors.add :payments, :invalid, price: '%.3f' % self.price,
+          payment: '%.3f' % payment
+      end
     end
   end
 
@@ -202,5 +222,10 @@ class Print < ApplicationModel
 
   def scheduled?
     self.printer.blank? && !self.scheduled_at.blank?
+  end
+  
+  STATUS.each do |status, value|
+    define_method("#{status}?") { self.status == value }
+    define_method("#{status}!") { self.status = value }
   end
 end

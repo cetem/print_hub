@@ -59,7 +59,7 @@ class PrintsController < ApplicationController
     @title = t('view.prints.edit_title')
     @print = prints_scope.find(params[:id])
 
-    if !@print.pending_payment && !@print.scheduled?
+    if !@print.pending_payment? && !@print.scheduled?
       raise 'This print is readonly!'
     end
   end
@@ -88,7 +88,7 @@ class PrintsController < ApplicationController
     @title = t('view.prints.edit_title')
     @print = prints_scope.find(params[:id])
 
-    if !@print.pending_payment && !@print.scheduled?
+    if !@print.pending_payment? && !@print.scheduled?
       raise 'This print is readonly!'
     end
 

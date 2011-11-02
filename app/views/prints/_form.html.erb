@@ -24,9 +24,9 @@
       <%= link_to_function 'X', "Print.clearCustomer(); $(this).remove()",
         :class => 'remove' %>
     <% end %>
-    <%= f.hidden_field :customer_id, :class => :autocomplete_id %>
+    <%= f.hidden_field :customer_id, :class => 'autocomplete_id' %>
     <%= hidden_field_tag :customer_free_credit,
-      @print.customer.try(:free_credit), id: :customer_free_credit %>
+      @print.customer.try(:free_credit), id: 'customer_free_credit' %>
   </div>
 
   <div class="clear">
@@ -98,13 +98,13 @@
       title: t('view.prints.add_article_line_title') %>
   </div>
   <section id="payments" class="nested_items">
-    <h2><%= t :payment, scope: [:view, :prints] %></h2>
+    <h2><%= t 'view.prints.payment' %></h2>
     <table class="summary">
       <thead>
         <tr class="payment_headers">
           <th><%= Payment.human_attribute_name :amount %></th>
           <th><%= Payment.human_attribute_name :paid %></th>
-          <th><%= Print.human_attribute_name :credit_password %></th>
+          <th></th>
           <th><%= Payment.human_attribute_name :paid_with %></th>
         </tr>
       </thead>
@@ -128,11 +128,15 @@
             <td>
               <% if p_f.object.credit? %>
                 <div class="nested_item_field">
-                  <%= f.password_field :credit_password, value: '',
-                    size: nil, maxlength: 255 %>
+                  <%= f.password_field :credit_password, value: '', size: nil,
+                    maxlength: 255,
+                    placeholder: Print.human_attribute_name(:credit_password) %>
                 </div>
               <% else %>
-                &nbsp;
+                <div class="nested_item_field">
+                  <%= f.check_box :pay_later %>
+                  <%= f.label :pay_later %>
+                </div>
               <% end %>
             </td>
             <td>
@@ -152,7 +156,7 @@
     <%= hidden_field_tag :total_pages, @print.total_pages, id: 'total_pages',
       'data-price-per-one-sided' => Setting.price_per_one_sided_copy,
       'data-price-per-two-sided' => Setting.price_per_two_sided_copy %>
-    <%= f.submit nil, id: :print_submit, title: t('view.prints.print_title') %>
+    <%= f.submit nil, id: 'print_submit', title: t('view.prints.print_title') %>
   </div>
 <% end %>
 <%= javascript_tag 'jQuery(function() {Print.updateTotalPrice();});' if @print.new_record? %>

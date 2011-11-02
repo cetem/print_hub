@@ -26,7 +26,7 @@
         <td><%= l print.scheduled_at, format: :short if print.scheduled_at %></td>
         <td><%= print.user %></td>
         <td><%= link_to t('label.show'), print %></td>
-        <td><%= link_to t('label.edit'), edit_print_path(print, status: params[:status]) if print.pending_payment || print.scheduled? %></td>
+        <td><%= link_to t('label.edit'), edit_print_path(print, status: params[:status]) if print.pending_payment? || print.scheduled? %></td>
         <td><%= link_to t('view.prints.revoke'), revoke_print_path(print), method: :delete, confirm: t('messages.confirmation') if current_user.admin? && !print.revoked %></td>
       </tr>
     <% end %>

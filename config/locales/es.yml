@@ -161,6 +161,7 @@
         scheduled_at: 'Programado para'
         avoid_printing: 'No imprimir'
         credit_password: 'Contraseña'
+        pay_later: 'Cuenta corriente'
         customer: 'Cliente'
         customer_id: 'Cliente'
         user: 'Usuario'
