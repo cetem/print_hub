@@ -27,6 +27,7 @@ jQuery(function($){
 		hourText: 'Horas',
 		minuteText: 'Minutos',
 		secondText: 'Segundos',
+                millisecText: 'Milisegundo',
 		timezoneText: 'Huso horario',
 		currentText: 'Ahora',
 		closeText: 'Cerrar',

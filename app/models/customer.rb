@@ -179,7 +179,7 @@ class Customer < ApplicationModel
       begin
         Customer.with_monthly_bonus.each do |customer|
           customer.build_monthly_bonus
-          customer.save!
+          customer.save! validate: false
         end
 
       rescue ActiveRecord::RecordInvalid
