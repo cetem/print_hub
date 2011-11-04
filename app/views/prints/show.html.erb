@@ -4,6 +4,11 @@
 </p>
 
 <p>
+  <b><%= Print.human_attribute_name :status %></b>:
+  <%= show_print_status @print %>
+</p>
+
+<p>
   <b><%= Print.human_attribute_name :customer %></b>:
   <%= @print.customer || '-' %>
 </p>
@@ -78,28 +83,30 @@
   </section>
 <% end %>
 
-<section class="nested_items">
-  <h2><%= t 'view.prints.payment' %></h2>
+<% unless @print.payments.empty? %>
+  <section class="nested_items">
+    <h2><%= t 'view.prints.payment' %></h2>
 
-  <table class="summary">
-    <thead>
-      <tr>
-        <th><%= Payment.human_attribute_name :amount %></th>
-        <th><%= Payment.human_attribute_name :paid %></th>
-        <th><%= Payment.human_attribute_name :paid_with %></th>
-      </tr>
-    </thead>
-    <tbody>
-      <% @print.payments.each do |payment| %>
+    <table class="summary">
+      <thead>
         <tr>
-          <td><%= number_to_currency payment.amount %></td>
-          <td><%= number_to_currency payment.paid %></td>
-          <td><%= payment.paid_with_text %></td>
+          <th><%= Payment.human_attribute_name :amount %></th>
+          <th><%= Payment.human_attribute_name :paid %></th>
+          <th><%= Payment.human_attribute_name :paid_with %></th>
         </tr>
-      <% end %>
-    </tbody>
-  </table>
-</section>
+      </thead>
+      <tbody>
+        <% @print.payments.each do |payment| %>
+          <tr>
+            <td><%= number_to_currency payment.amount %></td>
+            <td><%= number_to_currency payment.paid %></td>
+            <td><%= payment.paid_with_text %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </section>
+<% end %>
 
 <nav class="links">
   <%= link_to raw("<b>#{t('view.prints.new')}</b>"), new_print_path %> |

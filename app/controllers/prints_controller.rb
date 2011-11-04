@@ -182,6 +182,8 @@ class PrintsController < ApplicationController
         scope = scope.pending
       when 'scheduled'
         scope = scope.scheduled
+      when 'pay_later'
+        scope = scope.pay_later
     end
 
     scope

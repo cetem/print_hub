@@ -7,35 +7,35 @@
 <br />
 
 <p>
-  <b><%= Customer.human_attribute_name :identification %>:</b>
+  <b><%= Customer.human_attribute_name 'identification' %>:</b>
   <%= @customer.identification %>
 </p>
 
 <p>
-  <b><%= Customer.human_attribute_name :free_monthly_bonus %>:</b>
+  <b><%= Customer.human_attribute_name 'free_monthly_bonus' %>:</b>
   <%= number_to_currency(@customer.free_monthly_bonus) %>
 </p>
 
 <p>
-  <b><%= Customer.human_attribute_name :bonus_without_expiration %>:</b>
-  <%= t(@customer.bonus_without_expiration ? :yes : :no, :scope => :label) %>
+  <b><%= Customer.human_attribute_name 'bonus_without_expiration' %>:</b>
+  <%= t(@customer.bonus_without_expiration ? :yes : :no, scope: :label) %>
 </p>
 
 <% unless @customer.current_bonuses.empty? %>
   <section class="nested_items">
     <h2>
-      <%= t(:current_bonuses,
-        :count => @customer.current_bonuses.size,
-        :scope => [:view, :customers])
-      %>
+      <%= t(
+        'view.customers.current_bonuses',
+        count: @customer.current_bonuses.size
+      ) %>
     </h2>
 
     <table class="summary">
       <thead>
         <tr>
-          <th><%= Bonus.human_attribute_name :amount %></th>
-          <th><%= Bonus.human_attribute_name :remaining %></th>
-          <th><%= Bonus.human_attribute_name :valid_until %></th>
+          <th><%= Bonus.human_attribute_name 'amount' %></th>
+          <th><%= Bonus.human_attribute_name 'remaining' %></th>
+          <th><%= Bonus.human_attribute_name 'valid_until' %></th>
         </tr>
       </thead>
       <tbody>
@@ -54,18 +54,18 @@
 <% unless @customer.current_deposits.empty? %>
   <section class="nested_items">
     <h2>
-      <%= t(:current_deposits,
-        :count => @customer.current_deposits.size,
-        :scope => [:view, :customers])
-      %>
+      <%= t(
+        'view.customers.current_deposits',
+        count: @customer.current_deposits.size
+      ) %>
     </h2>
 
     <table class="summary">
       <thead>
         <tr>
-          <th><%= Deposit.human_attribute_name :amount %></th>
-          <th><%= Deposit.human_attribute_name :remaining %></th>
-          <th><%= Deposit.human_attribute_name :created_at %></th>
+          <th><%= Deposit.human_attribute_name 'amount' %></th>
+          <th><%= Deposit.human_attribute_name 'remaining' %></th>
+          <th><%= Deposit.human_attribute_name 'created_at' %></th>
         </tr>
       </thead>
       <tbody>
@@ -73,7 +73,7 @@
           <tr>
             <td><%= number_to_currency deposit.amount %></td>
             <td><%= number_to_currency deposit.remaining %></td>
-            <td><%= l deposit.created_at, :format => :minimal if deposit.created_at %></td>
+            <td><%= l deposit.created_at, format: :minimal if deposit.created_at %></td>
           </tr>
         <% end %>
       </tbody>
@@ -82,8 +82,9 @@
 <% end %>
 
 <nav class="links">
-  <%= link_to t(:'label.edit'), edit_customer_path(@customer) %> |
+  <%= link_to t('label.edit'), edit_customer_path(@customer) %> |
   <%= show_link_to_customer_prints(@customer) %> |
   <%= show_link_to_customer_bonuses(@customer) %> |
-  <%= link_to t(:'label.list'), customers_path %>
+  <%= show_link_to_customer_non_payments(@customer) %> |
+  <%= link_to t('label.list'), customers_path %>
 </nav>

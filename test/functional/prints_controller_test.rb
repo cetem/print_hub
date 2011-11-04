@@ -78,6 +78,20 @@ class PrintsControllerTest < ActionController::TestCase
     assert_template 'prints/index'
   end
   
+  test 'should get admin pay later index' do
+    user = users(:administrator)
+
+    UserSession.create(user)
+    get :index, :status => 'pay_later'
+    assert_response :success
+    assert_not_nil assigns(:prints)
+    assert_equal Print.pay_later.count, assigns(:prints).size
+    assert assigns(:prints).any? { |p| p.user_id != user.id }
+    assert assigns(:prints).all?(&:pay_later?)
+    assert_select '#error_body', false
+    assert_template 'prints/index'
+  end
+  
   test 'should get customer index' do
     user = users(:administrator)
     customer = customers(:student)

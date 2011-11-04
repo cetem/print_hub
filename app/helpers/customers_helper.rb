@@ -8,7 +8,7 @@ module CustomersHelper
         customer_prints_path(customer)
       )
     else
-      t(:without_prints, scope: [:view, :customers])
+      t('view.customers.without_prints')
     end
   end
   
@@ -22,6 +22,19 @@ module CustomersHelper
       )
     else
       t('view.customers.without_bonuses')
+    end
+  end
+  
+  def show_link_to_customer_non_payments(customer)
+    pay_later_count = customer.prints.pay_later.count
+
+    if pay_later_count > 0
+      link_to(
+        t('view.customers.non_payments_list', count: pay_later_count),
+        customer_prints_path(customer, status: 'pay_later')
+      )
+    else
+      t('view.customers.without_non_payments')
     end
   end
   

@@ -48,6 +48,10 @@ module PrintsHelper
       'data-stock' => stock
   end
   
+  def show_print_status(print)
+    t("view.prints.status.#{print.status_symbol}")
+  end
+  
   def there_are_documents_for_printing?
     !session[:documents_for_printing].blank?
   end

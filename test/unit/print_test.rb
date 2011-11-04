@@ -448,7 +448,8 @@ class PrintTest < ActiveSupport::TestCase
         assert_no_difference 'Payment.count' do
           @print = Print.create(
             printer: @printer,
-            user: users(:administrator),
+            user: nil,
+            customer: customers(:student_without_bonus),
             scheduled_at: '',
             avoid_printing: false,
             pay_later: true,
@@ -512,12 +513,16 @@ class PrintTest < ActiveSupport::TestCase
     @print.print_jobs.destroy_all
     @print.article_lines.destroy_all
     @print.payments.destroy_all
+    @print.customer = nil
+    @print.pay_later!
     assert @print.invalid?
-    assert_equal 2, @print.errors.count
+    assert_equal 3, @print.errors.count
     assert_equal [error_message_from_model(@print, :printer, :must_be_blank)],
       @print.errors[:printer]
     assert_equal [error_message_from_model(@print, :base, :must_have_one_item)],
       @print.errors[:base]
+    assert_equal [error_message_from_model(@print, :customer_id, :blank)],
+      @print.errors[:customer_id]
   end
 
   # Prueba que las validaciones del modelo se cumplan como es esperado
@@ -525,8 +530,9 @@ class PrintTest < ActiveSupport::TestCase
     @print.scheduled_at = '13/13/13'
     assert @print.invalid?
     assert_equal 1, @print.errors.count
-    assert_equal [error_message_from_model(@print, :scheduled_at,
-        :invalid_date)], @print.errors[:scheduled_at]
+    assert_equal [
+      error_message_from_model(@print, :scheduled_at, :invalid_date)
+    ], @print.errors[:scheduled_at]
   end
 
   # Prueba que las validaciones del modelo se cumplan como es esperado
@@ -547,6 +553,15 @@ class PrintTest < ActiveSupport::TestCase
     assert_equal [error_message_from_model(@print, :printer, :must_be_blank),
       error_message_from_model(@print, :printer, :too_long, count: 255)].sort,
       @print.errors[:printer].sort
+  end
+  
+  # Prueba que las validaciones del modelo se cumplan como es esperado
+  test 'validates included attributes' do
+    @print.status = Print::STATUS.values.sort.last.next
+    assert @print.invalid?
+    assert_equal 1, @print.errors.count
+    assert_equal [error_message_from_model(@print, :status, :inclusion)],
+      @print.errors[:status]
   end
   
   test 'validates payments' do

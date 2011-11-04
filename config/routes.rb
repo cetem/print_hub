@@ -62,8 +62,8 @@ PrintHubApp::Application.routes.draw do
     
     resources :orders, only: [:index, :show, :destroy]
 
-    scope ':status', defaults: {status: 'all'},
-      constraints: {status: /pending|scheduled|all/} do
+    scope ':status', defaults: { status: 'all' },
+      constraints: { status: /pending|scheduled|pay_later|all/ } do
       resources :prints, except: [:destroy] do
         member do
           put :cancel_job

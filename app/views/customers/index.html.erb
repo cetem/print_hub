@@ -2,21 +2,21 @@
 <table class="list">
   <thead>
     <tr>
-      <th><%= Customer.human_attribute_name :name %></th>
-      <th><%= Customer.human_attribute_name :identification %></th>
-      <th><%= Customer.human_attribute_name :free_monthly_bonus %></th>
+      <th><%= Customer.human_attribute_name 'name' %></th>
+      <th><%= Customer.human_attribute_name 'identification' %></th>
+      <th><%= Customer.human_attribute_name 'free_monthly_bonus' %></th>
       <th colspan="3"></th>
     </tr>
   </thead>
 
   <tbody>
     <% @customers.each do |customer| %>
-      <tr class="<%= cycle(:even, :odd) %>">
+      <tr class="<%= cycle('even', 'odd') %>">
         <td><%= customer.to_s %> (<%= show_link_to_customer_prints(customer) %>)</td>
         <td><%= customer.identification %></td>
         <td><%= number_to_currency(customer.free_monthly_bonus || 0) %></td>
-        <td><%= link_to t(:'label.show'), customer %></td>
-        <td><%= link_to t(:'label.edit'), edit_customer_path(customer) %></td>
+        <td><%= link_to t('label.show'), customer %></td>
+        <td><%= link_to t('label.edit'), edit_customer_path(customer) %></td>
         <td><%= show_button_to_destroy(customer) %></td>
       </tr>
     <% end %>
@@ -25,5 +25,5 @@
 
 <nav class="links">
   <%= pagination_links(@customers) %>
-  <%= link_to t(:'label.new'), new_customer_path %>
+  <%= link_to t('label.new'), new_customer_path %>
 </nav>

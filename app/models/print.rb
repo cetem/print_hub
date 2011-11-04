@@ -15,6 +15,7 @@ class Print < ApplicationModel
 
   # Scopes
   scope :pending, where(status: STATUS[:pending_payment])
+  scope :pay_later, where(status: STATUS[:pay_later])
   scope :scheduled, where(
     '(printer = :blank OR printer IS NULL) AND scheduled_at IS NOT NULL',
     blank: ''
@@ -36,6 +37,8 @@ class Print < ApplicationModel
     allow_blank: true
   validates_datetime :scheduled_at, allow_nil: true, allow_blank: true,
     after: -> { Time.now }
+  validates :status, inclusion: { in: STATUS.values }, allow_nil: true,
+    allow_blank: true
   validates_each :printer do |record, attr, value|
     printer_changed = !record.printer_was.blank? && record.printer_was != value
     print_and_schedule_new_record = record.new_record? &&
@@ -44,6 +47,9 @@ class Print < ApplicationModel
     if printer_changed || print_and_schedule_new_record
       record.errors.add attr, :must_be_blank
     end
+  end
+  validates_each :customer_id do |record, attr, value|
+    record.errors.add attr, :blank if value.blank? && record.pay_later?
   end
   validate :must_have_one_item, :must_have_valid_payments
 
@@ -222,6 +228,10 @@ class Print < ApplicationModel
 
   def scheduled?
     self.printer.blank? && !self.scheduled_at.blank?
+  end
+  
+  def status_symbol
+    STATUS.invert[self.status]
   end
   
   STATUS.each do |status, value|

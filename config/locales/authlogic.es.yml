@@ -1,0 +1,27 @@
+'es':
+  authlogic:
+    error_messages:
+      login_blank: 'no puede estar en blanco'
+      login_not_found: 'no encontrado'
+      login_invalid: 'debe contener solamente letras, números, espacios y .-_@'
+      consecutive_failed_logins_limit_exceeded: 'Límite de ingresos fallidos consecutivos exedido, la cuenta se ha deshabilitado'
+      email_invalid: 'no es una dirección de correo válida'
+      password_blank: 'no puede estar en blanco'
+      password_invalid: 'no es válida'
+      not_active: 'Su cuenta no está activa'
+      not_confirmed: 'Su cuenta no está confirmada'
+      not_approved: 'Su cuenta no está aprobada'
+      no_authentication_details: 'Debe proporcionar datos para la autenticación'
+    models:
+      customer_session: 'Sesión'
+      user_session: 'Sesión'
+    attributes:
+      customer_session:
+        email: 'Correo electrónico'
+        password: 'Contraseña'
+        remember_me: 'Recordarme'
+      user_session:
+        username: 'Usuario o correo electrónico'
+        email: 'Correo electrónico'
+        password: 'Contraseña'
+        remember_me: 'Recordarme'
