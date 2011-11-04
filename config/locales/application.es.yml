@@ -1,6 +1,10 @@
 'es':
   app_name: 'Central de Impresión'
   
+  attributes:
+    created_at: 'Creación'
+    updated_at: 'Actualización'
+  
   activerecord:
     errors:
       models:
@@ -43,7 +47,7 @@
       tag: 'Etiqueta'
       user: 'Usuario'
       user_session: 'Sesión'
-      
+
     attributes:
       article:
         code: 'Código'
@@ -185,8 +189,8 @@
         enable: 'Habilitado'
         avatar: 'Imagen'
       user_session:
-        username: 'Usuario'
-        password: 'Contraseña'
+          username: 'Usuario'
+          password: 'Contraseña'
         
   customer_menu:
     catalog: 'Documentos'
