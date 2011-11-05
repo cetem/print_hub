@@ -16,17 +16,14 @@ set :branch, 'master'
 
 role :web, 'fotocopia.frm.utn.edu.ar'
 role :app, 'fotocopia.frm.utn.edu.ar'
-role :db,  'fotocopia.frm.utn.edu.ar', primary: true
+role :db, 'fotocopia.frm.utn.edu.ar', primary: true
 
 before 'deploy:finalize_update', 'deploy:create_shared_symlinks'
 
 namespace :deploy do
-  task :start do
-  end
-
-  task :stop do
-  end
-
+  task :start do ; end
+  task :stop do ; end
+  
   task :restart, roles: :app, except: { no_release: true } do
     run "touch #{File.join(current_path, 'tmp', 'restart.txt')}"
   end
