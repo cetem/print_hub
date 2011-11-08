@@ -14,9 +14,9 @@ set :use_sudo, false
 set :scm, :git
 set :branch, 'master'
 
-role :web, 'fotocopia.frm.utn.edu.ar'
-role :app, 'fotocopia.frm.utn.edu.ar'
-role :db, 'fotocopia.frm.utn.edu.ar', primary: true
+role :web, 'fcatena.com.ar'
+role :app, 'fcatena.com.ar'
+role :db, 'fcatena.com.ar', primary: true
 
 before 'deploy:finalize_update', 'deploy:create_shared_symlinks'
 

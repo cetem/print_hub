@@ -31,10 +31,10 @@ class OrderLineTest < ActiveSupport::TestCase
   test 'create with document' do
     assert_difference 'OrderLine.count' do
       @order_line = OrderLine.create(
-        :copies => 2,
-        :price_per_copy => 1.10,
-        :two_sided => false,
-        :document => documents(:math_book)
+        copies: 2,
+        price_per_copy: 1.10,
+        two_sided: false,
+        document: documents(:math_book)
       )
     end
 
@@ -49,7 +49,7 @@ class OrderLineTest < ActiveSupport::TestCase
   # Prueba de actualización de un ítem de una orden
   test 'update' do
     assert_no_difference 'OrderLine.count' do
-      assert @order_line.update_attributes(:copies => 20),
+      assert @order_line.update_attributes(copies: 20),
         @order_line.errors.full_messages.join('; ')
     end
 
@@ -99,11 +99,24 @@ class OrderLineTest < ActiveSupport::TestCase
     @order_line.price_per_copy = '-0.01'
     assert @order_line.invalid?
     assert_equal 2, @order_line.errors.count
-    assert_equal [error_message_from_model(@order_line, :copies, :greater_than,
-        :count => 0)], @order_line.errors[:copies]
-    assert_equal [error_message_from_model(@order_line, :price_per_copy,
-        :greater_than_or_equal_to, :count => 0)],
-      @order_line.errors[:price_per_copy]
+    assert_equal [
+      error_message_from_model(@order_line, :copies, :greater_than, count: 0)
+    ], @order_line.errors[:copies]
+    assert_equal [
+      error_message_from_model(
+        @order_line, :price_per_copy, :greater_than_or_equal_to, count: 0
+      )
+    ], @order_line.errors[:price_per_copy]
+    
+    @order_line.reload
+    @order_line.copies = '2147483648'
+    assert @order_line.invalid?
+    assert_equal 1, @order_line.errors.count
+    assert_equal [
+      error_message_from_model(
+        @order_line, :copies, :less_than, count: 2147483648
+      )
+    ], @order_line.errors[:copies]
   end
   
   test 'price' do

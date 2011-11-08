@@ -24,12 +24,11 @@ class PrintJob < ApplicationModel
 
   # Restricciones
   validates :copies, :pages, :price_per_copy, :printed_copies, presence: true
-  validates :copies, :pages,
-    numericality: { only_integer: true, greater_than: 0 },
-    allow_nil: true, allow_blank: true
-  validates :printed_copies,
-    numericality: { only_integer: true, greater_than_or_equal_to: 0 },
-    allow_nil: true, allow_blank: true
+  validates :copies, :pages, allow_nil: true, allow_blank: true,
+    numericality: { only_integer: true, greater_than: 0, less_than: 2147483648 }
+  validates :printed_copies, numericality: {
+    only_integer: true, greater_than_or_equal_to: 0, less_than: 2147483648
+  }, allow_nil: true, allow_blank: true
   validates :price_per_copy, numericality: { greater_than_or_equal_to: 0 },
     allow_nil: true, allow_blank: true
   validates :range, :job_id, length: { maximum: 255 },

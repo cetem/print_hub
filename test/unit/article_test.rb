@@ -22,10 +22,10 @@ class ArticleTest < ActiveSupport::TestCase
   test 'create' do
     assert_difference 'Article.count' do
       @article = Article.create(
-        :code => '00001234',
-        :name => 'New name',
-        :price => '15.2',
-        :description => 'New description'
+        code: '00001234',
+        name: 'New name',
+        price: '15.2',
+        description: 'New description'
       )
     end
   end
@@ -33,7 +33,7 @@ class ArticleTest < ActiveSupport::TestCase
   # Prueba de actualización de un articleo
   test 'update' do
     assert_no_difference 'Article.count' do
-      assert @article.update_attributes(:name => 'Updated name'),
+      assert @article.update_attributes(name: 'Updated name'),
         @article.errors.full_messages.join('; ')
     end
 
@@ -62,9 +62,10 @@ class ArticleTest < ActiveSupport::TestCase
       @article.errors[:code]
     assert_equal [error_message_from_model(@article, :name, :blank)],
       @article.errors[:name]
-    assert_equal [error_message_from_model(@article, :price, :blank),
-      error_message_from_model(@article, :price, :not_a_number)].sort,
-      @article.errors[:price].sort
+    assert_equal [
+      error_message_from_model(@article, :price, :blank),
+      error_message_from_model(@article, :price, :not_a_number)
+    ].sort, @article.errors[:price].sort
   end
 
   # Prueba que las validaciones del modelo se cumplan como es esperado
@@ -81,8 +82,9 @@ class ArticleTest < ActiveSupport::TestCase
     @article.name = 'abcde' * 52
     assert @article.invalid?
     assert_equal 1, @article.errors.count
-    assert_equal [error_message_from_model(@article, :name, :too_long,
-      :count => 255)], @article.errors[:name]
+    assert_equal [
+      error_message_from_model(@article, :name, :too_long, count: 255)
+    ], @article.errors[:name]
   end
 
   # Prueba que las validaciones del modelo se cumplan como es esperado
@@ -101,9 +103,17 @@ class ArticleTest < ActiveSupport::TestCase
     assert @article.invalid?
     assert_equal 2, @article.errors.count
     assert_equal [error_message_from_model(@article, :price,
-        :greater_than_or_equal_to, :count => 0)], @article.errors[:price]
+        :greater_than_or_equal_to, count: 0)], @article.errors[:price]
     assert_equal [error_message_from_model(@article, :code, :greater_than,
-        :count => 0)], @article.errors[:code]
+        count: 0)], @article.errors[:code]
+    
+    @article.reload
+    @article.code = '2147483648'
+    assert @article.invalid?
+    assert_equal 1, @article.errors.count
+    assert_equal [
+      error_message_from_model(@article, :code, :less_than, count: 2147483648)
+    ], @article.errors[:code]
 
     @article.reload
     @article.code = '51.23'

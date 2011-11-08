@@ -25,10 +25,10 @@ class ArticleLineTest < ActiveSupport::TestCase
   test 'create' do
     assert_difference 'ArticleLine.count' do
       @article_line = ArticleLine.create(
-        :article => articles(:binding),
-        :print => prints(:math_print),
-        :units => 1,
-        :unit_price => articles(:binding).price
+        article: articles(:binding),
+        print: prints(:math_print),
+        units: 1,
+        unit_price: articles(:binding).price
       )
     end
   end
@@ -36,7 +36,7 @@ class ArticleLineTest < ActiveSupport::TestCase
   # Prueba de actualización de una línea de artículo
   test 'update' do
     assert_no_difference 'ArticleLine.count' do
-      assert @article_line.update_attributes(:units => 100),
+      assert @article_line.update_attributes(units: 100),
         @article_line.errors.full_messages.join('; ')
     end
 
@@ -79,11 +79,27 @@ class ArticleLineTest < ActiveSupport::TestCase
   # Prueba que las validaciones del modelo se cumplan como es esperado
   test 'validates attributes boundaries' do
     @article_line.unit_price = '-0.01'
+    @article_line.units = '0'
+    assert @article_line.invalid?
+    assert_equal 2, @article_line.errors.count
+    assert_equal [
+      error_message_from_model(
+        @article_line, :unit_price, :greater_than_or_equal_to, count: 0
+      )
+    ], @article_line.errors[:unit_price]
+    assert_equal [
+      error_message_from_model(@article_line, :units, :greater_than, count: 0)
+    ], @article_line.errors[:units]
+    
+    @article_line.reload
+    @article_line.units = '2147483648'
     assert @article_line.invalid?
     assert_equal 1, @article_line.errors.count
-    assert_equal [error_message_from_model(@article_line, :unit_price,
-        :greater_than_or_equal_to, :count => 0)],
-      @article_line.errors[:unit_price]
+    assert_equal [
+      error_message_from_model(
+        @article_line, :units, :less_than, count: 2147483648
+      )
+    ], @article_line.errors[:units]
   end
 
   test 'price' do

@@ -254,6 +254,21 @@ class DocumentTest < ActiveSupport::TestCase
         @document, :stock, :greater_than_or_equal_to, count: 0
       )
     ], @document.errors[:stock]
+    
+    @document.pages = '2147483648'
+    @document.code = '2147483648'
+    @document.stock = '2147483648'
+    assert @document.invalid?
+    assert_equal 3, @document.errors.count
+    assert_equal [
+      error_message_from_model(@document, :pages, :less_than, count: 2147483648)
+    ], @document.errors[:pages]
+    assert_equal [
+      error_message_from_model(@document, :code, :less_than, count: 2147483648)
+    ], @document.errors[:code]
+    assert_equal [
+      error_message_from_model(@document, :stock, :less_than, count: 2147483648)
+    ], @document.errors[:stock]
   end
 
   test 'update tag path' do

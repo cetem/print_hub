@@ -6,8 +6,8 @@ class OrderLine < ApplicationModel
   
   # Restricciones
   validates :copies, :price_per_copy, presence: true
-  validates :copies, numericality: {only_integer: true, greater_than: 0},
-    allow_nil: true, allow_blank: true
+  validates :copies, allow_nil: true, allow_blank: true,
+    numericality: { only_integer: true, greater_than: 0, less_than: 2147483648 }
   validates :price_per_copy, numericality: {greater_than_or_equal_to: 0},
     allow_nil: true, allow_blank: true
   

@@ -179,6 +179,28 @@ class PrintJobTest < ActiveSupport::TestCase
     assert_equal [error_message_from_model(@print_job, :price_per_copy,
         :greater_than_or_equal_to, count: 0)
     ], @print_job.errors[:price_per_copy]
+    
+    @print_job.reload
+    @print_job.copies = '2147483648'
+    @print_job.pages = '2147483648'
+    @print_job.printed_copies = '2147483648'
+    assert @print_job.invalid?
+    assert_equal 3, @print_job.errors.count
+    assert_equal [
+      error_message_from_model(
+        @print_job, :copies, :less_than, count: 2147483648
+      )
+    ], @print_job.errors[:copies]
+    assert_equal [
+      error_message_from_model(
+        @print_job, :pages, :less_than, count: 2147483648
+      )
+    ], @print_job.errors[:pages]
+    assert_equal [
+      error_message_from_model(
+        @print_job, :printed_copies, :less_than, count: 2147483648
+      )
+    ], @print_job.errors[:printed_copies]
   end
 
   # Prueba que las validaciones del modelo se cumplan como es esperado

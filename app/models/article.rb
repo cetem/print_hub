@@ -13,7 +13,7 @@ class Article < ApplicationModel
   validates :code, uniqueness: true, allow_nil: true, allow_blank: true
   validates :name, length: { maximum: 255 }, allow_nil: true, allow_blank: true
   validates :code, allow_nil: true, allow_blank: true,
-    numericality: { greater_than: 0, only_integer: true }
+    numericality: { greater_than: 0, less_than: 2147483648, only_integer: true }
   validates :price, presence: true, numericality: {greater_than_or_equal_to: 0}
 
   has_many :article_lines
