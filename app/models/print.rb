@@ -161,7 +161,7 @@ class Print < ApplicationModel
   
   def total_pages
     self.print_jobs.reject(&:marked_for_destruction?).sum do |pj|
-      pj.copies * pj.range_pages
+      pj.printed_copies * pj.range_pages
     end
   end
   

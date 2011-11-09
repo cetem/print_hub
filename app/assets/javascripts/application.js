@@ -12,6 +12,7 @@
 //= require vendor/jquery.fancybox
 //= require vendor/jquery.filestyle
 //= require common
+//= require customers
 //= require catalog
 //= require documents
 //= require feedbacks

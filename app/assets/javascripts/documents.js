@@ -23,4 +23,19 @@ jQuery(function() {
       $(this).next('.barcode_container').html(data).stop(true, true).slideDown();
     });
   }
+  
+  if($('#ph_documents form').length > 0) {
+    $('form').submit(function() { $('#notice').slideDown(); });
+
+    $(document).keydown(function(e) {
+      var key = e.which;
+
+      // CTRL + ALT + E = Agregar una etiqueta
+      if((key == 69 || key == 101) && e.ctrlKey && e.altKey) {
+        $('#add_tag_link').click();
+        e.preventDefault();
+        e.stopPropagation();
+      }
+    });
+  }
 });

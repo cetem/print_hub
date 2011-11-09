@@ -68,7 +68,7 @@
 
     <div class="add_nested_item">
       <%= link_to t('view.customers.add_bonus'), '#', id: 'add_bonus_link',
-        'data-template' => :bonus, 'data-container' => '#bonuses',
+        'data-template' => 'bonus', 'data-container' => '#bonuses',
         'data-event' => 'addNestedItem',
         'title' => t('view.customers.add_bonus_title') %>
     </div>
@@ -99,7 +99,7 @@
 
   <div class="add_nested_item">
     <%= link_to t('view.customers.add_deposit'), '#', id: 'add_deposit_link',
-      'data-template' => :deposit, 'data-container' => '#deposits',
+      'data-template' => 'deposit', 'data-container' => '#deposits',
       'data-event' => 'addNestedItem',
       'title' => t('view.customers.add_deposit_title') %>
   </div>
@@ -109,23 +109,3 @@
     <%= f.submit %>
   </div>
 <% end %>
-<script type="text/javascript">
-  // Captura de atajos de teclado
-  $(document).keydown(function(e) {
-    var key = e.which;
-
-    // CTRL + ALT + E = Agregar una bonificación
-    if((key == 66 || key == 98) && e.ctrlKey && e.altKey) {
-      $('#add_bonus_link').click();
-      e.preventDefault();
-      e.stopPropagation();
-    }
-    
-    // CTRL + ALT + D = Agregar un depósito
-    if((key == 68 || key == 100) && e.ctrlKey && e.altKey) {
-      $('#add_deposit_link').click();
-      e.preventDefault();
-      e.stopPropagation();
-    }
-  });
-</script>

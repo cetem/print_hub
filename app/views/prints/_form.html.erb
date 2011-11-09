@@ -14,19 +14,8 @@
     <%= print_destinations_field(f) %>
   </div>
   <div class="field column_right">
-    <%= f.label :customer, raw(Print.human_attribute_name(:customer) + ' ' + link_to_customer_credit_detail(@print.customer)), for: :print_auto_customer_name %>
-    <% field_classes = [:autocomplete_field] %>
-    <% field_classes << :field_with_errors unless @print.errors[:customer_id].blank? %>
-    <%= f.text_field :auto_customer_name, :value => @print.customer,
-      :class => field_classes.join(' '),
-      'data-autocomplete-url' => autocomplete_for_customer_name_prints_path %>
-    <% if @print.customer %>
-      <%= link_to_function 'X', "Print.clearCustomer(); $(this).remove()",
-        :class => 'remove' %>
-    <% end %>
-    <%= f.hidden_field :customer_id, :class => 'autocomplete_id' %>
-    <%= hidden_field_tag :customer_free_credit,
-      @print.customer.try(:free_credit), id: 'customer_free_credit' %>
+    <%= f.label :avoid_printing %>
+    <%= f.check_box :avoid_printing %>
   </div>
 
   <div class="clear">
@@ -36,8 +25,19 @@
     </div>
 
     <div class="field column_right">
-      <%= f.label :avoid_printing %>
-      <%= f.check_box :avoid_printing %>
+      <%= f.label :customer, raw(Print.human_attribute_name(:customer) + ' ' + link_to_customer_credit_detail(@print.customer)), for: :print_auto_customer_name %>
+      <% field_classes = [:autocomplete_field] %>
+      <% field_classes << :field_with_errors unless @print.errors[:customer_id].blank? %>
+      <%= f.text_field :auto_customer_name, value: @print.customer,
+        class: field_classes.join(' '),
+        'data-autocomplete-url' => autocomplete_for_customer_name_prints_path %>
+      <% if @print.customer %>
+        <%= link_to_function 'X', "Print.clearCustomer(); $(this).remove()",
+          class: 'remove' %>
+      <% end %>
+      <%= f.hidden_field :customer_id, class: 'autocomplete_id' %>
+      <%= hidden_field_tag :customer_free_credit,
+        @print.customer.try(:free_credit), id: 'customer_free_credit' %>
     </div>
   </div>
 
@@ -132,11 +132,13 @@
                     maxlength: 255,
                     placeholder: Print.human_attribute_name(:credit_password) %>
                 </div>
-              <% else %>
+              <% elsif @print.new_record? %>
                 <div class="nested_item_field">
                   <%= f.check_box :pay_later %>
                   <%= f.label :pay_later %>
                 </div>
+              <% else %>
+                &nbsp;
               <% end %>
             </td>
             <td>
@@ -159,7 +161,7 @@
     <%= f.submit nil, id: 'print_submit', title: t('view.prints.print_title') %>
   </div>
 <% end %>
-<%= javascript_tag 'jQuery(function() {Print.updateTotalPrice();});' if @print.new_record? %>
+<%= javascript_tag 'jQuery(function() { Print.updateTotalPrice(); });' if @print.new_record? %>
 <script type="text/javascript">
   Print.cashPrefix = '#payment_<%= Payment::PAID_WITH[:cash] %>';
   Print.creditPrefix = '#payment_<%= Payment::PAID_WITH[:credit] %>';

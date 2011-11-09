@@ -35,14 +35,14 @@
   <div class="field">
     <%= document_file_label f %>
     <%= f.file_field :file,
-      :class => (:field_with_errors unless @document.errors[:file_file_name].blank?) %>
+      class: (:field_with_errors unless @document.errors[:file_file_name].blank?) %>
   </div>
   <div class="field">
     <%= f.check_box :enable %>
     <%= f.label :enable %>
   </div>
   <section class="nested_items">
-    <h2><%= t(:'menu.tags') %></h2>
+    <h2><%= t('menu.tags') %></h2>
 
     <div id="tags" class="items">
       <% @document.tags.each do |tag| %>
@@ -70,18 +70,3 @@
   hide: true,
   message: t('view.documents.processing_document')
 } %>
-<script type="text/javascript">
-  $('form').submit(function() { $('#notice').slideDown(); });
-  
-  // Captura de atajos de teclado
-  $(document).keydown(function(e) {
-    var key = e.which;
-
-    // CTRL + ALT + E = Agregar una etiqueta
-    if((key == 69 || key == 101) && e.ctrlKey && e.altKey) {
-      $('#add_tag_link').click();
-      e.preventDefault();
-      e.stopPropagation();
-    }
-  });
-</script>
