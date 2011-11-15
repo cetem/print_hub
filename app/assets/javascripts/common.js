@@ -177,7 +177,7 @@ jQuery(function($) {
   // Para que los navegadores que no soportan HTML5 funcionen con autofocus
   $('*[autofocus]:not([readonly]):not([disabled]):visible:first').focus();
   
-  $('a[data-event]').live('click', function(event) {
+  $(document).on('click', 'a[data-event]', function(event) {
     if (event.stopped) return;
     var element = $(this);
     var eventName = element.data('event');
@@ -190,7 +190,7 @@ jQuery(function($) {
     }
   });
 
-  $('input.autocomplete_field').live('change', function() {
+  $(document).on('change', 'input.autocomplete_field', function() {
     var element = $(this);
     
     if(/^\s*$/.test(element.val())) {
@@ -208,7 +208,7 @@ jQuery(function($) {
     ajaxStop: function() { State.ajaxInProgress = false; }
   });
   
-  $('input.calendar:not(.hasDatepicker)').live('focus', function() {
+  $(document).on('focus', 'input.calendar:not(.hasDatepicker)', function() {
     if($(this).data('time')) {
       $(this).datetimepicker({
         showOn: 'both',
@@ -223,13 +223,13 @@ jQuery(function($) {
     }
   });
   
-  $('input.file').live('click', function() {
+  $(document).on('click', 'input.file', function() {
     $(this).parents('div.field:first').find('input[type="file"]').click();
   });
   
   $('a.fancybox').fancybox({type: 'image'});
   
-  $('a.show').live('click', function(event) {
+  $(document).on('click', 'a.show', function(event) {
     $($(this).data('target')).stop(true, true).slideDown(300, function() {
       $(this).find('*[autofocus]:not([readonly]):not([disabled]):visible:first').focus()
     });

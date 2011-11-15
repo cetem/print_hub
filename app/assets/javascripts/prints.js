@@ -94,7 +94,7 @@ var Print = {
 
 jQuery(function($) {
   if($('#ph_prints').length > 0) {
-    $('.print_job').live('item:removed', function() {
+    $(document).on('item:removed', '.print_job', function() {
       $(this).data('excludeFromTotal', true).find(
         '.page_modifier:first'
       ).trigger('ph:page_modification');
@@ -102,13 +102,13 @@ jQuery(function($) {
       Print.updateTotalPrice();
     });
 
-    $('.article_line').live('item:removed', function() {
+    $(document).on('item:removed', '.article_line', function() {
       $(this).data('excludeFromTotal', true);
 
       Print.updateTotalPrice();
     });
 
-    $('input.autocomplete_field').live('autocomplete:update', function() {
+    $(document).on('autocomplete:update', 'input.autocomplete_field', function() {
       var item = $(this).data('item');
 
       if (item.pages) {
@@ -158,11 +158,11 @@ jQuery(function($) {
       Print.updateSubmitLabel();
     });
 
-    $('input[name="[print_auto_customer_name]"]').live('change', function() {
+    $(document).on('change', 'input[name="[print_auto_customer_name]"]', function() {
       if(/^\s*$/.test($(this).val())) {clearCustomer();}
     });
 
-    $('input[name$="[auto_document_name]"]').live('change', function() {
+    $(document).on('change', 'input[name$="[auto_document_name]"]', function() {
       var element = $(this);
       var printJob = element.parents('.print_job');
 
@@ -177,7 +177,7 @@ jQuery(function($) {
       }
     });
 
-    $('input[name$="[auto_article_name]"]').live('change', function() {
+    $(document).on('change', 'input[name$="[auto_article_name]"]', function() {
       var element = $(this);
       var articleLine = element.parents('.article_line');
 
@@ -189,7 +189,7 @@ jQuery(function($) {
       }
     });
 
-    $('input[name$="[pages]"]').live('change keyup', function() {
+    $(document).on('change keyup', 'input[name$="[pages]"]', function() {
       var element = $(this);
       var printJob = element.parents('.print_job');
       var range = printJob.find('input[name$="[range]"]');
@@ -208,7 +208,7 @@ jQuery(function($) {
       Print.updatePrintJobPrice(printJob);
     });
     
-    $('input[name$="[copies]"]').live('change keyup', function() {
+    $(document).on('change keyup', 'input[name$="[copies]"]', function() {
       var element = $(this);
       var printJob = element.parents('.print_job');
       
@@ -218,7 +218,7 @@ jQuery(function($) {
     Jobs.listenRangeChanges();
     Jobs.listenTwoSidedChanges();
     
-    $('input[name$="[range]"]').live('keyup', function() {
+    $(document).on('keyup', 'input[name$="[range]"]', function() {
       var printJob = $(this).parents('.print_job');
       var printJobStockDetails = printJob.find('.document_stock');
       var stock = parseInt(printJobStockDetails.data('stock'));
@@ -232,7 +232,7 @@ jQuery(function($) {
       }
     });
 
-    $('.page_modifier').live('change keyup ph:page_modification', function() {
+    $(document).on('change keyup ph:page_modification', '.page_modifier', function() {
       var totalPages = 0;
 
       $('.print_job').each(function(i, pj) {
@@ -251,7 +251,7 @@ jQuery(function($) {
       });
     });
 
-    $('.price_modifier').live('change keyup', function() {
+    $(document).on('change keyup', '.price_modifier', function() {
       var element = $(this);
 
       if (element.parents('.print_job').length > 0) {
@@ -261,13 +261,13 @@ jQuery(function($) {
       }
     });
 
-    $('a.details_link').live('ajax:success', function(event, data) {
+    $(document).on('ajax:success', 'a.details_link', function(event, data) {
       Helper.show(
         $(this).parents('.print_job').find('.dynamic_details').hide().html(data)
       );
     });
 
-    $('#link_to_customer_credit_detail').live('ajax:success', function(event, data) {
+    $(document).on('ajax:success', '#link_to_customer_credit_detail', function(event, data) {
       $.fancybox({'padding': 24, 'content': data});
     });
     

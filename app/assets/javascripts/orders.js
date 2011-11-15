@@ -45,13 +45,13 @@ var Order = {
 
 jQuery(function($) {
   if($('#ph_orders').length > 0) {
-    $('a.details_link').live('ajax:success', function(event, data) {
+    $(document).on('ajax:success', 'a.details_link', function(event, data) {
       Helper.show(
         $(this).parents('.order_line').find('.dynamic_details').hide().html(data)
       );
     });
 
-    $('.order_line').live('item:removed', function() {
+    $(document).on('item:removed', '.order_line', function() {
       $(this).data('excludeFromTotal', true).find(
         '.page_modifier:first'
       ).trigger('ph:page_modification');
@@ -61,11 +61,11 @@ jQuery(function($) {
 
     Jobs.listenTwoSidedChanges();
 
-    $('.price_modifier').live('change keyup', function() {
+    $(document).on('change keyup', '.price_modifier', function() {
       Order.updateOrderLinePrice($(this).parents('.order_line'));
     });
 
-    $('.page_modifier').live('change keyup ph:page_modification', function() {
+    $(document).on('change keyup ph:page_modification', '.page_modifier', function() {
       var totalPages = 0;
 
       $('.order_line').each(function() {

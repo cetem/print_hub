@@ -1,6 +1,6 @@
 var Jobs = {
   listenRangeChanges: function() {
-    $('input[name$="[range]"]').live('keyup', function() {
+    $(document).on('keyup', 'input[name$="[range]"]', function() {
       var element = $(this);
       var validRanges = true, maxPage = undefined, rangePages = 0;
       var pages = parseInt(
@@ -41,7 +41,7 @@ var Jobs = {
   },
   
   listenTwoSidedChanges: function() {
-    $('input[name$="[two_sided]"]').live('change', function() {
+    $(document).on('change', 'input[name$="[two_sided]"]', function() {
       Jobs.updatePricePerCopy();
     });
   },
