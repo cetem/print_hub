@@ -315,6 +315,18 @@
       non_payments_list:
         one: 'Una impresión sin pagar'
         other: '%{count} impresiones sin pagar'
+      to_pay_prints:
+        no_debt: 'Sin deuda'
+        title: 'Saldo en cuenta corriente'
+        columns:
+          type: 'Tipo de copia'
+          count: 'Cantidad'
+          unit_price: 'Precio por unidad'
+          total_price: 'Precio total'
+        rows:
+          one_sided: 'Simple faz'
+          two_sided: 'Doble faz'
+          total: 'Total'
     customer_sessions:
       login: 'Ingresar'
       new_title: 'Iniciar sesión'

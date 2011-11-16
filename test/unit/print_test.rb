@@ -594,6 +594,18 @@ class PrintTest < ActiveSupport::TestCase
     assert new_print.valid?
   end
   
+  test 'current print jobs' do
+    assert_difference '@print.current_print_jobs.size', -1 do
+      @print.current_print_jobs.first.mark_for_destruction
+    end
+  end
+  
+  test 'current article lines' do
+    assert_difference '@print.current_article_lines.size', -1 do
+      @print.current_article_lines.first.mark_for_destruction
+    end
+  end
+  
   test 'revoke' do
     UserSession.create(users(:administrator))
     

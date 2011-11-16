@@ -51,6 +51,7 @@ class Customer < ApplicationModel
     autosave: true, class_name: 'Bonus', order: 'valid_until ASC'
   has_many :deposits, inverse_of: :customer, dependent: :destroy,
     autosave: true, order: 'valid_until ASC'
+  has_many :print_jobs, through: :prints
   
   accepts_nested_attributes_for :bonuses, allow_destroy: true,
     reject_if: :reject_credits
@@ -163,6 +164,23 @@ class Customer < ApplicationModel
     else
       false
     end
+  end
+  
+  def to_pay_amounts
+    amounts = {
+      one_sided_count: self.print_jobs.pay_later.one_sided.sum(:printed_pages),
+      two_sided_count: self.print_jobs.pay_later.two_sided.sum(:printed_pages)
+    }
+    
+    amounts[:total_count] = amounts[:one_sided_count] + amounts[:two_sided_count]
+    amounts[:one_sided_price] = PriceChooser.choose(
+      one_sided: true, copies: amounts[:total_count]
+    )
+    amounts[:two_sided_price] = PriceChooser.choose(
+      one_sided: false, copies: amounts[:total_count]
+    )
+    
+    amounts
   end
   
   def self.full_text(query_terms)

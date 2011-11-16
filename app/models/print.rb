@@ -103,6 +103,14 @@ class Print < ApplicationModel
       self.payment(:credit)
     end
   end
+  
+  def current_print_jobs
+    self.print_jobs.reject(&:marked_for_destruction?)
+  end
+  
+  def current_article_lines
+    self.article_lines.reject(&:marked_for_destruction?)
+  end
 
   def can_be_destroyed?
     self.article_lines.empty? && self.print_jobs.empty? && self.payments.empty?
@@ -119,7 +127,7 @@ class Print < ApplicationModel
 
   def print_all_jobs
     if self.printer_was.blank? && !self.printer.blank? && !self.avoid_printing?
-      self.print_jobs.reject(&:marked_for_destruction?).each do |pj|
+      self.current_print_jobs.each do |pj|
         pj.send_to_print(self.printer, self.user)
       end
     end
@@ -155,14 +163,12 @@ class Print < ApplicationModel
   end
 
   def price
-    self.print_jobs.reject(&:marked_for_destruction?).to_a.sum(&:price) +
-      self.article_lines.reject(&:marked_for_destruction?).to_a.sum(&:price)
+    self.current_print_jobs.to_a.sum(&:price) +
+      self.current_article_lines.to_a.sum(&:price)
   end
   
   def total_pages
-    self.print_jobs.reject(&:marked_for_destruction?).sum do |pj|
-      pj.printed_copies * pj.range_pages
-    end
+    self.current_print_jobs.sum { |pj| pj.printed_copies * pj.range_pages }
   end
   
   def reject_print_job_attributes?(attributes)
@@ -173,10 +179,7 @@ class Print < ApplicationModel
   end
   
   def must_have_one_item
-    print_jobs = self.print_jobs.reject(&:marked_for_destruction?)
-    article_lines = self.article_lines.reject(&:marked_for_destruction?)
-    
-    if print_jobs.empty? && article_lines.empty?
+    if self.current_print_jobs.empty? && self.current_article_lines.empty?
       self.errors.add :base, :must_have_one_item
     end
   end

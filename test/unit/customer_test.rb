@@ -295,6 +295,32 @@ class CustomerTest < ActiveSupport::TestCase
     assert_equal '1000.0', @customer.free_credit.to_s
   end
   
+  test 'to pay amounts' do
+    assert !@customer.print_jobs.pay_later.empty?
+    
+    one_sided_count = @customer.print_jobs.pay_later.one_sided.inject(0) do |t, pj|
+      t + pj.printed_pages
+    end
+    two_sided_count = @customer.print_jobs.pay_later.two_sided.inject(0) do |t, pj|
+      t + pj.printed_pages
+    end
+    total_count = one_sided_count + two_sided_count
+    one_sided_price = PriceChooser.choose(one_sided: true, copies: total_count)
+    two_sided_price = PriceChooser.choose(one_sided: false, copies: total_count)
+    
+    assert one_sided_count > 0
+    assert two_sided_count > 0
+    
+    amounts = @customer.to_pay_amounts
+    
+    assert_equal 5, amounts.size
+    assert_equal one_sided_count, amounts[:one_sided_count]
+    assert_equal two_sided_count, amounts[:two_sided_count]
+    assert_equal one_sided_price, amounts[:one_sided_price]
+    assert_equal two_sided_price, amounts[:two_sided_price]
+    assert_equal total_count, amounts[:total_count]
+  end
+  
   test 'add bonus' do
     initial_bonus_amount = @customer.bonuses.to_a.sum(&:amount)
     

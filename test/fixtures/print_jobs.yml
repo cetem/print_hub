@@ -138,7 +138,7 @@ math_job_to_pay_later_1:
   price_per_copy: 0.10
   range: ''
   printed_pages: <%= 3 * 12 %>
-  two_sided: true
+  two_sided: false
   document: math_notes
   print: math_print_to_pay_later
 

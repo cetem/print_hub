@@ -9,6 +9,11 @@ class PrintJob < ApplicationModel
     )
   }
   scope :not_revoked, includes(:print).where(Print.table_name => {revoked: false})
+  scope :pay_later, includes(:print).where(
+    Print.table_name => { status: Print::STATUS[:pay_later] }
+  )
+  scope :one_sided, where(two_sided: false)
+  scope :two_sided, where(two_sided: true)
   
   # Callbacks
   before_save :put_printed_pages
@@ -19,8 +24,8 @@ class PrintJob < ApplicationModel
 
   # Restricciones de atributos
   attr_protected :job_id, :price_per_copy, :printed_copies
-  attr_readonly :document_id, :copies, :pages, :price_per_copy, :range, :job_id,
-    :two_sided, :print_id
+  attr_readonly :document_id, :copies, :pages, :range, :job_id, :two_sided,
+    :print_id
 
   # Restricciones
   validates :copies, :pages, :price_per_copy, :printed_copies, presence: true
