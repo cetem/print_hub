@@ -38,6 +38,7 @@ GEM
       activesupport (= 3.1.1)
     activesupport (3.1.1)
       multi_json (~> 1.0)
+    ansi (1.4.1)
     archive-tar-minitar (0.5.2)
     arel (2.2.1)
     authlogic (3.1.0)
@@ -85,6 +86,7 @@ GEM
       treetop (~> 1.4.8)
     memcache-client (1.8.5)
     mime-types (1.17.2)
+    minitest (2.8.1)
     mongrel (1.2.0.pre2)
       daemons (~> 1.0.10)
       gem_plugin (~> 0.2.3)
@@ -149,11 +151,10 @@ GEM
     ruby_core_source (0.1.5)
       archive-tar-minitar (>= 0.5.2)
     sass (3.1.10)
-    sass-rails (3.1.4)
+    sass-rails (3.1.5)
       actionpack (~> 3.1.0)
       railties (~> 3.1.0)
-      sass (>= 3.1.4)
-      sprockets (~> 2.0.0)
+      sass (~> 3.1.10)
       tilt (~> 1.3.2)
     simple_autocomplete (0.3.8)
     sprockets (2.0.3)
@@ -168,6 +169,8 @@ GEM
     treetop (1.4.10)
       polyglot
       polyglot (>= 0.3.1)
+    turn (0.8.3)
+      ansi
     tzinfo (0.3.31)
     uglifier (1.1.0)
       execjs (>= 0.3.0)
@@ -192,6 +195,7 @@ DEPENDENCIES
   foreigner
   jquery-rails
   memcache-client
+  minitest
   mongrel (= 1.2.0.pre2)
   newrelic_rpm
   paper_trail
@@ -208,6 +212,7 @@ DEPENDENCIES
   sass-rails
   simple_autocomplete
   therubyracer
+  turn
   uglifier
   validates_timeliness
   whenever
