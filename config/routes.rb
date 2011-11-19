@@ -55,7 +55,10 @@ PrintHubApp::Application.routes.draw do
       resources :prints, only: [:index]
       resources :bonuses, only: [:index]
 
-      get :credit_detail, on: :member
+      member do
+        get :credit_detail
+        put :pay_off_debt
+      end
     end
 
     resources :settings, only: [:index, :show, :edit, :update]

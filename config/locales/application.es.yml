@@ -318,6 +318,8 @@
       to_pay_prints:
         no_debt: 'Sin deuda'
         title: 'Saldo en cuenta corriente'
+        pay_off_debt: 'Pagar todo'
+        debt_cancelled: 'Deuda cancelada'
         columns:
           type: 'Tipo de copia'
           count: 'Cantidad'

@@ -540,9 +540,12 @@ class PrintTest < ActiveSupport::TestCase
     @print.scheduled_at = 2.seconds.ago
     assert @print.invalid?
     assert_equal 1, @print.errors.count
-    assert_equal [error_message_from_model(@print, :scheduled_at, :after,
-        restriction: Time.now.strftime('%d/%m/%Y %H:%M:%S'))],
-      @print.errors[:scheduled_at]
+    assert_equal [
+      error_message_from_model(
+        @print, :scheduled_at, :after,
+        restriction: Time.now.strftime('%d/%m/%Y %H:%M:%S')
+      )
+    ], @print.errors[:scheduled_at]
   end
 
   # Prueba que las validaciones del modelo se cumplan como es esperado
@@ -550,9 +553,10 @@ class PrintTest < ActiveSupport::TestCase
     @print.printer = 'abcde' * 52
     assert @print.invalid?
     assert_equal 2, @print.errors.count
-    assert_equal [error_message_from_model(@print, :printer, :must_be_blank),
-      error_message_from_model(@print, :printer, :too_long, count: 255)].sort,
-      @print.errors[:printer].sort
+    assert_equal [
+      error_message_from_model(@print, :printer, :must_be_blank),
+      error_message_from_model(@print, :printer, :too_long, count: 255)
+    ].sort, @print.errors[:printer].sort
   end
   
   # Prueba que las validaciones del modelo se cumplan como es esperado
@@ -587,8 +591,9 @@ class PrintTest < ActiveSupport::TestCase
 
     assert new_print.invalid?
     assert_equal 1, new_print.errors.count
-    assert_equal [error_message_from_model(new_print, :printer,
-        :must_be_blank)], new_print.errors[:printer].sort
+    assert_equal [
+      error_message_from_model(new_print, :printer, :must_be_blank)
+    ], new_print.errors[:printer].sort
 
     new_print.scheduled_at = nil
     assert new_print.valid?
@@ -639,6 +644,25 @@ class PrintTest < ActiveSupport::TestCase
       (initial_bonus + payments_amount).to_s,
       print.customer.bonuses.to_a.sum(&:remaining).to_s
     )
+  end
+  
+  test 'pay with special price' do
+    print = prints(:math_print_to_pay_later)
+    original_price = print.price
+    
+    print.pay_with_special_price(one_sided_price: 0.02, two_sided_price: 0.01)
+    
+    assert print.paid?
+    assert_equal 1, print.payments.size
+    assert print.payments.first.cash?
+    
+    new_price = print.price
+    calculated_price = print.print_jobs.inject(0.0) do |t, pj|
+      t + pj.printed_pages * (pj.two_sided ? 0.01 : 0.02)
+    end
+    
+    assert_equal '%.3f' % new_price, '%.3f' % calculated_price
+    assert_not_equal '%.3f' % original_price, '%.3f' % new_price
   end
 
   test 'price' do

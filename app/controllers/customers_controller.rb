@@ -113,7 +113,7 @@ class CustomersController < ApplicationController
     end
   end
   
-  # GET /customers/credit_detail/1
+  # GET /customers/1/credit_detail
   def credit_detail
     @customer = Customer.find(params[:id])
     
@@ -138,5 +138,13 @@ class CustomersController < ApplicationController
         format.xml  { render xml: [t('view.customers.can_not_be_activated')], status: :unprocessable_entity }
       end
     end
+  end
+  
+  # PUT /customers/1/pay_off_debt
+  def pay_off_debt
+    @customer = Customer.find(params[:id])
+    amounts = @customer.pay_off_debt
+    
+    render partial: 'debt', locals: { amounts: amounts, cancelled: true }
   end
 end

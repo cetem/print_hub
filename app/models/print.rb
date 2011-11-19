@@ -161,6 +161,19 @@ class Print < ApplicationModel
       self.save validate: false
     end
   end
+  
+  def pay_with_special_price(prices)
+    if self.pay_later?
+      self.print_jobs.each do |pj|
+        pj.price_per_copy = pj.two_sided ?
+          prices[:two_sided_price] : prices[:one_sided_price]
+      end
+
+      self.payments.build(amount: self.price, paid: self.price)
+      self.paid!
+      self.save!
+    end
+  end
 
   def price
     self.current_print_jobs.to_a.sum(&:price) +

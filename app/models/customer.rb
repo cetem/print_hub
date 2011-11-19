@@ -183,6 +183,25 @@ class Customer < ApplicationModel
     amounts
   end
   
+  def pay_off_debt
+    amounts = self.to_pay_amounts
+    
+    Print.transaction do
+      begin
+        self.prints.pay_later.each do |p|
+          p.pay_with_special_price(
+            one_sided_price: amounts[:one_sided_price],
+            two_sided_price: amounts[:two_sided_price]
+          )
+        end
+      rescue
+        raise ActiveRecord::Rollback
+      end
+    end
+    
+    amounts
+  end
+  
   def self.full_text(query_terms)
     options = text_query(query_terms, 'identification', 'name', 'lastname')
     conditions = [options[:query]]

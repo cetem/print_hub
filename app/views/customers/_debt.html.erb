@@ -1,0 +1,51 @@
+<section class="nested_items">
+  <h2>
+    <%= t('view.customers.to_pay_prints.title') %>
+  </h2>
+  
+  <table class="summary">
+    <thead>
+      <tr>
+        <th><%= t('view.customers.to_pay_prints.columns.type') %></th>
+        <th><%= t('view.customers.to_pay_prints.columns.count') %></th>
+        <th><%= t('view.customers.to_pay_prints.columns.unit_price') %></th>
+        <th><%= t('view.customers.to_pay_prints.columns.total_price') %></th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td><%= t('view.customers.to_pay_prints.rows.one_sided') %></td>
+        <td><%= amounts[:one_sided_count] %></td>
+        <td><%= number_to_currency amounts[:one_sided_price] %></td>
+        <td><%= number_to_currency amounts[:one_sided_count] * amounts[:one_sided_price] %></td>
+      </tr>
+      <tr>
+        <td><%= t('view.customers.to_pay_prints.rows.two_sided') %></td>
+        <td><%= amounts[:two_sided_count] %></td>
+        <td><%= number_to_currency amounts[:two_sided_price] %></td>
+        <td><%= number_to_currency amounts[:two_sided_count] * amounts[:two_sided_price] %></td>
+      </tr>
+      <tr>
+        <td>
+          <strong><%= t('view.customers.to_pay_prints.rows.total') %></strong>
+        </td>
+        <td><strong><%= amounts[:total_count] %></strong></td>
+        <td></td>
+        <td><strong><%= show_total_to_pay_amount amounts %></strong></td>
+      </tr>
+    </tbody>
+  </table>
+  
+  <% if cancelled %>
+    <p><%= t('view.customers.to_pay_prints.debt_cancelled') %></p>
+  <% else %>
+    <div class="actions">
+      <%= button_to(
+        t('view.customers.to_pay_prints.pay_off_debt'),
+        pay_off_debt_customer_path(@customer),
+        method: :put, remote: true, id: 'pay_off_debt',
+        form: {'data-type' => 'html'}
+      ) %>
+    </div>
+  <% end %>
+</section>

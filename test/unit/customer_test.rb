@@ -321,6 +321,16 @@ class CustomerTest < ActiveSupport::TestCase
     assert_equal total_count, amounts[:total_count]
   end
   
+  test 'pay off debt' do
+    assert_not_equal 0, @customer.reload.prints.pay_later.count
+    
+    assert_difference 'Payment.count', @customer.prints.pay_later.count do
+      assert @customer.pay_off_debt
+    end
+    
+    assert_equal 0, @customer.reload.prints.pay_later.count
+  end
+  
   test 'add bonus' do
     initial_bonus_amount = @customer.bonuses.to_a.sum(&:amount)
     

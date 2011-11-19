@@ -18,4 +18,10 @@ jQuery(function() {
       }
     });
   }
+  
+  if($('#ph_customers[data-action="show"]').length > 0) {
+    $(document).on('ajax:success', 'form[data-remote]', function(xhr, data) {
+      $(this).parents('section.nested_items').replaceWith(data);
+    });
+  }
 });
