@@ -9,8 +9,9 @@ class Print < ApplicationModel
   }.with_indifferent_access.freeze
   
   # Callbacks
+  before_validation :remove_unnecessary_payments
   before_save :mark_order_as_completed, :update_customer_credit, if: :new_record?
-  before_save :remove_unnecessary_payments, :mark_as_pending, :print_all_jobs
+  before_save :mark_as_pending, :print_all_jobs
   before_destroy :can_be_destroyed?
 
   # Scopes
@@ -97,7 +98,7 @@ class Print < ApplicationModel
     end
 
     if self.pay_later?
-      self.payments.clear
+      self.payments.each { |p| p.amount = p.paid = 0 }
     else
       self.payment(:cash)
       self.payment(:credit)
@@ -198,7 +199,7 @@ class Print < ApplicationModel
   end
 
   def must_have_valid_payments
-    if self.pending_payment?
+    if self.pending_payment? || (self.paid? && self.new_record?)
       unless (payment = self.payments.to_a.sum(&:amount)) == self.price
         self.errors.add :payments, :invalid, price: '%.3f' % self.price,
           payment: '%.3f' % payment
@@ -207,15 +208,7 @@ class Print < ApplicationModel
   end
 
   def remove_unnecessary_payments
-    credit_payment = self.payments.detect(&:credit?)
-    cash_payment = self.payments.detect(&:cash?)
-
-    credit_payment.mark_for_destruction if credit_payment.try(:amount) == 0
-    
-    if credit_payment && credit_payment.amount > 0 &&
-        cash_payment.try(:amount) == 0
-      cash_payment.mark_for_destruction
-    end
+    self.payments.delete_if { |p| p.amount <= 0 }
   end
 
   def update_customer_credit

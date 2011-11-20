@@ -23,10 +23,10 @@ class PaymentTest < ActiveSupport::TestCase
   test 'create' do
     assert_difference 'Payment.count' do
       @payment = Payment.create(
-        :amount => '10.50',
-        :paid => '10.00',
-        :paid_with => Payment::PAID_WITH[:credit],
-        :payable => prints(:math_print)
+        amount: '10.50',
+        paid: '10.00',
+        paid_with: Payment::PAID_WITH[:credit],
+        payable: prints(:math_print)
       )
     end
   end
@@ -34,7 +34,7 @@ class PaymentTest < ActiveSupport::TestCase
   # Prueba de actualización de un pago
   test 'update' do
     assert_no_difference 'Payment.count' do
-      assert @payment.update_attributes(:paid => '38.00'),
+      assert @payment.update_attributes(paid: '38.00'),
         @payment.errors.full_messages.join('; ')
     end
 
@@ -83,7 +83,7 @@ class PaymentTest < ActiveSupport::TestCase
     assert_equal 2, @payment.errors.count
     assert_equal [error_message_from_model(@payment, :paid_with, :inclusion),
       error_message_from_model(@payment, :paid_with, :too_long,
-        :count => 1)].sort, @payment.errors[:paid_with].sort
+        count: 1)].sort, @payment.errors[:paid_with].sort
   end
 
   # Prueba que las validaciones del modelo se cumplan como es esperado
@@ -97,21 +97,21 @@ class PaymentTest < ActiveSupport::TestCase
 
   # Prueba que las validaciones del modelo se cumplan como es esperado
   test 'validates boundaries of attributes' do
-    @payment.amount = '-0.01'
+    @payment.amount = '0.00'
     @payment.paid = '-0.01'
     assert @payment.invalid?
     assert_equal 2, @payment.errors.count
     assert_equal [error_message_from_model(@payment, :amount,
-        :greater_than_or_equal_to, :count => 0)], @payment.errors[:amount]
+        :greater_than, count: 0)], @payment.errors[:amount]
     assert_equal [error_message_from_model(@payment, :paid,
-        :greater_than_or_equal_to, :count => 0)], @payment.errors[:paid]
+        :greater_than_or_equal_to, count: 0)], @payment.errors[:paid]
 
     @payment.reload
     @payment.paid = @payment.amount + 0.01
     assert @payment.invalid?
     assert_equal 1, @payment.errors.count
     assert_equal [error_message_from_model(@payment, :paid,
-        :less_than_or_equal_to, :count => @payment.amount)],
+        :less_than_or_equal_to, count: @payment.amount)],
       @payment.errors[:paid]
   end
 

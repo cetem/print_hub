@@ -80,6 +80,7 @@ var Print = {
     $('#print_customer_id').val('');
     $('#customer_free_credit').val('');
     $('#link_to_customer_credit_detail').hide();
+    $('#print_pay_later').parents('div.field').hide();
 
     Print.updateTotalPrice();
   },
@@ -144,7 +145,9 @@ jQuery(function($) {
         Print.updateArticleLinePrice(articleLine);
       } else if (item.free_credit) {
         var customerDetailsLink = $('#link_to_customer_credit_detail');
+        
         $('#customer_free_credit').val(item.free_credit);
+        $('#print_pay_later').parents('div.field').show();
 
         customerDetailsLink.attr(
           'href', customerDetailsLink.attr('href').replace(/\d+/, item.id)
@@ -158,8 +161,8 @@ jQuery(function($) {
       Print.updateSubmitLabel();
     });
 
-    $(document).on('change', 'input[name="[print_auto_customer_name]"]', function() {
-      if(/^\s*$/.test($(this).val())) {clearCustomer();}
+    $(document).on('change keyup', 'input[name$="[auto_customer_name]"]', function() {
+      if(/^\s*$/.test($(this).val())) { Print.clearCustomer(); }
     });
 
     $(document).on('change', 'input[name$="[auto_document_name]"]', function() {
@@ -260,6 +263,16 @@ jQuery(function($) {
         Print.updateArticleLinePrice(element.parents('.article_line'));
       }
     });
+    
+    $(document).on('change', 'input[name$="[pay_later]"]', function() {
+      if($(this).is(':checked')) {
+        $('input[name^="print[payments_attributes]"]').each(function(i, e) {
+          if(parseInt($(e).val()) > 0) { $(e).val('0.000'); }
+        });
+      } else {
+        Print.updateTotalPrice();
+      }
+    });
 
     $(document).on('ajax:success', 'a.details_link', function(event, data) {
       Helper.show(
@@ -272,6 +285,10 @@ jQuery(function($) {
     });
     
     Print.updateSubmitLabel();
+    
+    if(/^\s*$/.test($('#print_customer_id').val())) {
+      $('#print_pay_later').parents('div.field').hide();
+    }
 
     // Captura de atajos de teclado
     $(document).keydown(function(e) {

@@ -13,9 +13,20 @@
     <%= f.label :printer %>
     <%= print_destinations_field(f) %>
   </div>
-  <div class="field column_right">
-    <%= f.label :avoid_printing %>
-    <%= f.check_box :avoid_printing %>
+  <div class="field column_left">
+    <%= f.label :customer, raw(Print.human_attribute_name(:customer) + ' ' + link_to_customer_credit_detail(@print.customer)), for: :print_auto_customer_name %>
+    <% field_classes = [:autocomplete_field] %>
+    <% field_classes << :field_with_errors unless @print.errors[:customer_id].blank? %>
+    <%= f.text_field :auto_customer_name, value: @print.customer,
+      class: field_classes.join(' '),
+      'data-autocomplete-url' => autocomplete_for_customer_name_prints_path %>
+    <% if @print.customer %>
+      <%= link_to_function 'X', "Print.clearCustomer(); $(this).remove()",
+        class: 'remove' %>
+    <% end %>
+    <%= f.hidden_field :customer_id, class: 'autocomplete_id' %>
+    <%= hidden_field_tag :customer_free_credit,
+      @print.customer.try(:free_credit), id: 'customer_free_credit' %>
   </div>
 
   <div class="clear">
@@ -23,21 +34,13 @@
       <%= f.label :scheduled_at %>
       <%= calendar_text_field f, :scheduled_at, time: true %>
     </div>
-
-    <div class="field column_right">
-      <%= f.label :customer, raw(Print.human_attribute_name(:customer) + ' ' + link_to_customer_credit_detail(@print.customer)), for: :print_auto_customer_name %>
-      <% field_classes = [:autocomplete_field] %>
-      <% field_classes << :field_with_errors unless @print.errors[:customer_id].blank? %>
-      <%= f.text_field :auto_customer_name, value: @print.customer,
-        class: field_classes.join(' '),
-        'data-autocomplete-url' => autocomplete_for_customer_name_prints_path %>
-      <% if @print.customer %>
-        <%= link_to_function 'X', "Print.clearCustomer(); $(this).remove()",
-          class: 'remove' %>
-      <% end %>
-      <%= f.hidden_field :customer_id, class: 'autocomplete_id' %>
-      <%= hidden_field_tag :customer_free_credit,
-        @print.customer.try(:free_credit), id: 'customer_free_credit' %>
+    <div class="field column_left" style="width: 24%;">
+      <%= f.label :avoid_printing %>
+      <%= f.check_box :avoid_printing %>
+    </div>
+    <div class="field column_left" style="width: 24%;">
+      <%= f.label :pay_later %>
+      <%= f.check_box :pay_later %>
     </div>
   </div>
 
@@ -131,11 +134,6 @@
                   <%= f.password_field :credit_password, value: '', size: nil,
                     maxlength: 255,
                     placeholder: Print.human_attribute_name(:credit_password) %>
-                </div>
-              <% elsif @print.new_record? %>
-                <div class="nested_item_field">
-                  <%= f.check_box :pay_later %>
-                  <%= f.label :pay_later %>
                 </div>
               <% else %>
                 &nbsp;
