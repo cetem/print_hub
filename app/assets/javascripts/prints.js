@@ -80,7 +80,7 @@ var Print = {
     $('#print_customer_id').val('');
     $('#customer_free_credit').val('');
     $('#link_to_customer_credit_detail').hide();
-    $('#print_pay_later').parents('div.field').hide();
+    $('#print_pay_later').attr('checked', false).parents('div.field').hide();
 
     Print.updateTotalPrice();
   },
