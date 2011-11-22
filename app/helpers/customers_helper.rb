@@ -51,4 +51,13 @@ module CustomersHelper
     
     number_to_currency one_sided_price + two_sided_price
   end
+  
+  def show_button_to_pay_debt(customer)
+    button_to(
+      t('view.customers.to_pay_prints.pay_off_debt'),
+      pay_off_debt_customer_path(customer),
+      method: :put, remote: true, id: 'pay_off_debt',
+      form: { 'data-type' => 'html' }
+    )
+  end
 end

@@ -36,3 +36,18 @@
     text-align: justify;
   }
 }
+
+#ph_customers {
+  .cancelled {
+    opacity: .75;
+
+    strong {
+      text-decoration: line-through;
+    }
+
+    .highlight {
+      font-weight: bold;
+      color: #c00;
+    }
+  }
+}

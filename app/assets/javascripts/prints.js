@@ -14,21 +14,23 @@ var Print = {
   updateTotalPrice: function() {
     var freeCredit = parseFloat($('#customer_free_credit').val()) || 0.0;
     var payWithCash = 0.0, payWithBonus = 0.0, totalPrice = 0.0;
+    
+    if(!$('#print_pay_later').is(':checked')) {
+      $('.print_job:not([data-exclude-from-total])').each(function() {
+        totalPrice += parseFloat($(this).data('price')) || 0;
+      });
 
-    $('.print_job:not([data-exclude-from-total])').each(function() {
-      totalPrice += parseFloat($(this).data('price')) || 0;
-    });
+      $('.article_line:not([data-exclude-from-total])').each(function() {
+        totalPrice += parseFloat($(this).data('price')) || 0;
+      });
 
-    $('.article_line:not([data-exclude-from-total])').each(function() {
-      totalPrice += parseFloat($(this).data('price')) || 0;
-    });
-
-    if(freeCredit > totalPrice) {
-      payWithCash = 0.0;
-      payWithBonus = totalPrice;
-    } else {
-      payWithCash = totalPrice - freeCredit;
-      payWithBonus = freeCredit;
+      if(freeCredit > totalPrice) {
+        payWithCash = 0.0;
+        payWithBonus = totalPrice;
+      } else {
+        payWithCash = totalPrice - freeCredit;
+        payWithBonus = freeCredit;
+      }
     }
 
     $(Print.cashPrefix + '_amount').val(payWithCash.toFixed(3));
