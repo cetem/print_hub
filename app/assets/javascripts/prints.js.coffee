@@ -1,0 +1,271 @@
+window.Print =
+  updateStock: (printJob)->
+    copies = parseInt(printJob.find('input[name$="[copies]"]').val()) || 0
+    printJobStockDetails = printJob.find('.document_stock')
+    stock = parseInt printJobStockDetails.data('stock')
+
+    if stock > 0
+      printedCopies = if stock > copies then 0 else copies - stock
+
+      printJobStockDetails.html('#' + stock + '!' + printedCopies)
+  
+  updateTotalPrice: ->
+    freeCredit = parseFloat($('#customer_free_credit').val()) || 0.0
+    [payWithCash, payWithBonus, totalPrice] = [0.0, 0.0, 0.0]
+    
+    if !$('#print_pay_later').is(':checked')
+      $('.print_job:not([data-exclude-from-total])').each ->
+        totalPrice += parseFloat($(this).data('price')) || 0
+
+      $('.article_line:not([data-exclude-from-total])').each ->
+        totalPrice += parseFloat($(this).data('price')) || 0
+
+      if freeCredit > totalPrice
+        payWithCash = 0.0
+        payWithBonus = totalPrice
+      else
+        payWithCash = totalPrice - freeCredit
+        payWithBonus = freeCredit
+
+    $(Print.cashPrefix + '_amount').val(payWithCash.toFixed(3))
+    $(Print.cashPrefix + '_paid').val(payWithCash.toFixed(3))
+    $(Print.creditPrefix + '_amount').val(payWithBonus.toFixed(3))
+    $(Print.creditPrefix + '_paid').val(payWithBonus.toFixed(3))
+
+  updatePrintJobPrice: (printJob)->
+    Jobs.updatePricePerCopy()
+
+    copies = parseInt(printJob.find('input[name$="[copies]"]').val())
+    pricePerCopy = parseFloat(
+      printJob.find('input[name$="[price_per_copy]"]').val()
+    )
+    rangePages = parseInt(
+      printJob.find('input[name$="[range]"]').data('rangePages')
+    )
+    pricePerOneSidedCopy = PriceChooser.choose(
+      $('#total_pages').data('pricePerOneSided'), parseInt($('#total_pages').val())
+    )
+    evenRange = rangePages - (rangePages % 2)
+    rest = (rangePages % 2) * pricePerOneSidedCopy
+    jobPrice = (copies * (pricePerCopy * evenRange + rest)) || 0
+    money = printJob.find('span.money')
+
+    printJob.data('price', jobPrice)
+    money.html(money.html().replace(/(\d+.)+\d+/, jobPrice.toFixed(3)))
+
+    Print.updateTotalPrice()
+
+  updateArticleLinePrice: (articleLine)->
+    units = parseInt articleLine.find('input[name$="[units]"]').val()
+    unitPrice = parseFloat(
+      articleLine.find('input[name$="[unit_price]"]').val()
+    )
+    articlePrice = (units * unitPrice) || 0
+    money = articleLine.find('span.money')
+
+    articleLine.data('price', articlePrice)
+    money.html(money.html().replace(/(\d+.)+\d+/, articlePrice.toFixed(3)))
+
+    Print.updateTotalPrice()
+
+  clearCustomer: ->
+    $('#print_auto_customer_name').val('')
+    $('#print_customer_id').val('')
+    $('#customer_free_credit').val('')
+    $('#link_to_customer_credit_detail').hide()
+    $('#print_pay_later').attr('checked', false).parents('div.field').hide()
+
+    Print.updateTotalPrice()
+  
+  updateSubmitLabel: ->
+    if /^\s*$/.test($('#print_printer').val())
+      label = Print.saveMessage
+    else
+      label = Print.printMessage
+
+    $('#print_submit').attr('value', label)
+
+jQuery ($)->
+  if $('#ph_prints').length > 0
+    $(document).on 'item:removed', '.print_job', ->
+      $(this).data('excludeFromTotal', true).find(
+        '.page_modifier:first'
+      ).trigger('ph:page_modification')
+
+      Print.updateTotalPrice()
+
+    $(document).on 'item:removed', '.article_line', ->
+      $(this).data('excludeFromTotal', true)
+      Print.updateTotalPrice()
+
+    $(document).on 'autocomplete:update', 'input.autocomplete_field', ->
+      item = $(this).data('item')
+
+      if item.pages
+        pages = item.pages
+        stock = parseInt(item.stock)
+        printJob = $(this).parents('.print_job:first')
+        printJobDetailsLink = printJob.find('a.details_link')
+        printJobStockDetails = printJob.find('.document_stock')
+
+        printJob.find('input[name$="[pages]"]').val(pages).attr('disabled', true)
+        printJobDetailsLink.attr(
+          'href', printJobDetailsLink.attr('href').replace(/\d+$/, item.id)
+        ).show()
+        printJob.find('.dynamic_details').text('')
+        printJob.find('input[name$="[range]"]').val('').data(
+          'rangePages', pages
+        ).trigger('ph:page_modification')
+          
+        if stock > 0
+          printJobStockDetails.data('stock', stock).show()
+          Print.updateStock(printJob)
+        else
+          printJobStockDetails.hide()
+
+        Print.updatePrintJobPrice(printJob)
+      else if item.unit_price
+        unitPrice = parseFloat(item.unit_price).toFixed(3)
+        articleLine = $(this).parents('.article_line')
+
+        articleLine.find('input[name$="[unit_price]"]').val(unitPrice)
+
+        Print.updateArticleLinePrice(articleLine)
+      else if item.free_credit
+        customerDetailsLink = $('#link_to_customer_credit_detail')
+        
+        $('#customer_free_credit').val(item.free_credit)
+        $('#print_pay_later').parents('div.field').show()
+
+        customerDetailsLink.attr(
+          'href', customerDetailsLink.attr('href').replace(/\d+/, item.id)
+        ).show()
+
+        Print.updateTotalPrice()
+
+    $('#print_printer').change -> Print.updateSubmitLabel()
+
+    $(document).on 'change keyup', 'input[name$="[auto_customer_name]"]', ->
+      Print.clearCustomer() if /^\s*$/.test($(this).val())
+
+    $(document).on 'change', 'input[name$="[auto_document_name]"]', ->
+      element = $(this)
+      printJob = element.parents('.print_job')
+
+      if printJob.length > 0 && /^\s*$/.test(element.val())
+        printJob.find('input[name$="[range]"]').data('rangePages', 0)
+        printJob.find('input[name$="[pages]"]').val('').removeAttr('disabled')
+        printJob.find('.dynamic_details').html('')
+        printJob.find('a.details_link').hide()
+        printJob.find('.document_stock').hide()
+
+        Print.updatePrintJobPrice(printJob)
+
+    $(document).on 'change', 'input[name$="[auto_article_name]"]', ->
+      element = $(this)
+      articleLine = element.parents('.article_line')
+
+      if articleLine.length > 0 && /^\s*$/.test(element.val())
+        articleLine.find('input[name$="[units]"]').val('0')
+        articleLine.find('input[name$="[unit_price]"]').val('')
+
+        Print.updateArticleLinePrice(articleLine)
+
+    $(document).on 'change keyup', 'input[name$="[pages]"]', ->
+      element = $(this)
+      printJob = element.parents('.print_job')
+      range = printJob.find('input[name$="[range]"]')
+      autoDocument = printJob.find('input[name$="[auto_document_name]"]')
+
+      if !element.attr('disabled') && parseInt(element.val()) > 0
+        range.attr('disabled', true)
+        autoDocument.attr('disabled', true)
+      else
+        range.removeAttr('disabled')
+        autoDocument.removeAttr('disabled')
+      
+      range.data('rangePages', parseInt(element.val()))
+
+      Print.updatePrintJobPrice(printJob)
+    
+    $(document).on 'change keyup', 'input[name$="[copies]"]', ->
+      element = $(this)
+      printJob = element.parents('.print_job')
+      
+      Print.updateStock(printJob)
+    
+    Jobs.listenRangeChanges()
+    Jobs.listenTwoSidedChanges()
+    
+    $(document).on 'keyup', 'input[name$="[range]"]', ->
+      printJob = $(this).parents('.print_job')
+      printJobStockDetails = printJob.find('.document_stock')
+      stock = parseInt printJobStockDetails.data('stock')
+      rangePages = parseInt $(this).data('rangePages')
+      pages = parseInt printJob.find('input[name$="[pages]"]').val()
+      
+      if rangePages == pages && stock > 0
+        printJobStockDetails.show()
+      else
+        printJobStockDetails.hide()
+
+    $(document).on 'change keyup ph:page_modification', '.page_modifier', ->
+      totalPages = 0
+
+      $('.print_job').each (i, pj)->
+        copies = parseInt $(pj).find('input[name$="[copies]"]').val()
+        rangePages = parseInt(
+          $(pj).find('input[name$="[range]"]').data('rangePages')
+        )
+
+        totalPages += (copies || 0) * (rangePages || 0)
+
+      $('#total_pages').val(totalPages)
+
+      $('.print_job').each (i, pj)->
+        Print.updatePrintJobPrice($(pj))
+
+    $(document).on 'change keyup', '.price_modifier', ->
+      element = $(this)
+
+      if element.parents('.print_job').length > 0
+        Print.updatePrintJobPrice(element.parents('.print_job'))
+      else if element.parents('.article_line').length > 0
+        Print.updateArticleLinePrice(element.parents('.article_line'))
+    
+    $(document).on 'change', 'input[name$="[pay_later]"]', ->
+      if($(this).is(':checked')) 
+        $('input[name^="print[payments_attributes]"]').each (i, e)->
+          $(e).val('0.000') if parseInt($(e).val()) > 0
+      else
+        Print.updateTotalPrice()
+
+    $(document).on 'ajax:success', 'a.details_link', (event, data)->
+      Helper.show(
+        $(this).parents('.print_job').find('.dynamic_details').hide().html(data)
+      )
+
+    $(document).on 'ajax:success', '#link_to_customer_credit_detail', (event, data)->
+      $.fancybox('padding': 24, 'content': data)
+    
+    Print.updateSubmitLabel()
+    
+    if /^\s*$/.test($('#print_customer_id').val())
+      $('#print_pay_later').parents('div.field').hide()
+
+    # Captura de atajos de teclado
+    $(document).keydown (e)->
+      key = e.which
+
+      # CTRL + ALT + I = Agregar un trabajo
+      if (key == 73 || key == 105) && e.ctrlKey && e.altKey
+        $('#add_print_job_link').click()
+        e.preventDefault()
+      # CTRL + ALT + A = Agregar un artículo
+      else if (key == 65 || key == 97) && e.ctrlKey && e.altKey
+        $('#add_article_line_link').click()
+        e.preventDefault()
+      # CTRL + ALT + P = Imprimir
+      else if (key == 80 || key == 112) && e.ctrlKey && e.altKey
+        $('#print_submit').click()
+        e.preventDefault()
