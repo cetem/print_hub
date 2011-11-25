@@ -8,49 +8,6 @@ window.State =
   # Indicador de que alguna llamada por AJAX está en progreso
   ajaxInProgress: false
 
-# Funciones de autocompletado
-window.AutoComplete =
-  observeAll: ->
-    $('input.autocomplete_field:not([data-observed])').each ->
-      input = $(this)
-      
-      input.autocomplete
-        source: (request, response)->
-          jQuery.ajax
-            url: input.data('autocompleteUrl')
-            dataType: 'json'
-            data: { q: request.term }
-            success: (data)->
-              response jQuery.map data, (item)->
-                content = $('<div></div>')
-
-                content.append $('<span class="label"></span>').text(item.label)
-
-                if item.informal
-                  content.append(
-                    $('<span class="informal"></span>').text(item.informal)
-                  )
-
-                { label: content.html(), value: item.label, item: item }
-        type: 'get'
-        select: (event, ui)->
-          selected = ui.item
-          
-          input.val(selected.value)
-          input.data('item', selected.item)
-          input.next('input.autocomplete_id').val(selected.item.id)
-          
-          input.trigger 'autocomplete:update', input
-          
-          false
-        open: -> $('.ui-menu').css('width', input.width())
-      
-      input.data('autocomplete')._renderItem = (ul, item)->
-        $('<li></li>').data('item.autocomplete', item).append(
-          $('<a></a>').html(item.label)
-        ).appendTo(ul)
-    .data('observed', true)
-
 # Manejadores de eventos
 window.EventHandler =
   # Agrega un ítem anidado
@@ -73,7 +30,7 @@ window.EventHandler =
   removeItem: (e)->
     target = e.parents(e.data('target'))
 
-    Helper.remove target, -> target.trigger('item:removed', target)
+    Helper.remove target, -> $(document).trigger('item.removed', target)
   
   toggleMenu: (e)->
     target = $(e.data('target'))
@@ -193,8 +150,6 @@ jQuery ($)->
   # cambiar de página
   $(window).bind 'beforeunload', ->
     Messages.ajaxInProgressWarning if State.ajaxInProgress
-
-  AutoComplete.observeAll()
 
 # Lograr que la función click() se comporte de la misma manera que un click
 if !HTMLAnchorElement.prototype.click

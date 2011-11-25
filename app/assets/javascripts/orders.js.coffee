@@ -45,19 +45,20 @@ jQuery ($)->
         $(this).parents('.order_line').find('.dynamic_details').hide().html(data)
       )
 
-    $(document).on 'item:removed', '.order_line', ->
-      $(this).data('excludeFromTotal', true).find(
-        '.page_modifier:first'
-      ).trigger('ph:page_modification')
+    $(document).on 'item.removed', (event, element)->
+      if $(element).hasClass('order_line')
+        $(element).data('excludeFromTotal', true).find(
+          '.page_modifier:first'
+        ).trigger('ph.page_modification')
 
-      Order.updateTotalPrice()
+        Order.updateTotalPrice()
 
     Jobs.listenTwoSidedChanges()
 
     $(document).on 'change keyup', '.price_modifier', ->
       Order.updateOrderLinePrice($(this).parents('.order_line'))
 
-    $(document).on 'change keyup ph:page_modification', '.page_modifier', ->
+    $(document).on 'change keyup ph.page_modification', '.page_modifier', ->
       totalPages = 0
 
       $('.order_line').each ->

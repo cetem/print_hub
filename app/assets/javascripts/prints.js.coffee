@@ -87,16 +87,17 @@ window.Print =
 
 jQuery ($)->
   if $('#ph_prints').length > 0
-    $(document).on 'item:removed', '.print_job', ->
-      $(this).data('excludeFromTotal', true).find(
-        '.page_modifier:first'
-      ).trigger('ph:page_modification')
+    $(document).on 'item.removed', (event, element)->
+      if $(element).hasClass('print_job')
+        $(element).data('excludeFromTotal', true).find(
+          '.page_modifier:first'
+        ).trigger('ph.page_modification')
 
-      Print.updateTotalPrice()
-
-    $(document).on 'item:removed', '.article_line', ->
-      $(this).data('excludeFromTotal', true)
-      Print.updateTotalPrice()
+        Print.updateTotalPrice()
+      else if $(element).hasClass('article_line')
+        $(element).data('excludeFromTotal', true)
+        
+        Print.updateTotalPrice()
 
     $(document).on 'autocomplete:update', 'input.autocomplete_field', ->
       item = $(this).data('item')
@@ -115,7 +116,7 @@ jQuery ($)->
         printJob.find('.dynamic_details').text('')
         printJob.find('input[name$="[range]"]').val('').data(
           'rangePages', pages
-        ).trigger('ph:page_modification')
+        ).trigger('ph.page_modification')
           
         if stock > 0
           printJobStockDetails.data('stock', stock).show()
@@ -209,7 +210,7 @@ jQuery ($)->
       else
         printJobStockDetails.hide()
 
-    $(document).on 'change keyup ph:page_modification', '.page_modifier', ->
+    $(document).on 'change keyup ph.page_modification', '.page_modifier', (e)->
       totalPages = 0
 
       $('.print_job').each (i, pj)->
@@ -221,9 +222,7 @@ jQuery ($)->
         totalPages += (copies || 0) * (rangePages || 0)
 
       $('#total_pages').val(totalPages)
-
-      $('.print_job').each (i, pj)->
-        Print.updatePrintJobPrice($(pj))
+      $('.print_job').each (i, pj)-> Print.updatePrintJobPrice($(pj))
 
     $(document).on 'change keyup', '.price_modifier', ->
       element = $(this)
