@@ -33,7 +33,7 @@ window.Order =
     olPrice = (copies * (pricePerCopy * evenRange + rest)) || 0
     money = orderLine.find('span.money')
 
-    orderLine.data('price', olPrice.toFixed(3))
+    orderLine.data 'price', olPrice.toFixed(3)
     money.html(money.html().replace(/(\d+.)+\d+/, olPrice.toFixed(3)))
 
     Order.updateTotalPrice()
@@ -47,16 +47,15 @@ jQuery ($)->
 
     $(document).on 'item.removed', (event, element)->
       if $(element).hasClass('order_line')
-        $(element).data('excludeFromTotal', true).find(
-          '.page_modifier:first'
-        ).trigger('ph.page_modification')
+        $(element).attr('data-exclude-from-total', '1')
+        .find('.page_modifier:first').trigger('ph.page_modification')
 
         Order.updateTotalPrice()
 
     Jobs.listenTwoSidedChanges()
 
     $(document).on 'change keyup', '.price_modifier', ->
-      Order.updateOrderLinePrice($(this).parents('.order_line'))
+      Order.updateOrderLinePrice $(this).parents('.order_line')
 
     $(document).on 'change keyup ph.page_modification', '.page_modifier', ->
       totalPages = 0

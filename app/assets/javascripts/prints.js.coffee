@@ -89,13 +89,13 @@ jQuery ($)->
   if $('#ph_prints').length > 0
     $(document).on 'item.removed', (event, element)->
       if $(element).hasClass('print_job')
-        $(element).data('excludeFromTotal', true).find(
+        $(element).attr('data-exclude-from-total', '1').find(
           '.page_modifier:first'
         ).trigger('ph.page_modification')
 
         Print.updateTotalPrice()
       else if $(element).hasClass('article_line')
-        $(element).data('excludeFromTotal', true)
+        $(element).attr('data-exclude-from-total', '1')
         
         Print.updateTotalPrice()
 

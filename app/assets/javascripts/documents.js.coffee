@@ -9,12 +9,10 @@ jQuery ->
       $(this).next('.barcode_container').stop(true, true).slideUp()
       
       if !/^\s*$/.test($('#document_code').val() || '')
-        $(this).attr(
-          'href',
-          $(this).attr('href').replace(
-            /[^/]*\/barcode/, $('#document_code').val() + '/barcode'
-          )
-        )
+        newHref = $(this).attr('href')
+        .replace(/[^/]*\/barcode/, $('#document_code').val() + '/barcode')
+        
+        $(this).attr 'href', newHref
     
     $(document).on 'ajax:success', 'a.show_barcode', (xhr, data)->
       $(this).next('.barcode_container').html(data).stop(true, true).slideDown()

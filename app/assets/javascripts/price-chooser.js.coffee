@@ -1,11 +1,11 @@
 window.PriceChooser =
   choose: (setting, copies)->
     rules = PriceChooser.parse(setting + '')
-    price = 0
+    price = 0.0
     
     $.each rules, (i, e)->
       useThis = eval(e[0].replace('%{c}', copies))
-      price = parseFloat(e[1]) || 0 if useThis
+      price = parseFloat(e[1]) || 0.0 if useThis
     
     price
 

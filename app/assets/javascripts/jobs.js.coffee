@@ -19,7 +19,7 @@ window.Jobs =
         validRanges = validRanges && (!maxPage || maxPage < n1)
 
         maxPage = n2 || n1
-        rangePages += n2 ? n2 + 1 - n1 : 1
+        rangePages += if n2 then n2 + 1 - n1 else 1
 
       if (/^\s*$/.test(element.val()) || validRanges) && (!pages || !maxPage || pages >= maxPage)
         element.removeClass('field_with_errors')
@@ -37,9 +37,9 @@ window.Jobs =
   
   updatePricePerCopy: ->
     $('input[name$="[price_per_copy]"]').each (i, ppc)->
-      twoSidedElement = $(ppc).parents('.nested_item:first').find(
-        'input[name$="[two_sided]"].price_modifier'
-      )
+      twoSidedElement = $(ppc).parents('.nested_item:first')
+      .find('input[name$="[two_sided]"].price_modifier')
+      
       if twoSidedElement.is(':checked')
         setting = $('#total_pages').data('pricePerTwoSided')
       else
