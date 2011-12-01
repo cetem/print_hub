@@ -1,4 +1,8 @@
 jQuery ($)->
+  $(document).on 'change', 'input.autocomplete_field', ->
+    if /^\s*$/.test($(this).val())
+      $(this).next('input.autocomplete_id:first').val('')
+      
   $(document).on 'focus', 'input.autocomplete_field:not([data-observed])', ->
     input = $(this)
 

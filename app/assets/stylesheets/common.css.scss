@@ -128,6 +128,8 @@ div#alert, div#notice, div#login_error {
 
 div#error_explanation {
   width: 100%;
+  min-width: 600px;
+  max-width: 1250px;
   padding: .5em;
   padding-bottom: 0em;
   margin-bottom: 1.5em;
@@ -155,6 +157,7 @@ div#error_explanation {
 
   ul {
     margin: 1em 1em 1em 3em;
+    line-height: 1.5em;
     
     li {
       list-style: square;

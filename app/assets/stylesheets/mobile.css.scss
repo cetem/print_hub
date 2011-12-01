@@ -47,9 +47,19 @@
       }
     }
   }
+
+  #ph_password_resets, #ph_customers {
+    #main_container {
+      margin: 2em auto !important;
+    }
+  }
   
   div.actions {
     margin-left: 1em;
+    
+    a {
+      font-size: .8em;
+    }
   }
   
   div.field {
