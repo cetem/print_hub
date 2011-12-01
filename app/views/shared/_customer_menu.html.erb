@@ -1,4 +1,9 @@
-<nav id="menu_links">
+<p class="help_link_container only_mobile hide_when_show_mobile_menu">
+  <a id="show_menu" class="toggle_display" href="#menu_links">
+    <strong><%= t('menu.actions.show') %></strong>
+  </a>
+</p>
+<nav id="menu_links" class="hidden_for_mobile">
   <ul>
     <%= content_tag(:li, link_to(t('customer_menu.catalog'), catalog_path),
       class: ('selected' if controller_name == 'catalog')) %>
@@ -6,9 +11,11 @@
       class: ('selected' if controller_name == 'orders' && ['new', 'create'].exclude?(action_name))) %>
     <%= content_tag(:li, link_to(t('view.catalog.new_order'), new_order_path),
       class: "strong #{('selected' if controller_name == 'orders' && ['new', 'create'].include?(action_name))}") %>
+    <%= content_tag(:li, link_to(t('menu.actions.hide'), '#menu_links', id: 'hide_menu', class: 'toggle_display'),
+      class: 'only_mobile') %>
   </ul>
 </nav>
-<nav id="user_actions">
+<nav id="user_actions" class="hide_when_show_mobile_menu">
   <div id="user" data-credit="<%= current_customer.free_credit_minus_pendings %>">
     <%= current_customer.email %>
   </div>

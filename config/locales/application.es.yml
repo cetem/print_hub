@@ -225,7 +225,9 @@
 
   menu:
     actions:
+      hide: 'Ocultar'
       logout: 'Salir'
+      show: 'Menú'
     admin: 'Administración'
     articles: 'Artículos'
     bonuses: 'Bonificaciones'

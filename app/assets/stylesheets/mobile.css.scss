@@ -53,6 +53,32 @@
       margin: 2em auto !important;
     }
   }
+
+  #user_actions {
+    top: .5em !important;
+    right: .25em !important;
+
+    #user {
+      font-size: .8em;
+    }
+  }
+
+  a.add_link, a.remove_link {
+    font-size: 1.25em;
+  }
+
+  body {
+    padding: 0em .5em;
+  }
+
+  div#main_menu {
+    padding: .1em 0em;
+    min-width: 200px;
+  }
+
+  div#search {
+    margin: -1em 0em .5em 0em;
+  }
   
   div.actions {
     margin-left: 1em;
@@ -70,6 +96,39 @@
     }
   }
 
+  nav#menu_links {
+    margin: 0em;
+    
+    ul {
+      font-size: 1.5em;
+      float: none;
+      background: #fff;
+
+      li {
+        float: none;
+        display: block;
+
+        a {
+          display: block;
+          clear: both;
+          margin: 0em auto;
+          width: 90%;
+          padding: 1.5em .5em;
+          
+          &:hover {
+            text-shadow: inherit;
+            color: inherit;
+            background: inherit;
+          }
+        }
+      }
+    }
+  }
+
+  nav.links {
+    margin: .25em 0em;
+  }
+
   p.help_link_container {
     margin: .5em 0em .5em 1em;
   }
@@ -77,6 +136,16 @@
   section.explanation {
     padding: 1em;
     border: none;
+  }
+
+  table.list {
+    td {
+      padding: .75em .5em;
+    }
+  }
+
+  .expendable {
+    display: none;
   }
 
   .only_mobile {
