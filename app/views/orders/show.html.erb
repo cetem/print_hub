@@ -4,7 +4,7 @@
     <h3>
       <%= l @order.scheduled_at, format: :long if @order.scheduled_at %>
     </h3>
-    <p class="not_printable">
+    <p class="not_printable expendable">
       <%= link_to_function t('view.orders.print'), 'window.print()' %>
     </p>
   </header>
@@ -25,8 +25,8 @@
           <tr>
             <th><%= OrderLine.human_attribute_name :document_id %></th>
             <th><%= OrderLine.human_attribute_name :copies %></th>
-            <th><%= Document.human_attribute_name :pages %></th>
-            <th><%= OrderLine.human_attribute_name :price_per_copy %></th>
+            <th class="expendable"><%= Document.human_attribute_name :pages %></th>
+            <th class="expendable"><%= OrderLine.human_attribute_name :price_per_copy %></th>
             <th><%= OrderLine.human_attribute_name :two_sided %></th>
           </tr>
         </thead>
@@ -35,8 +35,8 @@
             <tr>
               <td><%= order_line.document %></td>
               <td><%= order_line.copies %></td>
-              <td><%= order_line.document.try(:pages) %></td>
-              <td><%= number_to_currency order_line.price_per_copy %></td>
+              <td class="expendable"><%= order_line.document.try(:pages) %></td>
+              <td class="expendable"><%= number_to_currency order_line.price_per_copy %></td>
               <td><%= t(order_line.two_sided ? :yes : :no, scope: :label) %></td>
             </tr>
           <% end %>

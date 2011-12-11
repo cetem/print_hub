@@ -13,8 +13,8 @@
     <div id="order_lines_headers" class="headers">
       <h3><%= OrderLine.human_attribute_name :document_id %></h3>
       <h3><%= OrderLine.human_attribute_name :copies %></h3>
-      <h3><%= Document.human_attribute_name :pages %></h3>
-      <h3><%= OrderLine.human_attribute_name :price_per_copy %></h3>
+      <h3 class="expendable"><%= Document.human_attribute_name :pages %></h3>
+      <h3 class="expendable"><%= OrderLine.human_attribute_name :price_per_copy %></h3>
       <h3><%= OrderLine.human_attribute_name :two_sided %></h3>
       <br class="break" />
     </div>

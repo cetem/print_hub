@@ -6,21 +6,21 @@
       <%= f.hidden_field :document_id %>
     </div>
     <div class="nested_item_field">
-      <%= f.text_field :copies, :maxlength => 5,
-        :class => 'price_modifier page_modifier', :autocomplete => :off %>
+      <%= f.text_field :copies, maxlength: 5, autocomplete: 'off',
+        class: 'price_modifier page_modifier' %>
     </div>
-    <div class="nested_item_field">
+    <div class="nested_item_field expendable">
       <%= text_field_tag "document[#{f.object.document_id}][pages]",
         f.object.document.try(:pages),
-        :id => "order_line_pages_#{f.object.document_id}",
-        :class => 'price_modifier page_modifier', :disabled => true %>
+        id: "order_line_pages_#{f.object.document_id}",
+        class: 'price_modifier page_modifier', disabled: true %>
+    </div>
+    <div class="nested_item_field expendable">
+      <%= f.text_field :price_per_copy, disabled: true, class: 'price_modifier',
+          autocomplete: 'off' %>
     </div>
     <div class="nested_item_field">
-      <%= f.text_field :price_per_copy, :disabled => true,
-        :class => :price_modifier, :autocomplete => :off %>
-    </div>
-    <div class="nested_item_field">
-      <%= f.check_box :two_sided, :class => :price_modifier %>
+      <%= f.check_box :two_sided, class: 'price_modifier' %>
     </div>
     <div class="nested_item_actions">
       <span class="money"><%= number_to_currency f.object.price %></span>
@@ -28,9 +28,9 @@
         <%= link_to_remove_nested_item(f) %>
       <% end %>
       <%= link_to '...', show_catalog_path(f.object.document),
-        :class => 'details_link action_link', :remote => true,
-        :title => t(:'view.prints.document_details'),
-        :style => ('display: none;' unless f.object.document) %>
+        class: 'details_link action_link expendable', remote: true,
+        title: t('view.prints.document_details'),
+        style: ('display: none;' unless f.object.document) %>
       <%= f.hidden_field :lock_version %>
     </div>
     <div class="dynamic_details" id="<%= "document_details_#{id}" %>"></div>

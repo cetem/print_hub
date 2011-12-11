@@ -8,12 +8,12 @@ jQuery ($)->
 
     input.autocomplete
       source: (request, response)->
-        jQuery.ajax
+        $.ajax
           url: input.data('autocompleteUrl')
           dataType: 'json'
           data: { q: request.term }
           success: (data)->
-            response jQuery.map data, (item)->
+            response $.map data, (item)->
               content = $('<div></div>')
 
               content.append $('<span class="label"></span>').text(item.label)

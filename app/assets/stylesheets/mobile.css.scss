@@ -54,6 +54,12 @@
     }
   }
 
+  #total {
+    span.money {
+      font-size: 1em;
+    }
+  }
+
   #user_actions {
     top: .5em !important;
     right: .25em !important;
@@ -81,16 +87,12 @@
   }
   
   div.actions {
-    margin-left: 1em;
-    
     a {
       font-size: .8em;
     }
   }
   
   div.field {
-    margin-left: 1em;
-    
     input[type="text"], input[type="password"], select, textarea, input.file {
       width: 90%;
     }
@@ -138,6 +140,10 @@
     border: none;
   }
 
+  span.money {
+    font-size: .5em;
+  }
+
   table.list {
     td {
       padding: .75em .5em;
@@ -155,4 +161,11 @@
   .only_mobile_inline {
     display: inline;
   }
+
+  @include nested-column(order_lines_headers, order_line, 1, 35%);
+  @include nested-column(order_lines_headers, order_line, 2, 10%);
+  @include nested-column(order_lines_headers, order_line, 3, 0%);
+  @include nested-column(order_lines_headers, order_line, 4, 0%);
+  @include nested-column(order_lines_headers, order_line, 5, 15%);
+  @include nested-column(order_lines_headers, order_line, 7, 35%);
 }
