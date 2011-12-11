@@ -3,7 +3,7 @@
     <p>
       <%= t('view.customers.registration_text') %>
       <%= link_to t('view.customers.register'), new_customer_path,
-        :class => 'large_link' %>
+        class: 'large_link' %>
     </p>
   </nav>
   <%= render 'organization_header' %>
@@ -36,8 +36,7 @@
   <div id="login_error">
     <p><%= @customer_session.errors.full_messages.join('; ') %></p>
     <div class="close"><%= link_to_function 'X',
-      "$('#login_error').slideUp()", :title => t(:'label.close') %></div>
+      "$('#login_error').slideUp()", title: t('label.close') %></div>
   </div>
 <% end %>
-
-<%= render 'unsupported_warning' if request.env['HTTP_USER_AGENT'] =~ /msie/i %>
+<%= render 'unsupported_warning' if explorer? %>

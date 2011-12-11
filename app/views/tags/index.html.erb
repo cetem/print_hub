@@ -16,7 +16,7 @@
 
   <tbody>
     <% @tags.each do |tag| %>
-      <% classes = [cycle(:even, :odd), tag.private ? 'private' : 'public'] %>
+      <% classes = [cycle('even', 'odd'), tag.private ? 'private' : 'public'] %>
       <tr class="<%= classes.join(' ') %>">
         <td><%= link_to tag.name, tags_path(parent: tag) %> (<%= show_link_to_tag_documents(tag) %>)</td>
         <td><%= link_to t('label.show'), tag %></td>

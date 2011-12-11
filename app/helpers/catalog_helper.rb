@@ -80,4 +80,33 @@ module CatalogHelper
     
     raw content_tag(:div, raw(out), class: 'nowrap')
   end
+  
+  def example_search_image
+    common_options = {
+      alt: t('view.catalog.images.example_search'),
+      title: t('view.catalog.images.example_search')
+    }
+    
+    if mobile?
+      image_tag 'help/example_search_mobile.gif',
+        common_options.merge(size: '280x29')
+    else
+      image_tag 'help/example_search.gif', common_options.merge(size: '366x31')
+    end
+  end
+  
+  def example_document_grid_image
+    common_options = {
+      alt: t('view.catalog.images.example_document_grid'),
+      title: t('view.catalog.images.example_document_grid')
+    }
+    
+    if mobile?
+      image_tag 'help/example_document_grid_mobile.gif',
+        common_options.merge(size: '280x72')
+    else
+      image_tag 'help/example_document_grid.gif',
+        common_options.merge(size: '600x44')
+    end
+  end
 end

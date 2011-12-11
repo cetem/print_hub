@@ -272,11 +272,14 @@
       show_title: 'Detalle de documento'
       show: 'Ver documento'
       new_order: 'Revisar pedido'
+      add_to_order:
+        title: 'Marca este documento para que sea INCLUIDO en el pedido'
+      images:
+        example_search: "Buscar, por ejemplo, 'física 2011'"
+        example_document_grid: 'Seleccionar documentos con el signo +'
       more_tags:
         one: 'Y una etiqueta más...'
         other: 'Y %{count} etiquetas más...'
-      add_to_order:
-        title: 'Marca este documento para que sea INCLUIDO en el pedido'
       remove_from_order:
         title: 'Elimina la marca de este documento para que NO sea incluido en el pedido'
     customers:

@@ -41,4 +41,4 @@ jQuery ($)->
       $('<li></li>').data('item.autocomplete', item).append(
         $('<a></a>').html(item.label)
       ).appendTo(ul)
-  .data('observed', true)
+  .attr('data-observed', true)

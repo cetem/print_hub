@@ -141,4 +141,12 @@ module ApplicationHelper
       { class: css_class }
     )
   end
+  
+  def explorer?
+    request.env['HTTP_USER_AGENT'] =~ /msie/i
+  end
+  
+  def mobile?
+    request.env['HTTP_USER_AGENT'] =~ /mobile/i
+  end
 end

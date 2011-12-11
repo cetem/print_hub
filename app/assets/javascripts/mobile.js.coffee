@@ -7,9 +7,10 @@ jQuery ->
     
     $(document).on 'click', '.toggle_display', ->
       id = $(this).attr 'href'
+      wasVisible = $(id).is ':visible'
       
       $(id).toggle()
-      window.location.hash = id if $(id).is ':visible'
+      window.location.hash = if wasVisible then '' else id
     
     # Ocultar la barra de direcciones
     window.scrollTo(0, 1).delay 1000

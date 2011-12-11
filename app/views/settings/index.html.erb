@@ -9,7 +9,7 @@
 
   <tbody>
     <% @settings.each do |setting| %>
-      <tr class="<%= cycle(:even, :odd) %>">
+      <tr class="<%= cycle('even', 'odd') %>">
         <td><%= setting.name %></td>
         <td><%= setting.value %></td>
         <td><%= link_to t(:'label.show'), setting %></td>

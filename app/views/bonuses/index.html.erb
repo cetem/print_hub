@@ -16,7 +16,7 @@
 
   <tbody>
     <% @bonuses.each do |bonus| %>
-      <tr class="<%= cycle(:even, :odd) %>">
+      <tr class="<%= cycle('even', 'odd') %>">
         <td><%= bonus.customer %></td>
         <td><%= number_to_currency bonus.amount %></td>
         <td><%= number_to_currency bonus.remaining %></td>
