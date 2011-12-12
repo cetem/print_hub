@@ -42,6 +42,8 @@ module PrintHubApp
     # Enable the asset pipeline
     config.assets.enabled = true
     
+    config.assets.precompile += ['mobile.css']
+    
     # Enable Memcache store
     config.cache_store = :mem_cache_store, 'localhost', {
       namespace: "print_hub_#{Rails.env}".downcase

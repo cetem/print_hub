@@ -7,9 +7,6 @@
   <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
   <![endif]-->
   <%= stylesheet_link_tag 'application', media: 'screen' %>
-  <!-- Solo para móbiles, se precarga para que compilen los assets >
-  <%= stylesheet_link_tag 'mobile', media: 'only screen' %>
-  <! -->
   <%= stylesheet_link_tag 'print', media: 'print' if @can_print %>
   <%= javascript_include_tag 'application' %>
   <%= favicon_link_tag %>
