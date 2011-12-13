@@ -19,7 +19,7 @@ class Tag < ApplicationModel
   validates :name, length: { maximum: 255 }, allow_nil: true, allow_blank: true
 
   # Relaciones
-  has_and_belongs_to_many :documents, autosave: true, order: 'name ASC'
+  has_and_belongs_to_many :documents, autosave: true
 
   def to_s
     ([self] + self.ancestors).map(&:name).reverse.join(' | ')
