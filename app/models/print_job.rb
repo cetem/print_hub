@@ -47,7 +47,7 @@ class PrintJob < ApplicationModel
 
   def initialize(attributes = nil, options = {})
     super(attributes, options)
-
+    
     self.two_sided = true if self.two_sided.nil?
     self.copies ||= 1
     self.printed_copies ||= 0

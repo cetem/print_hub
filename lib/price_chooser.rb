@@ -9,18 +9,18 @@ class PriceChooser
   
   def price
     BigDecimal.new(
-      parse.select {|cond, price| eval(cond % { c: @copies }) }.last[1]
+      parse.select { |cond, price| eval(cond % { c: @copies }) }.last[1]
     )
   end
   
   def self.choose(*args)
     options = args.extract_options!
-    copies = options[:copies] || 0
+    total_copies = options[:copies] || 0
     
     if options[:one_sided]
-      self.new(Setting.price_per_one_sided_copy, copies).price
+      self.new(Setting.price_per_one_sided_copy, total_copies).price
     else
-      self.new(Setting.price_per_two_sided_copy, copies).price
+      self.new(Setting.price_per_two_sided_copy, total_copies).price
     end
   end
   

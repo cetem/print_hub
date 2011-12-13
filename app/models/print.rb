@@ -182,7 +182,7 @@ class Print < ApplicationModel
   end
   
   def total_pages
-    self.current_print_jobs.sum { |pj| pj.printed_copies * pj.range_pages }
+    self.current_print_jobs.sum { |pj| pj.copies * pj.range_pages }
   end
   
   def reject_print_job_attributes?(attributes)
