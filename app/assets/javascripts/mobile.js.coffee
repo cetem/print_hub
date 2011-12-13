@@ -1,5 +1,5 @@
 jQuery ($)->
-  if navigator.userAgent.match(/mobile/i)
+  if navigator.userAgent.match(/mobile|mini/i) && window.screen.width <= 480
     $('.hidden_for_mobile').hide()
     
     $('#show_menu').on 'click', -> $('.hide_when_show_mobile_menu').hide()
