@@ -147,6 +147,6 @@ module ApplicationHelper
   end
   
   def mobile?
-    request.env['HTTP_USER_AGENT'] =~ /mobile|mini/i
+    request.env['HTTP_USER_AGENT'] =~ /mobi|mini|fennec/i
   end
 end
