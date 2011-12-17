@@ -1,11 +1,11 @@
 <%= form_for(@print) do |f| %>
   <% if @print.new_record? %>
-    <%= content_for :js_extra do -%>
+    <%= content_for :js_extra do %>
       <%= raw "var print_job='#{generate_template(f, :print_jobs,
         locals: { disabled: false })}';" %>
       <%= raw "var article_line='#{generate_template(f, :article_lines,
         locals: { disabled: false })}';" %>
-    <% end -%>
+    <% end %>
   <% end %>
   <%= show_error_messages(@print) %>
 

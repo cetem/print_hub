@@ -1,8 +1,8 @@
 <%= form_for(@document, html: { multipart: true }) do |f| %>
-  <%= content_for :js_extra do -%>
+  <%= content_for :js_extra do %>
     <%= raw "var tag='#{escape_javascript render(partial: 'tag',
       locals: {is_dynamic: true, f: f, tag: nil})}';" %>
-  <% end -%>
+  <% end %>
   <%= show_error_messages(@document) %>
   <div class="field column_right">
     <%= document_link_to_barcode(@document.code.blank? ? 0 : @document.code) %>

@@ -1,8 +1,8 @@
 <% message = link_to(
   '+',
   add_to_order_catalog_path(@document),
-  :title => t('view.catalog.add_to_order.title'),
-  :remote => true, :method => :post, :class => 'add_link add_to_order'
+  title: t('view.catalog.add_to_order.title'),
+  remote: true, method: :post, class: 'add_link add_to_order'
 ) %>
 <% id = "#document_#{@document.id}_to_order" %>
 $('<%= id %>').html('<%= message %>');
