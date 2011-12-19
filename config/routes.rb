@@ -44,7 +44,7 @@ PrintHubApp::Application.routes.draw do
     root to: 'customer_sessions#new'
   end
   
-  constraints subdomain: 'xx' do
+  constraints subdomain: '' do
     match 'printer_stats(.:format)' => 'stats#printers', as: 'printer_stats',
       via: :get
     match 'user_stats(.:format)' => 'stats#users', as: 'user_stats',
