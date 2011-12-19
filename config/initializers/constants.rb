@@ -1,7 +1,7 @@
 # Cantidad de líneas por página
 APP_LINES_PER_PAGE = 16
 # Subdominio donde ingresan los clientes
-CUSTOMER_SUBDOMAIN = 'fotocopia'
+CUSTOMER_SUBDOMAIN = nil
 # Umbral crédito / precio para determinar si se imprime o no un pedido
 CREDIT_THRESHOLD = 0.7
 # Dominio público
