@@ -26,6 +26,7 @@ class Customer < ApplicationModel
 
   # Callbacks
   before_create :build_monthly_bonus, :send_welcome_email!
+  before_update :must_be_reactivate?
   before_destroy :has_no_orders?
   
   # Restricciones
@@ -110,6 +111,13 @@ class Customer < ApplicationModel
   
   def send_welcome_email!
     Notifications.signup(self).deliver
+  end
+  
+  def must_be_reactivate?
+    if self.email_changed?
+      self.enable = false
+      Notifications.reactivation(self).deliver
+    end
   end
   
   def deliver_password_reset_instructions!

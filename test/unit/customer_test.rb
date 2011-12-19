@@ -89,7 +89,10 @@ class CustomerTest < ActiveSupport::TestCase
 
   # Prueba de actualización de un cliente
   test 'update' do
-    assert_no_difference ['Customer.count', 'Bonus.count'] do
+    invariable_counts = [
+      'ActionMailer::Base.deliveries.size', 'Customer.count', 'Bonus.count'
+    ]
+    assert_no_difference invariable_counts do
       assert @customer.update_attributes(
         name: 'Updated name'
       ), @customer.errors.full_messages.join('; ')
@@ -200,6 +203,13 @@ class CustomerTest < ActiveSupport::TestCase
     assert !customer.enable
     assert customer.activate!
     assert customer.reload.enable
+  end
+  
+  test 'reactivation' do
+    # Must sent the reactivation email if the address change
+    assert_difference 'ActionMailer::Base.deliveries.size' do
+      assert @customer.update_attributes(email: 'new_email@new.com')
+    end
   end
   
   test 'deliver password reset instructions' do

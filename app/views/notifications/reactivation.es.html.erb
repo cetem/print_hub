@@ -1,0 +1,22 @@
+<% activation_url = activate_customer_url(token: @customer.perishable_token) %>
+<h2>Cambio de correo</h2>
+
+<p>Hola <strong><%= @customer.name %></strong>,</p>
+
+<p>
+  Cambiaste tu dirección de correo y necesitamos <strong>re-confirmarla</strong>
+  (Uff), <strong>hacé clic</strong> en el siguiete enlace y listo:<br />
+  <%= link_to activation_url, activation_url %>
+</p>
+
+<%= render 'valid_until', date: TOKEN_VALIDITY.from_now %>
+
+<br />
+<br />
+
+<footer>
+  <p>
+    Si tenés problemas con el enlace anterior probá copiándolo en la barra de
+    direcciones de tu navegador.
+  </p>
+</footer>

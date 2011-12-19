@@ -251,10 +251,12 @@
     must_be_logged_out: 'Debe salir para poder ver el contenido requerido'
     
   notifications:
-    signup:
-      subject: 'Registro'
     forgot_password:
       subject: 'Restablecer contraseña'
+    reactivation:
+      subject: 'Re-activar cuenta'
+    signup:
+      subject: 'Registro'
       
   view:
     articles:

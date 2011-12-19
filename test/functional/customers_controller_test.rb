@@ -145,7 +145,6 @@ class CustomersControllerTest < ActionController::TestCase
           name: 'Updated name',
           lastname: 'Updated lastname',
           identification: '111x',
-          email: 'updated_email@printhub.com',
           free_monthly_bonus: '0.0',
           bonus_without_expiration: '0',
           bonuses_attributes: {
@@ -209,7 +208,6 @@ class CustomersControllerTest < ActionController::TestCase
           name: 'Updated name',
           lastname: 'Updated lastname',
           identification: '111x',
-          email: 'updated_email@printhub.com',
           bonuses_attributes: {
             new_1: {
               amount: '100.0',
@@ -232,8 +230,7 @@ class CustomersControllerTest < ActionController::TestCase
       put :update_profile, id: @customer.to_param, customer: {
         name: 'Updated name',
         lastname: 'Updated lastname',
-        identification: '111x',
-        email: 'updated_email@printhub.com'
+        identification: '111x'
       }
     end
 

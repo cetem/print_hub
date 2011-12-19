@@ -9,6 +9,12 @@ class Notifications < ActionMailer::Base
     
     mail to: customer.email
   end
+  
+  def reactivation(customer)
+    @customer = customer
+    
+    mail to: customer.email
+  end
 
   def forgot_password(customer)
     @customer = customer

@@ -1,0 +1,11 @@
+                              Cambio de correo
+================================================================================
+
+Hola <%= @customer.name %>,
+
+Cambiaste tu dirección de correo y necesitamos re-confirmarla (Uff), ingresá a
+la siguiente dirección y listo:
+
+<%= activate_customer_url(token: @customer.perishable_token) %>
+
+<%= render 'valid_until', date: TOKEN_VALIDITY.from_now %>
