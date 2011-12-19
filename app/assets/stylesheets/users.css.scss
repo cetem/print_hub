@@ -48,6 +48,10 @@ nav#user_actions {
   > ul, > ul > li {
     display: inline;
     list-style: none;
-    margin: 0em .5em;
+    padding: 0em .5em;
+  }
+
+  > ul > li {
+    border-left: 1px solid #999;
   }
 }

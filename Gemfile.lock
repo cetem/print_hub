@@ -70,7 +70,7 @@ GEM
     foreigner (1.1.1)
       activerecord (>= 3.0.0)
     gem_plugin (0.2.3)
-    highline (1.6.8)
+    highline (1.6.9)
     hike (1.2.1)
     i18n (0.6.0)
     jquery-rails (1.0.19)

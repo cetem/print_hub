@@ -125,6 +125,33 @@ class CustomersController < ApplicationController
     end
   end
   
+  # GET /customers/1/edit_profile
+  def edit_profile
+    @title = t('view.customers.edit_title')
+    @customer = current_customer
+  end
+  
+  # PUT /customers/1/update_profile
+  # PUT /customers/1/update_profile.xml
+  def update_profile
+    @title = t('view.customers.edit_title')
+    @customer = current_customer
+
+    respond_to do |format|
+      if @customer.update_attributes(params[:customer])
+        format.html { redirect_to(edit_profile_customer_url(@customer), notice: t('view.customers.profile_correctly_updated')) }
+        format.xml  { head :ok }
+      else
+        format.html { render action: 'edit_profile' }
+        format.xml  { render xml: @customer.errors, status: :unprocessable_entity }
+      end
+    end
+
+  rescue ActiveRecord::StaleObjectError
+    flash.alert = t('view.customers.stale_object_error')
+    redirect_to edit_profile_customer_url(@customer)
+  end
+  
   # GET /customers/activate/token
   def activate
     @title = t('view.customers.activation_title')
