@@ -5,8 +5,13 @@ Hola <%= @customer.name %>,
 
 Nos alegra tenerte con nosotros...
 
+<% if @customer.enable %>
+Tu cuenta ya está lista para usarse, entrá en <%= root_url %> y hacé tus
+pedidos.
+<% else %>
 Activá tu cuenta desde la siguiente dirección para poder ingresar:
 
-<%= activate_customer_url(:token => @customer.perishable_token) %>
+<%= activate_customer_url(token: @customer.perishable_token) %>
 
 <%= render 'valid_until', date: TOKEN_VALIDITY.from_now %>
+<% end %>

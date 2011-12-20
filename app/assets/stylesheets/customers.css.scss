@@ -37,6 +37,20 @@
   }
 }
 
+#customer_profile {
+  #public_customer_form {
+    float: left;
+    margin-right: 2em;
+  }
+
+  section.explanation {
+    float: left;
+    margin: 0em;
+    max-width: 450px;
+    text-align: justify;
+  }
+}
+
 #ph_customers {
   .cancelled {
     opacity: .75;

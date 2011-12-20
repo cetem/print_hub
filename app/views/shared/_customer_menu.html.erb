@@ -11,6 +11,8 @@
       class: ('selected' if controller_name == 'orders' && ['new', 'create'].exclude?(action_name))) %>
     <%= content_tag(:li, link_to(t('view.catalog.new_order'), new_order_path),
       class: "strong #{('selected' if controller_name == 'orders' && ['new', 'create'].include?(action_name))}") %>
+    <%= content_tag(:li, link_to( t('customer_menu.profile'), edit_profile_customer_path(current_customer)),
+      class: ('selected' if controller_name == 'customers')) %>
     <%= content_tag(:li, link_to(t('menu.actions.hide'), '#menu_links', id: 'hide_menu', class: 'toggle_display'),
       class: 'only_mobile') %>
   </ul>

@@ -37,13 +37,13 @@ module ApplicationHelper
   #                     en ese caso es :comments)
   # * _user_options_::  Optiones del usuario para "personalizar" la generación de
   #                     HTML.
-  #    :object => objeto asociado
-  #    :partial => partial utilizado para generar el HTML
+  #    object objeto asociado
+  #    partial partial utilizado para generar el HTML
   #    form_builder_local => nombre de la variable que contiene el objeto form
-  #    :locals => Hash con las variables locales que necesita el partial
-  #    :child_index => nombre que se pondrá en el lugar donde se debe reemplazar
+  #    locals Hash con las variables locales que necesita el partial
+  #    child_index nombre que se pondrá en el lugar donde se debe reemplazar
   #                    por el índice adecuado (por defecto NEW_RECORD)
-  #    :is_dynamic => se establece a true si se está generando para luego ser
+  #    is_dynamic se establece a true si se está generando para luego ser
   #                   insertado múltiples veces.
   def generate_html(form_builder, method, user_options = {})
     options = {
@@ -139,6 +139,20 @@ module ApplicationHelper
     link_to(
       title || column.titleize, "#{request.path}?#{query.to_query}",
       { class: css_class, title: request.path.class }
+    )
+  end
+  
+  def image_sprite(image, options = {}) 
+    sprites = {
+      copyleft: {w: 70, h: 40, x: 0, y: 0},
+      solidarity: {w: 70, h: 40, x: 0, y: 56},
+      transformation: {w: 70, h: 40, x: 0, y: 110}
+    }
+    
+    content_tag('span', options[:title],
+      class: "sprite #{options[:class]}",
+      style: "background: url(#{image_path('welcome/sprites.gif')}) no-repeat -#{sprites[image][:x]}px -#{sprites[image][:y]}px; width: #{sprites[image][:w]}px; padding-top: #{sprites[image][:h]}px; #{options[:style]}",
+      title: "#{options[:title]}"
     )
   end
   

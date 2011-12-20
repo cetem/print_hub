@@ -145,7 +145,6 @@ class CustomersControllerTest < ActionController::TestCase
           name: 'Updated name',
           lastname: 'Updated lastname',
           identification: '111x',
-          email: 'updated_email@printhub.com',
           free_monthly_bonus: '0.0',
           bonus_without_expiration: '0',
           bonuses_attributes: {
@@ -178,6 +177,66 @@ class CustomersControllerTest < ActionController::TestCase
     assert_not_nil assigns(:customer)
     assert_select '#error_body', false
     assert_template 'customers/credit_detail'
+  end
+  
+  test 'should get edit profile' do
+    CustomerSession.create(customers(:student))
+    get :edit_profile, id: @customer.to_param
+    assert_response :success
+    assert_not_nil assigns(:customer)
+    assert_select '#error_body', false
+    assert_template 'customers/edit_profile'
+  end
+  
+  test 'should not get alien edit profile' do
+    logged_customer = Customer.find(customers(:teacher).id)
+    
+    CustomerSession.create(logged_customer)
+    get :edit_profile, id: @customer.to_param
+    assert_response :success
+    assert_not_nil assigns(:customer)
+    assert_equal logged_customer.id, assigns(:customer).id
+    assert_select '#error_body', false
+    assert_template 'customers/edit_profile'
+  end
+
+  test 'should update customer profile and avoid create a bonus' do
+    CustomerSession.create(customers(:student))
+    assert_no_difference 'Customer.count' do
+      assert_no_difference 'Bonus.count' do
+        put :update_profile, id: @customer.to_param, customer: {
+          name: 'Updated name',
+          lastname: 'Updated lastname',
+          identification: '111x',
+          bonuses_attributes: {
+            new_1: {
+              amount: '100.0',
+              valid_until: '' # Por siempre
+            }
+          }
+        }
+      end
+    end
+
+    assert_redirected_to edit_profile_customer_url(assigns(:customer))
+    assert_equal 'Updated name', @customer.reload.name
+  end
+  
+  test 'should not update alien customer profile' do
+    logged_customer = Customer.find(customers(:teacher).id)
+    
+    CustomerSession.create(logged_customer)
+    assert_no_difference 'Customer.count' do
+      put :update_profile, id: @customer.to_param, customer: {
+        name: 'Updated name',
+        lastname: 'Updated lastname',
+        identification: '111x'
+      }
+    end
+
+    assert_redirected_to edit_profile_customer_url(assigns(:customer))
+    assert_not_equal 'Updated name', @customer.reload.name
+    assert_equal 'Updated name', logged_customer.reload.name
   end
   
   test 'should activate customer' do

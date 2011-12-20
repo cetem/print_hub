@@ -13,14 +13,20 @@ class Customer < ApplicationModel
   scope :disable, where(enable: false)
   scope :with_monthly_bonus, where('free_monthly_bonus > :zero', zero: 0)
   
-  # Atributos protegidos
-  attr_protected :enable
+  # Atributos permitidos
+  attr_accessible :name, :lastname, :identification, :email, :password,
+    :password_confirmation, :lock_version
+  attr_accessible :name, :lastname, :identification, :email, :password,
+    :password_confirmation, :lock_version, :free_monthly_bonus,
+    :bonus_without_expiration, :enable, :bonuses_attributes,
+    :deposits_attributes, as: :admin
   
   # Alias de atributos
   alias_attribute :informal, :identification
 
   # Callbacks
   before_create :build_monthly_bonus, :send_welcome_email!
+  before_update :must_be_reactivate?
   before_destroy :has_no_orders?
   
   # Restricciones
@@ -33,14 +39,6 @@ class Customer < ApplicationModel
     allow_nil: true, allow_blank: true
   validates :free_monthly_bonus, allow_nil: true, allow_blank: true,
     numericality: {greater_than_or_equal_to: 0}
-  validates_each :free_monthly_bonus do |record, attr, value|
-    # Si no es un usuario de tipo admin este atributo no lo puede tocar =)
-    unless UserSession.find.try(:record).try(:admin)
-      if record.send("#{attr}_changed?") && value.to_f > 0
-        record.errors.add attr, :invalid
-      end
-    end
-  end
 
   # Relaciones
   has_many :orders, inverse_of: :customer, dependent: :destroy,
@@ -57,11 +55,11 @@ class Customer < ApplicationModel
     reject_if: :reject_credits
   accepts_nested_attributes_for :deposits, allow_destroy: true,
     reject_if: :reject_credits
-  
+
   def initialize(attributes = nil, options = {})
     super(attributes, options)
     
-    self.enable = !!UserSession.find.try(:record)
+    self.enable = options[:as] == :admin # TODO: find a better alternative
   end
 
   def to_s
@@ -80,7 +78,7 @@ class Customer < ApplicationModel
   end
   
   def reject_credits(attributes)
-    attributes['amount'].to_f <= 0 || !UserSession.find.try(:record)
+    attributes['amount'].to_f <= 0
   end
   
   def activate!
@@ -113,6 +111,13 @@ class Customer < ApplicationModel
   
   def send_welcome_email!
     Notifications.signup(self).deliver
+  end
+  
+  def must_be_reactivate?
+    if self.email_changed?
+      self.enable = false
+      Notifications.reactivation(self).deliver
+    end
   end
   
   def deliver_password_reset_instructions!
