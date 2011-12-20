@@ -1,5 +1,6 @@
-<%= render 'public_form' %>
-
-<nav class="links">
-  <%= link_to t('customer_menu.catalog'), catalog_path %>
-</nav>
+<section id="customer_profile">
+  <div id="public_customer_form">
+    <%= render 'public_form' %>
+  </div>
+  <%= render 'help/customer_profile' %>
+</section>

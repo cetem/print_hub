@@ -14,6 +14,18 @@
 #customer_registration {
   #public_customer_form {
     float: none;
+    margin: -2em 0em 0em 0em;
+  }
+
+  section.explanation {
+    float: none;
+    text-align: justify;
+  }
+}
+
+#customer_profile {
+  #public_customer_form {
+    float: none;
     margin: 0em;
   }
 

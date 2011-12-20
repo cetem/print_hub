@@ -89,7 +89,7 @@ module CatalogHelper
     
     if mobile?
       image_tag 'help/example_search_mobile.gif',
-        common_options.merge(size: '280x29')
+        common_options.merge(size: '260x29')
     else
       image_tag 'help/example_search.gif', common_options.merge(size: '366x31')
     end
@@ -103,7 +103,7 @@ module CatalogHelper
     
     if mobile?
       image_tag 'help/example_document_grid_mobile.gif',
-        common_options.merge(size: '280x72')
+        common_options.merge(size: '260x72')
     else
       image_tag 'help/example_document_grid.gif',
         common_options.merge(size: '600x44')
