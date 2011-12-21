@@ -23,13 +23,13 @@ class OrderTest < ActiveSupport::TestCase
     assert_difference ['Order.count', 'OrderLine.count'] do
       assert_difference 'Version.count', 2 do
         @order = Order.create(
-          :scheduled_at => 10.days.from_now,
-          :customer => customers(:student_without_bonus),
-          :order_lines_attributes => {
-            :new_1 => {
-              :copies => 2,
-              :two_sided => false,
-              :document => documents(:math_book)
+          scheduled_at: 10.days.from_now,
+          customer: customers(:student_without_bonus),
+          order_lines_attributes: {
+            new_1: {
+              copies: 2,
+              two_sided: false,
+              document: documents(:math_book)
             }
           }
         )
@@ -44,13 +44,13 @@ class OrderTest < ActiveSupport::TestCase
     assert_difference ['Order.count', 'OrderLine.count'] do
       assert_difference 'Version.count', 2 do
         @order = Order.create(
-          :scheduled_at => 10.days.from_now,
-          :customer => customers(:student),
-          :order_lines_attributes => {
-            :new_1 => {
-              :copies => 2,
-              :two_sided => false,
-              :document => documents(:math_book)
+          scheduled_at: 10.days.from_now,
+          customer: customers(:student),
+          order_lines_attributes: {
+            new_1: {
+              copies: 2,
+              two_sided: false,
+              document: documents(:math_book)
             }
           }
         )
@@ -63,9 +63,9 @@ class OrderTest < ActiveSupport::TestCase
   test 'create with included documents' do
     assert_difference ['Order.count', 'OrderLine.count'] do
       @order = Order.create(
-        :scheduled_at => 10.days.from_now,
-        :customer => customers(:student_without_bonus),
-        :include_documents => [documents(:math_book).id]
+        scheduled_at: 10.days.from_now,
+        customer: customers(:student_without_bonus),
+        include_documents: [documents(:math_book).id]
       )
     end
   end
@@ -74,13 +74,13 @@ class OrderTest < ActiveSupport::TestCase
   test 'can not create for current date' do
     assert_no_difference ['Order.count', 'OrderLine.count'] do
       @order = Order.create(
-        :scheduled_at => Time.now,
-        :customer => customers(:student_without_bonus),
-        :order_lines_attributes => {
-          :new_1 => {
-            :copies => 2,
-            :two_sided => false,
-            :document => documents(:math_book)
+        scheduled_at: Time.now,
+        customer: customers(:student_without_bonus),
+        order_lines_attributes: {
+          new_1: {
+            copies: 2,
+            two_sided: false,
+            document: documents(:math_book)
           }
         }
       )
@@ -90,7 +90,7 @@ class OrderTest < ActiveSupport::TestCase
     assert_equal [
       error_message_from_model(
         @order, :scheduled_at, :after,
-        :restriction => 12.hours.from_now.strftime('%d/%m/%Y %H:%M:%S')
+        restriction: 12.hours.from_now.strftime('%d/%m/%Y %H:%M:%S')
       )
     ], @order.errors[:scheduled_at]
   end
@@ -99,8 +99,8 @@ class OrderTest < ActiveSupport::TestCase
   test 'update' do
     assert_no_difference 'Order.count' do
       assert @order.update_attributes(
-        :scheduled_at => 5.days.from_now.at_midnight,
-        :notes => 'Updated notes'
+        scheduled_at: 5.days.from_now.at_midnight,
+        notes: 'Updated notes'
       ), @order.errors.full_messages.join('; ')
     end
 
@@ -115,7 +115,7 @@ class OrderTest < ActiveSupport::TestCase
     assert @order.save
     
     assert !@order.update_attributes(
-      :scheduled_at => 5.days.from_now.at_midnight
+      scheduled_at: 5.days.from_now.at_midnight
     )
     
     assert_not_equal 5.days.from_now.at_midnight, @order.reload.scheduled_at

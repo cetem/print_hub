@@ -236,7 +236,9 @@ class Customer < ApplicationModel
         customers = Customer.disable.where('updated_at <= ?', 1.day.ago.to_date)
         
         customers.find_each do |customer|
-          raise "#{customer} can not be destroyed" unless customer.destroy
+          if customer.orders.count == 0
+            raise "#{customer} can not be destroyed" unless customer.destroy
+          end
         end
 
       rescue
