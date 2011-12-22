@@ -1,8 +1,8 @@
 class OrderLine < ApplicationModel
   has_paper_trail
   
-  # Restricciones de atributos
-  attr_protected :price_per_copy
+  # Atributos "permitidos"
+  attr_accessible :document_id, :copies, :two_sided, :order_id, :lock_version
   
   # Restricciones
   validates :copies, :price_per_copy, presence: true

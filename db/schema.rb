@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20111102204430) do
+ActiveRecord::Schema.define(:version => 20111218054445) do
 
   create_table "article_lines", :force => true do |t|
     t.integer  "print_id",                                                   :null => false
@@ -67,7 +67,7 @@ ActiveRecord::Schema.define(:version => 20111102204430) do
     t.string   "password_salt"
     t.string   "persistence_token"
     t.string   "perishable_token"
-    t.boolean  "enable",                                                  :default => true
+    t.boolean  "enable",                                                  :default => false
   end
 
   add_index "customers", ["email"], :name => "index_customers_on_email", :unique => true

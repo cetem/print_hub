@@ -32,7 +32,7 @@ class PrintTest < ActiveSupport::TestCase
     assert_difference counts do
       @print = Print.create(
         printer: @printer,
-        user: users(:administrator),
+        user_id: users(:administrator).id,
         scheduled_at: '',
         pay_later: false,
         print_jobs_attributes: {
@@ -80,7 +80,7 @@ class PrintTest < ActiveSupport::TestCase
     assert_difference counts do
       @print = Print.create(
         printer: @printer,
-        user: users(:administrator),
+        user_id: users(:administrator).id,
         scheduled_at: '',
         pay_later: false,
         article_lines_attributes: {
@@ -116,7 +116,7 @@ class PrintTest < ActiveSupport::TestCase
       assert_no_difference 'Cups.all_jobs(@printer).keys.sort.last' do
         @print = Print.create(
           printer: '',
-          user: users(:administrator),
+          user_id: users(:administrator).id,
           scheduled_at: 2.hours.from_now,
           pay_later: false,
           print_jobs_attributes: {
@@ -156,7 +156,7 @@ class PrintTest < ActiveSupport::TestCase
       assert_no_difference 'Cups.all_jobs(@printer).keys.sort.last' do
         @print = Print.create(
           printer: @printer,
-          user: users(:administrator),
+          user_id: users(:administrator).id,
           scheduled_at: '',
           avoid_printing: true,
           print_jobs_attributes: {
@@ -199,7 +199,7 @@ class PrintTest < ActiveSupport::TestCase
       assert_no_difference 'Cups.all_jobs(@printer).keys.sort.last' do
         @print = Print.create(
           printer: @printer,
-          user: users(:administrator),
+          user_id: users(:administrator).id,
           scheduled_at: '',
           pay_later: false,
           print_jobs_attributes: {
@@ -243,8 +243,8 @@ class PrintTest < ActiveSupport::TestCase
     assert_difference counts do
       @print = Print.create(
         printer: @printer,
-        user: users(:administrator),
-        customer: customers(:student),
+        user_id: users(:administrator).id,
+        customer_id: customers(:student).id,
         scheduled_at: '',
         credit_password: 'student123',
         print_jobs_attributes: {
@@ -291,8 +291,8 @@ class PrintTest < ActiveSupport::TestCase
     assert_no_difference counts do
       @print = Print.create(
         printer: @printer,
-        user: users(:administrator),
-        customer: customers(:student),
+        user_id: users(:administrator).id,
+        customer_id: customers(:student).id,
         scheduled_at: '',
         pay_later: false,
         credit_password: 'wrong_password',
@@ -324,8 +324,8 @@ class PrintTest < ActiveSupport::TestCase
         assert_difference 'Payment.count', 2 do
           @print = Print.create(
             printer: @printer,
-            user: users(:administrator),
-            customer: customers(:student),
+            user_id: users(:administrator).id,
+            customer_id: customers(:student).id,
             scheduled_at: '',
             credit_password: 'student123',
             print_jobs_attributes: {
@@ -379,7 +379,7 @@ class PrintTest < ActiveSupport::TestCase
       assert_no_difference 'Cups.all_jobs(@printer).keys.sort.last' do
         @print = Print.create(
           printer: @printer,
-          user: users(:administrator),
+          user_id: users(:administrator).id,
           scheduled_at: '',
           avoid_printing: true,
           pay_later: false,
@@ -414,10 +414,10 @@ class PrintTest < ActiveSupport::TestCase
       assert_no_difference 'Cups.all_jobs(@printer).keys.sort.last' do
         @print = Print.create(
           printer: @printer,
-          user: users(:administrator),
+          user_id: users(:administrator).id,
           scheduled_at: '',
           avoid_printing: true,
-          order: order,
+          order_id: order.id,
           payments_attributes: {
             '1' => {
               amount: '24.5',
@@ -448,8 +448,8 @@ class PrintTest < ActiveSupport::TestCase
         assert_no_difference 'Payment.count' do
           @print = Print.create(
             printer: @printer,
-            user: nil,
-            customer: customers(:student_without_bonus),
+            user_id: nil,
+            customer_id: customers(:student_without_bonus).id,
             scheduled_at: '',
             avoid_printing: false,
             pay_later: true,
@@ -486,7 +486,7 @@ class PrintTest < ActiveSupport::TestCase
     assert_not_equal customers(:teacher).id, @print.customer_id
 
     assert_no_difference counts do
-      assert @print.update_attributes(customer: customers(:teacher)),
+      assert @print.update_attributes(customer_id: customers(:teacher).id),
         @print.errors.full_messages.join('; ')
     end
 

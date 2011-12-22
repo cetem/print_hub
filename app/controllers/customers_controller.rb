@@ -1,7 +1,8 @@
 class CustomersController < ApplicationController
   before_filter :require_admin_user, except: [
-    :new, :create, :credit_detail, :activate
+    :new, :create, :credit_detail, :activate, :edit_profile, :update_profile
   ]
+  before_filter :require_customer, only: [:edit_profile, :update_profile]
   before_filter :require_user, only: [:credit_detail]
   before_filter :require_no_customer_or_admin, only: [:new, :create]
   before_filter :require_no_customer, only: [:activate]
@@ -49,7 +50,7 @@ class CustomersController < ApplicationController
     @customer = Customer.new
 
     respond_to do |format|
-      format.html { render action: current_user ? :new  : :new_public }
+      format.html { render action: current_user ? 'new' : 'new_public' }
       format.xml  { render xml: @customer }
     end
   end
@@ -64,7 +65,9 @@ class CustomersController < ApplicationController
   # POST /customers.xml
   def create
     @title = t('view.customers.new_title')
-    @customer = Customer.new(params[:customer])
+    @customer = Customer.new(
+      params[:customer], {as: (current_user.try(:admin) ? :admin : :default)}
+    )
 
     respond_to do |format|
       if @customer.save
@@ -74,7 +77,7 @@ class CustomersController < ApplicationController
         format.html { redirect_to(url, notice: notice) }
         format.xml  { render xml: @customer, status: :created, location: @customer }
       else
-        format.html { render action: current_user ? :new  : :new_public }
+        format.html { render action: current_user ? 'new' : 'new_public' }
         format.xml  { render xml: @customer.errors, status: :unprocessable_entity }
       end
     end
@@ -87,7 +90,7 @@ class CustomersController < ApplicationController
     @customer = Customer.find(params[:id])
 
     respond_to do |format|
-      if @customer.update_attributes(params[:customer])
+      if @customer.update_attributes(params[:customer], as: :admin)
         format.html { redirect_to(customer_url(@customer), notice: t('view.customers.correctly_updated')) }
         format.xml  { head :ok }
       else
@@ -120,6 +123,33 @@ class CustomersController < ApplicationController
     respond_to do |format|
       format.html
     end
+  end
+  
+  # GET /customers/1/edit_profile
+  def edit_profile
+    @title = t('view.customers.edit_title')
+    @customer = current_customer
+  end
+  
+  # PUT /customers/1/update_profile
+  # PUT /customers/1/update_profile.xml
+  def update_profile
+    @title = t('view.customers.edit_title')
+    @customer = current_customer
+
+    respond_to do |format|
+      if @customer.update_attributes(params[:customer])
+        format.html { redirect_to(edit_profile_customer_url(@customer), notice: t('view.customers.profile_correctly_updated')) }
+        format.xml  { head :ok }
+      else
+        format.html { render action: 'edit_profile' }
+        format.xml  { render xml: @customer.errors, status: :unprocessable_entity }
+      end
+    end
+
+  rescue ActiveRecord::StaleObjectError
+    flash.alert = t('view.customers.stale_object_error')
+    redirect_to edit_profile_customer_url(@customer)
   end
   
   # GET /customers/activate/token

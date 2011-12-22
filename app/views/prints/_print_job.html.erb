@@ -5,36 +5,36 @@
     <div class="nested_item_field">
       <% field_classes = ['autocomplete_field'] %>
       <% field_classes << 'field_with_errors' unless f.object.errors[:document_id].blank? %>
-      <%= f.text_field :auto_document_name, :disabled => disabled,
-        :id => "auto_document_#{id}", :class => field_classes.join(' '),
-        :value => f.object.document.try(:to_s),
-        'data-autocomplete-url' => autocomplete_for_document_name_prints_path(:format => :json) %>
-      <%= f.hidden_field :document_id, :class => :autocomplete_id %>
+      <%= f.text_field :auto_document_name, disabled: disabled,
+        id: "auto_document_#{id}", class: field_classes.join(' '),
+        value: f.object.document.try(:to_s),
+        'data-autocomplete-url' => autocomplete_for_document_name_prints_path(format: :json) %>
+      <%= f.hidden_field :document_id, class: :autocomplete_id %>
     </div>
     <div class="nested_item_field">
-      <%= f.text_field :copies, :maxlength => 5,
-        :class => 'price_modifier page_modifier',
-        :autocomplete => 'off', :disabled => disabled %>
+      <%= f.text_field :copies, maxlength: 5,
+        class: 'price_modifier page_modifier',
+        autocomplete: 'off', disabled: disabled %>
     </div>
     <div class="nested_item_field">
-      <%= f.text_field :pages, :maxlength => 5,
-        :class => 'price_modifier page_modifier',
-        :autocomplete => 'off',
-        :disabled => disabled || !f.object.document.blank? %>
+      <%= f.text_field :pages, maxlength: 5,
+        class: 'price_modifier page_modifier',
+        autocomplete: 'off',
+        disabled: disabled || !f.object.document.blank? %>
     </div>
     <div class="nested_item_field">
-      <%= f.text_field :price_per_copy, :disabled => true,
-        :class => 'price_modifier', :autocomplete => 'off' %>
+      <%= f.text_field :price_per_copy, disabled: true,
+        class: 'price_modifier', autocomplete: 'off' %>
     </div>
     <div class="nested_item_field">
-      <%= f.text_field :range, :maxlength => 255,
-        :class => 'price_modifier page_modifier',
-        :autocomplete => 'off', 'data-range-pages' => f.object.range_pages,
-        :disabled => disabled || (!f.object.new_record? && f.object.document.blank?) %>
+      <%= f.text_field :range, maxlength: 255,
+        class: 'price_modifier page_modifier',
+        autocomplete: 'off', 'data-range-pages' => f.object.range_pages,
+        disabled: disabled || (!f.object.new_record? && f.object.document.blank?) %>
     </div>
     <div class="nested_item_field">
-      <%= f.check_box :two_sided, :class => 'price_modifier',
-        :disabled => disabled %>
+      <%= f.check_box :two_sided, class: 'price_modifier',
+        disabled: disabled %>
     </div>
     <div class="nested_item_actions">
       <span class="money"><%= number_to_currency f.object.price %></span>

@@ -25,8 +25,8 @@ class ArticleLineTest < ActiveSupport::TestCase
   test 'create' do
     assert_difference 'ArticleLine.count' do
       @article_line = ArticleLine.create(
-        article: articles(:binding),
-        print: prints(:math_print),
+        article_id: articles(:binding).id,
+        print_id: prints(:math_print).id,
         units: 1,
         unit_price: articles(:binding).price
       )

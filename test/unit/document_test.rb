@@ -40,7 +40,7 @@ class DocumentTest < ActiveSupport::TestCase
         media: Document::MEDIA_TYPES.values.first,
         description: 'New description',
         enable: true,
-        tags: [tags(:books), tags(:notes)],
+        tag_ids: [tags(:books).id, tags(:notes).id],
         file: file
       )
 
@@ -72,7 +72,7 @@ class DocumentTest < ActiveSupport::TestCase
         media: Document::MEDIA_TYPES.values.first,
         enable: true,
         description: 'New description',
-        tags: [tags(:books), tags(:notes)]
+        tag_ids: [tags(:books).id, tags(:notes).id]
       )
 
       @document.file = Rack::Test::UploadedFile.new(

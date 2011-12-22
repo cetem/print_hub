@@ -14,6 +14,18 @@
 #customer_registration {
   #public_customer_form {
     float: none;
+    margin: -2em 0em 0em 0em;
+  }
+
+  section.explanation {
+    float: none;
+    text-align: justify;
+  }
+}
+
+#customer_profile {
+  #public_customer_form {
+    float: none;
     margin: 0em;
   }
 
@@ -48,6 +60,12 @@
 
   section.details {
     margin: 0em;
+  }
+}
+
+#ph_customers {
+  form {
+    margin-top: 4em;
   }
 }
 
@@ -158,6 +176,10 @@ table.list {
 }
 
 .expendable {
+  display: none;
+}
+
+.hidden_for_mobile {
   display: none;
 }
 

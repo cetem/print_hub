@@ -3,16 +3,16 @@
 <div class="deposit nested_item" id="<%= id %>" <%= raw 'style="display: none;"' if hide %>>
   <div>
     <div class="nested_item_field">
-      <%= f.text_field :amount, :value => '%.3f' % f.object.amount,
-        :maxlength => 15, :autocomplete => :off,
-        :disabled => !f.object.new_record?, :id => "deposit_amount_#{id}" %>
+      <%= f.text_field :amount, value: '%.3f' % f.object.amount,
+        maxlength: 15, autocomplete: :off,
+        disabled: !f.object.new_record?, id: "deposit_amount_#{id}" %>
     </div>
     <div class="nested_item_field">
-      <%= f.text_field :remaining, :value => '%.3f' % f.object.remaining,
-        :maxlength => 15, :autocomplete => :off, :disabled => true %>
+      <%= f.text_field :remaining, value: '%.3f' % f.object.remaining,
+        maxlength: 15, autocomplete: :off, disabled: true %>
     </div>
     <div class="nested_item_field">
-      <%= l(f.object.created_at, :format => :minimal) if f.object.created_at %>
+      <%= l(f.object.created_at, format: :minimal) if f.object.created_at %>
     </div>
     <div class="nested_item_actions">
       <%= link_to_remove_nested_item(f) %>

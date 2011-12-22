@@ -12,10 +12,12 @@ class Payment < ApplicationModel
     where('created_at BETWEEN :start AND :end', start: _start, end: _end)
   }
   scope :not_revoked, where(revoked: false)
+  
+  # Atributos "permitidos"
+  attr_accessible :amount, :paid, :paid_with, :payable_id, :lock_version
 
   # Restricciones de los atributos
   attr_readonly :amount
-  attr_protected :revoked
 
   # Restricciones
   validates :amount, presence: true, numericality: { greater_than: 0 }

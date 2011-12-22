@@ -34,7 +34,7 @@ class OrderLineTest < ActiveSupport::TestCase
         copies: 2,
         price_per_copy: 1.10,
         two_sided: false,
-        document: documents(:math_book)
+        document_id: documents(:math_book).id
       )
     end
 

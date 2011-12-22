@@ -12,6 +12,11 @@ class User < ApplicationModel
     c.maintain_sessions = false
     c.crypto_provider = Authlogic::CryptoProviders::Sha512
   end
+  
+  # Atributos "permitidos"
+  attr_accessible :name, :last_name, :language, :email, :username, :password,
+    :password_confirmation, :default_printer, :admin, :enable, :avatar,
+    :lines_per_page, :lock_version
 
   # Restricciones
   validates :name, :last_name, :language, presence: true

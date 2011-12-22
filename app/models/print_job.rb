@@ -18,6 +18,10 @@ class PrintJob < ApplicationModel
   # Callbacks
   before_save :put_printed_pages
   
+  # Atributos "permitidos"
+  attr_accessible :document_id, :copies, :pages, :range, :two_sided, :print_id,
+    :auto_document_name, :lock_version
+  
   # Atributos no persistentes
   attr_writer :range_pages
   attr_accessor :auto_document_name, :job_hold_until
