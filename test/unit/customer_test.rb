@@ -254,7 +254,7 @@ class CustomerTest < ActiveSupport::TestCase
           new_1: {
             copies: 1,
             two_sided: false,
-            document: documents(:math_book)
+            document_id: documents(:math_book).id
           }
         }
       )

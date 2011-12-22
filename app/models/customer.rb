@@ -13,7 +13,7 @@ class Customer < ApplicationModel
   scope :disable, where(enable: false)
   scope :with_monthly_bonus, where('free_monthly_bonus > :zero', zero: 0)
   
-  # Atributos permitidos
+  # Atributos "permitidos"
   attr_accessible :name, :lastname, :identification, :email, :password,
     :password_confirmation, :lock_version
   attr_accessible :name, :lastname, :identification, :email, :password,

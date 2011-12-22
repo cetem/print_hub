@@ -1,19 +1,19 @@
-<%= render :partial => 'shared/date_filter', :locals => {
-  :from_date => @from_date, :to_date => @to_date
+<%= render partial: 'shared/date_filter', locals: {
+  from_date: @from_date, to_date: @to_date
 } %>
 <% if @users_count.blank? %>
-  <p><%= t(:'view.stats.empty_result') %></p>
+  <p><%= t('view.stats.empty_result') %></p>
 <% else %>
   <table class="list">
     <thead>
       <tr>
-        <th><%= Print.human_attribute_name :user %></th>
-        <th><%= PrintJob.human_attribute_name :printed_copies %></th>
+        <th><%= Print.human_attribute_name 'user' %></th>
+        <th><%= PrintJob.human_attribute_name 'printed_copies' %></th>
       </tr>
     </thead>
 
     <tbody>
-      <% @users_count.sort {|a,b| a[1] <=> b[1]}.each do |user_id, count| %>
+      <% @users_count.sort { |a,b| a[1] <=> b[1] }.each do |user_id, count| %>
         <tr>
           <td><%= User.find(user_id) %></td>
           <td><%= count %></td>
@@ -26,5 +26,5 @@
   </section>
 <% end %>
 <nav class="links">
-  <%= link_to t(:'view.stats.printers_title'), printer_stats_path %>
+  <%= link_to t('view.stats.printers_title'), printer_stats_path %>
 </nav>

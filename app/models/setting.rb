@@ -1,6 +1,6 @@
 class Setting < RailsSettings::Settings
-  attr_readonly :var
   attr_accessible :var, :value, :lock_version
+  attr_readonly :var
 
   # Restricciones
   validates :var, :value, presence: true

@@ -24,7 +24,7 @@ class OrderTest < ActiveSupport::TestCase
       assert_difference 'Version.count', 2 do
         @order = Order.create(
           scheduled_at: 10.days.from_now,
-          customer: customers(:student_without_bonus),
+          customer_id: customers(:student_without_bonus).id,
           order_lines_attributes: {
             new_1: {
               copies: 2,
@@ -45,7 +45,7 @@ class OrderTest < ActiveSupport::TestCase
       assert_difference 'Version.count', 2 do
         @order = Order.create(
           scheduled_at: 10.days.from_now,
-          customer: customers(:student),
+          customer_id: customers(:student).id,
           order_lines_attributes: {
             new_1: {
               copies: 2,
@@ -64,7 +64,7 @@ class OrderTest < ActiveSupport::TestCase
     assert_difference ['Order.count', 'OrderLine.count'] do
       @order = Order.create(
         scheduled_at: 10.days.from_now,
-        customer: customers(:student_without_bonus),
+        customer_id: customers(:student_without_bonus).id,
         include_documents: [documents(:math_book).id]
       )
     end
@@ -75,7 +75,7 @@ class OrderTest < ActiveSupport::TestCase
     assert_no_difference ['Order.count', 'OrderLine.count'] do
       @order = Order.create(
         scheduled_at: Time.now,
-        customer: customers(:student_without_bonus),
+        customer_id: customers(:student_without_bonus).id,
         order_lines_attributes: {
           new_1: {
             copies: 2,

@@ -2,6 +2,9 @@ class Article < ApplicationModel
   has_paper_trail
   find_by_autocomplete :name
   
+  # Atributos "permitidos"
+  attr_accessible :name, :code, :price, :description, :lock_version
+  
   # Alias de atributos
   alias_attribute :unit_price, :price
   

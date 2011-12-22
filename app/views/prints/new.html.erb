@@ -4,10 +4,10 @@
   <% if there_are_documents_for_printing? %>
     <%= link_to(
       textilize_without_paragraph(
-        t(:'view.prints.new_without_stored_documents')
+        t('view.prints.new_without_stored_documents')
       ),
-      new_print_path(:clear_documents_for_printing => true)
+      new_print_path(clear_documents_for_printing: true)
     ) %> |
   <% end %>
-  <%= link_to t(:'label.list'), prints_path %>
+  <%= link_to t('label.list'), prints_path %>
 </nav>
