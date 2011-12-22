@@ -1,10 +1,16 @@
+<%= include_stats_js %>
 <%= render partial: 'shared/date_filter', locals: {
   from_date: @from_date, to_date: @to_date
 } %>
 <% if @printers_count.blank? %>
   <p><%= t('view.stats.empty_result') %></p>
 <% else %>
-  <table class="list">
+  <div class="actions">
+    <%= link_to t('view.stats.show_grid'), '#', class: 'show_grid' %>
+    <%= link_to t('view.stats.show_graph'), '#', class: 'show_graph' %>
+  </div>
+  <div id="graph"></div>
+  <table class="list" data-graph-grid="true">
     <thead>
       <tr>
         <th><%= Print.human_attribute_name 'printer' %></th>
@@ -15,8 +21,8 @@
     <tbody>
       <% @printers_count.sort { |a,b| a[1] <=> b[1] }.each do |printer, count| %>
         <tr>
-          <td><%= printer.blank? ? t('view.stats.scheduled_print') : printer %></td>
-          <td><%= count %></td>
+          <td class="label"><%= printer.blank? ? t('view.stats.scheduled_print') : printer %></td>
+          <td class="value"><%= count %></td>
         </tr>
       <% end %>
     </tbody>

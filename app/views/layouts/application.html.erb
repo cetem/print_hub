@@ -16,6 +16,7 @@
     <%= yield :js_extra %>
   <% end %>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, target-densitydpi=device-dpi" />
+  <%= yield :head_extra %>
 </head>
 <body id="<%= "ph_#{controller_name}" %>" data-action="<%= action_name %>">
   <div id="loading_caption" style="display: none;">

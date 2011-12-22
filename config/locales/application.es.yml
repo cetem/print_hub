@@ -490,6 +490,8 @@
       empty_result: 'Sin resultados para el rango de fechas seleccionado'
       printers_title: 'Estadísticas por impresora'
       scheduled_print: 'Impresiones programadas'
+      show_graph: 'Ver gráfico'
+      show_grid: 'Ver datos'
       total:
         one: 'De un total de una copia hecha en %{distance_time}'
         other: 'De un total de %{count} copias hechas en %{distance_time}'
