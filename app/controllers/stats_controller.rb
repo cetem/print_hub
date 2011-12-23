@@ -6,9 +6,7 @@ class StatsController < ApplicationController
   def printers
     @title = t('view.stats.printers_title')
     @from_date, @to_date = *make_datetime_range(params[:interval])
-    @printers_count = PrintJob.with_print_between(
-      @from_date, @to_date
-    ).not_revoked.group(:printer).sum(:printed_pages)
+    @printers_count = PrintJob.printer_stats_between(@from_date, @to_date)
     
     respond_to do |format|
       format.html # index.html.erb
@@ -21,13 +19,24 @@ class StatsController < ApplicationController
   def users
     @title = t('view.stats.users_title')
     @from_date, @to_date = *make_datetime_range(params[:interval])
-    @users_count = PrintJob.with_print_between(
-      @from_date, @to_date
-    ).not_revoked.group(:user_id).sum(:printed_pages)
+    @users_count = PrintJob.user_stats_between(@from_date, @to_date)
     
     respond_to do |format|
       format.html # index.html.erb
       format.xml  { render xml: @users_count }
+    end
+  end
+  
+  # GET /print_stats
+  # GET /print_stats.xml
+  def prints
+    @title = t('view.stats.prints_title')
+    @from_date, @to_date = *make_datetime_range(params[:interval])
+    @user_prints_count = Print.stats_between(@from_date, @to_date)
+    
+    respond_to do |format|
+      format.html # index.html.erb
+      format.xml  { render xml: @user_prints_count }
     end
   end
 end

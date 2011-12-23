@@ -26,7 +26,7 @@ class PaymentTest < ActiveSupport::TestCase
         amount: '10.50',
         paid: '10.00',
         paid_with: Payment::PAID_WITH[:credit],
-        payable: prints(:math_print)
+        payable_id: prints(:math_print).id
       )
     end
   end

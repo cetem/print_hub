@@ -1,2 +1,2 @@
-class Bonus < Credit  
+class Bonus < Credit
 end

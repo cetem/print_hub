@@ -2,7 +2,7 @@
 <%= render partial: 'shared/date_filter', locals: {
   from_date: @from_date, to_date: @to_date
 } %>
-<% if @printers_count.blank? %>
+<% if @user_prints_count.blank? %>
   <p><%= t('view.stats.empty_result') %></p>
 <% else %>
   <div class="actions">
@@ -13,25 +13,25 @@
   <table class="list" data-graph-grid="true">
     <thead>
       <tr>
-        <th><%= Print.human_attribute_name 'printer' %></th>
-        <th><%= PrintJob.human_attribute_name 'printed_copies' %></th>
+        <th><%= Print.human_attribute_name 'user' %></th>
+        <th><%= t('menu.prints') %></th>
       </tr>
     </thead>
 
     <tbody>
-      <% @printers_count.sort { |a,b| a[1] <=> b[1] }.each do |printer, count| %>
+      <% @user_prints_count.sort { |a,b| a[1] <=> b[1] }.each do |user_id, count| %>
         <tr>
-          <td class="label"><%= printer.blank? ? t('view.stats.scheduled_print') : printer %></td>
+          <td class="label"><%= User.find(user_id) %></td>
           <td class="value"><%= count %></td>
         </tr>
       <% end %>
     </tbody>
   </table>
   <section class="details">
-    <h3><%= show_stats_total(@printers_count.sum(&:second)) %></h3>
+    <h3><%= show_stats_total_prints(@user_prints_count.sum(&:second)) %></h3>
   </section>
 <% end %>
 <nav class="links">
   <%= link_to t('view.stats.users_title'), user_stats_path %> |
-  <%= link_to t('view.stats.prints_title'), print_stats_path %>
+  <%= link_to t('view.stats.printers_title'), printer_stats_path %>
 </nav>

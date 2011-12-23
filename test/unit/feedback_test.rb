@@ -21,8 +21,8 @@ class FeedbackTest < ActiveSupport::TestCase
   test 'create' do
     assert_difference 'Feedback.count' do
       @feedback = Feedback.create(
-        :item => 'new_customer_help',
-        :positive => true
+        item: 'new_customer_help',
+        positive: true
       )
     end
   end
@@ -31,8 +31,8 @@ class FeedbackTest < ActiveSupport::TestCase
   test 'update' do
     assert_no_difference 'Feedback.count' do
       assert @feedback.update_attributes(
-        :item => 'this_should_be_ignored',
-        :comments => 'It seems to me that needs polishing'
+        item: 'this_should_be_ignored',
+        comments: 'It seems to me that needs polishing'
       ), @feedback.errors.full_messages.join('; ')
     end
     

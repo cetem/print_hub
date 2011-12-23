@@ -42,8 +42,8 @@ class PrintJobTest < ActiveSupport::TestCase
         range: nil,
         two_sided: false,
         job_id: 1,
-        print: prints(:math_print),
-        document: document
+        print_id: prints(:math_print).id,
+        document_id: document.id
       )
     end
 
@@ -64,7 +64,7 @@ class PrintJobTest < ActiveSupport::TestCase
         range: nil,
         two_sided: false,
         job_id: 1,
-        print: prints(:math_print)
+        print_id: prints(:math_print).id
       )
     end
 

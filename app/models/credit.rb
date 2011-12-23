@@ -1,6 +1,10 @@
 class Credit < ApplicationModel
   has_paper_trail
   
+  # Atributos "permitidos"
+  attr_accessible :amount, :remaining, :valid_until, :customer_id
+  attr_accessible :amount, :remaining, :valid_until, :customer_id, as: :admin
+  
   # Restricciones de atributos
   attr_readonly :amount
 

@@ -22,10 +22,10 @@ class DepositTest < ActiveSupport::TestCase
   test 'create' do
     assert_difference 'Deposit.count' do
       @deposit = Deposit.create(
-        :amount => '100.00',
-        :remaining => '50.0',
-        :valid_until => 1.month.from_now.to_date,
-        :customer => customers(:student)
+        amount: '100.00',
+        remaining: '50.0',
+        valid_until: 1.month.from_now.to_date,
+        customer_id: customers(:student).id
       )
     end
 
@@ -38,8 +38,8 @@ class DepositTest < ActiveSupport::TestCase
   test 'update' do
     assert_no_difference 'Deposit.count' do
       assert @deposit.update_attributes(
-        :amount => '1500.0',
-        :valid_until => 10.years.from_now.to_date
+        amount: '1500.0',
+        valid_until: 10.years.from_now.to_date
       ), @deposit.errors.full_messages.join('; ')
     end
 
@@ -92,18 +92,18 @@ class DepositTest < ActiveSupport::TestCase
     assert @deposit.invalid?
     assert_equal 3, @deposit.errors.count
     assert_equal [error_message_from_model(@deposit, :amount, :greater_than,
-        :count => 0)], @deposit.errors[:amount]
+        count: 0)], @deposit.errors[:amount]
     assert_equal [error_message_from_model(@deposit, :remaining,
-        :greater_than_or_equal_to, :count => 0)], @deposit.errors[:remaining]
+        :greater_than_or_equal_to, count: 0)], @deposit.errors[:remaining]
     assert_equal [error_message_from_model(@deposit, :valid_until, :on_or_after,
-        :restriction => I18n.l(Date.today))], @deposit.errors[:valid_until]
+        restriction: I18n.l(Date.today))], @deposit.errors[:valid_until]
 
     @deposit.reload
     @deposit.remaining = @deposit.amount + 1
     assert @deposit.invalid?
     assert_equal 1, @deposit.errors.count
     assert_equal [error_message_from_model(@deposit, :remaining,
-        :less_than_or_equal_to, :count => @deposit.amount)],
+        :less_than_or_equal_to, count: @deposit.amount)],
       @deposit.errors[:remaining]
   end
 end

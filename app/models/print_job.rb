@@ -18,6 +18,10 @@ class PrintJob < ApplicationModel
   # Callbacks
   before_save :put_printed_pages
   
+  # Atributos "permitidos"
+  attr_accessible :document_id, :copies, :pages, :range, :two_sided, :print_id,
+    :auto_document_name, :lock_version
+  
   # Atributos no persistentes
   attr_writer :range_pages
   attr_accessor :auto_document_name, :job_hold_until
@@ -154,5 +158,13 @@ class PrintJob < ApplicationModel
 
   def completed?
     !%x{lpstat -W completed | grep "^#{self.job_id} "}.blank?
+  end
+  
+  def self.printer_stats_between(from, to)
+    with_print_between(from, to).not_revoked.group(:printer).sum(:printed_pages)
+  end
+  
+  def self.user_stats_between(from, to)
+    with_print_between(from, to).not_revoked.group(:user_id).sum(:printed_pages)
   end
 end

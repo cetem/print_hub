@@ -11,6 +11,9 @@ class Tag < ApplicationModel
   # Callbacks
   before_save :update_related_documents
   before_destroy :remove_from_related_documents
+  
+  # Atributos "permitidos"
+  attr_accessible :name, :parent_id, :private, :lock_version
 
   # Restricciones
   validates :name, presence: true

@@ -254,7 +254,7 @@ class CustomerTest < ActiveSupport::TestCase
           new_1: {
             copies: 1,
             two_sided: false,
-            document: documents(:math_book)
+            document_id: documents(:math_book).id
           }
         }
       )
@@ -400,6 +400,28 @@ class CustomerTest < ActiveSupport::TestCase
   
   test 'destroy inactive accounts' do
     assert_difference 'Customer.disable.count', -1 do
+      Customer.destroy_inactive_accounts
+    end
+  end
+  
+  test 'not destroy inactive accounts if they have any order' do
+    Customer.disable.each do |c|
+      assert_difference 'c.orders.count' do
+        c.orders.create(
+          scheduled_at: 10.days.from_now,
+          customer: c,
+          order_lines_attributes: {
+            new_1: {
+              copies: 2,
+              two_sided: false,
+              document: documents(:math_book)
+            }
+          }
+        )
+      end
+    end
+    
+    assert_no_difference 'Customer.disable.count' do
       Customer.destroy_inactive_accounts
     end
   end

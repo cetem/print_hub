@@ -15,13 +15,15 @@ class Document < ApplicationModel
     includes(:tags).where("#{Tag.table_name}.id" => tag_id)
   }
   scope :publicly_visible, where(private: false)
+  
+  # Atributos "permitidos"
+  attr_accessible :code, :name, :description, :media, :file, :tag_ids, :enable,
+    :stock, :lock_version
 
   # Atributos no persistentes
   attr_accessor :auto_tag_name
   # Alias de atributos
   alias_attribute :informal, :tag_path
-  # Atributos protegidos contra escritura masiva
-  attr_protected :pages
 
   # Callbacks
   before_save :update_tag_path, :update_privacy

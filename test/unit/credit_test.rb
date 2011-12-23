@@ -22,10 +22,10 @@ class CreditTest < ActiveSupport::TestCase
   test 'create' do
     assert_difference 'Credit.count' do
       @credit = Credit.create(
-        :amount => '100.00',
-        :remaining => '50.0',
-        :valid_until => 1.month.from_now.to_date,
-        :customer => customers(:student)
+        amount: '100.00',
+        remaining: '50.0',
+        valid_until: 1.month.from_now.to_date,
+        customer_id: customers(:student).id
       )
     end
 
@@ -38,8 +38,8 @@ class CreditTest < ActiveSupport::TestCase
   test 'update' do
     assert_no_difference 'Credit.count' do
       assert @credit.update_attributes(
-        :amount => '1500.0',
-        :valid_until => 10.years.from_now.to_date
+        amount: '1500.0',
+        valid_until: 10.years.from_now.to_date
       ), @credit.errors.full_messages.join('; ')
     end
 
@@ -67,7 +67,7 @@ class CreditTest < ActiveSupport::TestCase
       error_message_from_model(@credit, :remaining, :not_a_number)].sort,
       @credit.errors[:remaining].sort
   end
-
+  
   # Prueba que las validaciones del modelo se cumplan como es esperado
   test 'validates well formated attributes' do
     @credit.amount = '1.2x'
@@ -91,18 +91,18 @@ class CreditTest < ActiveSupport::TestCase
     assert @credit.invalid?
     assert_equal 3, @credit.errors.count
     assert_equal [error_message_from_model(@credit, :amount, :greater_than,
-        :count => 0)], @credit.errors[:amount]
+        count: 0)], @credit.errors[:amount]
     assert_equal [error_message_from_model(@credit, :remaining,
-        :greater_than_or_equal_to, :count => 0)], @credit.errors[:remaining]
+        :greater_than_or_equal_to, count: 0)], @credit.errors[:remaining]
     assert_equal [error_message_from_model(@credit, :valid_until, :on_or_after,
-        :restriction => I18n.l(Date.today))], @credit.errors[:valid_until]
+        restriction: I18n.l(Date.today))], @credit.errors[:valid_until]
 
     @credit.reload
     @credit.remaining = @credit.amount + 1
     assert @credit.invalid?
     assert_equal 1, @credit.errors.count
     assert_equal [error_message_from_model(@credit, :remaining,
-        :less_than_or_equal_to, :count => @credit.amount)],
+        :less_than_or_equal_to, count: @credit.amount)],
       @credit.errors[:remaining]
   end
   

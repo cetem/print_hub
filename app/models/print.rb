@@ -17,10 +17,20 @@ class Print < ApplicationModel
   # Scopes
   scope :pending, where(status: STATUS[:pending_payment])
   scope :pay_later, where(status: STATUS[:pay_later])
+  scope :not_revoked, where(revoked: false)
+  scope :between, ->(_start, _end) {
+    where('created_at BETWEEN :start AND :end', start: _start, end: _end)
+  }
   scope :scheduled, where(
     '(printer = :blank OR printer IS NULL) AND scheduled_at IS NOT NULL',
     blank: ''
   )
+  
+  # Atributos "permitidos"
+  attr_accessible :printer, :scheduled_at, :customer_id, :order_id,
+    :auto_customer_name, :avoid_printing, :include_documents,
+    :credit_password, :pay_later, :lock_version, :print_jobs_attributes,
+    :article_lines_attributes, :payments_attributes
 
   # Atributos no persistentes
   attr_accessor :auto_customer_name, :avoid_printing, :include_documents,
@@ -28,7 +38,6 @@ class Print < ApplicationModel
 
   # Restricciones en los atributos
   attr_readonly :user_id, :customer_id, :printer
-  attr_protected :status, :revoked
 
   # Restricciones
   validates :printer, presence: true, if: ->(p) {
@@ -246,5 +255,9 @@ class Print < ApplicationModel
   STATUS.each do |status, value|
     define_method("#{status}?") { self.status == value }
     define_method("#{status}!") { self.status = value }
+  end
+  
+  def self.stats_between(from, to)
+    between(from, to).not_revoked.group(:user_id).count
   end
 end

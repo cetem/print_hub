@@ -13,7 +13,7 @@ class Customer < ApplicationModel
   scope :disable, where(enable: false)
   scope :with_monthly_bonus, where('free_monthly_bonus > :zero', zero: 0)
   
-  # Atributos permitidos
+  # Atributos "permitidos"
   attr_accessible :name, :lastname, :identification, :email, :password,
     :password_confirmation, :lock_version
   attr_accessible :name, :lastname, :identification, :email, :password,
@@ -236,7 +236,9 @@ class Customer < ApplicationModel
         customers = Customer.disable.where('updated_at <= ?', 1.day.ago.to_date)
         
         customers.find_each do |customer|
-          raise "#{customer} can not be destroyed" unless customer.destroy
+          if customer.orders.count == 0
+            raise "#{customer} can not be destroyed" unless customer.destroy
+          end
         end
 
       rescue
