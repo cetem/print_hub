@@ -489,12 +489,16 @@
         apply: 'Aplicar'
       empty_result: 'Sin resultados para el rango de fechas seleccionado'
       printers_title: 'Estadísticas por impresora'
+      prints_title: 'Estadísticas por impresión'
       scheduled_print: 'Impresiones programadas'
       show_graph: 'Ver gráfico'
       show_grid: 'Ver datos'
       total:
         one: 'De un total de una copia hecha en %{distance_time}'
         other: 'De un total de %{count} copias hechas en %{distance_time}'
+      total_prints:
+        one: 'De un total de una impresión hecha en %{distance_time}'
+        other: 'De un total de %{count} impresiones hechas en %{distance_time}'
       users_title: 'Estadísticas por usuario'
     tags:
       index_title: 'Listado de etiquetas'

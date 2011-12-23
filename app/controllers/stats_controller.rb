@@ -30,4 +30,19 @@ class StatsController < ApplicationController
       format.xml  { render xml: @users_count }
     end
   end
+  
+  # GET /print_stats
+  # GET /print_stats.xml
+  def prints
+    @title = t('view.stats.prints_title')
+    @from_date, @to_date = *make_datetime_range(params[:interval])
+    @user_prints_count = Print.between(
+      @from_date, @to_date
+    ).not_revoked.group(:user_id).count
+    
+    respond_to do |format|
+      format.html # index.html.erb
+      format.xml  { render xml: @user_prints_count }
+    end
+  end
 end

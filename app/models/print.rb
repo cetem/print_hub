@@ -17,6 +17,10 @@ class Print < ApplicationModel
   # Scopes
   scope :pending, where(status: STATUS[:pending_payment])
   scope :pay_later, where(status: STATUS[:pay_later])
+  scope :not_revoked, where(revoked: false)
+  scope :between, ->(_start, _end) {
+    where('created_at BETWEEN :start AND :end', start: _start, end: _end)
+  }
   scope :scheduled, where(
     '(printer = :blank OR printer IS NULL) AND scheduled_at IS NOT NULL',
     blank: ''

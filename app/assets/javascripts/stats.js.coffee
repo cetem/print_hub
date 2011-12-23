@@ -11,7 +11,7 @@ jQuery ->
       labels.push $('td.label', this).text()
 
     Raphael(container.get(0), width, 500).pieChart(
-      width / 2.0, 250, 175, values, labels, '#fff'
+      width / 2.0, 250, 175, values, labels, '#efefef'
     )
 
     # Hide graphic
