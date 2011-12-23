@@ -256,4 +256,8 @@ class Print < ApplicationModel
     define_method("#{status}?") { self.status == value }
     define_method("#{status}!") { self.status = value }
   end
+  
+  def self.stats_between(from, to)
+    between(from, to).not_revoked.group(:user_id).count
+  end
 end

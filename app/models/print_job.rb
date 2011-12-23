@@ -159,4 +159,12 @@ class PrintJob < ApplicationModel
   def completed?
     !%x{lpstat -W completed | grep "^#{self.job_id} "}.blank?
   end
+  
+  def self.printer_stats_between(from, to)
+    with_print_between(from, to).not_revoked.group(:printer).sum(:printed_pages)
+  end
+  
+  def self.user_stats_between(from, to)
+    with_print_between(from, to).not_revoked.group(:user_id).sum(:printed_pages)
+  end
 end
