@@ -2,26 +2,26 @@
   <thead>
     <tr>
       <th></th>
-      <th><%= User.human_attribute_name :name %></th>
-      <th><%= User.human_attribute_name :username %></th>
-      <th><%= User.human_attribute_name :email %></th>
-      <th><%= User.human_attribute_name :admin %></th>
-      <th><%= User.human_attribute_name :enable %></th>
+      <th><%= User.human_attribute_name 'name' %></th>
+      <th><%= User.human_attribute_name 'username' %></th>
+      <th><%= User.human_attribute_name 'email' %></th>
+      <th><%= User.human_attribute_name 'admin' %></th>
+      <th><%= User.human_attribute_name 'enable' %></th>
       <th colspan="2"></th>
     </tr>
   </thead>
 
   <tbody>
     <% @users.each do |user| %>
-      <tr class="<%= cycle('even', 'odd') %>">
+      <tr class="<%= cycle('even', 'odd') + (user.enable ? '' : ' disabled') %>">
         <td><%= show_avatar user, :mini %></td>
         <td><%= [user.name, user.last_name].join(' ') %></td>
         <td><%= user.username %></td>
         <td><%= user.email %></td>
-        <td><%= t(user.admin ? :yes : :no, :scope => [:label]) %></td>
-        <td><%= t(user.enable ? :yes : :no, :scope => [:label]) %></td>
-        <td><%= link_to t(:'label.show'), user %></td>
-        <td><%= link_to t(:'label.edit'), edit_user_path(user) %></td>
+        <td><%= t(user.admin ? 'label.yes' : 'label.no') %></td>
+        <td><%= t(user.enable ? 'label.yes' : 'label.no') %></td>
+        <td><%= link_to t('label.show'), user %></td>
+        <td><%= link_to t('label.edit'), edit_user_path(user) %></td>
       </tr>
     <% end %>
   </tbody>
@@ -29,5 +29,5 @@
 
 <nav class="links">
   <%= pagination_links(@users) %>
-  <%= link_to t(:'label.new'), new_user_path %>
+  <%= link_to t('label.new'), new_user_path %>
 </nav>

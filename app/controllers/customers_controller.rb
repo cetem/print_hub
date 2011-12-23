@@ -13,7 +13,7 @@ class CustomersController < ApplicationController
   # GET /customers.xml
   def index
     @title = t('view.customers.index_title')
-    @customers = Customer.order('lastname ASC')
+    @customers = Customer.unscoped.order('lastname ASC')
     
     if params[:q].present?
       query = params[:q].sanitized_for_text_query
@@ -35,7 +35,7 @@ class CustomersController < ApplicationController
   # GET /customers/1.xml
   def show
     @title = t('view.customers.show_title')
-    @customer = Customer.find(params[:id])
+    @customer = Customer.unscoped.find(params[:id])
 
     respond_to do |format|
       format.html # show.html.erb
@@ -58,7 +58,7 @@ class CustomersController < ApplicationController
   # GET /customers/1/edit
   def edit
     @title = t('view.customers.edit_title')
-    @customer = Customer.find(params[:id])
+    @customer = Customer.unscoped.find(params[:id])
   end
 
   # POST /customers
@@ -87,7 +87,7 @@ class CustomersController < ApplicationController
   # PUT /customers/1.xml
   def update
     @title = t('view.customers.edit_title')
-    @customer = Customer.find(params[:id])
+    @customer = Customer.unscoped.find(params[:id])
 
     respond_to do |format|
       if @customer.update_attributes(params[:customer], as: :admin)
