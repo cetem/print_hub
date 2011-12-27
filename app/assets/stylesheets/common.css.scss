@@ -740,6 +740,10 @@ table.list {
   }
 
   tbody {
+    tr.disabled {
+      opacity: .5;
+    }
+    
     tr.odd {
       background: #efefef;
     }
