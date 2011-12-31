@@ -9,7 +9,7 @@ class PasswordResetsController < ApplicationController
   # POST /password_resets
   def create
     @title = t('view.password_resets.new_title')
-    @customer = Customer.find_by_email(params[:email])
+    @customer = Customer.find_by_email params[:email].try(:downcase).try(:strip)
     
     if @customer
       @customer.deliver_password_reset_instructions!
