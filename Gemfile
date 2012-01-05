@@ -1,6 +1,6 @@
 source 'http://rubygems.org'
 
-gem 'rails', '3.2.0.rc1'
+gem 'rails', '3.2.0.rc2'
 
 gem 'pg'
 gem 'authlogic'
@@ -40,5 +40,7 @@ end
 group :test do
   gem 'turn', require: false
   gem 'minitest', require: false
-  gem 'ruby-prof'
+  gem 'ruby-prof', require: false
+  gem 'capybara', require: false
+  gem 'database_cleaner' # For Capybara
 end
