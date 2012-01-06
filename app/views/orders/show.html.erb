@@ -1,6 +1,12 @@
 <section id="show_order">
   <header>
-    <h2><%= t 'view.orders.order_number', number: @order.id, status: @order.status_text %></h2>
+    <h2>
+      <%= t(
+        'view.orders.order_number',
+        number: @order.id,
+        status: @order.status_text
+      ) %>
+    </h2>
     <h3>
       <%= l @order.scheduled_at, format: :long if @order.scheduled_at %>
     </h3>
@@ -11,7 +17,7 @@
   
   <% if @order.notes.present? %>
     <section>
-      <h3><%= Order.human_attribute_name :notes %></h3>
+      <h3><%= Order.human_attribute_name 'notes' %></h3>
       <%= simple_format @order.notes %>
     </section>
   <% end %>
@@ -23,11 +29,11 @@
       <table class="summary">
         <thead>
           <tr>
-            <th><%= OrderLine.human_attribute_name :document_id %></th>
-            <th><%= OrderLine.human_attribute_name :copies %></th>
-            <th class="expendable"><%= Document.human_attribute_name :pages %></th>
-            <th class="expendable"><%= OrderLine.human_attribute_name :price_per_copy %></th>
-            <th><%= OrderLine.human_attribute_name :two_sided %></th>
+            <th><%= OrderLine.human_attribute_name 'document_id' %></th>
+            <th><%= OrderLine.human_attribute_name 'copies' %></th>
+            <th class="expendable"><%= Document.human_attribute_name 'pages' %></th>
+            <th class="expendable"><%= OrderLine.human_attribute_name 'price_per_copy' %></th>
+            <th><%= OrderLine.human_attribute_name 'two_sided' %></th>
           </tr>
         </thead>
         <tbody>
@@ -37,7 +43,7 @@
               <td><%= order_line.copies %></td>
               <td class="expendable"><%= order_line.document.try(:pages) %></td>
               <td class="expendable"><%= number_to_currency order_line.price_per_copy %></td>
-              <td><%= t(order_line.two_sided ? :yes : :no, scope: :label) %></td>
+              <td><%= t(order_line.two_sided ? 'label.yes' : 'label.no') %></td>
             </tr>
           <% end %>
         </tbody>

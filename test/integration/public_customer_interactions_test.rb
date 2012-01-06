@@ -1,6 +1,6 @@
 require 'test_helper'
 
-class CustomerInteractionTest < ActionDispatch::IntegrationTest
+class PublicCustomerInteractionsTest < ActionDispatch::IntegrationTest
   fixtures :all
   
   setup do
@@ -11,8 +11,12 @@ class CustomerInteractionTest < ActionDispatch::IntegrationTest
 
   test 'should register a new customer and should not login' do
     visit new_customer_session_path
+    
+    assert_page_has_no_errors!
+    
     click_link I18n.t('view.customers.register')
     
+    assert_page_has_no_errors!
     assert_equal new_customer_path, current_path
     
     fill_in Customer.human_attribute_name('name'), with: 'Jar Jar'
@@ -27,6 +31,7 @@ class CustomerInteractionTest < ActionDispatch::IntegrationTest
     end
     
     assert_equal new_customer_session_path, current_path
+    assert_page_has_no_errors!
     assert page.has_content?(I18n.t('view.customers.correctly_registered'))
     
     fill_in I18n.t('authlogic.attributes.customer_session.email'),
@@ -39,14 +44,20 @@ class CustomerInteractionTest < ActionDispatch::IntegrationTest
     # No puede ingresar hasta que no active la cuenta
     assert_equal customer_sessions_path, current_path
     
-    assert page.has_content?(
-      I18n.t('authlogic.attributes.customer_session.email') + ' ' +
-      I18n.t('authlogic.error_messages.login_not_found')
-    )
+    assert_page_has_no_errors!
+    
+    within '#login_error' do
+      assert page.has_content?(
+        I18n.t('authlogic.attributes.customer_session.email') + ' ' +
+        I18n.t('authlogic.error_messages.login_not_found')
+      )
+    end
   end
   
   test 'should not login activate an account and should login' do
     visit new_customer_session_path
+    
+    assert_page_has_no_errors!
     
     Customer.unscoped.find(ActiveRecord::Fixtures.identify(:disabled_student)).tap do |customer|
       fill_in I18n.t('authlogic.attributes.customer_session.email'),
@@ -58,14 +69,23 @@ class CustomerInteractionTest < ActionDispatch::IntegrationTest
 
       # No puede ingresar hasta que no active la cuenta
       assert_equal customer_sessions_path, current_path
-
-      assert page.has_content?(
-        I18n.t('authlogic.attributes.customer_session.email') + ' ' +
-        I18n.t('authlogic.error_messages.login_not_found')
-      )
+      
+      assert_page_has_no_errors!
+      
+      within '#login_error' do
+        assert page.has_content?(
+          I18n.t('authlogic.attributes.customer_session.email') + ' ' +
+          I18n.t('authlogic.error_messages.login_not_found')
+        )
+      end
       
       visit activate_customer_path(token: customer.perishable_token)
-      assert page.has_content?(I18n.t('view.customers.correctly_activated'))
+      
+      assert_page_has_no_errors!
+      
+      within '#notice' do
+        assert page.has_content?(I18n.t('view.customers.correctly_activated'))
+      end
       
       fill_in I18n.t('authlogic.attributes.customer_session.email'),
         with: customer.email
@@ -75,15 +95,26 @@ class CustomerInteractionTest < ActionDispatch::IntegrationTest
       click_button I18n.t('view.customer_sessions.login')
       
       assert_equal catalog_path, current_path
-      assert page.has_content?(I18n.t('view.customer_sessions.correctly_created'))
+      
+      assert_page_has_no_errors!
+      
+      within '#notice' do
+        assert page.has_content?(
+          I18n.t('view.customer_sessions.correctly_created')
+        )
+      end
     end
   end
   
   test 'should reset password' do
     visit new_customer_session_path
+    
+    assert_page_has_no_errors!
+    
     click_link I18n.t('view.customers.forgot_password')
     
     assert_equal new_password_reset_path, current_path
+    assert_page_has_no_errors!
     
     customers(:student).tap do |customer|
       fill_in Customer.human_attribute_name('email'), with: customer.email
@@ -93,9 +124,14 @@ class CustomerInteractionTest < ActionDispatch::IntegrationTest
       end
       
       assert_equal new_customer_session_path, current_path
-      assert page.has_content?(
-        I18n.t('view.password_resets.instructions_delivered')
-      )
+      
+      assert_page_has_no_errors!
+      
+      within '#notice' do
+        assert page.has_content?(
+          I18n.t('view.password_resets.instructions_delivered')
+        )
+      end
     end
   end
 end

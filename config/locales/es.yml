@@ -85,8 +85,8 @@
       format:
         format: '%u%n'
         unit: '$'
-        separator: ','
-        delimiter: '.'
+        separator: '.'
+        delimiter: ''
         precision: 3
         significant: false
         strip_insignificant_zeros: false
