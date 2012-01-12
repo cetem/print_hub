@@ -21,7 +21,7 @@ class CatalogControllerTest < ActionController::TestCase
     CustomerSession.create(customers(:student))
     tag = Tag.find(tags(:notes).id)
 
-    get :index, :tag_id => tag.to_param
+    get :index, tag_id: tag.to_param
     assert_response :success
     assert_not_nil assigns(:documents)
     assert_equal tag.documents.count, assigns(:documents).size
@@ -32,7 +32,7 @@ class CatalogControllerTest < ActionController::TestCase
 
   test 'should get index with search filter' do
     CustomerSession.create(customers(:student))
-    get :index, :q => 'Math'
+    get :index, q: 'Math'
     assert_response :success
     assert_not_nil assigns(:documents)
     assert_equal 2, assigns(:documents).size
@@ -43,7 +43,7 @@ class CatalogControllerTest < ActionController::TestCase
   
   test 'should show document' do
     CustomerSession.create(customers(:student))
-    get :show, :id => @document.to_param
+    get :show, id: @document.to_param
     assert_response :success
     assert_select '#error_body', false
     assert_template 'catalog/show'
@@ -53,9 +53,9 @@ class CatalogControllerTest < ActionController::TestCase
     CustomerSession.create(customers(:student))
     
     assert File.exists?(@document.file.path(:original))
-    get :download, :id => @document.to_param, :style => :original
+    get :download, id: @document.to_param, style: :original
     assert_redirected_to catalog_url
-    assert_equal I18n.t(:'view.documents.non_existent'), flash.notice
+    assert_equal I18n.t('view.documents.non_existent'), flash.notice
   end
   
   test 'should not download document if no exist' do
@@ -66,18 +66,18 @@ class CatalogControllerTest < ActionController::TestCase
     end
     
     assert !File.exists?(@document.file.path(:pdf_thumb))
-    get :download, :id => @document.to_param, :style => :pdf_thumb
+    get :download, id: @document.to_param, style: :pdf_thumb
     assert_redirected_to catalog_url
-    assert_equal I18n.t(:'view.documents.non_existent'), flash.notice
+    assert_equal I18n.t('view.documents.non_existent'), flash.notice
   end
 
   test 'should download document' do
     CustomerSession.create(customers(:student))
     @document.file.reprocess!(:pdf_thumb)
-    get :download, :id => @document.to_param, :style => :pdf_thumb
+    get :download, id: @document.to_param, style: :pdf_thumb
     assert_response :success
     assert_equal(
-      File.open(@document.reload.file.path(:pdf_thumb), :encoding => 'ASCII-8BIT').read,
+      File.open(@document.reload.file.path(:pdf_thumb), encoding: 'ASCII-8BIT').read,
       @response.body
     )
   end
@@ -88,9 +88,9 @@ class CatalogControllerTest < ActionController::TestCase
     
     i18n_scope = [:view, :catalog, :remove_from_order]
     
-    xhr :post, :add_to_order, :id => @document.to_param
+    xhr :post, :add_to_order, id: @document.to_param
     assert_response :success
-    assert_match %r{#{I18n.t(:title, :scope => i18n_scope)}}, @response.body
+    assert_match %r{#{I18n.t(:title, scope: i18n_scope)}}, @response.body
     assert session[:documents_to_order].include?(@document.id)
   end
   
@@ -101,9 +101,9 @@ class CatalogControllerTest < ActionController::TestCase
     session[:documents_to_order] = [@document.id]
     i18n_scope = [:view, :catalog, :add_to_order]
     
-    xhr :delete, :remove_from_order, :id => @document.to_param
+    xhr :delete, :remove_from_order, id: @document.to_param
     assert_response :success
-    assert_match %r{#{I18n.t(:title, :scope => i18n_scope)}},
+    assert_match %r{#{I18n.t(:title, scope: i18n_scope)}},
       @response.body
     assert !session[:documents_to_order].include?(@document.id)
     
@@ -114,7 +114,7 @@ class CatalogControllerTest < ActionController::TestCase
     CustomerSession.create(customers(:student))
     assert session[:documents_to_order].blank?
     
-    get :add_to_order_by_code, :id => @document.code
+    get :add_to_order_by_code, id: @document.code
     assert_redirected_to new_order_url
     assert session[:documents_to_order].include?(@document.id)
   end
@@ -123,7 +123,7 @@ class CatalogControllerTest < ActionController::TestCase
     CustomerSession.create(customers(:student))
     assert session[:documents_to_order].blank?
     
-    get :add_to_order_by_code, :id => 'wrong_code'
+    get :add_to_order_by_code, id: 'wrong_code'
     assert_redirected_to catalog_url
     assert_equal I18n.t('view.documents.non_existent'), flash.notice
     assert session[:documents_to_order].blank?

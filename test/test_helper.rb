@@ -77,4 +77,8 @@ class ActionDispatch::IntegrationTest
     # Revert Capybara.current_driver to Capybara.default_driver
     Capybara.use_default_driver
   end
+  
+  def assert_page_has_no_errors!
+    assert !page.has_css?('#error_body')
+  end
 end

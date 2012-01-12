@@ -1,6 +1,9 @@
 <div id="alert">
   <p><%= flash.alert %></p>
-  <div class="close"><%= link_to_function 'X', "$('#alert').stop().slideUp()",
-    :title => t(:'label.close') %></div>
+  <div class="close">
+    <%= link_to_function(
+      'X', "$('#alert').stop().slideUp()", title: t('label.close')
+    ) %>
+  </div>
 </div>
 <%= javascript_tag "$('#alert').delay(7000).slideUp();" %>
