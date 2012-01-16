@@ -32,10 +32,10 @@ class PrivateCustomerInteractionsTest < ActionDispatch::IntegrationTest
     
     assert_page_has_no_errors!
     assert page.has_css?('table.list')
-    assert page.has_css?('a.add_to_order')
-    assert !page.has_css?('a.remove_from_order')
     
     within 'table.list' do
+      assert page.has_css?('a.add_to_order')
+      assert !page.has_css?('a.remove_from_order')
       find('a.add_to_order').click
       assert page.has_css?('a.remove_from_order')
     end
@@ -58,7 +58,7 @@ class PrivateCustomerInteractionsTest < ActionDispatch::IntegrationTest
     assert page.has_css?('#show_order')
   end
   
-  test 'all on client calculations in new order should work' do
+  test 'should do all on client calculations in new order' do
     documents(:math_book).tap do |document|
       visit add_to_order_by_code_catalog_path(document.code)
       
@@ -80,7 +80,71 @@ class PrivateCustomerInteractionsTest < ActionDispatch::IntegrationTest
       within '.nested_item_actions' do
         assert find('.money').has_content?("$#{total_should_be}")
       end
+      
+      fill_in 'order[order_lines_attributes][0][copies]', with: '5'
+      
+      new_total_should_be = 5 * pages * price_per_copy
+      
+      within '.nested_item_actions' do
+        assert find('.money').has_content?("$#{new_total_should_be}")
+      end
     end
+  end
+  
+  test 'should customize the order' do
+    login
+    
+    fill_in 'search_query', with: 'Math'
+    
+    click_button I18n.t('label.search')
+    
+    assert_page_has_no_errors!
+    assert page.has_css?('table.list')
+    
+    within 'table.list' do
+      assert page.has_css?('a.add_to_order')
+      assert !page.has_css?('a.remove_from_order')
+      find('a.add_to_order').click
+      assert page.has_css?('a.remove_from_order')
+      
+      assert page.has_css?('a.add_to_order')
+      find('a.add_to_order').click
+    end
+    
+    within '#menu_links' do
+      click_link I18n.t('view.catalog.new_order')
+    end
+    
+    assert_equal new_order_path, current_path
+    assert_page_has_no_errors!
+    assert page.has_css?('#check_order')
+    
+    within '#check_order' do
+      assert !page.has_css?('.document_details')
+      click_link '...'
+      assert page.has_css?('.document_details')
+      original_price =
+        find('.nested_item_actions .money').text.match(/\d+\.\d+/)[0].to_f
+      
+      assert_equal 2, page.all('.order_line').size
+      click_link 'X'
+      
+      wait_until { page.all('.order_line').size == 1 }
+      
+      new_price =
+        find('.nested_item_actions .money').text.match(/\d+\.\d+/)[0].to_f
+      
+      assert_not_equal new_price, original_price
+    end
+
+    assert_difference ['Order.count', 'OrderLine.count'] do
+      click_button I18n.t(
+        'helpers.submit.create', model: Order.model_name.human
+      )
+    end
+    
+    assert_page_has_no_errors!
+    assert page.has_css?('#show_order')
   end
   
   private
