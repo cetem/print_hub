@@ -2,9 +2,6 @@ require 'test_helper'
 
 # Clase para probar el modelo "ApplicationModel"
 class ApplicationModelTest < ActiveSupport::TestCase
-  def setup
-  end
-  
   test 'text query with PostgreSQL' do
     Object.send :remove_const, :DB_ADAPTER
     ::DB_ADAPTER = 'PostgreSQL'

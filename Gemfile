@@ -43,4 +43,6 @@ group :test do
   gem 'ruby-prof', require: false
   gem 'capybara', require: false
   gem 'database_cleaner' # For Capybara
+  gem 'fabrication'
+  gem 'faker'
 end

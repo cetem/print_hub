@@ -49,5 +49,11 @@ module PrintHubApp
 
     # En caso de no tener memcached se pueden user archivos:
     # config.cache_store = :file_store, File.join(Rails.root, 'tmp', 'cache_files')
+    
+    # Configuración de Fabrication
+    config.generators do |g|
+      g.test_framework :test_unit, fixture_replacement: :fabrication
+      g.fixture_replacement :fabrication, dir: 'test/fabricators'
+    end
   end
 end
