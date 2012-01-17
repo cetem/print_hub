@@ -35,7 +35,7 @@ class PrivateCustomerInteractionsTest < ActionDispatch::IntegrationTest
     
     within 'table.list' do
       assert page.has_css?('a.add_to_order')
-      assert !page.has_css?('a.remove_from_order')
+      assert page.has_no_css?('a.remove_from_order')
       find('a.add_to_order').click
       assert page.has_css?('a.remove_from_order')
     end
@@ -103,7 +103,7 @@ class PrivateCustomerInteractionsTest < ActionDispatch::IntegrationTest
     
     within 'table.list' do
       assert page.has_css?('a.add_to_order')
-      assert !page.has_css?('a.remove_from_order')
+      assert page.has_no_css?('a.remove_from_order')
       find('a.add_to_order').click
       assert page.has_css?('a.remove_from_order')
       
@@ -120,7 +120,7 @@ class PrivateCustomerInteractionsTest < ActionDispatch::IntegrationTest
     assert page.has_css?('#check_order')
     
     within '#check_order' do
-      assert !page.has_css?('.document_details')
+      assert page.has_no_css?('.document_details')
       click_link '...'
       assert page.has_css?('.document_details')
       original_price =

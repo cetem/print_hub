@@ -79,6 +79,6 @@ class ActionDispatch::IntegrationTest
   end
   
   def assert_page_has_no_errors!
-    assert !page.has_css?('#error_body')
+    assert page.has_no_css?('#error_body')
   end
 end
