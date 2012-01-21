@@ -85,7 +85,7 @@ class UserTest < ActiveSupport::TestCase
       @user.errors[:last_name]
     assert_equal [error_message_from_model(@user, :language, :blank)],
       @user.errors[:language]
-    assert_equal [I18n.t(:'authlogic.error_messages.email_invalid')],
+    assert_equal [I18n.t('authlogic.error_messages.email_invalid')],
       @user.errors[:email]
   end
 

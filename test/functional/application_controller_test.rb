@@ -5,8 +5,8 @@ class ApplicationControllerTest < ActionController::TestCase
 
   def setup
     @controller.send :reset_session
-    @controller.send :'response=', @response
-    @controller.send :'request=', @request
+    @controller.send 'response=', @response
+    @controller.send 'request=', @request
   end
   
   test 'current customer session' do

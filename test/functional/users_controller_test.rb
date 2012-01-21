@@ -92,7 +92,7 @@ class UsersControllerTest < ActionController::TestCase
     assert !File.exists?(@user.avatar.path)
     get :avatar, id: @user.to_param, style: :original
     assert_redirected_to action: :index
-    assert_equal I18n.t(:'view.users.non_existent_avatar'), flash.notice
+    assert_equal I18n.t('view.users.non_existent_avatar'), flash.notice
   end
 
   test 'should download avatar' do
