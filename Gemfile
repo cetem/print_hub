@@ -1,7 +1,8 @@
 source 'http://rubygems.org'
 
 gem 'rails', '3.1.3'
-
+# Previo sudo apt-get install libcupsys2-dev libxslt-dev libxml2-dev
+# sudo gem install linecache19 -- --with-ruby-include=/usr/lib/ruby/gems/1.9.1/
 gem 'pg'
 gem 'authlogic'
 gem 'rails-settings', git: 'https://github.com/100hz/rails-settings.git'
@@ -20,7 +21,6 @@ gem 'barby'
 gem 'rqrcode'
 gem 'capistrano'
 gem 'whenever', require: false
-# Previo sudo apt-get install libcupsys2-dev
 gem 'cups'
 gem 'pdf-reader'
 
@@ -33,7 +33,10 @@ group :assets do
 end
 
 group :development do
-  gem 'ruby-debug19', require: 'ruby-debug'
+# Si se usa ruby 1.9.2 descomentar estas lineas
+#  gem 'ruby-debug19', require: 'ruby-debug'
+#  gem 'linecache19'
+#  gem 'ruby-debug-base19'
   gem 'mongrel', '1.2.0.pre2'
 end
 
