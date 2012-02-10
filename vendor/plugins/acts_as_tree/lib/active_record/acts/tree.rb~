@@ -57,7 +57,7 @@ module ActiveRecord
             def self.root
               first(:conditions => "#{configuration[:foreign_key]} IS NULL", :order => #{configuration[:order].nil? ? 'nil' : %Q{"#{configuration[:order]}"}})
             end
-          RUBY
+          EOV
         end
       end
 

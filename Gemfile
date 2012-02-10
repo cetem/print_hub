@@ -20,7 +20,6 @@ gem 'barby'
 gem 'rqrcode'
 gem 'capistrano'
 gem 'whenever', require: false
-# Previo sudo apt-get install libcupsys2-dev
 gem 'cups'
 gem 'pdf-reader'
 
@@ -33,7 +32,7 @@ group :assets do
 end
 
 group :development do
-  gem 'ruby-debug19', require: 'ruby-debug'
+#  gem 'ruby-debug19', require: 'ruby-debug'
   gem 'mongrel', '1.2.0.pre2'
 end
 
