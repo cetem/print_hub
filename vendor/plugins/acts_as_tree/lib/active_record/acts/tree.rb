@@ -47,7 +47,7 @@ module ActiveRecord
           belongs_to :parent, :class_name => name, :foreign_key => configuration[:foreign_key], :counter_cache => configuration[:counter_cache]
           has_many :children, :class_name => name, :foreign_key => configuration[:foreign_key], :order => configuration[:order], :dependent => configuration[:dependent_children], :include => configuration[:include]
 
-          class_eval <<-EOV
+          class_eval <<-RUBY
             include ActiveRecord::Acts::Tree::InstanceMethods
 
             def self.roots
@@ -57,7 +57,7 @@ module ActiveRecord
             def self.root
               first(:conditions => "#{configuration[:foreign_key]} IS NULL", :order => #{configuration[:order].nil? ? 'nil' : %Q{"#{configuration[:order]}"}})
             end
-          EOV
+          RUBY
         end
       end
 
