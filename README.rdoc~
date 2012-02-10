@@ -35,10 +35,8 @@ Previously run:
 - cd proyects/print_hub
 - bundle install
 
-If the bundle boom ^^ for linecache19 run:
+If the bundle boom ^^ run:
 - gem install linecache19 -- --with-ruby-include=/usr/lib/ruby/gems/1.9.1/ #but pointing to your gems directory
 
-Install a virtual pdf printer via /system/printers o  /localhost:631/
-with mark GENERIC Postcript *
 
 
