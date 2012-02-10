@@ -146,6 +146,43 @@ class PrivateCustomerInteractionsTest < ActionDispatch::IntegrationTest
     assert_page_has_no_errors!
     assert page.has_css?('#show_order')
   end
+
+ test 'should change the password and login with the correct' do
+      
+    login 
+    
+    assert_page_has_no_errors!
+    
+    within '#menu_links' do
+      click_link I18n.t('customer_menu.profile')
+    end
+    
+    fill_in 'customer_password', with: '123456'
+    fill_in 'customer_password_confirmation', with: '123456'
+    click_button I18n.t('view.customers.update_profile')
+    
+    assert_page_has_no_errors!
+    
+    assert_equal new_customer_session_path, current_path
+    
+    fill_in 'customer_session_email',
+              with: customers(:student_without_bonus).email
+    fill_in 'customer_session_password', with: '654321'
+    click_button I18n.t('view.customer_sessions.login')
+    
+    assert_equal customer_sessions_path, current_path
+    
+    assert_page_has_no_errors!
+    
+    fill_in 'customer_session_email',
+              with: customers(:student_without_bonus).email
+    fill_in 'customer_session_password', with: '123456'
+    click_button I18n.t('view.customer_sessions.login')
+    
+    assert_page_has_no_errors!
+    
+  end
+
   
   private
   

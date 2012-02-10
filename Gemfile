@@ -20,7 +20,6 @@ gem 'barby'
 gem 'rqrcode'
 gem 'capistrano'
 gem 'whenever', require: false
-# Previo sudo apt-get install libcupsys2-dev
 gem 'cups'
 gem 'pdf-reader'
 
