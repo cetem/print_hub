@@ -177,6 +177,7 @@ class PrivateCustomerInteractionsTest < ActionDispatch::IntegrationTest
     fill_in 'customer_session_email',
               with: customers(:student_without_bonus).email
     fill_in 'customer_session_password', with: '123456'
+    
     click_button I18n.t('view.customer_sessions.login')
     
     assert_page_has_no_errors!
