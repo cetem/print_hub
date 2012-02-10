@@ -1,0 +1,17 @@
+ test_cancel_print                                        0:00:11:451 ERROR
+        You have a nil object when you didn't expect it!
+        You might have expected an instance of Array.
+        The error occurred while evaluating nil.+
+        Exception `NoMethodError' at:
+        /usr/lib/ruby/gems/1.9.1/gems/activesupport-3.1.3/lib/active_support/testing/assertions.rb:60:in `block in assert_difference'
+        /usr/lib/ruby/gems/1.9.1/gems/activesupport-3.1.3/lib/active_support/testing/assertions.rb:57:in `each'
+        /usr/lib/ruby/gems/1.9.1/gems/activesupport-3.1.3/lib/active_support/testing/assertions.rb:57:in `each_with_index'
+        /usr/lib/ruby/gems/1.9.1/gems/activesupport-3.1.3/lib/active_support/testing/assertions.rb:57:in `assert_difference'
+        /usr/lib/ruby/gems/1.9.1/gems/activesupport-3.1.3/lib/active_support/testing/setup_and_teardown.rb:35:in `block in run'
+        /usr/lib/ruby/gems/1.9.1/gems/activesupport-3.1.3/lib/active_support/callbacks.rb:417:in `_run_setup_callbacks'
+        /usr/lib/ruby/gems/1.9.1/gems/activesupport-3.1.3/lib/active_support/callbacks.rb:81:in `run_callbacks'
+        /usr/lib/ruby/gems/1.9.1/gems/activesupport-3.1.3/lib/active_support/testing/setup_and_teardown.rb:34:in `run'
+
+
+ERROR GENERAL
+/usr/lib/ruby/gems/1.9.1/gems/activesupport-3.1.3/lib/active_support/dependencies.rb:240:in `block in require': iconv will be deprecated in the future, use String#encode instead.

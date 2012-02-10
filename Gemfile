@@ -1,8 +1,7 @@
 source 'http://rubygems.org'
 
 gem 'rails', '3.1.3'
-# Previo sudo apt-get install libcupsys2-dev libxslt-dev libxml2-dev
-# sudo gem install linecache19 -- --with-ruby-include=/usr/lib/ruby/gems/1.9.1/
+
 gem 'pg'
 gem 'authlogic'
 gem 'rails-settings', git: 'https://github.com/100hz/rails-settings.git'

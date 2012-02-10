@@ -33,7 +33,7 @@ class Order < ApplicationModel
   validates :scheduled_at, :customer, presence: true
   validates :status, inclusion: { in: STATUS.values }, allow_nil: true,
     allow_blank: true
-  validates_datetime :scheduled_at, allow_nil: true, allow_blank: true
+#  validates_datetime :scheduled_at, allow_nil: true, allow_blank: true
   validates_datetime :scheduled_at, allow_nil: true, allow_blank: true,
     after: -> { 12.hours.from_now }, on: :create
   validate :must_have_one_item

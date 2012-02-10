@@ -163,7 +163,7 @@ class PrivateCustomerInteractionsTest < ActionDispatch::IntegrationTest
     
     assert_page_has_no_errors!
     
-    assert_equal new_customer_session_path, current_path
+    assert_equal customer_sessions_path, current_path
     
     fill_in 'customer_session_email',
               with: customers(:student_without_bonus).email
@@ -172,7 +172,7 @@ class PrivateCustomerInteractionsTest < ActionDispatch::IntegrationTest
 
     click_button I18n.t('view.customer_sessions.login')
     
-    assert_equal customer_sessions_path, current_path
+    assert_equal new_customer_session_path, current_path
     
     assert_page_has_no_errors!
     
