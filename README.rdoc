@@ -2,6 +2,25 @@
 
 Web application for manage and print documents
 
+=== Installation Guide.
+
+Previously run:
+- sudo apt-get install libcupsys2-dev # For cups gem
+- sudo apt-get install libxslt-dev libxml2-dev # For nakogiri gem
+- sudo apt-get install cups-pdf # For virtual pdf printer
+- cd projects/print_hub
+- bundle install
+
+If the bundle boom ^^ for linecache19 run:
+- gem install linecache19 
+or search in Saint Google ^^
+
+Install a virtual pdf printer via /system/printers o  /localhost:631/
+with mark GENERIC Postcript *
+
+Enjoy ^^
+
+
 === (The MIT License)
 
 Copyright (c) 2008-2012 Cirope S.A.
