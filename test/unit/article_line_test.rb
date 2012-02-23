@@ -2,16 +2,33 @@ require 'test_helper'
 
 # Clase para probar el modelo "ArticleLine"
 class ArticleLineTest < ActiveSupport::TestCase
+  fixtures :article_lines
+
   # Función para inicializar las variables utilizadas en las pruebas
   def setup
-    @article_line = Fabricate(:article_line)
+    @article_line = ArticleLine.find article_lines(:math_binding_line).id
+  end
+
+  # Prueba que se realicen las búsquedas como se espera
+  test 'find' do
+    assert_kind_of ArticleLine, @article_line
+    assert_equal article_lines(:math_binding_line).article_id,
+      @article_line.article_id
+    assert_equal article_lines(:math_binding_line).print_id,
+      @article_line.print_id
+    assert_equal article_lines(:math_binding_line).units, @article_line.units
+    assert_equal article_lines(:math_binding_line).unit_price,
+      @article_line.unit_price
   end
 
   # Prueba la creación de una línea de artículo
   test 'create' do
     assert_difference 'ArticleLine.count' do
       @article_line = ArticleLine.create(
-        Fabricate.attributes_for(:article_line)
+        article_id: articles(:binding).id,
+        print_id: prints(:math_print).id,
+        units: 1,
+        unit_price: articles(:binding).price
       )
     end
   end
@@ -19,9 +36,8 @@ class ArticleLineTest < ActiveSupport::TestCase
   # Prueba de actualización de una línea de artículo
   test 'update' do
     assert_no_difference 'ArticleLine.count' do
-      assert @article_line.update_attributes(
-        Fabricate.attributes_for(:article_line, units: 100)
-      )
+      assert @article_line.update_attributes(units: 100),
+        @article_line.errors.full_messages.join('; ')
     end
 
     # No se puede modificar el atributo
@@ -87,7 +103,6 @@ class ArticleLineTest < ActiveSupport::TestCase
   end
 
   test 'price' do
-    assert_equal (@article_line.units * @article_line.unit_price).to_s,
-      @article_line.price.to_s
+    assert_equal '3.58', @article_line.price.to_s
   end
 end

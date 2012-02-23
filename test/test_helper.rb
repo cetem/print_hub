@@ -70,12 +70,9 @@ class ActionDispatch::IntegrationTest
   self.use_transactional_fixtures = false
 
   teardown do
-    # Truncate the database
-    DatabaseCleaner.clean
-    # Forget the (simulated) browser state
-    Capybara.reset_sessions!
-    # Revert Capybara.current_driver to Capybara.default_driver
-    Capybara.use_default_driver
+    DatabaseCleaner.clean       # Truncate the database
+    Capybara.reset_sessions!    # Forget the (simulated) browser state
+    Capybara.use_default_driver # Revert Capybara.current_driver to Capybara.default_driver
   end
   
   def assert_page_has_no_errors!

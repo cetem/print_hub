@@ -33,7 +33,7 @@ end
 
 group :development do
   gem 'ruby-debug19', require: 'ruby-debug'
-  gem 'mongrel', '1.2.0.pre2'
+  gem 'thin'
 end
 
 group :test do
@@ -42,6 +42,4 @@ group :test do
   gem 'ruby-prof', require: false
   gem 'capybara', require: false
   gem 'database_cleaner' # For Capybara
-  gem 'fabrication'
-  gem 'faker'
 end

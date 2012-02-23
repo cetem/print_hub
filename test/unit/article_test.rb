@@ -2,38 +2,52 @@ require 'test_helper'
 
 # Clase para probar el modelo "Article"
 class ArticleTest < ActiveSupport::TestCase
+  fixtures :articles
+
   # Función para inicializar las variables utilizadas en las pruebas
   def setup
-    @article = Fabricate(:article)
+    @article = Article.find articles(:binding).id
   end
 
-  # Prueba la creación de un artículo
+  # Prueba que se realicen las búsquedas como se espera
+  test 'find' do
+    assert_kind_of Article, @article
+    assert_equal articles(:binding).code, @article.code
+    assert_equal articles(:binding).name, @article.name
+    assert_equal articles(:binding).price, @article.price
+    assert_equal articles(:binding).description, @article.description
+  end
+
+  # Prueba la creación de un articleo
   test 'create' do
     assert_difference 'Article.count' do
-      @article = Article.create(Fabricate.attributes_for(:article))
+      @article = Article.create(
+        code: '00001234',
+        name: 'New name',
+        price: '15.2',
+        description: 'New description'
+      )
     end
   end
 
-  # Prueba de actualización de un artículos
+  # Prueba de actualización de un articleo
   test 'update' do
     assert_no_difference 'Article.count' do
-      assert @article.update_attributes(
-        Fabricate.attributes_for(:article, name: 'Updated name')
-      )
+      assert @article.update_attributes(name: 'Updated name'),
+        @article.errors.full_messages.join('; ')
     end
 
     assert_equal 'Updated name', @article.reload.name
   end
 
-  # Prueba de eliminación de artículos
+  # Prueba de eliminación de articleos
   test 'destroy' do
-    assert_difference('Article.count', -1) { @article.destroy }
+    article = Article.find(articles(:ringed).id)
+
+    assert_difference('Article.count', -1) { article.destroy }
   end
 
   test 'can not be destroyed' do
-    # No se puede eliminar si ya se ha usado
-    Fabricate(:article_line, article: @article)
-    
     assert_no_difference('Article.count', -1) { @article.destroy }
   end
 
@@ -88,14 +102,10 @@ class ArticleTest < ActiveSupport::TestCase
     @article.code = '-1'
     assert @article.invalid?
     assert_equal 2, @article.errors.count
-    assert_equal [
-      error_message_from_model(
-        @article, :price, :greater_than_or_equal_to, count: 0
-      )
-    ], @article.errors[:price]
-    assert_equal [
-      error_message_from_model(@article, :code, :greater_than, count: 0)
-    ], @article.errors[:code]
+    assert_equal [error_message_from_model(@article, :price,
+        :greater_than_or_equal_to, count: 0)], @article.errors[:price]
+    assert_equal [error_message_from_model(@article, :code, :greater_than,
+        count: 0)], @article.errors[:code]
     
     @article.reload
     @article.code = '2147483648'
@@ -114,19 +124,14 @@ class ArticleTest < ActiveSupport::TestCase
   end
   
   test 'full text search' do
-    new_article = Fabricate(:article)
-    articles = Article.full_text([@article.name])
+    articles = Article.full_text(['Ringed'])
     
     assert_equal 1, articles.size
-    assert_equal @article.name, articles.first.name
+    assert_equal 'Ringed', articles.first.name
     
-    articles = Article.full_text([@article.code.to_s])
+    articles = Article.full_text(['111'])
     
     assert_equal 1, articles.size
-    assert_equal @article.code, articles.first.code
-    
-    articles = Article.full_text([new_article.name])
-    assert_equal 1, articles.size
-    assert_equal new_article.name, articles.first.name
+    assert_equal 111, articles.first.code
   end
 end
