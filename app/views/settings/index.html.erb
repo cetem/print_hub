@@ -12,8 +12,8 @@
       <tr class="<%= cycle('even', 'odd') %>">
         <td><%= setting.name %></td>
         <td><%= setting.value %></td>
-        <td><%= link_to t(:'label.show'), setting %></td>
-        <td><%= link_to t(:'label.edit'), edit_setting_path(setting) %></td>
+        <td><%= link_to t('label.show'), setting %></td>
+        <td><%= link_to t('label.edit'), edit_setting_path(setting) %></td>
       </tr>
     <% end %>
   </tbody>

@@ -12,7 +12,7 @@
       <%= f.check_box :remember_me %><%= f.label :remember_me %>
     </div>
     <div class="actions">
-      <%= f.submit t(:'view.user_sessions.login') %>
+      <%= f.submit t('view.user_sessions.login') %>
     </div>
   <% end %>
 </div>
@@ -21,6 +21,6 @@
   <div id="login_error">
     <p><%= @user_session.errors.full_messages.join('; ') %></p>
     <div class="close"><%= link_to_function 'X',
-      "$('#login_error').slideUp()", :title => t(:'label.close') %></div>
+      "$('#login_error').slideUp()", :title => t('label.close') %></div>
   </div>
 <% end %>

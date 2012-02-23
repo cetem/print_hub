@@ -18,7 +18,7 @@ class PasswordResetsControllerTest < ActionController::TestCase
     assert_difference 'ActionMailer::Base.deliveries.size' do
       post :create, :email => @customer.email
       assert_redirected_to new_customer_session_url
-      assert_equal I18n.t(:'view.password_resets.instructions_delivered'),
+      assert_equal I18n.t('view.password_resets.instructions_delivered'),
         flash.notice
     end
   end
@@ -27,7 +27,7 @@ class PasswordResetsControllerTest < ActionController::TestCase
     assert_no_difference 'ActionMailer::Base.deliveries.size' do
       post :create, :email => 'wrong@email.com'
       assert_response :success
-      assert_equal I18n.t(:'view.password_resets.email_not_found'), flash.notice
+      assert_equal I18n.t('view.password_resets.email_not_found'), flash.notice
       assert_select '#error_body', false
       assert_template 'password_resets/new'
     end
@@ -57,7 +57,7 @@ class PasswordResetsControllerTest < ActionController::TestCase
     }
 
     assert_redirected_to new_customer_session_url
-    assert_equal I18n.t(:'view.password_resets.correctly_updated'), flash.notice
+    assert_equal I18n.t('view.password_resets.correctly_updated'), flash.notice
     assert @customer.reload.valid_password?('updated_password')
   end
 end

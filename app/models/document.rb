@@ -138,15 +138,11 @@ class Document < ApplicationModel
 
     styles
   end
-  
-  # Invocado por PDF::Reader para establecer la cantidad de páginas del PDF
-  def page_count(pages)
-    self.pages = pages
-  end
 
   def extract_page_count
-    ::PDF::Reader.file(self.file.queued_for_write[:original].path, self,
-      pages: false)
+    PDF::Reader.new(self.file.queued_for_write[:original].path).tap do |pdf|
+      self.pages = pdf.page_count
+    end
 
   rescue PDF::Reader::MalformedPDFError
     false

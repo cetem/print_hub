@@ -11,10 +11,10 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20111218054445) do
+ActiveRecord::Schema.define(:version => 20120116002845) do
 
   create_table "article_lines", :force => true do |t|
-    t.integer  "print_id",                                                   :null => false
+    t.integer  "print_id"
     t.integer  "article_id",                                                 :null => false
     t.integer  "units",                                                      :null => false
     t.decimal  "unit_price",   :precision => 15, :scale => 3,                :null => false
@@ -171,7 +171,7 @@ ActiveRecord::Schema.define(:version => 20111218054445) do
     t.string   "range"
     t.boolean  "two_sided",                                     :default => true
     t.integer  "document_id"
-    t.integer  "print_id",                                                        :null => false
+    t.integer  "print_id"
     t.integer  "lock_version",                                  :default => 0
     t.datetime "created_at"
     t.datetime "updated_at"

@@ -134,4 +134,48 @@ class PublicCustomerInteractionsTest < ActionDispatch::IntegrationTest
       end
     end
   end
+  
+  test 'should give positive feedback in new customer help' do
+    visit new_customer_path
+    
+    assert_page_has_no_errors!
+    
+    within '#feedback' do
+      assert_difference 'Feedback.positive.count' do
+        click_link 'Si'
+        
+        assert page.has_content?(I18n.t('view.feedbacks.positive_return'))
+      end
+      
+      assert_equal 'new_customer',
+        Feedback.positive.order('created_at').last.item
+    end
+  end
+  
+  test 'should give negative feedback with comment in new customer help' do
+    visit new_customer_path
+    
+    assert_page_has_no_errors!
+    
+    within '#feedback' do
+      assert_difference 'Feedback.negative.count' do
+        click_link 'No'
+        
+        assert page.has_content?(I18n.t('view.feedbacks.negative_return'))
+      end
+      
+      Feedback.negative.order('created_at').last.tap do |feedback|
+        assert_equal 'new_customer', feedback.item
+        assert feedback.comments.blank?
+      end
+      
+      fill_in 'feedback_comments', with: 'No me sirve'
+      
+      click_button I18n.t('view.feedbacks.submit')
+      assert page.has_content?(I18n.t('view.feedbacks.negative_comment_return'))
+      
+      assert_equal 'No me sirve',
+        Feedback.negative.order('created_at').last.comments
+    end
+  end
 end

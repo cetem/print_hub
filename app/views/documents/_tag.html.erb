@@ -6,7 +6,7 @@
         <% field_classes = [:autocomplete_field] %>
         <% field_classes << :field_with_errors unless f.object.errors[:tag_id].blank? %>
         <%= f.text_field :auto_tag_name, :class => field_classes.join(' '),
-          :'data-autocomplete-url' => autocomplete_for_tag_name_documents_path,
+          'data-autocomplete-url' => autocomplete_for_tag_name_documents_path,
           :id => "autocomplete_tag_#{id}", :value => nil %>
       <% else %>
         <%= tag %>
