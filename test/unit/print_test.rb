@@ -30,7 +30,7 @@ class PrintTest < ActiveSupport::TestCase
       'ArticleLine.count', 'Cups.all_jobs(@printer).keys.sort.last']
     
     assert_difference counts do
-      @print = Print.create(
+      @print = Print.create({
         printer: @printer,
         user_id: users(:administrator).id,
         scheduled_at: '',
@@ -43,8 +43,8 @@ class PrintTest < ActiveSupport::TestCase
             # No importan las páginas, se establecen desde el documento
             pages: 1,
             two_sided: false,
-            document: documents(:math_book)
-          }
+            document_id: documents(:math_book).id
+          }.slice(*PrintJob.accessible_attributes.map(&:to_sym))
         },
         article_lines_attributes: {
           '1' => {
@@ -52,15 +52,15 @@ class PrintTest < ActiveSupport::TestCase
             units: 1,
             # No importa el precio, se establece desde el artículo
             unit_price: 12.0
-          }
+          }.slice(*ArticleLine.accessible_attributes.map(&:to_sym))
         },
         payments_attributes: {
           '1' => {
             amount: 36.79,
             paid: 36.79
-          }
+          }.slice(*Payment.accessible_attributes.map(&:to_sym))
         }
-      )
+      }.slice(*Print.accessible_attributes.map(&:to_sym)))
     end
 
     assert_equal 1, @print.reload.payments.size
@@ -78,7 +78,7 @@ class PrintTest < ActiveSupport::TestCase
     counts = ['Print.count', 'Payment.count', 'ArticleLine.count']
     
     assert_difference counts do
-      @print = Print.create(
+      @print = Print.create({
         printer: @printer,
         user_id: users(:administrator).id,
         scheduled_at: '',
@@ -89,15 +89,15 @@ class PrintTest < ActiveSupport::TestCase
             units: 1,
             # No importa el precio, se establece desde el artículo
             unit_price: 12.0
-          }
+          }.slice(*ArticleLine.accessible_attributes.map(&:to_sym))
         },
         payments_attributes: {
           '1' => {
             amount: 1.79,
             paid: 1.79
-          }
+          }.slice(*Payment.accessible_attributes.map(&:to_sym))
         }
-      )
+      }.slice(*Print.accessible_attributes.map(&:to_sym)))
     end
 
     assert_equal 1, @print.reload.payments.size
@@ -114,7 +114,7 @@ class PrintTest < ActiveSupport::TestCase
   test 'create scheduled' do
     assert_difference ['Print.count', 'PrintJob.count', 'Payment.count'] do
       assert_no_difference 'Cups.all_jobs(@printer).keys.sort.last' do
-        @print = Print.create(
+        @print = Print.create({
           printer: '',
           user_id: users(:administrator).id,
           scheduled_at: 2.hours.from_now,
@@ -127,16 +127,16 @@ class PrintTest < ActiveSupport::TestCase
               # No importan las páginas, se establecen desde el documento
               pages: 1,
               two_sided: false,
-              document: documents(:math_book)
-            }
+              document_id: documents(:math_book).id
+            }.slice(*PrintJob.accessible_attributes.map(&:to_sym))
           },
           payments_attributes: {
             '1' => {
               amount: 35.00,
               paid: 35.00
-            }
+            }.slice(*Payment.accessible_attributes.map(&:to_sym))
           }
-        )
+        }.slice(*Print.accessible_attributes.map(&:to_sym)))
       end
     end
 
@@ -154,7 +154,7 @@ class PrintTest < ActiveSupport::TestCase
   test 'create with avoid printing' do
     assert_difference ['Print.count', 'PrintJob.count', 'Payment.count'] do
       assert_no_difference 'Cups.all_jobs(@printer).keys.sort.last' do
-        @print = Print.create(
+        @print = Print.create({
           printer: @printer,
           user_id: users(:administrator).id,
           scheduled_at: '',
@@ -167,16 +167,16 @@ class PrintTest < ActiveSupport::TestCase
               # No importan las páginas, se establecen desde el documento
               pages: 1,
               two_sided: false,
-              document: documents(:math_book)
-            }
+              document_id: documents(:math_book).id
+            }.slice(*PrintJob.accessible_attributes.map(&:to_sym))
           },
           payments_attributes: {
             '1' => {
               amount: 35.00,
               paid: 35.00
-            }
+            }.slice(*Payment.accessible_attributes.map(&:to_sym))
           }
-        )
+        }.slice(*Print.accessible_attributes.map(&:to_sym)))
       end
     end
 
@@ -197,7 +197,7 @@ class PrintTest < ActiveSupport::TestCase
     
     assert_difference ['Print.count', 'PrintJob.count', 'Payment.count'] do
       assert_no_difference 'Cups.all_jobs(@printer).keys.sort.last' do
-        @print = Print.create(
+        @print = Print.create({
           printer: @printer,
           user_id: users(:administrator).id,
           scheduled_at: '',
@@ -210,16 +210,16 @@ class PrintTest < ActiveSupport::TestCase
               # No importan las páginas, se establecen desde el documento
               pages: 1,
               two_sided: false,
-              document: document
-            }
+              document_id: document.id
+            }.slice(*PrintJob.accessible_attributes.map(&:to_sym))
           },
           payments_attributes: {
             '1' => {
               amount: 1.00,
               paid: 1.00
-            }
+            }.slice(*Payment.accessible_attributes.map(&:to_sym))
           }
-        )
+        }.slice(*Print.accessible_attributes.map(&:to_sym)))
       end
     end
 
@@ -241,7 +241,7 @@ class PrintTest < ActiveSupport::TestCase
       'Cups.all_jobs(@printer).keys.sort.last', 'ArticleLine.count']
 
     assert_difference counts do
-      @print = Print.create(
+      @print = Print.create({
         printer: @printer,
         user_id: users(:administrator).id,
         customer_id: customers(:student).id,
@@ -252,8 +252,9 @@ class PrintTest < ActiveSupport::TestCase
             copies: 1,
             price_per_copy: 0.10,
             two_sided: false,
-            document: documents(:math_book)
-          } # 350 páginas = $35.00
+            document_id: documents(:math_book).id
+          }.slice(*PrintJob.accessible_attributes.map(&:to_sym))
+          # 350 páginas = $35.00
         },
         article_lines_attributes: {
           '1' => {
@@ -261,16 +262,16 @@ class PrintTest < ActiveSupport::TestCase
             units: 1,
             # No importa el precio, se establece desde el artículo
             unit_price: 12.0
-          }
+          }.slice(*ArticleLine.accessible_attributes.map(&:to_sym))
         },
         payments_attributes: {
           '1' => {
             amount: 36.79,
             paid: 36.79,
             paid_with: Payment::PAID_WITH[:credit]
-          }
+          }.slice(*Payment.accessible_attributes.map(&:to_sym))
         }
-      )
+      }.slice(*Print.accessible_attributes.map(&:to_sym)))
     end
 
     assert_equal 1, @print.reload.payments.size
@@ -289,7 +290,7 @@ class PrintTest < ActiveSupport::TestCase
       'Cups.all_jobs(@printer).keys.sort.last', 'ArticleLine.count']
 
     assert_no_difference counts do
-      @print = Print.create(
+      @print = Print.create({
         printer: @printer,
         user_id: users(:administrator).id,
         customer_id: customers(:student).id,
@@ -301,17 +302,18 @@ class PrintTest < ActiveSupport::TestCase
             copies: 1,
             price_per_copy: 0.10,
             two_sided: false,
-            document: documents(:math_book)
-          } # 350 páginas = $35.00
+            document_id: documents(:math_book).id
+          }.slice(*PrintJob.accessible_attributes.map(&:to_sym))
+          # 350 páginas = $35.00
         },
         payments_attributes: {
           '1' => {
             amount: 35.00,
             paid: 35.00,
             paid_with: Payment::PAID_WITH[:credit]
-          }
+          }.slice(*Payment.accessible_attributes.map(&:to_sym))
         }
-      )
+      }.slice(*Print.accessible_attributes.map(&:to_sym)))
     end
     
     assert_equal [error_message_from_model(@print, :credit_password, :invalid)],
@@ -322,7 +324,7 @@ class PrintTest < ActiveSupport::TestCase
     assert_difference ['Print.count', 'PrintJob.count', 'ArticleLine.count'] do
       assert_difference 'Cups.all_jobs(@printer).keys.sort.last' do
         assert_difference 'Payment.count', 2 do
-          @print = Print.create(
+          @print = Print.create({
             printer: @printer,
             user_id: users(:administrator).id,
             customer_id: customers(:student).id,
@@ -333,8 +335,9 @@ class PrintTest < ActiveSupport::TestCase
                 copies: 100,
                 price_per_copy: 0.10,
                 two_sided: false,
-                document: documents(:math_book)
-              } # 35000 páginas = $3500.00
+                document_id: documents(:math_book).id
+              }.slice(*PrintJob.accessible_attributes.map(&:to_sym))
+              # 35000 páginas = $3500.00
             },
             article_lines_attributes: {
               '1' => {
@@ -342,20 +345,20 @@ class PrintTest < ActiveSupport::TestCase
                 units: 1,
                 # No importa el precio, se establece desde el artículo
                 unit_price: 12.0
-              }
+              }.slice(*ArticleLine.accessible_attributes.map(&:to_sym))
             },
             payments_attributes: {
               '1' => {
                 amount: 3001.79,
                 paid: 3001.79
-              },
+              }.slice(*Payment.accessible_attributes.map(&:to_sym)),
               '2' => {
                 amount: 500.00,
                 paid: 500.00,
                 paid_with: Payment::PAID_WITH[:credit]
-              }
+              }.slice(*Payment.accessible_attributes.map(&:to_sym))
             }
-          )
+          }.slice(*Print.accessible_attributes.map(&:to_sym)))
         end
       end
     end
@@ -377,7 +380,7 @@ class PrintTest < ActiveSupport::TestCase
   test 'create with included documents' do
     assert_difference ['Print.count', 'PrintJob.count', 'Payment.count'] do
       assert_no_difference 'Cups.all_jobs(@printer).keys.sort.last' do
-        @print = Print.create(
+        @print = Print.create({
           printer: @printer,
           user_id: users(:administrator).id,
           scheduled_at: '',
@@ -388,9 +391,9 @@ class PrintTest < ActiveSupport::TestCase
             '1' => {
               amount: 24.50,
               paid: 24.50
-            }
+            }.slice(*Payment.accessible_attributes.map(&:to_sym))
           }
-        )
+        }.slice(*Print.accessible_attributes.map(&:to_sym)))
       end
     end
 
@@ -412,7 +415,7 @@ class PrintTest < ActiveSupport::TestCase
     
     assert_difference ['Print.count', 'PrintJob.count', 'Payment.count'] do
       assert_no_difference 'Cups.all_jobs(@printer).keys.sort.last' do
-        @print = Print.create(
+        @print = Print.create({
           printer: @printer,
           user_id: users(:administrator).id,
           scheduled_at: '',
@@ -422,9 +425,9 @@ class PrintTest < ActiveSupport::TestCase
             '1' => {
               amount: '24.5',
               paid: '24.5'
-            }
+            }.slice(*Payment.accessible_attributes.map(&:to_sym))
           }
-        )
+        }.slice(*Print.accessible_attributes.map(&:to_sym)))
       end
     end
 
@@ -446,7 +449,7 @@ class PrintTest < ActiveSupport::TestCase
     assert_difference ['Print.count', 'PrintJob.count'] do
       assert_difference 'Cups.all_jobs(@printer).keys.sort.last' do
         assert_no_difference 'Payment.count' do
-          @print = Print.create(
+          @print = Print.create({
             printer: @printer,
             user_id: nil,
             customer_id: customers(:student_without_bonus).id,
@@ -461,16 +464,16 @@ class PrintTest < ActiveSupport::TestCase
                 # No importan las páginas, se establecen desde el documento
                 pages: 1,
                 two_sided: false,
-                document: documents(:math_book)
-              }
+                document_id: documents(:math_book).id
+              }.slice(*PrintJob.accessible_attributes.map(&:to_sym))
             },
             payments_attributes: {
               '1' => {
                 amount: 35.00,
                 paid: 35.00
-              }
+              }.slice(*Payment.accessible_attributes.map(&:to_sym))
             }
-          )
+          }.slice(*Print.accessible_attributes.map(&:to_sym)))
         end
       end
     end
@@ -726,14 +729,20 @@ class PrintTest < ActiveSupport::TestCase
   end
 
   def build_new_print_from(print)
-    new_print = Print.new(print.attributes.except(:id))
+    new_print = Print.new(
+      print.attributes.slice(*Print.accessible_attributes.map(&:to_sym))
+    )
     new_print.print_jobs.clear
 
     print.print_jobs.each do |pj|
-      new_print.print_jobs.build(pj.attributes.except(:id))
+      new_print.print_jobs.build(
+        pj.attributes.slice(*PrintJob.accessible_attributes.map(&:to_sym))
+      )
     end
     print.article_lines.each do |al|
-      new_print.article_lines.build(al.attributes.except(:id))
+      new_print.article_lines.build(
+        al.attributes.slice(*ArticleLine.accessible_attributes.map(&:to_sym))
+      )
     end
 
     new_print.payments.build(amount: new_print.price)

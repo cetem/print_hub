@@ -12,15 +12,14 @@ class Order < ApplicationModel
   before_destroy :avoid_destruction
   before_save :can_be_modified?
   
-  # Atributos "permitidos"
-  attr_accessible :scheduled_at, :notes, :lock_version
-  
   # Atributos no persistentes
   attr_accessor :include_documents
-  # Atributos protegidos
-  attr_protected :status, :print
   # Atributos de sólo lectura
   attr_readonly :scheduled_at
+  
+  # Atributos "permitidos"
+  attr_accessible :scheduled_at, :notes, :lock_version, :include_documents,
+    :order_lines_attributes
   
   # Scopes
   scope :pending, where(status: STATUS[:pending])

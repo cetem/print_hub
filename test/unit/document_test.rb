@@ -32,7 +32,7 @@ class DocumentTest < ActiveSupport::TestCase
         'application/pdf'
       )
 
-      @document = Document.new(
+      @document = Document.new({
         code: '00001234',
         name: 'New name',
         stock: 1,
@@ -42,7 +42,7 @@ class DocumentTest < ActiveSupport::TestCase
         enable: true,
         tag_ids: [tags(:books).id, tags(:notes).id],
         file: file
-      )
+      }.slice(*Document.accessible_attributes.map(&:to_sym)))
 
       assert @document.save
     end
@@ -64,7 +64,7 @@ class DocumentTest < ActiveSupport::TestCase
   # Prueba la creación de un documento con múltiples páginas
   test 'create a multipage document' do
     assert_difference 'Document.count' do
-      @document = Document.new(
+      @document = Document.new({
         code: '00001234',
         name: 'New name',
         stock: 1,
@@ -73,7 +73,7 @@ class DocumentTest < ActiveSupport::TestCase
         enable: true,
         description: 'New description',
         tag_ids: [tags(:books).id, tags(:notes).id]
-      )
+      }.slice(*Document.accessible_attributes.map(&:to_sym)))
 
       @document.file = Rack::Test::UploadedFile.new(
         File.join(Rails.root, 'test', 'fixtures', 'files', 'multipage_test.pdf'),

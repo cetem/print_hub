@@ -195,8 +195,8 @@
         enable: 'Habilitado'
         avatar: 'Imagen'
       user_session:
-          username: 'Usuario'
-          password: 'Contraseña'
+        username: 'Usuario'
+        password: 'Contraseña'
         
   customer_menu:
     catalog: 'Documentos'

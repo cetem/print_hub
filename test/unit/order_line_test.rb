@@ -30,12 +30,12 @@ class OrderLineTest < ActiveSupport::TestCase
   # Prueba la creación de un ítem de una orden
   test 'create with document' do
     assert_difference 'OrderLine.count' do
-      @order_line = OrderLine.create(
+      @order_line = OrderLine.create({
         copies: 2,
         price_per_copy: 1.10,
         two_sided: false,
         document_id: documents(:math_book).id
-      )
+      }.slice(*OrderLine.accessible_attributes.map(&:to_sym)))
     end
 
     # El precio por copia no se puede alterar

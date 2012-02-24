@@ -9,7 +9,7 @@ class ArticleLine < ApplicationModel
   attr_accessor :auto_article_name
   
   # Restricciones de atributos
-  attr_protected :unit_price
+  attr_accessible :article_id, :units, :auto_article_name, :lock_version
   attr_readonly :article_id, :units, :unit_price, :print_id
 
   # Restricciones

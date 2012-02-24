@@ -27,7 +27,6 @@ class PrintJob < ApplicationModel
   attr_accessor :auto_document_name, :job_hold_until
 
   # Restricciones de atributos
-  attr_protected :job_id, :price_per_copy, :printed_copies
   attr_readonly :document_id, :copies, :pages, :range, :job_id, :two_sided,
     :print_id
 

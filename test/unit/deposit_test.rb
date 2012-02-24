@@ -73,7 +73,7 @@ class DepositTest < ActiveSupport::TestCase
     @deposit.amount = '1.2x'
     @deposit.remaining = '1.2x'
     # TODO: Descomentar cuando corrijan el problema en validates_timeliness
-    #@deposit.valid_until = '13/13/13'
+    # @deposit.valid_until = '13/13/13'
     assert @deposit.invalid?
     assert_equal 2, @deposit.errors.count
     assert_equal [error_message_from_model(@deposit, :amount, :not_a_number)],

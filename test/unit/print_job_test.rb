@@ -35,7 +35,7 @@ class PrintJobTest < ActiveSupport::TestCase
     document = Document.find(documents(:math_book).id);
 
     assert_difference 'PrintJob.count' do
-      @print_job = PrintJob.create(
+      @print_job = PrintJob.create({
         copies: 2,
         pages: document.pages,
         price_per_copy: 0.10,
@@ -44,7 +44,7 @@ class PrintJobTest < ActiveSupport::TestCase
         job_id: 1,
         print_id: prints(:math_print).id,
         document_id: document.id
-      )
+      }.slice(*PrintJob.accessible_attributes.map(&:to_sym)))
     end
 
     assert @print_job.reload.two_sided == false
@@ -57,7 +57,7 @@ class PrintJobTest < ActiveSupport::TestCase
   # Prueba la creación de un trabajo de impresión
   test 'create without document' do
     assert_difference 'PrintJob.count' do
-      @print_job = PrintJob.create(
+      @print_job = PrintJob.create({
         copies: 1,
         pages: 50,
         price_per_copy: 1111,
@@ -65,7 +65,7 @@ class PrintJobTest < ActiveSupport::TestCase
         two_sided: false,
         job_id: 1,
         print_id: prints(:math_print).id
-      )
+      }.slice(*PrintJob.accessible_attributes.map(&:to_sym)))
     end
 
     assert_equal '5.0', @print_job.price.to_s
@@ -446,7 +446,9 @@ class PrintJobTest < ActiveSupport::TestCase
   end
 
   test 'completed' do
-    print_job = PrintJob.create(@print_job.attributes.except(:id))
+    print_job = PrintJob.create(
+      @print_job.attributes.slice(*PrintJob.accessible_attributes.map(&:to_sym))
+    )
 
     assert !print_job.completed?
 

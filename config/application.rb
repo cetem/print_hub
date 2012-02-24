@@ -60,5 +60,9 @@ module PrintHubApp
     config.cache_store = :mem_cache_store, 'localhost', {
       namespace: "print_hub_#{Rails.env}".downcase
     }
+    
+    # Enable IdentityMap
+    # http://www.martinfowler.com/eaaCatalog/identityMap.html
+    config.active_record.identity_map = true
   end
 end

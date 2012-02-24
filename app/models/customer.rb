@@ -147,7 +147,6 @@ class Customer < ApplicationModel
     if self.valid_password?(password) || options[:avoid_password_check]
       to_pay = BigDecimal.new(amount.to_s)
       available_credits = self.credits.valids.order('valid_until DESC').to_a
-      credits_for_update = {'Bonus' => [], 'Deposit' => []}
       
       while to_pay > 0 && available_credits.size > 0
         credit = available_credits.shift
@@ -160,12 +159,10 @@ class Customer < ApplicationModel
           credit.remaining = 0
           to_pay -= remaining
         end
-
-        credits_for_update[credit.type] << credit
+        
+        credit.save! if options[:save]
       end
       
-      self.bonuses_attributes = credits_for_update['Bonus'].map(&:attributes)
-      self.deposits_attributes = credits_for_update['Deposit'].map(&:attributes)
       self.save! if options[:save]
 
       to_pay

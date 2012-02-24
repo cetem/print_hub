@@ -24,12 +24,12 @@ class ArticleLineTest < ActiveSupport::TestCase
   # Prueba la creación de una línea de artículo
   test 'create' do
     assert_difference 'ArticleLine.count' do
-      @article_line = ArticleLine.create(
+      @article_line = ArticleLine.create({
         article_id: articles(:binding).id,
         print_id: prints(:math_print).id,
         units: 1,
         unit_price: articles(:binding).price
-      )
+      }.slice(*ArticleLine.accessible_attributes.map(&:to_sym)))
     end
   end
 
