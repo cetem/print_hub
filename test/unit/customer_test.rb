@@ -273,7 +273,7 @@ class CustomerTest < ActiveSupport::TestCase
   test 'use credit' do
     # Usa el crédito que tiene disponible
     assert_equal '0',
-      @customer.use_credit(100, 'student123', save: true).to_s
+      @customer.use_credit(100, 'student123').to_s
     assert_equal '900.0', @customer.reload.free_credit.to_s
 
     assert_difference '@customer.bonuses.count' do
@@ -285,22 +285,22 @@ class CustomerTest < ActiveSupport::TestCase
 
     # Usa primero el crédito más próximo a vencer
     assert_equal '0',
-      @customer.use_credit(200, 'student123', save: true).to_s
+      @customer.use_credit(200, 'student123').to_s
     assert_equal '1700.0', @customer.free_credit.to_s
     assert_equal ['200.0', '500.0', '1000.0'],
       @customer.credits.valids.map(&:remaining).map(&:to_s)
     # Pagar más de lo que se puede con crédito
     assert_equal '300.0',
-      @customer.use_credit(2000, 'student123', save: true).to_s
+      @customer.use_credit(2000, 'student123').to_s
     assert_equal '0.0', @customer.free_credit.to_s
     # Intentar pagar sin crédito
     assert_equal '100.0',
-      @customer.use_credit(100, 'student123', save: true).to_s
+      @customer.use_credit(100, 'student123').to_s
   end
   
   test 'can not use credit with wrong password' do
     assert_equal false,
-      @customer.use_credit(100, 'wrong_password', save: true)
+      @customer.use_credit(100, 'wrong_password')
     assert_equal '1000.0', @customer.free_credit.to_s
   end
   

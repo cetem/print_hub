@@ -12,14 +12,14 @@ class Order < ApplicationModel
   before_destroy :avoid_destruction
   before_save :can_be_modified?
   
+  # Atributos "permitidos"
+  attr_accessible :scheduled_at, :notes, :lock_version, :include_documents,
+    :order_lines_attributes
+  
   # Atributos no persistentes
   attr_accessor :include_documents
   # Atributos de sólo lectura
   attr_readonly :scheduled_at
-  
-  # Atributos "permitidos"
-  attr_accessible :scheduled_at, :notes, :lock_version, :include_documents,
-    :order_lines_attributes
   
   # Scopes
   scope :pending, where(status: STATUS[:pending])
@@ -81,6 +81,14 @@ class Order < ApplicationModel
   
   def status_text
     I18n.t("view.orders.status.#{STATUS.invert[self.status]}")
+  end
+  
+  def print
+    read_attribute(:print)
+  end
+  
+  def print=(print)
+    write_attribute(:print, print)
   end
   
   STATUS.each do |status, value|

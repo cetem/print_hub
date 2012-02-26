@@ -137,9 +137,11 @@ class PrintJob < ApplicationModel
         options += "-t #{user || 'ph'}-#{timestamp} "
         options += self.options.map { |o, v| "-o #{o}=#{v}" }.join(' ')
         out = %x{lp #{options} "#{self.document.file.path}" 2>&1}
-
+        
         self.job_id = out.match(/#{Regexp.escape(printer)}-\d+/).to_a[0] || '-'
       end
+    else
+      puts "no no no"
     end
   end
 
@@ -152,11 +154,11 @@ class PrintJob < ApplicationModel
   end
 
   def pending?
-    !%x{lpstat -W not-completed | grep "^#{self.job_id} "}.blank?
+    %x{lpstat -W not-completed | grep "^#{self.job_id} "}.present?
   end
 
   def completed?
-    !%x{lpstat -W completed | grep "^#{self.job_id} "}.blank?
+    %x{lpstat -W completed | grep "^#{self.job_id} "}.present?
   end
   
   def self.printer_stats_between(from, to)

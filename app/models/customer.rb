@@ -160,10 +160,10 @@ class Customer < ApplicationModel
           to_pay -= remaining
         end
         
-        credit.save! if options[:save]
+        credit.save!
       end
       
-      self.save! if options[:save]
+      self.save!
 
       to_pay
     else

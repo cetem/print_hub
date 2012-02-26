@@ -730,18 +730,18 @@ class PrintTest < ActiveSupport::TestCase
 
   def build_new_print_from(print)
     new_print = Print.new(
-      print.attributes.slice(*Print.accessible_attributes.map(&:to_sym))
+      print.attributes.slice(*Print.accessible_attributes)
     )
     new_print.print_jobs.clear
 
     print.print_jobs.each do |pj|
       new_print.print_jobs.build(
-        pj.attributes.slice(*PrintJob.accessible_attributes.map(&:to_sym))
+        pj.attributes.slice(*PrintJob.accessible_attributes)
       )
     end
     print.article_lines.each do |al|
       new_print.article_lines.build(
-        al.attributes.slice(*ArticleLine.accessible_attributes.map(&:to_sym))
+        al.attributes.slice(*ArticleLine.accessible_attributes)
       )
     end
 
