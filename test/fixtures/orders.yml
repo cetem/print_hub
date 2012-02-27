@@ -1,20 +1,20 @@
 for_tomorrow:
   scheduled_at: <%= 1.day.from_now.to_s(:db) %>
   status: <%= Order::STATUS[:pending] %>
-  print: false
+  print_out: false
   notes: Order notes
   customer: student_without_bonus
 
 from_yesterday:
   scheduled_at: <%= 1.day.ago.to_s(:db) %>
   status: <%= Order::STATUS[:pending] %>
-  print: false
+  print_out: false
   notes: Order notes
   customer: student_without_bonus
   
 for_10_minutes_from_now:
   scheduled_at: <%= 10.minutes.from_now.to_s(:db) %>
   status: <%= Order::STATUS[:pending] %>
-  print: true
+  print_out: true
   notes: Order notes
   customer: student

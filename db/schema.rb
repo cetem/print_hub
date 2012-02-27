@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120116002845) do
+ActiveRecord::Schema.define(:version => 20120227025951) do
 
   create_table "article_lines", :force => true do |t|
     t.integer  "print_id"
@@ -134,7 +134,7 @@ ActiveRecord::Schema.define(:version => 20120116002845) do
   create_table "orders", :force => true do |t|
     t.datetime "scheduled_at",                             :null => false
     t.string   "status",       :limit => 1,                :null => false
-    t.boolean  "print",                                    :null => false
+    t.boolean  "print_out",                                :null => false
     t.text     "notes"
     t.integer  "lock_version",              :default => 0
     t.integer  "customer_id",                              :null => false
@@ -143,7 +143,7 @@ ActiveRecord::Schema.define(:version => 20120116002845) do
   end
 
   add_index "orders", ["customer_id"], :name => "index_orders_on_customer_id"
-  add_index "orders", ["print"], :name => "index_orders_on_print"
+  add_index "orders", ["print_out"], :name => "index_orders_on_print_out"
   add_index "orders", ["scheduled_at"], :name => "index_orders_on_scheduled_at"
   add_index "orders", ["status"], :name => "index_orders_on_status"
 

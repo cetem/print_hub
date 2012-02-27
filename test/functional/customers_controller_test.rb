@@ -61,14 +61,14 @@ class CustomersControllerTest < ActionController::TestCase
             new_1: {
               amount: '100',
               valid_until: I18n.l(1.day.from_now.to_date)
-            },
+            }.slice(*Bonus.accessible_attributes.map(&:to_sym)),
             # Debe ser ignorado por su monto = 0
             new_2: {
               amount: '0',
               valid_until: I18n.l(1.day.from_now.to_date)
-            }
+            }.slice(*Bonus.accessible_attributes.map(&:to_sym))
           }
-        }
+        }.slice(*Customer.accessible_attributes.map(&:to_sym))
       end
     end
 
@@ -87,7 +87,7 @@ class CustomersControllerTest < ActionController::TestCase
         email: 'jar_jar@printhub.com',
         password: 'jarjar123',
         password_confirmation: 'jarjar123'
-      }
+      }.slice(*Customer.accessible_attributes.map(&:to_sym))
     end
 
     assert_redirected_to new_customer_session_url
@@ -109,9 +109,9 @@ class CustomersControllerTest < ActionController::TestCase
             new_1: {
               amount: '100',
               valid_until: I18n.l(1.day.from_now.to_date)
-            }
+            }.slice(*Bonus.accessible_attributes.map(&:to_sym))
           }
-        }
+        }.slice(*Customer.accessible_attributes.map(&:to_sym))
       end
     end
 
@@ -151,9 +151,9 @@ class CustomersControllerTest < ActionController::TestCase
             new_1: {
               amount: '100.0',
               valid_until: '' # Por siempre
-            }
+            }.slice(*Bonus.accessible_attributes.map(&:to_sym))
           }
-        }
+        }.slice(*Customer.accessible_attributes.map(&:to_sym))
       end
     end
 
@@ -212,9 +212,9 @@ class CustomersControllerTest < ActionController::TestCase
             new_1: {
               amount: '100.0',
               valid_until: '' # Por siempre
-            }
+            }.slice(*Bonus.accessible_attributes.map(&:to_sym))
           }
-        }
+        }.slice(*Customer.accessible_attributes.map(&:to_sym))
       end
     end
 

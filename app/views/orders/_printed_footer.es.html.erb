@@ -1,28 +1,28 @@
 <footer id="order_meta" class="not_printable">
   <% if @order.pending? %>
     <% if @order.new_record? %>
-      <div id="printed" <%= raw 'style="display: none"' unless @order.print %>>
+      <div id="printed" <%= raw 'style="display: none"' unless @order.print_out %>>
         <p>
           Presioná <strong>Guardar Pedido</strong> y tus documentos estarán
           <strong>impresos</strong> y listo para la fecha programada
         </p>
       </div>
 
-      <div id="not_printed" <%= raw 'style="display: none"' if @order.print %>>
+      <div id="not_printed" <%= raw 'style="display: none"' if @order.print_out %>>
         <p>
           Presioná <strong>Guardar Pedido</strong> y <strong>acercate</strong>
           personalmente hasta el centro de copiado para imprimir los documentos
         </p>
       </div>
     <% else %>
-      <div id="printed" <%= raw 'style="display: none"' unless @order.print %>>
+      <div id="printed" <%= raw 'style="display: none"' unless @order.print_out %>>
         <p>
           El pedido estará <strong>impreso</strong> y listo para la fecha
           programada
         </p>
       </div>
 
-      <div id="not_printed" <%= raw 'style="display: none"' if @order.print %>>
+      <div id="not_printed" <%= raw 'style="display: none"' if @order.print_out %>>
         <p>
           Para imprimir los documentos <strong>acercate</strong> personalmente
           hasta el centro de copiado y consultá por el pedido

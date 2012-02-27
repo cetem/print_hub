@@ -114,7 +114,7 @@
         scheduled_at: 'Programado para'
         status: 'Estado'
         notes: 'Notas'
-        print: 'Imprimir'
+        print_out: 'Imprimir'
       order/order_lines:
         one: 'Línea de pedido'
         other: 'Líneas de pedido'

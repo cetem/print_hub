@@ -16,7 +16,7 @@ class OrdersControllerTest < ActionController::TestCase
     assert_not_nil assigns(:orders)
     # Se listan órdenes de mas de un cliente
     assert assigns(:orders).map(&:customer_id).uniq.size > 1
-    assert assigns(:orders).any? { |o| !o.print }
+    assert assigns(:orders).any? { |o| !o.print_out }
     assert_select '#error_body', false
     assert_template 'orders/index'
   end
@@ -27,7 +27,7 @@ class OrdersControllerTest < ActionController::TestCase
     get :index, type: 'print'
     assert_response :success
     assert_not_nil assigns(:orders)
-    assert assigns(:orders).all? { |o| o.print }
+    assert assigns(:orders).all? { |o| o.print_out }
     assert_select '#error_body', false
     assert_template 'orders/index'
   end

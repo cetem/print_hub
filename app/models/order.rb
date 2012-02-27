@@ -25,7 +25,7 @@ class Order < ApplicationModel
   scope :pending, where(status: STATUS[:pending])
   scope :completed, where(status: STATUS[:completed])
   scope :cancelled, where(status: STATUS[:cancelled])
-  scope :for_print, where(print: true)
+  scope :for_print, where(print_out: true)
   scope :scheduled_soon, where('scheduled_at <= ?', 6.hour.from_now)
   
   # Restricciones
@@ -56,7 +56,7 @@ class Order < ApplicationModel
       end
     end
     
-    self.print = !!self.customer.try(:can_afford?, self.price)
+    self.print_out = !!self.customer.try(:can_afford?, self.price)
     
     self.order_lines.each do |ol|
       ol.price_per_copy = PriceChooser.choose(
@@ -81,14 +81,6 @@ class Order < ApplicationModel
   
   def status_text
     I18n.t("view.orders.status.#{STATUS.invert[self.status]}")
-  end
-  
-  def print
-    read_attribute(:print)
-  end
-  
-  def print=(print)
-    write_attribute(:print, print)
   end
   
   STATUS.each do |status, value|

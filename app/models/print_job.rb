@@ -140,8 +140,6 @@ class PrintJob < ApplicationModel
         
         self.job_id = out.match(/#{Regexp.escape(printer)}-\d+/).to_a[0] || '-'
       end
-    else
-      puts "no no no"
     end
   end
 

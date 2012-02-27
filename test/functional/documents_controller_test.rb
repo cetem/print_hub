@@ -72,7 +72,7 @@ class DocumentsControllerTest < ActionController::TestCase
         auto_tag_name: 'Some name given in autocomplete',
         tag_ids: [tags(:books).id, tags(:notes).id],
         file: fixture_file_upload('/files/test.pdf', 'application/pdf')
-      }
+      }.slice(*Document.accessible_attributes.map(&:to_sym))
     end
 
     assert_redirected_to documents_path
@@ -110,7 +110,7 @@ class DocumentsControllerTest < ActionController::TestCase
       enable: '1',
       description: 'Updated description',
       auto_tag_name: 'Some name given in autocomplete'
-    }
+    }.slice(*Document.accessible_attributes.map(&:to_sym))
     assert_redirected_to documents_path
     assert_equal 'Updated name', @document.reload.name
   end

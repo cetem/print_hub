@@ -36,7 +36,7 @@ class OrderTest < ActiveSupport::TestCase
       end
     end
     
-    assert !@order.reload.print
+    assert !@order.reload.print_out
   end
   
   # Prueba la creación de un pedido
@@ -57,7 +57,7 @@ class OrderTest < ActiveSupport::TestCase
       end
     end
     
-    assert @order.reload.print
+    assert @order.reload.print_out
   end
   
   test 'create with included documents' do
