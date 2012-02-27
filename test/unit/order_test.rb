@@ -22,9 +22,9 @@ class OrderTest < ActiveSupport::TestCase
   test 'create' do
     assert_difference ['Order.count', 'OrderLine.count'] do
       assert_difference 'Version.count', 2 do
-        @order = Order.create(
+        customer = customers(:student_without_bonus)
+        @order = customer.orders.create(
           scheduled_at: 10.days.from_now,
-          customer_id: customers(:student_without_bonus).id,
           order_lines_attributes: {
             new_1: {
               copies: 2,
@@ -36,16 +36,16 @@ class OrderTest < ActiveSupport::TestCase
       end
     end
     
-    assert !@order.reload.print
+    assert !@order.reload.print_out
   end
   
   # Prueba la creación de un pedido
   test 'create with credit and allow printing' do
     assert_difference ['Order.count', 'OrderLine.count'] do
       assert_difference 'Version.count', 2 do
-        @order = Order.create(
+        customer = customers(:student)
+        @order = customer.orders.create(
           scheduled_at: 10.days.from_now,
-          customer_id: customers(:student).id,
           order_lines_attributes: {
             new_1: {
               copies: 2,
@@ -57,14 +57,14 @@ class OrderTest < ActiveSupport::TestCase
       end
     end
     
-    assert @order.reload.print
+    assert @order.reload.print_out
   end
   
   test 'create with included documents' do
     assert_difference ['Order.count', 'OrderLine.count'] do
-      @order = Order.create(
+      customer = customers(:student_without_bonus)
+      @order = customer.orders.create(
         scheduled_at: 10.days.from_now,
-        customer_id: customers(:student_without_bonus).id,
         include_documents: [documents(:math_book).id]
       )
     end
@@ -73,9 +73,9 @@ class OrderTest < ActiveSupport::TestCase
   # Prueba la creación de un pedido
   test 'can not create for current date' do
     assert_no_difference ['Order.count', 'OrderLine.count'] do
-      @order = Order.create(
+      customer = customers(:student_without_bonus)
+      @order = customer.orders.create(
         scheduled_at: Time.now,
-        customer_id: customers(:student_without_bonus).id,
         order_lines_attributes: {
           new_1: {
             copies: 2,

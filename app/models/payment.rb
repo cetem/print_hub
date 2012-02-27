@@ -14,10 +14,10 @@ class Payment < ApplicationModel
   scope :not_revoked, where(revoked: false)
   
   # Atributos "permitidos"
-  attr_accessible :amount, :paid, :paid_with, :payable_id, :lock_version
+  attr_accessible :id, :amount, :paid, :paid_with, :payable_id, :lock_version
 
   # Restricciones de los atributos
-  attr_readonly :amount
+  attr_readonly :id, :amount
 
   # Restricciones
   validates :amount, presence: true, numericality: { greater_than: 0 }

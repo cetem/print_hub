@@ -15,7 +15,7 @@ class PrintsControllerTest < ActionController::TestCase
     user = users(:operator)
 
     UserSession.create(user)
-    get :index
+    get :index, status: 'all'
     assert_response :success
     assert_not_nil assigns(:prints)
     assert_equal user.prints.count, assigns(:prints).size
@@ -28,7 +28,7 @@ class PrintsControllerTest < ActionController::TestCase
     user = users(:operator)
 
     UserSession.create(user)
-    get :index, :status => 'pending'
+    get :index, status: 'pending'
     assert_response :success
     assert_not_nil assigns(:prints)
     assert assigns(:prints).size > 0
@@ -41,7 +41,7 @@ class PrintsControllerTest < ActionController::TestCase
     user = users(:administrator)
     
     UserSession.create(user)
-    get :index
+    get :index, status: 'all'
     assert_response :success
     assert_not_nil assigns(:prints)
     assert_equal Print.count, assigns(:prints).size
@@ -54,7 +54,7 @@ class PrintsControllerTest < ActionController::TestCase
     user = users(:administrator)
 
     UserSession.create(user)
-    get :index, :status => 'pending'
+    get :index, status: 'pending'
     assert_response :success
     assert_not_nil assigns(:prints)
     assert_equal Print.pending.count, assigns(:prints).size
@@ -68,7 +68,7 @@ class PrintsControllerTest < ActionController::TestCase
     user = users(:administrator)
 
     UserSession.create(user)
-    get :index, :status => 'scheduled'
+    get :index, status: 'scheduled'
     assert_response :success
     assert_not_nil assigns(:prints)
     assert_equal Print.scheduled.count, assigns(:prints).size
@@ -82,7 +82,7 @@ class PrintsControllerTest < ActionController::TestCase
     user = users(:administrator)
 
     UserSession.create(user)
-    get :index, :status => 'pay_later'
+    get :index, status: 'pay_later'
     assert_response :success
     assert_not_nil assigns(:prints)
     assert_equal Print.pay_later.count, assigns(:prints).size
@@ -97,7 +97,7 @@ class PrintsControllerTest < ActionController::TestCase
     customer = customers(:student)
 
     UserSession.create(user)
-    get :index, :customer_id => customer.to_param
+    get :index, status: 'all', customer_id: customer.to_param
     assert_response :success
     assert_not_nil assigns(:prints)
     assert_equal customer.prints.count, assigns(:prints).size
@@ -121,7 +121,7 @@ class PrintsControllerTest < ActionController::TestCase
     
     order = Order.find(orders(:for_tomorrow).id)
     
-    get :new, :order_id => order.id
+    get :new, order_id: order.id
     assert_response :success
     assert_not_nil assigns(:print)
     assert_select '#error_body', false
@@ -146,7 +146,7 @@ class PrintsControllerTest < ActionController::TestCase
     UserSession.create(users(:administrator))
     session[:documents_for_printing] = [documents(:math_notes).id]
     
-    get :new, :clear_documents_for_printing => true
+    get :new, clear_documents_for_printing: true
     assert_response :success
     assert_not_nil assigns(:print)
     assert session[:documents_for_printing].blank?
@@ -166,38 +166,38 @@ class PrintsControllerTest < ActionController::TestCase
 
     assert_difference counts_array do
       assert_difference 'Version.count', 4 do
-        post :create, :print => {
-          :printer => @printer,
-          :customer_id => customer.id,
-          :scheduled_at => '',
-          :avoid_printing => '0',
-          :print_jobs_attributes => {
-            :new_1 => {
-              :copies => '1',
-              :pages => document.pages.to_s,
+        post :create, print: {
+          printer: @printer,
+          customer_id: customer.id,
+          scheduled_at: '',
+          avoid_printing: '0',
+          print_jobs_attributes: {
+            new_1: {
+              copies: '1',
+              pages: document.pages.to_s,
               # No importa el precio, se establece desde la configuración
-              :price_per_copy => '12.0',
-              :range => '',
-              :two_sided => '0',
-              :auto_document_name => 'Some name given in autocomplete',
-              :document_id => document.id.to_s
-            }
+              price_per_copy: '12.0',
+              range: '',
+              two_sided: '0',
+              auto_document_name: 'Some name given in autocomplete',
+              document_id: document.id.to_s
+            }.slice(*PrintJob.accessible_attributes.map(&:to_sym))
           },
-          :article_lines_attributes => {
-            :new_1 => {
-              :article_id => articles(:binding).id.to_s,
-              :units => '1',
+          article_lines_attributes: {
+            new_1: {
+              article_id: articles(:binding).id.to_s,
+              units: '1',
               # No importa el precio, se establece desde el artículo
-              :unit_price => '12.0'
-            }
+              unit_price: '12.0'
+            }.slice(*ArticleLine.accessible_attributes.map(&:to_sym))
           },
-          :payments_attributes => {
-            :new_1 => {
-              :amount => '36.79',
-              :paid => '36.79'
-            }
+          payments_attributes: {
+            new_1: {
+              amount: '36.79',
+              paid: '36.79'
+            }.slice(*Payment.accessible_attributes.map(&:to_sym))
           }
-        }
+        }.slice(*Print.accessible_attributes.map(&:to_sym))
       end
     end
 
@@ -217,30 +217,30 @@ class PrintsControllerTest < ActionController::TestCase
     assert_difference counts_array do
       assert_difference 'Version.count', 3 do
         assert_no_difference 'Cups.all_jobs(@printer).keys.sort.last' do
-          post :create, :print => {
-            :printer => @printer,
-            :customer_id => '',
-            :scheduled_at => '',
-            :avoid_printing => '1',
-            :print_jobs_attributes => {
-              :new_1 => {
-                :copies => '1',
-                :pages => document.pages.to_s,
+          post :create, print: {
+            printer: @printer,
+            customer_id: '',
+            scheduled_at: '',
+            avoid_printing: '1',
+            print_jobs_attributes: {
+              new_1: {
+                copies: '1',
+                pages: document.pages.to_s,
                 # No importa el precio, se establece desde la configuración
-                :price_per_copy => '12.0',
-                :range => '',
-                :two_sided => '0',
-                :auto_document_name => 'Some name given in autocomplete',
-                :document_id => document.id.to_s
-              }
+                price_per_copy: '12.0',
+                range: '',
+                two_sided: '0',
+                auto_document_name: 'Some name given in autocomplete',
+                document_id: document.id.to_s
+              }.slice(*PrintJob.accessible_attributes.map(&:to_sym))
             },
-            :payments_attributes => {
-              :new_1 => {
-                :amount => '35.00',
-                :paid => '35.00'
-              }
+            payments_attributes: {
+              new_1: {
+                amount: '35.00',
+                paid: '35.00'
+              }.slice(*Payment.accessible_attributes.map(&:to_sym))
             }
-          }
+          }.slice(*Print.accessible_attributes.map(&:to_sym))
         end
       end
     end
@@ -262,32 +262,32 @@ class PrintsControllerTest < ActionController::TestCase
 
     assert_difference counts_array do
       assert_difference 'Version.count', 4 do
-        post :create, :print => {
-          :printer => @printer,
-          :customer_id => customer.id,
-          :scheduled_at => '',
-          :avoid_printing => '0',
-          :credit_password => 'student123',
-          :print_jobs_attributes => {
-            :new_1 => {
-              :copies => '1',
-              :pages => document.pages.to_s,
+        post :create, print: {
+          printer: @printer,
+          customer_id: customer.id,
+          scheduled_at: '',
+          avoid_printing: '0',
+          credit_password: 'student123',
+          print_jobs_attributes: {
+            new_1: {
+              copies: '1',
+              pages: document.pages.to_s,
               # No importa el precio, se establece desde la configuración
-              :price_per_copy => '12.0',
-              :range => '',
-              :two_sided => '0',
-              :auto_document_name => 'Some name given in autocomplete',
-              :document_id => document.id.to_s
-            }
+              price_per_copy: '12.0',
+              range: '',
+              two_sided: '0',
+              auto_document_name: 'Some name given in autocomplete',
+              document_id: document.id.to_s
+            }.slice(*PrintJob.accessible_attributes.map(&:to_sym))
           },
-          :payments_attributes => {
-            :new_1 => {
-              :amount => '35.00',
-              :paid => '35.00',
-              :paid_with => Payment::PAID_WITH[:credit].to_s
-            }
+          payments_attributes: {
+            new_1: {
+              amount: '35.00',
+              paid: '35.00',
+              paid_with: Payment::PAID_WITH[:credit].to_s
+            }.slice(*Payment.accessible_attributes.map(&:to_sym))
           }
-        }
+        }.slice(*Print.accessible_attributes.map(&:to_sym))
       end
     end
 
@@ -306,36 +306,36 @@ class PrintsControllerTest < ActionController::TestCase
     customer = Customer.find customers(:student).id
 
     assert_difference counts_array do
-      post :create, :print => {
-        :printer => @printer,
-        :customer_id => customer.id,
-        :scheduled_at => '',
-        :avoid_printing => '0',
-        :print_jobs_attributes => {
-          :new_1 => {
-            :copies => '1',
-            :pages => '30',
+      post :create, print: {
+        printer: @printer,
+        customer_id: customer.id,
+        scheduled_at: '',
+        avoid_printing: '0',
+        print_jobs_attributes: {
+          new_1: {
+            copies: '1',
+            pages: '30',
             # No importa el precio, se establece desde la configuración
-            :price_per_copy => '12.0',
-            :range => '',
-            :two_sided => '0'
-          }
+            price_per_copy: '12.0',
+            range: '',
+            two_sided: '0'
+          }.slice(*PrintJob.accessible_attributes.map(&:to_sym))
         },
-        :article_lines_attributes => {
-          :new_1 => {
-            :article_id => articles(:binding).id.to_s,
-            :units => '1',
+        article_lines_attributes: {
+          new_1: {
+            article_id: articles(:binding).id.to_s,
+            units: '1',
             # No importa el precio, se establece desde el artículo
-            :unit_price => '12.0'
-          }
+            unit_price: '12.0'
+          }.slice(*ArticleLine.accessible_attributes.map(&:to_sym))
         },
-        :payments_attributes => {
-          :new_1 => {
-            :amount => '4.79',
-            :paid => '4.79'
-          }
+        payments_attributes: {
+          new_1: {
+            amount: '4.79',
+            paid: '4.79'
+          }.slice(*Payment.accessible_attributes.map(&:to_sym))
         }
-      }
+      }.slice(*Print.accessible_attributes.map(&:to_sym))
     end
 
     assert_redirected_to print_path(assigns(:print))
@@ -352,34 +352,34 @@ class PrintsControllerTest < ActionController::TestCase
     Setting.price_per_one_sided_copy = '0.125'
 
     assert_difference counts_array do
-      post :create, :print => {
-        :printer => @printer,
-        :customer_id => customer.id,
-        :scheduled_at => '',
-        :avoid_printing => '0',
-        :print_jobs_attributes => {
-          :new_1 => {
-            :copies => '1',
-            :pages => '3',
+      post :create, print: {
+        printer: @printer,
+        customer_id: customer.id,
+        scheduled_at: '',
+        avoid_printing: '0',
+        print_jobs_attributes: {
+          new_1: {
+            copies: '1',
+            pages: '3',
             # No importa el precio, se establece desde la configuración
-            :price_per_copy => '12.0',
-            :range => '',
-            :two_sided => '0'
-          }
+            price_per_copy: '12.0',
+            range: '',
+            two_sided: '0'
+          }.slice(*PrintJob.accessible_attributes.map(&:to_sym))
         },
-        :article_lines_attributes => {
-          :new_1 => {
-            :article_id => articles(:binding).id.to_s,
-            :units => '3',
+        article_lines_attributes: {
+          new_1: {
+            article_id: articles(:binding).id.to_s,
+            units: '3',
             # No importa el precio, se establece desde el artículo
-            :unit_price => '12.0'
-          }
+            unit_price: '12.0'
+          }.slice(*ArticleLine.accessible_attributes.map(&:to_sym))
         },
-        :payments_attributes => {
-          :new_1 => {
-            :amount => '5.745',
-            :paid => '5.745'
-          }
+        payments_attributes: {
+          new_1: {
+            amount: '5.745',
+            paid: '5.745'
+          }.slice(*Payment.accessible_attributes.map(&:to_sym))
         }
       }
     end
@@ -391,7 +391,7 @@ class PrintsControllerTest < ActionController::TestCase
 
   test 'should show print' do
     UserSession.create(users(:operator))
-    get :show, :id => @print.to_param
+    get :show, id: @print.to_param
     assert_response :success
     assert_not_nil assigns(:print)
     assert_select '#error_body', false
@@ -400,7 +400,7 @@ class PrintsControllerTest < ActionController::TestCase
 
   test 'should get edit' do
     UserSession.create(users(:operator))
-    get :edit, :id => @print.to_param
+    get :edit, id: @print.to_param
     assert_response :success
     assert_not_nil assigns(:print)
     assert_select '#error_body', false
@@ -413,7 +413,7 @@ class PrintsControllerTest < ActionController::TestCase
     print = Print.find(prints(:os_print).id)
 
     # Se debe producir un error al tratar de editar una impresión "cerrada"
-    get :edit, :id => print.to_param
+    get :edit, id: print.to_param
     assert_response :success
     assert_not_nil assigns(:print)
     assert !assigns(:print).pending_payment? && !assigns(:print).scheduled?
@@ -434,55 +434,55 @@ class PrintsControllerTest < ActionController::TestCase
     assert_not_equal customer.id, @print.customer_id
 
     assert_no_difference immutable_counts do
-      assert_difference ['@print.print_jobs.count'] do
-        put :update, :id => @print.to_param, :print => {
-          :printer => @printer,
-          :customer_id => customer.id,
-          :scheduled_at => '',
-          :avoid_printing => '0',
-          :user_id => users(:administrator).id,
-          :print_jobs_attributes => {
+      assert_difference '@print.print_jobs.count' do
+        put :update, id: @print.to_param, print: {
+          printer: @printer,
+          customer_id: customer.id,
+          scheduled_at: '',
+          avoid_printing: '0',
+          user_id: users(:administrator).id,
+          print_jobs_attributes: {
             print_jobs(:math_job_1).id => {
-              :id => print_jobs(:math_job_1).id,
-              :auto_document_name => 'Some name given in autocomplete',
-              :document_id => math_notes.id.to_s,
-              :copies => '123',
-              :pages => math_notes.pages.to_s,
+              id: print_jobs(:math_job_1).id,
+              auto_document_name: 'Some name given in autocomplete',
+              document_id: math_notes.id.to_s,
+              copies: '123',
+              pages: math_notes.pages.to_s,
               # No importa el precio, se establece desde la configuración
-              :price_per_copy => '12.0',
-              :range => '',
-              :two_sided => '0'
-            },
+              price_per_copy: '12.0',
+              range: '',
+              two_sided: '0'
+            }.slice(*PrintJob.accessible_attributes.map(&:to_sym)),
             print_jobs(:math_job_2).id => {
-              :id => print_jobs(:math_job_2).id,
-              :auto_document_name => 'Some name given in autocomplete',
-              :document_id => math_book.id.to_s,
-              :copies => '234',
-              :pages => math_book.pages.to_s,
+              id: print_jobs(:math_job_2).id,
+              auto_document_name: 'Some name given in autocomplete',
+              document_id: math_book.id.to_s,
+              copies: '234',
+              pages: math_book.pages.to_s,
               # No importa el precio, se establece desde la configuración
-              :price_per_copy => '0.2',
-              :range => '',
-              :two_sided => '0'
-            },
-            :new_1 => {
-              :auto_document_name => 'Some name given in autocomplete',
-              :document_id => math_book.id.to_s,
-              :copies => '1',
+              price_per_copy: '0.2',
+              range: '',
+              two_sided: '0'
+            }.slice(*PrintJob.accessible_attributes.map(&:to_sym)),
+            new_1: {
+              auto_document_name: 'Some name given in autocomplete',
+              document_id: math_book.id.to_s,
+              copies: '1',
               # Sin páginas intencionalmente
               # No importa el precio, se establece desde la configuración
-              :price_per_copy => '0.3',
-              :range => '',
-              :two_sided => '0'
-            }
+              price_per_copy: '0.3',
+              range: '',
+              two_sided: '0'
+            }.slice(*PrintJob.accessible_attributes.map(&:to_sym))
           },
-          :payments_attributes => {
+          payments_attributes: {
             payments(:math_payment).id => {
-              :id => payments(:math_payment).id.to_s,
-              :amount => '8376.18',
-              :paid => '7.50'
-            }
+              id: payments(:math_payment).id.to_s,
+              amount: '8376.18',
+              paid: '7.50'
+            }.slice(*Payment.accessible_attributes.map(&:to_sym))
           }
-        }
+        }.slice(*Print.accessible_attributes.map(&:to_sym))
       end
     end
 
@@ -501,7 +501,7 @@ class PrintsControllerTest < ActionController::TestCase
   test 'should revoke print' do
     UserSession.create(users(:administrator))
     
-    delete :revoke, :id => @print.to_param
+    delete :revoke, id: @print.to_param
     assert_redirected_to prints_url
     assert @print.reload.revoked
   end
@@ -516,34 +516,34 @@ class PrintsControllerTest < ActionController::TestCase
     document = Document.find documents(:math_book).id
 
     assert_difference 'Cups.all_jobs(@printer).keys.sort.last' do
-      post :create, :print => {
-        :printer => @printer,
-        :scheduled_at => '',
-        :avoid_printing => '0',
-        :print_jobs_attributes => {
-          :new_1 => {
-            :copies => '1',
-            :range => '',
-            :two_sided => '0',
-            :document_id => document.id.to_s,
-            :job_hold_until => 'indefinite'
-          }
+      post :create, print: {
+        printer: @printer,
+        scheduled_at: '',
+        avoid_printing: '0',
+        print_jobs_attributes: {
+          new_1: {
+            copies: '1',
+            range: '',
+            two_sided: '0',
+            document_id: document.id.to_s,
+            job_hold_until: 'indefinite'
+          }.slice(*PrintJob.accessible_attributes.map(&:to_sym))
         },
-        :payments_attributes => {
-          :new_1 => {
-            :amount => '35.00',
-            :paid => '35.00'
-          }
+        payments_attributes: {
+          new_1: {
+            amount: '35.00',
+            paid: '35.00'
+          }.slice(*Payment.accessible_attributes.map(&:to_sym))
         }
-      }
+      }.slice(*Print.accessible_attributes.map(&:to_sym))
     end
 
     print_job = Print.find(assigns(:print).id).print_jobs.first
 
-    xhr :put, :cancel_job, :id => print_job.to_param
+    xhr :put, :cancel_job, id: print_job.to_param
 
     assert_response :success
-    assert_match %r{#{I18n.t(:job_canceled, :scope => [:view, :prints])}},
+    assert_match %r{#{I18n.t(:job_canceled, scope: [:view, :prints])}},
       @response.body
     
     sleep 0.5
@@ -560,16 +560,16 @@ class PrintsControllerTest < ActionController::TestCase
     
     print_job = PrintJob.find print_jobs(:math_job_1).id
 
-    xhr :put, :cancel_job, :id => print_job.to_param
+    xhr :put, :cancel_job, id: print_job.to_param
 
     assert_response :success
-    assert_match %r{#{I18n.t(:job_not_canceled, :scope => [:view, :prints])}},
+    assert_match %r{#{I18n.t(:job_not_canceled, scope: [:view, :prints])}},
       @response.body
   end
 
   test 'should get autocomplete document list' do
     UserSession.create(users(:operator))
-    get :autocomplete_for_document_name, :format => :json, :q => 'Math'
+    get :autocomplete_for_document_name, format: :json, q: 'Math'
     assert_response :success
     
     documents = ActiveSupport::JSON.decode(@response.body)
@@ -577,7 +577,7 @@ class PrintsControllerTest < ActionController::TestCase
     assert_equal 2, documents.size
     assert documents.all? { |d| (d['label'] + d['informal']).match /math/i }
 
-    get :autocomplete_for_document_name, :format => :json, :q => 'note'
+    get :autocomplete_for_document_name, format: :json, q: 'note'
     assert_response :success
     
     documents = ActiveSupport::JSON.decode(@response.body)
@@ -585,7 +585,7 @@ class PrintsControllerTest < ActionController::TestCase
     assert_equal 2, documents.size
     assert documents.all? { |d| (d['label'] + d['informal']).match /note/i }
 
-    get :autocomplete_for_document_name, :format => :json, :q => '001'
+    get :autocomplete_for_document_name, format: :json, q: '001'
     assert_response :success
     
     documents = ActiveSupport::JSON.decode(@response.body)
@@ -593,7 +593,7 @@ class PrintsControllerTest < ActionController::TestCase
     assert_equal 1, documents.size
     assert documents.all? { |d| (d['label'] + d['informal']).match /1/i }
 
-    get :autocomplete_for_document_name, :format => :json, :q => 'physics'
+    get :autocomplete_for_document_name, format: :json, q: 'physics'
     assert_response :success
     
     documents = ActiveSupport::JSON.decode(@response.body)
@@ -601,7 +601,7 @@ class PrintsControllerTest < ActionController::TestCase
     assert_equal 1, documents.size
     assert documents.all? { |d| (d['label'] + d['informal']).match /physics/i }
 
-    get :autocomplete_for_document_name, :format => :json, :q => 'phyxyz'
+    get :autocomplete_for_document_name, format: :json, q: 'phyxyz'
     assert_response :success
     
     documents = ActiveSupport::JSON.decode(@response.body)
@@ -611,7 +611,7 @@ class PrintsControllerTest < ActionController::TestCase
 
   test 'should get autocomplete article list' do
     UserSession.create(users(:operator))
-    get :autocomplete_for_article_name, :format => :json, :q => '111'
+    get :autocomplete_for_article_name, format: :json, q: '111'
     assert_response :success
     
     articles = ActiveSupport::JSON.decode(@response.body)
@@ -619,7 +619,7 @@ class PrintsControllerTest < ActionController::TestCase
     assert_equal 1, articles.size
     assert articles.all? { |a| a['label'].match /111/i }
 
-    get :autocomplete_for_article_name, :format => :json, :q => 'binding'
+    get :autocomplete_for_article_name, format: :json, q: 'binding'
     assert_response :success
     
     articles = ActiveSupport::JSON.decode(@response.body)
@@ -627,7 +627,7 @@ class PrintsControllerTest < ActionController::TestCase
     assert_equal 2, articles.size
     assert articles.all? { |a| a['label'].match /binding/i }
 
-    get :autocomplete_for_article_name, :format => :json, :q => '333'
+    get :autocomplete_for_article_name, format: :json, q: '333'
     assert_response :success
     
     articles = ActiveSupport::JSON.decode(@response.body)
@@ -635,7 +635,7 @@ class PrintsControllerTest < ActionController::TestCase
     assert_equal 1, articles.size
     assert articles.all? { |a| a['label'].match /333/i }
 
-    get :autocomplete_for_article_name, :format => :json, :q => 'xyz'
+    get :autocomplete_for_article_name, format: :json, q: 'xyz'
     assert_response :success
     
     articles = ActiveSupport::JSON.decode(@response.body)
@@ -645,7 +645,7 @@ class PrintsControllerTest < ActionController::TestCase
 
   test 'should get autocomplete customer list' do
     UserSession.create(users(:operator))
-    get :autocomplete_for_customer_name, :format => :json, :q => 'anakin'
+    get :autocomplete_for_customer_name, format: :json, q: 'anakin'
     assert_response :success
     
     customers = ActiveSupport::JSON.decode(@response.body)
@@ -653,7 +653,7 @@ class PrintsControllerTest < ActionController::TestCase
     assert_equal 1, customers.size
     assert customers.all? { |c| (c['label'] + c['informal']).match /anakin/i }
 
-    get :autocomplete_for_customer_name, :format => :json, :q => 'obi'
+    get :autocomplete_for_customer_name, format: :json, q: 'obi'
     assert_response :success
     
     customers = ActiveSupport::JSON.decode(@response.body)
@@ -661,7 +661,7 @@ class PrintsControllerTest < ActionController::TestCase
     assert_equal 1, customers.size
     assert customers.all? { |c| (c['label'] + c['informal']).match /obi/i }
 
-    get :autocomplete_for_customer_name, :format => :json, :q => 'phyxyz'
+    get :autocomplete_for_customer_name, format: :json, q: 'phyxyz'
     assert_response :success
     
     customers = ActiveSupport::JSON.decode(@response.body)

@@ -4,4 +4,4 @@
 # If you change this key, all old signed cookies will become invalid!
 # Make sure the secret is at least 30 characters and all random,
 # no regular words or you'll be exposed to dictionary attacks.
-PrintHubApp::Application.config.secret_token = '958b6cfb231a70618635e2cf641d7c684d3d5c83251affea729ca1764e18ed8d1f8080852f2b847f8be1e1693ca4a76f389b68022ecc021f5cb1c771a6af610c'
+PrintHubApp::Application.config.secret_token = '9b112d13d7e37c0dff02b693b774471aaa14804cb96e4bdbe13eb90e7e4ba7e35f1a4e1fe78675d620c889618a0dd240426bc26d53a2cb3768b652e9dab1bad7'

@@ -18,17 +18,16 @@ class PrintJob < ApplicationModel
   # Callbacks
   before_save :put_printed_pages
   
-  # Atributos "permitidos"
-  attr_accessible :document_id, :copies, :pages, :range, :two_sided, :print_id,
-    :auto_document_name, :lock_version
-  
   # Atributos no persistentes
   attr_writer :range_pages
   attr_accessor :auto_document_name, :job_hold_until
+  
+  # Atributos "permitidos"
+  attr_accessible :id, :document_id, :copies, :pages, :range, :two_sided,
+    :print_id, :auto_document_name, :lock_version
 
   # Restricciones de atributos
-  attr_protected :job_id, :price_per_copy, :printed_copies
-  attr_readonly :document_id, :copies, :pages, :range, :job_id, :two_sided,
+  attr_readonly :id, :document_id, :copies, :pages, :range, :job_id, :two_sided,
     :print_id
 
   # Restricciones
@@ -138,7 +137,7 @@ class PrintJob < ApplicationModel
         options += "-t #{user || 'ph'}-#{timestamp} "
         options += self.options.map { |o, v| "-o #{o}=#{v}" }.join(' ')
         out = %x{lp #{options} "#{self.document.file.path}" 2>&1}
-
+        
         self.job_id = out.match(/#{Regexp.escape(printer)}-\d+/).to_a[0] || '-'
       end
     end
@@ -153,11 +152,11 @@ class PrintJob < ApplicationModel
   end
 
   def pending?
-    !%x{lpstat -W not-completed | grep "^#{self.job_id} "}.blank?
+    %x{lpstat -W not-completed | grep "^#{self.job_id} "}.present?
   end
 
   def completed?
-    !%x{lpstat -W completed | grep "^#{self.job_id} "}.blank?
+    %x{lpstat -W completed | grep "^#{self.job_id} "}.present?
   end
   
   def self.printer_stats_between(from, to)

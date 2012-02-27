@@ -8,17 +8,16 @@ class Order < ApplicationModel
     cancelled: 'X'
   }
   
-  # Callbacks
+   # Callbacks
   before_destroy :avoid_destruction
   before_save :can_be_modified?
   
   # Atributos "permitidos"
-  attr_accessible :scheduled_at, :notes, :lock_version
+  attr_accessible :scheduled_at, :notes, :lock_version, :include_documents,
+    :order_lines_attributes
   
   # Atributos no persistentes
   attr_accessor :include_documents
-  # Atributos protegidos
-  attr_protected :status, :print
   # Atributos de sólo lectura
   attr_readonly :scheduled_at
   
@@ -26,7 +25,7 @@ class Order < ApplicationModel
   scope :pending, where(status: STATUS[:pending])
   scope :completed, where(status: STATUS[:completed])
   scope :cancelled, where(status: STATUS[:cancelled])
-  scope :for_print, where(print: true)
+  scope :for_print, where(print_out: true)
   scope :scheduled_soon, where('scheduled_at <= ?', 6.hour.from_now)
   
   # Restricciones
@@ -57,7 +56,7 @@ class Order < ApplicationModel
       end
     end
     
-    self.print = !!self.customer.try(:can_afford?, self.price)
+    self.print_out = !!self.customer.try(:can_afford?, self.price)
     
     self.order_lines.each do |ol|
       ol.price_per_copy = PriceChooser.choose(

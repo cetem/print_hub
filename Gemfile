@@ -34,7 +34,7 @@ end
 
 group :development do
   gem 'ruby-debug19', require: 'ruby-debug'
-  gem 'mongrel', '1.2.0.pre2'
+  gem 'thin'
 end
 
 group :test do

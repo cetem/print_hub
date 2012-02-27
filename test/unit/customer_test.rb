@@ -73,7 +73,7 @@ class CustomerTest < ActiveSupport::TestCase
   test 'no create bonus without admin role' do
     assert_difference 'Customer.disable.count' do
       assert_no_difference 'Bonus.count' do
-        @customer = Customer.create(
+        @customer = Customer.create({
           name: 'Jar Jar',
           lastname: 'Binks',
           identification: '111',
@@ -82,7 +82,7 @@ class CustomerTest < ActiveSupport::TestCase
           password_confirmation: 'jarjar123',
           free_monthly_bonus: 10.0,
           bonus_without_expiration: false
-        )
+        }.slice(*Customer.accessible_attributes.map(&:to_sym)))
       end
     end
   end
@@ -189,9 +189,9 @@ class CustomerTest < ActiveSupport::TestCase
   # Prueba que las validaciones del modelo se cumplan como es esperado
   test 'ignores nasty attributes' do
     # Si no es admin no funciona, ¡¡pillín!!
-    assert @customer.update_attributes(
+    assert @customer.update_attributes({
       free_monthly_bonus: 10, enable: false, bonus_without_expiration: true
-    )
+    }.slice(*Customer.accessible_attributes.map(&:to_sym)))
     assert_not_equal '10.00', '%.2f' % @customer.reload.free_monthly_bonus
     assert @customer.enable
     assert !@customer.bonus_without_expiration
@@ -273,8 +273,8 @@ class CustomerTest < ActiveSupport::TestCase
   test 'use credit' do
     # Usa el crédito que tiene disponible
     assert_equal '0',
-      @customer.use_credit(100, 'student123', save: true).to_s
-    assert_equal '900.0', @customer.free_credit.to_s
+      @customer.use_credit(100, 'student123').to_s
+    assert_equal '900.0', @customer.reload.free_credit.to_s
 
     assert_difference '@customer.bonuses.count' do
       @customer.bonuses.create(
@@ -285,22 +285,22 @@ class CustomerTest < ActiveSupport::TestCase
 
     # Usa primero el crédito más próximo a vencer
     assert_equal '0',
-      @customer.use_credit(200, 'student123', save: true).to_s
+      @customer.use_credit(200, 'student123').to_s
     assert_equal '1700.0', @customer.free_credit.to_s
     assert_equal ['200.0', '500.0', '1000.0'],
       @customer.credits.valids.map(&:remaining).map(&:to_s)
     # Pagar más de lo que se puede con crédito
     assert_equal '300.0',
-      @customer.use_credit(2000, 'student123', save: true).to_s
+      @customer.use_credit(2000, 'student123').to_s
     assert_equal '0.0', @customer.free_credit.to_s
     # Intentar pagar sin crédito
     assert_equal '100.0',
-      @customer.use_credit(100, 'student123', save: true).to_s
+      @customer.use_credit(100, 'student123').to_s
   end
   
   test 'can not use credit with wrong password' do
     assert_equal false,
-      @customer.use_credit(100, 'wrong_password', save: true)
+      @customer.use_credit(100, 'wrong_password')
     assert_equal '1000.0', @customer.free_credit.to_s
   end
   
@@ -404,12 +404,11 @@ class CustomerTest < ActiveSupport::TestCase
     end
   end
   
-  test 'not destroy inactive accounts if they have any order' do
+  test 'no destroy inactive accounts if they have any order' do
     Customer.disable.each do |c|
       assert_difference 'c.orders.count' do
-        c.orders.create(
+        c.orders.build(
           scheduled_at: 10.days.from_now,
-          customer: c,
           order_lines_attributes: {
             new_1: {
               copies: 2,
@@ -417,7 +416,7 @@ class CustomerTest < ActiveSupport::TestCase
               document_id: documents(:math_book).id
             }
           }
-        )
+        ).save!
       end
     end
     
