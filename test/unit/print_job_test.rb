@@ -447,7 +447,7 @@ class PrintJobTest < ActiveSupport::TestCase
 
   test 'completed' do
     print_job = PrintJob.create(
-      @print_job.attributes.slice(*PrintJob.accessible_attributes)
+      @print_job.attributes.slice(*PrintJob.accessible_attributes - ['id'])
     )
 
     assert !print_job.completed?

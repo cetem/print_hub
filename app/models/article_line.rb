@@ -2,15 +2,14 @@ class ArticleLine < ApplicationModel
   has_paper_trail
   
   # Atributos "permitidos"
-  attr_accessible :print_id, :article_id, :units, :unit_price,
-    :auto_article_name, :lock_version
+  attr_accessible :id, :print_id, :article_id, :units, :auto_article_name,
+    :lock_version
   
   # Atributos no persistentes
   attr_accessor :auto_article_name
   
-  # Restricciones de atributos
-  attr_accessible :article_id, :units, :auto_article_name, :lock_version
-  attr_readonly :article_id, :units, :unit_price, :print_id
+  # Atributos de solo lectura
+  attr_readonly :id, :article_id, :units, :unit_price, :print_id
 
   # Restricciones
   validates :article_id, :units, :unit_price, presence: true
