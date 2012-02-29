@@ -2,7 +2,7 @@ class Tag < ApplicationModel
   include Comparable
 
   has_paper_trail
-  acts_as_tree  
+  acts_as_nested_set  
   find_by_autocomplete :name
   
   # Scopes

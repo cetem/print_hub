@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120227025951) do
+ActiveRecord::Schema.define(:version => 20120229224241) do
 
   create_table "article_lines", :force => true do |t|
     t.integer  "print_id"
@@ -234,6 +234,9 @@ ActiveRecord::Schema.define(:version => 20120227025951) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.boolean  "private",      :default => false
+    t.integer  "lft"
+    t.integer  "rgt"
+    t.integer  "depth"
   end
 
   add_index "tags", ["parent_id"], :name => "index_tags_on_parent_id"
