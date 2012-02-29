@@ -1,12 +1,12 @@
 module StatsHelper
   def show_stats_total(count)
-    distance_of_time = distance_of_time_in_words(@from_date.to_i, @to_date.to_i)
+    distance_of_time = distance_of_time_in_words(@from_date.utc, @to_date.utc)
     
     t('view.stats.total', count: count, distance_time: distance_of_time)
   end
   
   def show_stats_total_prints(count)
-    distance_of_time = distance_of_time_in_words(@from_date.to_i, @to_date.to_i)
+    distance_of_time = distance_of_time_in_words(@from_date.utc, @to_date.utc)
     
     t('view.stats.total_prints', count: count, distance_time: distance_of_time)
   end

@@ -21,6 +21,8 @@ jQuery(function($){
 		yearSuffix: ''};
 	$.datepicker.setDefaults($.datepicker.regional['es']);
         
+        /* Spanish translation for the jQuery Timepicker Addon */
+        /* Written by Ianaré Sévi */
         $.timepicker.regional['es'] = {
 		timeOnlyTitle: 'Elegir una hora',
 		timeText: 'Hora',
