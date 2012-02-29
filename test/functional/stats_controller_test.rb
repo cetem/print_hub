@@ -23,7 +23,7 @@ class StatsControllerTest < ActionController::TestCase
     assert_select '#error_body', false
     assert_template 'stats/printers'
   end
-
+  
   test 'should get filtered printers stats with 0 printed pages' do
     UserSession.create(users(:administrator))
     get :printers, interval: {
@@ -36,6 +36,19 @@ class StatsControllerTest < ActionController::TestCase
     assert_equal 0, assigns(:printers_count).sum(&:second)
     assert_select '#error_body', false
     assert_template 'stats/printers'
+  end
+  
+  test 'should get filtered printers stats in csv' do
+    UserSession.create(users(:administrator))
+    get :printers, format: :csv, interval: {
+      from: 1.day.ago.to_datetime.to_s(:db),
+      to: 1.day.from_now.to_datetime.to_s(:db)
+    }
+    assert_response :success
+    response = CSV.parse(@response.body)
+    assert_not_nil response
+    assert_equal 2, response.size
+    assert_equal PrintJob.sum(:printed_pages), response.sum {|row| row[1].to_i}
   end
   
   test 'should get users stats' do
@@ -75,6 +88,19 @@ class StatsControllerTest < ActionController::TestCase
     assert_template 'stats/users'
   end
   
+  test 'should get filtered users stats in csv' do
+    UserSession.create(users(:administrator))
+    get :users, format: :csv, interval: {
+      from: 1.day.ago.to_datetime.to_s(:db),
+      to: 1.day.from_now.to_datetime.to_s(:db)
+    }
+    assert_response :success
+    response = CSV.parse(@response.body)
+    assert_not_nil response
+    assert_equal 2, response.size
+    assert_equal PrintJob.sum(:printed_pages), response.sum {|row| row[1].to_i}
+  end
+  
   test 'should get prints stats' do
     UserSession.create(users(:administrator))
     get :prints
@@ -110,5 +136,18 @@ class StatsControllerTest < ActionController::TestCase
     assert_equal 0, assigns(:user_prints_count).sum(&:second)
     assert_select '#error_body', false
     assert_template 'stats/prints'
+  end
+  
+  test 'should get filtered prints stats in csv' do
+    UserSession.create(users(:administrator))
+    get :prints, format: :csv, interval: {
+      from: 1.day.ago.to_datetime.to_s(:db),
+      to: 1.day.from_now.to_datetime.to_s(:db)
+    }
+    assert_response :success
+    response = CSV.parse(@response.body)
+    assert_not_nil response
+    assert_equal 2, response.size
+    assert_equal Print.count, response.sum {|row| row[1].to_i}
   end
 end

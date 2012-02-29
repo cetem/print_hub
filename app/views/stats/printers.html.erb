@@ -7,7 +7,8 @@
 <% else %>
   <div class="actions">
     <%= link_to t('view.stats.show_grid'), '#', class: 'show_grid' %>
-    <%= link_to t('view.stats.show_graph'), '#', class: 'show_graph' %>
+    <%= link_to t('view.stats.show_graph'), '#', class: 'show_graph' %> |
+    <%= link_to t('view.stats.download_csv'), printer_stats_path(params.merge(format: :csv)) %>
   </div>
   <div id="graph"></div>
   <table class="list" data-graph-grid="true">
@@ -21,7 +22,7 @@
     <tbody>
       <% @printers_count.sort { |a,b| a[1] <=> b[1] }.each do |printer, count| %>
         <tr>
-          <td class="label"><%= printer.blank? ? t('view.stats.scheduled_print') : printer %></td>
+          <td class="label"><%= printer %></td>
           <td class="value"><%= count %></td>
         </tr>
       <% end %>

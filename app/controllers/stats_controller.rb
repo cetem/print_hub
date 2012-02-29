@@ -1,16 +1,21 @@
 class StatsController < ApplicationController
-  before_filter :require_admin_user
+  before_filter :require_admin_user, :load_date_range
+  respond_to :html, :xml, :json, :csv
   
   # GET /printer_stats
   # GET /printer_stats.xml
   def printers
     @title = t('view.stats.printers_title')
-    @from_date, @to_date = *make_datetime_range(params[:interval])
-    @printers_count = PrintJob.printer_stats_between(@from_date, @to_date)
+    @printers_count = {}
     
-    respond_to do |format|
-      format.html # index.html.erb
-      format.xml  { render xml: @printers_count }
+    PrintJob.printer_stats_between(@from_date, @to_date).each do |p, count|
+      printer = p.blank? ? t('view.stats.scheduled_print') : p
+      
+      @printers_count[printer] = count
+    end
+    
+    respond_with @printers_count do |format|
+      format.csv { render csv: @printers_count, filename: @title }
     end
   end
   
@@ -18,12 +23,14 @@ class StatsController < ApplicationController
   # GET /user_stats.xml
   def users
     @title = t('view.stats.users_title')
-    @from_date, @to_date = *make_datetime_range(params[:interval])
-    @users_count = PrintJob.user_stats_between(@from_date, @to_date)
+    @users_count = {}
     
-    respond_to do |format|
-      format.html # index.html.erb
-      format.xml  { render xml: @users_count }
+    PrintJob.user_stats_between(@from_date, @to_date).each do |u_id, count|
+      @users_count[User.find(u_id).to_s] = count
+    end
+    
+    respond_with @users_count do |format|
+      format.csv { render csv: @users_count, filename: @title }
     end
   end
   
@@ -31,12 +38,20 @@ class StatsController < ApplicationController
   # GET /print_stats.xml
   def prints
     @title = t('view.stats.prints_title')
-    @from_date, @to_date = *make_datetime_range(params[:interval])
-    @user_prints_count = Print.stats_between(@from_date, @to_date)
+    @user_prints_count = {}
     
-    respond_to do |format|
-      format.html # index.html.erb
-      format.xml  { render xml: @user_prints_count }
+    Print.stats_between(@from_date, @to_date).each do |u_id, count|
+      @user_prints_count[User.find(u_id).to_s] = count
     end
+    
+    respond_with @user_prints_count do |format|
+      format.csv { render csv: @user_prints_count, filename: @title }
+    end
+  end
+  
+  private
+  
+  def load_date_range
+    @from_date, @to_date = *make_datetime_range(params[:interval])
   end
 end

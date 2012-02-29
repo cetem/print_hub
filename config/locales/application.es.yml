@@ -499,6 +499,7 @@
       scheduled_print: 'Impresiones programadas'
       show_graph: 'Ver gráfico'
       show_grid: 'Ver datos'
+      download_csv: 'Descargar en CSV'
       total:
         one: 'De un total de una copia hecha en %{distance_time}'
         other: 'De un total de %{count} copias hechas en %{distance_time}'
