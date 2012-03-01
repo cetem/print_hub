@@ -7,10 +7,10 @@
 //= require jquery
 //= require jquery-ui
 //= require jquery_ujs
-//= require vendor/jquery-ui-timepicker-addon
-//= require vendor/datepicker/jquery.ui.datepicker-es
-//= require vendor/jquery.fancybox
-//= require vendor/jquery.filestyle
+//= require jquery-ui-timepicker-addon
+//= require datepicker/jquery.ui.datepicker-es
+//= require jquery.fancybox
+//= require jquery.filestyle
 //= require common
 //= require autocomplete
 //= require customers
