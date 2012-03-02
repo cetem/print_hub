@@ -150,8 +150,7 @@ class PrivateCustomerInteractionsTest < ActionDispatch::IntegrationTest
     assert page.has_css?('#show_order')
   end
 
- test 'should change the password and login with the correct' do
-      
+  test 'should change the password and login with the correct' do
     login 
     
     assert_page_has_no_errors!
@@ -183,9 +182,7 @@ class PrivateCustomerInteractionsTest < ActionDispatch::IntegrationTest
     click_button I18n.t('view.customer_sessions.login')
     
     assert_page_has_no_errors!
-    
   end
-
   
   private
   

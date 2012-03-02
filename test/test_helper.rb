@@ -78,4 +78,27 @@ class ActionDispatch::IntegrationTest
   def assert_page_has_no_errors!
     assert page.has_no_css?('#unexpected_error')
   end
+  
+  def adm_login(options = {})
+    options.reverse_merge!(
+      user_id: :administrator,
+      expected_path: prints_path
+    )
+    
+    visit new_user_session_path
+    
+    assert_page_has_no_errors!
+    
+    users(options[:user_id]).tap do |user|
+      fill_in I18n.t('authlogic.attributes.user_session.username'),
+        with: user.email
+      fill_in I18n.t('authlogic.attributes.user_session.password'),
+        with: "admin123"
+    end
+    
+    click_button I18n.t('view.user_sessions.login')
+    
+    assert_equal options[:expected_path], current_path
+    assert_page_has_no_errors!
+  end
 end
