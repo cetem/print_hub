@@ -10,7 +10,7 @@ class ArticlesControllerTest < ActionController::TestCase
     get :index
     assert_response :success
     assert_not_nil assigns(:articles)
-    assert_select '#error_body', false
+    assert_select '#unexpected_error', false
     assert_template 'articles/index'
   end
 
@@ -18,7 +18,7 @@ class ArticlesControllerTest < ActionController::TestCase
     UserSession.create(users(:administrator))
     get :new
     assert_response :success
-    assert_select '#error_body', false
+    assert_select '#unexpected_error', false
     assert_template 'articles/new'
   end
 
@@ -42,7 +42,7 @@ class ArticlesControllerTest < ActionController::TestCase
     UserSession.create(users(:administrator))
     get :show, :id => @article.to_param
     assert_response :success
-    assert_select '#error_body', false
+    assert_select '#unexpected_error', false
     assert_template 'articles/show'
   end
 
@@ -50,7 +50,7 @@ class ArticlesControllerTest < ActionController::TestCase
     UserSession.create(users(:administrator))
     get :edit, :id => @article.to_param
     assert_response :success
-    assert_select '#error_body', false
+    assert_select '#unexpected_error', false
     assert_template 'articles/edit'
   end
 

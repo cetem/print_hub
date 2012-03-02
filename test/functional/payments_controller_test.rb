@@ -6,7 +6,7 @@ class PaymentsControllerTest < ActionController::TestCase
     get :index
     assert_response :success
     assert_not_nil assigns(:payments)
-    assert_select '#error_body', false
+    assert_select '#unexpected_error', false
     assert_template 'payments/index'
   end
 
@@ -22,7 +22,7 @@ class PaymentsControllerTest < ActionController::TestCase
     assert_equal '88.17', assigns(:payments).sum('amount').to_s
     assert_equal '45.0', assigns(:payments).sum('paid').to_s
     assert_equal '1001.5', assigns(:deposits).sum('amount').to_s
-    assert_select '#error_body', false
+    assert_select '#unexpected_error', false
     assert_template 'payments/index'
   end
 
@@ -37,7 +37,7 @@ class PaymentsControllerTest < ActionController::TestCase
     assert_equal 0, assigns(:payments).count
     assert_equal '0.0', assigns(:payments).sum('amount').to_s
     assert_equal '0.0', assigns(:payments).sum('paid').to_s
-    assert_select '#error_body', false
+    assert_select '#unexpected_error', false
     assert_template 'payments/index'
   end
 end

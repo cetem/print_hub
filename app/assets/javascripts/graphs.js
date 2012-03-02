@@ -1,5 +1,5 @@
 // Graphics
 // 
-//= require vendor/raphael
-//= require vendor/raphael_pie
+//= require raphael
+//= require raphael_pie
 //= require stats

@@ -17,7 +17,7 @@ class OrdersControllerTest < ActionController::TestCase
     # Se listan órdenes de mas de un cliente
     assert assigns(:orders).map(&:customer_id).uniq.size > 1
     assert assigns(:orders).any? { |o| !o.print_out }
-    assert_select '#error_body', false
+    assert_select '#unexpected_error', false
     assert_template 'orders/index'
   end
   
@@ -28,7 +28,7 @@ class OrdersControllerTest < ActionController::TestCase
     assert_response :success
     assert_not_nil assigns(:orders)
     assert assigns(:orders).all? { |o| o.print_out }
-    assert_select '#error_body', false
+    assert_select '#unexpected_error', false
     assert_template 'orders/index'
   end
   
@@ -40,7 +40,7 @@ class OrdersControllerTest < ActionController::TestCase
     assert_not_nil assigns(:orders)
     assert assigns(:orders).size > 0
     assert assigns(:orders).all? { |o| o.customer.to_s.match /darth/i }
-    assert_select '#error_body', false
+    assert_select '#unexpected_error', false
     assert_template 'orders/index'
   end
   
@@ -54,7 +54,7 @@ class OrdersControllerTest < ActionController::TestCase
     assert_not_nil assigns(:orders)
     # Se listan órdenes solo del cliente
     assert_equal customer.orders.count, assigns(:orders).size
-    assert_select '#error_body', false
+    assert_select '#unexpected_error', false
     assert_template 'orders/index'
   end
 
@@ -62,7 +62,7 @@ class OrdersControllerTest < ActionController::TestCase
     CustomerSession.create(customers(:student_without_bonus))
     get :new
     assert_response :success
-    assert_select '#error_body', false
+    assert_select '#unexpected_error', false
     assert_template 'orders/new'
   end
 
@@ -94,7 +94,7 @@ class OrdersControllerTest < ActionController::TestCase
     UserSession.create(users(:administrator))
     get :show, type: 'all', id: @order.to_param
     assert_response :success
-    assert_select '#error_body', false
+    assert_select '#unexpected_error', false
     assert_template 'orders/show'
   end
 
@@ -102,7 +102,7 @@ class OrdersControllerTest < ActionController::TestCase
     CustomerSession.create(customers(:student_without_bonus))
     get :show, id: @order.to_param
     assert_response :success
-    assert_select '#error_body', false
+    assert_select '#unexpected_error', false
     assert_template 'orders/show'
   end
 
@@ -110,7 +110,7 @@ class OrdersControllerTest < ActionController::TestCase
     CustomerSession.create(customers(:student_without_bonus))
     get :edit, id: @order.to_param
     assert_response :success
-    assert_select '#error_body', false
+    assert_select '#unexpected_error', false
     assert_template 'orders/edit'
   end
 

@@ -10,7 +10,7 @@ class CustomersControllerTest < ActionController::TestCase
     get :index
     assert_response :success
     assert_not_nil assigns(:customers)
-    assert_select '#error_body', false
+    assert_select '#unexpected_error', false
     assert_template 'customers/index'
   end
   
@@ -21,7 +21,7 @@ class CustomersControllerTest < ActionController::TestCase
     assert_not_nil assigns(:customers)
     assert_equal 2, assigns(:customers).size
     assert assigns(:customers).all? { |c| c.to_s.match /anakin|darth/i }
-    assert_select '#error_body', false
+    assert_select '#unexpected_error', false
     assert_template 'customers/index'
   end
 
@@ -30,7 +30,7 @@ class CustomersControllerTest < ActionController::TestCase
     get :new
     assert_response :success
     assert_not_nil assigns(:customer)
-    assert_select '#error_body', false
+    assert_select '#unexpected_error', false
     assert_template 'customers/new'
   end
   
@@ -40,7 +40,7 @@ class CustomersControllerTest < ActionController::TestCase
     get :new
     assert_response :success
     assert_not_nil assigns(:customer)
-    assert_select '#error_body', false
+    assert_select '#unexpected_error', false
     assert_template 'customers/new_public'
   end
 
@@ -123,7 +123,7 @@ class CustomersControllerTest < ActionController::TestCase
     get :show, id: @customer.to_param
     assert_response :success
     assert_not_nil assigns(:customer)
-    assert_select '#error_body', false
+    assert_select '#unexpected_error', false
     assert_template 'customers/show'
   end
 
@@ -132,7 +132,7 @@ class CustomersControllerTest < ActionController::TestCase
     get :edit, id: @customer.to_param
     assert_response :success
     assert_not_nil assigns(:customer)
-    assert_select '#error_body', false
+    assert_select '#unexpected_error', false
     assert_template 'customers/edit'
   end
 
@@ -175,7 +175,7 @@ class CustomersControllerTest < ActionController::TestCase
     xhr :get, :credit_detail, id: @customer.to_param
     assert_response :success
     assert_not_nil assigns(:customer)
-    assert_select '#error_body', false
+    assert_select '#unexpected_error', false
     assert_template 'customers/credit_detail'
   end
   
@@ -184,7 +184,7 @@ class CustomersControllerTest < ActionController::TestCase
     get :edit_profile, id: @customer.to_param
     assert_response :success
     assert_not_nil assigns(:customer)
-    assert_select '#error_body', false
+    assert_select '#unexpected_error', false
     assert_template 'customers/edit_profile'
   end
   
@@ -196,7 +196,7 @@ class CustomersControllerTest < ActionController::TestCase
     assert_response :success
     assert_not_nil assigns(:customer)
     assert_equal logged_customer.id, assigns(:customer).id
-    assert_select '#error_body', false
+    assert_select '#unexpected_error', false
     assert_template 'customers/edit_profile'
   end
 
@@ -258,7 +258,7 @@ class CustomersControllerTest < ActionController::TestCase
     
     assert_response :success
     assert_not_nil assigns(:customer)
-    assert_select '#error_body', false
+    assert_select '#unexpected_error', false
     assert_template 'customers/_debt'
   end
 end

@@ -7,7 +7,7 @@ class FeedbacksControllerTest < ActionController::TestCase
     end
 
     assert_response :success
-    assert_select '#error_body', false
+    assert_select '#unexpected_error', false
     assert_template 'feedbacks/positive'
   end
   
@@ -17,7 +17,7 @@ class FeedbacksControllerTest < ActionController::TestCase
     end
 
     assert_response :success
-    assert_select '#error_body', false
+    assert_select '#unexpected_error', false
     assert_template 'feedbacks/negative'
   end
 
@@ -30,7 +30,7 @@ class FeedbacksControllerTest < ActionController::TestCase
     }
     
     assert_response :success
-    assert_select '#error_body', false
+    assert_select '#unexpected_error', false
     assert_template 'feedbacks/negative_comment'
     assert_equal 'It seems to me that needs polishing', feedback.reload.comments
     assert_not_equal 'this_should_be_ignored', feedback.reload.item

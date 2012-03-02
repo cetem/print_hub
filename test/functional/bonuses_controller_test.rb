@@ -8,7 +8,7 @@ class BonusesControllerTest < ActionController::TestCase
     assert_response :success
     assert_not_nil assigns(:bonuses)
     assert_equal Bonus.count, assigns(:bonuses).size
-    assert_select '#error_body', false
+    assert_select '#unexpected_error', false
     assert_template 'bonuses/index'
   end
   
@@ -21,7 +21,7 @@ class BonusesControllerTest < ActionController::TestCase
     assert_not_nil assigns(:bonuses)
     assert_equal customer.bonuses.count, assigns(:bonuses).size
     assert assigns(:bonuses).all? { |b| b.customer_id == customer.id }
-    assert_select '#error_body', false
+    assert_select '#unexpected_error', false
     assert_template 'bonuses/index'
   end
 end

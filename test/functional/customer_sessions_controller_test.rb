@@ -10,7 +10,7 @@ class CustomerSessionsControllerTest < ActionController::TestCase
     get :new
     assert_response :success
     assert_not_nil assigns(:customer_session)
-    assert_select '#error_body', false
+    assert_select '#unexpected_error', false
     assert_template 'customer_sessions/new'
   end
 
@@ -34,7 +34,7 @@ class CustomerSessionsControllerTest < ActionController::TestCase
     assert_nil CustomerSession.find
     assert_response :success
     assert_not_nil assigns(:customer_session)
-    assert_select '#error_body', false
+    assert_select '#unexpected_error', false
     assert_template 'customer_sessions/new'
   end
   
@@ -51,7 +51,7 @@ class CustomerSessionsControllerTest < ActionController::TestCase
     assert_nil CustomerSession.find
     assert_response :success
     assert_not_nil assigns(:customer_session)
-    assert_select '#error_body', false
+    assert_select '#unexpected_error', false
     assert_template 'customer_sessions/new'
   end
 

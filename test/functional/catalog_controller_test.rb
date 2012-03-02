@@ -13,7 +13,7 @@ class CatalogControllerTest < ActionController::TestCase
     get :index
     assert_response :success
     assert_nil assigns(:documents) # Index with no search give no documents =)
-    assert_select '#error_body', false
+    assert_select '#unexpected_error', false
     assert_template 'catalog/index'
   end
 
@@ -26,7 +26,7 @@ class CatalogControllerTest < ActionController::TestCase
     assert_not_nil assigns(:documents)
     assert_equal tag.documents.count, assigns(:documents).size
     assert assigns(:documents).all? { |d| d.tags.include?(tag) }
-    assert_select '#error_body', false
+    assert_select '#unexpected_error', false
     assert_template 'catalog/index'
   end
 
@@ -37,7 +37,7 @@ class CatalogControllerTest < ActionController::TestCase
     assert_not_nil assigns(:documents)
     assert_equal 2, assigns(:documents).size
     assert assigns(:documents).all? { |d| d.name.match(/math/i) }
-    assert_select '#error_body', false
+    assert_select '#unexpected_error', false
     assert_template 'catalog/index'
   end
   
@@ -45,7 +45,7 @@ class CatalogControllerTest < ActionController::TestCase
     CustomerSession.create(customers(:student))
     get :show, id: @document.to_param
     assert_response :success
-    assert_select '#error_body', false
+    assert_select '#unexpected_error', false
     assert_template 'catalog/show'
   end
   

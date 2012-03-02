@@ -11,7 +11,7 @@ class TagsControllerTest < ActionController::TestCase
     assert_response :success
     assert_not_nil assigns(:tags)
     assert_select 'nav.path', false
-    assert_select '#error_body', false
+    assert_select '#unexpected_error', false
     assert_template 'tags/index'
   end
 
@@ -21,7 +21,7 @@ class TagsControllerTest < ActionController::TestCase
     assert_response :success
     assert_not_nil assigns(:tags)
     assert_select 'nav.path'
-    assert_select '#error_body', false
+    assert_select '#unexpected_error', false
     assert_template 'tags/index'
   end
 
@@ -30,7 +30,7 @@ class TagsControllerTest < ActionController::TestCase
     get :new
     assert_response :success
     assert_not_nil assigns(:tag)
-    assert_select '#error_body', false
+    assert_select '#unexpected_error', false
     assert_template 'tags/new'
   end
 
@@ -52,7 +52,7 @@ class TagsControllerTest < ActionController::TestCase
     get :show, id: @tag.to_param
     assert_response :success
     assert_not_nil assigns(:tag)
-    assert_select '#error_body', false
+    assert_select '#unexpected_error', false
     assert_template 'tags/show'
   end
 
@@ -61,7 +61,7 @@ class TagsControllerTest < ActionController::TestCase
     get :edit, id: @tag.to_param
     assert_response :success
     assert_not_nil assigns(:tag)
-    assert_select '#error_body', false
+    assert_select '#unexpected_error', false
     assert_template 'tags/edit'
   end
 

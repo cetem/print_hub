@@ -20,7 +20,7 @@ class PrintsControllerTest < ActionController::TestCase
     assert_not_nil assigns(:prints)
     assert_equal user.prints.count, assigns(:prints).size
     assert assigns(:prints).all? { |p| p.user_id == user.id }
-    assert_select '#error_body', false
+    assert_select '#unexpected_error', false
     assert_template 'prints/index'
   end
 
@@ -33,7 +33,7 @@ class PrintsControllerTest < ActionController::TestCase
     assert_not_nil assigns(:prints)
     assert assigns(:prints).size > 0
     assert assigns(:prints).all?(&:pending_payment?)
-    assert_select '#error_body', false
+    assert_select '#unexpected_error', false
     assert_template 'prints/index'
   end
 
@@ -46,7 +46,7 @@ class PrintsControllerTest < ActionController::TestCase
     assert_not_nil assigns(:prints)
     assert_equal Print.count, assigns(:prints).size
     assert assigns(:prints).any? { |p| p.user_id != user.id }
-    assert_select '#error_body', false
+    assert_select '#unexpected_error', false
     assert_template 'prints/index'
   end
 
@@ -60,7 +60,7 @@ class PrintsControllerTest < ActionController::TestCase
     assert_equal Print.pending.count, assigns(:prints).size
     assert assigns(:prints).any? { |p| p.user_id != user.id }
     assert assigns(:prints).all?(&:pending_payment?)
-    assert_select '#error_body', false
+    assert_select '#unexpected_error', false
     assert_template 'prints/index'
   end
 
@@ -74,7 +74,7 @@ class PrintsControllerTest < ActionController::TestCase
     assert_equal Print.scheduled.count, assigns(:prints).size
     assert assigns(:prints).any? { |p| p.user_id != user.id }
     assert assigns(:prints).all?(&:scheduled?)
-    assert_select '#error_body', false
+    assert_select '#unexpected_error', false
     assert_template 'prints/index'
   end
   
@@ -88,7 +88,7 @@ class PrintsControllerTest < ActionController::TestCase
     assert_equal Print.pay_later.count, assigns(:prints).size
     assert assigns(:prints).any? { |p| p.user_id != user.id }
     assert assigns(:prints).all?(&:pay_later?)
-    assert_select '#error_body', false
+    assert_select '#unexpected_error', false
     assert_template 'prints/index'
   end
   
@@ -102,7 +102,7 @@ class PrintsControllerTest < ActionController::TestCase
     assert_not_nil assigns(:prints)
     assert_equal customer.prints.count, assigns(:prints).size
     assert assigns(:prints).all? { |p| p.customer_id == customer.id }
-    assert_select '#error_body', false
+    assert_select '#unexpected_error', false
     assert_template 'prints/index'
   end
 
@@ -111,7 +111,7 @@ class PrintsControllerTest < ActionController::TestCase
     get :new
     assert_response :success
     assert_not_nil assigns(:print)
-    assert_select '#error_body', false
+    assert_select '#unexpected_error', false
     assert_select '.print_job', 1
     assert_template 'prints/new'
   end
@@ -124,7 +124,7 @@ class PrintsControllerTest < ActionController::TestCase
     get :new, order_id: order.id
     assert_response :success
     assert_not_nil assigns(:print)
-    assert_select '#error_body', false
+    assert_select '#unexpected_error', false
     assert_select '.print_job', order.order_lines.count
     assert_template 'prints/new'
   end
@@ -137,7 +137,7 @@ class PrintsControllerTest < ActionController::TestCase
     get :new
     assert_response :success
     assert_not_nil assigns(:print)
-    assert_select '#error_body', false
+    assert_select '#unexpected_error', false
     assert_select '.print_job', 2
     assert_template 'prints/new'
   end
@@ -150,7 +150,7 @@ class PrintsControllerTest < ActionController::TestCase
     assert_response :success
     assert_not_nil assigns(:print)
     assert session[:documents_for_printing].blank?
-    assert_select '#error_body', false
+    assert_select '#unexpected_error', false
     assert_select '.print_job', 1
     assert_template 'prints/new'
   end
@@ -394,7 +394,7 @@ class PrintsControllerTest < ActionController::TestCase
     get :show, id: @print.to_param
     assert_response :success
     assert_not_nil assigns(:print)
-    assert_select '#error_body', false
+    assert_select '#unexpected_error', false
     assert_template 'prints/show'
   end
 
@@ -403,7 +403,7 @@ class PrintsControllerTest < ActionController::TestCase
     get :edit, id: @print.to_param
     assert_response :success
     assert_not_nil assigns(:print)
-    assert_select '#error_body', false
+    assert_select '#unexpected_error', false
     assert_template 'prints/edit'
   end
 
@@ -417,7 +417,7 @@ class PrintsControllerTest < ActionController::TestCase
     assert_response :success
     assert_not_nil assigns(:print)
     assert !assigns(:print).pending_payment? && !assigns(:print).scheduled?
-    assert_select '#error_body'
+    assert_select '#unexpected_error'
     assert_template 'shared/show_error'
   end
 

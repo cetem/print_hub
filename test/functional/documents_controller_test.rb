@@ -13,7 +13,7 @@ class DocumentsControllerTest < ActionController::TestCase
     assert_response :success
     assert_not_nil assigns(:documents)
     assert_not_nil assigns(:documents_for_printing)
-    assert_select '#error_body', false
+    assert_select '#unexpected_error', false
     assert_template 'documents/index'
   end
 
@@ -26,7 +26,7 @@ class DocumentsControllerTest < ActionController::TestCase
     assert_not_nil assigns(:documents)
     assert_equal tag.documents.count, assigns(:documents).size
     assert assigns(:documents).all? { |d| d.tags.include?(tag) }
-    assert_select '#error_body', false
+    assert_select '#unexpected_error', false
     assert_template 'documents/index'
   end
 
@@ -37,7 +37,7 @@ class DocumentsControllerTest < ActionController::TestCase
     assert_not_nil assigns(:documents)
     assert_equal 2, assigns(:documents).size
     assert assigns(:documents).all? { |d| d.name.match(/math/i) }
-    assert_select '#error_body', false
+    assert_select '#unexpected_error', false
     assert_template 'documents/index'
   end
   
@@ -54,7 +54,7 @@ class DocumentsControllerTest < ActionController::TestCase
     UserSession.create(users(:administrator))
     get :new
     assert_response :success
-    assert_select '#error_body', false
+    assert_select '#unexpected_error', false
     assert_template 'documents/new'
   end
 
@@ -87,7 +87,7 @@ class DocumentsControllerTest < ActionController::TestCase
     UserSession.create(users(:administrator))
     get :show, id: @document.to_param
     assert_response :success
-    assert_select '#error_body', false
+    assert_select '#unexpected_error', false
     assert_template 'documents/show'
   end
 
@@ -95,7 +95,7 @@ class DocumentsControllerTest < ActionController::TestCase
     UserSession.create(users(:administrator))
     get :edit, id: @document.to_param
     assert_response :success
-    assert_select '#error_body', false
+    assert_select '#unexpected_error', false
     assert_template 'documents/edit'
   end
 
@@ -160,7 +160,7 @@ class DocumentsControllerTest < ActionController::TestCase
     get :barcode, id: @document.code
     assert_response :success
     assert_not_nil assigns(:document)
-    assert_select '#error_body', false
+    assert_select '#unexpected_error', false
     assert_select 'figcaption', @document.code.to_s
     assert_template 'documents/barcode'
   end
@@ -170,7 +170,7 @@ class DocumentsControllerTest < ActionController::TestCase
     get :barcode, id: '159321'
     assert_response :success
     assert_not_nil assigns(:document)
-    assert_select '#error_body', false
+    assert_select '#unexpected_error', false
     assert_select 'figcaption', '159321'
     assert_template 'documents/barcode'
   end

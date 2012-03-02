@@ -11,7 +11,7 @@ class SettingsControllerTest < ActionController::TestCase
     get :index
     assert_response :success
     assert_not_nil assigns(:settings)
-    assert_select '#error_body', false
+    assert_select '#unexpected_error', false
     assert_template 'settings/index'
   end
 
@@ -20,7 +20,7 @@ class SettingsControllerTest < ActionController::TestCase
     get :show, :id => @setting.to_param
     assert_response :success
     assert_not_nil assigns(:setting)
-    assert_select '#error_body', false
+    assert_select '#unexpected_error', false
     assert_template 'settings/show'
   end
 
@@ -29,7 +29,7 @@ class SettingsControllerTest < ActionController::TestCase
     get :edit, :id => @setting.to_param
     assert_response :success
     assert_not_nil assigns(:setting)
-    assert_select '#error_body', false
+    assert_select '#unexpected_error', false
     assert_template 'settings/edit'
   end
 
