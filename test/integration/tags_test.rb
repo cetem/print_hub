@@ -8,8 +8,6 @@ class TagsTest < ActionDispatch::IntegrationTest
     Capybara.server_port = '54163'
     Capybara.app_host = "http://localhost:54163"
     page.driver.options[:resynchronize] = true
-    
-    Tag.rebuild! # Not so awesome =)
   end
   
   
