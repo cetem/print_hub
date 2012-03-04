@@ -1,20 +1,35 @@
 draft_note:
   name: Draft note
   private: false
+  lft: 7
+  rgt: 8
+  depth: 0
 
 notes:
   name: Notes
   private: false
+  lft: 1
+  rgt: 4
+  depth: 0
 
 basics:
   name: Basics
   private: false
+  lft: 9
+  rgt: 10
+  depth: 0
 
 books:
   name: Books
   private: false
+  lft: 5
+  rgt: 6
+  depth: 0
 
 physics:
   name: Physics
   private: false
   parent_id: <%= ActiveRecord::Fixtures.identify(:notes) %>
+  lft: 2
+  rgt: 3
+  depth: 0
