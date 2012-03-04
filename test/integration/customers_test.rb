@@ -71,5 +71,52 @@ class CustomersTest < ActionDispatch::IntegrationTest
         'helpers.submit.update', model: Customer.model_name.human
       )
     end
+    
+    id = Customer.order('updated_at DESC').first.id
+    assert_page_has_no_errors!
+    assert_equal customer_path(id), current_path
+  end
+  
+  test 'should probe the nested delete in deposits' do
+    adm_login
+    
+    assert_page_has_no_errors!
+    assert_equal prints_path, current_path
+    
+    visit edit_customer_path(customers(:student))
+    
+    assert_page_has_no_errors!
+    assert_equal(
+      edit_customer_path(customers(:student)), current_path
+    )
+    
+    deposit = "//input[starts-with(@id,'deposit_amount_')]"
+    
+    assert_difference "all(:xpath, deposit).size" do
+      click_link I18n.t('view.customers.add_deposit')
+    end
+    
+    assert_difference "all(:xpath, deposit).size", -1 do
+      find('[data-event=removeItem]').click
+      sleep 0.5 # Sino, sigue siendo el mismo nº de antes
+    end
+  end
+  
+  test 'should show the bonuses' do
+    adm_login
+    
+    assert_page_has_no_errors!
+    assert_equal prints_path, current_path
+    
+    visit edit_customer_path(customers(:student_without_bonus))
+    
+    assert_page_has_no_errors!
+    assert_equal(
+      edit_customer_path(customers(:student_without_bonus)), current_path
+    )
+    
+    assert !find('#bonuses_section').visible?
+    click_link I18n.t('view.customers.show_bonuses')
+    assert find('#bonuses_section').visible?
   end
 end
