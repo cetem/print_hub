@@ -18,7 +18,7 @@ class Document < ApplicationModel
   
   # Atributos "permitidos"
   attr_accessible :code, :name, :description, :media, :file, :tag_ids, :enable,
-    :stock, :lock_version
+    :stock, :auto_tag_name, :lock_version
 
   # Atributos no persistentes
   attr_accessor :auto_tag_name
