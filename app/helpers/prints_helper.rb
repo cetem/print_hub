@@ -55,4 +55,24 @@ module PrintsHelper
   def there_are_documents_for_printing?
     !session[:documents_for_printing].blank?
   end
+  
+  def display_print_jobs_codes(print)
+    codes = print.print_jobs.includes(:document).select(&:document).map do |pj|
+      [pj.document.code, pj.document.name]
+    end
+    
+    out = (codes[0..2]).map do |code, name|
+      code = truncate(code.to_s, length: 15, omission: '...')
+      
+      content_tag(:span, code, title: name, class: 'tag')
+    end.join
+    
+    if codes.size > 3
+      title = t 'view.prints.more_codes', count: codes.size - 3
+      
+      out << content_tag(:span, '...', title: title)
+    end
+    
+    raw content_tag(:div, out.present? ? raw(out) : '-', class: 'nowrap')
+  end
 end

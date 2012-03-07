@@ -8,7 +8,7 @@
     <tr>
       <th><%= Print.human_attribute_name :id %></th>
       <th><%= Print.human_attribute_name :created_at %></th>
-      <th><%= Print.human_attribute_name :printer %></th>
+      <th><%= Document.human_attribute_name :code, count: 2 %></th>
       <th><%= Print.human_attribute_name :customer %></th>
       <th><%= Print.human_attribute_name :scheduled_at %></th>
       <th><%= Print.human_attribute_name :user %></th>
@@ -21,7 +21,7 @@
       <tr class="<%= (print.revoked ? 'revoked ' : '') + cycle('even', 'odd') %>">
         <td><%= print.id %></td>
         <td><%= l print.created_at, format: :short if print.created_at %></td>
-        <td><%= print.printer.blank? ? '-' : print.printer %></td>
+        <td><%= display_print_jobs_codes(print) %></td>
         <td><%= print.customer || '-' %></td>
         <td><%= l print.scheduled_at, format: :short if print.scheduled_at %></td>
         <td><%= print.user %></td>
