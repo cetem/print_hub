@@ -68,9 +68,9 @@ module PrintsHelper
     end.join
     
     if codes.size > 3
-      title = t 'view.prints.more_codes', count: codes.size - 3
+      title = codes[3..-1].map { |code, name| "[#{code}] #{name}" }.join(', ')
       
-      out << content_tag(:span, '...', title: title)
+      out << content_tag(:span, '...', title: title, class: 'hint')
     end
     
     raw content_tag(:div, out.present? ? raw(out) : '-', class: 'nowrap')

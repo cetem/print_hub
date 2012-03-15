@@ -467,9 +467,6 @@
       customer_credit_detail:
         link: 'Ver crédito'
         title: 'Ver detalles del crédito vigente'
-      more_codes:
-        one: 'Y un código más...'
-        other: 'Y %{count} códigos más...'
       status:
         paid: 'Pagado'
         pending_payment: 'Con pago pendiente'
