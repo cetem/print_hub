@@ -14,7 +14,7 @@ module DocumentsHelper
         image_style = style.to_s.sub(/_mini/, '').to_sym
 
         content_tag :a, thumb, href: document.file.url(image_style),
-          'data-rel' => "doc_image_#{document.id}", title: document.name,
+          data: {rel: "doc_image_#{document.id}"}, title: document.name,
           class: :fancybox
       end
     end.compact.join("\n").html_safe
@@ -33,12 +33,7 @@ module DocumentsHelper
   end
   
   def show_document_barcode(document)
-    barcode = Barby::QrCode.new(
-      add_to_order_by_code_catalog_url(
-        document.code,
-        host: PUBLIC_DOMAIN, port: PUBLIC_PORT, protocol: PUBLIC_PROTOCOL
-      ), level: :h
-    )
+    barcode = get_barcode_for document
     outputter = barcode.outputter_for(:to_svg)
     
     outputter.title = document.to_s
@@ -48,13 +43,17 @@ module DocumentsHelper
   end
   
   def document_link_to_barcode(code)
-    out = link_to(
-      t('view.documents.barcode'), barcode_document_path(code),
-      'class' => 'show_barcode', 'remote' => true, 'data-type' => 'html'
+    out = []
+    out << link_to(
+      t('label.download'), download_barcode_document_path(code),
+      class: 'download_barcode'
     )
-    out << content_tag(:div, nil, 'class' => 'barcode_container')
+    out << link_to(
+      t('label.show'), barcode_document_path(code),
+      class: 'show_barcode', remote: true, data: { type: 'html' }
+    )
     
-    raw out
+    raw out.join(' | ') << content_tag(:div, nil, class: 'barcode_container')
   end
   
   def document_link_for_use_in_next_print(document)
@@ -89,5 +88,14 @@ module DocumentsHelper
     
     form.label :file, raw(label),
       class: ('field_with_errors' unless @document.errors[:file_file_name].blank?)
+  end
+  
+  def get_barcode_for(document)
+    Barby::QrCode.new(
+      add_to_order_by_code_catalog_url(
+        document.code,
+        host: PUBLIC_DOMAIN, port: PUBLIC_PORT, protocol: PUBLIC_PROTOCOL
+      ), level: :h
+    )
   end
 end

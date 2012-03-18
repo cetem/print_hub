@@ -93,6 +93,7 @@ PrintHubApp::Application.routes.draw do
 
       member do
         get :barcode
+        get :download_barcode
         post :add_to_next_print
         delete :remove_from_next_print
 

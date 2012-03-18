@@ -140,12 +140,23 @@ class DocumentsController < ApplicationController
     @document = Document.find_or_initialize_by_code(params[:id])
   end
   
+  # GET /document/1/download_barcode
+  def download_barcode
+    @document = Document.find_or_initialize_by_code(params[:id])
+    
+    barcode = view_context.get_barcode_for @document
+    png_path = "#{TMP_BARCODE_IMAGES}/#{@document.code}.png"
+    
+    File.open(png_path, 'wb') { |f| f << barcode.to_png(xdim: 2, ydim: 2) }
+    
+    send_file png_path, type: 'image/png'
+  end
+  
   # POST /documents/1/add_to_next_print
   def add_to_next_print
     @document = Document.find(params[:id])
-    session[:documents_for_printing] ||= []
     
-    unless session[:documents_for_printing].include?(@document.id)
+    unless @documents_for_printing.include?(@document.id)
       session[:documents_for_printing] << @document.id
     end
   end
@@ -153,7 +164,6 @@ class DocumentsController < ApplicationController
   # DELETE /documents/1/remove_from_next_print
   def remove_from_next_print
     @document = Document.find(params[:id])
-    session[:documents_for_printing] ||= []
     
     session[:documents_for_printing].delete(@document.id)
   end
@@ -177,8 +187,7 @@ class DocumentsController < ApplicationController
   private
   
   def load_documents_for_printing
-    session[:documents_for_printing] ||= []
-    @documents_for_printing = session[:documents_for_printing]
+    @documents_for_printing = (session[:documents_for_printing] ||= [])
   end
   
   def sort_column

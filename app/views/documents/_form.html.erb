@@ -5,6 +5,7 @@
   <% end %>
   <%= show_error_messages(@document) %>
   <div class="field column_right">
+    <strong><%= t('view.documents.barcode') %></strong>:
     <%= document_link_to_barcode(@document.code.blank? ? 0 : @document.code) %>
   </div>
   <div class="field">

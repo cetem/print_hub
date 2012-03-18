@@ -19,6 +19,7 @@ gem 'RedCloth'
 gem 'newrelic_rpm'
 gem 'barby'
 gem 'rqrcode'
+gem 'chunky_png'
 gem 'capistrano'
 gem 'whenever', require: false
 gem 'cups'

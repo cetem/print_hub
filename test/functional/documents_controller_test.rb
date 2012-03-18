@@ -175,6 +175,24 @@ class DocumentsControllerTest < ActionController::TestCase
     assert_template 'documents/barcode'
   end
   
+  test 'should download barcode' do
+    UserSession.create(users(:administrator))
+    get :download_barcode, id: @document.code
+    assert_response :success
+    assert_not_nil assigns(:document)
+    assert_select '#unexpected_error', false
+    assert_equal 'image/png', @response.content_type
+  end
+  
+  test 'should download barcode of new document' do
+    UserSession.create(users(:administrator))
+    get :download_barcode, id: '159321'
+    assert_response :success
+    assert_not_nil assigns(:document)
+    assert_select '#unexpected_error', false
+    assert_equal 'image/png', @response.content_type
+  end
+  
   test 'should add document to next print' do
     UserSession.create(users(:administrator))
     assert session[:documents_for_printing].blank?

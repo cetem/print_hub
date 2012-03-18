@@ -5,14 +5,23 @@ jQuery ->
         event.preventDefault()
       .removeAttr('data-remote').removeAttr('data-method').css('opacity', '.4')
     
+    $(document).on 'change', '#document_code', ->
+      if !/^\s*$/.test($('#document_code').val() || '')
+        newShowHref = $('a.show_barcode').attr('href')
+        .replace(/[^/]*\/barcode/, "#{$('#document_code').val()}/barcode")
+        
+        $('a.show_barcode').attr 'href', newShowHref
+        
+        newDownloadHref = $('a.download_barcode').attr('href')
+        .replace(
+          /[^/]*\/download_barcode/,
+          "#{$('#document_code').val()}/download_barcode"
+        )
+        
+        $('a.download_barcode').attr 'href', newDownloadHref
+    
     $(document).on 'ajax:before', 'a.show_barcode', ->
       $(this).next('.barcode_container').stop(true, true).slideUp()
-      
-      if !/^\s*$/.test($('#document_code').val() || '')
-        newHref = $(this).attr('href')
-        .replace(/[^/]*\/barcode/, $('#document_code').val() + '/barcode')
-        
-        $(this).attr 'href', newHref
     
     $(document).on 'ajax:success', 'a.show_barcode', (xhr, data)->
       $(this).next('.barcode_container').html(data).stop(true, true).slideDown()
