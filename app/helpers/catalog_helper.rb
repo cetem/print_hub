@@ -75,7 +75,7 @@ module CatalogHelper
     if tags.size > 3
       title = t 'view.catalog.more_tags', count: tags.size - 3
       
-      out << content_tag(:span, '...', title: title)
+      out << content_tag(:span, raw('&hellip;'), title: title)
     end
     
     raw content_tag(:div, raw(out), class: 'nowrap')

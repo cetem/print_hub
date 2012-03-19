@@ -3,6 +3,7 @@
 <head>
   <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
   <title><%= [t('app_name'), @title].compact.join(' | ') %></title>
+  <meta name="viewport" content="width=device-width" />
   <!--[if lt IE 9]>
   <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
   <![endif]-->
@@ -15,7 +16,6 @@
     <%= "Messages.ajaxInProgressWarning = '#{t('messages.ajax_in_progress_warning')}';" %>
     <%= yield :js_extra %>
   <% end %>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, target-densitydpi=device-dpi" />
   <%= yield :head_extra %>
 </head>
 <body id="<%= "ph_#{controller_name}" %>" data-action="<%= action_name %>">

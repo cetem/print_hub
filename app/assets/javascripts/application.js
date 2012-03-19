@@ -24,4 +24,3 @@
 //
 // Mobile js
 //= require mobile
-//= require mobile_style

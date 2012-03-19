@@ -17,4 +17,5 @@
  *= require customers
  *= require customer_sessions
  *= require password_resets
+ *= require mobile
 */

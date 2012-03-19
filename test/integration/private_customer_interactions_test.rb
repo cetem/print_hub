@@ -1,3 +1,4 @@
+# encoding: utf-8
 require 'test_helper'
 
 class PrivateCustomerInteractionsTest < ActionDispatch::IntegrationTest
@@ -124,7 +125,7 @@ class PrivateCustomerInteractionsTest < ActionDispatch::IntegrationTest
     
     within '#check_order' do
       assert page.has_no_css?('.document_details')
-      click_link '...'
+      click_link '…'
       assert page.has_css?('.document_details')
       original_price =
         find('.nested_item_actions .money').text.match(/\d+\.\d+/)[0].to_f

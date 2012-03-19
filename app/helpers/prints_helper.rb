@@ -30,7 +30,7 @@ module PrintsHelper
   end
   
   def link_to_document_details(document)
-    link_to '...', document || document_path(id: 0),
+    link_to raw('&hellip;'), document || document_path(id: 0),
       class: 'details_link action_link', remote: true,
       title: t('view.prints.document_details'),
       style: ('display: none;' unless document)
@@ -70,7 +70,7 @@ module PrintsHelper
     if codes.size > 3
       title = codes[3..-1].map { |code, name| "[#{code}] #{name}" }.join(', ')
       
-      out << content_tag(:span, '...', title: title, class: 'hint')
+      out << content_tag(:span, raw('&hellip;'), title: title, class: 'hint')
     end
     
     raw content_tag(:div, out.present? ? raw(out) : '-', class: 'nowrap')

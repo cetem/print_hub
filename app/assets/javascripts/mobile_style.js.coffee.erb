@@ -1,7 +1,0 @@
-# El estilo hay que "inyectarlo" de esta forma por un bug en Android 2.2
-# ver: http://code.google.com/p/android/issues/detail?id=11961
-if navigator.userAgent.match(/mobi|mini|fennec/i) && window.screen.width <= 800
-  $('head').append(
-    $('<link media="screen" rel="stylesheet" type="text/css" />')
-    .attr('href', '<%= asset_path 'mobile.css' %>')
-  )

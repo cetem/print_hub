@@ -1,0 +1,201 @@
+@import "mixins";
+
+@media (max-width: 480px) {
+  #customer_login {
+    float: none;
+
+    #login {
+      float: none;
+      width: 17em;
+      margin: 0em auto;
+      padding: 1em 2em;
+    }
+  }
+
+  #customer_registration {
+    #public_customer_form {
+      float: none;
+      margin: -2em 0em 0em 0em;
+    }
+
+    section.explanation {
+      float: none;
+      text-align: justify;
+    }
+  }
+
+  #customer_profile {
+    #public_customer_form {
+      float: none;
+      margin: 0em;
+    }
+
+    section.explanation {
+      float: none;
+      text-align: justify;
+    }
+  }
+
+  #main_container {
+    width: 100% !important;
+    min-width: 200px !important;
+    padding: 0em !important;
+    margin: 5em auto !important;
+  }
+
+  #ph_customer_sessions {
+    #top_bar {
+      min-width: 200px;
+      padding: 1em .5em .5em .5em;
+
+      hgroup {
+        h2 {
+          display: none;
+        }
+      }
+
+      nav {
+        font-size: .8em;
+      }
+    }
+
+    section.details {
+      margin: 0em;
+    }
+  }
+
+  #ph_customers {
+    form {
+      margin-top: 4em;
+    }
+  }
+
+  #ph_password_resets, #ph_customers {
+    #main_container {
+      margin: 2em auto !important;
+    }
+  }
+
+  #total {
+    span.money {
+      font-size: 1em;
+    }
+  }
+
+  #user_actions {
+    top: .5em !important;
+    right: .25em !important;
+
+    #user {
+      font-size: .8em;
+    }
+  }
+
+  a.add_link, a.remove_link {
+    font-size: 1.25em;
+  }
+
+  body {
+    padding: 0em .5em;
+  }
+
+  div#main_menu {
+    padding: .1em 0em;
+    min-width: 200px;
+
+    p.help_link_container {
+      margin: .5em 1em;
+    }
+  }
+
+  div#search {
+    margin: -1em 0em .5em 0em;
+  }
+
+  div.actions {
+    a {
+      font-size: .8em;
+    }
+  }
+
+  div.field {
+    input[type="text"], input[type="password"], select, textarea, input.file {
+      width: 90%;
+    }
+  }
+
+  nav#menu_links {
+    margin: 0em;
+
+    ul {
+      font-size: 1.5em;
+      float: none;
+      background: #fff;
+
+      li {
+        float: none;
+        display: block;
+
+        a {
+          display: block;
+          clear: both;
+          margin: 0em auto;
+          width: 90%;
+          padding: 1.5em .5em;
+
+          &:hover {
+            text-shadow: inherit;
+            color: inherit;
+            background: inherit;
+          }
+        }
+      }
+    }
+  }
+
+  nav.links {
+    margin: .25em 0em;
+  }
+
+  p.help_link_container {
+    margin: 1em 0em;
+  }
+
+  section.explanation {
+    padding: 1em;
+    border: none;
+  }
+
+  span.money {
+    font-size: .5em;
+  }
+
+  table.list {
+    td {
+      padding: .75em .5em;
+    }
+  }
+
+  .expendable {
+    display: none;
+  }
+
+  .hidden_for_mobile {
+    display: none;
+  }
+
+  .only_mobile {
+    display: block;
+  }
+
+  .only_mobile_inline {
+    display: inline;
+  }
+
+  @include nested-column(order_lines_headers, order_line, 1, 35%);
+  @include nested-column(order_lines_headers, order_line, 2, 10%);
+  @include nested-column(order_lines_headers, order_line, 3, 0%);
+  @include nested-column(order_lines_headers, order_line, 4, 0%);
+  @include nested-column(order_lines_headers, order_line, 5, 15%);
+  @include nested-column(order_lines_headers, order_line, 7, 35%);
+}
