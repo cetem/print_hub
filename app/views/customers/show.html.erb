@@ -83,7 +83,11 @@
 
 <% amounts = @customer.to_pay_amounts %>
 <% if amounts[:total_count] > 0 %>
-  <%= render 'debt', amounts: amounts, cancelled: false %>
+  <% if params[:date] && @customer.months_to_pay.size > 1 %>
+    <%= render 'month_debt', date: params[:date], cancelled: false %>
+  <% else %>
+    <%= render 'debt', amounts: amounts, cancelled: false %>
+  <% end %>
 <% else %>
   <br />
   <p>

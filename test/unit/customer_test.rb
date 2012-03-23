@@ -339,6 +339,32 @@ class CustomerTest < ActiveSupport::TestCase
     
     assert_equal 0, @customer.reload.prints.pay_later.count
   end
+
+  test 'pay off current month debt' do
+    assert_equal 2, @customer.months_to_pay.size
+    month = @customer.months_to_pay.last
+    date = Date.new(month.last, month.first, 1)
+    
+    assert_difference '@customer.months_to_pay.size', -1 do
+      assert @customer.pay_month_debt(date)
+    end
+
+    current_date = [[Date.today.month, Date.today.year]]
+    assert_not_equal current_date, @customer.reload.months_to_pay
+  end
+
+  test 'pay off not current month debt' do
+    assert_equal 2, @customer.months_to_pay.size
+    month = @customer.months_to_pay.first
+    date = Date.new(month.last, month.first, 1)
+
+    assert_difference '@customer.months_to_pay.size', -1 do
+      assert @customer.pay_month_debt(date)
+    end
+
+    current_date = [[Date.today.month, Date.today.year]]
+    assert_equal current_date, @customer.reload.months_to_pay
+  end
   
   test 'add bonus' do
     initial_bonus_amount = @customer.bonuses.to_a.sum(&:amount)

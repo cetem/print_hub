@@ -1,6 +1,18 @@
 <section class="nested_items<%= ' cancelled' if cancelled %>">
   <h2>
     <%= t('view.customers.to_pay_prints.title') %>
+    ( 
+    <% if @customer.months_to_pay.size > 1 %>
+      <%= link_to t('view.customers.to_pay_prints.month_to_pay'),
+        customer_path(
+          @customer, date: show_customer_first_month_to_pay(@customer)) %>   
+    <% elsif @customer.months_to_pay.size == 1 %>
+      <%= I18n.t(
+        'view.customers.to_pay_prints.one_month_only_debt', 
+          month: show_customer_the_only_month_of_debt(@customer)
+      ) %>
+    <% end %>
+    )
   </h2>
   
   <table class="summary">

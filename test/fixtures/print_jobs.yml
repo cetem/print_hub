@@ -131,7 +131,7 @@ math_job_with_credit_2:
   print: math_print_with_credit
   
 math_job_to_pay_later_1:
-  job_id: 3
+  job_id: 1
   copies: 3
   printed_copies: 3
   pages: 12
@@ -140,10 +140,10 @@ math_job_to_pay_later_1:
   printed_pages: <%= 3 * 12 %>
   two_sided: false
   document: math_notes
-  print: math_print_to_pay_later
+  print: math_print_to_pay_later_1
 
 math_job_to_pay_later_2:
-  job_id: 1
+  job_id: 2
   copies: 1
   printed_copies: 1
   pages: 350
@@ -152,7 +152,20 @@ math_job_to_pay_later_2:
   printed_pages: <%= 1 * 350 %>
   two_sided: true
   document: math_book
-  print: math_print_to_pay_later
+  print: math_print_to_pay_later_1
+
+math_job_to_pay_later_3:
+  job_id: 3
+  copies: 4
+  printed_copies: 4
+  pages: 350
+  price_per_copy: 0.10
+  range: ''
+  printed_pages: <%= 4 * 350 %>
+  two_sided: true
+  document: math_book
+  print: math_print_to_pay_later_2
+  created_at: <%= 2.months.ago %>
 
 physics_job_to_pay_later_1:
   job_id: 2

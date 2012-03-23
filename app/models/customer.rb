@@ -12,7 +12,7 @@ class Customer < ApplicationModel
   default_scope where(enable: true)
   scope :disable, where(enable: false)
   scope :with_monthly_bonus, where('free_monthly_bonus > :zero', zero: 0)
-  
+
   # Atributos "permitidos"
   attr_accessible :name, :lastname, :identification, :email, :password,
     :password_confirmation, :lock_version
@@ -170,13 +170,27 @@ class Customer < ApplicationModel
       false
     end
   end
-  
-  def to_pay_amounts
+
+  def to_pay_amounts_by_month(date)
+    date = Date.parse(date) unless date.is_a? Date
     amounts = {
-      one_sided_count: self.print_jobs.pay_later.one_sided.sum(:printed_pages),
-      two_sided_count: self.print_jobs.pay_later.two_sided.sum(:printed_pages)
+      one_sided_count: self.print_jobs.pay_later.created_at_month(date).
+        one_sided.sum(:printed_pages),
+      two_sided_count: self.print_jobs.pay_later.created_at_month(date).
+        two_sided.sum(:printed_pages)
     }
+
+    put_prices_in_copies(amounts)
+  end
+  
+  def months_to_pay
+    self.print_jobs.pay_later.order('created_at ASC').inject([]) do |date, p|
+      month_year = [p.created_at.month, p.created_at.year]
+      date.include?(month_year) ? date : date + [month_year]
+    end
+  end
     
+  def put_prices_in_copies(amounts)
     amounts[:total_count] = amounts[:one_sided_count] + amounts[:two_sided_count]
     amounts[:one_sided_price] = PriceChooser.choose(
       one_sided: true, copies: amounts[:total_count]
@@ -187,7 +201,34 @@ class Customer < ApplicationModel
     
     amounts
   end
+
+  def to_pay_amounts
+    amounts = {
+      one_sided_count: self.print_jobs.pay_later.one_sided.sum(:printed_pages),
+      two_sided_count: self.print_jobs.pay_later.two_sided.sum(:printed_pages)
+    }
+    
+    put_prices_in_copies(amounts)
+  end
   
+  def pay_month_debt(date)
+    amount = self.to_pay_amounts_by_month(date)
+    date = Date.parse(date) unless date.is_a? Date
+
+    Print.transaction do
+      begin
+        self.prints.pay_later.created_in_the_same_month(date).each do |p|
+          p.pay_with_special_price(
+            one_sided_price: amount[:one_sided_price],
+            two_sided_price: amount[:two_sided_price]
+          )
+        end
+      rescue
+        raise ActiveRecord::Rollback
+      end
+    end
+  end
+
   def pay_off_debt
     amounts = self.to_pay_amounts
     

@@ -14,6 +14,13 @@ jQuery ->
         $('#add_deposit_link').click()
         e.preventDefault()
         e.stopPropagation()
+        
+  $('#month_select_to_pay').change ->
+    window.location = window.location.href.replace(
+      /date=([^&])+/, "date=#{$(this).val()}"
+    )
+    $(this).attr 'disabled', true
+    $('#loading_caption').stop(true, true).slideDown(100)
   
   if $('#ph_customers[data-action="show"]').length > 0
     $(document).on 'ajax:success', 'form[data-remote]', (xhr, data)->

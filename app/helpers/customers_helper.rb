@@ -60,4 +60,31 @@ module CustomersHelper
       form: { 'data-type' => 'html' }
     )
   end
+
+  def show_button_to_pay_month_debt(customer, date)
+    date_s = l(Date.parse(date), format: :month_and_year).camelize
+    button_to(
+      t('view.customers.to_pay_prints.pay', date: date_s),
+      pay_month_debt_customer_path(customer, date: date),
+      method: :put, remote: true, id: 'pay_month_debt',
+      form: { 'data-type' => 'html' }
+    )
+  end
+
+  def show_customer_first_month_to_pay(customer)
+    m_y = customer.months_to_pay.first
+    "#{m_y.last}-#{m_y.first}-1"
+  end
+
+  def show_customer_select_with_debt_months(customer)
+    customer.months_to_pay.inject([]) do |date, m_y|
+      date + [[l(Date.new(m_y.last, m_y.first, 1), format: :month_and_year), 
+        "#{m_y.last}-#{m_y.first}-1"]]
+    end
+  end
+
+  def show_customer_the_only_month_of_debt(customer)
+    month = customer.months_to_pay.first
+    l(Date.new(month.last, month.first, 1), format: :month_and_year)
+  end
 end

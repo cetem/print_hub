@@ -166,4 +166,8 @@ class PrintJob < ApplicationModel
   def self.user_stats_between(from, to)
     with_print_between(from, to).not_revoked.group(:user_id).sum(:printed_pages)
   end
+
+  def self.created_at_month(date)
+    with_print_between(date.beginning_of_month, date.end_of_month)
+  end
 end
