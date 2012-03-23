@@ -4,7 +4,7 @@
       default: '%d/%m/%Y'
       short: '%d de %b'
       long: '%d de %B de %Y'
-
+      month_and_year: '%B de %Y'
     day_names:
       - domingo
       - lunes
@@ -21,7 +21,6 @@
       - jue
       - vie
       - sáb
-
     month_names:
       - ~
       - enero

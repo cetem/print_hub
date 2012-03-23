@@ -13,7 +13,7 @@ class StatsControllerTest < ActionController::TestCase
   test 'should get filtered printers stats' do
     UserSession.create(users(:administrator))
     get :printers, interval: {
-      from: 1.day.ago.to_datetime.to_s(:db),
+      from: 3.months.ago.to_datetime.to_s(:db),
       to: 1.day.from_now.to_datetime.to_s(:db)
     }
     assert_response :success
@@ -41,7 +41,7 @@ class StatsControllerTest < ActionController::TestCase
   test 'should get filtered printers stats in csv' do
     UserSession.create(users(:administrator))
     get :printers, format: :csv, interval: {
-      from: 1.day.ago.to_datetime.to_s(:db),
+      from: 3.months.ago.to_datetime.to_s(:db),
       to: 1.day.from_now.to_datetime.to_s(:db)
     }
     assert_response :success
@@ -63,7 +63,7 @@ class StatsControllerTest < ActionController::TestCase
   test 'should get filtered users stats' do
     UserSession.create(users(:administrator))
     get :users, interval: {
-      from: 1.day.ago.to_datetime.to_s(:db),
+      from: 3.months.ago.to_datetime.to_s(:db),
       to: 1.day.from_now.to_datetime.to_s(:db)
     }
     assert_response :success
@@ -91,7 +91,7 @@ class StatsControllerTest < ActionController::TestCase
   test 'should get filtered users stats in csv' do
     UserSession.create(users(:administrator))
     get :users, format: :csv, interval: {
-      from: 1.day.ago.to_datetime.to_s(:db),
+      from: 3.months.ago.to_datetime.to_s(:db),
       to: 1.day.from_now.to_datetime.to_s(:db)
     }
     assert_response :success
@@ -113,7 +113,7 @@ class StatsControllerTest < ActionController::TestCase
   test 'should get filtered prints stats' do
     UserSession.create(users(:administrator))
     get :prints, interval: {
-      from: 1.day.ago.to_datetime.to_s(:db),
+      from: 3.months.ago.to_datetime.to_s(:db),
       to: 1.day.from_now.to_datetime.to_s(:db)
     }
     assert_response :success
@@ -141,7 +141,7 @@ class StatsControllerTest < ActionController::TestCase
   test 'should get filtered prints stats in csv' do
     UserSession.create(users(:administrator))
     get :prints, format: :csv, interval: {
-      from: 1.day.ago.to_datetime.to_s(:db),
+      from: 3.months.ago.to_datetime.to_s(:db),
       to: 1.day.from_now.to_datetime.to_s(:db)
     }
     assert_response :success

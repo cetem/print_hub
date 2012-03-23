@@ -177,4 +177,12 @@ class CustomersController < ApplicationController
     
     render partial: 'debt', locals: { amounts: amounts, cancelled: true }
   end
+
+  # PUT /customers/1/pay_month_debt?date=date
+  def pay_month_debt
+    @customer = Customer.find(params[:id])
+    @customer.pay_month_debt(params[:date])
+
+    render partial: 'month_paid'
+  end
 end

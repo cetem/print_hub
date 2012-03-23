@@ -650,7 +650,7 @@ class PrintTest < ActiveSupport::TestCase
   end
   
   test 'pay with special price' do
-    print = prints(:math_print_to_pay_later)
+    print = prints(:math_print_to_pay_later_1)
     original_price = print.price
     
     print.pay_with_special_price(one_sided_price: 0.02, two_sided_price: 0.01)

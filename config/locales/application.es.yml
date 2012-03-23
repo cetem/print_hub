@@ -334,8 +334,14 @@
         one: 'Una impresión sin pagar'
         other: '%{count} impresiones sin pagar'
       to_pay_prints:
+        month_to_pay: 'Pago por mes'
+        total_to_pay: 'Pago total'
+        one_month_only_debt: 'La deuda corresponde solo al mes de %{month}'
+        month_title: 'Saldo cuenta corriente a '
+        pay: 'Pagar %{date}'
+        paid: '%{date} pagado'
         no_debt: 'Sin deuda'
-        title: 'Saldo en cuenta corriente'
+        title: 'Saldo total en cuenta corriente'
         pay_off_debt: 'Pagar todo'
         debt_cancelled: 'Deuda saldada'
         columns:

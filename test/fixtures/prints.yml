@@ -48,12 +48,20 @@ math_print_with_credit:
   status: <%= Print::STATUS[:paid] %>
   revoked: false
   
-math_print_to_pay_later:
+math_print_to_pay_later_1:
   printer: <%= Cups.show_destinations.detect { |p| p =~ /pdf/i } %>
   user: operator
   customer: student
   status: <%= Print::STATUS[:pay_later] %>
   revoked: false
+
+math_print_to_pay_later_2:
+  printer: <%= Cups.show_destinations.detect { |p| p =~ /pdf/i } %>
+  user: operator
+  customer: student
+  status: <%= Print::STATUS[:pay_later] %>
+  revoked: false
+  created_at: <%= 2.months.ago %>
 
 physics_print_to_pay_later:
   printer: <%= Cups.show_destinations.detect { |p| p =~ /pdf/i } %>

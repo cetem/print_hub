@@ -119,4 +119,51 @@ class CustomersTest < ActionDispatch::IntegrationTest
     click_link I18n.t('view.customers.show_bonuses')
     assert find('#bonuses_section').visible?
   end
+
+  test 'should pay a month debt' do
+    adm_login
+    
+    assert_page_has_no_errors!
+    assert_equal prints_path, current_path
+    
+    visit customer_path(customers(:student))
+
+    id = customers(:student).id
+    assert_page_has_no_errors!
+    assert_equal customer_path(id), current_path
+    
+    href = find_link(I18n.t('view.customers.to_pay_prints.month_to_pay'))[:href]
+    click_link I18n.t('view.customers.to_pay_prints.month_to_pay')
+
+    href = href.match(/\?date\=(\S+)/)[1]
+    current_page = current_url.match(/\:54163(\S+)/)[1]
+
+    assert_page_has_no_errors!
+    assert_equal customer_path(id, date: href ), current_page
+
+
+    assert_difference "Customer.find(#{id}).months_to_pay.count", -1 do
+      find('#pay_month_debt').click
+    end
+    
+    assert_page_has_no_errors!
+  end
+
+  test 'should pay total debt' do
+    adm_login
+    
+    assert_page_has_no_errors!
+    assert_equal prints_path, current_path
+    
+    visit customer_path(customers(:student))
+
+    assert_page_has_no_errors!
+    assert_equal customer_path(customers(:student)), current_path
+
+    id = customers(:student).id
+    assert_not_equal Customer.find(id).prints.pay_later.count, 0
+    find('#pay_off_debt').click
+    assert_equal Customer.find(id).prints.pay_later.count, 0
+    assert_page_has_no_errors!
+  end
 end
