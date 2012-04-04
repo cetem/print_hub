@@ -1,7 +1,7 @@
 jQuery ->
   if $('#ph_documents').length > 0
     $(document).on 'click', 'a.add_link, a.remove_link', ->
-      $(this).html('X').attr('href', '#').click (event)->
+      $(this).html('&#xe064;').attr('href', '#').click (event)->
         event.preventDefault()
       .removeAttr('data-remote').removeAttr('data-method').css('opacity', '.4')
     

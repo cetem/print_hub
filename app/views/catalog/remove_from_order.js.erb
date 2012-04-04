@@ -1,8 +1,8 @@
 <% message = link_to(
-  '+',
+  '&#xe008;'.html_safe,
   add_to_order_catalog_path(@document),
   title: t('view.catalog.add_to_order.title'),
-  remote: true, method: :post, class: 'add_link add_to_order'
+  remote: true, method: :post, class: 'add_link add_to_order iconic'
 ) %>
 <% id = "#document_#{@document.id}_to_order" %>
 $('<%= id %>').html('<%= message %>');

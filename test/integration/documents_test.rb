@@ -59,7 +59,7 @@ class DocumentsTest < ActionDispatch::IntegrationTest
       assert_difference "Document.count", -1 do
         # all("input[value=#{I18n.t('label.delete')}]").second.click
         find(
-          "form[action*=\"/#{documents(:unused_book).id}\"] input[type=submit]"
+          "a[href*=\"/#{documents(:unused_book).id}\"][data-method='delete']"
         ).click
         page.driver.browser.switch_to.alert.accept
         sleep(0.5)

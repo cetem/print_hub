@@ -36,7 +36,7 @@
   <div class="field">
     <%= document_file_label f %>
     <%= f.file_field :file,
-      class: (:field_with_errors unless @document.errors[:file_file_name].blank?) %>
+      class: ('field_with_errors' unless @document.errors[:file_file_name].blank?) %>
   </div>
   <div class="field">
     <%= f.check_box :enable %>

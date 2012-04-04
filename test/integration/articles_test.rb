@@ -47,7 +47,7 @@ class ArticlesTest < ActionDispatch::IntegrationTest
     
     within 'table.list' do
       assert_difference 'Article.count', -1 do
-        all("input[value='Eliminar']")[1].click #El 1ro esta usado
+        all("a[data-method='delete']")[1].click #El 1ro esta usado
         page.driver.browser.switch_to.alert.accept
         sleep(0.5)
       end

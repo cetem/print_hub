@@ -1,6 +1,6 @@
 source 'http://rubygems.org'
 
-gem 'rails', '3.2.2'
+gem 'rails', '3.2.3'
 
 gem 'pg'
 gem 'authlogic'
@@ -11,7 +11,7 @@ gem 'validates_timeliness'
 gem 'awesome_nested_set'
 gem 'rghost'
 gem 'will_paginate'
-gem 'paperclip'
+gem 'paperclip', '3.0.0' # 3.0.1 has a bug
 gem 'foreigner'
 gem 'memcache-client'
 gem 'paper_trail'

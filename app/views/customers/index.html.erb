@@ -15,9 +15,9 @@
         <td><%= customer.to_s %> (<%= show_link_to_customer_prints(customer) %>)</td>
         <td><%= customer.identification %></td>
         <td><%= number_to_currency(customer.free_monthly_bonus || 0) %></td>
-        <td><%= link_to t('label.show'), customer %></td>
-        <td><%= link_to t('label.edit'), edit_customer_path(customer) %></td>
-        <td><%= show_button_to_destroy(customer) %></td>
+        <td><%= link_to_show customer %></td>
+        <td><%= link_to_edit edit_customer_path(customer) %></td>
+        <td><%= link_to_destroy customer %></td>
       </tr>
     <% end %>
   </tbody>

@@ -24,10 +24,9 @@
         <td><%= document.stock %></td>
         <td><%= document.pages %></td>
         <td><%= document_link_for_use_in_next_print document %></td>
-        <td><%= link_to t('label.show'), document %></td>
-        <td><%= link_to t('label.edit'), edit_document_path(document) %></td>
-        <td><%= button_to t('label.delete'), document,
-          confirm: t('messages.confirmation'), method: :delete %></td>
+        <td><%= link_to_show document %></td>
+        <td><%= link_to_edit edit_document_path(document) %></td>
+        <td><%= link_to_destroy document %></td>
       </tr>
     <% end %>
   </tbody>

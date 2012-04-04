@@ -1,5 +1,16 @@
 @import "mixins";
 
+@font-face {
+  font-family: 'IconicStroke';
+  src: url('<%= image_path 'fonts/iconic_stroke.eot' %>');
+  src: url('<%= image_path 'fonts/iconic_stroke.eot' %>?#iefix') format('embedded-opentype'),
+       url('<%= image_path 'fonts/iconic_stroke.woff' %>') format('woff'),
+       url('<%= image_path 'fonts/iconic_stroke.ttf' %>') format('truetype'),
+       url('<%= image_path 'fonts/iconic_stroke.svg' %>#iconic') format('svg');
+  font-weight: normal;
+  font-style: normal;
+}
+
 * {
   margin: 0px;
   padding: 0px;
@@ -18,49 +29,6 @@ a {
   }
 }
 
-a.action_link,
-a.remove,
-a[data-event="removeItem"],
-a[data-event="hideItem"] {
-  font-size: 12px;
-  font-weight: bold;
-  padding: 1px 3px;
-  text-decoration: none;
-  @include rounded-corners(.25em);
-  @include transition(.25s, background, ease-in);
-
-  &:hover {
-    background: $main-color;
-    color: #fff;
-    text-shadow: 0px 0px .1em #fff;
-    @include transition(.25s, background, ease-out);
-  }
-}
-
-a.add_link {
-  border: 2px solid #ccc;
-}
-
-a.add_link, a.remove_link {
-  color: #fff;
-  background: #666;
-  font-family: Monaco, "Courier New", "DejaVu Sans Mono", "Bitstream Vera Sans Mono", monospace;
-  font-size: 1.1em;
-  font-weight: bolder;
-  padding: 0em .25em;
-  text-decoration: none;
-  text-shadow: 0 0 .2em white;
-  @include rounded-corners(1em);
-  @include box-shadow(0em, 0em, .3em, #999);
-  @include transition(.25s, border, ease-in);
-
-  &:hover {
-    color: $highlight-color;
-    border: 2px solid $highlight-color;
-    @include transition(.25s, border, ease-out);
-  }
-}
-
 a.large_link {
   font-size: 1.1em;
   font-weight: bold;
@@ -74,8 +42,7 @@ a.large_link {
 }
 
 a.remove_link {
-  color: $main-color;
-  border: 2px solid $main-color;
+  color: darken($main-color, 10%) !important;
 }
 
 body {
@@ -414,38 +381,6 @@ dl.details {
   }
 }
 
-form.button_to {
-  input[type="submit"] {
-    font-size: .8em;
-    padding: 0em .5em;
-    display: inline-block;
-    background: rgba(185,185,185,1);
-    background: -moz-linear-gradient(top,rgba(255,255,255,1),rgba(185,185,185,1));
-    background: -webkit-gradient(linear,0% 0%,0% 100%,from(rgba(255,255,255,1)),to(rgba(185,185,185,1)));
-    text-shadow: 1px 1px 1px rgba(255,255,255,0.5);
-    border: 1px solid rgba(0,0,0,0.4);
-    @include rounded-corners(.25em);
-    @include box-shadow(0px, 0px, .1em, rgba(0,0,0,0.5));
-
-    &:disabled {
-      color: rgba(0,0,0,0.4);
-      text-shadow: 1px 1px 0px rgba(255,255,255,0.5);
-      background: rgba(220,220,220,1);
-    }
-
-    &:hover:not(:disabled) {
-      border: 1px solid $main-color;
-      text-shadow: 0px 0px 2px #999;
-    }
-
-    &:active, &:focus {
-      background: rgba(255,255,255,1);
-      background: -moz-linear-gradient(top,rgba(185,185,185,1),rgba(255,255,255,1));
-      background: -webkit-gradient(linear,0% 0%,0% 100%,from(rgba(185,185,185,1)),to(rgba(255,255,255,1)));
-    }
-  }
-}
-
 h2.title {
   font-size: 1.25em;
   margin-bottom: 1em;
@@ -699,6 +634,19 @@ table.list {
   border: 2px solid #666;
   border-collapse: collapse;
   
+  a {
+    color: $main-text-color;
+    
+    &:visited {
+      color: lighten($main-text-color, 20%);
+    }
+
+    &:hover {
+      color: $main-color;
+      text-shadow: 0px 0px .1em $main-color;
+    }
+  }
+  
   caption {
     text-align: left;
     font-size: 1.5em;
@@ -820,6 +768,13 @@ ul.raw {
 
 .hint {
   cursor: help;
+}
+
+.iconic {
+  font-family: "IconicStroke";
+  display: inline-block;
+  text-decoration: none !important;
+  font-size: 1.5em;
 }
 
 .nowrap {

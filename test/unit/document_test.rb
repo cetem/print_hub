@@ -166,7 +166,7 @@ class DocumentTest < ActiveSupport::TestCase
     @document.pages = nil
     @document.file = nil
     assert @document.invalid?
-    assert_equal 6, @document.errors.count
+    assert_equal 5, @document.errors.count
     assert_equal [error_message_from_model(@document, :code, :blank)],
       @document.errors[:code]
     assert_equal [error_message_from_model(@document, :name, :blank)],
@@ -175,9 +175,8 @@ class DocumentTest < ActiveSupport::TestCase
       @document.errors[:media]
     assert_equal [error_message_from_model(@document, :pages, :blank)],
       @document.errors[:pages]
-    assert_equal [I18n.t('errors.messages.blank')],
-      @document.errors[:file_file_name]
-    assert_equal [I18n.t('errors.messages.blank')], @document.errors[:file]
+    assert_equal [error_message_from_model(@document, :file, :blank)],
+      @document.errors[:file]
   end
 
   # Prueba que las validaciones del modelo se cumplan como es esperado

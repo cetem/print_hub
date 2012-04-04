@@ -29,7 +29,7 @@ class TagsTest < ActionDispatch::IntegrationTest
 
     within 'table.list' do
       assert_difference 'Tag.count', -1 do
-        click_button I18n.t('label.delete')
+        find("a[data-method='delete']").click
         page.driver.browser.switch_to.alert.accept
         sleep(0.5)
       end

@@ -1,8 +1,6 @@
 module OrdersHelper
-  def link_to_show_order(text, order)
-    link_to(text,
-      current_customer ? order : order_path(order, type: order_type)
-    )
+  def custom_order_path(order)
+    current_customer ? order : order_path(order, type: order_type)
   end
   
   def nav_links_in_show_order(order)

@@ -91,10 +91,6 @@
     }
   }
 
-  a.add_link, a.remove_link {
-    font-size: 1.25em;
-  }
-
   body {
     padding: 0em .5em;
   }
@@ -183,7 +179,7 @@
   .hidden_for_mobile {
     display: none;
   }
-
+  
   .only_mobile {
     display: block;
   }

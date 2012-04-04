@@ -30,8 +30,8 @@ module PrintsHelper
   end
   
   def link_to_document_details(document)
-    link_to raw('&hellip;'), document || document_path(id: 0),
-      class: 'details_link action_link', remote: true,
+    link_to '&#xe054;'.html_safe, document || document_path(id: 0),
+      class: 'details_link action_link iconic', remote: true,
       title: t('view.prints.document_details'),
       style: ('display: none;' unless document)
   end

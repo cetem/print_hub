@@ -44,18 +44,18 @@ module CatalogHelper
     
     if @documents_to_order.include?(document.id)
       content << link_to(
-        '-',
+        '&#xe009;'.html_safe,
         remove_from_order_catalog_path(document),
         title: t('view.catalog.remove_from_order.title'),
         remote: true, method: :delete,
-        class: 'remove_link remove_from_order'
+        class: 'remove_link remove_from_order iconic'
       )
     else
       content << link_to(
-        '+',
+        '&#xe008;'.html_safe,
         add_to_order_catalog_path(document),
         title: t('view.catalog.add_to_order.title'),
-        remote: true, method: :post, class: 'add_link add_to_order'
+        remote: true, method: :post, class: 'add_link add_to_order iconic'
       )
     end
     

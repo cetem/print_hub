@@ -45,8 +45,7 @@ class Document < ApplicationModel
   }
   validates_attachment_content_type :file, content_type: /pdf/i,
     allow_nil: true, allow_blank: true
-  validates_attachment_presence :file,
-    message: -> { ::I18n.t('errors.messages.blank') }
+  validates_attachment_presence :file
 
   # Relaciones
   has_many :print_jobs

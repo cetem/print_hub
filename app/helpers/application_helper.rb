@@ -28,6 +28,35 @@ module ApplicationHelper
   def show_error_messages(model)
     render 'shared/error_messages', model: model unless model.errors.empty?
   end
+  
+  def link_to_show(*args)
+    options = args.extract_options!
+    
+    options['class'] ||= 'iconic'
+    options['title'] ||= t('label.show')
+    
+    link_to '&#xe074;'.html_safe, *args, options
+  end
+  
+  def link_to_edit(*args)
+    options = args.extract_options!
+    
+    options['class'] ||= 'iconic'
+    options['title'] ||= t('label.edit')
+    
+    link_to '&#x270e;'.html_safe, *args, options
+  end
+  
+  def link_to_destroy(*args)
+    options = args.extract_options!
+    
+    options['class'] ||= 'iconic'
+    options['title'] ||= t('label.delete')
+    options['confirm'] ||= t('messages.confirmation')
+    options['method'] ||= :delete
+    
+    link_to '&#xe05a;'.html_safe, *args, options
+  end
 
   # Devuelve el HTML necesario para insertar un nuevo ítem en un nested form
   #
@@ -77,9 +106,11 @@ module ApplicationHelper
     out = String.new
     out << fields.hidden_field(:_destroy, class: :destroy,
       value: fields.object.marked_for_destruction? ? 1 : 0) unless new_record
-    out << link_to('X', '#', title: t('label.delete'),
+    out << link_to(
+      '&#x2718;'.html_safe, '#', title: t('label.delete'), class: 'iconic',
       'data-target' => ".#{class_for_remove || fields.object.class.name.underscore}",
-      'data-event' => (new_record ? 'removeItem' : 'hideItem'))
+      'data-event' => (new_record ? 'removeItem' : 'hideItem')
+    )
 
     raw out
   end

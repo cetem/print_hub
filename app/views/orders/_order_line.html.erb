@@ -27,8 +27,8 @@
       <% unless disabled %>
         <%= link_to_remove_nested_item(f) %>
       <% end %>
-      <%= link_to raw('&hellip;'), show_catalog_path(f.object.document),
-        class: 'details_link action_link expendable', remote: true,
+      <%= link_to '&#xe054;'.html_safe, show_catalog_path(f.object.document),
+        class: 'iconic details_link action_link expendable', remote: true,
         title: t('view.prints.document_details'),
         style: ('display: none;' unless f.object.document) %>
       <%= f.hidden_field :lock_version %>

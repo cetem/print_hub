@@ -20,8 +20,8 @@
         <td><%= user.email %></td>
         <td><%= t(user.admin ? 'label.yes' : 'label.no') %></td>
         <td><%= t(user.enable ? 'label.yes' : 'label.no') %></td>
-        <td><%= link_to t('label.show'), user %></td>
-        <td><%= link_to t('label.edit'), edit_user_path(user) %></td>
+        <td><%= link_to_show user %></td>
+        <td><%= link_to_edit edit_user_path(user) %></td>
       </tr>
     <% end %>
   </tbody>

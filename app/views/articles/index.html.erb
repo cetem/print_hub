@@ -14,10 +14,10 @@
         <td><%= article.code %></td>
         <td><%= article.name %></td>
         <td><%= number_to_currency article.price %></td>
-        <td><%= link_to t('label.show'), article %></td>
-        <td><%= link_to t('label.edit'), edit_article_path(article) %></td>
-        <td><%= button_to t('label.delete'), article,
-          confirm: t('messages.confirmation'), method: :delete %></td>
+        <td><%= link_to_show article %></td>
+        <td><%= link_to_edit edit_article_path(article) %></td>
+        <td><%= link_to_destroy article, confirm: t('messages.confirmation'),
+          method: :delete %></td>
       </tr>
     <% end %>
   </tbody>

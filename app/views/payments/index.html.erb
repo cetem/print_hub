@@ -1,14 +1,14 @@
 <% deposits_amount = @deposits.sum('amount') %>
 <% payments_amount = @payments.sum('amount') %>
 <% payments_paid = @payments.sum('paid') %>
-<%= render :partial => 'shared/date_filter', :locals => {
-  :from_date => @from_date, :to_date => @to_date
+<%= render partial: 'shared/date_filter', locals: {
+  from_date: @from_date, to_date: @to_date
 } %>
 <table class="list">
   <thead>
     <tr>
-      <th><%= Payment.human_attribute_name :amount %></th>
-      <th><%= Payment.human_attribute_name :paid %></th>
+      <th><%= Payment.human_attribute_name 'amount' %></th>
+      <th><%= Payment.human_attribute_name 'paid' %></th>
     </tr>
   </thead>
 
@@ -26,7 +26,7 @@
       </tr>
     <% end %>
     <tr>
-      <td><strong><%= t(:total, :scope => [:view, :payments]) %></strong></td>
+      <td><strong><%= t('view.payments.total') %></strong></td>
       <td>
         <strong><%= number_to_currency payments_paid + deposits_amount %></strong>
       </td>
@@ -40,7 +40,7 @@
 
 <% unless payments_paid == 0 %>
   <section class="details">
-    <h3>(*) <%= t(:payment_details, :scope => [:view, :payments]) %></h3>
+    <h3>(*) <%= t('view.payments.payment_details') %></h3>
     <ul class="raw">
       <% @payments.group(:paid_with).sum('paid').each do |paid_with, payments_amount| %>
         <li><%= "#{show_paid_with_text(paid_with)}: #{number_to_currency(payments_amount)}" %></li>

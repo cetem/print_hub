@@ -1,8 +1,8 @@
 <% message = link_to(
-  '-',
+  '&#xe009;'.html_safe,
   remove_from_order_catalog_path(@document),
   title: t('view.catalog.remove_from_order.title'),
-  remote: true, method: :delete, class: 'remove_link remove_from_order'
+  remote: true, method: :delete, class: 'remove_link remove_from_order iconic'
 ) %>
 <% id = "#document_#{@document.id}_to_order" %>
 $('<%= id %>').html('<%= message %>');

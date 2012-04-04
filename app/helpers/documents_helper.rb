@@ -61,17 +61,17 @@ module DocumentsHelper
     
     if @documents_for_printing.include?(document.id)
       content << link_to(
-        '-',
+        '&#xe009;'.html_safe,
         remove_from_next_print_document_path(document),
         title: t('view.documents.remove_from_next_print.title'),
-        remote: true, method: :delete, class: 'remove_link'
+        remote: true, method: :delete, class: 'remove_link iconic'
       )
     else
       content << link_to(
-        '+',
+        '&#xe008;'.html_safe,
         add_to_next_print_document_path(document),
         title: t('view.documents.add_to_next_print.title'),
-        remote: true, method: :post, class: 'add_link'
+        remote: true, method: :post, class: 'add_link iconic'
       )
     end
     
@@ -83,7 +83,12 @@ module DocumentsHelper
     label = Document.human_attribute_name :file
     
     if @document.file? && !@document.new_record?
-      label += " | #{link_to t('view.documents.download'), @document.file.url}"
+      link = link_to(
+        '&#xe042;'.html_safe, @document.file.url,
+        title: t('view.documents.download'), class: 'iconic'
+      )
+      
+      label << " #{link}"
     end
     
     form.label :file, raw(label),

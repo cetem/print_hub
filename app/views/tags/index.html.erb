@@ -19,12 +19,10 @@
       <% classes = [cycle('even', 'odd'), tag.private ? 'private' : 'public'] %>
       <tr class="<%= classes.join(' ') %>">
         <td><%= link_to tag.name, tags_path(parent: tag) %> (<%= show_link_to_tag_documents(tag) %>)</td>
-        <td><%= link_to t('label.show'), tag %></td>
+        <td><%= link_to_show tag %></td>
         <% if current_user.admin? %>
-          <td><%= link_to t('label.edit'), edit_tag_path(tag) %></td>
-        
-          <td><%= button_to t('label.delete'), tag,
-            confirm: t('messages.confirmation'), method: :delete %></td>
+          <td><%= link_to_edit edit_tag_path(tag) %></td>
+          <td><%= link_to_destroy tag %></td>
         <% end %>
       </tr>
     <% end %>
