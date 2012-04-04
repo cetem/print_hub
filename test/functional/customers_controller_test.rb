@@ -261,4 +261,17 @@ class CustomersControllerTest < ActionController::TestCase
     assert_select '#unexpected_error', false
     assert_template 'customers/_debt'
   end
+
+  test 'should pay off a customer month debt' do
+    UserSession.create(users(:administrator))
+    month = @customer.months_to_pay.last
+    date = Date.new(month.last, month.first, 1)
+    
+    xhr :put, :pay_month_debt, id: @customer.to_param, date: date
+    
+    assert_response :success
+    assert_not_nil assigns(:customer)
+    assert_select '#unexpected_error', false
+    assert_template 'customers/_month_paid'
+  end
 end
