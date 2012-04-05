@@ -37,7 +37,7 @@ class Print < ApplicationModel
     :article_lines_attributes, :payments_attributes
 
   # Restricciones en los atributos
-  attr_readonly :user_id, :customer_id, :printer
+  attr_readonly :user_id, :customer_id
 
   # Restricciones
   validates :printer, presence: true, if: ->(p) {
@@ -45,8 +45,9 @@ class Print < ApplicationModel
   }
   validates :printer, length: { maximum: 255 }, allow_nil: true,
     allow_blank: true
+  validates_datetime :scheduled_at, allow_nil: true, allow_blank: true
   validates_datetime :scheduled_at, allow_nil: true, allow_blank: true,
-    after: -> { Time.now }
+    after: -> { Time.now }, on: :create
   validates :status, inclusion: { in: STATUS.values }, allow_nil: true,
     allow_blank: true
   validates_each :printer do |record, attr, value|

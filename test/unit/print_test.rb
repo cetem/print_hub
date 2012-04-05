@@ -540,15 +540,19 @@ class PrintTest < ActiveSupport::TestCase
 
   # Prueba que las validaciones del modelo se cumplan como es esperado
   test 'validates attributes boundaries' do
-    @print.scheduled_at = 2.seconds.ago
-    assert @print.invalid?
-    assert_equal 1, @print.errors.count
+    print = build_new_print_from(@print)
+    
+    print.printer = nil
+    print.scheduled_at = 2.seconds.ago
+    
+    assert print.invalid?
+    assert_equal 1, print.errors.count
     assert_equal [
       error_message_from_model(
-        @print, :scheduled_at, :after,
+        print, :scheduled_at, :after,
         restriction: Time.now.strftime('%d/%m/%Y %H:%M:%S')
       )
-    ], @print.errors[:scheduled_at]
+    ], print.errors[:scheduled_at]
   end
 
   # Prueba que las validaciones del modelo se cumplan como es esperado
