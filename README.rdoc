@@ -5,8 +5,9 @@ Web application for manage and print documents
 === Installation Guide.
 
 Previously run:
-- sudo apt-get install libcupsys2-dev # For cups gem
-- sudo apt-get install libxslt-dev libxml2-dev # For nakogiri gem
+- sudo apt-get install cups-bsd # Extra Cups command line utilities
+- sudo apt-get install libcupsys2-dev # Cups gem dependency
+- sudo apt-get install libxslt-dev libxml2-dev # For nokogiri gem
 - sudo apt-get install cups-pdf # For virtual pdf printer
 - cd projects/print_hub
 - bundle install
