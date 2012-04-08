@@ -1,0 +1,18 @@
+es:
+  simple_form:
+    "yes": 'Si'
+    "no": 'No'
+    required:
+      text: 'Requerido'
+      mark: '*'
+    error_notification:
+      default_message: "Se encontraron errores: "
+      
+    labels:
+      user: 'Usuario'
+      password: 'Password'
+      new:
+         email: 'E-mail'
+      edit:
+         email: 'E-mail'
+

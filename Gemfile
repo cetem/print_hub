@@ -24,6 +24,7 @@ gem 'capistrano'
 gem 'whenever', require: false
 gem 'cups'
 gem 'pdf-reader'
+gem 'simple_form'
 
 group :assets do
   gem 'sass'
@@ -34,7 +35,7 @@ group :assets do
 end
 
 group :development do
-  gem 'ruby-debug19', require: 'ruby-debug'
+#  gem 'ruby-debug19', require: 'ruby-debug'
   gem 'thin'
 end
 
