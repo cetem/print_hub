@@ -1,19 +1,12 @@
 <div id="login">
-  <%= form_for(@user_session) do |f| %>
-    <div class="field">
-      <%= f.label :username %>
-      <%= f.text_field :username, :autocomplete => :off, :autofocus => true %>
-    </div>
-    <div class="field">
-      <%= f.label :password %>
-      <%= f.password_field :password %>
-    </div>
-    <div class="field">
-      <%= f.check_box :remember_me %><%= f.label :remember_me %>
-    </div>
-    <div class="actions">
-      <%= f.submit t('view.user_sessions.login') %>
-    </div>
+  <%= simple_form_for @user_session,
+    defaults: { wrapper_html: { class: 'field' } }  do |f| %>
+
+      <%= f.input :username,
+        input_html: { autocomplete: :off, autofocus: true } %>
+      <%= f.input :password %>
+      <%= f.input :remember_me, as: :boolean %>
+      <%= f.button :submit, t('view.user_sessions.login') %>  
   <% end %>
 </div>
 

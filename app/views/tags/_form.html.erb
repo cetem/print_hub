@@ -1,17 +1,12 @@
-<%= form_for(@tag) do |f| %>
+<%= simple_form_for @tag, defaults: { wrapper_html: { class: 'field'}} do |f| %>
   <%= show_error_messages(@tag) %>
 
-  <div class="field">
-    <%= f.label :name %>
-    <%= f.text_field :name, autofocus: true, maxlength: 255 %>
-  </div>
-  <div class="field">
-    <%= f.check_box :private %>
-    <%= f.label :private %>
-  </div>
+    <%= f.input :name, input_html: { autofocus: true, maxlength: 255 } %>
+    <%= f.input :private, as: :boolean %>
+
   <div class="actions">
-    <%= f.hidden_field :parent_id %>
-    <%= f.hidden_field :lock_version %>
-    <%= f.submit %>
+    <%= f.input :parent_id, as: :hidden %>
+    <%= f.input :lock_version, as: :hidden %>
+    <%= f.button :submit %>
   </div>
 <% end %>
