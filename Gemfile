@@ -34,7 +34,6 @@ group :assets do
 end
 
 group :development do
-  gem 'ruby-debug19', require: 'ruby-debug'
   gem 'thin'
 end
 
