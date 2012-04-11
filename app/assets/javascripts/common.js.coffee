@@ -110,7 +110,8 @@ jQuery ($)->
       .focus()
   
   $(document).on 'click', 'input.file', ->
-    $(this).parents('div.field:first').find('input[type="file"]').click()
+    $(this).parents('div.field:first').find('input[type="file"]').
+    removeClass('file').click()
   
   $('a.fancybox').fancybox(type: 'image')
   
