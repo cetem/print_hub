@@ -1,21 +1,19 @@
 <% if @customer %>
-  <% url = update_password_reset_path(:token => params[:token]) %>
-  <%= form_for(@customer, :url => url, :html => { :method => :put }) do |f| %>
+  <% url = update_password_reset_path(token: params[:token]) %>
+  <%= simple_form_for @customer, url: url, html: { method: :put } do |f| %>
     <%= show_error_messages(@customer) %>
 
-    <div class="field">
-      <%= f.label :password %>
-      <%= f.password_field :password, :maxlength => 255, :autofocus => true %>
-    </div>
-    <div class="field">
-      <%= f.label :password_confirmation %>
-      <%= f.password_field :password_confirmation, :maxlength => 255 %>
-    </div>
+      <%= f.input :password, input_html: {
+        maxlength: 255, autofocus: true },
+      wrapper_html: { class: 'field'} %>
 
-    <div class="actions">
-      <%= f.submit t(:update_password, :scope => [:view, :password_resets]) %>
-    </div>
+      <%= f.input :password_confirmation, input_html: { maxlength: 255 },
+      wrapper_html: { class: 'field'} %>
+
+      <%= f.button :submit t(
+        :update_password, scope: [:view, :password_resets]
+      ), wrapper_html: { class: 'action'}  %>
   <% end %>
 <% else %>
-  <p><%= t(:customer_not_found, :scope => [:view, :password_resets]) %></p>
+  <p><%= t(:customer_not_found, scope: [:view, :password_resets]) %></p>
 <% end %>

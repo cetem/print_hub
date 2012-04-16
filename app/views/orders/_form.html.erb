@@ -1,4 +1,4 @@
-<%= form_for(@order) do |f| %>
+<%= simple_form_for @order  do |f| %>
   <%= show_error_messages(@order) %>
 
   <div class="field">
@@ -20,7 +20,7 @@
     </div>
     
     <div id="order_lines" class="items">
-      <%= f.fields_for :order_lines do |ol_f| %>
+      <%= f.simple_fields_for :order_lines do |ol_f| %>
         <%= render 'order_line', f: ol_f, disabled: !@order.new_record? %>
       <% end %>
     </div>
@@ -33,16 +33,16 @@
       'data-target' => '#notes' %>
     <div id="notes" style="display: none;">
       <br />
-      <%= f.text_area :notes, autofocus: true %>
+      <%= f.input :notes, input_html: { autofocus: true } %>
     </div>
   </div>
   
   <div class="actions">
-    <%= f.hidden_field :lock_version %>
+    <%= f.input :lock_version, as: :hidden %>
     <%= hidden_field_tag :total_pages, @order.total_pages, id: 'total_pages',
       'data-price-per-one-sided' => Setting.price_per_one_sided_copy,
       'data-price-per-two-sided' => Setting.price_per_two_sided_copy %>
-    <%= f.submit %>
+    <%= f.button :submit %>
   </div>
 <% end %>
 <script type="text/javascript">
