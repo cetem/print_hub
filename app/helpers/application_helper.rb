@@ -159,7 +159,7 @@ module ApplicationHelper
     options['value'] = l(value, format: time ? :minimal : :default) if value
     options['data-time'] = true if time
     
-    form.text_field attribute, options
+    form.input attribute, options
   end
   
   def sortable(column, title = nil)

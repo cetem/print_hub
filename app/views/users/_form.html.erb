@@ -1,29 +1,18 @@
-<%= simple_form_for @user, defaults: { 
-  wrapper_html: { class: 'field' },
-  input_html: { maxlength: 255 }
-}, html: { multipart: true } do |f| %>
-
+<%= simple_form_for @user, html: { multipart: true } do |f| %>
   <%= show_error_messages(@user) %>
 
   <%= f.input :name, input_html: { autofocus: true } %>
   <%= f.input :last_name %>
-  <%= f.input :language, collection: user_lenguages_for_select, prompt: true %>
-
-  <%= f.input :email, as: :string, required: true %>
-  <%= f.input :default_printer, collection: user_printers_for_select,
-    include_blank: true %>
-  <%= f.input :lines_per_page, as: :string, input_html: { maxlength: 2 } %>
-
+  <%= user_language_field(f) %>
+  <%= f.input :email, required: true %>
+  <%= user_default_printer_field(f) %>
+  <%= f.input :lines_per_page, input_html: { maxlength: 2 } %>
   <%= f.input :username, required: true %>
   <%= f.input :password, required: true %>
-  <%= f.input :password_confirmation %>
-
+  <%= f.input :password_confirmation, required: true %>
   <%= f.input :admin, as: :boolean %>
   <%= f.input :enable, as: :boolean %>
   <%= f.input :avatar %>
-
-  <div class="actions">
-    <%= f.input :lock_version, as: :hidden %>
-    <%= f.button :submit %>
-  </div>
+  <%= f.input :lock_version, as: :hidden %>
+  <%= f.button :submit %>
 <% end %>

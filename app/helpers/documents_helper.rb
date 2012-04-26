@@ -25,7 +25,7 @@ module DocumentsHelper
       [show_document_media_text(mt), mt]
     end
 
-    form.select :media, media_types, prompt: true
+    form.input :media, collection: media_types, prompt: true
   end
 
   def show_document_media_text(media)

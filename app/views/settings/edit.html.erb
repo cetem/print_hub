@@ -3,13 +3,9 @@
 
   <h2 class="title"><%= @setting.name %></h2>
   
-  <%= f.input :value, input_html: { value: @setting.value, autofocus: true,
-      :maxlength => 255, wrapper_html: { class: 'field' } } %>
-
-  <div class="actions">
-    <%= f.input :lock_version, as: :hidden %>
-    <%= f.input :submit %>
-  </div>
+  <%= f.input :value, input_html: { value: @setting.value, autofocus: true } %>
+  <%= f.input :lock_version, as: :hidden %>
+  <%= f.input :submit %>
 <% end %>
 
 <nav class="links">

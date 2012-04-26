@@ -6,9 +6,10 @@
       <%= f.input :document_id, as: :hidden %>
     </div>
     
-      <%= f.input :copies, label: false, input_html: { 
-        maxlength: 5, autocomplete: 'off', class: 'price_modifier page_modifier'
-      }, wrapper_html: { class: 'nested_item_field'} %>
+    <%= f.input :copies, label: false, 
+      input_html: { maxlength: 5, autocomplete: 'off', 
+      class: 'price_modifier page_modifier'}, 
+      wrapper_html: { class: 'nested_item_field'} %>
         
     <div class="nested_item_field expendable">
       <%= text_field_tag "document[#{f.object.document_id}][pages]",
@@ -17,13 +18,12 @@
         class: 'price_modifier page_modifier', disabled: true %>
     </div>
     
-      <%= f.input :price_per_copy, label: false, input_html: {
-        disabled: true, class: 'price_modifier', autocomplete: 'off'},
-        wrapper_html: { class: 'nested_item_field expendable'} %>
-    
-      <%= f.input :two_sided, as: :boolean, 
-        input_html: { class: 'price_modifier' },
-        wrapper_html: { class: 'nested_item_field' } %>
+    <%= f.input :price_per_copy, label: false, input_html: {
+      disabled: true, class: 'price_modifier', autocomplete: 'off'},
+      wrapper_html: { class: 'nested_item_field expendable'} %>
+    <%= f.input :two_sided, as: :boolean, label: false, 
+      input_html: { class: 'price_modifier' },
+      wrapper_html: { class: 'nested_item_field' } %>
     
     <div class="nested_item_actions">
       <span class="money"><%= number_to_currency f.object.price %></span>

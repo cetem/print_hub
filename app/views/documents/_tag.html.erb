@@ -5,14 +5,15 @@
       <% unless tag %>
         <% field_classes = [:autocomplete_field] %>
         <% field_classes << :field_with_errors unless f.object.errors[:tag_id].blank? %>
-        <%= f.text_field :auto_tag_name, :class => field_classes.join(' '),
+        <%= f.input :auto_tag_name, label: false,
+          input_html: { class: field_classes.join(' '),
           'data-autocomplete-url' => autocomplete_for_tag_name_documents_path,
-          :id => "autocomplete_tag_#{id}", :value => nil %>
+          id: "autocomplete_tag_#{id}", value: nil } %>
       <% else %>
         <%= tag %>
       <% end %>
       <%= hidden_field_tag 'document[tag_ids][]', tag.try(:id),
-        :id => "new_tag_#{id}", :class => :autocomplete_id %>
+        id: "new_tag_#{id}", class: :autocomplete_id %>
     </div>
     <div class="nested_item_actions">
       <%= link_to_remove_nested_item(nil, 'tag') %>

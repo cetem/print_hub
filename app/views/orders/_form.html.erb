@@ -1,11 +1,7 @@
 <%= simple_form_for @order  do |f| %>
   <%= show_error_messages(@order) %>
 
-  <div class="field">
-    <%= f.label :scheduled_at %>
-    <%= calendar_text_field f, :scheduled_at, time: true,
-      disabled: !@order.new_record? %>
-  </div>
+  <%= f.input :scheduled_at, input_html: { disabled: !@order.new_record? } %>
   
   <section class="nested_items">
     <h2><%= t 'view.orders.order_lines' %></h2>

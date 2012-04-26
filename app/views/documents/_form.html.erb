@@ -1,4 +1,4 @@
-<%= form_for(@document) do |f| %>
+<%= simple_form_for @document do |f| %>
   <%= content_for :js_extra do %>
     <%= raw "var tag='#{escape_javascript render(partial: 'tag',
       locals: {is_dynamic: true, f: f, tag: nil})}';" %>
@@ -8,40 +8,22 @@
     <strong><%= t('view.documents.barcode') %></strong>:
     <%= document_link_to_barcode(@document.code.blank? ? 0 : @document.code) %>
   </div>
-  <div class="field">
-    <%= f.label :code %>
-    <%= f.text_field :code, autofocus: true, maxlength: 10 %>
-  </div>
-  <div class="field">
-    <%= f.label :name %>
-    <%= f.text_field :name, maxlength: 255 %>
-  </div>
-  <div class="field">
-    <%= f.label :pages %>
-    <%= f.text_field :pages, maxlength: 5, disabled: true %>
-  </div>
-  <div class="field">
-    <%= f.label :stock %>
-    <%= f.text_field :stock, maxlength: 5 %>
-  </div>
-  <div class="field">
-    <%= f.label :media %>
-    <%= show_document_media_field(f) %>
-  </div>
-  <div class="field">
-    <%= f.label :description %>
-    <%= f.text_area :description %>
-  </div>
+  
+  <%= f.input :code, as: :string, input_html: { autofocus: true, maxlength: 10 } %>
+  <%= f.input :name %>
+  <%= f.input :pages, as: :string, input_html: { maxlength: 5, disabled: true } %>
+  <%= f.input :stock, as: :string, input_html: { maxlength: 5 } %>
+  <%= show_document_media_field(f) %>
+  <%= f.input :description %>
   
   <div class="field">
     <%= document_file_label f %>
-    <%= f.file_field :file,
-      class: ('field_with_errors' unless @document.errors[:file_file_name].blank?) %>
+    <%= f.input :file, label: false, input_html: {
+      class: ('field_with_errors' unless @document.errors[:file_file_name].blank?) } %>
   </div>
-  <div class="field">
-    <%= f.check_box :enable %>
-    <%= f.label :enable %>
-  </div>
+
+  <%= f.input :enable, as: :boolean %>
+
   <section class="nested_items">
     <h2><%= t('menu.tags') %></h2>
 
@@ -61,11 +43,9 @@
       'data-event' => 'addNestedItem',
       title: t('view.documents.add_tag_title') %>
   </div>
-
-  <div class="actions">
-    <%= f.hidden_field :lock_version %>
-    <%= f.submit %>
-  </div>
+  
+  <%= f.input :lock_version, as: :hidden %>
+  <%= f.button :submit %>
 <% end %>
 <%= render partial: 'shared/notice', locals: {
   hide: true,

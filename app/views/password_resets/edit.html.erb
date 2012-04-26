@@ -3,17 +3,10 @@
   <%= simple_form_for @customer, url: url, html: { method: :put } do |f| %>
     <%= show_error_messages(@customer) %>
 
-      <%= f.input :password, input_html: {
-        maxlength: 255, autofocus: true },
-      wrapper_html: { class: 'field'} %>
-
-      <%= f.input :password_confirmation, input_html: { maxlength: 255 },
-      wrapper_html: { class: 'field'} %>
-
-      <%= f.button :submit t(
-        :update_password, scope: [:view, :password_resets]
-      ), wrapper_html: { class: 'action'}  %>
+    <%= f.input :password, input_html: { autofocus: true } %>
+    <%= f.input :password_confirmation %>
+    <%= f.button :submit, t('view.password_resets.update_password') %>
   <% end %>
 <% else %>
-  <p><%= t(:customer_not_found, scope: [:view, :password_resets]) %></p>
+  <p><%= t('view.password_resets.customer_not_found') %></p>
 <% end %>

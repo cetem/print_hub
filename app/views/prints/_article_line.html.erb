@@ -2,28 +2,29 @@
 <% hide = is_dynamic || f.object.marked_for_destruction? %>
 <div class="article_line nested_item" id="<%= id %>" data-price="<%= f.object.price %>" <%= raw 'style="display: none;"' if hide %>>
   <div>
-    <div class="nested_item_field">
-      <% field_classes = [:autocomplete_field] %>
-      <% field_classes << :field_with_errors unless f.object.errors[:article_id].blank? %>
-      <%= f.text_field :auto_article_name, disabled: disabled,
-        id: "auto_article_line_#{id}", class: field_classes.join(' '),
-        value: f.object.article.try(:to_s),
-        'data-autocomplete-url' => autocomplete_for_article_name_prints_path(format: :json) %>
-      <%= f.hidden_field :article_id, class: 'autocomplete_id' %>
-    </div>
-    <div class="nested_item_field">
-      <%= f.text_field :units, maxlength: 5, class: 'price_modifier',
-        autocomplete: :off, disabled: disabled %>
-    </div>
-    <div class="nested_item_field">
-      <%= f.text_field :unit_price, disabled: true,
-        value: ('%.3f' % f.object.unit_price if f.object.unit_price),
-        class: 'price_modifier', autocomplete: 'off' %>
-    </div>
+    <% field_classes = [:autocomplete_field] %>
+    <% field_classes << :field_with_errors unless f.object.errors[:article_id].blank? %>
+    <%= f.input :auto_article_name, label: false, 
+      input_html: { disabled: disabled, id: "auto_article_line_#{id}", 
+      class: field_classes.join(' '), value: f.object.article.try(:to_s),
+      'data-autocomplete-url' => autocomplete_for_article_name_prints_path(format: :json) },
+      wrapper_html: { class: 'nested_item_field' }  %>
+    <%= f.input :article_id, as: :hidden, 
+      input_html: { class: 'autocomplete_id' } %>
+    <%= f.input :units, label: false,
+      input_html: { maxlength: 5, class: 'price_modifier',
+      autocomplete: :off, disabled: disabled },
+      wrapper_html: { class: 'nested_item_field' }  %>
+    <%= f.input :unit_price,  label: false,
+      input_html: { disabled: true,
+      value: ('%.3f' % f.object.unit_price if f.object.unit_price),
+      class: 'price_modifier', autocomplete: 'off' },
+      wrapper_html: { class: 'nested_item_field' }  %>
+    
     <div class="nested_item_actions">
       <span class="money"><%= number_to_currency f.object.price %></span>
       <%= link_to_remove_nested_item(f) unless disabled %>
-      <%= f.hidden_field :lock_version %>
+      <%= f.input :lock_version, as: :hidden %>
     </div>
     <div class="dynamic_details"></div>
   </div>

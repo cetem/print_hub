@@ -1,13 +1,10 @@
 module PrintsHelper
   def print_destinations_field(form)
-    selected = form.object.printer || current_user.default_printer
-    printers = Cups.show_destinations.map { |d| [d, d] }
+    selected_printer = form.object.printer || current_user.default_printer
     
-    form.select(
-      :printer, printers,
-      {include_blank: true, selected: selected},
-      {autofocus: true}
-    )
+    form.input :printer, collection: Cups.show_destinations.map { |d| [d, d] },
+      selected: selected_printer, include_blank: true, autofocus: true,
+      wrapper_html: { class: 'column_left' }
   end
 
   def link_to_cancel_print_job(print_job)

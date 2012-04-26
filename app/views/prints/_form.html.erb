@@ -1,4 +1,4 @@
-<%= simple_form_for(@print) do |f| %>
+<%= simple_form_for @print do |f| %>
   <% if @print.new_record? %>
     <%= content_for :js_extra do %>
       <%= raw "var print_job='#{generate_template(f, :print_jobs,
@@ -8,23 +8,21 @@
     <% end %>
   <% end %>
   <%= show_error_messages(@print) %>
+  
+  <%= print_destinations_field(f) %>
 
   <div class="field column_left">
-    <%= f.label :printer %>
-    <%= print_destinations_field(f) %>
-  </div>
-  <div class="field column_left">
-    <%= f.label :customer, raw(Print.human_attribute_name(:customer) + ' ' + link_to_customer_credit_detail(@print.customer)), for: :print_auto_customer_name %>
+    <%= f.label :customer, raw( Print.human_attribute_name(:customer) +
+      ' ' + link_to_customer_credit_detail(@print.customer)),
+      for: :print_auto_customer_name %>
     <% field_classes = [:autocomplete_field] %>
     <% field_classes << :field_with_errors unless @print.errors[:customer_id].blank? %>
     <%= f.input :auto_customer_name, label: false, input_html: { 
       value: @print.customer, class: field_classes.join(' '),
       'data-autocomplete-url' => autocomplete_for_customer_name_prints_path(format: :json)
       } %>
-    <% if @print.customer %>
-      <%= link_to_function 'X', "Print.clearCustomer(); $(this).remove()",
-        class: 'remove' %>
-    <% end %>
+    <%= link_to_function 'X', "Print.clearCustomer(); $(this).remove()",
+      class: 'remove' if @print.customer %>
     <%= f.input :customer_id, as: :hidden, 
       input_html: { class: 'autocomplete_id' } %>
     <%= hidden_field_tag :customer_free_credit,
@@ -32,16 +30,11 @@
   </div>
 
   <div class="clear">
-    <div class="field column_left">
-      <%= f.label :scheduled_at %>
-      <%= calendar_text_field f, :scheduled_at, time: true %>
-    </div>
-    <div class="field column_left" style="width: 24%;">
-      <%= f.input :avoid_printing, as: :boolean %>
-    </div>
-    <div class="field column_left" style="width: 24%;">
-      <%= f.input :pay_later, as: :boolean %>
-    </div>
+    <%= f.input :scheduled_at, wrapper_html: { class: 'column_left' } %>
+    <%= f.input :avoid_printing, as: :boolean, wrapper_html: {
+    class: 'column_left', style: 'width: 24%' } %>
+    <%= f.input :pay_later, as: :boolean, wrapper_html: {
+    class: 'column_left', style: 'width: 24%' }  %>
   </div>
 
   <section class="nested_items">
@@ -115,25 +108,25 @@
         <%= f.simple_fields_for :payments do |p_f| %>
           <tr class="payment">
             <td>
-                <%= p_f.input :amount, as: :string, label: false, input_html: { 
-                  value: '%.3f' % p_f.object.amount,
-                  id: "payment_#{p_f.object.paid_with}_amount",
-                  maxlength: 15, size: nil, readonly: true },
-                  wrapper_html: { class: 'nested_item_field'} %>
+              <%= p_f.input :amount, label: false, input_html: { 
+                value: '%.3f' % p_f.object.amount,
+                id: "payment_#{p_f.object.paid_with}_amount",
+                maxlength: 15, size: nil, readonly: true },
+                wrapper_html: { class: 'nested_item_field'} %>
             </td>
             <td>
-                <%= p_f.input :paid, as: :string, label: false, input_html: {
-                  value: '%.3f' % p_f.object.paid,
-                  id: "payment_#{p_f.object.paid_with}_paid",
-                  maxlength: 15, size: nil, readonly: p_f.object.credit? },
-                  wrapper_html: { class: 'nested_item_field'} %>
+              <%= p_f.input :paid, label: false, input_html: {
+                value: '%.3f' % p_f.object.paid,
+                id: "payment_#{p_f.object.paid_with}_paid",
+                maxlength: 15, size: nil, readonly: p_f.object.credit? },
+                wrapper_html: { class: 'nested_item_field'} %>
             </td>
             <td>
               <% if p_f.object.credit? %>
-                  <%= f.input :credit_password, label: false,
-                    placeholder: Print.human_attribute_name(:credit_password),
-                    input_html: { value: '', size: nil, maxlength: 255 }, 
-                    wrapper_html: { class: 'nested_item_field'} %>
+                <%= f.input :credit_password, label: false,
+                  placeholder: Print.human_attribute_name(:credit_password),
+                  input_html: { value: '', size: nil }, 
+                  wrapper_html: { class: 'nested_item_field'} %>
               <% else %>
                 &nbsp;
               <% end %>
@@ -149,15 +142,13 @@
     </table>
   </section>
 
-  <div class="actions">
-    <%= f.input :order_id, as: :hidden %>
-    <%= f.input :lock_version, as: :hidden%>
-    <%= hidden_field_tag :total_pages, @print.total_pages, id: 'total_pages',
-      'data-price-per-one-sided' => Setting.price_per_one_sided_copy,
-      'data-price-per-two-sided' => Setting.price_per_two_sided_copy %>
-    <%= f.button :submit, nil, input_html: { 
-      id: 'print_submit', title: t('view.prints.print_title') } %>
-  </div>
+  <%= f.input :order_id, as: :hidden %>
+  <%= f.input :lock_version, as: :hidden%>
+  <%= hidden_field_tag :total_pages, @print.total_pages, id: 'total_pages',
+    'data-price-per-one-sided' => Setting.price_per_one_sided_copy,
+    'data-price-per-two-sided' => Setting.price_per_two_sided_copy %>
+  <%= f.button :submit, input_html: { 
+    id: 'print_submit', title: t('view.prints.print_title') } %>
 <% end %>
 <%= javascript_tag 'jQuery(function() { Print.updateTotalPrice(); });' if @print.new_record? %>
 <script type="text/javascript">

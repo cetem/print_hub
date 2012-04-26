@@ -2,12 +2,9 @@
 
 <br />
 
-<%= form_for(@feedback, url: update_feedback_path(@feedback), remote: true) do |f| %>
-  <div class="field">
-    <%= f.text_area :comments %>
-  </div>
+<%= simple_form_for @feedback, 
+  url: update_feedback_path(@feedback), remote: true do |f| %>
   
-  <div class="actions">
-    <%= f.submit t('view.feedbacks.submit') %>
-  </div>
+  <%= f.input :comments, label: false %>
+  <%= f.button :submit, t('view.feedbacks.submit') %> 
 <% end %>
