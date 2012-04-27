@@ -1,11 +1,10 @@
-<% i18n_scope = [:view, controller_name] %>
 <div class="filter">
-  <%= form_for :interval, :html => {:method => :get} do |f| %>
+  <%= simple_form_for :interval, html: { method: :get } do |f| %>
     <table class="summary">
       <thead>
         <tr>
-          <th><%= t('date_filter.start', :scope => i18n_scope) %></th>
-          <th><%= t('date_filter.end', :scope => i18n_scope) %></th>
+          <th><%= t("view.#{controller_name}.date_filter.start") %></th>
+          <th><%= t("view.#{controller_name}.date_filter.end") %></th>
           <th></th>
         </tr>
       </thead>
@@ -14,17 +13,17 @@
         <tr>
           <td>
             <div class="field">
-              <%= calendar_text_field f, :from, :time => true, :value => from_date %>
+              <%= calendar_text_field f, :from, time: true, value: from_date %>
             </div>
           </td>
           <td>
             <div class="field">
-              <%= calendar_text_field f, :to, :time => true, :value => to_date %>
+              <%= calendar_text_field f, :to, time: true, value: to_date %>
             </div>
           </td>
           <td>
             <div class="actions">
-              <%= f.submit t('date_filter.apply', :scope => i18n_scope) %>
+              <%= f.submit t("view.#{controller_name}.date_filter.apply") %>
             </div>
           </td>
         </tr>

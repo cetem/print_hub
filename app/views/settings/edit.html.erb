@@ -3,9 +3,12 @@
 
   <h2 class="title"><%= @setting.name %></h2>
   
-  <%= f.input :value, input_html: { value: @setting.value, autofocus: true } %>
+  <%= f.input :value, as: :string, input_html: { value: @setting.value, autofocus: true } %>
   <%= f.input :lock_version, as: :hidden %>
-  <%= f.input :submit %>
+  
+  <div class="actions">
+    <%= f.button :submit %>
+  </div>
 <% end %>
 
 <nav class="links">
