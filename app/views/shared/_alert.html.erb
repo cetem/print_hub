@@ -1,9 +1,4 @@
-<div id="alert">
-  <p><%= flash.alert %></p>
-  <div class="close">
-    <%= link_to_function(
-      'X', "$('#alert').stop().slideUp()", title: t('label.close')
-    ) %>
-  </div>
-</div>
-<%= javascript_tag "$('#alert').delay(7000).slideUp();" %>
+<footer class="alert alert-error fade in" data-dismiss="alert" data-close-after="30000">
+  <a class="close">&times;</a>
+  <strong><%= flash.alert %></strong>
+</footer>

@@ -34,6 +34,7 @@ module ApplicationHelper
     
     options['class'] ||= 'iconic'
     options['title'] ||= t('label.show')
+    options['data-show-tooltip'] = true
     
     link_to '&#xe074;'.html_safe, *args, options
   end
@@ -43,6 +44,7 @@ module ApplicationHelper
     
     options['class'] ||= 'iconic'
     options['title'] ||= t('label.edit')
+    options['data-show-tooltip'] = true
     
     link_to '&#x270e;'.html_safe, *args, options
   end
@@ -54,6 +56,7 @@ module ApplicationHelper
     options['title'] ||= t('label.delete')
     options['confirm'] ||= t('messages.confirmation')
     options['method'] ||= :delete
+    options['data-show-tooltip'] = true
     
     link_to '&#xe05a;'.html_safe, *args, options
   end
@@ -119,36 +122,39 @@ module ApplicationHelper
   #
   # * _objects_:: Objetos con los que se genera la lista paginada
   def pagination_links(objects, params = nil)
-    result = will_paginate objects, inner_window: 1, outer_window: 1,
-      params: params
+    result = will_paginate objects,
+      inner_window: 1, outer_window: 1, params: params,
+      renderer: BootstrapPaginationHelper::LinkRenderer,
+      class: 'pagination pagination-right'
+    page_entries = content_tag(
+      :blockquote,
+      content_tag(
+        :small,
+        page_entries_info(objects),
+        class: 'page-entries hidden-desktop pull-right'
+      )
+    )
     
     unless result
       previous_tag = content_tag(
-        :span,
-        t('will_paginate.previous_label').html_safe,
-        class: 'disabled prev_page'
+        :li,
+        content_tag(:a, t('will_paginate.previous_label').html_safe),
+        class: 'previous_page disabled'
       )
       next_tag = content_tag(
-        :span,
-        t('will_paginate.next_label').html_safe,
-        class: 'disabled next_page'
+        :li,
+        content_tag(:a, t('will_paginate.next_label').html_safe),
+        class: 'next disabled'
       )
       
       result = content_tag(
         :div,
-        previous_tag + content_tag(:em, 1) + next_tag,
-        class: 'pagination'
+        content_tag(:ul, previous_tag + next_tag),
+        class: 'pagination pagination-right'
       )
     end
 
-    result
-  end
-  
-  def link_to_menu_with_nested_menu(name, submenu)
-    link_to(
-      raw("#{t(name, scope: :menu)} <span class=\"arrow_down\"></span>"),
-      '#', 'data-event' => 'toggleMenu', 'data-target' => "##{submenu}"
-    )
+    result + page_entries
   end
   
   def calendar_text_field(form, attribute, user_options = {})

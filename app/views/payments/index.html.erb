@@ -4,7 +4,7 @@
 <%= render partial: 'shared/date_filter', locals: {
   from_date: @from_date, to_date: @to_date
 } %>
-<table class="list">
+<table class="table">
   <thead>
     <tr>
       <th><%= Payment.human_attribute_name 'amount' %></th>

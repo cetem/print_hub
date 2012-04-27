@@ -1,0 +1,49 @@
+@import "mixins";
+
+.public_form_container {
+  background: #fff;
+  margin-top: 2em !important;
+  padding-top: 1em;
+  border: 1px solid #aaa;
+  @include border-radius(8px);
+  @include box-shadow(0, 0, 6px, #999);
+
+  form {
+    margin-bottom: 0em;
+
+    .form-inputs {
+      padding: 6px 20px;
+
+      /* TODO: Erase this excesive amount of CSS for control de checkbox position */
+      label.boolean {
+        display: inline;
+      }
+
+      .control-group.boolean {
+        label, .controls {
+          display: inline;
+        }
+
+        label {
+          input.boolean {
+            margin: 0px 6px 0px 0px;
+          }
+        }
+      }
+      /* ENDTODO (if something like this exists...) */
+    }
+
+    .form-actions {
+       margin-bottom: 0px;
+    }
+  }
+
+  h3 {
+    text-align: center;
+    margin-bottom: 18px;
+  }
+
+  h3, p {
+    padding: 0px 20px;
+  }
+}

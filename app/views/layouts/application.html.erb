@@ -1,15 +1,18 @@
 <!doctype html>
-<html>
+<!--[if lt IE 7 ]><html class="ie ie6"> <![endif]-->
+<!--[if IE 7 ]><html class="ie ie7"> <![endif]-->
+<!--[if IE 8 ]><html class="ie ie8"> <![endif]-->
+<!--[if (gte IE 9)|!(IE)]><!--><html> <!--<![endif]-->
 <head>
-  <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+  <meta charset="utf-8" />
   <title><%= [t('app_name'), @title].compact.join(' | ') %></title>
   <meta name="viewport" content="width=device-width" />
-  <!--[if lt IE 9]>
-  <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
-  <![endif]-->
   <%= stylesheet_link_tag 'application', media: 'screen' %>
   <%= stylesheet_link_tag 'print', media: 'print' if @can_print %>
   <%= javascript_include_tag 'application' %>
+  <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+  <![endif]-->
   <%= favicon_link_tag %>
   <%= csrf_meta_tag %>
   <%= javascript_tag do %>
@@ -18,19 +21,15 @@
   <% end %>
   <%= yield :head_extra %>
 </head>
-<body id="<%= "ph_#{controller_name}" %>" data-action="<%= action_name %>">
-  <div id="loading_caption" style="display: none;">
-    <%= t('messages.loading') %>
+<body id="<%= "ph_#{controller_name}" %>" data-action="<%= action_name %>" <%= raw 'class="logged_in"' if current_user || current_customer %>>
+  <%= render 'shared/menu' %>
+  
+  <div id="loading_caption" class="alert" style="display: none;">
+    <strong><%= t('messages.loading') %></strong>
   </div>
   
-  <% if current_user %>
-    <div id="main_menu"><%= render 'shared/menu' %></div>
-  <% elsif current_customer %>
-    <div id="main_menu"><%= render 'shared/customer_menu' %></div>
-  <% end %>
-  
-  <div id="main_container" class="hide_when_show_mobile_menu">
-    <%= yield %><div style="clear: both;"></div>
+  <div class="container">
+    <div class="content"><%= yield %></div>
   </div>
   
   <%= render 'shared/notice' if flash.notice %>

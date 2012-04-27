@@ -1,16 +1,23 @@
-<div id="login">
-  <%= simple_form_for @user_session, defaults: { required: false } do |f| %>
-    <%= f.input :username, input_html: { autocomplete: :off, autofocus: true } %>
-    <%= f.input :password %>
-    <%= f.input :remember_me, as: :boolean %>
-    <%= f.button :submit, t('view.user_sessions.login') %>  
-  <% end %>
+<div class="row">
+  <div class="public_form_container span4 offset4">
+    <div id="login">
+      <%= simple_form_for @user_session, defaults: { required: false } do |f| %>
+        <div class="form-inputs">
+          <%= f.input :username, input_html: { autocomplete: 'off', autofocus: true, class: 'span3' } %>
+          <%= f.input :password, input_html: { class: 'span3' } %>
+          <%= f.input :remember_me, as: :boolean %>
+        </div>
+        <div class="form-actions">
+         <%= f.button :submit, t('view.user_sessions.login'), class: 'btn btn-primary' %>
+        </div>
+      <% end %>
+    </div>
+  </div>
 </div>
 
 <% if @user_session.errors.any? %>
-  <div id="login_error">
-    <p><%= @user_session.errors.full_messages.join('; ') %></p>
-    <div class="close"><%= link_to_function 'X',
-      "$('#login_error').slideUp()", :title => t('label.close') %></div>
-  </div>
+  <footer class="alert alert-error fade in" data-dismiss="alert" data-close-after="30000">
+    <a class="close">&times;</a>
+    <strong><%= @user_session.errors.full_messages.join('; ') %></strong>
+  </footer>
 <% end %>

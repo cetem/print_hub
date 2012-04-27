@@ -1,0 +1,35 @@
+@media (max-width: 480px) {
+}
+
+@media (max-width: 767px) {
+  .iconic {
+    font-size: 1.5em;
+  }
+}
+
+@media (min-width: 768px) and (max-width: 979px) {  
+}
+
+@media (max-width: 979px) {
+
+  footer.alert {
+    left: 0em;
+    right: 0em;
+  }
+
+  .pagination {
+    li {
+      display: none;
+    }
+
+    li.previous_page, li.next {
+      display: inline;
+    }
+  }
+}
+
+@media (min-width: 980px) {
+}
+
+@media (min-width: 1200px) {
+}

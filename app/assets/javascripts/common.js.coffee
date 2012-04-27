@@ -76,6 +76,8 @@ jQuery ($)->
   # Para que los navegadores que no soportan HTML5 funcionen con autofocus
   $('*[autofocus]:not([readonly]):not([disabled]):visible:first').focus()
   
+  $('*[data-show-tooltip]').tooltip()
+  
   $(document).on 'click', 'a[data-event]', (event)->
     return if event.stopped
     
@@ -89,8 +91,14 @@ jQuery ($)->
       event.stopPropagation()
   
   $('#loading_caption').bind
-    ajaxStart: `function() { $(this).stop(true, true).slideDown(100) }`
-    ajaxStop: `function() { $(this).stop(true, true).slideUp(100) }`
+    ajaxStart: `function() { $(this).stop(true, true).fadeIn(100) }`
+    ajaxStop: `function() { $(this).stop(true, true).fadeOut(100) }`
+    
+  if $('.alert[data-close-after]').length > 0
+    $('.alert[data-close-after]').each (i, a)->
+      setTimeout(
+        (-> $(a).find('a.close').trigger('click')), $(a).data('close-after')
+      )
   
   $(document).bind
     ajaxStart: `function() { State.ajaxInProgress = true }`

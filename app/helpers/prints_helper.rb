@@ -61,13 +61,19 @@ module PrintsHelper
     out = (codes[0..2]).map do |code, name|
       code = truncate(code.to_s, length: 15, omission: '...')
       
-      content_tag(:span, code, title: name, class: 'tag')
-    end.join
+      content_tag(
+        :span, code, title: name, class: 'label', data: {'show-tooltip' => true}
+      )
+    end.join(' ')
     
     if codes.size > 3
       title = codes[3..-1].map { |code, name| "[#{code}] #{name}" }.join(', ')
       
-      out << content_tag(:span, raw('&hellip;'), title: title, class: 'hint')
+      out << ' '
+      out << content_tag(
+        :span, raw('&hellip;'), title: title, class: 'label',
+        data: {'show-tooltip' => true}
+      )
     end
     
     raw content_tag(:div, out.present? ? raw(out) : '-', class: 'nowrap')

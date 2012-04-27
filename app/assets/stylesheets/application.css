@@ -3,17 +3,20 @@
  * and any sub-directories. You're free to add application-wide styles to this file and they'll appear at
  * the top of the compiled file, but it's generally better to create a new file per style scope.
  *= require_self
+ *= require twitter/bootstrap
+ *= require body_padding
+ *= require twitter/bootstrap-responsive
  *= require jquery/fancybox
  *= require jquery/ui-custom
- *= require html5-compat
  *= require common
+ *= require common-responsive
  *= require help
- *= require nested-items
  *= require documents
  *= require orders
  *= require prints
  *= require tags
  *= require users
+ *= require user_sessions
  *= require customers
  *= require customer_sessions
  *= require password_resets

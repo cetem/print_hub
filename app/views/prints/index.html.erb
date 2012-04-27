@@ -1,9 +1,9 @@
 <% if @customer %>
-  <h2 class="title">
+  <h2>
     <%= t('view.prints.prints_with_customer', customer: @customer.to_s) %>
   </h2>
 <% end %>
-<table class="list">
+<table class="table">
   <thead>
     <tr>
       <th><%= Print.human_attribute_name 'id' %></th>
@@ -18,7 +18,7 @@
 
   <tbody>
     <% @prints.each do |print| %>
-      <tr class="<%= (print.revoked ? 'revoked ' : '') + cycle('even', 'odd') %>">
+      <tr class="<%= print.revoked ? 'revoked ' : '' %>">
         <td><%= print.id %></td>
         <td><%= l print.created_at, format: :short if print.created_at %></td>
         <td><%= display_print_jobs_codes(print) %></td>
@@ -31,18 +31,18 @@
           <%= link_to(
             '&#x26d4;'.html_safe, revoke_print_path(print),
             method: :delete, confirm: t('messages.confirmation'),
-            title: t('view.prints.revoke'), class: 'iconic'
-            ) if current_user.admin? && !print.revoked
-          %>
+            title: t('view.prints.revoke'), class: 'iconic',
+            data: {'show-tooltip' => true}
+          ) if current_user.admin? && !print.revoked %>
         </td>
       </tr>
     <% end %>
   </tbody>
 </table>
 
-<nav class="links">
+<nav class="form-actions">
   <%= pagination_links(@prints) %>
-  <%= link_to raw("<b>#{t('view.prints.new')}</b>"), new_print_path %>
+  <%= link_to raw("<b>#{t('view.prints.new')}</b>"), new_print_path, class: 'btn btn-primary' %>
   <% if @customer.nil? && params[:status] != 'scheduled' %>
     | <%= link_to(
         textilize_without_paragraph(t('view.prints.show_scheduled')),

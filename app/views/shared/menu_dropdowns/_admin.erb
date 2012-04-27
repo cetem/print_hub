@@ -1,0 +1,23 @@
+<% controllers = [
+  'users', 'customers', 'bonuses', 'settings', 'payments', 'stats'
+] %>
+<li class="dropdown<%= ' active' if controllers.include?(controller_name) %>">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+    <%= t('menu.admin') %>
+    <b class="caret"></b>
+  </a>
+  <ul class="dropdown-menu">
+    <%= content_tag(:li, link_to(t('menu.users'), users_path),
+      class: ('active' if controller_name == 'users')) %>
+    <%= content_tag(:li, link_to(t('menu.customers'), customers_path),
+      class: ('active' if controller_name == 'customers')) %>
+    <%= content_tag(:li, link_to(t('menu.bonuses'), bonuses_path),
+      class: ('active' if controller_name == 'bonuses')) %>
+    <%= content_tag(:li, link_to(t('menu.settings'), settings_path),
+      class: ('active' if controller_name == 'settings')) %>
+    <%= content_tag(:li, link_to(t('menu.payments'), payments_path),
+      class: ('active' if controller_name == 'payments')) %>
+    <%= content_tag(:li, link_to(t('menu.stats'), printer_stats_path),
+      class: ('active' if controller_name == 'stats')) %>
+  </ul>
+</li>

@@ -1,0 +1,39 @@
+<div class="navbar navbar-fixed-top">
+  <div class="navbar-inner">
+    <div class="container">
+      <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+        <span class="iconic">&#xe055;</span>
+      </a>
+      
+      <%= link_to t('app_name'), root_path, class: 'brand' %>
+      
+      <div class="nav-collapse">
+        <ul class="nav">
+          <%= render partial: 'shared/menu_dropdowns/admin'  if current_user.admin %>
+          <%= content_tag(:li, link_to(t('menu.prints'), prints_path),
+            class: ('active' if controller_name == 'prints')) %>
+          <%= content_tag(:li, link_to(t('menu.documents'), documents_path),
+            class: ('active' if controller_name == 'documents')) %>
+          <%= content_tag(:li, link_to(t('menu.tags'), tags_path),
+            class: ('active' if controller_name == 'tags')) %>
+          <%= content_tag(:li, link_to(t('menu.articles'), articles_path),
+            class: ('active' if controller_name == 'articles')) %>
+          <%= content_tag(:li, link_to(orders_text, orders_path),
+            class: ('active' if controller_name == 'orders')) %>
+        </ul>
+        
+        <ul class="nav pull-right">
+          <li><a><%= current_user.username %></a></li>
+          <li>
+            <%= link_to(
+              '&#x2192;'.html_safe, user_sessions_path,
+              'title' => t('menu.actions.logout'), 'class' => 'iconic',
+              'data-show-tooltip' => true, 'data-placement' => 'bottom',
+              'method' => :delete
+            ) %>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>

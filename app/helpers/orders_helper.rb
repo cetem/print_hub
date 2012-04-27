@@ -36,10 +36,12 @@ module OrdersHelper
   
   def orders_text
     count = Order.pending_for_print_count
+    classes = ['badge']
+    classes << 'badge-important' if count > 0
     count_tag = content_tag(
-      :span, count, id: 'orders_count', class: ('look_me' if count > 0)
+      :span, count, id: 'orders_count', class: classes.join(' ')
     )
     
-    raw(t('menu.orders') + count_tag)
+    raw("#{t('menu.orders')} #{count_tag}")
   end
 end
