@@ -1,9 +1,11 @@
-<p class="help_link_container only_mobile">
-  <a class="toggle_display" href="#welcome">¿De que se trata esto?</a>
-</p>
-<section id="welcome" class="details hidden_for_mobile">
+<%= content_for :bottom_content do %>
+  <p class="help_link_container visible-phone">
+    <a class="toggle_display" href="#welcome">¿De que se trata esto?</a>
+  </p>
+<% end %>
+<section id="welcome" class="details hidden-phone">
   <header>
-    <h2>La visión del Centro de Estudiantes sobre el Centro de Copiado</h2>
+    <h3>La visión del Centro de Estudiantes sobre el Centro de Copiado</h3>
   </header>
   
   <p>
@@ -16,12 +18,12 @@
     El Centro de Copiado de la UTN Mendoza es:
   </p>
   
-  <section>
+  <section class="clearfix">
     <figure>
       <%= image_sprite :solidarity, title: 'Solidaridad' %>
     </figure>
     <header>
-      <h3>Solidario</h3>
+      <h4>Solidario</h4>
     </header>
     <p>
       Porque lo recaudado se destina a becas para que compañeros puedan seguir
@@ -29,24 +31,24 @@
     </p>
   </section>
   
-  <section>
+  <section class="clearfix">
     <figure>
       <%= image_sprite :copyleft, title: 'Copyleft' %>
     </figure>
     <header>
-      <h3>Libre</h3>
+      <h4>Libre</h4>
     </header>
     <p>
       Porque los estudiantes podemos decidir sin que nadie nos diga qué hacer
     </p>
   </section>
   
-  <section>
+  <section class="clearfix">
     <figure>
       <%= image_sprite :transformation, title: 'Transformación' %>
     </figure>
     <header>
-      <h3>Transformador</h3>
+      <h4>Transformador</h4>
     </header>
     <p>
       Porque creamos tecnología propia de la UTN para que otros puedan
@@ -54,10 +56,10 @@
     </p>
   </section>
   
-  <footer>
-    <p>
-      Todos estos valores se sintetizan en una sola palabra:
-      <strong>AUTOGESTIÓN</strong>
-    </p>
-  </footer>
+  <br />
+  
+  <div class="well">
+    Todos estos valores se sintetizan en una sola palabra:
+    <strong>AUTOGESTIÓN</strong>
+  </div>
 </section>

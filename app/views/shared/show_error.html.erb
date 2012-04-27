@@ -1,30 +1,25 @@
-<div id="unexpected_error" style="margin-bottom: 1em;">
-  <div id="error_header">
-    <h1><%= t('errors.header_message') %></h1>
-  </div>
+<div class="row">
+  <div class="span10 offset1">
+    <section id="unexpected_error" class="alert alert-error">
+      <header>
+        <h2 class="alert-heading"><%= t('errors.header_message') %></h2>
+      </header>
 
-  <div id="error_body">
-    <p><%= t('errors.apologies_for_the_inconvenience') %></p>
+      <p><%= t('errors.apologies_for_the_inconvenience') %></p>
+    </section>
+
+    <% unless Rails.env.production? %>
+      <section id="error_details">
+        <header>
+          <h3 class="well"><%= error.message %></h3>
+        </header>
+
+        <h4>Pila de llamadas</h4>
+        <pre><%= error.backtrace.join("\n") %></pre>
+
+        <h4>Parámetros</h4>
+        <pre><%= params.try(:inspect) %></pre>
+      </section>
+    <% end %>
   </div>
 </div>
-
-<% unless Rails.env.production? %>
-  <%= link_to_function t('errors.show_details'),
-    "$('#error_details').slideDown(); $(this).fadeOut()", :id => 'show_link' %>
-  <div style="display: none;" id="error_details">
-    <div>
-      <%= link_to_function t('errors.hide_details'),
-        "$('#error_details').slideUp(); $('#show_link').fadeIn()" %>
-      <!-- Final -->
-      <h2 style="margin: 1em 0em;"><%= error.message %></h2>
-      <h3>Backtrace:</h3>
-      <pre style="margin-top: .5em;"><%= error.backtrace.join("\n") %></pre>
-
-      <% unless params.empty? %>
-      <h3 style="margin-top: 1em;">Parameters:</h3>
-      <pre style="margin-top: .5em;"><%= params.inspect %></pre>
-      <% end %>
-      <div style="clear: both;"></div>
-    </div>
-  </div>
-<% end %>

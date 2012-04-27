@@ -182,7 +182,7 @@ module ApplicationHelper
   def image_sprite(image, options = {}) 
     sprites = {
       copyleft: {w: 70, h: 40, x: 0, y: 0},
-      solidarity: {w: 70, h: 40, x: 0, y: 56},
+      solidarity: {w: 70, h: 40, x: 0, y: 50},
       transformation: {w: 70, h: 40, x: 0, y: 110}
     }
     

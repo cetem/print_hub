@@ -1,28 +1,40 @@
-<p class="help_link_container only_mobile hide_when_show_mobile_menu">
-  <a id="show_menu" class="toggle_display" href="#menu_links">
-    <strong><%= t('menu.actions.show') %></strong>
-  </a>
-</p>
-<nav id="menu_links" class="hidden_for_mobile">
-  <ul>
-    <%= content_tag(:li, link_to(t('customer_menu.catalog'), catalog_path),
-      class: ('selected' if controller_name == 'catalog')) %>
-    <%= content_tag(:li, link_to(t('customer_menu.orders'), orders_path),
-      class: ('selected' if controller_name == 'orders' && ['new', 'create'].exclude?(action_name))) %>
-    <%= content_tag(:li, link_to(t('view.catalog.new_order'), new_order_path),
-      class: "strong #{('selected' if controller_name == 'orders' && ['new', 'create'].include?(action_name))}") %>
-    <%= content_tag(:li, link_to( t('customer_menu.profile'), edit_profile_customer_path(current_customer)),
-      class: ('selected' if controller_name == 'customers')) %>
-    <%= content_tag(:li, link_to(t('menu.actions.hide'), '#menu_links', id: 'hide_menu', class: 'toggle_display'),
-      class: 'only_mobile') %>
-  </ul>
-</nav>
-<nav id="user_actions" class="hide_when_show_mobile_menu">
-  <div id="user" data-credit="<%= current_customer.free_credit_minus_pendings %>">
-    <%= current_customer.email %>
+<div class="navbar navbar-fixed-top">
+  <div class="navbar-inner">
+    <div class="container">
+      <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+        <span class="iconic">&#xe055;</span>
+      </a>
+      
+      <%= link_to t('app_name'), root_path, class: 'brand' %>
+      
+      <div class="nav-collapse">
+        <ul class="nav">
+          <%= content_tag(:li, link_to(t('customer_menu.catalog'), catalog_path),
+            class: ('active' if controller_name == 'catalog')) %>
+          <%= content_tag(:li, link_to(t('customer_menu.orders'), orders_path),
+            class: ('active' if controller_name == 'orders' && ['new', 'create'].exclude?(action_name))) %>
+          <%= content_tag(:li, link_to(t('view.catalog.new_order'), new_order_path),
+            class: "strong #{('active' if controller_name == 'orders' && ['new', 'create'].include?(action_name))}") %>
+          <%= content_tag(:li, link_to( t('customer_menu.profile'), edit_profile_customer_path(current_customer)),
+            class: ('active' if controller_name == 'customers')) %>
+        </ul>
+        
+        <ul class="nav pull-right">
+          <li>
+            <a id="user" data-credit="<%= current_customer.free_credit_minus_pendings %>">
+              <%= current_customer.email %>
+            </a>
+          </li>
+          <li>
+            <%= link_to(
+              '&#x2192;'.html_safe, customer_sessions_path,
+              'title' => t('menu.actions.logout'), 'class' => 'iconic',
+              'data-show-tooltip' => true, 'data-placement' => 'bottom',
+              'method' => :delete
+            ) %>
+          </li>
+        </ul>
+      </div>
+    </div>
   </div>
-  <ul>
-    <li><%= link_to t('menu.actions.logout'),
-      customer_sessions_path, method: :delete %></li>
-  </ul>
-</nav>
+</div>

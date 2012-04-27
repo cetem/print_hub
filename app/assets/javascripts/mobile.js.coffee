@@ -1,16 +1,12 @@
 jQuery ($)->
-  if navigator.userAgent.match(/mobi|mini|fennec/i) && window.screen.width <= 800
-    $('.hidden_for_mobile').hide().removeClass('hidden_for_mobile')
+  $(document).on 'click', '.toggle_display:not(.used)', ->
+    id = $(this).attr 'href'
+    wasVisible = $(id).is ':visible'
+
+    $(this).after $('<div class="visible-phone"></div>').html($(id).html())
+    $(this).addClass('used').hide()
+    window.location.hash = if wasVisible then '' else 'mobile_content'
     
-    $('#show_menu').on 'click', -> $('.hide_when_show_mobile_menu').hide()
-    $('#hide_menu').on 'click', -> $('.hide_when_show_mobile_menu').show()
-    
-    $(document).on 'click', '.toggle_display', ->
-      id = $(this).attr 'href'
-      wasVisible = $(id).is ':visible'
-      
-      $(id).toggle()
-      window.location.hash = if wasVisible then '' else id
-    
+  if navigator.userAgent.match(/mobi|mini|fennec/i)
     # Ocultar la barra de direcciones
     window.scrollTo(0, 1).delay 1000

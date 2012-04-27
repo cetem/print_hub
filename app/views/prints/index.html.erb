@@ -42,7 +42,7 @@
 
 <nav class="form-actions">
   <%= pagination_links(@prints) %>
-  <%= link_to raw("<b>#{t('view.prints.new')}</b>"), new_print_path, class: 'btn btn-primary' %>
+  <%= link_to t('view.prints.new'), new_print_path, class: 'btn btn-primary' %>
   <% if @customer.nil? && params[:status] != 'scheduled' %>
     | <%= link_to(
         textilize_without_paragraph(t('view.prints.show_scheduled')),
