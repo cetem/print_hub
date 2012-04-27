@@ -5,12 +5,12 @@
     <%= render 'welcome' %>
   </div>
 
-  <div class="span5">
+  <div class="span4 offset1">
     <div id="login" class="public_form_container">
       <%= simple_form_for @customer_session do |f| %>
         <div class="form-inputs">
-          <%= f.input :email, input_html: { autofocus: true, class: 'span4' } %>
-          <%= f.input :password, input_html: { class: 'span4' } %>
+          <%= f.input :email, input_html: { autofocus: true, class: 'span3' } %>
+          <%= f.input :password, input_html: { class: 'span3' } %>
           <%= f.input :remember_me, as: :boolean %>
         </div>
           
