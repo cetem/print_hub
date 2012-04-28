@@ -5,44 +5,20 @@
   <% end %>
   <%= show_error_messages(@customer) %>
 
-  <div class="field">
-    <%= f.label :name %>
-    <%= f.text_field :name, autofocus: true, maxlength: 255 %>
-  </div>
-  <div class="field">
-    <%= f.label :lastname %>
-    <%= f.text_field :lastname, maxlength: 255 %>
-  </div>
-  <div class="field">
-    <%= f.label :identification %>
-    <%= f.text_field :identification, maxlength: 255 %>
-  </div>
-  <div class="field">
-    <%= f.label :email %>
-    <%= f.text_field :email, maxlength: 255 %>
-  </div>
-  <div class="field">
-    <%= f.label :password %>
-    <%= f.password_field :password, maxlength: 255 %>
-  </div>
-  <div class="field">
-    <%= f.label :password_confirmation %>
-    <%= f.password_field :password_confirmation, maxlength: 255 %>
-  </div>
-  <div class="field">
-    <%= f.label :free_monthly_bonus %>
-    <%= f.text_field :free_monthly_bonus, maxlength: 15 %>
-  </div>
-  <div class="field">
-    <%= f.check_box :bonus_without_expiration %>
-    <%= f.label :bonus_without_expiration %> |
-    <%= link_to_function(
-      t('view.customers.show_bonuses'),
-      "$('#bonuses_section').slideDown(300)",
-      id: 'show_bonuses_section'
-    ) %>
-  </div>
-
+  <%= f.input :name, input_html: { autofocus: true } %>
+  <%= f.input :lastname %>
+  <%= f.input :identification%>
+  <%= f.input :email %>
+  <%= f.input :password %>
+  <%= f.input :password_confirmation %>
+  <%= f.input :free_monthly_bonus, input_html: { maxlength: 15 } %>
+  <%= f.input :bonus_without_expiration %> 
+  <%= link_to_function(
+    t('view.customers.show_bonuses'),
+    "$('#bonuses_section').slideDown(300)",
+    id: 'show_bonuses_section'
+  ) %>
+  
   <div id="bonuses_section" style="display: none;">
     <section class="nested_items">
       <h2>
@@ -60,7 +36,7 @@
       </div>
 
       <div id="bonuses" class="items">
-        <%= f.fields_for :bonuses, @customer.current_bonuses do |b_f| %>
+        <%= f.simple_fields_for :bonuses, @customer.current_bonuses do |b_f| %>
           <%= render partial: 'bonus', locals: { f: b_f, is_dynamic: false } %>
         <% end %>
       </div>
@@ -91,7 +67,7 @@
     </div>
 
     <div id="deposits" class="items">
-      <%= f.fields_for :deposits, @customer.current_deposits do |d_f| %>
+      <%= f.simple_fields_for :deposits, @customer.current_deposits do |d_f| %>
         <%= render partial: 'deposit', locals: { f: d_f, is_dynamic: false } %>
       <% end %>
     </div>
@@ -103,9 +79,7 @@
       'data-event' => 'addNestedItem',
       'title' => t('view.customers.add_deposit_title') %>
   </div>
-  
-  <div class="actions">
-    <%= f.hidden_field :lock_version %>
-    <%= f.submit %>
-  </div>
+
+  <%= f.input :lock_version, as: :hidden %>
+  <%= f.button :submit %>
 <% end %>
