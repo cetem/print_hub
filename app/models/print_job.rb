@@ -168,6 +168,6 @@ class PrintJob < ApplicationModel
   end
 
   def self.created_at_month(date)
-    with_print_between(date.beginning_of_month, date.end_of_month)
+    with_print_between(date.beginning_of_month, date.end_of_month.end_of_day)
   end
 end

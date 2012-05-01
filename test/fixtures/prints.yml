@@ -61,7 +61,7 @@ math_print_to_pay_later_2:
   customer: student
   status: <%= Print::STATUS[:pay_later] %>
   revoked: false
-  created_at: <%= Time.now.advance(months: -2, days: -1).to_s(:db) %>
+  created_at: <%= 2.months.ago %>
 
 physics_print_to_pay_later:
   printer: <%= Cups.show_destinations.detect { |p| p =~ /pdf/i } %>

@@ -263,6 +263,6 @@ class Print < ApplicationModel
   end
 
   def self.created_in_the_same_month(date)
-    between(date.beginning_of_month, date.end_of_month)
+    between(date.beginning_of_month, date.end_of_month.end_of_day)
   end
 end

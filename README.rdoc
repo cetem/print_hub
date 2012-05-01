@@ -9,15 +9,12 @@ Previously run:
 - sudo apt-get install libcupsys2-dev # Cups gem dependency
 - sudo apt-get install libxslt-dev libxml2-dev # For nokogiri gem
 - sudo apt-get install cups-pdf # For virtual pdf printer
+- sudo apt-get install postgresql # For database best support
 - cd projects/print_hub
 - bundle install
 
-If the bundle boom ^^ for linecache19 run:
-- gem install linecache19 
-or search in Saint Google ^^
-
 Install a virtual pdf printer via /system/printers o  /localhost:631/
-with mark GENERIC Postcript *
+with mark GENERIC Postcript printer
 
 Enjoy ^^
 
