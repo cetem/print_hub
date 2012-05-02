@@ -4,7 +4,7 @@ module PrintsHelper
     
     form.input :printer, collection: Cups.show_destinations.map { |d| [d, d] },
       selected: selected_printer, include_blank: true, autofocus: true,
-      wrapper_html: { class: 'column_left' }
+      input_html: { class: 'span11' }
   end
 
   def link_to_cancel_print_job(print_job)
@@ -39,7 +39,7 @@ module PrintsHelper
     printed_copies = stock > copies ? 0 : copies - stock;
     
     content_tag :span, "##{stock}!#{printed_copies}",
-      class: 'document_stock',
+      class: 'document_stock label label-important',
       title: t('view.prints.document_stock'),
       style: ('display: none;' if stock == 0 || !print_job.full_document?),
       'data-stock' => stock
@@ -77,5 +77,14 @@ module PrintsHelper
     end
     
     raw content_tag(:div, out.present? ? raw(out) : '-', class: 'nowrap')
+  end
+  
+  def print_customer_label(customer)
+    label = Print.human_attribute_name('customer')
+    
+    label << ' '
+    label << link_to_customer_credit_detail(customer)
+    
+    raw(label)
   end
 end

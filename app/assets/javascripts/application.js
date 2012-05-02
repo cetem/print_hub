@@ -14,6 +14,7 @@
 //= require twitter/bootstrap
 //= require common
 //= require autocomplete
+//= require datepicker
 //= require customers
 //= require catalog
 //= require documents

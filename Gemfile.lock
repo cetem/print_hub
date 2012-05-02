@@ -6,7 +6,7 @@ GIT
       rails (>= 3.0.0)
 
 GEM
-  remote: http://rubygems.org/
+  remote: https://rubygems.org/
   specs:
     Ascii85 (1.0.1)
     RedCloth (4.2.9)
@@ -113,7 +113,7 @@ GEM
     paper_trail (2.6.3)
       activerecord (~> 3.0)
       railties (~> 3.0)
-    paperclip (3.0.0)
+    paperclip (3.0.2)
       activemodel (>= 3.0.0)
       activerecord (>= 3.0.0)
       activesupport (>= 3.0.0)
@@ -220,7 +220,7 @@ DEPENDENCIES
   minitest
   newrelic_rpm
   paper_trail
-  paperclip (= 3.0.0)
+  paperclip
   pdf-reader
   pg
   rails (= 3.2.3)

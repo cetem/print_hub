@@ -104,19 +104,6 @@ jQuery ($)->
     ajaxStart: `function() { State.ajaxInProgress = true }`
     ajaxStop: `function() { State.ajaxInProgress = false }`
   
-  $(document).on 'focus', 'input.calendar:not(.hasDatepicker)', ->
-    if $(this).data('time')
-      $(this).datetimepicker
-        showOn: 'both',
-        stepHour: 1,
-        stepMinute: 5
-      .focus()
-    else
-      $(this).datepicker
-        showOn: 'both',
-        onSelect: -> $(this).datepicker('hide')
-      .focus()
-  
   $(document).on 'click', 'input.file', ->
     $(this).parents('div.field:first').find('input[type="file"]').
     removeClass('file').click()

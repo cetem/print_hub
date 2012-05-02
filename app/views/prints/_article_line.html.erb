@@ -1,9 +1,9 @@
 <% id = dynamic_object_id('article_line', f) %>
 <% hide = is_dynamic || f.object.marked_for_destruction? %>
-<div class="article_line nested_item" id="<%= id %>" data-price="<%= f.object.price %>" <%= raw 'style="display: none;"' if hide %>>
-  <div>
-    <% field_classes = [:autocomplete_field] %>
-    <% field_classes << :field_with_errors unless f.object.errors[:article_id].blank? %>
+<div class="article_line row-fluid" id="<%= id %>" data-price="<%= f.object.price %>" <%= raw 'style="display: none;"' if hide %>>
+  <div class="span5">
+    <% field_classes = ['autocomplete_field', 'span11'] %>
+    <% field_classes << 'error' unless f.object.errors[:article_id].blank? %>
     <%= f.input :auto_article_name, label: false, 
       input_html: { disabled: disabled, id: "auto_article_line_#{id}", 
       class: field_classes.join(' '), value: f.object.article.try(:to_s),
@@ -11,22 +11,22 @@
       wrapper_html: { class: 'nested_item_field' }  %>
     <%= f.input :article_id, as: :hidden, 
       input_html: { class: 'autocomplete_id' } %>
+  </div>
+  <div class="span1">
     <%= f.input :units, label: false,
-      input_html: { maxlength: 5, class: 'price_modifier',
-      autocomplete: :off, disabled: disabled },
-      wrapper_html: { class: 'nested_item_field' }  %>
+      input_html: { max: 99999, class: 'price_modifier span11',
+      autocomplete: :off, disabled: disabled }  %>
+  </div>
+  <div class="span1">
     <%= f.input :unit_price,  label: false,
       input_html: { disabled: true,
       value: ('%.3f' % f.object.unit_price if f.object.unit_price),
-      class: 'price_modifier', autocomplete: 'off' },
-      wrapper_html: { class: 'nested_item_field' }  %>
-    
-    <div class="nested_item_actions">
-      <span class="money"><%= number_to_currency f.object.price %></span>
-      <%= link_to_remove_nested_item(f) unless disabled %>
-      <%= f.input :lock_version, as: :hidden %>
-    </div>
-    <div class="dynamic_details"></div>
+      class: 'price_modifier span11', autocomplete: 'off' } %>
+  </div>
+  <div class="span5">
+    <span class="label money"><%= number_to_currency f.object.price %></span>
+    <%= link_to_remove_nested_item(f) unless disabled %>
+    <%= f.input :lock_version, as: :hidden %>
   </div>
 </div>
 <% if is_dynamic %>

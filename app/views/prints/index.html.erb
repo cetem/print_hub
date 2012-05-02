@@ -40,25 +40,39 @@
   </tbody>
 </table>
 
+<%= pagination_links(@prints) %>
+
 <nav class="form-actions">
-  <%= pagination_links(@prints) %>
-  <%= link_to t('view.prints.new'), new_print_path, class: 'btn btn-primary' %>
-  <% if @customer.nil? && params[:status] != 'scheduled' %>
-    | <%= link_to(
-        textilize_without_paragraph(t('view.prints.show_scheduled')),
-        prints_path(status: 'scheduled')
-      ) %>
-  <% end %>
-  <% if @customer.nil? && params[:status] != 'pending' %>
-    | <%= link_to(
-        textilize_without_paragraph(t('view.prints.show_pending')),
-        prints_path(status: 'pending')
-      ) %>
-  <% end %>
-  <% if params[:status] != 'all' %>
-    | <%= link_to(
-        textilize_without_paragraph(t('view.prints.show_all')),
-        prints_path(status: 'all')
-      ) %>
-  <% end %>
+  <div class="btn-group">
+    <%= link_to t('view.prints.new'), new_print_path, class: 'btn btn-primary' %>
+    <button class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+      <span class="caret"></span>
+    </button>
+    <ul class="dropdown-menu">
+      <% if @customer.nil? && params[:status] != 'scheduled' %>
+        <li>
+          <%= link_to(
+            textilize_without_paragraph(t('view.prints.show_scheduled')),
+            prints_path(status: 'scheduled')
+          ) %>
+        </li>
+      <% end %>
+      <% if @customer.nil? && params[:status] != 'pending' %>
+        <li>
+          <%= link_to(
+            textilize_without_paragraph(t('view.prints.show_pending')),
+            prints_path(status: 'pending')
+          ) %>
+        </li>
+      <% end %>
+      <% if params[:status] != 'all' %>
+        <li>
+          <%= link_to(
+            textilize_without_paragraph(t('view.prints.show_all')),
+            prints_path(status: 'all')
+          ) %>
+        </li>
+      <% end %>
+    </ul>
+  </div>
 </nav>

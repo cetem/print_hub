@@ -1,6 +1,4 @@
-<%= render 'form' %>
-
-<nav class="links">
+<%= content_for :form_actions do %>
   <% if there_are_documents_for_printing? %>
     <%= link_to(
       textilize_without_paragraph(
@@ -10,4 +8,6 @@
     ) %> |
   <% end %>
   <%= link_to t('label.list'), prints_path %>
-</nav>
+<% end %>
+
+<%= render 'form' %>
