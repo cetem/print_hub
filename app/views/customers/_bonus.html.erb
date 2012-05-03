@@ -1,24 +1,27 @@
 <% id = dynamic_object_id('bonus', f) %>
 <% hide = is_dynamic || f.object.marked_for_destruction? %>
-<div class="bonus nested_item" id="<%= id %>" <%= raw 'style="display: none;"' if hide %>>
-  <div>
-      <%= f.input :amount, label: false, 
-        input_html: { value: '%.3f' % f.object.amount,
-        maxlength: 15, autocomplete: :off,
-        disabled: !f.object.new_record?, id: "bonus_amount_#{id}" },
-        wrapper_html: { class: 'nested_item_field' } %>
-      <%= f.input :remaining, label: false, 
-        input_html: { value: '%.3f' % f.object.remaining,
-        maxlength: 15, autocomplete: :off, disabled: true },
-        wrapper_html: { class: 'nested_item_field' } %>
-    <div class="nested_item_field">
-      <%= calendar_text_field f, :valid_until %>
-    </div>
-    <div class="nested_item_actions">
-      <%= link_to_remove_nested_item(f) %>
-    </div>
-    <div class="dynamic_details"></div>
+<div class="bonus row-fluid" id="<%= id %>" <%= raw 'style="display: none;"' if hide %>>
+  <div class="span2">
+    <%= f.input :amount, label: false, 
+      input_html: { value: '%.3f' % f.object.amount,
+      maxlength: 15, autocomplete: :off, class: 'span11',
+      disabled: !f.object.new_record?, id: "bonus_amount_#{id}" },
+      wrapper_html: { class: 'nested_item_field' } %>
   </div>
+  <div class="span2">
+    <%= f.input :remaining, label: false, 
+      input_html: { value: '%.3f' % f.object.remaining, class: 'span11',
+      maxlength: 15, autocomplete: :off, disabled: true },
+      wrapper_html: { class: 'nested_item_field' } %>
+  </div>
+  <div class="span3">
+    <%= f.input :valid_until, as: :date_picker, label: false,
+      input_html: { class: 'span11' } %>
+  </div>
+  <div class="span2">
+    <%= link_to_remove_nested_item(f) %>
+  </div>
+  <div class="dynamic_details"></div>
 </div>
 <% if is_dynamic %>
   <script type="text/javascript">

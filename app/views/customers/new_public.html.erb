@@ -1,6 +1,13 @@
 <section id="customer_registration">
-  <div id="public_customer_form">
-    <%= render 'public_form' %>
+  
+  <div class="form-inputs">
+    <div class="row-fluid">
+      <div class="span6">
+        <%= render 'public_form' %>
+      </div>
+      <div class="span6">
+          <%= render 'help/new_customer' %>
+      </div>
+    </div>
   </div>
-  <%= render 'help/new_customer' %>
 </section>

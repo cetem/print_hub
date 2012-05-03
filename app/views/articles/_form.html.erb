@@ -1,10 +1,19 @@
-<%= simple_form_for(@article) do |f| %>
-  <%= show_error_messages(@article) %>
+<%= simple_form_for @article, defaults: { input_html: { class: 'span11' } } do |f| %>
 
-  <%= f.input :code, input_html: { autofocus: true, maxlength: 10 } %>
-  <%= f.input :name %>
-  <%= f.input :price, input_html: { maxlength: 15 } %>
-  <%= f.input :description %>
-  <%= f.input :lock_version, as: :hidden %>
-  <%= f.button :submit %>
+  <div class="form-inputs">
+    <div class="row-fluid">
+      <div class="span6">
+        <%= f.input :code, input_html: { autofocus: true, maxlength: 10 } %>
+        <%= f.input :name %>
+        <%= f.input :price, input_html: { maxlength: 15 } %>
+        <%= f.input :description, input_html: { rows: 4 } %>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-actions">
+    <div class="pull-right"><%= yield :form_actions %></div>
+    <%= f.input :lock_version, as: :hidden %>
+    <%= f.button :submit, class: 'btn-primary' %>
+  </div>
 <% end %>

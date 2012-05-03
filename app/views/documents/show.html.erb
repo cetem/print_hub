@@ -1,56 +1,56 @@
 <% id = "document_details_#{@document.id}" %>
-<div id="<%= id %>" class="document_details">
+<div id="<%= id %>" class="document_details readonly_data">
   <div class="document_data">
     <h2 class="title"><%= @document %></h2>
-    
-    <dl class="details">
-      <dt><%= Document.human_attribute_name :stock %>:</dt>
-      <dd><%= @document.stock %></dd>
-      
-      <dt><%= Document.human_attribute_name :pages %>:</dt>
-      <dd><%= @document.pages %></dd>
-      
-      <dt><%= Document.human_attribute_name :media %>:</dt>
-      <dd><%= show_document_media_text @document.media %></dd>
+    <div class="row-fluid">
+      <div class="span6">
+        <dl class="details">
+          <dt><%= Document.human_attribute_name :stock %>:</dt>
+          <dd><%= @document.stock %></dd>
 
-      <dt><%= Document.human_attribute_name :description %>:</dt>
-      <dd><%= @document.description %>&nbsp;</dd>
+          <dt><%= Document.human_attribute_name :pages %>:</dt>
+          <dd><%= @document.pages %></dd>
 
-      <dt><%= Document.human_attribute_name :file %>:</dt>
-      <dd><%= link_to_if @document.file.file?, t('label.download'), @document.file.url %></dd>
-    </dl>
-    
-    <div>
-      <strong><%= t('view.documents.barcode') %></strong>:
-      <%= document_link_to_barcode @document.code %>
+          <dt><%= Document.human_attribute_name :media %>:</dt>
+          <dd><%= show_document_media_text @document.media %></dd>
+
+          <dt><%= Document.human_attribute_name :description %>:</dt>
+          <dd><%= @document.description %>&nbsp;</dd>
+
+          <dt><%= Document.human_attribute_name :file %>:</dt>
+          <dd><%= link_to_if @document.file.file?, t('label.download'), @document.file.url %></dd>
+        </dl>
+
+        <% unless @document.tags.empty? %>
+          <h3 class="title"><%= t('menu.tags') %></h3>
+          <ul class="raw">
+            <% @document.tags.each do |tag| %>
+              <li><%= tag %></li>
+            <% end %>
+          </ul>
+        <% end %>
+      </div>
+      <div class="span6">
+        <strong><%= t('view.documents.barcode') %></strong>:
+        <%= document_link_to_barcode @document.code %>
+      </div>
     </div>
 
-    <% unless @document.tags.empty? %>
-      <section>
-        <h3 class="title"><%= t('menu.tags') %></h3>
-
-        <ul class="raw">
-          <% @document.tags.each do |tag| %>
-            <li><%= tag %></li>
-          <% end %>
-        </ul>
-      </section>
-    <% end %>
+    <%= show_document_thumb(@document) %>
   </div>
-  
-  <%= show_document_thumb(@document) %>
-
-  <nav class="links">
-    <% if request.xhr? %>
-      <%= link_to t('label.show'), document_path(@document) %> |
-      <%= link_to_function t('label.hide'), "Helper.remove('##{id}')" %>
-    <% else %>
-      <%= document_link_for_use_in_next_print @document %> |
-      <%= link_to t('label.edit'), edit_document_path(@document) %> |
-      <%= link_to t('label.list'), documents_path %>
-    <% end %>
-  </nav>
 </div>
+
+<nav class="form-actions">
+  <% if request.xhr? %>
+    <%= link_to t('label.show'), document_path(@document) %> |
+    <%= link_to_function t('label.hide'), "Helper.remove('##{id}')" %>
+  <% else %>
+    <%= document_link_for_use_in_next_print @document %> |
+    <%= link_to t('label.edit'), edit_document_path(@document) %> |
+    <%= link_to t('label.list'), documents_path %>
+  <% end %>
+</nav>
+
 <% if request.xhr? %>
   <script type="text/javascript">
     $('#<%= id %>').find('a.fancybox').fancybox({type: 'image'});

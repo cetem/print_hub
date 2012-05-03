@@ -1,4 +1,4 @@
-<table class="table">
+<table class="table table-striped">
   <thead>
     <tr>
       <th><%= Customer.human_attribute_name 'name' %></th>
@@ -10,7 +10,7 @@
 
   <tbody>
     <% @customers.each do |customer| %>
-      <tr class="<%= cycle('even', 'odd') + (customer.enable ? '' : ' disabled') %>">
+      <tr class="<%= (customer.enable ? '' : ' disabled') %>">
         <td><%= customer.to_s %> (<%= show_link_to_customer_prints(customer) %>)</td>
         <td><%= customer.identification %></td>
         <td><%= number_to_currency(customer.free_monthly_bonus || 0) %></td>
@@ -22,7 +22,8 @@
   </tbody>
 </table>
 
-<nav class="links">
-  <%= pagination_links(@customers) %>
-  <%= link_to t('label.new'), new_customer_path %>
+<%= pagination_links(@customers) %>
+
+<nav class="form-actions">
+  <%= link_to t('label.new'), new_customer_path, class: 'btn btn-primary' %>
 </nav>

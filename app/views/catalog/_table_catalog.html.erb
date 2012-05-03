@@ -1,4 +1,4 @@
-<table class="table">
+<table class="table table-striped">
   <thead>
     <tr>
       <th><%= sortable 'code', Document.human_attribute_name('code') %></th>
@@ -11,7 +11,7 @@
 
   <tbody>
     <% @documents.each do |document| %>
-      <tr class="<%= cycle('even', 'odd') %>">
+      <tr>
         <td><%= document.code %></td>
         <td><%= catalog_document_link_with_name(document) %></td>
         <td class="expendable"><%= display_document_short_tags(document) %></td>
@@ -22,6 +22,4 @@
   </tbody>
 </table>
 
-<nav class="links">
-  <%= pagination_links(@documents) %>
-</nav>
+<%= pagination_links(@documents) %>

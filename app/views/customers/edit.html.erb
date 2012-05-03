@@ -1,9 +1,9 @@
-<%= render 'form' %>
-
-<nav class="links">
+<%= content_for :form_actions do %>
   <%= link_to t('label.show'), @customer %> |
   <%= show_link_to_customer_prints(@customer) %> |
   <%= show_link_to_customer_bonuses(@customer) %> |
   <%= show_link_to_customer_non_payments(@customer) %> |
   <%= link_to t('label.list'), customers_path %>
-</nav>
+<% end %>
+
+<%= render 'form' %>

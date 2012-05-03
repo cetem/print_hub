@@ -1,11 +1,13 @@
-<h2 class="title"><%= @tag %></h2>
+<div class="readonly_data">
+  <h2 class="title"><%= @tag %></h2>
 
-<p>
-  <b><%= Tag.human_attribute_name :private %></b>:
-  <%= t @tag.private ? 'label.yes' : 'label.no' %>
-</p>
+  <p>
+    <b><%= Tag.human_attribute_name :private %></b>:
+    <%= t @tag.private ? 'label.yes' : 'label.no' %>
+  </p>
 
-<nav class="links">
+</div>
+<nav class="form-actions">
   <% if current_user.admin? %>
     <%= link_to t('label.edit'), edit_tag_path(@tag, parent: params[:parent]) %> |
   <% end %>

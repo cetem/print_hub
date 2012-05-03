@@ -1,24 +1,29 @@
 <% url = @customer.new_record? ?
   customers_path : update_profile_customer_path(@customer)
 %>
-<%= simple_form_for @customer, url: url do |f| %>
-  <%= show_error_messages(@customer) %>
-
-  <%= f.input :name, input_html: { autofocus: true } %>
-  <%= f.input :lastname %>
-  <%= f.input :identification %>
-  <%= f.input :email, required: true %>
-  <%= f.input :password, required: true %>
-  <%= f.input :password_confirmation, required: true %>
+<%= simple_form_for @customer, url: url,
+  defaults: { input_html: { class: 'span11' } } do |f| %>
+  <div class="form-inputs">
+    <div class="row-fluid">
+      <div class="span6">
+        <%= f.input :name, input_html: { autofocus: true } %>
+        <%= f.input :lastname %>
+        <%= f.input :identification %>
+        <%= f.input :email, required: true %>
+        <%= f.input :password, required: true %>
+        <%= f.input :password_confirmation, required: true %>
+      </div>
+    </div>
   </div>
 
-  <div class="actions">
+  <div class="form-actions">
     <% if @customer.new_record? %>
-      <%= f.button :submit, t('view.customers.register') %>
+      <%= f.button :submit, t('view.customers.register'), class: 'btn-primary' %>
       <%= t('label.or') %>
       <%= link_to t('label.back'), new_customer_session_path %>
     <% else %>
-      <%= f.button :submit, t('view.customers.update_profile') %>
+      <%= f.button :submit, t('view.customers.update_profile'), 
+        class: 'btn-primary' %>
     <% end %>
   </div>
 <% end %>

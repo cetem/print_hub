@@ -1,6 +1,6 @@
-<%= render 'form' %>
-
-<nav class="links">
+<%= content_for :form_actions do %>
   <%= link_to t('label.show'), @article %> |
   <%= link_to t('label.list'), articles_path %>
-</nav>
+<% end %>
+
+<%= render 'form' %>

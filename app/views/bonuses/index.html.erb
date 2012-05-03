@@ -3,7 +3,7 @@
     <%= t('view.bonuses.bonuses_with_customer', customer: @customer.to_s) %>
   </h2>
 <% end %>
-<table class="table">
+<table class="table table-striped">
   <thead>
     <tr>
       <th><%= Bonus.human_attribute_name 'customer_id' %></th>
@@ -16,7 +16,7 @@
 
   <tbody>
     <% @bonuses.each do |bonus| %>
-      <tr class="<%= cycle('even', 'odd') %>">
+      <tr>
         <td><%= bonus.customer %></td>
         <td><%= number_to_currency bonus.amount %></td>
         <td><%= number_to_currency bonus.remaining %></td>
@@ -27,6 +27,4 @@
   </tbody>
 </table>
 
-<nav class="links">
-  <%= pagination_links(@bonuses) %>
-</nav>
+<%= pagination_links(@bonuses) %>

@@ -5,33 +5,31 @@
         <%= t('view.customers.without_bonuses') %>
       </p>
     <% else %>
-      <section class="nested_items">
-        <h2>
-          <%= t(
-            'view.customers.current_bonuses',
-            count: @customer.current_bonuses.size
-          ) %>
-        </h2>
+      <h2>
+        <%= t(
+          'view.customers.current_bonuses',
+          count: @customer.current_bonuses.size
+        ) %>
+      </h2>
 
-        <table class="summary">
-          <thead>
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th><%= Bonus.human_attribute_name :amount %></th>
+            <th><%= Bonus.human_attribute_name :remaining %></th>
+            <th><%= Bonus.human_attribute_name :valid_until %></th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @customer.current_bonuses.each do |bonus| %>
             <tr>
-              <th><%= Bonus.human_attribute_name :amount %></th>
-              <th><%= Bonus.human_attribute_name :remaining %></th>
-              <th><%= Bonus.human_attribute_name :valid_until %></th>
+              <td><%= number_to_currency bonus.amount %></td>
+              <td><%= number_to_currency bonus.remaining %></td>
+              <td><%= l bonus.valid_until if bonus.valid_until %></td>
             </tr>
-          </thead>
-          <tbody>
-            <% @customer.current_bonuses.each do |bonus| %>
-              <tr>
-                <td><%= number_to_currency bonus.amount %></td>
-                <td><%= number_to_currency bonus.remaining %></td>
-                <td><%= l bonus.valid_until if bonus.valid_until %></td>
-              </tr>
-            <% end %>
-          </tbody>
-        </table>
-      </section>
+          <% end %>
+        </tbody>
+      </table>
     <% end %>
     
     <% if @customer.current_deposits.empty? %>
@@ -39,33 +37,31 @@
         <%= t('view.customers.without_deposits') %>
       </p>
     <% else %>
-      <section class="nested_items">
-        <h2>
-          <%= t(
-            'view.customers.current_deposits',
-            count: @customer.current_deposits.size
-          ) %>
-        </h2>
+      <h2>
+        <%= t(
+          'view.customers.current_deposits',
+          count: @customer.current_deposits.size
+        ) %>
+      </h2>
 
-        <table class="summary">
-          <thead>
+      <table class="table table-striped">
+        <thead>
+          <tr>
+            <th><%= Deposit.human_attribute_name :amount %></th>
+            <th><%= Deposit.human_attribute_name :remaining %></th>
+            <th><%= Deposit.human_attribute_name :valid_until %></th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @customer.current_deposits.each do |deposit| %>
             <tr>
-              <th><%= Deposit.human_attribute_name :amount %></th>
-              <th><%= Deposit.human_attribute_name :remaining %></th>
-              <th><%= Deposit.human_attribute_name :valid_until %></th>
+              <td><%= number_to_currency deposit.amount %></td>
+              <td><%= number_to_currency deposit.remaining %></td>
+              <td><%= l deposit.valid_until if deposit.valid_until %></td>
             </tr>
-          </thead>
-          <tbody>
-            <% @customer.current_deposits.each do |deposit| %>
-              <tr>
-                <td><%= number_to_currency deposit.amount %></td>
-                <td><%= number_to_currency deposit.remaining %></td>
-                <td><%= l deposit.valid_until if deposit.valid_until %></td>
-              </tr>
-            <% end %>
-          </tbody>
-        </table>
-      </section>
+          <% end %>
+        </tbody>
+      </table>
     <% end %>
   </div>
 </div>

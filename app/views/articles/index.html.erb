@@ -1,4 +1,4 @@
-<table class="table">
+<table class="table table-striped">
   <thead>
     <tr>
       <th><%= Article.human_attribute_name 'code' %></th>
@@ -10,7 +10,7 @@
 
   <tbody>
     <% @articles.each do |article| %>
-      <tr class="<%= cycle('even', 'odd') %>">
+      <tr>
         <td><%= article.code %></td>
         <td><%= article.name %></td>
         <td><%= number_to_currency article.price %></td>
@@ -23,7 +23,7 @@
   </tbody>
 </table>
 
-<nav class="links">
-  <%= pagination_links(@articles) %>
-  <%= link_to t('label.new'), new_article_path %>
+<%= pagination_links(@articles) %>
+<nav class="form-actions">
+  <%= link_to t('label.new'), new_article_path, class: 'btn btn-primary' %>
 </nav>

@@ -1,24 +1,26 @@
 <% id = dynamic_object_id('deposit', f) %>
 <% hide = is_dynamic || f.object.marked_for_destruction? %>
-<div class="deposit nested_item" id="<%= id %>" <%= raw 'style="display: none;"' if hide %>>
-  <div>
-      <%= f.input :amount, label: false,
-        input_html: { value: '%.3f' % f.object.amount, maxlength: 15, 
-        autocomplete: :off, disabled: !f.object.new_record?, 
-        id: "deposit_amount_#{id}" },
-        wrapper_html: { class: 'nested_item_field' } %>
-      <%= f.input :remaining, label: false,
-        input_html: { value: '%.3f' % f.object.remaining,
-        maxlength: 15, autocomplete: :off, disabled: true },
-        wrapper_html: { class: 'nested_item_field' } %>
-    <div class="nested_item_field">
-      <%= l(f.object.created_at, format: :minimal) if f.object.created_at %>
-    </div>
-    <div class="nested_item_actions">
-      <%= link_to_remove_nested_item(f) %>
-    </div>
-    <div class="dynamic_details"></div>
+<div class="deposit row-fluid" id="<%= id %>" <%= raw 'style="display: none;"' if hide %>>
+  <div class="span2">
+    <%= f.input :amount, label: false,
+      input_html: { value: '%.3f' % f.object.amount, maxlength: 15,
+      autocomplete: :off, disabled: !f.object.new_record?, class: 'span11',
+      id: "deposit_amount_#{id}" } %>
   </div>
+  <div class="span2">
+    <%= f.input :remaining, label: false,
+      input_html: { value: '%.3f' % f.object.remaining, class: 'span11',
+      maxlength: 15, autocomplete: :off, disabled: true } %>
+  </div>
+  <% if f.object.created_at %>
+    <div class="span3">
+      <%= l(f.object.created_at, format: :minimal) %>
+    </div>
+  <% end %>
+  <div class="span2">
+    <%= link_to_remove_nested_item(f) %>
+  </div>
+  <div class="dynamic_details"></div>
 </div>
 <% if is_dynamic %>
   <script type="text/javascript">

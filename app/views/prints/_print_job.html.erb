@@ -39,7 +39,7 @@
         disabled: disabled || (!f.object.new_record? && f.object.document.blank?)} %>
     </div>
     <div class="span1">
-      <%= f.input :two_sided, as: :boolean, label: false,
+      <%= f.input :two_sided, label: false,
         input_html: { class: 'price_modifier span11', disabled: disabled } %>
     </div>
     <div class="span2">

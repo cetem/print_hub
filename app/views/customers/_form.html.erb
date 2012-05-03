@@ -1,85 +1,106 @@
-<%= simple_form_for(@customer) do |f| %>
+<%= simple_form_for @customer, defaults: { input_html: { class: 'span11' } }  do |f| %>
   <%= content_for :js_extra do %>
     <%= raw "var bonus='#{generate_template(f, :bonuses, partial: 'bonus')}';" %>
     <%= raw "var deposit='#{generate_template(f, :deposits, partial: 'deposit')}';" %>
   <% end %>
-  <%= show_error_messages(@customer) %>
-
-  <%= f.input :name, input_html: { autofocus: true } %>
-  <%= f.input :lastname %>
-  <%= f.input :identification%>
-  <%= f.input :email %>
-  <%= f.input :password %>
-  <%= f.input :password_confirmation %>
-  <%= f.input :free_monthly_bonus, input_html: { maxlength: 15 } %>
-  <%= f.input :bonus_without_expiration %> 
-  <%= link_to_function(
-    t('view.customers.show_bonuses'),
-    "$('#bonuses_section').slideDown(300)",
-    id: 'show_bonuses_section'
-  ) %>
-  
-  <div id="bonuses_section" style="display: none;">
-    <section class="nested_items">
-      <h2>
-        <%= t(
-          'view.customers.current_bonuses',
-          count: @customer.current_bonuses.size
-        ) %>
-      </h2>
-
-      <div id="bonuses_headers" class="headers">
-        <h3><%= Bonus.human_attribute_name :amount %></h3>
-        <h3><%= Bonus.human_attribute_name :remaining %></h3>
-        <h3><%= Bonus.human_attribute_name :valid_until %></h3>
-        <br class="break" />
+  <div class="form-inputs">
+    <div class="row-fluid">
+      <div class="span6">
+        <%= f.input :name, input_html: { autofocus: true } %>
+        <%= f.input :lastname %>
+        <%= f.input :identification%>
+        <%= f.input :email %>
+        <%= f.input :password %>
+        <%= f.input :password_confirmation %>
       </div>
+      
+      <div class="span6">
+        <%= f.input :free_monthly_bonus, input_html: { maxlength: 15 } %>
+        <div class="row-fluid">
+          <div class="span6">
+            <%= f.input :bonus_without_expiration, input_html: { class: ''} %> 
+          </div>
+          <div class="span6">
+            <%= link_to_function(
+              t('view.customers.show_bonuses'),
+              "$('#bonuses_section').slideDown(300)",
+              id: 'show_bonuses_section'
+            ) %>
+          </div>
+        </div>
+        <div id="bonuses_section" style="display: none;">
+          <h2>
+            <%= t(
+              'view.customers.current_bonuses',
+              count: @customer.current_bonuses.size
+            ) %>
+          </h2>
 
-      <div id="bonuses" class="items">
-        <%= f.simple_fields_for :bonuses, @customer.current_bonuses do |b_f| %>
-          <%= render partial: 'bonus', locals: { f: b_f, is_dynamic: false } %>
-        <% end %>
+          <div id="bonuses_headers" class="row-fluid">
+            <div class="span2">
+              <h3><%= Bonus.human_attribute_name :amount %></h3>
+            </div>
+            <div class="span2">
+              <h3><%= Bonus.human_attribute_name :remaining %></h3>
+            </div>
+            <div class="span3">
+              <h3><%= Bonus.human_attribute_name :valid_until %></h3>
+            </div>
+          </div>
+
+          <div id="bonuses">
+            <%= f.simple_fields_for :bonuses, @customer.current_bonuses do |b_f| %>
+              <%= render partial: 'bonus', locals: { f: b_f, is_dynamic: false } %>
+            <% end %>
+          </div>
+
+          <div class="add_nested_item">
+            <%= link_to t('view.customers.add_bonus'), '#', id: 'add_bonus_link',
+              'data-template' => 'bonus', 'data-container' => '#bonuses',
+              'data-event' => 'addNestedItem',
+              'title' => t('view.customers.add_bonus_title') %>
+          </div>
+        </div>
+        <div id="nested_items">
+          <% @customer.deposits.build if @customer.current_deposits.empty? %>
+          <h2>
+            <%= t(
+              'view.customers.current_deposits',
+              count: @customer.current_deposits.size
+            ) %>
+          </h2>
+
+          <div id="deposits_headers" class="row-fluid">
+            <div class="span2">
+              <h3><%= Deposit.human_attribute_name :amount %></h3>
+            </div>
+            <div class="span2">
+              <h3><%= Deposit.human_attribute_name :remaining %></h3>
+            </div>
+            <div class="span3">
+              <h3><%= Deposit.human_attribute_name :created_at %></h3>
+            </div>
+          </div>
+
+          <div id="deposits">
+            <%= f.simple_fields_for :deposits, @customer.current_deposits do |d_f| %>
+              <%= render partial: 'deposit', locals: { f: d_f, is_dynamic: false } %>
+            <% end %>
+          </div>
+
+          <div class="add_nested_item">
+            <%= link_to t('view.customers.add_deposit'), '#', id: 'add_deposit_link',
+              'data-template' => 'deposit', 'data-container' => '#deposits',
+              'data-event' => 'addNestedItem',
+              'title' => t('view.customers.add_deposit_title') %>
+          </div>
+        </div>
       </div>
-    </section>
-
-    <div class="add_nested_item">
-      <%= link_to t('view.customers.add_bonus'), '#', id: 'add_bonus_link',
-        'data-template' => 'bonus', 'data-container' => '#bonuses',
-        'data-event' => 'addNestedItem',
-        'title' => t('view.customers.add_bonus_title') %>
     </div>
   </div>
-  
-  <section class="nested_items">
-    <% @customer.deposits.build if @customer.current_deposits.empty? %>
-    <h2>
-      <%= t(
-        'view.customers.current_deposits',
-        count: @customer.current_deposits.size
-      ) %>
-    </h2>
-    
-    <div id="deposits_headers" class="headers">
-      <h3><%= Deposit.human_attribute_name :amount %></h3>
-      <h3><%= Deposit.human_attribute_name :remaining %></h3>
-      <h3><%= Deposit.human_attribute_name :created_at %></h3>
-      <br class="break" />
-    </div>
-
-    <div id="deposits" class="items">
-      <%= f.simple_fields_for :deposits, @customer.current_deposits do |d_f| %>
-        <%= render partial: 'deposit', locals: { f: d_f, is_dynamic: false } %>
-      <% end %>
-    </div>
-  </section>
-
-  <div class="add_nested_item">
-    <%= link_to t('view.customers.add_deposit'), '#', id: 'add_deposit_link',
-      'data-template' => 'deposit', 'data-container' => '#deposits',
-      'data-event' => 'addNestedItem',
-      'title' => t('view.customers.add_deposit_title') %>
+  <div class="form-actions">
+    <div class="pull-right"><%= yield :form_actions %></div>
+    <%= f.input :lock_version, as: :hidden %>
+    <%= f.button :submit, class: 'btn-primary' %>
   </div>
-
-  <%= f.input :lock_version, as: :hidden %>
-  <%= f.button :submit %>
 <% end %>

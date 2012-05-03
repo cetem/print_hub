@@ -1,18 +1,23 @@
-<%= simple_form_for @user, html: { multipart: true } do |f| %>
-  <%= show_error_messages(@user) %>
 
-  <%= f.input :name, input_html: { autofocus: true } %>
-  <%= f.input :last_name %>
-  <%= user_language_field(f) %>
-  <%= f.input :email, required: true %>
-  <%= user_default_printer_field(f) %>
-  <%= f.input :lines_per_page, input_html: { maxlength: 2 } %>
-  <%= f.input :username, required: true %>
-  <%= f.input :password, required: true %>
-  <%= f.input :password_confirmation, required: true %>
-  <%= f.input :admin, as: :boolean %>
-  <%= f.input :enable, as: :boolean %>
-  <%= f.input :avatar %>
-  <%= f.input :lock_version, as: :hidden %>
-  <%= f.button :submit %>
+<%= simple_form_for @user, html: { multipart: true },
+  defaults: { input_html: { class: 'span4' } } do |f| %>
+  <%= show_error_messages(@user) %>
+  <div class="form-inputs">
+    <%= f.input :name, input_html: { autofocus: true } %>
+    <%= f.input :last_name %>
+    <%= user_language_field(f) %>
+    <%= f.input :email, required: true %>
+    <%= user_default_printer_field(f) %>
+    <%= f.input :lines_per_page, input_html: { maxlength: 2 } %>
+    <%= f.input :username, required: true %>
+    <%= f.input :password, required: true %>
+    <%= f.input :password_confirmation, required: true %>
+    <%= f.input :admin, input_html: { class: ''} %>
+    <%= f.input :enable, input_html: { class: ''} %>
+    <%= f.input :avatar %>
+  </div>
+  <div class="form-actions">
+    <%= f.input :lock_version, as: :hidden %>
+    <%= f.button :submit %>
+  </div>
 <% end %>

@@ -29,7 +29,9 @@
   </tbody>
 </table>
 
-<nav class="links">
-  <%= pagination_links(@tags) %>
-  <%= link_to t('label.new'), new_tag_path(parent: params[:parent]) if current_user.admin? %>
+<%= pagination_links(@tags) %>
+
+<nav class="form-actions">
+  <%= link_to t('label.new'), new_tag_path(parent: params[:parent]), 
+    class: 'btn btn-primary' if current_user.admin? %>
 </nav>

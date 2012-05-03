@@ -7,6 +7,7 @@ class TagsController < ApplicationController
   # GET /tags.xml
   def index
     @title = t('view.tags.index_title')
+    @searchable = true
     @tags = (@parent_tag.try(:children) || Tag).where(
       ('parent_id IS NULL' unless @parent_tag)
     ).order("#{Tag.table_name}.name ASC").paginate(

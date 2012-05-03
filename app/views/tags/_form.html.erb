@@ -1,9 +1,16 @@
 <%= simple_form_for @tag do |f| %>
-  <%= show_error_messages(@tag) %>
-
-  <%= f.input :name, input_html: { autofocus: true } %>
-  <%= f.input :private, as: :boolean %>
-  <%= f.input :parent_id, as: :hidden %>
-  <%= f.input :lock_version, as: :hidden %>
-  <%= f.button :submit %>
+  <div class="form-inputs">
+    <div class="row-fluid">
+      <div class="span6">
+        <%= f.input :name, required: false, input_html: { autofocus: true } %>
+        <%= f.input :private, as: :boolean %>
+        <%= f.input :parent_id, as: :hidden %>
+      </div>
+    </div>
+  </div>
+  <div class='form-actions'>
+    <div class="pull-right"><%= yield :form_actions %></div>
+    <%= f.input :lock_version, as: :hidden %>
+    <%= f.button :submit, class: 'btn-primary' %>
+  </div> 
 <% end %>

@@ -1,28 +1,28 @@
-<h2 class="title"><%= @customer %></h2>
+<div class="readonly_data">
+  <h2 class="title"><%= @customer %></h2>
 
-<p>
-  <%= mail_to @customer.email %>
-</p>
+  <p>
+    <%= mail_to @customer.email %>
+  </p>
 
-<br />
+  <br />
 
-<p>
-  <b><%= Customer.human_attribute_name 'identification' %>:</b>
-  <%= @customer.identification %>
-</p>
+  <p>
+    <b><%= Customer.human_attribute_name 'identification' %>:</b>
+    <%= @customer.identification %>
+  </p>
 
-<p>
-  <b><%= Customer.human_attribute_name 'free_monthly_bonus' %>:</b>
-  <%= number_to_currency(@customer.free_monthly_bonus) %>
-</p>
+  <p>
+    <b><%= Customer.human_attribute_name 'free_monthly_bonus' %>:</b>
+    <%= number_to_currency(@customer.free_monthly_bonus) %>
+  </p>
 
-<p>
-  <b><%= Customer.human_attribute_name 'bonus_without_expiration' %>:</b>
-  <%= t(@customer.bonus_without_expiration ? :yes : :no, scope: :label) %>
-</p>
+  <p>
+    <b><%= Customer.human_attribute_name 'bonus_without_expiration' %>:</b>
+    <%= t(@customer.bonus_without_expiration ? :yes : :no, scope: :label) %>
+  </p>
 
-<% unless @customer.current_bonuses.empty? %>
-  <section class="nested_items">
+  <% unless @customer.current_bonuses.empty? %>
     <h2>
       <%= t(
         'view.customers.current_bonuses',
@@ -30,7 +30,7 @@
       ) %>
     </h2>
 
-    <table class="summary">
+    <table class="table table-striped">
       <thead>
         <tr>
           <th><%= Bonus.human_attribute_name 'amount' %></th>
@@ -48,11 +48,9 @@
         <% end %>
       </tbody>
     </table>
-  </section>
-<% end %>
+  <% end %>
 
-<% unless @customer.current_deposits.empty? %>
-  <section class="nested_items">
+  <% unless @customer.current_deposits.empty? %>
     <h2>
       <%= t(
         'view.customers.current_deposits',
@@ -60,7 +58,7 @@
       ) %>
     </h2>
 
-    <table class="summary">
+    <table class="table table-striped">
       <thead>
         <tr>
           <th><%= Deposit.human_attribute_name 'amount' %></th>
@@ -78,24 +76,23 @@
         <% end %>
       </tbody>
     </table>
-  </section>
-<% end %>
-
-<% amounts = @customer.to_pay_amounts %>
-<% if amounts[:total_count] > 0 %>
-  <% if params[:date] && @customer.months_to_pay.size > 1 %>
-    <%= render 'month_debt', date: params[:date], cancelled: false %>
-  <% else %>
-    <%= render 'debt', amounts: amounts, cancelled: false %>
   <% end %>
-<% else %>
-  <br />
-  <p>
-    <strong><%= t('view.customers.to_pay_prints.no_debt') %></strong>
-  </p>
-<% end %>
 
-<nav class="links">
+  <% amounts = @customer.to_pay_amounts %>
+  <% if amounts[:total_count] > 0 %>
+    <% if params[:date] && @customer.months_to_pay.size > 1 %>
+      <%= render 'month_debt', date: params[:date], cancelled: false %>
+    <% else %>
+      <%= render 'debt', amounts: amounts, cancelled: false %>
+    <% end %>
+  <% else %>
+    <br />
+    <p>
+      <strong><%= t('view.customers.to_pay_prints.no_debt') %></strong>
+    </p>
+  <% end %>
+</div>
+<nav class="form-actions">
   <%= link_to t('label.edit'), edit_customer_path(@customer) %> |
   <%= show_link_to_customer_prints(@customer) %> |
   <%= show_link_to_customer_bonuses(@customer) %> |
