@@ -1,16 +1,18 @@
-<% if @tag %>
-  <h2 class="title">
-    <%= t('view.documents.documents_with_tag', tag: @tag.to_s) %>
-  </h2>
-<% end %>
-<%= render partial: 'shared/search' %>
 <table class="table">
+  <% if @tag %>
+    <caption>
+      <h4>
+        <%= t('view.documents.documents_with_tag.html', tag: @tag.to_s) %>
+      </h4>
+      <br />
+    </caption>
+  <% end %>
   <thead>
     <tr>
-      <th><%= sortable 'code', Document.human_attribute_name(:code) %></th>
-      <th><%= sortable 'name', Document.human_attribute_name(:name) %></th>
-      <th><%= Document.human_attribute_name :stock %></th>
-      <th><%= Document.human_attribute_name :pages %></th>
+      <th><%= sortable 'code', Document.human_attribute_name('code') %></th>
+      <th><%= sortable 'name', Document.human_attribute_name('name') %></th>
+      <th><%= Document.human_attribute_name 'stock' %></th>
+      <th><%= Document.human_attribute_name 'pages' %></th>
       <th colspan="4"></th>
     </tr>
   </thead>
@@ -32,10 +34,22 @@
   </tbody>
 </table>
 
-<nav class="links">
-  <%= pagination_links(@documents) %>
-  <%= link_to t('label.new'), new_document_path %> |
-  <%= link_to t('view.documents.new_print'), new_print_path %> |
-  <%= link_to t('view.documents.clear_documents_for_printing'),
-    request.parameters.merge(clear_documents_for_printing: true) %>
+<%= pagination_links(@documents) %>
+
+<nav class="form-actions">
+  <div class="btn-group">
+    <%= link_to t('label.new'), new_document_path, class: 'btn btn-primary' %>
+    <button class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+      <span class="caret"></span>
+    </button>
+    <ul class="dropdown-menu">
+      <li>
+        <%= link_to t('view.documents.new_print'), new_print_path %>
+      </li>
+      <li>
+        <%= link_to t('view.documents.clear_documents_for_printing'),
+          request.parameters.merge(clear_documents_for_printing: true) %>
+      </li>
+    </ul>
+  </div>
 </nav>

@@ -1,7 +1,7 @@
-<%= render 'form' %>
-
-<nav class="links">
+<%= content_for :form_actions do %>
   <%= document_link_for_use_in_next_print @document %> |
   <%= link_to t('label.show'), @document %> |
   <%= link_to t('label.list'), documents_path %>
-</nav>
+<% end %>
+
+<%= render 'form' %>

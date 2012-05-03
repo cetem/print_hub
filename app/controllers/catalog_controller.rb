@@ -6,6 +6,7 @@ class CatalogController < ApplicationController
   
   def index
     @title = t('view.catalog.index_title')
+    @searchable = true
     
     if params[:q].present? || @tag
       query = params[:q].try(:sanitized_for_text_query) || ''

@@ -4,8 +4,6 @@
   </h2>
 <% end %>
 
-<%= render 'shared/search' %>
-
 <% if params[:q].blank? && @documents.blank? %>
   <%= render 'help/empty_catalog' %>
 <% elsif params[:q].present? && @documents.blank? %>

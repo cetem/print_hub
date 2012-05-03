@@ -18,7 +18,7 @@
           <%= content_tag(:li, link_to( t('customer_menu.profile'), edit_profile_customer_path(current_customer)),
             class: ('active' if controller_name == 'customers')) %>
         </ul>
-        
+        <%= render partial: 'shared/nav_search' if @searchable %>
         <ul class="nav pull-right">
           <li>
             <a id="user" data-credit="<%= current_customer.free_credit_minus_pendings %>">

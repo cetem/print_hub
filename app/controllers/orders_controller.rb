@@ -8,6 +8,7 @@ class OrdersController < ApplicationController
   # GET /orders.json
   def index
     @title = t 'view.orders.index_title'
+    @searchable = current_customer.nil?
     @orders = @order_scope.order('scheduled_at ASC')
     
     if params[:q].present? && current_user

@@ -5,16 +5,19 @@
     <% field_classes = ['autocomplete_field', 'span11'] %>
     <% field_classes << 'error' unless f.object.errors[:article_id].blank? %>
     <%= f.input :auto_article_name, label: false, 
-      input_html: { disabled: disabled, id: "auto_article_line_#{id}", 
+      input_html: { disabled: disabled, id: "auto_article_line_#{id}",
       class: field_classes.join(' '), value: f.object.article.try(:to_s),
-      'data-autocomplete-url' => autocomplete_for_article_name_prints_path(format: :json) },
-      wrapper_html: { class: 'nested_item_field' }  %>
+      data: {
+        'autocomplete-id-target' => "#auto_article_line_id_#{id}",
+        'autocomplete-url' => autocomplete_for_article_name_prints_path(format: :json)
+      }
+    } %>
     <%= f.input :article_id, as: :hidden, 
-      input_html: { class: 'autocomplete_id' } %>
+      input_html: { class: 'autocomplete_id', id: "auto_article_line_id_#{id}" } %>
   </div>
   <div class="span1">
     <%= f.input :units, label: false,
-      input_html: { max: 99999, class: 'price_modifier span11',
+      input_html: { maxlength: 5, class: 'price_modifier span11',
       autocomplete: :off, disabled: disabled }  %>
   </div>
   <div class="span1">

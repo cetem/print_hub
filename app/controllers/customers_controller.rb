@@ -13,6 +13,7 @@ class CustomersController < ApplicationController
   # GET /customers.xml
   def index
     @title = t('view.customers.index_title')
+    @searchable = true
     @customers = Customer.unscoped.order('lastname ASC')
     
     if params[:q].present?

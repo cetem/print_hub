@@ -29,7 +29,7 @@ module OrdersHelper
   def show_orders_table_caption
     unless current_customer
       content_tag(:caption,
-        raw(textilize_without_paragraph(t("view.orders.type.#{order_type}")))
+        content_tag(:h4, t("view.orders.type.#{order_type}.html"))
       )
     end
   end

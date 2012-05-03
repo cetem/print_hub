@@ -1,33 +1,34 @@
-<%= simple_form_for @document do |f| %>
+<%= simple_form_for @document, defaults: { input_html: { class: 'span11' } } do |f| %>
   <%= content_for :js_extra do %>
     <%= raw "var tag='#{escape_javascript render(partial: 'tag',
       locals: {is_dynamic: true, f: f, tag: nil})}';" %>
   <% end %>
-  <%= show_error_messages(@document) %>
-  <div class="field column_right">
-    <strong><%= t('view.documents.barcode') %></strong>:
-    <%= document_link_to_barcode(@document.code.blank? ? 0 : @document.code) %>
-  </div>
-  
-  <%= f.input :code, as: :string, input_html: { autofocus: true, maxlength: 10 } %>
-  <%= f.input :name %>
-  <%= f.input :pages, as: :string, input_html: { maxlength: 5, disabled: true } %>
-  <%= f.input :stock, as: :string, input_html: { maxlength: 5 } %>
-  <%= show_document_media_field(f) %>
-  <%= f.input :description %>
-  
-  <div class="field">
-    <%= document_file_label f %>
-    <%= f.input :file, label: false, input_html: {
-      class: ('field_with_errors' unless @document.errors[:file_file_name].blank?) } %>
-  </div>
+  <div class="form-inputs">
+    <div class="row-fluid">
+      <div class="span6">
+        <%= f.input :code, input_html: { autofocus: true, maxlength: 10 } %>
+        <%= f.input :name %>
+        <%= f.input :pages, input_html: { maxlength: 5, disabled: true } %>
+        <%= f.input :stock, input_html: { maxlength: 5 } %>
+        <%= show_document_media_field(f) %>
+        <%= f.input :description, input_html: { rows: 4 } %>
+        <%= f.input :file, input_html: {
+            class: ('error' unless @document.errors[:file_file_name].blank?)
+        } %>
+        <%= f.input :enable, input_html: { class: '' } %>
+      </div>
 
-  <%= f.input :enable, as: :boolean %>
+      <div class="span6">
+        <strong><%= t('view.documents.barcode') %></strong>:
+        <%= document_link_to_barcode(@document.code.blank? ? 0 : @document.code) %>
+      </div>
+    </div>
+    
+    <div class="page-header">
+      <h3><%= t('menu.tags') %></h3>
+    </div>
 
-  <section class="nested_items">
-    <h2><%= t('menu.tags') %></h2>
-
-    <div id="tags" class="items">
+    <div id="tags">
       <% @document.tags.each do |tag| %>
         <%= render partial: 'tag',
           locals: { is_dynamic: false, f: f, tag: tag } %>
@@ -35,17 +36,20 @@
       <%= render partial: 'tag',
         locals: { is_dynamic: false, f: f, tag: nil } %>
     </div>
-  </section>
 
-  <div class="add_nested_item">
-    <%= link_to t('view.documents.add_tag'), '#', id: 'add_tag_link',
-      'data-template' => 'tag', 'data-container' => '#tags',
-      'data-event' => 'addNestedItem',
-      title: t('view.documents.add_tag_title') %>
+    <div class="add_nested_item">
+      <%= link_to t('view.documents.add_tag'), '#', id: 'add_tag_link',
+        'data-template' => 'tag', 'data-container' => '#tags',
+        'data-event' => 'addNestedItem',
+        title: t('view.documents.add_tag_title'), class: 'btn btn-mini' %>
+    </div>
   </div>
   
-  <%= f.input :lock_version, as: :hidden %>
-  <%= f.button :submit %>
+  <div class="form-actions">
+    <div class="pull-right"><%= yield :form_actions %></div>
+    <%= f.input :lock_version, as: :hidden %>
+    <%= f.button :submit, class: 'btn-primary' %>
+  </div>
 <% end %>
 <%= render partial: 'shared/notice', locals: {
   hide: true,

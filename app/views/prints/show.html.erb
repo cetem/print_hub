@@ -1,117 +1,121 @@
-<p>
-  <b><%= Print.human_attribute_name :printer %></b>:
-  <%= @print.printer %>
-</p>
+<div class="readonly_data">
+  <p>
+    <b><%= Print.human_attribute_name 'printer' %></b>:
+    <%= @print.printer %>
+  </p>
 
-<p>
-  <b><%= Print.human_attribute_name :status %></b>:
-  <%= show_print_status @print %>
-</p>
+  <p>
+    <b><%= Print.human_attribute_name 'status' %></b>:
+    <%= show_print_status @print %>
+  </p>
 
-<p>
-  <b><%= Print.human_attribute_name :customer %></b>:
-  <%= @print.customer || '-' %>
-</p>
+  <p>
+    <b><%= Print.human_attribute_name 'customer' %></b>:
+    <%= @print.customer || '-' %>
+  </p>
 
-<p>
-  <b><%= Print.human_attribute_name :user %></b>:
-  <%= @print.user %>
-</p>
+  <p>
+    <b><%= Print.human_attribute_name 'user' %></b>:
+    <%= @print.user %>
+  </p>
 
-<p>
-  <b><%= Print.human_attribute_name :scheduled_at %></b>:
-  <%= l @print.scheduled_at, format: :long if @print.scheduled_at %>
-</p>
+  <p>
+    <b><%= Print.human_attribute_name 'scheduled_at' %></b>:
+    <%= l @print.scheduled_at, format: :long if @print.scheduled_at %>
+  </p>
 
-<% unless @print.print_jobs.empty? %>
-  <section class="nested_items">
-    <h2><%= t 'view.prints.print_jobs' %></h2>
+  <% unless @print.print_jobs.empty? %>
+    <section class="nested_items">
+      <h3><%= t 'view.prints.print_jobs' %></h3>
 
-    <table class="summary">
-      <thead>
-        <tr>
-          <th><%= PrintJob.human_attribute_name :document_id %></th>
-          <th><%= PrintJob.human_attribute_name :copies %></th>
-          <th><%= PrintJob.human_attribute_name :printed_copies %></th>
-          <th><%= PrintJob.human_attribute_name :pages %></th>
-          <th><%= PrintJob.human_attribute_name :price_per_copy %></th>
-          <th><%= PrintJob.human_attribute_name :range %></th>
-          <th><%= PrintJob.human_attribute_name :two_sided %></th>
-          <th></th>
-        </tr>
-      </thead>
-      <tbody>
-        <% @print.print_jobs.each do |print_job| %>
+      <table class="table table-condensed">
+        <thead>
           <tr>
-            <td><%= print_job.document %></td>
-            <td><%= print_job.copies %></td>
-            <td><%= print_job.printed_copies %></td>
-            <td><%= print_job.pages %></td>
-            <td><%= number_to_currency print_job.price_per_copy %></td>
-            <td><%= print_job.range %></td>
-            <td><%= t(print_job.two_sided ? 'label.yes' : 'label.no') %></td>
-            <td><%= link_to_cancel_print_job(print_job) %></td>
+            <th><%= PrintJob.human_attribute_name 'document_id' %></th>
+            <th><%= PrintJob.human_attribute_name 'copies' %></th>
+            <th><%= PrintJob.human_attribute_name 'printed_copies' %></th>
+            <th><%= PrintJob.human_attribute_name 'pages' %></th>
+            <th><%= PrintJob.human_attribute_name 'price_per_copy' %></th>
+            <th><%= PrintJob.human_attribute_name 'range' %></th>
+            <th><%= PrintJob.human_attribute_name 'two_sided' %></th>
+            <th></th>
           </tr>
-        <% end %>
-      </tbody>
-    </table>
-  </section>
-<% end %>
-
-<% unless @print.article_lines.empty? %>
-  <section class="nested_items">
-    <h2><%= t 'view.prints.article_lines' %></h2>
-
-    <table class="summary">
-      <thead>
-        <tr>
-          <th><%= ArticleLine.human_attribute_name :article_id %></th>
-          <th><%= ArticleLine.human_attribute_name :units %></th>
-          <th><%= ArticleLine.human_attribute_name :unit_price %></th>
-        </tr>
-      </thead>
-      <tbody>
-        <% @print.article_lines.each do |article_line| %>
-          <tr>
-            <td><%= article_line.article %></td>
-            <td><%= article_line.units %></td>
-            <td><%= number_to_currency article_line.unit_price %></td>
-          </tr>
-        <% end %>
-      </tbody>
-    </table>
-  </section>
-<% end %>
-
-<% unless @print.payments.empty? %>
-  <section class="nested_items">
-    <h2><%= t 'view.prints.payment' %></h2>
-
-    <table class="summary">
-      <thead>
-        <tr>
-          <th><%= Payment.human_attribute_name :amount %></th>
-          <th><%= Payment.human_attribute_name :paid %></th>
-          <th><%= Payment.human_attribute_name :paid_with %></th>
-        </tr>
-      </thead>
-      <tbody>
-        <% @print.payments.each do |payment| %>
-          <tr>
-            <td><%= number_to_currency payment.amount %></td>
-            <td><%= number_to_currency payment.paid %></td>
-            <td><%= payment.paid_with_text %></td>
-          </tr>
-        <% end %>
-      </tbody>
-    </table>
-  </section>
-<% end %>
-
-<nav class="links">
-  <%= link_to raw("<b>#{t('view.prints.new')}</b>"), new_print_path %> |
-  <% if @print.pending_payment? %>
-    <%= link_to t('label.edit'), edit_print_path(@print) %> |
+        </thead>
+        <tbody>
+          <% @print.print_jobs.each do |print_job| %>
+            <tr>
+              <td><%= print_job.document %></td>
+              <td><%= print_job.copies %></td>
+              <td><%= print_job.printed_copies %></td>
+              <td><%= print_job.pages %></td>
+              <td><%= number_to_currency print_job.price_per_copy %></td>
+              <td><%= print_job.range %></td>
+              <td><%= t(print_job.two_sided ? 'label.yes' : 'label.no') %></td>
+              <td><%= link_to_cancel_print_job(print_job) %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </section>
   <% end %>
-  <%= link_to t('label.list'), prints_path %>
-</nav>
+
+  <% unless @print.article_lines.empty? %>
+    <section class="nested_items">
+      <h3><%= t 'view.prints.article_lines' %></h3>
+
+      <table class="table table-condensed">
+        <thead>
+          <tr>
+            <th><%= ArticleLine.human_attribute_name 'article_id' %></th>
+            <th><%= ArticleLine.human_attribute_name 'units' %></th>
+            <th><%= ArticleLine.human_attribute_name 'unit_price' %></th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @print.article_lines.each do |article_line| %>
+            <tr>
+              <td><%= article_line.article %></td>
+              <td><%= article_line.units %></td>
+              <td><%= number_to_currency article_line.unit_price %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </section>
+  <% end %>
+
+  <% unless @print.payments.empty? %>
+    <section class="nested_items">
+      <h3><%= t 'view.prints.payment' %></h3>
+
+      <table class="table table-condensed">
+        <thead>
+          <tr>
+            <th><%= Payment.human_attribute_name 'amount' %></th>
+            <th><%= Payment.human_attribute_name 'paid' %></th>
+            <th><%= Payment.human_attribute_name 'paid_with' %></th>
+          </tr>
+        </thead>
+        <tbody>
+          <% @print.payments.each do |payment| %>
+            <tr>
+              <td><%= number_to_currency payment.amount %></td>
+              <td><%= number_to_currency payment.paid %></td>
+              <td><%= payment.paid_with_text %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </section>
+  <% end %>
+</div>
+
+<div class="form-actions">
+  <%= link_to t('view.prints.new'), new_print_path, class: 'btn btn-primary' %>
+  <div class="pull-right">
+    <% if @print.pending_payment? %>
+      <%= link_to t('label.edit'), edit_print_path(@print) %> |
+    <% end %>
+    <%= link_to t('label.list'), prints_path %>
+  </div>
+</div>

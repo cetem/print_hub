@@ -46,7 +46,7 @@ SimpleForm.setup do |config|
   end
 
   config.wrappers :bootstrap, tag: 'div', class: 'control-group', error_class: 'error' do |b|
-    b.use :html5
+    #b.use :html5
     b.use :placeholder
     b.use :label
     b.wrapper tag: 'div', class: 'controls' do |ba|

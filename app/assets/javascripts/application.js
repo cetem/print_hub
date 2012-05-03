@@ -10,7 +10,6 @@
 //= require jquery-ui-timepicker-addon
 //= require datepicker/jquery.ui.datepicker-es
 //= require jquery.fancybox
-//= require jquery.filestyle
 //= require twitter/bootstrap
 //= require common
 //= require autocomplete

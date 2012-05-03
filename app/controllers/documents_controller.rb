@@ -8,6 +8,7 @@ class DocumentsController < ApplicationController
   # GET /documents.xml
   def index
     @title = t('view.documents.index_title')
+    @searchable = true
     @tag = Tag.find(params[:tag_id]) if params[:tag_id]
     @documents = @tag ? @tag.documents : Document.scoped
     

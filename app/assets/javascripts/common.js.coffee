@@ -104,10 +104,6 @@ jQuery ($)->
     ajaxStart: `function() { State.ajaxInProgress = true }`
     ajaxStop: `function() { State.ajaxInProgress = false }`
   
-  $(document).on 'click', 'input.file', ->
-    $(this).parents('div.field:first').find('input[type="file"]').
-    removeClass('file').click()
-  
   $('a.fancybox').fancybox(type: 'image')
   
   $(document).on 'click', 'a.show', (event)->
@@ -116,12 +112,6 @@ jQuery ($)->
     
     event.preventDefault()
     event.stopPropagation()
-  
-  $('input[type="file"]').filestyle
-    image: '/assets/choose-file.png',
-    imageheight : 16,
-    imagewidth : 16,
-    width : 360
   
   $('form').submit ->
     $(this).find('input[type="submit"], input[name="utf8"]')

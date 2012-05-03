@@ -10,6 +10,9 @@
   <% end %>
   
   <div class="form-inputs">
+    <%= f.error_notification %>
+    <%= @print.errors.full_messages.join('; ') %>
+    
     <div class="row-fluid">
       <div class="span6">
         <%= print_destinations_field(f) %>
@@ -24,6 +27,7 @@
         <%= f.input :auto_customer_name, label: false, input_html: { 
           value: @print.customer, class: field_classes.join(' '),
           data: {
+            'autocomplete-id-target' => '#print_customer_id',
             'autocomplete-url' => autocomplete_for_customer_name_prints_path(format: :json)
           }
         } %>
@@ -156,13 +160,13 @@
             <%= p_f.input :amount, label: false, input_html: { 
               value: '%.3f' % p_f.object.amount,
               id: "payment_#{p_f.object.paid_with}_amount",
-              max: 999999999999999, size: nil, readonly: true } %>
+              maxlength: 15, size: nil, readonly: true } %>
           </div>
           <div class="span3">
             <%= p_f.input :paid, label: false, input_html: {
               value: '%.3f' % p_f.object.paid,
               id: "payment_#{p_f.object.paid_with}_paid",
-              max: 999999999999999, size: nil, readonly: p_f.object.credit? } %>
+              maxlength: 15, size: nil, readonly: p_f.object.credit? } %>
           </div>
           <div class="span3">
             <% if p_f.object.credit? %>

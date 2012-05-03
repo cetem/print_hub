@@ -1,0 +1,3 @@
+<%= form_for :search, method: :get, html: {class: 'navbar-search pull-left'} do |f| %>
+  <%= text_field_tag :q, params[:q], class: 'search-query span2', placeholder: t('label.search') %>
+<% end %>

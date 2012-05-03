@@ -8,17 +8,23 @@
       <%= f.input :auto_document_name, label: false, input_html: {
         id: "auto_document_#{id}", class: field_classes.join(' '),
         value: f.object.document.try(:to_s), disabled: disabled,
-        'data-autocomplete-url' => autocomplete_for_document_name_prints_path(format: :json) } %>
-      <%= f.input :document_id, as: :hidden, input_html: { class: :autocomplete_id } %>
+        data: {
+          'autocomplete-id-target' => "#auto_document_id_#{id}",
+          'autocomplete-url' => autocomplete_for_document_name_prints_path(format: :json)
+        }
+      } %>
+      <%= f.input :document_id, as: :hidden, input_html: {
+        class: 'autocomplete_id', id: "auto_document_id_#{id}"
+      } %>
     </div>
     <div class="span1">
       <%= f.input :copies, label: false, 
-        input_html: { max: 99999, class: 'price_modifier page_modifier span11',
+        input_html: { maxlength: 5, class: 'price_modifier page_modifier span11',
         autocomplete: 'off', disabled: disabled } %>
     </div>
     <div class="span1">
       <%= f.input :pages, label: false,
-        input_html: { max: 99999, class: 'price_modifier page_modifier span11',
+        input_html: { maxlength: 5, class: 'price_modifier page_modifier span11',
         autocomplete: 'off', disabled: disabled || !f.object.document.blank? } %>
     </div>
     <div class="span1">

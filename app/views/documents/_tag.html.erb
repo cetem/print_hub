@@ -1,24 +1,25 @@
 <% id = "tag_#{tag.try(:id) || 'NEW_RECORD'}" %>
-<div class="tag nested_item" id="<%= id %>" <%= raw 'style="display: none;"' if is_dynamic %>>
-  <div>
-    <div class="nested_item_field">
-      <% unless tag %>
-        <% field_classes = [:autocomplete_field] %>
-        <% field_classes << 'error' unless f.object.errors[:tag_id].blank? %>
-        <%= f.input :auto_tag_name, label: false,
-          input_html: { class: field_classes.join(' '),
-          'data-autocomplete-url' => autocomplete_for_tag_name_documents_path,
-          id: "autocomplete_tag_#{id}", value: nil } %>
-      <% else %>
-        <%= tag %>
-      <% end %>
-      <%= hidden_field_tag 'document[tag_ids][]', tag.try(:id),
-        id: "new_tag_#{id}", class: :autocomplete_id %>
-    </div>
-    <div class="nested_item_actions">
-      <%= link_to_remove_nested_item(nil, 'tag') %>
-    </div>
-    <div class="dynamic_details"></div>
+<div class="tag row-fluid" id="<%= id %>" <%= raw 'style="display: none;"' if is_dynamic %>>
+  <div class="span6">
+    <% if tag %>
+      <%= tag %>
+    <% else %>
+      <% field_classes = ['autocomplete_field', 'span11'] %>
+      <% field_classes << 'error' unless f.object.errors[:tag_id].blank? %>
+      <%= f.input :auto_tag_name, label: false,
+        input_html: { class: field_classes.join(' '),
+        id: "autocomplete_tag_#{id}", value: nil,
+        data: {
+          'autocomplete-id-target' => "#new_tag_#{id}",
+          'autocomplete-url' => autocomplete_for_tag_name_documents_path(format: :json),
+        }
+      } %>
+    <% end %>
+    <%= hidden_field_tag 'document[tag_ids][]', tag.try(:id),
+      id: "new_tag_#{id}", class: :autocomplete_id %>
+  </div>
+  <div class="span2">
+    <%= link_to_remove_nested_item(nil, 'tag') %>
   </div>
 </div>
 <% if is_dynamic %>

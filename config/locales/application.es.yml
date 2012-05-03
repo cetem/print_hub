@@ -1,5 +1,5 @@
 'es':
-  app_name: 'Central de Impresión'
+  app_name: 'Impresiones'
   
   attributes:
     created_at: 'Creación'
@@ -370,7 +370,8 @@
       non_existent: 'Archivo inexistente'
       add_tag: 'Agregar etiqueta'
       has_related_print_jobs: 'El documento no puede ser eliminado, tiene impresiones relacionadas'
-      documents_with_tag: 'Documentos con la etiqueta %{tag}'
+      documents_with_tag:
+        html: 'Documentos con la etiqueta <span class="label label-info">%{tag}</span>'
       clear_documents_for_printing: 'Desmarcar todos los documentos a imprimir'
       processing_document: 'Procesando documento, espere...'
       download: 'Descargar versión actual'
@@ -413,8 +414,10 @@
         completed: 'Impreso'
         cancelled: 'Cancelado'
       type:
-        print: 'Pedidos para *imprimir*'
-        all: 'Pedidos'
+        print:
+          html: 'Pedidos para <strong>imprimir</strong>'
+        all:
+          html: 'Pedidos'
     password_resets:
       new_title: 'Restaurar contraseña'
       edit_title: 'Modificar contraseña'

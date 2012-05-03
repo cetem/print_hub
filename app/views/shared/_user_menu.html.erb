@@ -21,7 +21,7 @@
           <%= content_tag(:li, link_to(orders_text, orders_path),
             class: ('active' if controller_name == 'orders')) %>
         </ul>
-        
+        <%= render partial: 'shared/nav_search' if @searchable %>
         <ul class="nav pull-right">
           <li><a><%= current_user.username %></a></li>
           <li>
