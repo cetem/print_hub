@@ -1,7 +1,7 @@
 <% if current_customer && @orders.empty? %>
   <%= render 'help/empty_orders' %>
 <% else %>
-  <table class="table">
+  <table class="table table-striped">
     <%= show_orders_table_caption %>
     <thead>
       <tr>
@@ -15,7 +15,7 @@
 
     <tbody>
       <% @orders.each do |order| %>
-        <tr class="<%= cycle('even', 'odd') %>">
+        <tr>
           <td><%= link_to order.id, custom_order_path(order) %></td>
           <td class="expendable"><%= order.customer %></td>
           <td><%= l order.scheduled_at, format: :short if order.scheduled_at %></td>
@@ -26,18 +26,19 @@
     </tbody>
   </table>
 
-  <nav class="links">
-    <%= pagination_links(@orders) %>
+  <%= pagination_links(@orders) %>
+
+  <nav class="form-actions">
     <% unless current_customer %>
       <% if order_type == 'print' %>
         <%= link_to(
           textilize_without_paragraph(t('view.orders.show_all')),
-          orders_path(type: 'all')
+          orders_path(type: 'all'), class: 'btn btn-primary'
         ) %>
       <% else %>
         <%= link_to(
           textilize_without_paragraph(t('view.orders.show_print')),
-          orders_path(type: 'print')
+          orders_path(type: 'print'), class: 'btn btn-primary'
         ) %>
       <% end %>
     <% end %>

@@ -6,5 +6,5 @@
   url: update_feedback_path(@feedback), remote: true do |f| %>
   
   <%= f.input :comments, label: false %>
-  <%= f.button :submit, t('view.feedbacks.submit') %> 
+  <%= f.button :submit, t('view.feedbacks.submit'), class: 'btn-primary' %> 
 <% end %>

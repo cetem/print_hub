@@ -1,6 +1,6 @@
 <h2 class="title"><%= @setting.name %>: <strong><%= @setting.value %></strong></h2>
 
-<nav class="links">
+<nav class="form-actions">
   <%= link_to t('label.edit'), edit_setting_path(@setting) %> |
   <%= link_to t('label.list'), settings_path %>
 </nav>

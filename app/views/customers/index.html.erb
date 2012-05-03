@@ -10,7 +10,7 @@
 
   <tbody>
     <% @customers.each do |customer| %>
-      <tr class="<%= (customer.enable ? '' : ' disabled') %>">
+      <tr class="<%= 'disabled' unless customer.enable %>">
         <td><%= customer.to_s %> (<%= show_link_to_customer_prints(customer) %>)</td>
         <td><%= customer.identification %></td>
         <td><%= number_to_currency(customer.free_monthly_bonus || 0) %></td>

@@ -36,7 +36,7 @@
       <%= f.input :range, label: false,
         input_html: { class: 'price_modifier page_modifier span11',
         autocomplete: 'off',  'data-range-pages' => f.object.range_pages,
-        disabled: disabled || (!f.object.new_record? && f.object.document.blank?)} %>
+        disabled: disabled || (f.object.persisted? && f.object.document.blank?)} %>
     </div>
     <div class="span1">
       <%= f.input :two_sided, label: false,

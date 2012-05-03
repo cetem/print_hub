@@ -1,5 +1,5 @@
-<%= render 'form' %>
-
-<nav class="links">
+<%= content_for :form_actions do %>
   <%= link_to t('label.list'), users_path %>
-</nav>
+<% end %>
+
+<%= render 'form' %>

@@ -5,13 +5,14 @@
 <% if @user_prints_count.blank? %>
   <p><%= t('view.stats.empty_result') %></p>
 <% else %>
-  <div class="actions">
-    <%= link_to t('view.stats.show_grid'), '#', class: 'show_grid' %>
-    <%= link_to t('view.stats.show_graph'), '#', class: 'show_graph' %> |
-    <%= link_to t('view.stats.download_csv'), print_stats_path(params.merge(format: :csv)) %>
+  <div class="form-actions">
+    <%= link_to t('view.stats.show_grid'), '#', class: 'show_grid btn btn-info' %>
+    <%= link_to t('view.stats.show_graph'), '#', class: 'show_graph btn btn-info' %> |
+    <%= link_to t('view.stats.download_csv'),
+      print_stats_path(params.merge(format: :csv)), class: 'btn btn-success' %>
   </div>
   <div id="graph"></div>
-  <table class="list" data-graph-grid="true">
+  <table class="table" data-graph-grid="true">
     <thead>
       <tr>
         <th><%= Print.human_attribute_name 'user' %></th>
@@ -32,7 +33,9 @@
     <h3><%= show_stats_total_prints(@user_prints_count.sum(&:second)) %></h3>
   </section>
 <% end %>
-<nav class="links">
-  <%= link_to t('view.stats.users_title'), user_stats_path %> |
-  <%= link_to t('view.stats.printers_title'), printer_stats_path %>
+<nav class="form-actions">
+  <%= link_to t('view.stats.users_title'),
+    user_stats_path, class: 'btn btn-primary' %> |
+  <%= link_to t('view.stats.printers_title'), 
+    printer_stats_path, class: 'btn btn-primary' %>
 </nav>

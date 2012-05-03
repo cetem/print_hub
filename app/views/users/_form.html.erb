@@ -1,7 +1,4 @@
-
-<%= simple_form_for @user, html: { multipart: true },
-  defaults: { input_html: { class: 'span4' } } do |f| %>
-  <%= show_error_messages(@user) %>
+<%= simple_form_for @user, defaults: { input_html: { class: 'span11' } } do |f| %>
   <div class="form-inputs">
     <%= f.input :name, input_html: { autofocus: true } %>
     <%= f.input :last_name %>
@@ -17,7 +14,8 @@
     <%= f.input :avatar %>
   </div>
   <div class="form-actions">
+    <div class="pull-right"><%= yield :form_actions %></div>
     <%= f.input :lock_version, as: :hidden %>
-    <%= f.button :submit %>
+    <%= f.button :submit, class: 'btn-primary' %>
   </div>
 <% end %>

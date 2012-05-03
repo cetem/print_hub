@@ -1,17 +1,15 @@
 <%= simple_form_for @setting do |f| %>
-  <%= show_error_messages(@setting) %>
+  <div class="form-inputs">
+    <h2 class="title"><%= @setting.name %></h2>
 
-  <h2 class="title"><%= @setting.name %></h2>
-  
-  <%= f.input :value, as: :string, input_html: { value: @setting.value, autofocus: true } %>
-  <%= f.input :lock_version, as: :hidden %>
-  
-  <div class="actions">
-    <%= f.button :submit %>
+    <%= f.input :value, input_html: { value: @setting.value, autofocus: true } %>
+    <%= f.input :lock_version, as: :hidden %>
+  </div>
+  <div class="form-actions">
+    <div class="pull-right">
+      <%= link_to t('label.show'), @setting %> |
+      <%= link_to t('label.list'), settings_path %>
+    </div>
+    <%= f.button :submit, class: 'btn-primary' %>
   </div>
 <% end %>
-
-<nav class="links">
-  <%= link_to t('label.show'), @setting %> |
-  <%= link_to t('label.list'), settings_path %>
-</nav>

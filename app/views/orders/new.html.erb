@@ -2,12 +2,11 @@
   <%= render 'help/empty_order' %>
 <% else %>
   <section id="check_order">
+    <%= content_for :form_actions do %>
+      <%= link_to t('label.back'), catalog_path %>
+    <% end %>
     <%= render 'form' %>
   </section>
 
-  <nav class="links">
-    <%= link_to t('label.back'), catalog_path %>
-  </nav>
-  
   <%= render 'printed_footer' %>
 <% end %>

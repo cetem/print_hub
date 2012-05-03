@@ -117,7 +117,7 @@
       <% @print.article_lines.build if @print.article_lines.empty? %>
       <%= f.simple_fields_for :article_lines do |pj_f| %>
         <%= render partial: 'article_line', locals: {
-          f: pj_f, is_dynamic: false, disabled: !@print.new_record?
+          f: pj_f, is_dynamic: false, disabled: @print.persisted?
         } %>
       <% end %>
     </div>

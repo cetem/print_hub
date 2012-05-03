@@ -8,10 +8,16 @@
 
   <% url = password_resets_path %>
   <%= simple_form_for :customer, url: url, html: { method: :post } do |f| %>
-    <%= f.input :email, label: Customer.human_attribute_name('email'),
-    input_html: {name: 'email', autofocus: true } %>
-    <%= f.button :submit, t('view.password_resets.request_reset') %>
-    <%= t('label.or') %>
-    <%= link_to t('label.back'), new_customer_session_path %>
+    <div class="form-inputs">
+      <%= f.input :email, label: Customer.human_attribute_name('email'),
+      input_html: {name: 'email', autofocus: true }, required: false %>
+    </div>
+    <div class="form-actions">
+      <%= f.button :submit, t('view.password_resets.request_reset'), 
+        class: 'btn-primary' %>
+      <div class="pull-right">
+        <%= link_to t('label.back'), new_customer_session_path %>
+      </div>
+    </div>
   <% end %>
 </section>

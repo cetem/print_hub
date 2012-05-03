@@ -164,6 +164,7 @@ module ApplicationHelper
     
     options['value'] = l(value, format: time ? :minimal : :default) if value
     options['data-time'] = true if time
+    options[:label] = false
     
     form.input attribute, options
   end

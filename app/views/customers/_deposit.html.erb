@@ -4,7 +4,7 @@
   <div class="span2">
     <%= f.input :amount, label: false,
       input_html: { value: '%.3f' % f.object.amount, maxlength: 15,
-      autocomplete: :off, disabled: !f.object.new_record?, class: 'span11',
+      autocomplete: :off, disabled: f.object.persisted?, class: 'span11',
       id: "deposit_amount_#{id}" } %>
   </div>
   <div class="span2">

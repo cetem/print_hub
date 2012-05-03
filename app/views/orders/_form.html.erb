@@ -1,45 +1,55 @@
-<%= simple_form_for @order  do |f| %>
-  <%= show_error_messages(@order) %>
+<%= simple_form_for @order, defaults: { input_html: { class: 'span11' } } do |f| %>
+  <div class="form-inputs">
+    <%= f.input :scheduled_at, as: :datetime_picker, required: false,
+      input_html: { disabled: @order.persisted?, class: 'span4' } %>
 
-  <%= f.input :scheduled_at, input_html: { disabled: !@order.new_record? } %>
-  
-  <section class="nested_items">
     <h2><%= t 'view.orders.order_lines' %></h2>
-    
-    <div id="order_lines_headers" class="headers">
-      <h3><%= OrderLine.human_attribute_name :document_id %></h3>
-      <h3><%= OrderLine.human_attribute_name :copies %></h3>
-      <h3 class="expendable"><%= Document.human_attribute_name :pages %></h3>
-      <h3 class="expendable"><%= OrderLine.human_attribute_name :price_per_copy %></h3>
-      <h3><%= OrderLine.human_attribute_name :two_sided %></h3>
-      <br class="break" />
+
+    <div id="order_lines_headers" class="row-fluid">
+      <div class="span5">
+        <h3><%= OrderLine.human_attribute_name :document_id %></h3>
+      </div>
+      <div class="span1">
+        <h3><%= OrderLine.human_attribute_name :copies %></h3>
+      </div>
+      <div class="span1">
+        <h3 class="expendable"><%= Document.human_attribute_name :pages %></h3>
+      </div>
+      <div class="span2">
+        <h3 class="expendable"><%= OrderLine.human_attribute_name :price_per_copy %></h3>
+      </div>
+      <div class="span2">
+        <h3><%= OrderLine.human_attribute_name :two_sided %></h3>
+      </div>
     </div>
-    
-    <div id="order_lines" class="items">
+
+    <div id="order_lines">
       <%= f.simple_fields_for :order_lines do |ol_f| %>
-        <%= render 'order_line', f: ol_f, disabled: !@order.new_record? %>
+        <%= render 'order_line', f: ol_f, disabled: @order.persisted? %>
       <% end %>
     </div>
-  </section>
 
-  <%= render 'total', order: @order %>
-
-  <div class="field">
-    <%= link_to t('view.orders.notes_link'), '#', 'class' => 'show',
-      'data-target' => '#notes' %>
-    <div id="notes" style="display: none;">
-      <br />
-      <%= f.input :notes, input_html: { autofocus: true } %>
+    <%= render 'total', order: @order %>
+    <div class="row-fluid">
+      <div class="span6">
+        <%= link_to t('view.orders.notes_link'), '#', 'class' => 'show',
+          'data-target' => '#notes' %>
+        <div id="notes" style="display: none;">
+          <br />
+          <%= f.input :notes, input_html: { autofocus: true, rows: 4 } %>
+        </div>
+      </div>
     </div>
   </div>
-  
-  <div class="actions">
+  <div class="form-actions">
+    <div class="pull-right"><%= yield :form_actions %></div>
     <%= f.input :lock_version, as: :hidden %>
     <%= hidden_field_tag :total_pages, @order.total_pages, id: 'total_pages',
       'data-price-per-one-sided' => Setting.price_per_one_sided_copy,
       'data-price-per-two-sided' => Setting.price_per_two_sided_copy %>
-    <%= f.button :submit %>
+    <%= f.button :submit, class: 'btn-primary' %>
   </div>
+  
 <% end %>
 <script type="text/javascript">
   Order.threshold = <%= CREDIT_THRESHOLD %>;

@@ -1,44 +1,46 @@
-<%= show_avatar(@user, :medium) %>
+<div class="readonly_data">
+  <%= show_avatar(@user, :medium) %>
 
-<h2 class="title"><%= @user %></h2>
+  <h2 class="title"><%= @user %></h2>
 
-<p>
-  <%= mail_to @user.email %>
-</p>
+  <p>
+    <%= mail_to @user.email %>
+  </p>
 
-<br />
+  <br />
 
-<p>
-  <b><%= User.human_attribute_name :username %></b>:
-  <%= @user.username %>
-</p>
+  <p>
+    <b><%= User.human_attribute_name :username %></b>:
+    <%= @user.username %>
+  </p>
 
-<p>
-  <b><%= User.human_attribute_name :language %></b>:
-  <%= t(@user.language, :scope => :lang) %>
-</p>
+  <p>
+    <b><%= User.human_attribute_name :language %></b>:
+    <%= t(@user.language, :scope => :lang) %>
+  </p>
 
-<p>
-  <b><%= User.human_attribute_name :default_printer %></b>:
-  <%= @user.default_printer %>
-</p>
+  <p>
+    <b><%= User.human_attribute_name :default_printer %></b>:
+    <%= @user.default_printer %>
+  </p>
 
-<p>
-  <b><%= User.human_attribute_name :lines_per_page %></b>:
-  <%= @user.lines_per_page %>
-</p>
+  <p>
+    <b><%= User.human_attribute_name :lines_per_page %></b>:
+    <%= @user.lines_per_page %>
+  </p>
 
-<p>
-  <b><%= User.human_attribute_name :admin %></b>:
-  <%= t(@user.admin ? :yes : :no, :scope => [:label]) %>
-</p>
+  <p>
+    <b><%= User.human_attribute_name :admin %></b>:
+    <%= t(@user.admin ? :yes : :no, :scope => [:label]) %>
+  </p>
 
-<p>
-  <b><%= User.human_attribute_name :enable %></b>:
-  <%= t(@user.enable ? :yes : :no, :scope => [:label]) %>
-</p>
+  <p>
+    <b><%= User.human_attribute_name :enable %></b>:
+    <%= t(@user.enable ? :yes : :no, :scope => [:label]) %>
+  </p>
+</div>
 
-<nav class="links">
+<nav class="form-actions">
   <%= link_to t('label.edit'), edit_user_path(@user) %> |
   <%= link_to t('label.list'), users_path %>
 </nav>

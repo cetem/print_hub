@@ -1,4 +1,4 @@
-<table class="table">
+<table class="table table-striped">
   <thead>
     <tr>
       <th></th>
@@ -13,7 +13,7 @@
 
   <tbody>
     <% @users.each do |user| %>
-      <tr class="<%= cycle('even', 'odd') + (user.enable ? '' : ' disabled') %>">
+      <tr class="<%= 'disabled' unless user.enable %>">
         <td><%= show_avatar user, :mini %></td>
         <td><%= [user.name, user.last_name].join(' ') %></td>
         <td><%= user.username %></td>
@@ -27,7 +27,8 @@
   </tbody>
 </table>
 
-<nav class="links">
-  <%= pagination_links(@users) %>
-  <%= link_to t('label.new'), new_user_path %>
+<%= pagination_links(@users) %>
+
+<nav class="form-actions">
+  <%= link_to t('label.new'), new_user_path, class: 'btn btn-primary' %>
 </nav>

@@ -4,7 +4,7 @@
 <%= render partial: 'shared/date_filter', locals: {
   from_date: @from_date, to_date: @to_date
 } %>
-<table class="table">
+<table class="table table-striped">
   <thead>
     <tr>
       <th><%= Payment.human_attribute_name 'amount' %></th>
@@ -34,12 +34,12 @@
   </tbody>
 </table>
 
-<p class="note">
+<p class="note readonly_data">
   <%= show_payments_resume(deposits_amount) %>
 </p>
 
 <% unless payments_paid == 0 %>
-  <section class="details">
+  <section class="details readonly_data">
     <h3>(*) <%= t('view.payments.payment_details') %></h3>
     <ul class="raw">
       <% @payments.group(:paid_with).sum('paid').each do |paid_with, payments_amount| %>

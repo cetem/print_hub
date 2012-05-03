@@ -1,9 +1,9 @@
-<footer id="order_meta" class="not_printable">
+<footer id="order_meta" class="not_printable readonly_data">
   <% if @order.pending? %>
     <% if @order.new_record? %>
       <div id="printed" <%= raw 'style="display: none"' unless @order.print_out %>>
         <p>
-          Presioná <strong>Guardar Pedido</strong> y tus documentos estarán
+          Presioná <strong>Crear Pedido</strong> y tus documentos estarán
           <strong>impresos</strong> y listo para la fecha programada
         </p>
       </div>

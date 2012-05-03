@@ -1,8 +1,7 @@
 <% url = @customer.new_record? ?
   customers_path : update_profile_customer_path(@customer)
 %>
-<%= simple_form_for @customer, url: url,
-  defaults: { input_html: { class: 'span11' } } do |f| %>
+<%= simple_form_for @customer, url: url, defaults: { input_html: { class: 'span11' } } do |f| %>
   <div class="form-inputs">
     <div class="row-fluid">
       <div class="span6">
