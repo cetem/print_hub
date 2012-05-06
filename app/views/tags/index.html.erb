@@ -6,7 +6,7 @@
   </nav>
 <% end %>
 
-<table class="table">
+<table class="table table-striped">
   <thead>
     <tr>
       <th><%= Tag.human_attribute_name :name %></th>
@@ -16,8 +16,7 @@
 
   <tbody>
     <% @tags.each do |tag| %>
-      <% classes = [cycle('even', 'odd'), tag.private ? 'private' : 'public'] %>
-      <tr class="<%= classes.join(' ') %>">
+      <tr class="<%= tag.private ? 'private' : 'public' %>">
         <td><%= link_to tag.name, tags_path(parent: tag) %> (<%= show_link_to_tag_documents(tag) %>)</td>
         <td><%= link_to_show tag %></td>
         <% if current_user.admin? %>
