@@ -31,12 +31,12 @@
 
   <p>
     <b><%= User.human_attribute_name :admin %></b>:
-    <%= t(@user.admin ? :yes : :no, :scope => [:label]) %>
+    <%= t(@user.admin ? 'label.yes' : 'label.no') %>
   </p>
 
   <p>
     <b><%= User.human_attribute_name :enable %></b>:
-    <%= t(@user.enable ? :yes : :no, :scope => [:label]) %>
+    <%= t(@user.enable ? 'label.yes' : 'label.no') %>
   </p>
 </div>
 

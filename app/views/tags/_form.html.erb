@@ -1,8 +1,12 @@
 <%= simple_form_for @tag do |f| %>
-  <div class="form-inputs row-fluid span6">
-    <%= f.input :name, required: false, input_html: { autofocus: true } %>
-    <%= f.input :private, as: :boolean %>
-    <%= f.input :parent_id, as: :hidden %>
+  <div class="form-inputs">
+    <div class="row-fluid">
+      <div class="span6">
+        <%= f.input :name, required: false, input_html: { autofocus: true } %>
+        <%= f.input :private, as: :boolean %>
+        <%= f.input :parent_id, as: :hidden %>
+      </div>
+    </div>
   </div>
   <div class='form-actions'>
     <div class="pull-right"><%= yield :form_actions %></div>

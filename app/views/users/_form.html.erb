@@ -1,7 +1,7 @@
-<%= simple_form_for @user do |f| %>
+<%= simple_form_for @user, defaults: { input_html: { class: 'span8' } } do |f| %>
   <div class="form-inputs">
     <div class="row-fluid">
-      <div class="span6">
+      <div class="span8">
         <%= f.input :name, input_html: { autofocus: true } %>
         <%= f.input :last_name %>
         <%= user_language_field(f) %>
@@ -15,7 +15,11 @@
         <%= f.input :enable, input_html: { class: ''} %>
         <%= f.input :avatar %>
       </div>
-      <div class="span6 visible-desktop"><%= yield :show_avatar %></div>
+      <div class="span4 hidden-phone">
+        <div class="pull-right">
+          <%= yield :show_avatar %>
+        </div>
+      </div>
     </div>
   </div>
   <div class="form-actions">

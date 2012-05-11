@@ -1,50 +1,52 @@
 <% deposits_amount = @deposits.sum('amount') %>
 <% payments_amount = @payments.sum('amount') %>
 <% payments_paid = @payments.sum('paid') %>
+<div class="row-fluid">
 <%= render partial: 'shared/date_filter', locals: {
   from_date: @from_date, to_date: @to_date
 } %>
-<table class="table table-striped">
-  <thead>
-    <tr>
-      <th><%= Payment.human_attribute_name 'amount' %></th>
-      <th><%= Payment.human_attribute_name 'paid' %></th>
-    </tr>
-  </thead>
-
-  <tbody>
-    <tr>
-      <td><%= number_to_currency(payments_amount) %></td>
-      <td>
-        <%= number_to_currency(payments_paid) %><%= '(*)' unless payments_paid == 0 %>
-      </td>
-    </tr>
-    <% if deposits_amount > 0 %>
+  <table class="table table-striped">
+    <thead>
       <tr>
-        <td></td>
-        <td><%= number_to_currency(deposits_amount) %>(**)</td>
+        <th><%= Payment.human_attribute_name 'amount' %></th>
+        <th><%= Payment.human_attribute_name 'paid' %></th>
       </tr>
-    <% end %>
-    <tr>
-      <td><strong><%= t('view.payments.total') %></strong></td>
-      <td>
-        <strong><%= number_to_currency payments_paid + deposits_amount %></strong>
-      </td>
-    </tr>
-  </tbody>
-</table>
+    </thead>
 
-<p class="note readonly_data">
-  <%= show_payments_resume(deposits_amount) %>
-</p>
-
-<% unless payments_paid == 0 %>
-  <section class="details readonly_data">
-    <h3>(*) <%= t('view.payments.payment_details') %></h3>
-    <ul class="raw">
-      <% @payments.group(:paid_with).sum('paid').each do |paid_with, payments_amount| %>
-        <li><%= "#{show_paid_with_text(paid_with)}: #{number_to_currency(payments_amount)}" %></li>
+    <tbody>
+      <tr>
+        <td><%= number_to_currency(payments_amount) %></td>
+        <td>
+          <%= number_to_currency(payments_paid) %><%= '(*)' unless payments_paid == 0 %>
+        </td>
+      </tr>
+      <% if deposits_amount > 0 %>
+        <tr>
+          <td></td>
+          <td><%= number_to_currency(deposits_amount) %>(**)</td>
+        </tr>
       <% end %>
-    </ul>
-  </section>
-<% end %>
+      <tr>
+        <td><strong><%= t('view.payments.total') %></strong></td>
+        <td>
+          <strong><%= number_to_currency payments_paid + deposits_amount %></strong>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+
+  <p class="note readonly_data">
+    <%= show_payments_resume(deposits_amount) %>
+  </p>
+
+  <% unless payments_paid == 0 %>
+    <section class="details readonly_data">
+      <h3>(*) <%= t('view.payments.payment_details') %></h3>
+      <ul class="raw">
+        <% @payments.group(:paid_with).sum('paid').each do |paid_with, payments_amount| %>
+          <li><%= "#{show_paid_with_text(paid_with)}: #{number_to_currency(payments_amount)}" %></li>
+        <% end %>
+      </ul>
+    </section>
+  <% end %>
+</div>

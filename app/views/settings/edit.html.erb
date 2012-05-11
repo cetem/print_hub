@@ -2,7 +2,9 @@
   <div class="form-inputs">
     <h2 class="title"><%= @setting.name %></h2>
 
-    <%= f.input :value, input_html: { value: @setting.value, autofocus: true } %>
+    <%= f.input :value, required: false, input_html: {
+      value: @setting.value, autofocus: true, rows: 3 
+    } %>
     <%= f.input :lock_version, as: :hidden %>
   </div>
   <div class="form-actions">

@@ -1,4 +1,4 @@
-<table class="table">
+<table class="table table-striped">
   <thead>
     <tr>
       <th><%= Setting.human_attribute_name :name %></th>
@@ -9,7 +9,7 @@
 
   <tbody>
     <% @settings.each do |setting| %>
-      <tr class="<%= cycle('even', 'odd') %>">
+      <tr>
         <td><%= setting.name %></td>
         <td><%= setting.value %></td>
         <td><%= link_to_show setting %></td>
@@ -19,6 +19,4 @@
   </tbody>
 </table>
 
-<nav class="links">
-  <%= pagination_links(@settings) %>
-</nav>
+<%= pagination_links(@settings) %>
