@@ -49,93 +49,103 @@
       </div>
     </div>
     
-    <div class="page-header">
-      <h3><%= t 'view.prints.print_jobs' %></h3>
-    </div>
-
-    <div class="row-fluid">
-      <div class="span5">
-        <h4><%= PrintJob.human_attribute_name 'document_id' %></h4>
-      </div>
-      <div class="span1">
-        <h4><%= PrintJob.human_attribute_name 'copies' %></h4>
-      </div>
-      <div class="span1">
-        <h4><%= PrintJob.human_attribute_name 'pages' %></h4>
-      </div>
-      <div class="span1">  
-        <h4><%= PrintJob.human_attribute_name 'price_per_copy' %></h4>
-      </div>
-      <div class="span1">
-        <h4><%= PrintJob.human_attribute_name 'range' %></h4>
-      </div>
-      <div class="span1">
-        <h4><%= PrintJob.human_attribute_name 'two_sided' %></h4>
-      </div>
-    </div>
-
-    <div id="print_jobs">
-      <% @print.print_jobs.build if @print.print_jobs.empty? %>
-      <%= f.simple_fields_for :print_jobs do |pj_f| %>
-        <%= render partial: 'print_job', locals: {
-          f: pj_f, is_dynamic: false, disabled: @print.persisted?
-        } %>
-      <% end %>
-    </div>
-
-    <% if @print.new_record? %>
-      <div>
-        <%= link_to t('view.prints.add_print_job'), '#',
-          id: 'add_print_job_link', class: 'btn btn-mini',
-          title: t('view.prints.add_print_job_title'),
-          data: {
-            template: 'print_job',
-            container: '#print_jobs',
-            event: 'addNestedItem'
-          }
-        %>
-      </div>
-    <% end %>
+    <ul class="nav nav-tabs">
+      <li class="active">
+        <%= link_to(t('view.prints.print_jobs'),
+          '#print_jobs_container', data: { toggle: 'tab' }
+        ) %>
+      </li>
+      <li>
+        <%= link_to(t('view.prints.article_lines'),
+          '#articles_container', data: { toggle: 'tab' }
+        ) %>
+      </li>
+    </ul>
     
-    <div class="page-header">
-      <h3><%= t 'view.prints.article_lines' %></h3>
-    </div>
+    <div class="tab-content">
+      <div id="print_jobs_container" class="tab-pane active">
+        <div class="row-fluid">
+          <div class="span5">
+            <h4><%= PrintJob.human_attribute_name 'document_id' %></h4>
+          </div>
+          <div class="span1">
+            <h4><%= PrintJob.human_attribute_name 'copies' %></h4>
+          </div>
+          <div class="span1">
+            <h4><%= PrintJob.human_attribute_name 'pages' %></h4>
+          </div>
+          <div class="span1">  
+            <h4><%= PrintJob.human_attribute_name 'price_per_copy' %></h4>
+          </div>
+          <div class="span1">
+            <h4><%= PrintJob.human_attribute_name 'range' %></h4>
+          </div>
+          <div class="span1">
+            <h4><%= PrintJob.human_attribute_name 'two_sided' %></h4>
+          </div>
+        </div>
 
-    <div class="row-fluid">
-      <div class="span5">
-        <h4><%= ArticleLine.human_attribute_name 'article_id' %></h4>
-      </div>
-      <div class="span1">
-        <h4><%= ArticleLine.human_attribute_name 'units' %></h4>
-      </div>
-      <div class="span1">
-        <h4><%= ArticleLine.human_attribute_name 'unit_price' %></h4>
-      </div>
-    </div>
+        <div id="print_jobs">
+          <% @print.print_jobs.build if @print.print_jobs.empty? %>
+          <%= f.simple_fields_for :print_jobs do |pj_f| %>
+            <%= render partial: 'print_job', locals: {
+              f: pj_f, is_dynamic: false, disabled: @print.persisted?
+            } %>
+          <% end %>
+        </div>
 
-    <div id="article_lines">
-      <% @print.article_lines.build if @print.article_lines.empty? %>
-      <%= f.simple_fields_for :article_lines do |pj_f| %>
-        <%= render partial: 'article_line', locals: {
-          f: pj_f, is_dynamic: false, disabled: @print.persisted?
-        } %>
-      <% end %>
-    </div>
-    
-    <% if @print.new_record? %>
-      <div>
-        <%= link_to t('view.prints.add_article_line'), '#',
-          id: 'add_article_line_link', class: 'btn btn-mini',
-          title: t('view.prints.add_article_line_title'),
-          data: {
-            template: 'article_line',
-            container: '#article_lines',
-            event: 'addNestedItem'
-          }
-        %>
+        <% if @print.new_record? %>
+          <div>
+            <%= link_to t('view.prints.add_print_job'), '#',
+              id: 'add_print_job_link', class: 'btn btn-mini',
+              title: t('view.prints.add_print_job_title'),
+              data: {
+                template: 'print_job',
+                container: '#print_jobs',
+                event: 'addNestedItem'
+              }
+            %>
+          </div>
+        <% end %>
       </div>
-    <% end %>
-    
+
+      <div id="articles_container" class="tab-pane">
+        <div class="row-fluid">
+          <div class="span5">
+            <h4><%= ArticleLine.human_attribute_name 'article_id' %></h4>
+          </div>
+          <div class="span1">
+            <h4><%= ArticleLine.human_attribute_name 'units' %></h4>
+          </div>
+          <div class="span1">
+            <h4><%= ArticleLine.human_attribute_name 'unit_price' %></h4>
+          </div>
+        </div>
+
+        <div id="article_lines">
+          <% @print.article_lines.build if @print.article_lines.empty? %>
+          <%= f.simple_fields_for :article_lines do |pj_f| %>
+            <%= render partial: 'article_line', locals: {
+              f: pj_f, is_dynamic: false, disabled: @print.persisted?
+            } %>
+          <% end %>
+        </div>
+
+        <% if @print.new_record? %>
+          <div>
+            <%= link_to t('view.prints.add_article_line'), '#',
+              id: 'add_article_line_link', class: 'btn btn-mini',
+              title: t('view.prints.add_article_line_title'),
+              data: {
+                template: 'article_line',
+                container: '#article_lines',
+                event: 'addNestedItem'
+              }
+            %>
+          </div>
+        <% end %>
+      </div>
+    </div>
     <div class="page-header">
       <h3><%= t 'view.prints.payment' %></h3>
     </div>

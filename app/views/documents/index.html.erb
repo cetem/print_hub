@@ -1,4 +1,4 @@
-<table class="table">
+<table class="table table-striped">
   <% if @tag %>
     <caption>
       <h4>
@@ -19,8 +19,7 @@
 
   <tbody>
     <% @documents.each do |document| %>
-      <% classes = [cycle('even', 'odd'), document.private ? 'private' : 'public'] %>
-      <tr class="<%= classes.join(' ') %>">
+      <tr class="<%= document.private ? 'private' : 'public' %>">
         <td><%= document.code %></td>
         <td><%= document.name %></td>
         <td><%= document.stock %></td>
