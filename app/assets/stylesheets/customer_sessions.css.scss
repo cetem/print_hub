@@ -1,4 +1,8 @@
 #ph_customer_sessions {
+  figure {
+    margin: 0px;
+  }
+
   span.sprite {
     color: transparent;
     float: left;
@@ -6,5 +10,11 @@
 
   .public_form_container {
     margin-top: 0em !important;
+  }
+
+  .alert.alert-success {
+    h4, p {
+      text-align: center;
+    }
   }
 }

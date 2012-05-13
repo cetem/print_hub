@@ -1,23 +1,23 @@
-<section id="password_reset">
-  <header>
-    <hgroup>
-      <h1><%= t('view.password_resets.reset_title') %></h1>
-      <h3><%= t('view.password_resets.reset_subtitle') %></h3>
-    </hgroup>
-  </header>
-
-  <% url = password_resets_path %>
-  <%= simple_form_for :customer, url: url, html: { method: :post } do |f| %>
-    <div class="form-inputs">
-      <%= f.input :email, label: Customer.human_attribute_name('email'),
-      input_html: {name: 'email', autofocus: true }, required: false %>
+<div class="row">
+  <div class="public_form_container span6 offset3">
+    <div id="password_reset">
+      <h3><%= t('view.password_resets.reset_title') %></h3>
+      <p><%= t('view.password_resets.reset_subtitle') %></p>
+      
+      <% url = password_resets_path %>
+      <%= simple_form_for :customer, url: url, html: { method: :post } do |f| %>
+        <div class="form-inputs">
+          <%= f.input :email, label: Customer.human_attribute_name('email'),
+          input_html: { name: 'email', autofocus: true, class: 'span4' } %>
+        </div>
+        <div class="form-actions">
+          <%= f.button :submit, t('view.password_resets.request_reset'), 
+            class: 'btn-primary' %>
+          <div class="pull-right">
+            <%= link_to t('label.back'), new_customer_session_path %>
+          </div>
+        </div>
+      <% end %>
     </div>
-    <div class="form-actions">
-      <%= f.button :submit, t('view.password_resets.request_reset'), 
-        class: 'btn-primary' %>
-      <div class="pull-right">
-        <%= link_to t('label.back'), new_customer_session_path %>
-      </div>
-    </div>
-  <% end %>
-</section>
+  </div>
+</div>

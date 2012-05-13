@@ -15,10 +15,12 @@
         </div>
           
         <div class="form-actions">
-          <%= f.button :submit, label: t('view.customer_sessions.login'), 
-            input_html: { class: 'btn-primary' } %>
-          &nbsp;&nbsp;<%= link_to t('view.customers.forgot_password'), 
-            new_password_reset_path %>
+          <%= f.button :submit, t('view.customer_sessions.login'),
+            class: 'btn-primary' %>
+          <div class="pull-right">
+            <%= link_to t('view.customers.forgot_password'),
+              new_password_reset_path %>
+          </div>
         </div>
       <% end %>
     </div>
@@ -26,9 +28,14 @@
     <br />
     
     <div class="alert alert-success">
-      <%= t('view.customers.registration_text') %>&nbsp;&nbsp;
-      <%= link_to t('view.customers.register'), new_customer_path,
-        class: 'btn btn-success' %>
+      <h4 class="alert-heading">
+        <%= t('view.customers.registration_text') %>
+      </h4>
+      <br />
+      <p>
+        <%= link_to t('view.customers.register'), new_customer_path,
+          class: 'btn btn-success btn-large' %>
+      </p>
     </div>
   </div>
 </div>

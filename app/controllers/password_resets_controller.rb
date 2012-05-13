@@ -12,6 +12,7 @@ class PasswordResetsController < ApplicationController
     @customer = Customer.find_by_email params[:email].try(:downcase).try(:strip)
     
     if @customer
+      @customer.touch
       @customer.deliver_password_reset_instructions!
       redirect_to(new_customer_session_url, notice: t('view.password_resets.instructions_delivered'))
     else
