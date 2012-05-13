@@ -1,18 +1,14 @@
 <% url = @customer.new_record? ?
   customers_path : update_profile_customer_path(@customer)
 %>
-<%= simple_form_for @customer, url: url, defaults: { input_html: { class: 'span11' } } do |f| %>
+<%= simple_form_for @customer, url: url, defaults: { input_html: { class: 'span8' } } do |f| %>
   <div class="form-inputs">
-    <div class="row-fluid">
-      <div class="span6">
-        <%= f.input :name, input_html: { autofocus: true } %>
-        <%= f.input :lastname %>
-        <%= f.input :identification %>
-        <%= f.input :email, required: true %>
-        <%= f.input :password, required: true %>
-        <%= f.input :password_confirmation, required: true %>
-      </div>
-    </div>
+    <%= f.input :name, input_html: { autofocus: true } %>
+    <%= f.input :lastname %>
+    <%= f.input :identification %>
+    <%= f.input :email, required: true %>
+    <%= f.input :password, required: true %>
+    <%= f.input :password_confirmation, required: true %>
   </div>
 
   <div class="form-actions">

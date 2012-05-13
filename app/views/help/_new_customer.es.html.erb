@@ -1,35 +1,45 @@
-<p class="help_link_container only_mobile">
-  <a class="toggle_display" href="#new_customer_help">
-    ¿Cómo y <strong>para qué</strong> crear mi cuenta?
-  </a>
-</p>
-<section id="new_customer_help" class="explanation hidden_for_mobile">
+<%= content_for :bottom_content do %>
+  <p class="help_link_container visible-phone">
+    <a class="toggle_display" href="#new_customer_help">
+      ¿Cómo y <strong>para qué</strong> crear mi cuenta?
+    </a>
+  </p>
+<% end %>
+<section id="new_customer_help" class="details hidden-phone">
   <header>
-    <h2>Para registrarse</h2>
+    <h1>Para registrarse</h1>
   </header>
-  <section class="spot">
+  
+  <br />
+  
+  <div>
     <h3>Completá los datos del formulario</h3>
     <p>
       Cuando presiones <strong><%= t('view.customers.register') %></strong>
       te enviaremos un correo para que actives tu cuenta.
     </p>
-  </section>
-  <section class="spot">
+  </div>
+  
+  <div>
     <h3><strong>Activá</strong> tu cuenta</h3>
     <p>
       Luego de activarla podés comenzar a utilizar todo el sistema de pedidos.
     </p>
-  </section>
-  <section class="spot">
+  </div>
+  
+  <div>
     <h3><em>Agilizá</em> tu paso por el centro de copiado</h3>
     <p>
       Para que tus copias estén <strong>impresas</strong> cuando llegues en la
       fecha acordada, tenés que tener <em>saldo</em> en tu cuenta.
     </p>
-  </section>
-  <section class="spot">
+  </div>
+  
+  <div>
     <h3>Saldo</h3>
     <p>Para cargar saldo en tu cuenta acercate al centro de copiado.</p>
-  </section>
+  </div>
+  
+  <br />
   <%= render 'help/footer', item: 'new_customer' %>
 </section>
