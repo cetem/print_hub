@@ -1,5 +1,5 @@
 PrintHubApp::Application.routes.draw do
-  constraints subdomain: /\A#{CUSTOMER_SUBDOMAIN}/i do
+  constraints(CustomerSubdomain) do
     match 'catalog' => 'catalog#index', as: 'catalog', via: :get
     match 'catalog/:id' => 'catalog#show', as: 'show_catalog', via: :get
     match 'catalog/:id/:style/download' => 'catalog#download',
@@ -44,7 +44,7 @@ PrintHubApp::Application.routes.draw do
     root to: 'customer_sessions#new'
   end
   
-  constraints subdomain: '' do
+  constraints(UserSubdomain) do
     match 'printer_stats(.:format)' => 'stats#printers',
       as: 'printer_stats', via: :get
     match 'user_stats(.:format)' => 'stats#users',

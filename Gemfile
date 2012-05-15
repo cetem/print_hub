@@ -27,7 +27,6 @@ gem 'pdf-reader'
 gem 'simple_form'
 
 group :assets do
-  gem 'sass'
   gem 'sass-rails'
   gem 'coffee-rails'
   gem 'therubyracer', require: false
@@ -41,7 +40,6 @@ end
 group :test do
   gem 'turn', require: false
   gem 'minitest', require: false
-  gem 'ruby-prof', require: false
   gem 'capybara', require: false
   gem 'database_cleaner' # For Capybara
 end
