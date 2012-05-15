@@ -1,4 +1,4 @@
-source 'http://rubygems.org'
+source 'https://rubygems.org'
 
 gem 'rails', '3.2.3'
 
@@ -11,7 +11,7 @@ gem 'validates_timeliness'
 gem 'awesome_nested_set'
 gem 'rghost'
 gem 'will_paginate'
-gem 'paperclip', '3.0.0' # 3.0.1 has a bug
+gem 'paperclip'
 gem 'foreigner'
 gem 'memcache-client'
 gem 'paper_trail'
@@ -26,7 +26,6 @@ gem 'cups'
 gem 'pdf-reader'
 
 group :assets do
-  gem 'sass'
   gem 'sass-rails'
   gem 'coffee-rails'
   gem 'therubyracer', require: false
@@ -40,7 +39,6 @@ end
 group :test do
   gem 'turn', require: false
   gem 'minitest', require: false
-  gem 'ruby-prof', require: false
   gem 'capybara', require: false
   # TODO: Eliminar cuando corrijan los problemas con los diálogos modales
   gem 'selenium-webdriver', '2.16.0'
