@@ -1,26 +1,37 @@
-<p class="help_link_container only_mobile">
-  <a class="toggle_display" href="#empty_catalog_help">
-    ¿Cómo hago un <strong>pedido</strong>?
-  </a>
-</p>
-<section id="empty_catalog_help" class="explanation hidden_for_mobile">
-  <header>
-    <h2>Para realizar un pedido</h2>
-  </header>
-  
-  <section class="spot">
-    <h3>Decinos <strong>que buscás</strong>&hellip;</h3>
-    <div class="image_container"><%= example_search_image %></div>
-  </section>
-  <section class="spot">
-    <h3>y de los resultados, <strong>seleccioná</strong> lo que te interesa.</h3>
-    <div class="image_container"><%= example_document_grid_image %></div>
-  </section>
-  <section class="spot">
-    <h3>
+<section class="details">
+  <div class="readonly_data">
+    <div class="page-header">
+      <h1>Para realizar un pedido</h1>
+    </div>
+    
+    <div class="row-fluid">
+      <div class="span6">
+        <p class="lead">Decinos <strong>que buscás</strong>&hellip;</p>
+      </div>
+      <div class="span6">
+        <p><%= example_search_image %></p>
+      </div>
+    </div>
+    
+    <div class="row-fluid">
+      <div class="span6">
+        <p class="lead">
+          y de los resultados, <strong>seleccioná</strong> lo que te
+          interesa&hellip;
+        </p>
+      </div>
+      <div class="span6">
+        <p><%= example_document_grid_image %></p>
+      </div>
+    </div>
+    
+    <p class="lead">
       Después confirmanos tu pedido desde
-      <strong><%= link_to t('view.catalog.new_order'), new_order_path %></strong>
-    </h3>
-  </section>
+      <strong>
+        <%= link_to t('view.catalog.new_order'), new_order_path %>
+      </strong>
+    </p>
+    <br />
+  </div>
   <%= render 'help/footer', item: 'empty_catalog' %>
 </section>

@@ -286,7 +286,7 @@
       add_to_order:
         title: 'Marca este documento para que sea INCLUIDO en el pedido'
       images:
-        example_search: "Buscar, por ejemplo, 'física 2011'"
+        example_search: "Buscar, por ejemplo, 'física 2012'"
         example_document_grid: 'Seleccionar documentos con el signo +'
       more_tags:
         one: 'Y una etiqueta más...'

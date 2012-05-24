@@ -1,33 +1,28 @@
-<p class="help_link_container only_mobile">
-  <a class="toggle_display" href="#empty_search_in_catalog_help">
-    ¿Dónde están mis <strong>resultados</strong>?
-  </a>
-</p>
-<section id="empty_search_in_catalog_help" class="explanation hidden_for_mobile">
-  <header>
-    <h2>
-      La búsqueda de <strong><%= params[:q] %></strong> no produjo resultados
-    </h2>
-  </header>
-  
-  <section class="spot">
-    <h3>Algunas sugerencias...</h3>
+<section class="details">
+  <div class="readonly_data">
+    <div class="page-header">
+      <h2>
+        La búsqueda de <em><%= params[:q] %></em> no produjo resultados
+      </h2>
+    </div>
+
+    <p class="lead">Algunas sugerencias...</p>
     <ul>
       <li>Revisá que todo esté <strong>bien escrito</strong></li>
       <li>Usá palabras alternativas</li>
       <li>Usá palabras más generales (o menos palabras)</li>
     </ul>
-  </section>
-  <section class="spot">
-    <h3>También podés <strong>mejorar</strong> tus búsquedas</h3>
+
+    <p class="lead">También podés <strong>mejorar</strong> tus búsquedas</p>
     <ul>
       <li>
-        Si buscás con <code>2011 física</code> seleccionás los documentos que
-        contienen las 2 palabras
+        Si buscás con <code><%= Time.now.year %> física</code> seleccionás los
+        documentos que contienen las 2 palabras
       </li>
       <li>
-        Si buscás con <code>2011 <strong>o</strong> física</code> seleccionás
-        los documentos que contienen al menos una de las dos palabras
+        Si buscás con <code><%= Time.now.year %> <strong>o</strong>
+        física</code> seleccionás los documentos que contienen al menos una de
+        las dos palabras
       </li>
       <li>
         Las palabras <strong>no respetan</strong> género ni número, buscar por
@@ -37,6 +32,6 @@
         Podés usar tantas palabras como quieras y combinarlas con <code>o</code>
       </li>
     </ul>
-  </section>
+  </div>
   <%= render 'help/footer', item: 'empty_search_in_catalog' %>
 </section>

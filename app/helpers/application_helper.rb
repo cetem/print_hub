@@ -186,19 +186,22 @@ module ApplicationHelper
       solidarity: {w: 70, h: 40, x: 0, y: 50},
       transformation: {w: 70, h: 40, x: 0, y: 110}
     }
+    style = <<-CSS
+      background: url(#{image_path('welcome/sprites.gif')})
+        no-repeat -#{sprites[image][:x]}px -#{sprites[image][:y]}px;
+      width: #{sprites[image][:w]}px;
+      padding-top: #{sprites[image][:h]}px;
+      #{options[:style]}
+    CSS
     
     content_tag('span', options[:title],
       class: "sprite #{options[:class]}",
-      style: "background: url(#{image_path('welcome/sprites.gif')}) no-repeat -#{sprites[image][:x]}px -#{sprites[image][:y]}px; width: #{sprites[image][:w]}px; padding-top: #{sprites[image][:h]}px; #{options[:style]}",
+      style: style,
       title: "#{options[:title]}"
     )
   end
   
   def explorer?
     request.env['HTTP_USER_AGENT'] =~ /msie/i
-  end
-  
-  def mobile?
-    request.env['HTTP_USER_AGENT'] =~ /mobi|mini|fennec/i
   end
 end

@@ -3,8 +3,8 @@
     <tr>
       <th><%= sortable 'code', Document.human_attribute_name('code') %></th>
       <th><%= sortable 'name', Document.model_name.human %></th>
-      <th class="expendable"><%= t('menu.tags') %></th>
-      <th class="expendable"><%= Document.human_attribute_name 'pages' %></th>
+      <th class="hidden-phone"><%= t('menu.tags') %></th>
+      <th class="hidden-phone"><%= Document.human_attribute_name 'pages' %></th>
       <th></th>
     </tr>
   </thead>
@@ -14,8 +14,8 @@
       <tr>
         <td><%= document.code %></td>
         <td><%= catalog_document_link_with_name(document) %></td>
-        <td class="expendable"><%= display_document_short_tags(document) %></td>
-        <td class="expendable"><%= document.pages %></td>
+        <td class="hidden-phone"><%= display_document_short_tags(document) %></td>
+        <td class="hidden-phone"><%= document.pages %></td>
         <td><%= catalog_document_to_order document %></td>
       </tr>
     <% end %>

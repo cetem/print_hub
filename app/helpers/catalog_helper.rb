@@ -69,44 +69,37 @@ module CatalogHelper
     out = clean_tags.map do |tag, long_tag|
       name = truncate(tag, length: 15, omission: '...')
       
-      content_tag(:span, name, title: long_tag, class: 'tag')
-    end.join
+      content_tag(
+        :span, name, title: long_tag, class: 'label', data: {
+          'show-tooltip' => true
+        }
+      )
+    end.join(' ')
     
     if tags.size > 3
       title = t 'view.catalog.more_tags', count: tags.size - 3
       
-      out << content_tag(:span, raw('&hellip;'), title: title)
+      out << ' '
+      out << content_tag(
+        :span, raw('&hellip;'), title: title, class: 'label',
+        data: {'show-tooltip' => true}
+      )
     end
     
     raw content_tag(:div, raw(out), class: 'nowrap')
   end
   
   def example_search_image
-    common_options = {
+    image_tag 'help/example_search.gif',
       alt: t('view.catalog.images.example_search'),
-      title: t('view.catalog.images.example_search')
-    }
-    
-    if mobile?
-      image_tag 'help/example_search_mobile.gif',
-        common_options.merge(size: '260x29')
-    else
-      image_tag 'help/example_search.gif', common_options.merge(size: '366x31')
-    end
+      title: t('view.catalog.images.example_search'),
+      size: '269x34'
   end
   
   def example_document_grid_image
-    common_options = {
+    image_tag 'help/example_document_grid.gif',
       alt: t('view.catalog.images.example_document_grid'),
-      title: t('view.catalog.images.example_document_grid')
-    }
-    
-    if mobile?
-      image_tag 'help/example_document_grid_mobile.gif',
-        common_options.merge(size: '260x72')
-    else
-      image_tag 'help/example_document_grid.gif',
-        common_options.merge(size: '600x44')
-    end
+      title: t('view.catalog.images.example_document_grid'),
+      size: '269x39'
   end
 end

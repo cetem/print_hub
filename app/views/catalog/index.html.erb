@@ -1,7 +1,5 @@
 <% if @tag %>
-  <h2 class="title">
-    <%= t('view.documents.documents_with_tag', :tag => @tag.to_s) %>
-  </h2>
+  <h2><%= t('view.documents.documents_with_tag', tag: @tag.to_s) %></h2>
 <% end %>
 
 <% if params[:q].blank? && @documents.blank? %>
@@ -10,4 +8,5 @@
   <%= render 'help/empty_search_in_catalog' %>
 <% else %>
   <%= render 'table_catalog' %>
+  <div class="form-actions"></div>
 <% end %>
