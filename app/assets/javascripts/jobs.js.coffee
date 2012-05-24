@@ -38,7 +38,7 @@ window.Jobs =
   updatePricePerCopy: ->
     $('input[name$="[price_per_copy]"]').each (i, ppc)->
       twoSidedElement = $(ppc).parents('.nested_item:first')
-      .find('input[name$="[two_sided]"].price_modifier')
+      .find('input[name$="[two_sided]"].price-modifier')
       
       if twoSidedElement.is(':checked')
         setting = $('#total_pages').data('pricePerTwoSided')

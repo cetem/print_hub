@@ -40,7 +40,7 @@ window.Order =
 
 jQuery ($)->
   if $('#ph_orders').length > 0
-    $(document).on 'ajax:success', 'a.details_link', (event, data)->
+    $(document).on 'ajax:success', 'a.details-link', (event, data)->
       Helper.show(
         $(this).parents('.order_line').find('.dynamic_details').hide().html(data)
       )
@@ -48,16 +48,16 @@ jQuery ($)->
     $(document).on 'item.removed', (event, element)->
       if $(element).hasClass('order_line')
         $(element).attr('data-exclude-from-total', '1')
-        .find('.page_modifier:first').trigger('ph.page_modification')
+        .find('.page-modifier:first').trigger('ph.page_modification')
 
         Order.updateTotalPrice()
 
     Jobs.listenTwoSidedChanges()
 
-    $(document).on 'change keyup', '.price_modifier', ->
+    $(document).on 'change keyup', '.price-modifier', ->
       Order.updateOrderLinePrice $(this).parents('.order_line')
 
-    $(document).on 'change keyup ph.page_modification', '.page_modifier', ->
+    $(document).on 'change keyup ph.page_modification', '.page-modifier', ->
       totalPages = 0
 
       $('.order_line').each ->

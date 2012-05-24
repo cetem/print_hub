@@ -1,4 +1,4 @@
-<section id="show_order" class="readonly_data">
+<section id="show_order" class="readonly-data">
   <div class="row-fluid">
     <div class="span6">
       <h2>
@@ -13,7 +13,7 @@
       </h3>
     </div>
     <div class="span6">
-      <p class="not_printable expendable">
+      <p class="not-printable hidden-phone">
         <%= link_to_function t('view.orders.print'), 'window.print()' %>
       </p>
     </div>
@@ -35,8 +35,8 @@
             <tr>
               <th><%= OrderLine.human_attribute_name 'document_id' %></th>
               <th><%= OrderLine.human_attribute_name 'copies' %></th>
-              <th class="expendable"><%= Document.human_attribute_name 'pages' %></th>
-              <th class="expendable"><%= OrderLine.human_attribute_name 'price_per_copy' %></th>
+              <th class="hidden-phone"><%= Document.human_attribute_name 'pages' %></th>
+              <th class="hidden-phone"><%= OrderLine.human_attribute_name 'price_per_copy' %></th>
               <th><%= OrderLine.human_attribute_name 'two_sided' %></th>
             </tr>
           </thead>
@@ -45,8 +45,8 @@
               <tr>
                 <td><%= order_line.document %></td>
                 <td><%= order_line.copies %></td>
-                <td class="expendable"><%= order_line.document.try(:pages) %></td>
-                <td class="expendable"><%= number_to_currency order_line.price_per_copy %></td>
+                <td class="hidden-phone"><%= order_line.document.try(:pages) %></td>
+                <td class="hidden-phone"><%= number_to_currency order_line.price_per_copy %></td>
                 <td><%= t(order_line.two_sided ? 'label.yes' : 'label.no') %></td>
               </tr>
             <% end %>

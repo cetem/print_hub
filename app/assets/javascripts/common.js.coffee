@@ -90,7 +90,7 @@ jQuery ($)->
       event.preventDefault()
       event.stopPropagation()
   
-  $('#loading_caption').bind
+  $('#loading-caption').bind
     ajaxStart: `function() { $(this).stop(true, true).fadeIn(100) }`
     ajaxStop: `function() { $(this).stop(true, true).fadeOut(100) }`
     

@@ -2,7 +2,7 @@
 <% hide = is_dynamic || f.object.marked_for_destruction? %>
 <div class="article_line row-fluid" id="<%= id %>" data-price="<%= f.object.price %>" <%= raw 'style="display: none;"' if hide %>>
   <div class="span5">
-    <% field_classes = ['autocomplete_field', 'span11'] %>
+    <% field_classes = ['autocomplete-field', 'span11'] %>
     <% field_classes << 'error' unless f.object.errors[:article_id].blank? %>
     <%= f.input :auto_article_name, label: false, 
       input_html: { disabled: disabled, id: "auto_article_line_#{id}",
@@ -13,18 +13,18 @@
       }
     } %>
     <%= f.input :article_id, as: :hidden, 
-      input_html: { class: 'autocomplete_id', id: "auto_article_line_id_#{id}" } %>
+      input_html: { class: 'autocomplete-id', id: "auto_article_line_id_#{id}" } %>
   </div>
   <div class="span1">
     <%= f.input :units, label: false,
-      input_html: { maxlength: 5, class: 'price_modifier span11',
+      input_html: { maxlength: 5, class: 'price-modifier span11',
       autocomplete: :off, disabled: disabled }  %>
   </div>
   <div class="span1">
     <%= f.input :unit_price,  label: false,
       input_html: { disabled: true,
       value: ('%.3f' % f.object.unit_price if f.object.unit_price),
-      class: 'price_modifier span11', autocomplete: 'off' } %>
+      class: 'price-modifier span11', autocomplete: 'off' } %>
   </div>
   <div class="span5">
     <span class="label money"><%= number_to_currency f.object.price %></span>

@@ -90,7 +90,7 @@ jQuery ($)->
     $(document).on 'item.removed', (event, element)->
       if $(element).hasClass('print_job')
         $(element).attr('data-exclude-from-total', '1').find(
-          '.page_modifier:first'
+          '.page-modifier:first'
         ).trigger('ph.page_modification')
 
         Print.updateTotalPrice()
@@ -99,14 +99,14 @@ jQuery ($)->
         
         Print.updateTotalPrice()
 
-    $(document).on 'autocomplete:update', 'input.autocomplete_field', ->
+    $(document).on 'autocomplete:update', 'input.autocomplete-field', ->
       item = $(this).data('item')
 
       if item.pages
         pages = item.pages
         stock = parseInt(item.stock)
         printJob = $(this).parents('.print_job:first')
-        printJobDetailsLink = printJob.find('a.details_link')
+        printJobDetailsLink = printJob.find('a.details-link')
         printJobStockDetails = printJob.find('.document_stock')
 
         printJob.find('input[name$="[pages]"]').val(pages).attr('disabled', true)
@@ -157,7 +157,7 @@ jQuery ($)->
         printJob.find('input[name$="[range]"]').data('rangePages', 0)
         printJob.find('input[name$="[pages]"]').val('').removeAttr('disabled')
         printJob.find('.dynamic_details').html('')
-        printJob.find('a.details_link').hide()
+        printJob.find('a.details-link').hide()
         printJob.find('.document_stock').hide()
 
         Print.updatePrintJobPrice(printJob)
@@ -210,7 +210,7 @@ jQuery ($)->
       else
         printJobStockDetails.hide()
 
-    $(document).on 'change keyup ph.page_modification', '.page_modifier', (e)->
+    $(document).on 'change keyup ph.page_modification', '.page-modifier', (e)->
       totalPages = 0
 
       $('.print_job').each (i, pj)->
@@ -224,7 +224,7 @@ jQuery ($)->
       $('#total_pages').val(totalPages)
       $('.print_job').each (i, pj)-> Print.updatePrintJobPrice($(pj))
 
-    $(document).on 'change keyup', '.price_modifier', ->
+    $(document).on 'change keyup', '.price-modifier', ->
       element = $(this)
 
       if element.parents('.print_job').length > 0
@@ -239,7 +239,7 @@ jQuery ($)->
       else
         Print.updateTotalPrice()
 
-    $(document).on 'ajax:success', 'a.details_link', (event, data)->
+    $(document).on 'ajax:success', 'a.details-link', (event, data)->
       Helper.show(
         $(this).parents('.print_job').find('.dynamic_details').hide().html(data)
       )

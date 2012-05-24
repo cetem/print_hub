@@ -21,10 +21,10 @@
   <% end %>
   <%= yield :head_extra %>
 </head>
-<body id="<%= "ph_#{controller_name}" %>" data-action="<%= action_name %>" <%= raw 'class="logged_in"' if current_user || current_customer %>>
+<body id="<%= "ph_#{controller_name}" %>" data-action="<%= action_name %>" <%= raw 'class="logged-in"' if current_user || current_customer %>>
   <%= render 'shared/menu' %>
   
-  <div id="loading_caption" class="alert" style="display: none;">
+  <div id="loading-caption" class="alert" style="display: none;">
     <strong><%= t('messages.loading') %></strong>
   </div>
   

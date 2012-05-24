@@ -22,7 +22,7 @@
       <div class="span6">
         <%= f.label :customer, print_customer_label(@print.customer),
           for: :print_auto_customer_name %>
-        <% field_classes = ['autocomplete_field', 'span11'] %>
+        <% field_classes = ['autocomplete-field', 'span11'] %>
         <% field_classes << 'error' unless @print.errors[:customer_id].blank? %>
         <%= f.input :auto_customer_name, label: false, input_html: { 
           value: @print.customer, class: field_classes.join(' '),
@@ -35,7 +35,7 @@
           "Print.clearCustomer(); $(this).remove()",
           class: 'remove' if @print.customer %>
         <%= f.input :customer_id, as: :hidden, 
-          input_html: { class: 'autocomplete_id' } %>
+          input_html: { class: 'autocomplete-id' } %>
         <%= hidden_field_tag :customer_free_credit,
           @print.customer.try(:free_credit), id: 'customer_free_credit' %>
         <div class="row-fluid">

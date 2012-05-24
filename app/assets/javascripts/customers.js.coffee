@@ -20,7 +20,7 @@ jQuery ->
       /date=([^&])+/, "date=#{$(this).val()}"
     )
     $(this).attr 'disabled', true
-    $('#loading_caption').stop(true, true).slideDown(100)
+    $('#loading-caption').stop(true, true).slideDown(100)
   
   if $('#ph_customers[data-action="show"]').length > 0
     $(document).on 'ajax:success', 'form[data-remote]', (xhr, data)->

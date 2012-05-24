@@ -35,12 +35,12 @@
     </tbody>
   </table>
 
-  <p class="note readonly_data">
+  <p class="note readonly-data">
     <%= show_payments_resume(deposits_amount) %>
   </p>
 
   <% unless payments_paid == 0 %>
-    <section class="details readonly_data">
+    <section class="details readonly-data">
       <h3>(*) <%= t('view.payments.payment_details') %></h3>
       <ul class="raw">
         <% @payments.group(:paid_with).sum('paid').each do |paid_with, payments_amount| %>

@@ -4,7 +4,7 @@
     <% if tag %>
       <%= tag %>
     <% else %>
-      <% field_classes = ['autocomplete_field', 'span11'] %>
+      <% field_classes = ['autocomplete-field', 'span11'] %>
       <% field_classes << 'error' unless f.object.errors[:tag_id].blank? %>
       <%= f.input :auto_tag_name, label: false,
         input_html: { class: field_classes.join(' '),
@@ -16,7 +16,7 @@
       } %>
     <% end %>
     <%= hidden_field_tag 'document[tag_ids][]', tag.try(:id),
-      id: "new_tag_#{id}", class: :autocomplete_id %>
+      id: "new_tag_#{id}", class: 'autocomplete-id' %>
   </div>
   <div class="span2">
     <%= link_to_remove_nested_item(nil, 'tag') %>

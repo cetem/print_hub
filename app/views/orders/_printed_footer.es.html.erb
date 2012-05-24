@@ -1,4 +1,4 @@
-<footer id="order_meta" class="not_printable readonly_data">
+<footer id="order_meta" class="not-printable readonly-data">
   <% if @order.pending? %>
     <% if @order.new_record? %>
       <div id="printed" <%= raw 'style="display: none"' unless @order.print_out %>>

@@ -6,7 +6,7 @@
     <thead>
       <tr>
         <th><%= Order.human_attribute_name :id %></th>
-        <th class="expendable"><%= Order.human_attribute_name :customer %></th>
+        <th class="hidden-phone"><%= Order.human_attribute_name :customer %></th>
         <th><%= Order.human_attribute_name :scheduled_at %></th>
         <th><%= Order.human_attribute_name :status %></th>
         <th></th>
@@ -17,7 +17,7 @@
       <% @orders.each do |order| %>
         <tr>
           <td><%= link_to order.id, custom_order_path(order) %></td>
-          <td class="expendable"><%= order.customer %></td>
+          <td class="hidden-phone"><%= order.customer %></td>
           <td><%= l order.scheduled_at, format: :short if order.scheduled_at %></td>
           <td><%= order.status_text %></td>
           <td><%= link_to_show custom_order_path(order) %></td>

@@ -15,22 +15,21 @@ module PrintsHelper
       disabled: !print_job.pending?, class: 'btn btn-mini'
     )
 
-    content_tag :div, button, id: "cancel_print_job_#{print_job.id}",
-      class: 'button_form_container'
+    content_tag :div, button, id: "cancel_print_job_#{print_job.id}"
   end
   
   def link_to_customer_credit_detail(customer)
     link_to t('view.prints.customer_credit_detail.link'),
       credit_detail_customer_path(customer || {id: 0}),
       id: 'link_to_customer_credit_detail',
-      class: 'details_link action_link', remote: true,
+      class: 'details-link', remote: true,
       title: t('view.prints.customer_credit_detail.title'),
       style: ('display: none;' unless customer)
   end
   
   def link_to_document_details(document)
     link_to '&#xe054;'.html_safe, document || document_path(id: 0),
-      class: 'details_link action_link iconic', remote: true,
+      class: 'details-link iconic', remote: true,
       title: t('view.prints.document_details'),
       style: ('display: none;' unless document)
   end
