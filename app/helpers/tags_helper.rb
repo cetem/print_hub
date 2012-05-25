@@ -1,14 +1,21 @@
 module TagsHelper
   def show_tag_path(tag)
-    ancestors = [content_tag(:span, tag.name, class: 'bold')]
+    divider = content_tag(:span, '/', class: 'divider')
+    ancestors = [
+      content_tag(:li, raw(" #{divider} #{tag.name}"), class: 'active')
+    ]
 
     tag.ancestors.each do |a|
-      ancestors << "#{link_to(a.name, tags_path(parent: a))} &gt;"
+      ancestors << content_tag(:li,
+        raw(" #{divider} #{link_to(a.name, tags_path(parent: a))}")
+      )
     end
 
-    ancestors << "#{link_to(t('view.tags.root_tag'), tags_path)} &gt;"
+    ancestors << content_tag(:li,
+      raw(link_to(t('view.tags.root_tag'), tags_path))
+    )
 
-    raw(ancestors.reverse.map { |a| content_tag(:li, raw(a)) }.join)
+    raw(ancestors.reverse.join(' '))
   end
 
   def show_link_to_tag_documents(tag)
