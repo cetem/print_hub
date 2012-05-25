@@ -20,7 +20,7 @@ class ArticlesTest < ActionDispatch::IntegrationTest
     assert_page_has_no_errors!
     assert_equal new_article_path, current_path
     
-    within 'form'do
+    within 'form' do
       fill_in Article.human_attribute_name('code'), with: '007'
       fill_in Article.human_attribute_name('name'), with: 'Laminate'
       fill_in Article.human_attribute_name('price'), with: '1.50'
