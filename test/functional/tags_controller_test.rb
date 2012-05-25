@@ -10,7 +10,7 @@ class TagsControllerTest < ActionController::TestCase
     get :index
     assert_response :success
     assert_not_nil assigns(:tags)
-    assert_select 'nav.path', false
+    assert_select 'nav ul.breadcrumb', false
     assert_select '#unexpected_error', false
     assert_template 'tags/index'
   end
@@ -20,7 +20,7 @@ class TagsControllerTest < ActionController::TestCase
     get :index, parent: tags(:notes)
     assert_response :success
     assert_not_nil assigns(:tags)
-    assert_select 'nav.path'
+    assert_select 'nav ul.breadcrumb'
     assert_select '#unexpected_error', false
     assert_template 'tags/index'
   end

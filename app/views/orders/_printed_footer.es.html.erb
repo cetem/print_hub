@@ -1,28 +1,28 @@
 <footer id="order_meta" class="not-printable readonly-data">
   <% if @order.pending? %>
     <% if @order.new_record? %>
-      <div id="printed" <%= raw 'style="display: none"' unless @order.print_out %>>
+      <div id="printed" class="alert alert-success" <%= raw 'style="display: none"' unless @order.print_out %>>
         <p>
           Presioná <strong>Crear Pedido</strong> y tus documentos estarán
           <strong>impresos</strong> y listo para la fecha programada
         </p>
       </div>
 
-      <div id="not_printed" <%= raw 'style="display: none"' if @order.print_out %>>
+      <div id="not_printed" class="alert alert-warning" <%= raw 'style="display: none"' if @order.print_out %>>
         <p>
           Presioná <strong>Guardar Pedido</strong> y <strong>acercate</strong>
           personalmente hasta el centro de copiado para imprimir los documentos
         </p>
       </div>
     <% else %>
-      <div id="printed" <%= raw 'style="display: none"' unless @order.print_out %>>
+      <div id="printed" class="alert alert-success" <%= raw 'style="display: none"' unless @order.print_out %>>
         <p>
           El pedido estará <strong>impreso</strong> y listo para la fecha
           programada
         </p>
       </div>
 
-      <div id="not_printed" <%= raw 'style="display: none"' if @order.print_out %>>
+      <div id="not_printed" class="alert alert-warning" <%= raw 'style="display: none"' if @order.print_out %>>
         <p>
           Para imprimir los documentos <strong>acercate</strong> personalmente
           hasta el centro de copiado y consultá por el pedido
@@ -34,16 +34,16 @@
   
   <div id="credit">
     <p>
-      Tenés
-      <span class="money">
+      Tenés&nbsp;
+      <span class="money label label-inverse">
         <%= number_to_currency current_customer.free_credit_minus_pendings %>
       </span>
-      disponibles en tu cuenta.
+      &nbsp;disponibles en tu cuenta.
       <%= link_to_function 'Nuestros precios', "$('#prices').fadeIn(200)" %>
     </p>
   </div>
   
-  <div id="prices" style="display: none;">
+  <div id="prices" class="alert alert-info" style="display: none;">
     <% PriceChooser.humanize.each do |setting, values| %>
       <p>
         <%= setting %>:

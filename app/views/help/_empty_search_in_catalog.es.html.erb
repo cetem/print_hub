@@ -1,37 +1,35 @@
-<div class="details" id="empty-search-in-catalog-help">
-  <div class="readonly-data">
-    <div class="page-header">
-      <h2>
-        La búsqueda de <em><%= params[:q] %></em> no produjo resultados
-      </h2>
-    </div>
-
-    <p class="lead">Algunas sugerencias...</p>
-    <ul>
-      <li>Revisá que todo esté <strong>bien escrito</strong></li>
-      <li>Usá palabras alternativas</li>
-      <li>Usá palabras más generales (o menos palabras)</li>
-    </ul>
-
-    <p class="lead">También podés <strong>mejorar</strong> tus búsquedas</p>
-    <ul>
-      <li>
-        Si buscás con <code><%= Time.now.year %> física</code> seleccionás los
-        documentos que contienen las 2 palabras
-      </li>
-      <li>
-        Si buscás con <code><%= Time.now.year %> <strong>o</strong>
-        física</code> seleccionás los documentos que contienen al menos una de
-        las dos palabras
-      </li>
-      <li>
-        Las palabras <strong>no respetan</strong> género ni número, buscar por
-        <code>apunte</code> o <code>apuntes</code> produce los mismos resultados
-      </li>
-      <li>
-        Podés usar tantas palabras como quieras y combinarlas con <code>o</code>
-      </li>
-    </ul>
+<div class="readonly-data">
+  <div class="page-header">
+    <h2>
+      La búsqueda de <em><%= params[:q] %></em> no produjo resultados
+    </h2>
   </div>
-  <%= render 'help/footer', item: 'empty_search_in_catalog' %>
+
+  <p class="lead">Algunas sugerencias...</p>
+  <ul>
+    <li>Revisá que todo esté <strong>bien escrito</strong></li>
+    <li>Usá palabras alternativas</li>
+    <li>Usá palabras más generales (o menos palabras)</li>
+  </ul>
+
+  <p class="lead">También podés <strong>mejorar</strong> tus búsquedas</p>
+  <ul>
+    <li>
+      Si buscás con <code><%= Time.now.year %> física</code> seleccionás los
+      documentos que contienen las 2 palabras
+    </li>
+    <li>
+      Si buscás con <code><%= Time.now.year %> <strong>o</strong>
+      física</code> seleccionás los documentos que contienen al menos una de
+      las dos palabras
+    </li>
+    <li>
+      Las palabras <strong>no respetan</strong> género ni número, buscar por
+      <code>apunte</code> o <code>apuntes</code> produce los mismos resultados
+    </li>
+    <li>
+      Podés usar tantas palabras como quieras y combinarlas con <code>o</code>
+    </li>
+  </ul>
 </div>
+<%= render 'help/footer', item: 'empty_search_in_catalog' %>

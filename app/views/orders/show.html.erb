@@ -1,4 +1,4 @@
-<section id="show_order" class="readonly-data">
+<div id="show_order" class="readonly-data">
   <div class="row-fluid">
     <div class="span6">
       <h2>
@@ -12,54 +12,54 @@
         <%= l @order.scheduled_at, format: :long if @order.scheduled_at %>
       </h3>
     </div>
-    <div class="span6">
-      <p class="not-printable hidden-phone">
-        <%= link_to_function t('view.orders.print'), 'window.print()' %>
-      </p>
-    </div>
-  </div>
-  <div class="row-fluid">
-    <% if @order.notes.present? %>
-      <section>
-        <h3><%= Order.human_attribute_name 'notes' %></h3>
-        <%= simple_format @order.notes %>
-      </section>
-    <% end %>
-
-    <% unless @order.order_lines.empty? %>
-      <section class="span11">
-        <h2><%= t 'view.orders.order_lines' %></h2>
-
-        <table class="table table-striped">
-          <thead>
-            <tr>
-              <th><%= OrderLine.human_attribute_name 'document_id' %></th>
-              <th><%= OrderLine.human_attribute_name 'copies' %></th>
-              <th class="hidden-phone"><%= Document.human_attribute_name 'pages' %></th>
-              <th class="hidden-phone"><%= OrderLine.human_attribute_name 'price_per_copy' %></th>
-              <th><%= OrderLine.human_attribute_name 'two_sided' %></th>
-            </tr>
-          </thead>
-          <tbody>
-            <% @order.order_lines.each do |order_line| %>
-              <tr>
-                <td><%= order_line.document %></td>
-                <td><%= order_line.copies %></td>
-                <td class="hidden-phone"><%= order_line.document.try(:pages) %></td>
-                <td class="hidden-phone"><%= number_to_currency order_line.price_per_copy %></td>
-                <td><%= t(order_line.two_sided ? 'label.yes' : 'label.no') %></td>
-              </tr>
-            <% end %>
-          </tbody>
-        </table>
-        <%= render 'total', order: @order %>
-      </section>
+    <% if current_customer %>
+      <div class="span6">
+        <p class="pull-right not-printable hidden-phone">
+          <%= link_to_function t('view.orders.print'), 'window.print()', class: 'btn' %>
+        </p>
+      </div>
     <% end %>
   </div>
-</section>
+  
+  <br />
+  
+  <% if @order.notes.present? %>
+    <h4><%= Order.human_attribute_name 'notes' %></h4>
+    <%= simple_format @order.notes %>
+  <% end %>
+
+  <% unless @order.order_lines.empty? %>
+    <h3><%= t 'view.orders.order_lines' %></h3>
+
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th><%= OrderLine.human_attribute_name 'document_id' %></th>
+          <th><%= OrderLine.human_attribute_name 'copies' %></th>
+          <th class="hidden-phone"><%= Document.human_attribute_name 'pages' %></th>
+          <th class="hidden-phone"><%= OrderLine.human_attribute_name 'price_per_copy' %></th>
+          <th><%= OrderLine.human_attribute_name 'two_sided' %></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @order.order_lines.each do |order_line| %>
+          <tr>
+            <td><%= order_line.document %></td>
+            <td><%= order_line.copies %></td>
+            <td class="hidden-phone"><%= order_line.document.try(:pages) %></td>
+            <td class="hidden-phone"><%= number_to_currency order_line.price_per_copy %></td>
+            <td><%= t(order_line.two_sided ? 'label.yes' : 'label.no') %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+    <%= render 'total', order: @order %>
+  <% end %>
+</div>
+
+<br />
+<%= render 'printed_footer' if current_customer %>
 
 <nav class="form-actions">
   <%= nav_links_in_show_order(@order) %>
 </nav>
-
-<%= render 'printed_footer' if current_customer %>

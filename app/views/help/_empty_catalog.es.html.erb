@@ -1,37 +1,35 @@
-<div class="details" id="empty-catalog-help">
-  <div class="readonly-data">
-    <div class="page-header">
-      <h1>Para realizar un pedido</h1>
-    </div>
-    
-    <div class="row-fluid">
-      <div class="span6">
-        <p class="lead">Decinos <strong>que buscás</strong>&hellip;</p>
-      </div>
-      <div class="span6">
-        <p><%= example_search_image %></p>
-      </div>
-    </div>
-    
-    <div class="row-fluid">
-      <div class="span6">
-        <p class="lead">
-          y de los resultados, <strong>seleccioná</strong> lo que te
-          interesa&hellip;
-        </p>
-      </div>
-      <div class="span6">
-        <p><%= example_document_grid_image %></p>
-      </div>
-    </div>
-    
-    <p class="lead">
-      Después confirmanos tu pedido desde
-      <strong>
-        <%= link_to t('view.catalog.new_order'), new_order_path %>
-      </strong>
-    </p>
-    <br />
+<div class="readonly-data">
+  <div class="page-header">
+    <h1>Para realizar un pedido</h1>
   </div>
-  <%= render 'help/footer', item: 'empty_catalog' %>
+
+  <div class="row-fluid">
+    <div class="span6">
+      <p class="lead">Decinos <strong>que buscás</strong>&hellip;</p>
+    </div>
+    <div class="span6">
+      <p><%= example_search_image %></p>
+    </div>
+  </div>
+
+  <div class="row-fluid">
+    <div class="span6">
+      <p class="lead">
+        y de los resultados, <strong>seleccioná</strong> lo que te
+        interesa&hellip;
+      </p>
+    </div>
+    <div class="span6">
+      <p><%= example_document_grid_image %></p>
+    </div>
+  </div>
+
+  <p class="lead">
+    Después confirmanos tu pedido desde
+    <strong>
+      <%= link_to t('view.catalog.new_order'), new_order_path %>
+    </strong>
+  </p>
+  <br />
 </div>
+<%= render 'help/footer', item: 'empty_catalog' %>

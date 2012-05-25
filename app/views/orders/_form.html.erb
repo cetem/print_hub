@@ -1,25 +1,27 @@
 <%= simple_form_for @order, defaults: { input_html: { class: 'span11' } } do |f| %>
   <div class="form-inputs">
-    <%= f.input :scheduled_at, as: :datetime_picker, required: false,
+    <%= f.input :scheduled_at, as: :datetime_picker,
       input_html: { disabled: @order.persisted?, class: 'span4' } %>
 
-    <h2><%= t 'view.orders.order_lines' %></h2>
+    <h3><%= t 'view.orders.order_lines' %></h3>
+    
+    <br />
 
     <div id="order_lines_headers" class="row-fluid">
       <div class="span5">
-        <h3><%= OrderLine.human_attribute_name :document_id %></h3>
+        <h4><%= OrderLine.human_attribute_name 'document_id' %></h4>
       </div>
       <div class="span1">
-        <h3><%= OrderLine.human_attribute_name :copies %></h3>
+        <h4><%= OrderLine.human_attribute_name 'copies' %></h4>
       </div>
       <div class="span1">
-        <h3 class="hidden-phone"><%= Document.human_attribute_name :pages %></h3>
+        <h4 class="hidden-phone"><%= Document.human_attribute_name 'pages' %></h4>
       </div>
       <div class="span2">
-        <h3 class="hidden-phone"><%= OrderLine.human_attribute_name :price_per_copy %></h3>
+        <h4 class="hidden-phone"><%= OrderLine.human_attribute_name 'price_per_copy' %></h4>
       </div>
       <div class="span2">
-        <h3><%= OrderLine.human_attribute_name :two_sided %></h3>
+        <h4><%= OrderLine.human_attribute_name 'two_sided' %></h4>
       </div>
     </div>
 
@@ -30,26 +32,33 @@
     </div>
 
     <%= render 'total', order: @order %>
+    
+    <hr />
+    
     <div class="row-fluid">
-      <div class="span6">
-        <%= link_to t('view.orders.notes_link'), '#', 'class' => 'show',
-          'data-target' => '#notes' %>
+      <div class="span5">
+        <%= link_to t('view.orders.notes_link'), '#', class: 'show',
+          data: {target: '#notes'} %>    
         <div id="notes" style="display: none;">
-          <br />
           <%= f.input :notes, input_html: { autofocus: true, rows: 4 } %>
         </div>
       </div>
     </div>
   </div>
+
+  <%= render 'printed_footer' %>
+  
   <div class="form-actions">
     <div class="pull-right"><%= yield :form_actions %></div>
     <%= f.input :lock_version, as: :hidden %>
     <%= hidden_field_tag :total_pages, @order.total_pages, id: 'total_pages',
-      'data-price-per-one-sided' => Setting.price_per_one_sided_copy,
-      'data-price-per-two-sided' => Setting.price_per_two_sided_copy %>
+      data: {
+        'price-per-one-sided' => Setting.price_per_one_sided_copy,
+        'price-per-two-sided' => Setting.price_per_two_sided_copy
+      }
+    %>
     <%= f.button :submit, class: 'btn-primary' %>
   </div>
-  
 <% end %>
 <script type="text/javascript">
   Order.threshold = <%= CREDIT_THRESHOLD %>;
