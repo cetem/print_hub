@@ -43,15 +43,12 @@ class PublicCustomerInteractionsTest < ActionDispatch::IntegrationTest
     
     # No puede ingresar hasta que no active la cuenta
     assert_equal customer_sessions_path, current_path
-    
     assert_page_has_no_errors!
     
-    within '#login_error' do
-      assert page.has_content?(
-        I18n.t('authlogic.attributes.customer_session.email') + ' ' +
-        I18n.t('authlogic.error_messages.login_not_found')
-      )
-    end
+    assert page.has_css?('.alert', text:
+      I18n.t('authlogic.attributes.customer_session.email') + ' ' +
+      I18n.t('authlogic.error_messages.login_not_found')
+    )
   end
   
   test 'should not login activate an account and should login' do
@@ -72,20 +69,18 @@ class PublicCustomerInteractionsTest < ActionDispatch::IntegrationTest
       
       assert_page_has_no_errors!
       
-      within '#login_error' do
-        assert page.has_content?(
-          I18n.t('authlogic.attributes.customer_session.email') + ' ' +
-          I18n.t('authlogic.error_messages.login_not_found')
-        )
-      end
+      assert page.has_css?('.alert', text:
+        I18n.t('authlogic.attributes.customer_session.email') + ' ' +
+        I18n.t('authlogic.error_messages.login_not_found')
+      )
       
       visit activate_customer_path(token: customer.perishable_token)
       
       assert_page_has_no_errors!
       
-      within '#notice' do
-        assert page.has_content?(I18n.t('view.customers.correctly_activated'))
-      end
+      assert page.has_css?('.alert', text: 
+          I18n.t('view.customers.correctly_activated')
+      )
       
       fill_in I18n.t('authlogic.attributes.customer_session.email'),
         with: customer.email
@@ -98,11 +93,9 @@ class PublicCustomerInteractionsTest < ActionDispatch::IntegrationTest
       
       assert_page_has_no_errors!
       
-      within '#notice' do
-        assert page.has_content?(
-          I18n.t('view.customer_sessions.correctly_created')
-        )
-      end
+      assert page.has_css?('.alert', 
+        text: I18n.t('view.customer_sessions.correctly_created')
+      )
     end
   end
   
@@ -124,14 +117,11 @@ class PublicCustomerInteractionsTest < ActionDispatch::IntegrationTest
       end
       
       assert_equal new_customer_session_path, current_path
-      
       assert_page_has_no_errors!
       
-      within '#notice' do
-        assert page.has_content?(
-          I18n.t('view.password_resets.instructions_delivered')
-        )
-      end
+      assert page.has_css?('.alert', text:
+        I18n.t('view.password_resets.instructions_delivered')
+      )
     end
   end
   
@@ -140,7 +130,7 @@ class PublicCustomerInteractionsTest < ActionDispatch::IntegrationTest
     
     assert_page_has_no_errors!
     
-    within '#feedback' do
+    within '.feedback' do
       assert_difference 'Feedback.positive.count' do
         click_link 'Si'
         
@@ -157,7 +147,7 @@ class PublicCustomerInteractionsTest < ActionDispatch::IntegrationTest
     
     assert_page_has_no_errors!
     
-    within '#feedback' do
+    within '.feedback' do
       assert_difference 'Feedback.negative.count' do
         click_link 'No'
         

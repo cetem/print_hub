@@ -20,7 +20,7 @@ class DocumentsTest < ActionDispatch::IntegrationTest
     assert_page_has_no_errors!
     assert_equal new_document_path, current_path
 
-    within 'form.new_document' do
+    within 'form' do
       fill_in Document.human_attribute_name('code'), with: '10'
       fill_in Document.human_attribute_name('name'), with: 'Test'
       select('A4', from: Document.human_attribute_name('media'))
@@ -41,7 +41,7 @@ class DocumentsTest < ActionDispatch::IntegrationTest
     assert_page_has_no_errors!
     assert_equal documents_path, current_path
     assert page.has_css?(
-      '#notice', text: I18n.t('view.documents.correctly_created')
+      '.alert', text: I18n.t('view.documents.correctly_created')
     )
   end
     
@@ -55,9 +55,8 @@ class DocumentsTest < ActionDispatch::IntegrationTest
     assert_page_has_no_errors!
     assert_equal documents_path, current_path
 
-    within 'table.list' do
+    within 'table tbody' do
       assert_difference "Document.count", -1 do
-        # all("input[value=#{I18n.t('label.delete')}]").second.click
         find(
           "a[href*=\"/#{documents(:unused_book).id}\"][data-method='delete']"
         ).click
@@ -81,7 +80,7 @@ class DocumentsTest < ActionDispatch::IntegrationTest
     assert_page_has_no_errors!
     assert_equal edit_document_path(id_mb), current_path
 
-    within 'form.edit_document' do
+    within 'form' do
       assert_difference "Document.find(id_mb).tags.count", -1 do
         find('[data-event=removeItem]').click
         sleep(0.5) # Se tarda un poquito en quitarlo
@@ -95,7 +94,7 @@ class DocumentsTest < ActionDispatch::IntegrationTest
     assert_page_has_no_errors!
     assert_equal documents_path, current_path
     assert page.has_css?(
-      '#notice', text: I18n.t('view.documents.correctly_updated')
+      '.alert', text: I18n.t('view.documents.correctly_updated')
     )
   end
 end

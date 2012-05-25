@@ -16,9 +16,9 @@ class CustomersTest < ActionDispatch::IntegrationTest
     assert_page_has_no_errors!
     assert_equal prints_path, current_path
     
-    within '#main_menu' do
+    within '.nav-collapse' do
       click_link I18n.t('menu.admin')
-      within '#submenu_admin' do
+      within '.dropdown-menu' do
         click_link I18n.t('menu.customers')
       end
     end
@@ -26,14 +26,14 @@ class CustomersTest < ActionDispatch::IntegrationTest
     assert_page_has_no_errors!
     assert_equal customers_path, current_path
     
-    within 'nav.links' do
+    within '.form-actions' do
       click_link I18n.t('label.new')
     end
     
     assert_page_has_no_errors!
     assert_equal new_customer_path, current_path
     
-    within 'form.new_customer' do
+    within 'form' do
       fill_in Customer.human_attribute_name('name'), with: 'Yoda'
       fill_in Customer.human_attribute_name('lastname'), with: 'Master'
       fill_in Customer.human_attribute_name('identification'), with: '060'
@@ -52,7 +52,7 @@ class CustomersTest < ActionDispatch::IntegrationTest
     id = Customer.order('created_at DESC, id DESC').first.id
     assert_equal customer_path(id), current_path
     assert page.has_css?(
-      '#notice', text: I18n.t('view.customers.correctly_created')
+      '.alert', text: I18n.t('view.customers.correctly_created')
     )
   end
   

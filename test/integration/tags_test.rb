@@ -17,17 +17,17 @@ class TagsTest < ActionDispatch::IntegrationTest
     assert_equal prints_path, current_path
     assert_page_has_no_errors!
 
-    assert page.has_css?('#main_menu')
+    assert page.has_css?('.nav-collapse')
 
-    within '#main_menu' do
+    within '.nav-collapse' do
       click_link I18n.t('menu.tags')
     end
 
     assert_equal tags_path, current_path
     assert_page_has_no_errors!
-    assert page.has_css?('table.list')
+    assert page.has_css?('table')
 
-    within 'table.list' do
+    within 'table tbody' do
       assert_difference 'Tag.count', -1 do
         find("a[data-method='delete']").click
         page.driver.browser.switch_to.alert.accept
@@ -45,16 +45,16 @@ class TagsTest < ActionDispatch::IntegrationTest
     assert_equal prints_path, current_path
     assert_page_has_no_errors!
 
-    assert page.has_css?('#main_menu')
+    assert page.has_css?('.nav-collapse')
 
-    within '#main_menu' do
+    within '.nav-collapse' do
       click_link I18n.t('menu.tags')
     end
 
     assert_equal tags_path, current_path
     assert_page_has_no_errors!
 
-    within 'nav.links' do
+    within '.form-actions' do
       click_link I18n.t('label.new')
     end
 
@@ -67,7 +67,7 @@ class TagsTest < ActionDispatch::IntegrationTest
       click_button I18n.t('helpers.submit.create', model: Tag.model_name.human)
     end
 
-    assert page.has_css?('#notice', text: I18n.t('view.tags.correctly_created'))
+    assert page.has_css?('.alert', text: I18n.t('view.tags.correctly_created'))
     assert_equal tags_path, current_path
     assert_page_has_no_errors!
 
@@ -75,7 +75,7 @@ class TagsTest < ActionDispatch::IntegrationTest
 
     assert_page_has_no_errors!
 
-    within 'nav.links' do
+    within '.form-actions' do
       click_link I18n.t('label.new')
     end
 
@@ -89,6 +89,6 @@ class TagsTest < ActionDispatch::IntegrationTest
     end
 
     assert_page_has_no_errors!
-    assert page.has_css?('#notice', text: I18n.t('view.tags.correctly_created'))
+    assert page.has_css?('.alert', text: I18n.t('view.tags.correctly_created'))
   end
 end

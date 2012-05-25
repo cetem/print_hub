@@ -16,13 +16,13 @@ class OrdersTest < ActionDispatch::IntegrationTest
     assert_equal prints_path, current_path
     assert_page_has_no_errors!
 
-    within '#main_menu' do
+    within '.nav-collapse' do
       click_link I18n.t('menu.orders')
     end
 
     assert_page_has_no_errors!
 
-    within 'nav.links' do
+    within '.form-actions' do
       click_link I18n.t('view.orders.show_all').gsub('*', '')
     end
 
@@ -30,13 +30,11 @@ class OrdersTest < ActionDispatch::IntegrationTest
     assert_equal orders_path, current_path
 
     show_href = nil
-
-    within 'table.list' do
-      assert page.has_css?('.even') 
-      within ('.even') do
-        show_href = find_link(I18n.t('label.show'))[:href]
-        click_link I18n.t('label.show')
-      end
+    show_label = I18n.t('label.show')
+    
+    within 'table tbody' do
+      show_href = find("a[data-original-title=#{show_label}]")[:href]
+      find("a[data-original-title=#{show_label}]").click
     end
 
     id = show_href.match(/\/(\d+)/)[1]
@@ -46,7 +44,7 @@ class OrdersTest < ActionDispatch::IntegrationTest
     assert_equal order_path(id), current_path
     assert_page_has_no_errors!
 
-    within 'nav.links' do
+    within '.form-actions' do
       click_link I18n.t('view.orders.new_print')
     end
 
@@ -54,7 +52,7 @@ class OrdersTest < ActionDispatch::IntegrationTest
     assert_equal new_print_path, current_path
 
 
-    within 'form.new_print' do
+    within 'form' do
       select(
         Cups.show_destinations.detect { |p| p =~ /pdf/i }, from: 'print_printer'
       )
@@ -64,12 +62,12 @@ class OrdersTest < ActionDispatch::IntegrationTest
     end
 
     assert_page_has_no_errors!
-    assert page.has_css?('#notice', text: I18n.t('view.prints.correctly_created'))
+    assert page.has_css?('.alert', text: I18n.t('view.prints.correctly_created'))
 
     last_print = Print.order('id DESC').first
     assert_equal print_path(last_print), current_path
 
-    within 'nav.links' do
+    within '.form-actions' do
       click_link I18n.t('label.list')
     end
 
@@ -82,13 +80,13 @@ class OrdersTest < ActionDispatch::IntegrationTest
     assert_equal prints_path, current_path
     assert_page_has_no_errors!
 
-    within '#main_menu' do
+    within '.nav-collapse' do
       click_link I18n.t('menu.orders')
     end
 
     assert_page_has_no_errors!
 
-    within 'nav.links' do
+    within '.form-actions' do
       click_link I18n.t('view.orders.show_all').gsub('*', '')
     end
 
@@ -96,12 +94,11 @@ class OrdersTest < ActionDispatch::IntegrationTest
     assert_equal orders_path, current_path
 
     show_href = nil
-    
-    within 'table.list' do
-      within ('.even') do
-        show_href = find_link(I18n.t('label.show'))[:href]
-        click_link I18n.t('label.show')
-      end
+    show_label = I18n.t('label.show')
+        
+    within 'table tbody' do
+      show_href = find("a[data-original-title=#{show_label}]")[:href]
+      find("a[data-original-title=#{show_label}]").click
     end
 
     id = show_href.match(/\/(\d+)/)[1]
@@ -111,7 +108,7 @@ class OrdersTest < ActionDispatch::IntegrationTest
     assert_equal order_path(id), current_path
     assert_page_has_no_errors!
     
-    within 'nav.links' do
+    within '.form-actions' do
       assert_difference 'Order.cancelled.count' do
         click_link I18n.t('view.orders.cancel')
         page.driver.browser.switch_to.alert.accept
@@ -122,7 +119,7 @@ class OrdersTest < ActionDispatch::IntegrationTest
     assert_page_has_no_errors!
     assert_equal order_path(id), current_path
     assert page.has_css?(
-      '#notice', text: I18n.t('view.orders.correctly_cancelled')
+      '.alert', text: I18n.t('view.orders.correctly_cancelled')
     )
   end
 end

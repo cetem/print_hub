@@ -16,35 +16,33 @@ class PrivateCustomerInteractionsTest < ActionDispatch::IntegrationTest
   test 'should search with no results and show contextual help' do
     login
     
-    assert page.has_css?('#empty_catalog_help')
+    assert page.has_css?('#empty-catalog-help')
     
-    fill_in 'search_query', with: 'inexistent document'
-    
-    click_button I18n.t('label.search')
+    fill_in 'q', with: 'inexistent document'
+    find('#q').native.send_keys :enter
     
     assert_equal catalog_path, current_path
     assert_page_has_no_errors!
-    assert page.has_css?('#empty_search_in_catalog_help')
+    assert page.has_css?('#empty-search-in-catalog-help')
   end
   
   test 'should complete an order' do
     login
     
-    fill_in 'search_query', with: 'Math'
-    
-    click_button I18n.t('label.search')
+    fill_in 'q', with: 'Math'
+    find('#q').native.send_keys :enter
     
     assert_page_has_no_errors!
-    assert page.has_css?('table.list')
+    assert page.has_css?('table')
     
-    within 'table.list' do
+    within 'table tbody' do
       assert page.has_css?('a.add_to_order')
       assert page.has_no_css?('a.remove_from_order')
       find('a.add_to_order').click
       assert page.has_css?('a.remove_from_order')
     end
     
-    within '#menu_links' do
+    within '.nav-collapse' do
       click_link I18n.t('view.catalog.new_order')
     end
     
@@ -81,7 +79,7 @@ class PrivateCustomerInteractionsTest < ActionDispatch::IntegrationTest
       price_per_copy = find('input[name$="[price_per_copy]"]').value.to_f || 0.0
       total_should_be = copies * pages * price_per_copy
       
-      within '.nested_item_actions' do
+      within '.order_line' do
         assert find('.money').has_content?("$#{total_should_be}")
       end
       
@@ -89,7 +87,7 @@ class PrivateCustomerInteractionsTest < ActionDispatch::IntegrationTest
       
       new_total_should_be = 5 * pages * price_per_copy
       
-      within '.nested_item_actions' do
+      within '.order_line' do
         assert find('.money').has_content?("$#{new_total_should_be}")
       end
     end
@@ -98,14 +96,13 @@ class PrivateCustomerInteractionsTest < ActionDispatch::IntegrationTest
   test 'should customize the order' do
     login
     
-    fill_in 'search_query', with: 'Math'
-    
-    click_button I18n.t('label.search')
+    fill_in 'q', with: 'Math'
+    find('#q').native.send_keys :enter
     
     assert_page_has_no_errors!
-    assert page.has_css?('table.list')
+    assert page.has_css?('table')
     
-    within 'table.list' do
+    within 'table tbody' do
       assert page.has_css?('a.add_to_order')
       assert page.has_no_css?('a.remove_from_order')
       find('a.add_to_order').click
@@ -115,7 +112,7 @@ class PrivateCustomerInteractionsTest < ActionDispatch::IntegrationTest
       find('a.add_to_order').click
     end
     
-    within '#menu_links' do
+    within '.nav-collapse' do
       click_link I18n.t('view.catalog.new_order')
     end
     
@@ -128,7 +125,7 @@ class PrivateCustomerInteractionsTest < ActionDispatch::IntegrationTest
       click_link ''
       assert page.has_css?('.document_details')
       original_price =
-        find('.nested_item_actions .money').text.match(/\d+\.\d+/)[0].to_f
+        find('.order_line .money').text.match(/\d+\.\d+/)[0].to_f
       
       assert_equal 2, page.all('.order_line').size
       click_link '✘'
@@ -136,7 +133,7 @@ class PrivateCustomerInteractionsTest < ActionDispatch::IntegrationTest
       wait_until { page.all('.order_line').size == 1 }
       
       new_price =
-        find('.nested_item_actions .money').text.match(/\d+\.\d+/)[0].to_f
+        find('.order_line .money').text.match(/\d+\.\d+/)[0].to_f
       
       assert_not_equal new_price, original_price
     end
@@ -156,7 +153,7 @@ class PrivateCustomerInteractionsTest < ActionDispatch::IntegrationTest
     
     assert_page_has_no_errors!
     
-    within '#menu_links' do
+    within '.nav-collapse' do
       click_link I18n.t('customer_menu.profile')
     end
     

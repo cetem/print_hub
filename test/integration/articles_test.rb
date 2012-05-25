@@ -20,7 +20,7 @@ class ArticlesTest < ActionDispatch::IntegrationTest
     assert_page_has_no_errors!
     assert_equal new_article_path, current_path
     
-    within 'form.new_article'do
+    within 'form'do
       fill_in Article.human_attribute_name('code'), with: '007'
       fill_in Article.human_attribute_name('name'), with: 'Laminate'
       fill_in Article.human_attribute_name('price'), with: '1.50'
@@ -45,7 +45,7 @@ class ArticlesTest < ActionDispatch::IntegrationTest
     assert_page_has_no_errors!
     assert_equal articles_path, current_path
     
-    within 'table.list' do
+    within 'table tbody' do
       assert_difference 'Article.count', -1 do
         all("a[data-method='delete']")[1].click #El 1ro esta usado
         page.driver.browser.switch_to.alert.accept

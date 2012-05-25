@@ -19,7 +19,7 @@ class UsersTest < ActionDispatch::IntegrationTest
     assert_page_has_no_errors!
     assert_equal new_user_path, current_path
     
-    within 'form.new_user' do
+    within 'form' do
       fill_in User.human_attribute_name('name'), with: 'Mace'
       fill_in User.human_attribute_name('last_name'), with: 'Windu'
       select( I18n.t('lang.es'), from: 'user_language')
@@ -40,6 +40,6 @@ class UsersTest < ActionDispatch::IntegrationTest
       end
     end
     assert_page_has_no_errors!
-    assert page.has_css?('#notice', text: I18n.t('view.users.correctly_created'))
+    assert page.has_css?('.alert', text: I18n.t('view.users.correctly_created'))
   end  
 end

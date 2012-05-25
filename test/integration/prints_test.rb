@@ -9,7 +9,7 @@ class PrintsTest < ActionDispatch::IntegrationTest
     Capybara.app_host = "http://localhost:54163"
     page.driver.options[:resynchronize] = true
     
-    @ac_field = 'auto_document_print_job_print_print_jobs_attributes_0_'
+    @ac_field = 'auto-document-print_job_print_print_jobs_attributes_0_'
   end
   
   test 'should add a document with +' do
@@ -17,23 +17,23 @@ class PrintsTest < ActionDispatch::IntegrationTest
     
     assert_equal prints_path, current_path
     assert_page_has_no_errors!
-    assert page.has_css?('#main_menu')
+    assert page.has_css?('.nav-collapse')
     
-    within '#main_menu' do
+    within '.nav-collapse' do
       click_link I18n.t('menu.documents')
     end
     
     assert_equal documents_path, current_path
     assert_page_has_no_errors!
     
-    within '.even' do
+    within 'table tbody' do
       find('a.add_link').click
       assert find('a.remove_link')
     end
     
-    assert page.has_css?('nav.links')
+    assert page.has_css?('.form-actions')
     
-    within 'nav.links' do
+    within '.form-actions' do
       click_link I18n.t('view.documents.new_print')
     end
     
@@ -54,14 +54,14 @@ class PrintsTest < ActionDispatch::IntegrationTest
     assert_equal prints_path, current_path
     assert_page_has_no_errors!
     
-    within 'nav.links' do
+    within '.form-actions' do
       click_link I18n.t('view.prints.new')
     end
     
     assert_equal new_print_path, current_path
     assert page.has_css?('form.new_print')
     
-    within 'form.new_print' do
+    within 'form' do
       select(
         Cups.show_destinations.detect { |p| p =~ /pdf/i }, from: 'print_printer' 
       )
@@ -78,7 +78,7 @@ class PrintsTest < ActionDispatch::IntegrationTest
     end
     
     assert_page_has_no_errors!
-    assert page.has_css?('#notice', text: I18n.t('view.prints.correctly_created'))
+    assert page.has_css?('.alert', text: I18n.t('view.prints.correctly_created'))
     
   end
   
@@ -88,23 +88,23 @@ class PrintsTest < ActionDispatch::IntegrationTest
     assert_equal prints_path, current_path
     assert_page_has_no_errors!
     
-    within 'nav.links' do
+    within '.form-actions' do
       click_link I18n.t('view.prints.new')
     end
     
     assert_equal new_print_path, current_path
-    assert page.has_css?('form.new_print')
+    assert page.has_css?('form')
     
-    within 'form.new_print' do
+    within 'form' do
       select(:blank, from: 'print_printer' )
       fill_in 'print_scheduled_at', with: ''
-      assert page.has_xpath?("//table[@class='ui-datepicker-calendar']")
+      assert page.has_css?('div.datetime_picker')
 
-      within :xpath, "//table[@class='ui-datepicker-calendar']" do
+      within 'div.datetime_picker' do
         assert page.has_xpath?(
           "//div[@id='ui-timepicker-div-print_scheduled_at']"
         )
-        within :xpath, "//div[@class='ui-timepicker-div']" do
+        within :xpath, "//div[@id='ui-timepicker-div-print_scheduled_at']" do
           find('.ui_tpicker_hour .ui-slider-handle').native.send_keys :end
           find('.ui_tpicker_minute .ui-slider-handle').native.send_keys :end
         end
@@ -122,6 +122,6 @@ class PrintsTest < ActionDispatch::IntegrationTest
     end
     
     assert_page_has_no_errors!
-    assert page.has_css?('#notice', text: I18n.t('view.prints.correctly_created'))
+    assert page.has_css?('.alert', text: I18n.t('view.prints.correctly_created'))
   end
 end
