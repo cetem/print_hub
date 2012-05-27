@@ -22,9 +22,9 @@ module PrintsHelper
     link_to t('view.prints.customer_credit_detail.link'),
       credit_detail_customer_path(customer || {id: 0}),
       id: 'link_to_customer_credit_detail',
-      class: 'details-link', remote: true,
       title: t('view.prints.customer_credit_detail.title'),
-      style: ('display: none;' unless customer)
+      style: ('display: none;' unless customer),
+      data: { toggle: 'modal', target: '#customer_credit_details' }
   end
   
   def link_to_document_details(document)

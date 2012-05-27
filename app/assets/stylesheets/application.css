@@ -6,7 +6,6 @@
  *= require twitter/bootstrap
  *= require body_padding
  *= require twitter/bootstrap-responsive
- *= require jquery/fancybox
  *= require jquery/ui-custom
  *= require common
  *= require common-responsive

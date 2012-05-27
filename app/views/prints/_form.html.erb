@@ -215,3 +215,11 @@
   Print.printMessage = '<%= t('view.prints.print') %>';
   Print.saveMessage = '<%= t('helpers.submit.create', model: Print.model_name.human) %>';
 </script>
+
+<div class="modal fade" id="customer_credit_details">
+  <div class="modal-header">
+    <button class="close" data-dismiss="modal">&times;</button>
+    <h3><%= t('view.prints.customer_credit_detail_header') %></h3>
+  </div>
+  <div class="modal-body"><%= t('messages.loading') %></div>
+</div>

@@ -1,34 +1,24 @@
 module CatalogHelper
-  def catalog_document_thumb(document)
-    links_with_thumbs = [:pdf_mini_thumb].map do |style|
+  def catalog_document_thumbs(document, version = :mini)
+    styles = version == :mini ?
+      [:pdf_mini_thumb, :pdf_mini_thumb_2, :pdf_mini_thumb_3] :
+      [:pdf_thumb,      :pdf_thumb_2,      :pdf_thumb_3]
+
+    styles.each_with_index.map do |style, i|
       if document.file.file? && File.exists?(document.file.path(style))
         thumb_dimensions = Paperclip::Geometry.from_file document.file.path(style)
         thumb_image_tag = image_tag(
-          download_catalog_path(document, style: style),
-          alt: document.name,
+          download_catalog_path(document, style: style), alt: document.name,
           size: thumb_dimensions.to_s
         )
+        image_link = content_tag(
+          :a, thumb_image_tag, href: '#document_thumbs_modal',
+          data: { toggle: 'modal' }
+        )
 
-        thumb = content_tag(:div, thumb_image_tag, class: 'image_container')
-        image_style = style.to_s.sub(/_mini/, '').to_sym
-
-        content_tag :a, thumb,
-          href: download_catalog_path(document, style: image_style),
-          'data-rel' => "doc_image_#{document.id}", title: document.name,
-          class: 'fancybox'
+        content_tag :div, image_link, class: (i == 0 ? 'item active' : 'item')
       end
-    end
-    
-    links_with_thumbs += [:pdf_thumb_2, :pdf_thumb_3].map do |style|
-      if document.file.file? && File.exists?(document.file.path(style))
-        content_tag :a, '',
-          href: download_catalog_path(document, style: style),
-          'data-rel' => "doc_image_#{document.id}", title: document.name,
-          class: 'fancybox', style: 'display: none;'
-      end
-    end
-    
-    links_with_thumbs.compact.join("\n").html_safe
+    end.compact.join("\n").html_safe
   end
   
   def catalog_document_link_with_name(document)

@@ -104,8 +104,6 @@ jQuery ($)->
     ajaxStart: `function() { State.ajaxInProgress = true }`
     ajaxStop: `function() { State.ajaxInProgress = false }`
   
-  $('a.fancybox').fancybox(type: 'image')
-  
   $(document).on 'click', 'a.show', (event)->
     $($(this).data('target')).stop(true, true).slideDown 300, ->
       $(this).find('*[autofocus]:not([readonly]):not([disabled]):visible:first').focus()

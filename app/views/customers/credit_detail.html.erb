@@ -1,23 +1,25 @@
 <div id="customer_credit_detail">
   <div>
     <% if @customer.current_bonuses.empty? %>
-      <p class="warning">
+      <div class="alert alert-warning">
         <%= t('view.customers.without_bonuses') %>
-      </p>
+      </div>
     <% else %>
-      <h2>
+      <h3>
         <%= t(
           'view.customers.current_bonuses',
           count: @customer.current_bonuses.size
         ) %>
-      </h2>
+      </h3>
+    
+      <br />
 
       <table class="table table-striped">
         <thead>
           <tr>
-            <th><%= Bonus.human_attribute_name :amount %></th>
-            <th><%= Bonus.human_attribute_name :remaining %></th>
-            <th><%= Bonus.human_attribute_name :valid_until %></th>
+            <th><%= Bonus.human_attribute_name 'amount' %></th>
+            <th><%= Bonus.human_attribute_name 'remaining' %></th>
+            <th><%= Bonus.human_attribute_name 'valid_until' %></th>
           </tr>
         </thead>
         <tbody>
@@ -33,23 +35,23 @@
     <% end %>
     
     <% if @customer.current_deposits.empty? %>
-      <p class="warning">
+      <div class="alert alert-warning">
         <%= t('view.customers.without_deposits') %>
-      </p>
+      </div>
     <% else %>
-      <h2>
+      <h3>
         <%= t(
           'view.customers.current_deposits',
           count: @customer.current_deposits.size
         ) %>
-      </h2>
+      </h3>
 
       <table class="table table-striped">
         <thead>
           <tr>
-            <th><%= Deposit.human_attribute_name :amount %></th>
-            <th><%= Deposit.human_attribute_name :remaining %></th>
-            <th><%= Deposit.human_attribute_name :valid_until %></th>
+            <th><%= Deposit.human_attribute_name 'amount' %></th>
+            <th><%= Deposit.human_attribute_name 'remaining' %></th>
+            <th><%= Deposit.human_attribute_name 'valid_until' %></th>
           </tr>
         </thead>
         <tbody>

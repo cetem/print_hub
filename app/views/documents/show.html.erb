@@ -1,58 +1,81 @@
 <% id = "document_details_#{@document.id}" %>
-<div id="<%= id %>" class="document_details readonly-data">
-  <div class="document_data">
-    <h2 class="title"><%= @document %></h2>
-    <div class="row-fluid">
-      <div class="span6">
-        <dl class="details">
-          <dt><%= Document.human_attribute_name :stock %>:</dt>
-          <dd><%= @document.stock %></dd>
+<div id="<%= id %>" class="document_details readonly-data clearfix">
+  <div class="page-header">
+    <h2><%= @document %></h2>
+  </div>
+  
+  <div class="row-fluid">
+    <div class="span8">
+      <dl class="dl-horizontal">
+        <dt><%= Document.human_attribute_name 'stock' %>:</dt>
+        <dd><%= @document.stock %></dd>
 
-          <dt><%= Document.human_attribute_name :pages %>:</dt>
-          <dd><%= @document.pages %></dd>
+        <dt><%= Document.human_attribute_name 'pages' %>:</dt>
+        <dd><%= @document.pages %></dd>
 
-          <dt><%= Document.human_attribute_name :media %>:</dt>
-          <dd><%= show_document_media_text @document.media %></dd>
+        <dt><%= Document.human_attribute_name 'media' %>:</dt>
+        <dd><%= show_document_media_text @document.media %></dd>
 
-          <dt><%= Document.human_attribute_name :description %>:</dt>
-          <dd><%= @document.description %>&nbsp;</dd>
+        <dt><%= Document.human_attribute_name 'description' %>:</dt>
+        <dd><%= @document.description %>&nbsp;</dd>
 
-          <dt><%= Document.human_attribute_name :file %>:</dt>
-          <dd><%= link_to_if @document.file.file?, t('label.download'), @document.file.url %></dd>
-        </dl>
+        <dt><%= Document.human_attribute_name :file %>:</dt>
+        <dd><%= link_to_if @document.file.file?, t('label.download'), @document.file.url %></dd>
+        
+        <dt><%= t('view.documents.barcode') %>:</dt>
+        <dd><%= document_link_to_barcode @document.code %></dd>
+      </dl>
 
-        <% unless @document.tags.empty? %>
-          <h3 class="title"><%= t('menu.tags') %></h3>
-          <ul class="raw">
-            <% @document.tags.each do |tag| %>
-              <li><%= tag %></li>
-            <% end %>
-          </ul>
-        <% end %>
-      </div>
-      <div class="span6">
-        <strong><%= t('view.documents.barcode') %></strong>:
-        <%= document_link_to_barcode @document.code %>
+      <% unless @document.tags.empty? %>
+        <h3><%= t('menu.tags') %></h3>
+        <ul>
+          <% @document.tags.each do |tag| %>
+            <li><span class="label"><%= tag %></span></li>
+          <% end %>
+        </ul>
+      <% end %>
+    </div>
+    <div class="span4">
+      <div id="document_mini_thumbs" class="carousel" data-interval="false">
+        <div class="carousel-inner">
+          <%= show_document_thumbs(@document) %>
+        </div>
+
+        <a class="carousel-control left" href="#document_mini_thumbs" data-slide="prev">&lsaquo;</a>
+        <a class="carousel-control right" href="#document_mini_thumbs" data-slide="next">&rsaquo;</a>
       </div>
     </div>
-
-    <%= show_document_thumb(@document) %>
   </div>
+  
+  <% if request.xhr? %>
+    <nav class="form-actions">
+      <%= link_to t('label.show'), document_path(@document) %> |
+      <%= link_to_function t('label.hide'), "Helper.remove('##{id}')" %>
+    </nav>
+  <% end %>
 </div>
 
-<nav class="form-actions">
-  <% if request.xhr? %>
-    <%= link_to t('label.show'), document_path(@document) %> |
-    <%= link_to_function t('label.hide'), "Helper.remove('##{id}')" %>
-  <% else %>
+<% unless request.xhr? %>
+  <nav class="form-actions">
     <%= document_link_for_use_in_next_print @document %> |
     <%= link_to t('label.edit'), edit_document_path(@document) %> |
     <%= link_to t('label.list'), documents_path %>
-  <% end %>
-</nav>
-
-<% if request.xhr? %>
-  <script type="text/javascript">
-    $('#<%= id %>').find('a.fancybox').fancybox({type: 'image'});
-  </script>
+  </nav>
 <% end %>
+
+<div class="modal fade" id="document_thumbs_modal">
+  <div class="modal-header">
+    <button class="close" data-dismiss="modal">&times;</button>
+    <h3><%= @document %></h3>
+  </div>
+  <div class="modal-body">
+    <div id="document_thumbs" class="carousel" data-interval="false">
+      <div class="carousel-inner">
+        <%= show_document_thumbs(@document, :regular) %>
+      </div>
+
+      <a class="carousel-control left" href="#document_thumbs" data-slide="prev">&lsaquo;</a>
+      <a class="carousel-control right" href="#document_thumbs" data-slide="next">&rsaquo;</a>
+    </div>
+  </div>
+</div>

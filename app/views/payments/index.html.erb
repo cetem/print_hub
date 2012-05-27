@@ -42,7 +42,7 @@
   <% unless payments_paid == 0 %>
     <br />
     <h3>(*) <%= t('view.payments.payment_details') %></h3>
-    <ul class="raw">
+    <ul>
       <% @payments.group(:paid_with).sum('paid').each do |paid_with, payments_amount| %>
         <li><%= "#{show_paid_with_text(paid_with)}: #{number_to_currency(payments_amount)}" %></li>
       <% end %>

@@ -1,21 +1,22 @@
 module DocumentsHelper
-  def show_document_thumb(document)
-    mini_styles = [:pdf_mini_thumb, :pdf_mini_thumb_2, :pdf_mini_thumb_3]
+  def show_document_thumbs(document, version = :mini)
+    styles = version == :mini ?
+      [:pdf_mini_thumb, :pdf_mini_thumb_2, :pdf_mini_thumb_3] :
+      [:pdf_thumb,      :pdf_thumb_2,      :pdf_thumb_3]
 
-    mini_styles.map do |style|
+    styles.each_with_index.map do |style, i|
       if document.file.file? && File.exists?(document.file.path(style))
         thumb_dimensions = Paperclip::Geometry.from_file document.file.path(style)
         thumb_image_tag = image_tag(
           document.file.url(style), alt: document.name,
           size: thumb_dimensions.to_s
         )
+        image_link = content_tag(
+          :a, thumb_image_tag, href: '#document_thumbs_modal',
+          data: { toggle: 'modal' }
+        )
 
-        thumb = content_tag(:div, thumb_image_tag, class: 'image_container')
-        image_style = style.to_s.sub(/_mini/, '').to_sym
-
-        content_tag :a, thumb, href: document.file.url(image_style),
-          data: {rel: "doc_image_#{document.id}"}, title: document.name,
-          class: :fancybox
+        content_tag :div, image_link, class: (i == 0 ? 'item active' : 'item')
       end
     end.compact.join("\n").html_safe
   end

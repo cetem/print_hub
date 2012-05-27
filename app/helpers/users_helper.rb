@@ -18,11 +18,8 @@ module UsersHelper
       thumb_dimensions = Paperclip::Geometry.from_file user.avatar.path(style)
       thumb_image_tag = image_tag user.avatar.url(style), alt: user.to_s,
         size: thumb_dimensions.to_s
-      thumb = content_tag :div, thumb_image_tag,
-        class: "image_container user_avatar #{style}_style"
-
-      content_tag :a, thumb, href: user.avatar.url, title: user.to_s,
-        class: 'fancybox'
+      
+      content_tag :div, thumb_image_tag
     elsif options[:show_default]
       content_tag :span, '&#xe062;'.html_safe, class: 'iconic large'
     end

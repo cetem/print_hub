@@ -244,8 +244,8 @@ jQuery ($)->
         $(this).parents('.print_job').find('.dynamic_details').hide().html(data)
       )
 
-    $(document).on 'ajax:success', '#link_to_customer_credit_detail', (event, data)->
-      $.fancybox('padding': 24, 'content': data)
+    $(document).on 'click', '#link_to_customer_credit_detail', ->
+      $("#{$(this).attr('data-target')} .modal-body").load($(this).attr('href'))
     
     Print.updateSubmitLabel()
     

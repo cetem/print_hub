@@ -478,6 +478,7 @@
       job_canceled: 'Cancelado'
       job_not_canceled: 'No se pudo cancelar'
       prints_with_customer: 'Impresiones de %{customer}'
+      customer_credit_detail_header: 'Detalles de crédito'
       customer_credit_detail:
         link: 'Ver crédito'
         title: 'Ver detalles del crédito vigente'
