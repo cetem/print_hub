@@ -1,34 +1,43 @@
-<p class="help_link_container only_mobile">
-  <a class="toggle_display" href="#customer_profile_help">
-    ¿Qué pasa si <strong>cambio</strong> mis datos?
-  </a>
-</p>
-<section id="customer_profile_help" class="explanation hidden_for_mobile">
+<%= content_for :bottom_content do %>
+  <p class="help_link_container visible-phone">
+    <a class="toggle_display" href="#customer_profile_help">
+      ¿Qué pasa si <strong>cambio</strong> mis datos?
+    </a>
+  </p>
+<% end %>
+<section id="customer_profile_help" class="details hidden-phone">
   <header>
-    <h2>Cambio de datos</h2>
+    <h1>Cambio de datos</h1>
   </header>
-  <section class="spot">
+  
+  <br />
+  
+  <div>
     <h3>Cambiar contraseña</h3>
     <p>
       Para cambiar tu contraseña completá los campos <strong>contraseña</strong>
       y <strong>confirmación</strong>. Si los dejás
       <strong>en blanco</strong> tu contraseña <strong>no cambia</strong>.
     </p>
-  </section>
-  <section class="spot">
+  </div>
+  
+  <div>
     <h3>Cambio de <strong>correo</strong></h3>
     <p>
       Si cambiás la dirección de correo, tu cuenta se
       <strong>desactiva</strong>, te enviamos un <strong>correo</strong> a la
       nueva dirección, la <strong>re-confirmás</strong> y listo.
     </p>
-  </section>
-  <section class="spot">
+  </div>
+  
+  <div>
     <h3>Datos personales</h3>
     <p>
       El cambio de datos personales es <em>gratis</em>, podés alterar tu nombre
       sin ningún problema =)
     </p>
-  </section>
+  </div>
+  
+  <br />
   <%= render 'help/footer', item: 'customer_profile' %>
 </section>

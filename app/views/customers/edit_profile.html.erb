@@ -1,6 +1,9 @@
-<section id="customer_profile">
-  <div id="public_customer_form">
+<div class="row-fluid">
+  <div class="span6">
     <%= render 'public_form' %>
   </div>
-  <%= render 'help/customer_profile' %>
-</section>
+  <div class="span6">
+    <%= render 'help/customer_profile' %>
+    <%= yield :bottom_content %>
+  </div>
+</div>
