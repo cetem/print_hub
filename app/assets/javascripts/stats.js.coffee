@@ -7,8 +7,8 @@ jQuery ->
     width = container.innerWidth()
 
     $('table[data-graph-grid] tbody tr').each ->
-      values.push parseInt($('td.value', this).text())
-      labels.push $('td.label', this).text()
+      values.push parseInt($('td[data-value-column]', this).text())
+      labels.push $('td[data-label-column]', this).text()
 
     Raphael(container.get(0), width, 500).pieChart(
       width / 2.0, 250, 175, values, labels, '#efefef'

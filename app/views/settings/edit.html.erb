@@ -1,9 +1,11 @@
 <%= simple_form_for @setting do |f| %>
   <div class="form-inputs">
-    <h2 class="title"><%= @setting.name %></h2>
+    <div class="page-header">
+      <h2><%= @setting.name %></h2>
+    </div>
 
-    <%= f.input :value, required: false, input_html: {
-      value: @setting.value, autofocus: true, rows: 3 
+    <%= f.input :value, as: :string, input_html: {
+      value: @setting.value, autofocus: true, class: 'span6'
     } %>
     <%= f.input :lock_version, as: :hidden %>
   </div>

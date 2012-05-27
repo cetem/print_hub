@@ -1,10 +1,10 @@
 <% deposits_amount = @deposits.sum('amount') %>
 <% payments_amount = @payments.sum('amount') %>
 <% payments_paid = @payments.sum('paid') %>
-<div class="row-fluid">
-<%= render partial: 'shared/date_filter', locals: {
-  from_date: @from_date, to_date: @to_date
-} %>
+
+<%= render 'shared/date_filter', from_date: @from_date, to_date: @to_date %>
+
+<div class="readonly-data">
   <table class="table table-striped">
     <thead>
       <tr>
@@ -35,18 +35,18 @@
     </tbody>
   </table>
 
-  <p class="note readonly-data">
+  <p class="alert alert-info">
     <%= show_payments_resume(deposits_amount) %>
   </p>
 
   <% unless payments_paid == 0 %>
-    <section class="details readonly-data">
-      <h3>(*) <%= t('view.payments.payment_details') %></h3>
-      <ul class="raw">
-        <% @payments.group(:paid_with).sum('paid').each do |paid_with, payments_amount| %>
-          <li><%= "#{show_paid_with_text(paid_with)}: #{number_to_currency(payments_amount)}" %></li>
-        <% end %>
-      </ul>
-    </section>
+    <br />
+    <h3>(*) <%= t('view.payments.payment_details') %></h3>
+    <ul class="raw">
+      <% @payments.group(:paid_with).sum('paid').each do |paid_with, payments_amount| %>
+        <li><%= "#{show_paid_with_text(paid_with)}: #{number_to_currency(payments_amount)}" %></li>
+      <% end %>
+    </ul>
   <% end %>
 </div>
+<div class="form-actions"></div>

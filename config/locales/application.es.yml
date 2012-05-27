@@ -435,14 +435,16 @@
         end: 'Fin'
         apply: 'Aplicar'
       deposits_count:
-        one: 'un depósito'
-        other: '%{count} depósitos'
+        html:
+          one: '<strong>un</strong> depósito'
+          other: '<strong>%{count}</strong> depósitos'
       paid_with:
         cash: 'Efectivo'
         credit: 'Crédito'
       payments_count:
-        one: 'Suma de un pago'
-        other: 'Suma de %{count} pagos'
+        html:
+          one: 'Suma de <strong>un</strong> pago'
+          other: 'Suma de <strong>%{count}</strong> pagos'
       index_title: 'Listado de pagos'
       payment_details: 'Formas de pago:'
       total: 'Total'

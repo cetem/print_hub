@@ -157,18 +157,6 @@ module ApplicationHelper
     result + page_entries
   end
   
-  def calendar_text_field(form, attribute, user_options = {})
-    value = user_options.delete(:value) || form.object.send(attribute)
-    time = user_options.delete(:time)
-    options = { class: 'calendar' }.merge(user_options)
-    
-    options['value'] = l(value, format: time ? :minimal : :default) if value
-    options['data-time'] = true if time
-    options[:label] = false
-    
-    form.input attribute, options
-  end
-  
   def sortable(column, title = nil)
     css_class = column == sort_column ? "current #{sort_direction}" : nil
     direction = column == sort_column && sort_direction == 'asc' ? 'desc' : 'asc'
