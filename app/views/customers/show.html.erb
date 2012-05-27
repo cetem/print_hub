@@ -1,5 +1,5 @@
 <div class="readonly-data">
-  <h2 class="title"><%= @customer %></h2>
+  <h2><%= @customer %></h2>
 
   <p>
     <%= mail_to @customer.email %>
@@ -23,12 +23,12 @@
   </p>
 
   <% unless @customer.current_bonuses.empty? %>
-    <h2>
+    <h3>
       <%= t(
         'view.customers.current_bonuses',
         count: @customer.current_bonuses.size
       ) %>
-    </h2>
+    </h3>
 
     <table class="table table-striped">
       <thead>
@@ -51,12 +51,12 @@
   <% end %>
 
   <% unless @customer.current_deposits.empty? %>
-    <h2>
+    <h3>
       <%= t(
         'view.customers.current_deposits',
         count: @customer.current_deposits.size
       ) %>
-    </h2>
+    </h3>
 
     <table class="table table-striped">
       <thead>

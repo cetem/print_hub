@@ -1,18 +1,18 @@
 <% id = dynamic_object_id('bonus', f) %>
 <% hide = is_dynamic || f.object.marked_for_destruction? %>
 <div class="bonus row-fluid" id="<%= id %>" <%= raw 'style="display: none;"' if hide %>>
-  <div class="span2">
+  <div class="span3">
     <%= f.input :amount, label: false, 
       input_html: { value: '%.3f' % f.object.amount,
       maxlength: 15, autocomplete: :off, class: 'span11',
       disabled: f.object.persisted?, id: "bonus_amount_#{id}" } %>
   </div>
-  <div class="span2">
+  <div class="span3">
     <%= f.input :remaining, label: false, 
       input_html: { value: '%.3f' % f.object.remaining, class: 'span11',
       maxlength: 15, autocomplete: :off, disabled: true } %>
   </div>
-  <div class="span3">
+  <div class="span4">
     <%= f.input :valid_until, as: :date_picker, label: false,
       input_html: { class: 'span11' } %>
   </div>
