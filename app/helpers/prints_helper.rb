@@ -23,6 +23,7 @@ module PrintsHelper
       credit_detail_customer_path(customer || {id: 0}),
       id: 'link_to_customer_credit_detail',
       title: t('view.prints.customer_credit_detail.title'),
+      class: 'btn btn-mini',
       style: ('display: none;' unless customer),
       data: { toggle: 'modal', target: '#customer_credit_details' }
   end
@@ -83,8 +84,20 @@ module PrintsHelper
   def print_customer_label(customer)
     label = Print.human_attribute_name('customer')
     
+    label << '<span class="pull-right">'
+    
+    if customer
+      label << ' '
+      label << link_to_function(
+        t('view.prints.unlink_customer'),
+        "Print.clearCustomer(); $(this).remove()",
+        class: 'btn btn-mini remove'
+      )
+    end
+    
     label << ' '
     label << link_to_customer_credit_detail(customer)
+    label << '</span>'
     
     raw(label)
   end

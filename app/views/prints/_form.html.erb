@@ -31,9 +31,6 @@
             'autocomplete-url' => autocomplete_for_customer_name_prints_path(format: :json)
           }
         } %>
-        <%= link_to_function 'X',
-          "Print.clearCustomer(); $(this).remove()",
-          class: 'remove' if @print.customer %>
         <%= f.input :customer_id, as: :hidden, 
           input_html: { class: 'autocomplete-id' } %>
         <%= hidden_field_tag :customer_free_credit,
