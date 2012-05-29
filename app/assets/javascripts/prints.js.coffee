@@ -33,7 +33,7 @@ window.Print =
     $(Print.creditPrefix + '_paid').val(payWithBonus.toFixed(3))
 
   updatePrintJobPrice: (printJob)->
-    Jobs.updatePricePerCopy()
+    Jobs.updatePricePerCopy('.print_job')
 
     copies = parseInt(printJob.find('input[name$="[copies]"]').val())
     pricePerCopy = parseFloat(
@@ -195,8 +195,8 @@ jQuery ($)->
       
       Print.updateStock(printJob)
     
-    Jobs.listenRangeChanges()
-    Jobs.listenTwoSidedChanges()
+    Jobs.listenRangeChanges('.print_job')
+    Jobs.listenTwoSidedChanges('.print_job')
     
     $(document).on 'keyup', 'input[name$="[range]"]', ->
       printJob = $(this).parents('.print_job')

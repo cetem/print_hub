@@ -18,7 +18,7 @@ window.Order =
     money.html(money.html().replace(/(\d+.)+\d+/, totalPrice.toFixed(3)))
   
   updateOrderLinePrice: (orderLine)->
-    Jobs.updatePricePerCopy()
+    Jobs.updatePricePerCopy('.order_line')
     
     copies = parseInt orderLine.find('input[name$="[copies]"]').val()
     pages = parseInt orderLine.find('input[name$="[pages]"]').val()
@@ -52,7 +52,7 @@ jQuery ($)->
 
         Order.updateTotalPrice()
 
-    Jobs.listenTwoSidedChanges()
+    Jobs.listenTwoSidedChanges('.order_line')
 
     $(document).on 'change keyup', '.price-modifier', ->
       Order.updateOrderLinePrice $(this).parents('.order_line')

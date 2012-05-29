@@ -1,9 +1,9 @@
 window.Jobs =
-  listenRangeChanges: ->
+  listenRangeChanges: (itemClass)->
     $(document).on 'keyup', 'input[name$="[range]"]', ->
       element = $(this)
       [validRanges, maxPage, rangePages] = [true, null, 0]
-      pages = parseInt element.parents('.nested_item').find('input[name$="[pages]"]').val()
+      pages = parseInt element.parents(itemClass).find('input[name$="[pages]"]').val()
       ranges = element.val().trim().split(/\s*,\s*/).sort (r1, r2)->
         r1Value = parseInt(r1.match(/^\d+/)) || 0
         r2Value = parseInt(r2.match(/^\d+/)) || 0
@@ -22,22 +22,22 @@ window.Jobs =
         rangePages += if n2 then n2 + 1 - n1 else 1
 
       if (/^\s*$/.test(element.val()) || validRanges) && (!pages || !maxPage || pages >= maxPage)
-        element.removeClass('field_with_errors')
+        element.parents('.control-group').removeClass('error')
 
         if /^\s*$/.test(element.val()) && pages
           element.data('rangePages', pages).trigger('change')
         else if !/^\s*$/.test(element.val()) && validRanges
           element.data('rangePages', rangePages).trigger('change')
       else
-        element.addClass('field_with_errors')
+        element.parents('.control-group').addClass('error')
   
-  listenTwoSidedChanges: ->
+  listenTwoSidedChanges: (itemClass)->
     $(document).on 'change', 'input[name$="[two_sided]"]', ->
-      Jobs.updatePricePerCopy()
+      Jobs.updatePricePerCopy(itemClass)
   
-  updatePricePerCopy: ->
+  updatePricePerCopy: (itemClass)->
     $('input[name$="[price_per_copy]"]').each (i, ppc)->
-      twoSidedElement = $(ppc).parents('.nested_item:first')
+      twoSidedElement = $(ppc).parents("#{itemClass}:first")
       .find('input[name$="[two_sided]"].price-modifier')
       
       if twoSidedElement.is(':checked')

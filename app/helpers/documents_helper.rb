@@ -80,22 +80,6 @@ module DocumentsHelper
       id: "document_for_use_in_next_print_#{document.id}"
   end
   
-  def document_file_label(form)
-    label = Document.human_attribute_name :file
-    
-    if @document.file? && !@document.new_record?
-      link = link_to(
-        '&#xe042;'.html_safe, @document.file.url,
-        title: t('view.documents.download'), class: 'iconic'
-      )
-      
-      label << " #{link}"
-    end
-    
-    form.label :file, raw(label),
-      class: ('field_with_errors' unless @document.errors[:file_file_name].blank?)
-  end
-  
   def get_barcode_for(document)
     Barby::QrCode.new(
       add_to_order_by_code_catalog_url(
