@@ -1,3 +1,11 @@
 <%= form_for :search, method: :get, html: {class: 'navbar-search pull-left'} do |f| %>
-  <%= text_field_tag :q, params[:q], class: 'search-query span2', placeholder: t('label.search') %>
+  <%= text_field_tag(
+    :q, params[:q],
+    class: 'search-query span2', placeholder: t('label.search')
+  ) %>
+  <%= submit_tag(
+    '&#xe074;'.html_safe,
+    class: 'btn btn-mini btn-inverse iconic disabled', title: t('label.search'),
+    data: { 'show-tooltip' => true, 'placement' => 'bottom' }
+  ) %>
 <% end %>

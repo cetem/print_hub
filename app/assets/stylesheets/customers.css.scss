@@ -3,3 +3,13 @@
     padding: 6px 20px 18px;
   }
 }
+
+#ph_customers[data-action="edit_profile"] {
+  .feedback {
+    padding-left: 0px;
+  }
+  
+  .form-actions {
+    background-color: #fff;
+  }
+}

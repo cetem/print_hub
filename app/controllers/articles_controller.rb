@@ -1,5 +1,5 @@
 class ArticlesController < ApplicationController
-  before_filter :require_user
+  before_filter :require_admin_user
 
   # GET /articles
   # GET /articles.xml

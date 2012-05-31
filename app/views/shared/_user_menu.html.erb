@@ -16,8 +16,6 @@
             class: ('active' if controller_name == 'documents')) %>
           <%= content_tag(:li, link_to(t('menu.tags'), tags_path),
             class: ('active' if controller_name == 'tags')) %>
-          <%= content_tag(:li, link_to(t('menu.articles'), articles_path),
-            class: ('active' if controller_name == 'articles')) %>
           <%= content_tag(:li, link_to(orders_text, orders_path),
             class: ('active' if controller_name == 'orders')) %>
         </ul>

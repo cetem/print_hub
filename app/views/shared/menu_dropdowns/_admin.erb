@@ -13,6 +13,8 @@
       class: ('active' if controller_name == 'customers')) %>
     <%= content_tag(:li, link_to(t('menu.bonuses'), bonuses_path),
       class: ('active' if controller_name == 'bonuses')) %>
+    <%= content_tag(:li, link_to(t('menu.articles'), articles_path),
+      class: ('active' if controller_name == 'articles')) %>
     <%= content_tag(:li, link_to(t('menu.settings'), settings_path),
       class: ('active' if controller_name == 'settings')) %>
     <%= content_tag(:li, link_to(t('menu.payments'), payments_path),
