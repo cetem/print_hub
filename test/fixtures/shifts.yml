@@ -1,0 +1,11 @@
+current_shift:
+  start: <%= 10.minutes.ago.to_s(:db) %>
+  finish:
+  description: Pending shift
+  user: administrator
+
+old_shift:
+  start: <%= 10.hours.ago.to_s(:db) %>
+  finish: <%= 2.hours.ago.to_s(:db) %>
+  description: Complete shift
+  user: administrator

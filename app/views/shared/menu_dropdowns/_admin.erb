@@ -21,5 +21,7 @@
       class: ('active' if controller_name == 'payments')) %>
     <%= content_tag(:li, link_to(t('menu.stats'), printer_stats_path),
       class: ('active' if controller_name == 'stats')) %>
+    <%= content_tag(:li, link_to(t('menu.shifts'), shifts_path),
+      class: ('active' if controller_name == 'shifts')) %>
   </ul>
 </li>

@@ -1,0 +1,28 @@
+<div class="readonly-data">
+  <div class="row-fluid">
+    <div class="span6">
+      <h2><%= @shift.user %></h2>
+
+      <p>
+        <b><%= Shift.human_attribute_name 'start' %>:</b>
+        <%= l @shift.start, format: :long %>
+      </p>
+
+      <p>
+        <b><%= Shift.human_attribute_name 'finish' %>:</b>
+        <%= l @shift.finish, format: :long if @shift.finish %>
+      </p>
+
+      <p>
+        <b><%= Shift.human_attribute_name 'description' %>:</b>
+        <%= simple_format @shift.description %>
+      </p>
+      
+    </div>
+  </div>
+</div>
+
+<div class="form-actions">
+  <%= link_to t('label.edit'), edit_shift_path(@shift) %> |
+  <%= link_to t('label.list'), shifts_path %>
+</div>

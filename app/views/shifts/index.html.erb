@@ -1,0 +1,29 @@
+<table class="table table-striped">
+  <tbody>
+    <tr>
+      <th><%= Shift.human_attribute_name 'user_id' %></th>
+      <th><%= Shift.human_attribute_name 'start' %></th>
+      <th><%= Shift.human_attribute_name 'finish' %></th>
+      <th colspan="3"></th>
+    </tr>
+  </tbody>
+
+  <tbody>
+    <% @shifts.each do |shift| %>
+      <tr>
+        <td><%= shift.user %></td>
+        <td><%= l shift.start, format: :minimal %></td>
+        <td><%= l shift.finish, format: :minimal if shift.finish %></td>
+        <td><%= link_to_show shift %></td>
+        <td><%= link_to_edit edit_shift_path(shift) %></td>
+        <td><%= link_to_destroy shift %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<%= pagination_links @shifts %>
+
+<div class="form-actions">
+  <%= link_to t('label.new'), new_shift_path, class: 'btn btn-primary' %>
+</div>

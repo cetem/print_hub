@@ -57,6 +57,8 @@ PrintHubApp::Application.routes.draw do
     resources :articles
 
     resources :payments, only: [:index]
+    
+    resources :shifts
 
     resources :customers do
       resources :prints, only: [:index]

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120229224241) do
+ActiveRecord::Schema.define(:version => 20120605130534) do
 
   create_table "article_lines", :force => true do |t|
     t.integer  "print_id"
@@ -19,21 +19,21 @@ ActiveRecord::Schema.define(:version => 20120229224241) do
     t.integer  "units",                                                      :null => false
     t.decimal  "unit_price",   :precision => 15, :scale => 3,                :null => false
     t.integer  "lock_version",                                :default => 0
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                                                 :null => false
+    t.datetime "updated_at",                                                 :null => false
   end
 
   add_index "article_lines", ["article_id"], :name => "index_article_lines_on_article_id"
   add_index "article_lines", ["print_id"], :name => "index_article_lines_on_print_id"
 
   create_table "articles", :force => true do |t|
+    t.integer  "code",                                                       :null => false
     t.string   "name",                                                       :null => false
     t.decimal  "price",        :precision => 15, :scale => 3,                :null => false
     t.text     "description"
     t.integer  "lock_version",                                :default => 0
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.integer  "code",                                                       :null => false
+    t.datetime "created_at",                                                 :null => false
+    t.datetime "updated_at",                                                 :null => false
   end
 
   add_index "articles", ["code"], :name => "index_articles_on_code", :unique => true
@@ -43,8 +43,8 @@ ActiveRecord::Schema.define(:version => 20120229224241) do
     t.decimal  "remaining",   :precision => 15, :scale => 3,                      :null => false
     t.date     "valid_until"
     t.integer  "customer_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                                                      :null => false
+    t.datetime "updated_at",                                                      :null => false
     t.string   "type",                                       :default => "Bonus", :null => false
   end
 
@@ -59,8 +59,8 @@ ActiveRecord::Schema.define(:version => 20120229224241) do
     t.string   "identification",                                                             :null => false
     t.decimal  "free_monthly_bonus",       :precision => 15, :scale => 3
     t.integer  "lock_version",                                            :default => 0
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                                                                 :null => false
+    t.datetime "updated_at",                                                                 :null => false
     t.boolean  "bonus_without_expiration",                                :default => false, :null => false
     t.string   "email"
     t.string   "crypted_password"
@@ -85,8 +85,8 @@ ActiveRecord::Schema.define(:version => 20120229224241) do
     t.string   "file_content_type"
     t.integer  "file_file_size"
     t.datetime "file_updated_at"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                           :null => false
+    t.datetime "updated_at",                           :null => false
     t.text     "tag_path"
     t.string   "media"
     t.boolean  "enable",            :default => true,  :null => false
@@ -110,8 +110,8 @@ ActiveRecord::Schema.define(:version => 20120229224241) do
     t.string   "item",                          :null => false
     t.boolean  "positive",   :default => false, :null => false
     t.text     "comments"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                    :null => false
+    t.datetime "updated_at",                    :null => false
   end
 
   add_index "feedbacks", ["item"], :name => "index_feedbacks_on_item"
@@ -124,8 +124,8 @@ ActiveRecord::Schema.define(:version => 20120229224241) do
     t.boolean  "two_sided",                                     :default => true
     t.integer  "order_id"
     t.integer  "lock_version",                                  :default => 0
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                                                      :null => false
+    t.datetime "updated_at",                                                      :null => false
   end
 
   add_index "order_lines", ["document_id"], :name => "index_order_lines_on_document_id"
@@ -138,8 +138,8 @@ ActiveRecord::Schema.define(:version => 20120229224241) do
     t.text     "notes"
     t.integer  "lock_version",              :default => 0
     t.integer  "customer_id",                              :null => false
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                               :null => false
+    t.datetime "updated_at",                               :null => false
   end
 
   add_index "orders", ["customer_id"], :name => "index_orders_on_customer_id"
@@ -154,8 +154,8 @@ ActiveRecord::Schema.define(:version => 20120229224241) do
     t.integer  "payable_id"
     t.string   "payable_type"
     t.integer  "lock_version",                                             :default => 0
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                                                                  :null => false
+    t.datetime "updated_at",                                                                  :null => false
     t.boolean  "revoked",                                                  :default => false, :null => false
   end
 
@@ -173,8 +173,8 @@ ActiveRecord::Schema.define(:version => 20120229224241) do
     t.integer  "document_id"
     t.integer  "print_id"
     t.integer  "lock_version",                                  :default => 0
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                                                      :null => false
+    t.datetime "updated_at",                                                      :null => false
     t.integer  "pages",                                                           :null => false
     t.integer  "printed_pages",                                                   :null => false
     t.integer  "printed_copies",                                                  :null => false
@@ -188,8 +188,8 @@ ActiveRecord::Schema.define(:version => 20120229224241) do
     t.integer  "user_id"
     t.integer  "customer_id"
     t.integer  "lock_version",              :default => 0
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                                   :null => false
+    t.datetime "updated_at",                                   :null => false
     t.datetime "scheduled_at"
     t.integer  "order_id"
     t.boolean  "revoked",                   :default => false, :null => false
@@ -208,8 +208,8 @@ ActiveRecord::Schema.define(:version => 20120229224241) do
   create_table "sessions", :force => true do |t|
     t.string   "session_id", :null => false
     t.text     "data"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at", :null => false
+    t.datetime "updated_at", :null => false
   end
 
   add_index "sessions", ["session_id"], :name => "index_sessions_on_session_id"
@@ -221,18 +221,32 @@ ActiveRecord::Schema.define(:version => 20120229224241) do
     t.integer  "thing_id"
     t.string   "thing_type"
     t.integer  "lock_version", :default => 0
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                  :null => false
+    t.datetime "updated_at",                  :null => false
   end
 
   add_index "settings", ["thing_type", "thing_id", "var"], :name => "index_settings_on_thing_type_and_thing_id_and_var", :unique => true
+
+  create_table "shifts", :force => true do |t|
+    t.datetime "start",                       :null => false
+    t.datetime "finish"
+    t.text     "description"
+    t.integer  "lock_version", :default => 0, :null => false
+    t.integer  "user_id",                     :null => false
+    t.datetime "created_at",                  :null => false
+    t.datetime "updated_at",                  :null => false
+  end
+
+  add_index "shifts", ["finish"], :name => "index_shifts_on_finish"
+  add_index "shifts", ["start"], :name => "index_shifts_on_start"
+  add_index "shifts", ["user_id"], :name => "index_shifts_on_user_id"
 
   create_table "tags", :force => true do |t|
     t.string   "name",                            :null => false
     t.integer  "parent_id"
     t.integer  "lock_version", :default => 0
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                      :null => false
+    t.datetime "updated_at",                      :null => false
     t.boolean  "private",      :default => false
     t.integer  "lft"
     t.integer  "rgt"
@@ -248,8 +262,8 @@ ActiveRecord::Schema.define(:version => 20120229224241) do
     t.datetime "current_login_at"
     t.datetime "last_request_at"
     t.integer  "lock_version",     :default => 0
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                      :null => false
+    t.datetime "updated_at",                      :null => false
   end
 
   create_table "users", :force => true do |t|
@@ -264,8 +278,8 @@ ActiveRecord::Schema.define(:version => 20120229224241) do
     t.boolean  "admin",               :default => false, :null => false
     t.boolean  "enable"
     t.integer  "lock_version",        :default => 0
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                             :null => false
+    t.datetime "updated_at",                             :null => false
     t.string   "default_printer"
     t.string   "avatar_file_name"
     t.string   "avatar_content_type"
