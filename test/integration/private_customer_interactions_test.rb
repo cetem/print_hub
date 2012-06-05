@@ -16,14 +16,12 @@ class PrivateCustomerInteractionsTest < ActionDispatch::IntegrationTest
   test 'should search with no results and show contextual help' do
     login
     
-    assert page.has_css?('#empty-catalog-help')
-    
     fill_in 'q', with: 'inexistent document'
     find('#q').native.send_keys :enter
     
     assert_equal catalog_path, current_path
     assert_page_has_no_errors!
-    assert page.has_css?('#empty-search-in-catalog-help')
+    assert page.has_css?('#empty-search')
   end
   
   test 'should complete an order' do

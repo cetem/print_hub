@@ -34,7 +34,10 @@ class PrintsTest < ActionDispatch::IntegrationTest
     assert page.has_css?('.form-actions')
     
     within '.form-actions' do
-      click_link I18n.t('view.documents.new_print')
+      find('.dropdown-toggle').click
+      within '.dropdown-menu' do
+        click_link I18n.t('view.documents.new_print')
+      end
     end
     
     assert_equal new_print_path, current_path
