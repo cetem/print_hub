@@ -57,7 +57,7 @@ module CustomersHelper
       t('view.customers.to_pay_prints.pay_off_debt'),
       pay_off_debt_customer_path(customer),
       method: :put, remote: true, id: 'pay_off_debt',
-      form: { 'data-type' => 'html' }
+      class: 'btn btn-primary', form: { 'data-type' => 'html' }
     )
   end
 
@@ -67,7 +67,7 @@ module CustomersHelper
       t('view.customers.to_pay_prints.pay', date: date_s),
       pay_month_debt_customer_path(customer, date: date),
       method: :put, remote: true, id: 'pay_month_debt',
-      form: { 'data-type' => 'html' }
+      class: 'btn btn-primary', form: { 'data-type' => 'html' }
     )
   end
 

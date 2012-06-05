@@ -336,7 +336,7 @@
       to_pay_prints:
         month_to_pay: 'Pago por mes'
         total_to_pay: 'Pago total'
-        one_month_only_debt: 'La deuda corresponde solo al mes de %{month}'
+        one_month_only_debt: 'La deuda corresponde solo al mes de %{month} '
         month_title: 'Saldo cuenta corriente a '
         pay: 'Pagar %{date}'
         paid: '%{date} pagado'

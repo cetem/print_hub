@@ -3,7 +3,7 @@
     <tr>
       <th><%= Customer.human_attribute_name 'name' %></th>
       <th><%= Customer.human_attribute_name 'identification' %></th>
-      <th><%= Customer.human_attribute_name 'free_monthly_bonus' %></th>
+      <th><%= t('view.customers.current_deposits', count: 0 ) %></th>
       <th colspan="3"></th>
     </tr>
   </thead>
@@ -13,7 +13,7 @@
       <tr class="<%= 'disabled' unless customer.enable %>">
         <td><%= customer.to_s %> (<%= show_link_to_customer_prints(customer) %>)</td>
         <td><%= customer.identification %></td>
-        <td><%= number_to_currency(customer.free_monthly_bonus || 0) %></td>
+        <td><%= number_to_currency(customer.free_credit || 0) %></td>
         <td><%= link_to_show customer %></td>
         <td><%= link_to_edit edit_customer_path(customer) %></td>
         <td><%= link_to_destroy customer %></td>
