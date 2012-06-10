@@ -1,4 +1,4 @@
-<% id = "document_details_#{@document.id}" %>
+<% id = "document_details_#{@document.id}_#{rand(10000)}" %>
 <div id="<%= id %>" class="document_details readonly-data clearfix">
   <div class="page-header">
     <h2><%= @document %></h2>
@@ -41,7 +41,7 @@
   
   <% if request.xhr? %>
     <nav class="form-actions">
-      <%= link_to_function t('label.hide'), "Helper.remove('##{id}')" %>
+      <%= link_to t('label.hide'), '#', data: { action: 'remove', target: "##{id}" } %>
     </nav>
   <% end %>
 </div>

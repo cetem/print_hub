@@ -247,6 +247,13 @@ jQuery ($)->
     $(document).on 'click', '#link_to_customer_credit_detail', ->
       $("#{$(this).attr('data-target')} .modal-body").load($(this).attr('href'))
     
+    $(document).on 'click', 'a[data-action="clear-customer"]', (event)->
+      Print.clearCustomer()
+      $(this).remove()
+      
+      event.preventDefault()
+      event.stopPropagation()
+    
     Print.updateSubmitLabel()
     
     if /^\s*$/.test($('#print_customer_id').val())

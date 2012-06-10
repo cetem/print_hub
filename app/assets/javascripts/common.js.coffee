@@ -27,24 +27,6 @@ window.EventHandler =
     target = e.parents e.data('target')
 
     Helper.remove target, -> $(document).trigger('item.removed', target)
-  
-  toggleMenu: (e)->
-    target = $(e.data('target'))
-    
-    if target.is(':visible:not(:animated)')
-      target.stop().fadeOut 300, ->
-        $('span.arrow_up', e).removeClass('arrow_up').addClass('arrow_down')
-      
-      target.removeClass('hide_when_show_menu')
-    else if target.is(':not(:animated)')
-      $('.hide_when_show_menu').stop().hide()
-      $('#menu_links').find('span.arrow_up').removeClass('arrow_up')
-      .addClass('arrow_down')
-      
-      target.stop().fadeIn 300, ->
-        $('span.arrow_down', e).removeClass('arrow_down').addClass('arrow_up')
-      
-      target.addClass 'hide_when_show_menu'
 
 # Utilidades varias para asistir con efectos sobre los elementos
 window.Helper =
@@ -104,9 +86,15 @@ jQuery ($)->
     ajaxStart: `function() { State.ajaxInProgress = true }`
     ajaxStop: `function() { State.ajaxInProgress = false }`
   
-  $(document).on 'click', 'a.show', (event)->
+  $(document).on 'click', 'a.[data-action="show"]', (event)->
     $($(this).data('target')).stop(true, true).slideDown 300, ->
       $(this).find('*[autofocus]:not([readonly]):not([disabled]):visible:first').focus()
+    
+    event.preventDefault()
+    event.stopPropagation()
+  
+  $(document).on 'click', 'a.[data-action="remove"]', (event)->
+    Helper.remove($(this).data('target'))
     
     event.preventDefault()
     event.stopPropagation()

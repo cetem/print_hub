@@ -7,6 +7,7 @@
  *= require body_padding
  *= require twitter/bootstrap-responsive
  *= require jquery/ui-custom
+ *= require fonts
  *= require common
  *= require common-responsive
  *= require help

@@ -11,8 +11,8 @@ module PrintsHelper
     button = link_to(
       t('view.prints.cancel_job'),
       cancel_job_print_path(print_job), method: :put, remote: true,
-      disable_with: t('view.prints.disabled_cancel_job'),
-      disabled: !print_job.pending?, class: 'btn btn-mini'
+      disabled: !print_job.pending?, class: 'btn btn-mini',
+      data: { 'disable-with' => t('view.prints.disabled_cancel_job') }
     )
 
     content_tag :div, button, id: "cancel_print_job_#{print_job.id}"
@@ -88,9 +88,9 @@ module PrintsHelper
     
     if customer
       label << ' '
-      label << link_to_function(
-        t('view.prints.unlink_customer'),
-        "Print.clearCustomer(); $(this).remove()",
+      label << link_to(
+        t('view.prints.unlink_customer'), '#',
+        data: { action: 'clear-customer' },
         class: 'btn btn-mini remove'
       )
     end
