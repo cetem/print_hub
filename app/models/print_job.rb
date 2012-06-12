@@ -24,7 +24,7 @@ class PrintJob < ApplicationModel
   
   # Atributos "permitidos"
   attr_accessible :id, :document_id, :copies, :pages, :range, :two_sided,
-    :print_id, :auto_document_name, :lock_version
+    :print_id, :auto_document_name, :job_hold_until, :lock_version
 
   # Restricciones de atributos
   attr_readonly :id, :document_id, :copies, :pages, :range, :job_id, :two_sided,
@@ -131,6 +131,10 @@ class PrintJob < ApplicationModel
       end
       
       if self.printed_copies > 0
+        if self.job_hold_until.blank? && PRINT_JOB_DELAY > 0
+          self.job_hold_until = PRINT_JOB_DELAY.from_now.utc.strftime '%H:%M:%S'
+        end
+        
         timestamp = Time.now.utc.strftime('%Y%m%d%H%M%S')
         user = user.try(:username)
         options = "-d #{printer} -n #{self.printed_copies} -o fit-to-page "
@@ -138,13 +142,13 @@ class PrintJob < ApplicationModel
         options += self.options.map { |o, v| "-o #{o}=#{v}" }.join(' ')
         out = %x{lp #{options} "#{self.document.file.path}" 2>&1}
         
-        self.job_id = out.match(/#{Regexp.escape(printer)}-\d+/).to_a[0] || '-'
+        self.job_id = out.match(/#{Regexp.escape(printer)}-\d+/)[0] || '-'
       end
     end
   end
 
   def cancel
-    job = self.job_id ? self.job_id.match(/\d+$/).to_a[0] : nil
+    job = self.job_id ? self.job_id.match(/\d+$/)[0] : nil
 
     out = job ? %x{lprm #{job} 2>&1} : 'Error'
     

@@ -6,6 +6,8 @@ CREDIT_THRESHOLD = 0.7
 DB_ADAPTER = ActiveRecord::Base.connection.adapter_name
 # Idiomas disponibles
 LANGUAGES = [:es]
+# Delay before every print job
+PRINT_JOB_DELAY = APP_CONFIG['print_job_delay'].to_i.seconds
 # Dominio público
 PUBLIC_DOMAIN = APP_CONFIG['public_host'].split(':').first
 # Puerto público
