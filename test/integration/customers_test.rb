@@ -7,7 +7,6 @@ class CustomersTest < ActionDispatch::IntegrationTest
     Capybara.current_driver = Capybara.javascript_driver # :selenium by default
     Capybara.server_port = '54163'
     Capybara.app_host = "http://localhost:54163"
-    page.driver.options[:resynchronize] = true
   end
   
   test 'should create a customer' do

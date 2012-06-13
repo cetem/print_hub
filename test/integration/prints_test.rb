@@ -7,7 +7,6 @@ class PrintsTest < ActionDispatch::IntegrationTest
     Capybara.current_driver = Capybara.javascript_driver # :selenium by default
     Capybara.server_port = '54163'
     Capybara.app_host = "http://localhost:54163"
-    page.driver.options[:resynchronize] = true
     
     @ac_field = 'auto-document-print_job_print_print_jobs_attributes_0_'
   end
