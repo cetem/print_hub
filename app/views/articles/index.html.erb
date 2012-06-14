@@ -16,8 +16,7 @@
         <td><%= number_to_currency article.price %></td>
         <td><%= link_to_show article %></td>
         <td><%= link_to_edit edit_article_path(article) %></td>
-        <td><%= link_to_destroy article, confirm: t('messages.confirmation'),
-          method: :delete %></td>
+        <td><%= link_to_destroy article %></td>
       </tr>
     <% end %>
   </tbody>

@@ -2,7 +2,7 @@
   <%= content_for :form_actions do %>
     <%= link_to t('label.show'), @order %> |
     <%= link_to_if @order.pending?, t('view.orders.cancel'), @order,
-      confirm: t('messages.confirmation'), method: :delete %> |
+      method: :delete, data: { confirm: t('messages.confirmation') } %> |
     <%= link_to t('label.back'), catalog_path %>
   <% end %>
   <%= render 'form' %>

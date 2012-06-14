@@ -40,8 +40,8 @@ module CustomersHelper
   
   def show_button_to_destroy(customer)
     if customer.has_no_orders?
-      button_to t('label.delete'), customer,
-        confirm: t('messages.confirmation'), method: :delete
+      button_to t('label.delete'), customer, method: :delete,
+        data: { confirm: t('messages.confirmation') }
     end
   end
   

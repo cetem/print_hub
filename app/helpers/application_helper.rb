@@ -54,8 +54,8 @@ module ApplicationHelper
     
     options['class'] ||= 'iconic'
     options['title'] ||= t('label.delete')
-    options['confirm'] ||= t('messages.confirmation')
     options['method'] ||= :delete
+    options['data-confirm'] ||= t('messages.confirmation')
     options['data-show-tooltip'] = true
     
     link_to '&#xe05a;'.html_safe, *args, options
