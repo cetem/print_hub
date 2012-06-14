@@ -9,21 +9,22 @@ class PrintsTest < ActionDispatch::IntegrationTest
     Capybara.app_host = "http://localhost:54163"
     
     @ac_field = 'auto-document-print_job_print_print_jobs_attributes_0_'
+    @pdf_printer = Cups.show_destinations.detect { |p| p =~ /pdf/i }
   end
   
   test 'should add a document with +' do
     adm_login
     
-    assert_equal prints_path, current_path
     assert_page_has_no_errors!
+    assert_equal prints_path, current_path
     assert page.has_css?('.nav-collapse')
     
     within '.nav-collapse' do
       click_link I18n.t('menu.documents')
     end
     
-    assert_equal documents_path, current_path
     assert_page_has_no_errors!
+    assert_equal documents_path, current_path
     
     within 'table tbody' do
       find('a.add_link').click
@@ -39,8 +40,8 @@ class PrintsTest < ActionDispatch::IntegrationTest
       end
     end
     
-    assert_equal new_print_path, current_path
     assert_page_has_no_errors!
+    assert_equal new_print_path, current_path
     assert page.has_css?('.print_job', count: 1)
     
     barcode = find("##@ac_field").value
@@ -51,22 +52,21 @@ class PrintsTest < ActionDispatch::IntegrationTest
   end
   
   test 'should print' do
-  
     adm_login
-    assert_equal prints_path, current_path
+    
     assert_page_has_no_errors!
+    assert_equal prints_path, current_path
     
     within '.form-actions' do
       click_link I18n.t('view.prints.new')
     end
     
+    assert_page_has_no_errors!
     assert_equal new_print_path, current_path
     assert page.has_css?('form.new_print')
     
     within 'form' do
-      select(
-        Cups.show_destinations.detect { |p| p =~ /pdf/i }, from: 'print_printer' 
-      )
+      select @pdf_printer, from: 'print_printer'
     end
     
     within '.print_job' do |ac|
@@ -81,19 +81,19 @@ class PrintsTest < ActionDispatch::IntegrationTest
     
     assert_page_has_no_errors!
     assert page.has_css?('.alert', text: I18n.t('view.prints.correctly_created'))
-    
   end
   
   test 'should schedule for final of the day' do
-  
     adm_login
-    assert_equal prints_path, current_path
+    
     assert_page_has_no_errors!
+    assert_equal prints_path, current_path
     
     within '.form-actions' do
       click_link I18n.t('view.prints.new')
     end
     
+    assert_page_has_no_errors!
     assert_equal new_print_path, current_path
     assert page.has_css?('form')
     
@@ -125,5 +125,55 @@ class PrintsTest < ActionDispatch::IntegrationTest
     
     assert_page_has_no_errors!
     assert page.has_css?('.alert', text: I18n.t('view.prints.correctly_created'))
+  end
+  
+  test 'should cancel a print_job' do
+    adm_login
+    
+    assert_page_has_no_errors!
+    assert_equal prints_path, current_path
+    
+    within '.form-actions' do
+      click_link I18n.t('view.prints.new')
+    end
+    
+    assert_page_has_no_errors!
+    assert_equal new_print_path, current_path
+    assert page.has_css?('form')
+    
+    cancelled_jobs_count = Cups.all_jobs(@pdf_printer).map do |_, j|
+      j[:state] == :cancelled
+    end.count
+        
+    within 'form' do
+      select @pdf_printer, from: 'print_printer'
+    end
+    
+    within '.print_job' do |ac|
+      fill_in "#@ac_field", with: 'Math'
+      assert page.has_xpath?("//li[@class='ui-menu-item']", visible: true)
+      find("##@ac_field").native.send_keys :arrow_down, :tab
+    end
+    
+    assert_difference 'Print.count' do
+      click_button I18n.t('view.prints.print_title')
+    end
+    
+    assert_page_has_no_errors!
+    assert page.has_css?('.alert', text: I18n.t('view.prints.correctly_created'))
+    assert page.has_no_css?('div[id^=cancel_print_job] a[disabled]')
+    
+    within 'div[id^=cancel_print_job]' do
+      click_link I18n.t('view.prints.cancel_job')
+    end
+    
+    assert_page_has_no_errors!
+    assert page.has_content? I18n.t('view.prints.job_canceled')
+    
+    new_cancelled_jobs_count = Cups.all_jobs(@pdf_printer).map do |_, j|
+      j[:state] == :cancelled
+    end.count
+    
+    assert_equal cancelled_jobs_count, new_cancelled_jobs_count -1
   end
 end
