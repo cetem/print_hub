@@ -53,21 +53,22 @@ module CustomersHelper
   end
   
   def show_button_to_pay_debt(customer)
-    button_to(
+    link_to(
       t('view.customers.to_pay_prints.pay_off_debt'),
-      pay_off_debt_customer_path(customer),
+      pay_off_debt_customer_path(customer, format: 'html'),
       method: :put, remote: true, id: 'pay_off_debt',
-      class: 'btn btn-primary', form: { 'data-type' => 'html' }
+      class: 'btn btn-primary', data: { event: 'pay-debt' }
     )
   end
 
   def show_button_to_pay_month_debt(customer, date)
     date_s = l(Date.parse(date), format: :month_and_year).camelize
-    button_to(
+    
+    link_to(
       t('view.customers.to_pay_prints.pay', date: date_s),
-      pay_month_debt_customer_path(customer, date: date),
+      pay_month_debt_customer_path(customer, date: date, format: 'html'),
       method: :put, remote: true, id: 'pay_month_debt',
-      class: 'btn btn-primary', form: { 'data-type' => 'html' }
+      class: 'btn btn-primary', data: { event: 'pay-debt' }
     )
   end
 

@@ -8,12 +8,17 @@ module PrintsHelper
   end
 
   def link_to_cancel_print_job(print_job)
-    button = link_to(
-      t('view.prints.cancel_job'),
-      cancel_job_print_path(print_job), method: :put, remote: true,
-      disabled: !print_job.pending?, class: 'btn btn-mini',
-      data: { 'disable-with' => t('view.prints.disabled_cancel_job') }
-    )
+    if print_job.pending?
+      button = link_to(
+        t('view.prints.cancel_job'), cancel_job_print_path(print_job),
+        method: :put, remote: true, class: 'btn btn-mini',
+        data: { 'disable-with' => t('view.prints.disabled_cancel_job') }
+      )
+    else
+      button = content_tag(
+        :span, t('view.prints.cancel_job'), class: 'btn btn-mini disabled'
+      )
+    end
 
     content_tag :div, button, id: "cancel_print_job_#{print_job.id}"
   end

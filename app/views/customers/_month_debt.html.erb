@@ -1,14 +1,16 @@
 <br />
 <% date = params[:date] %>
 <% prints = @customer.to_pay_amounts_by_month(date) %>
-<h2>
+<h3>
   <%= t('view.customers.to_pay_prints.month_title') %>
   <%= select_tag 'month_select_to_pay', options_for_select(
     show_customer_select_with_debt_months(@customer), selected: date
+  ) %> |
+  <%= link_to(
+    t('view.customers.to_pay_prints.total_to_pay'),
+    customer_path(@customer)
   ) %>
-  ( <%= link_to t('view.customers.to_pay_prints.total_to_pay'),
-    customer_path(@customer) %> )
-</h2>
+</h3>
 <table class="table table-striped">
   <thead>
     <tr>
@@ -42,7 +44,9 @@
   </tbody>
 </table>
 <% if cancelled %>
-  <p class="highlight"><%= t('view.customers.to_pay_prints.debt_cancelled') %></p>
+  <div class="alert alert-success">
+    <%= t('view.customers.to_pay_prints.debt_cancelled') %>
+  </div>
 <% else %>
-  <div class="form-actions"><%= show_button_to_pay_month_debt(@customer, date) %></div>
+  <p><%= show_button_to_pay_month_debt(@customer, date) %></p>
 <% end %>
