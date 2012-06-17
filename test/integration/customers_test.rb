@@ -131,18 +131,19 @@ class CustomersTest < ActionDispatch::IntegrationTest
     assert_page_has_no_errors!
     assert_equal customer_path(id), current_path
     
-    href = find_link(I18n.t('view.customers.to_pay_prints.month_to_pay'))[:href]
-    click_link I18n.t('view.customers.to_pay_prints.month_to_pay')
-
+    link_month_to_pay = I18n.t('view.customers.to_pay_prints.month_to_pay')
+    href = find_link(link_month_to_pay)[:href]
+    click_link link_month_to_pay
+    
+    sleep 1 # Capybara read the current_url before the url change
     href = href.match(/\?date\=(\S+)/)[1]
-    current_page = current_url.match(/\:54163(\S+)/)[1]
-
+    current_page = current_url.match(/\:54163(\/\S+)/)[1]
     assert_page_has_no_errors!
-    assert_equal customer_path(id, date: href ), current_page
-
+    assert_equal customer_path(id, date: href), current_page
 
     assert_difference "Customer.find(#{id}).months_to_pay.count", -1 do
-      find('#pay_month_debt').click
+      click_button('pay_month_debt')
+      sleep 0.5
     end
     
     assert_page_has_no_errors!
@@ -161,7 +162,8 @@ class CustomersTest < ActionDispatch::IntegrationTest
 
     id = customers(:student).id
     assert_not_equal Customer.find(id).prints.pay_later.count, 0
-    find('#pay_off_debt').click
+    click_button('pay_off_debt')
+    sleep 0.5
     assert_equal Customer.find(id).prints.pay_later.count, 0
     assert_page_has_no_errors!
   end
