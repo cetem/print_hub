@@ -142,7 +142,7 @@ class CustomersTest < ActionDispatch::IntegrationTest
     assert_equal customer_path(id, date: href), current_page
 
     assert_difference "Customer.find(#{id}).months_to_pay.count", -1 do
-      click_button('pay_month_debt')
+      click_link('pay_month_debt')
       sleep 0.5
     end
     
@@ -162,7 +162,7 @@ class CustomersTest < ActionDispatch::IntegrationTest
 
     id = customers(:student).id
     assert_not_equal Customer.find(id).prints.pay_later.count, 0
-    click_button('pay_off_debt')
+    click_link('pay_off_debt')
     sleep 0.5
     assert_equal Customer.find(id).prints.pay_later.count, 0
     assert_page_has_no_errors!
