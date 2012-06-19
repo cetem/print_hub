@@ -106,4 +106,19 @@ module PrintsHelper
     
     raw(label)
   end
+  
+  def show_print_articles_tab_title
+    articles_title = t('view.prints.article_lines')
+    
+    if @print.article_lines.size > 0
+      articles_title << ' '
+      articles_title << content_tag(
+        :span, @print.article_lines.size, class: 'badge badge-info'
+      )
+    end
+    
+    link_to(
+      articles_title.html_safe, '#articles_container', data: { toggle: 'tab' }
+    ) 
+  end
 end

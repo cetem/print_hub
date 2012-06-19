@@ -1,4 +1,14 @@
 window.Print =
+  updateArticleCount: ->
+    articleCount = $('.article_line:not([data-exclude-from-total])').length
+    title = $('a[href="#articles_container"]')
+    
+    if title.find('.badge').length == 0
+      count = $('<span class="badge badge-info"></span>')
+      title.append('&nbsp;').append(count)
+    
+    title.find('.badge').text(articleCount)
+    title.find('.badge').remove() if articleCount == 0
   updateStock: (printJob)->
     copies = parseInt(printJob.find('input[name$="[copies]"]').val()) || 0
     printJobStockDetails = printJob.find('.document_stock')
@@ -97,6 +107,7 @@ jQuery ($)->
       else if $(element).hasClass('article_line')
         $(element).attr('data-exclude-from-total', '1')
         
+        Print.updateArticleCount()
         Print.updateTotalPrice()
 
     $(document).on 'autocomplete:update', 'input.autocomplete-field', ->
@@ -171,6 +182,9 @@ jQuery ($)->
         articleLine.find('input[name$="[unit_price]"]').val('')
 
         Print.updateArticleLinePrice(articleLine)
+        
+    $(document).on 'autocomplete:update', 'input[name$="[auto_article_name]"]', ->
+      Print.updateArticleCount()
 
     $(document).on 'change keyup', 'input[name$="[pages]"]', ->
       element = $(this)
