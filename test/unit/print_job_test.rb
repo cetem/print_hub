@@ -452,7 +452,6 @@ class PrintJobTest < ActiveSupport::TestCase
 
     assert !print_job.completed?
 
-    print_job.job_hold_until = 'no-hold' # Unofficial value by Nestor
     print_job.send_to_print(@printer)
 
     # Necesario para esperar que Cups lo "agregue" a la lista de completos

@@ -131,10 +131,6 @@ class PrintJob < ApplicationModel
       end
       
       if self.printed_copies > 0
-        if self.job_hold_until.blank? && PRINT_JOB_DELAY > 0
-          self.job_hold_until = PRINT_JOB_DELAY.from_now.utc.strftime '%H:%M:%S'
-        end
-        
         timestamp = Time.now.utc.strftime('%Y%m%d%H%M%S')
         user = user.try(:username)
         options = "-d #{printer} -n #{self.printed_copies} -o fit-to-page "
