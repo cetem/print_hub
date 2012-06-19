@@ -7,7 +7,8 @@ class PrivateCustomerInteractionsTest < ActionDispatch::IntegrationTest
   setup do
     Capybara.current_driver = Capybara.javascript_driver # :selenium by default
     Capybara.server_port = '54163'
-    Capybara.app_host = "http://#{CUSTOMER_SUBDOMAIN}.lvh.me:54163"
+    subdomain = APP_CONFIG['subdomains']['customers']
+    Capybara.app_host = "http://#{subdomain}.lvh.me:54163"
     
     # Para evitar problemas con "ajaxInProgressWarning"
     page.driver.options[:resynchronize] = true

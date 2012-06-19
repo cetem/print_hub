@@ -99,12 +99,12 @@ class ApplicationController < ActionController::Base
   end
   
   def require_customer_or_user
-    request.subdomains.first == CUSTOMER_SUBDOMAIN ?
+    request.subdomains.first == APP_CONFIG['subdomains']['customers'] ?
       require_customer : require_user
   end
   
   def require_no_customer_or_admin
-    request.subdomains.first == CUSTOMER_SUBDOMAIN ?
+    request.subdomains.first == APP_CONFIG['subdomains']['customers'] ?
       require_no_customer : require_admin_user
   end
 

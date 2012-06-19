@@ -4,7 +4,7 @@ class PasswordResetsControllerTest < ActionController::TestCase
   
   def setup
     @customer = customers(:student)
-    @request.host = "#{CUSTOMER_SUBDOMAIN}.printhub.local"
+    @request.host = "#{APP_CONFIG['subdomains']['customers']}.printhub.local"
   end
   
   test 'should get new' do
