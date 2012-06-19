@@ -9,7 +9,7 @@ module OrdersHelper
     if current_customer
       out << link_to_if(order.pending?, t('label.edit'), edit_order_path(order))
       out << link_to_if(order.pending?, t('view.orders.cancel'), order,
-        confirm: t('messages.confirmation'), method: :delete
+        method: :delete, data: { confirm: t('messages.confirmation') }
       )
       out <<  link_to(t('label.back'), catalog_path)
     else
@@ -18,7 +18,7 @@ module OrdersHelper
       )
       out << link_to_if(order.pending?, t('view.orders.cancel'),
         order_path(order, type: order_type),
-        confirm: t('messages.confirmation'), method: :delete
+        method: :delete, data: { confirm: t('messages.confirmation') }
       )
       out << link_to(t('label.list'), orders_path(type: order_type))
     end

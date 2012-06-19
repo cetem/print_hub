@@ -7,7 +7,6 @@ class ArticlesTest < ActionDispatch::IntegrationTest
     Capybara.current_driver = Capybara.javascript_driver # :selenium by default
     Capybara.server_port = '54163'
     Capybara.app_host = "http://localhost:54163"
-    page.driver.options[:resynchronize] = true
   end
   
   test 'should create an article' do
@@ -48,8 +47,9 @@ class ArticlesTest < ActionDispatch::IntegrationTest
     within 'table tbody' do
       assert_difference 'Article.count', -1 do
         all("a[data-method='delete']")[1].click #El 1ro esta usado
+        sleep(1)
         page.driver.browser.switch_to.alert.accept
-        sleep(0.5)
+        sleep(1)
       end
     end
     

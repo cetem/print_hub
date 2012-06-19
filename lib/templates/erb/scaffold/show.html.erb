@@ -1,0 +1,15 @@
+<div class="readonly-data">
+  <h2><%%= @<%= singular_table_name %> %></h2>
+
+  <%- attributes.each do |attribute| -%>
+    <p>
+      <b><%%= <%= singular_table_name.camelize %>.human_attribute_name '<%= attribute.name %>' %></b>:
+      <%%= <%= singular_table_name %>.<%= attribute.name %> %>
+    </p>
+  <%- end -%>
+  
+</div>
+<div class="form-actions">
+  <%%= link_to t('label.edit'), edit_<%= singular_table_name %>_path(@<%= singular_table_name %>) %> |
+  <%%= link_to t('label.list'), <%= index_helper %>_path %>
+</div>

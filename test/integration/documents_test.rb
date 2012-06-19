@@ -7,7 +7,6 @@ class DocumentsTest < ActionDispatch::IntegrationTest
     Capybara.current_driver = Capybara.javascript_driver # :selenium by default
     Capybara.server_port = '54163'
     Capybara.app_host = "http://localhost:54163"
-    page.driver.options[:resynchronize] = true
   end
   
   test 'should create a document' do
@@ -60,8 +59,9 @@ class DocumentsTest < ActionDispatch::IntegrationTest
         find(
           "a[href*=\"/#{documents(:unused_book).id}\"][data-method='delete']"
         ).click
+        sleep(1)
         page.driver.browser.switch_to.alert.accept
-        sleep(0.5)
+        sleep(1)
       end
     end
 

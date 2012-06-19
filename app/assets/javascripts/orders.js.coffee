@@ -68,3 +68,9 @@ jQuery ($)->
 
       $('#total_pages').val totalPages
       $('.order_line').each -> Order.updateOrderLinePrice($(this))
+      
+    $(document).on 'click', 'a[data-action="print"]', (event)->
+      window.print()
+      
+      event.preventDefault()
+      event.stopPropagation()

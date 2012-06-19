@@ -1,5 +1,5 @@
 class CustomerSubdomain
   def self.matches?(request)
-    request.subdomains.first == CUSTOMER_SUBDOMAIN
+    request.subdomains.first == APP_CONFIG['subdomains']['customers']
   end 
 end
