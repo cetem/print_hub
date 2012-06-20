@@ -37,8 +37,8 @@
     
     <div class="row-fluid">
       <div class="span5">
-        <%= link_to t('view.orders.notes_link'), '#', class: 'show',
-          data: {target: '#notes'} %>    
+        <%= link_to t('view.orders.notes_link'), '#',
+          data: { target: '#notes', action: 'show' } %>    
         <div id="notes" style="display: none;">
           <%= f.input :notes, input_html: { autofocus: true, rows: 4 } %>
         </div>

@@ -15,7 +15,9 @@
     <% if current_customer %>
       <div class="span6">
         <p class="pull-right not-printable hidden-phone">
-          <%= link_to_function t('view.orders.print'), 'window.print()', class: 'btn' %>
+          <%= link_to t('view.orders.print'), '#', class: 'btn', data: {
+              action: 'print'
+          } %>
         </p>
       </div>
     <% end %>

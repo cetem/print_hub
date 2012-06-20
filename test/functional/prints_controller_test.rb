@@ -108,7 +108,7 @@ class PrintsControllerTest < ActionController::TestCase
 
   test 'should get new' do
     UserSession.create(users(:operator))
-    get :new
+    get :new, status: 'all'
     assert_response :success
     assert_not_nil assigns(:print)
     assert_select '#unexpected_error', false
@@ -121,7 +121,7 @@ class PrintsControllerTest < ActionController::TestCase
     
     order = Order.find(orders(:for_tomorrow).id)
     
-    get :new, order_id: order.id
+    get :new, order_id: order.id, status: 'all'
     assert_response :success
     assert_not_nil assigns(:print)
     assert_select '#unexpected_error', false
@@ -134,7 +134,7 @@ class PrintsControllerTest < ActionController::TestCase
     session[:documents_for_printing] =
       [documents(:math_notes).id, documents(:math_book).id]
     
-    get :new
+    get :new, status: 'all'
     assert_response :success
     assert_not_nil assigns(:print)
     assert_select '#unexpected_error', false
@@ -146,7 +146,7 @@ class PrintsControllerTest < ActionController::TestCase
     UserSession.create(users(:administrator))
     session[:documents_for_printing] = [documents(:math_notes).id]
     
-    get :new, clear_documents_for_printing: true
+    get :new, clear_documents_for_printing: true, status: 'all'
     assert_response :success
     assert_not_nil assigns(:print)
     assert session[:documents_for_printing].blank?
@@ -166,7 +166,7 @@ class PrintsControllerTest < ActionController::TestCase
 
     assert_difference counts_array do
       assert_difference 'Version.count', 4 do
-        post :create, print: {
+        post :create, status: 'all', print: {
           printer: @printer,
           customer_id: customer.id,
           scheduled_at: '',
@@ -217,7 +217,7 @@ class PrintsControllerTest < ActionController::TestCase
     assert_difference counts_array do
       assert_difference 'Version.count', 3 do
         assert_no_difference 'Cups.all_jobs(@printer).keys.sort.last' do
-          post :create, print: {
+          post :create, status: 'all', print: {
             printer: @printer,
             customer_id: '',
             scheduled_at: '',
@@ -262,7 +262,7 @@ class PrintsControllerTest < ActionController::TestCase
 
     assert_difference counts_array do
       assert_difference 'Version.count', 4 do
-        post :create, print: {
+        post :create, status: 'all', print: {
           printer: @printer,
           customer_id: customer.id,
           scheduled_at: '',
@@ -306,7 +306,7 @@ class PrintsControllerTest < ActionController::TestCase
     customer = Customer.find customers(:student).id
 
     assert_difference counts_array do
-      post :create, print: {
+      post :create, status: 'all', print: {
         printer: @printer,
         customer_id: customer.id,
         scheduled_at: '',
@@ -352,7 +352,7 @@ class PrintsControllerTest < ActionController::TestCase
     Setting.price_per_one_sided_copy = '0.125'
 
     assert_difference counts_array do
-      post :create, print: {
+      post :create, status: 'all', print: {
         printer: @printer,
         customer_id: customer.id,
         scheduled_at: '',
@@ -391,7 +391,7 @@ class PrintsControllerTest < ActionController::TestCase
 
   test 'should show print' do
     UserSession.create(users(:operator))
-    get :show, id: @print.to_param
+    get :show, id: @print.to_param, status: 'all'
     assert_response :success
     assert_not_nil assigns(:print)
     assert_select '#unexpected_error', false
@@ -400,7 +400,7 @@ class PrintsControllerTest < ActionController::TestCase
 
   test 'should get edit' do
     UserSession.create(users(:operator))
-    get :edit, id: @print.to_param
+    get :edit, id: @print.to_param, status: 'all'
     assert_response :success
     assert_not_nil assigns(:print)
     assert_select '#unexpected_error', false
@@ -413,7 +413,7 @@ class PrintsControllerTest < ActionController::TestCase
     print = Print.find(prints(:os_print).id)
 
     # Se debe producir un error al tratar de editar una impresión "cerrada"
-    get :edit, id: print.to_param
+    get :edit, id: print.to_param, status: 'all'
     assert_response :success
     assert_not_nil assigns(:print)
     assert !assigns(:print).pending_payment? && !assigns(:print).scheduled?
@@ -435,7 +435,7 @@ class PrintsControllerTest < ActionController::TestCase
 
     assert_no_difference immutable_counts do
       assert_difference '@print.print_jobs.count' do
-        put :update, id: @print.to_param, print: {
+        put :update, id: @print.to_param, status: 'all', print: {
           printer: @printer,
           customer_id: customer.id,
           scheduled_at: '',
@@ -501,7 +501,7 @@ class PrintsControllerTest < ActionController::TestCase
   test 'should revoke print' do
     UserSession.create(users(:administrator))
     
-    delete :revoke, id: @print.to_param
+    delete :revoke, id: @print.to_param, status: 'all'
     assert_redirected_to prints_url
     assert @print.reload.revoked
   end
@@ -516,7 +516,7 @@ class PrintsControllerTest < ActionController::TestCase
     document = Document.find documents(:math_book).id
 
     assert_difference 'Cups.all_jobs(@printer).keys.sort.last' do
-      post :create, print: {
+      post :create, status: 'all', print: {
         printer: @printer,
         scheduled_at: '',
         avoid_printing: '0',
@@ -540,7 +540,7 @@ class PrintsControllerTest < ActionController::TestCase
 
     print_job = Print.find(assigns(:print).id).print_jobs.first
 
-    xhr :put, :cancel_job, id: print_job.to_param
+    xhr :put, :cancel_job, id: print_job.to_param, status: 'all'
 
     assert_response :success
     assert_match %r{#{I18n.t(:job_canceled, scope: [:view, :prints])}},
@@ -560,7 +560,7 @@ class PrintsControllerTest < ActionController::TestCase
     
     print_job = PrintJob.find print_jobs(:math_job_1).id
 
-    xhr :put, :cancel_job, id: print_job.to_param
+    xhr :put, :cancel_job, id: print_job.to_param, status: 'all'
 
     assert_response :success
     assert_match %r{#{I18n.t(:job_not_canceled, scope: [:view, :prints])}},
@@ -569,7 +569,7 @@ class PrintsControllerTest < ActionController::TestCase
 
   test 'should get autocomplete document list' do
     UserSession.create(users(:operator))
-    get :autocomplete_for_document_name, format: :json, q: 'Math'
+    get :autocomplete_for_document_name, format: :json, q: 'Math', status: 'all'
     assert_response :success
     
     documents = ActiveSupport::JSON.decode(@response.body)
@@ -577,7 +577,7 @@ class PrintsControllerTest < ActionController::TestCase
     assert_equal 2, documents.size
     assert documents.all? { |d| (d['label'] + d['informal']).match /math/i }
 
-    get :autocomplete_for_document_name, format: :json, q: 'note'
+    get :autocomplete_for_document_name, format: :json, q: 'note', status: 'all'
     assert_response :success
     
     documents = ActiveSupport::JSON.decode(@response.body)
@@ -585,7 +585,7 @@ class PrintsControllerTest < ActionController::TestCase
     assert_equal 2, documents.size
     assert documents.all? { |d| (d['label'] + d['informal']).match /note/i }
 
-    get :autocomplete_for_document_name, format: :json, q: '001'
+    get :autocomplete_for_document_name, format: :json, q: '001', status: 'all'
     assert_response :success
     
     documents = ActiveSupport::JSON.decode(@response.body)
@@ -593,7 +593,8 @@ class PrintsControllerTest < ActionController::TestCase
     assert_equal 1, documents.size
     assert documents.all? { |d| (d['label'] + d['informal']).match /1/i }
 
-    get :autocomplete_for_document_name, format: :json, q: 'physics'
+    get :autocomplete_for_document_name, format: :json, q: 'physics',
+      status: 'all'
     assert_response :success
     
     documents = ActiveSupport::JSON.decode(@response.body)
@@ -601,7 +602,8 @@ class PrintsControllerTest < ActionController::TestCase
     assert_equal 1, documents.size
     assert documents.all? { |d| (d['label'] + d['informal']).match /physics/i }
 
-    get :autocomplete_for_document_name, format: :json, q: 'phyxyz'
+    get :autocomplete_for_document_name, format: :json, q: 'phyxyz',
+      status: 'all'
     assert_response :success
     
     documents = ActiveSupport::JSON.decode(@response.body)
@@ -611,7 +613,7 @@ class PrintsControllerTest < ActionController::TestCase
 
   test 'should get autocomplete article list' do
     UserSession.create(users(:operator))
-    get :autocomplete_for_article_name, format: :json, q: '111'
+    get :autocomplete_for_article_name, format: :json, q: '111', status: 'all'
     assert_response :success
     
     articles = ActiveSupport::JSON.decode(@response.body)
@@ -619,7 +621,8 @@ class PrintsControllerTest < ActionController::TestCase
     assert_equal 1, articles.size
     assert articles.all? { |a| a['label'].match /111/i }
 
-    get :autocomplete_for_article_name, format: :json, q: 'binding'
+    get :autocomplete_for_article_name, format: :json, q: 'binding',
+      status: 'all'
     assert_response :success
     
     articles = ActiveSupport::JSON.decode(@response.body)
@@ -627,7 +630,7 @@ class PrintsControllerTest < ActionController::TestCase
     assert_equal 2, articles.size
     assert articles.all? { |a| a['label'].match /binding/i }
 
-    get :autocomplete_for_article_name, format: :json, q: '333'
+    get :autocomplete_for_article_name, format: :json, q: '333', status: 'all'
     assert_response :success
     
     articles = ActiveSupport::JSON.decode(@response.body)
@@ -635,7 +638,7 @@ class PrintsControllerTest < ActionController::TestCase
     assert_equal 1, articles.size
     assert articles.all? { |a| a['label'].match /333/i }
 
-    get :autocomplete_for_article_name, format: :json, q: 'xyz'
+    get :autocomplete_for_article_name, format: :json, q: 'xyz', status: 'all'
     assert_response :success
     
     articles = ActiveSupport::JSON.decode(@response.body)
@@ -645,7 +648,8 @@ class PrintsControllerTest < ActionController::TestCase
 
   test 'should get autocomplete customer list' do
     UserSession.create(users(:operator))
-    get :autocomplete_for_customer_name, format: :json, q: 'anakin'
+    get :autocomplete_for_customer_name, format: :json, q: 'anakin',
+      status: 'all'
     assert_response :success
     
     customers = ActiveSupport::JSON.decode(@response.body)
@@ -653,7 +657,7 @@ class PrintsControllerTest < ActionController::TestCase
     assert_equal 1, customers.size
     assert customers.all? { |c| (c['label'] + c['informal']).match /anakin/i }
 
-    get :autocomplete_for_customer_name, format: :json, q: 'obi'
+    get :autocomplete_for_customer_name, format: :json, q: 'obi', status: 'all'
     assert_response :success
     
     customers = ActiveSupport::JSON.decode(@response.body)
@@ -661,7 +665,8 @@ class PrintsControllerTest < ActionController::TestCase
     assert_equal 1, customers.size
     assert customers.all? { |c| (c['label'] + c['informal']).match /obi/i }
 
-    get :autocomplete_for_customer_name, format: :json, q: 'phyxyz'
+    get :autocomplete_for_customer_name, format: :json, q: 'phyxyz',
+      status: 'all'
     assert_response :success
     
     customers = ActiveSupport::JSON.decode(@response.body)

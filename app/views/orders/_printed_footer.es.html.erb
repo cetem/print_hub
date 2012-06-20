@@ -39,7 +39,9 @@
         <%= number_to_currency current_customer.free_credit_minus_pendings %>
       </span>
       &nbsp;disponibles en tu cuenta.
-      <%= link_to_function 'Nuestros precios', "$('#prices').fadeIn(200)" %>
+      <%= link_to(
+        'Nuestros precios', '#', data: { action: 'show', target: '#prices' }
+      ) %>
     </p>
   </div>
   

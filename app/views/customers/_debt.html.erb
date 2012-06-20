@@ -1,7 +1,7 @@
+<br />
 <section class="nested_items<%= ' cancelled' if cancelled %>">
-  <h2>
-    <%= t('view.customers.to_pay_prints.title') %>
-    ( 
+  <h3>
+    <%= t('view.customers.to_pay_prints.title') %> |
     <% if @customer.months_to_pay.size > 1 %>
       <%= link_to t('view.customers.to_pay_prints.month_to_pay'),
         customer_path(
@@ -12,10 +12,9 @@
           month: show_customer_the_only_month_of_debt(@customer)
       ) %>
     <% end %>
-    )
-  </h2>
+  </h3>
   
-  <table class="summary">
+  <table class="table table-striped">
     <thead>
       <tr>
         <th><%= t('view.customers.to_pay_prints.columns.type') %></th>
@@ -49,8 +48,10 @@
   </table>
   
   <% if cancelled %>
-    <p class="highlight"><%= t('view.customers.to_pay_prints.debt_cancelled') %></p>
+    <div class="alert alert-success">
+      <%= t('view.customers.to_pay_prints.debt_cancelled') %>
+    </div>
   <% else %>
-    <div class="actions"><%= show_button_to_pay_debt(@customer) %></div>
+    <p><%= show_button_to_pay_debt(@customer) %></p>
   <% end %>
 </section>

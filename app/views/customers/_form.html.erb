@@ -21,10 +21,10 @@
             <%= f.input :bonus_without_expiration, input_html: { class: ''} %> 
           </div>
           <div class="span6">
-            <%= link_to_function(
-              t('view.customers.show_bonuses'),
-              "$('#bonuses_section').slideDown(300)",
-              id: 'show_bonuses_section'
+            <%= link_to(
+              t('view.customers.show_bonuses'), '#', data: {
+                action: 'show', target: '#bonuses_section'
+              }
             ) %>
           </div>
         </div>

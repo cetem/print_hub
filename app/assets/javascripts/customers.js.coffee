@@ -23,5 +23,5 @@ jQuery ->
     $('#loading-caption').stop(true, true).slideDown(100)
   
   if $('#ph_customers[data-action="show"]').length > 0
-    $(document).on 'ajax:success', 'form[data-remote]', (xhr, data)->
+    $(document).on 'ajax:success', 'a[data-event="pay-debt"]', (xhr, data)->
       $(this).parents('section.nested_items').replaceWith(data)

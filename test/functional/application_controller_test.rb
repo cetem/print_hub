@@ -44,7 +44,7 @@ class ApplicationControllerTest < ActionController::TestCase
   end
   
   test 'require customer' do
-    @request.host = "#{CUSTOMER_SUBDOMAIN}.printhub.local"
+    @request.host = "#{APP_CONFIG['subdomains']['customers']}.printhub.local"
     
     assert_equal false, @controller.send(:require_customer)
     assert_redirected_to new_customer_session_url
@@ -56,7 +56,7 @@ class ApplicationControllerTest < ActionController::TestCase
   end
 
   test 'require no customer' do
-    @request.host = "#{CUSTOMER_SUBDOMAIN}.printhub.local"
+    @request.host = "#{APP_CONFIG['subdomains']['customers']}.printhub.local"
     
     assert @controller.send(:require_no_customer)
 
@@ -98,7 +98,7 @@ class ApplicationControllerTest < ActionController::TestCase
   end
   
   test 'require customer or user with customer' do
-    @request.host = "#{CUSTOMER_SUBDOMAIN}.printhub.local"
+    @request.host = "#{APP_CONFIG['subdomains']['customers']}.printhub.local"
     assert_equal false, @controller.send(:require_customer_or_user)
     assert_redirected_to new_customer_session_url
     assert_equal I18n.t('messages.must_be_logged_in'),
@@ -119,7 +119,7 @@ class ApplicationControllerTest < ActionController::TestCase
   end
   
   test 'require no customer or admin with customer' do
-    @request.host = "#{CUSTOMER_SUBDOMAIN}.printhub.local"
+    @request.host = "#{APP_CONFIG['subdomains']['customers']}.printhub.local"
     assert @controller.send(:require_no_customer_or_admin)
     
     CustomerSession.create(customers(:student))

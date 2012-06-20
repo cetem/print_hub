@@ -7,14 +7,14 @@ class OrdersTest < ActionDispatch::IntegrationTest
     Capybara.current_driver = Capybara.javascript_driver # :selenium by default
     Capybara.server_port = '54163'
     Capybara.app_host = "http://localhost:54163"
-    page.driver.options[:resynchronize] = true
   end
 
   
   test 'should print an order' do
     adm_login
-    assert_equal prints_path, current_path
+    
     assert_page_has_no_errors!
+    assert_equal prints_path, current_path
 
     within '.nav-collapse' do
       click_link I18n.t('menu.orders')
@@ -30,19 +30,19 @@ class OrdersTest < ActionDispatch::IntegrationTest
     assert_equal orders_path, current_path
 
     show_href = nil
-    show_label = I18n.t('label.show')
+    link_with_show_title = "a[data-original-title=#{I18n.t('label.show')}]"
     
     within 'table tbody' do
-      show_href = find("a[data-original-title=#{show_label}]")[:href]
-      find("a[data-original-title=#{show_label}]").click
+      show_href = find(link_with_show_title)[:href]
+      find(link_with_show_title).click
     end
 
     id = show_href.match(/\/(\d+)/)[1]
     order = Order.find(id.to_i)
     assert order.pending?
     
-    assert_equal order_path(id), current_path
     assert_page_has_no_errors!
+    assert_equal order_path(id), current_path
 
     within '.form-actions' do
       click_link I18n.t('view.orders.new_print')
@@ -77,8 +77,9 @@ class OrdersTest < ActionDispatch::IntegrationTest
   
   test 'should cancel an order' do
     adm_login
-    assert_equal prints_path, current_path
+    
     assert_page_has_no_errors!
+    assert_equal prints_path, current_path
 
     within '.nav-collapse' do
       click_link I18n.t('menu.orders')
@@ -94,25 +95,26 @@ class OrdersTest < ActionDispatch::IntegrationTest
     assert_equal orders_path, current_path
 
     show_href = nil
-    show_label = I18n.t('label.show')
-        
+    link_with_show_title = "a[data-original-title=#{I18n.t('label.show')}]"
+    
     within 'table tbody' do
-      show_href = find("a[data-original-title=#{show_label}]")[:href]
-      find("a[data-original-title=#{show_label}]").click
+      show_href = find(link_with_show_title)[:href]
+      find(link_with_show_title).click
     end
 
     id = show_href.match(/\/(\d+)/)[1]
     order = Order.find(id.to_i)
     assert order.pending?
     
-    assert_equal order_path(id), current_path
     assert_page_has_no_errors!
+    assert_equal order_path(id), current_path
     
     within '.form-actions' do
       assert_difference 'Order.cancelled.count' do
         click_link I18n.t('view.orders.cancel')
+        sleep(1)
         page.driver.browser.switch_to.alert.accept
-        sleep(0.5)
+        sleep(1)
       end 
     end
 
