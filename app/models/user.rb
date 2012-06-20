@@ -50,7 +50,19 @@ class User < ApplicationModel
     User.find_by_username(login) || User.find_by_email(login)
   end
   
+  def start_shift!(start = Time.now)
+    self.shifts.create!(start: start)
+  end
+  
   def has_pending_shift?
     self.shifts.pending.present?
+  end
+  
+  def has_stale_shift?
+    self.shifts.stale.present?
+  end
+  
+  def close_pending_shifts!
+    self.shifts.pending.all?(&:close!)
   end
 end

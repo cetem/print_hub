@@ -189,13 +189,41 @@ class UserTest < ActiveSupport::TestCase
     ], @user.errors[:lines_per_page]
   end
   
+  test 'start shift' do
+    assert_difference '@user.shifts.count' do
+      @user.start_shift!
+    end
+  end
+  
   test 'has pending shift' do
     assert_equal 0, @user.shifts.pending.count
     assert !@user.has_pending_shift?
     
-    @user.shifts.create!(start: Time.now)
+    @user.start_shift!
     
     assert_equal 1, @user.shifts.pending.reload.count
     assert @user.has_pending_shift?
+  end
+  
+  test 'has stale shift' do
+    assert_equal 0, @user.shifts.stale.count
+    assert !@user.has_stale_shift?
+    
+    @user.start_shift!(20.hours.ago)
+    
+    assert_equal 1, @user.shifts.stale.reload.count
+    assert @user.has_stale_shift?
+  end
+  
+  test 'close pending shifts' do
+    assert !@user.has_pending_shift?
+    
+    @user.start_shift!
+    
+    assert @user.has_pending_shift?
+    
+    @user.close_pending_shifts!
+    
+    assert !@user.has_pending_shift?
   end
 end

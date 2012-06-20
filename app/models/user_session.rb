@@ -5,12 +5,10 @@ class UserSession < Authlogic::Session::Base
   before_destroy :close_shift
   
   def create_shift
-    unless self.record.has_pending_shift?
-      self.record.shifts.create!(start: Time.now)
-    end
+    self.record.start_shift! unless self.record.has_pending_shift?
   end
   
   def close_shift
-    raise 'Unclosed shifts!' unless self.record.shifts.pending.all?(&:close!)
+    raise 'Unclosed shifts!' unless self.record.close_pending_shifts!
   end
 end
