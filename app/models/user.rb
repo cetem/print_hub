@@ -36,6 +36,7 @@ class User < ApplicationModel
 
   # Relaciones
   has_many :prints
+  has_many :shifts
 
   def to_s
     [self.name, self.last_name].join(' ')
@@ -47,5 +48,9 @@ class User < ApplicationModel
   
   def self.find_by_username_or_email(login)
     User.find_by_username(login) || User.find_by_email(login)
+  end
+  
+  def has_pending_shift?
+    self.shifts.pending.present?
   end
 end

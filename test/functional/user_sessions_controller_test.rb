@@ -14,10 +14,27 @@ class UserSessionsControllerTest < ActionController::TestCase
   end
 
   test 'should create user session' do
-    post :create, :user_session => {
-      :username => @user.username,
-      :password => 'admin123'
-    }
+    assert_difference '@user.shifts.count' do
+      post :create, user_session: {
+        username: @user.username,
+        password: 'admin123'
+      }
+    end
+
+    assert user_session = UserSession.find
+    assert_equal @user, user_session.user
+    assert_redirected_to prints_url
+  end
+  
+  test 'should create user session with pending shift' do
+    @user.shifts.create! start: Time.now
+    
+    assert_no_difference '@user.shifts.count' do
+      post :create, user_session: {
+        username: @user.username,
+        password: 'admin123'
+      }
+    end
 
     assert user_session = UserSession.find
     assert_equal @user, user_session.user
@@ -25,10 +42,12 @@ class UserSessionsControllerTest < ActionController::TestCase
   end
   
   test 'should not create a user session' do
-    post :create, :user_session => {
-      :username => @user.username,
-      :password => 'wrong'
-    }
+    assert_no_difference '@user.shifts.count' do
+      post :create, user_session: {
+        username: @user.username,
+        password: 'wrong'
+      }
+    end
 
     assert_nil UserSession.find
     assert_response :success
@@ -39,11 +58,13 @@ class UserSessionsControllerTest < ActionController::TestCase
 
   test 'should not create a user session with a disabled user' do
     disabled_user = users(:disabled_operator)
-
-    post :create, :user_session => {
-      :username => disabled_user.username,
-      :password => 'disabled_operator123'
-    }
+    
+    assert_no_difference 'disabled_user.shifts.count' do
+      post :create, user_session: {
+        username: disabled_user.username,
+        password: 'disabled_operator123'
+      }
+    end
 
     assert_nil UserSession.find
     assert_response :success
@@ -53,11 +74,17 @@ class UserSessionsControllerTest < ActionController::TestCase
   end
 
   test 'should destroy user session' do
-    UserSession.create(@user)
+    assert_difference '@user.shifts.count' do
+      UserSession.create(@user)
+    end
 
     assert_not_nil UserSession.find
     
+    assert_equal 1, @user.shifts.pending.size
+    
     delete :destroy
+    
+    assert_equal 0, @user.shifts.pending.reload.size
 
     assert_nil UserSession.find
     assert_redirected_to new_user_session_url

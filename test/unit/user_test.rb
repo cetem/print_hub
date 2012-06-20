@@ -188,4 +188,14 @@ class UserTest < ActiveSupport::TestCase
       error_message_from_model(@user, :lines_per_page, :less_than, count: 100)
     ], @user.errors[:lines_per_page]
   end
+  
+  test 'has pending shift' do
+    assert_equal 0, @user.shifts.pending.count
+    assert !@user.has_pending_shift?
+    
+    @user.shifts.create!(start: Time.now)
+    
+    assert_equal 1, @user.shifts.pending.reload.count
+    assert @user.has_pending_shift?
+  end
 end
