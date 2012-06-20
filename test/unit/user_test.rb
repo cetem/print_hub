@@ -206,12 +206,12 @@ class UserTest < ActiveSupport::TestCase
   end
   
   test 'has stale shift' do
-    assert_equal 0, @user.shifts.stale.count
+    assert_nil @user.stale_shift
     assert !@user.has_stale_shift?
     
     @user.start_shift!(20.hours.ago)
     
-    assert_equal 1, @user.shifts.stale.reload.count
+    assert_not_nil @user.stale_shift
     assert @user.has_stale_shift?
   end
   

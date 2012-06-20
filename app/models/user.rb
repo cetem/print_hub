@@ -58,11 +58,15 @@ class User < ApplicationModel
     self.shifts.pending.present?
   end
   
+  def close_pending_shifts!
+    self.shifts.pending.all?(&:close!)
+  end
+  
   def has_stale_shift?
     self.shifts.stale.present?
   end
   
-  def close_pending_shifts!
-    self.shifts.pending.all?(&:close!)
+  def stale_shift
+    self.shifts.stale.first
   end
 end
