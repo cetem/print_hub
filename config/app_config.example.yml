@@ -8,3 +8,9 @@ smtp:
   enable_starttls_auto: true
   
 public_host: 'public.domain.com'
+
+local_server_ip: '192.168.0.2'
+
+subdomains:
+  users: 'prints'
+ 	customers: 'fotocopia'

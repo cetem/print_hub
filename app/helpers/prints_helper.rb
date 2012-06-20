@@ -8,12 +8,17 @@ module PrintsHelper
   end
 
   def link_to_cancel_print_job(print_job)
-    button = link_to(
-      t('view.prints.cancel_job'),
-      cancel_job_print_path(print_job), method: :put, remote: true,
-      disable_with: t('view.prints.disabled_cancel_job'),
-      disabled: !print_job.pending?, class: 'btn btn-mini'
-    )
+    if print_job.pending?
+      button = link_to(
+        t('view.prints.cancel_job'), cancel_job_print_path(print_job),
+        method: :put, remote: true, class: 'btn btn-mini',
+        data: { 'disable-with' => t('view.prints.disabled_cancel_job') }
+      )
+    else
+      button = content_tag(
+        :span, t('view.prints.cancel_job'), class: 'btn btn-mini disabled'
+      )
+    end
 
     content_tag :div, button, id: "cancel_print_job_#{print_job.id}"
   end
@@ -88,9 +93,9 @@ module PrintsHelper
     
     if customer
       label << ' '
-      label << link_to_function(
-        t('view.prints.unlink_customer'),
-        "Print.clearCustomer(); $(this).remove()",
+      label << link_to(
+        t('view.prints.unlink_customer'), '#',
+        data: { action: 'clear-customer' },
         class: 'btn btn-mini remove'
       )
     end
@@ -100,5 +105,20 @@ module PrintsHelper
     label << '</span>'
     
     raw(label)
+  end
+  
+  def show_print_articles_tab_title
+    articles_title = t('view.prints.article_lines')
+    
+    if @print.article_lines.size > 0
+      articles_title << ' '
+      articles_title << content_tag(
+        :span, @print.article_lines.size, class: 'badge badge-info'
+      )
+    end
+    
+    link_to(
+      articles_title.html_safe, '#articles_container', data: { toggle: 'tab' }
+    ) 
   end
 end

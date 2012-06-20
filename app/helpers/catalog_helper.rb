@@ -83,7 +83,7 @@ module CatalogHelper
     image_tag 'help/example_search.gif',
       alt: t('view.catalog.images.example_search'),
       title: t('view.catalog.images.example_search'),
-      size: '269x34'
+      size: '269x36'
   end
   
   def example_document_grid_image

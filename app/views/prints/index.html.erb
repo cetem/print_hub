@@ -30,9 +30,11 @@
         <td>
           <%= link_to(
             '&#x26d4;'.html_safe, revoke_print_path(print),
-            method: :delete, confirm: t('messages.confirmation'),
-            title: t('view.prints.revoke'), class: 'iconic',
-            data: {'show-tooltip' => true}
+            method: :delete, title: t('view.prints.revoke'), class: 'iconic',
+            data: {
+              'show-tooltip' => true,
+              'confirm' => t('messages.confirmation')
+            }
           ) if current_user.admin? && !print.revoked %>
         </td>
       </tr>
