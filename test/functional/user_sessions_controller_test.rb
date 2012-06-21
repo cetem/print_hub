@@ -14,9 +14,9 @@ class UserSessionsControllerTest < ActionController::TestCase
   end
 
   test 'should create user session' do
-    post :create, :user_session => {
-      :username => @user.username,
-      :password => 'admin123'
+    post :create, user_session: {
+      username: @user.username,
+      password: 'admin123'
     }
 
     assert user_session = UserSession.find
@@ -25,9 +25,9 @@ class UserSessionsControllerTest < ActionController::TestCase
   end
   
   test 'should not create a user session' do
-    post :create, :user_session => {
-      :username => @user.username,
-      :password => 'wrong'
+    post :create, user_session: {
+      username: @user.username,
+      password: 'wrong'
     }
 
     assert_nil UserSession.find
@@ -40,9 +40,9 @@ class UserSessionsControllerTest < ActionController::TestCase
   test 'should not create a user session with a disabled user' do
     disabled_user = users(:disabled_operator)
 
-    post :create, :user_session => {
-      :username => disabled_user.username,
-      :password => 'disabled_operator123'
+    post :create, user_session: {
+      username: disabled_user.username,
+      password: 'disabled_operator123'
     }
 
     assert_nil UserSession.find

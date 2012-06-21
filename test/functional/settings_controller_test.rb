@@ -17,7 +17,7 @@ class SettingsControllerTest < ActionController::TestCase
 
   test 'should get show' do
     UserSession.create(@user)
-    get :show, :id => @setting.to_param
+    get :show, id: @setting.to_param
     assert_response :success
     assert_not_nil assigns(:setting)
     assert_select '#unexpected_error', false
@@ -26,7 +26,7 @@ class SettingsControllerTest < ActionController::TestCase
 
   test 'should get edit' do
     UserSession.create(@user)
-    get :edit, :id => @setting.to_param
+    get :edit, id: @setting.to_param
     assert_response :success
     assert_not_nil assigns(:setting)
     assert_select '#unexpected_error', false
@@ -35,8 +35,8 @@ class SettingsControllerTest < ActionController::TestCase
 
   test 'should update user' do
     UserSession.create(@user)
-    put :update, :id => @setting.to_param, :setting => {
-      :value => '1234'
+    put :update, id: @setting.to_param, setting: {
+      value: '1234'
     }
     assert_redirected_to settings_path
     assert_equal '1234', @setting.reload.value
