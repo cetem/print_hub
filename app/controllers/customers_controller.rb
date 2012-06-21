@@ -22,6 +22,8 @@ class CustomersController < ApplicationController
       @customers = @customers.full_text(@query_terms) unless @query_terms.empty?
     end
     
+    @customers = @customers.with_debt if params[:status] == 'with_debt'
+    
     @customers = @customers.paginate(
       page: params[:page], per_page: lines_per_page
     )

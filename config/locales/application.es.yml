@@ -341,6 +341,7 @@
         pay: 'Pagar %{date}'
         paid: '%{date} pagado'
         no_debt: 'Sin deuda'
+        with_debt: 'Con deuda'
         title: 'Saldo total en cuenta corriente'
         pay_off_debt: 'Pagar todo'
         debt_cancelled: 'Deuda saldada'
