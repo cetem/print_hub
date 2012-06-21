@@ -10,7 +10,7 @@ class CustomersController < ApplicationController
   layout ->(controller) { controller.request.xhr? ? false : 'application' }
 
   # GET /customers
-  # GET /customers.xml
+  # GET /customers.json
   def index
     @title = t('view.customers.index_title')
     @searchable = true
@@ -30,31 +30,31 @@ class CustomersController < ApplicationController
 
     respond_to do |format|
       format.html # index.html.erb
-      format.xml  { render xml: @customers }
+      format.json  { render json: @customers }
     end
   end
 
   # GET /customers/1
-  # GET /customers/1.xml
+  # GET /customers/1.json
   def show
     @title = t('view.customers.show_title')
     @customer = Customer.unscoped.find(params[:id])
 
     respond_to do |format|
       format.html # show.html.erb
-      format.xml  { render xml: @customer }
+      format.json  { render json: @customer }
     end
   end
 
   # GET /customers/new
-  # GET /customers/new.xml
+  # GET /customers/new.json
   def new
     @title = t('view.customers.new_title')
     @customer = Customer.new
 
     respond_to do |format|
       format.html { render action: current_user ? 'new' : 'new_public' }
-      format.xml  { render xml: @customer }
+      format.json  { render json: @customer }
     end
   end
 
@@ -65,7 +65,7 @@ class CustomersController < ApplicationController
   end
 
   # POST /customers
-  # POST /customers.xml
+  # POST /customers.json
   def create
     @title = t('view.customers.new_title')
     @customer = Customer.new(
@@ -78,16 +78,16 @@ class CustomersController < ApplicationController
         notice = current_user ? t('view.customers.correctly_created') : t('view.customers.correctly_registered')
         
         format.html { redirect_to(url, notice: notice) }
-        format.xml  { render xml: @customer, status: :created, location: @customer }
+        format.json  { render json: @customer, status: :created, location: @customer }
       else
         format.html { render action: current_user ? 'new' : 'new_public' }
-        format.xml  { render xml: @customer.errors, status: :unprocessable_entity }
+        format.json  { render json: @customer.errors, status: :unprocessable_entity }
       end
     end
   end
 
   # PUT /customers/1
-  # PUT /customers/1.xml
+  # PUT /customers/1.json
   def update
     @title = t('view.customers.edit_title')
     @customer = Customer.unscoped.find(params[:id])
@@ -95,10 +95,10 @@ class CustomersController < ApplicationController
     respond_to do |format|
       if @customer.update_attributes(params[:customer], as: :admin)
         format.html { redirect_to(customer_url(@customer), notice: t('view.customers.correctly_updated')) }
-        format.xml  { head :ok }
+        format.json  { head :ok }
       else
         format.html { render action: 'edit' }
-        format.xml  { render xml: @customer.errors, status: :unprocessable_entity }
+        format.json  { render json: @customer.errors, status: :unprocessable_entity }
       end
     end
 
@@ -108,14 +108,14 @@ class CustomersController < ApplicationController
   end
 
   # DELETE /customers/1
-  # DELETE /customers/1.xml
+  # DELETE /customers/1.json
   def destroy
     @customer = Customer.find(params[:id])
     @customer.destroy
 
     respond_to do |format|
       format.html { redirect_to(customers_url) }
-      format.xml  { head :ok }
+      format.json  { head :ok }
     end
   end
   
@@ -135,7 +135,7 @@ class CustomersController < ApplicationController
   end
   
   # PUT /customers/1/update_profile
-  # PUT /customers/1/update_profile.xml
+  # PUT /customers/1/update_profile.json
   def update_profile
     @title = t('view.customers.edit_title')
     @customer = current_customer
@@ -143,10 +143,10 @@ class CustomersController < ApplicationController
     respond_to do |format|
       if @customer.update_attributes(params[:customer])
         format.html { redirect_to(edit_profile_customer_url(@customer), notice: t('view.customers.profile_correctly_updated')) }
-        format.xml  { head :ok }
+        format.json  { head :ok }
       else
         format.html { render action: 'edit_profile' }
-        format.xml  { render xml: @customer.errors, status: :unprocessable_entity }
+        format.json  { render json: @customer.errors, status: :unprocessable_entity }
       end
     end
 
@@ -165,10 +165,10 @@ class CustomersController < ApplicationController
     respond_to do |format|
       if @customer.try(:activate!)
         format.html { redirect_to(new_customer_session_url, notice: t('view.customers.correctly_activated')) }
-        format.xml  { head :ok }
+        format.json  { head :ok }
       else
         format.html { redirect_to(new_customer_session_url, notice: t('view.customers.can_not_be_activated')) }
-        format.xml  { render xml: [t('view.customers.can_not_be_activated')], status: :unprocessable_entity }
+        format.json  { render json: [t('view.customers.can_not_be_activated')], status: :unprocessable_entity }
       end
     end
   end

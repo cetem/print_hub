@@ -98,7 +98,7 @@ class OrdersController < ApplicationController
   end
   
   # DELETE /orders/1
-  # DELETE /orders/1.xml
+  # DELETE /orders/1.json
   def destroy
     @order = @order_scope.find(params[:id])
     
@@ -106,7 +106,7 @@ class OrdersController < ApplicationController
       if @order.cancelled! && @order.save
         path = current_customer ? @order : order_path(@order, type: order_type)
         format.html { redirect_to path, notice: t('view.orders.correctly_cancelled') }
-        format.xml  { head :ok }
+        format.json  { head :ok }
       else
         format.html { render action: 'show' }
         format.json { render json: @order.errors, status: :unprocessable_entity }
