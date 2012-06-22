@@ -199,13 +199,12 @@ class PrintsTest < ActionDispatch::IntegrationTest
       select @pdf_printer, from: 'print_printer'
     end
     
-    
-    retard_input = '<input id=print_print_jobs_attributes_0_job_hold_until '
-    retard_input << 'name=print[print_jobs_attributes][0][job_hold_until] '
-    retard_input << 'type=hidden value=undefinite >'
+    retard_input = '<input id="print_print_jobs_attributes_0_job_hold_until" '
+    retard_input << 'name="print[print_jobs_attributes][0][job_hold_until]" '
+    retard_input << 'type="hidden" value="indefinite">'
     
     page.execute_script(
-      "$('div.print_job .row-fluid .span2').append('#{retard_input}');"
+      "$('div.print_job .row-fluid .span2').append($('#{retard_input}'));"
     )
     
     within '.print_job' do |ac|
