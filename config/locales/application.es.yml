@@ -521,6 +521,7 @@
      correctly_created: 'Turno agregado correctamente.'
      correctly_updated: 'Turno actualizado correctamente.'
      stale_object_error: 'El turno no pudo ser actualizado, intente nuevamente.'
+     edit_stale: 'Tenés un turno abierto demasiado viejo, decinos a que hora terminó...'
     stats:
       date_filter:
         start: 'Inicio'

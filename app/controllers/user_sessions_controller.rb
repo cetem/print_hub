@@ -3,7 +3,7 @@ class UserSessionsController < ApplicationController
   before_filter :require_user, only: :destroy
 
   # GET /user_sessions/new
-  # GET /user_sessions/new.xml
+  # GET /user_sessions/new.json
   def new
     @title = t 'view.user_sessions.new_title'
     @user_session = UserSession.new
@@ -15,11 +15,11 @@ class UserSessionsController < ApplicationController
     
     respond_to do |format|
       if @user_session.save
-        format.html { redirect_back_or_default(prints_url, notice: t('view.user_sessions.correctly_created')) }
-        format.xml  { render xml: @user_session, status: :created, location: prints_url }
+        format.html { redirect_back_or_default initial_url }
+        format.json { render json: @user_session, status: :created, location: initial_url }
       else
         format.html { render action: 'new' }
-        format.xml  { render xml: @user_session.errors, status: :unprocessable_entity }
+        format.json { render json: @user_session.errors, status: :unprocessable_entity }
       end
     end
   end
@@ -29,7 +29,21 @@ class UserSessionsController < ApplicationController
 
     respond_to do |format|
       format.html { redirect_to(new_user_session_url, notice: t('view.user_sessions.correctly_destroyed')) }
-      format.xml  { head :ok }
+      format.json  { head :ok }
+    end
+  end
+  
+  private
+  
+  def initial_url
+    if @user_session.record.has_stale_shift?
+      flash.notice = t('view.shifts.edit_stale')
+      
+      edit_shift_url(@user_session.record.stale_shift)
+    else
+      flash.notice = t('view.user_sessions.correctly_created')
+      
+      prints_url
     end
   end
 end

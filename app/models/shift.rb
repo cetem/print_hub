@@ -4,6 +4,10 @@ class Shift < ActiveRecord::Base
   # Atributos "permitidos"
   attr_accessible :start, :finish, :description, :user_id, :lock_version
   
+  # Scopes
+  scope :pending, where(finish: nil)
+  scope :stale, pending.where("#{table_name}.start < ?", 8.hours.ago)
+  
   # Restricciones
   validates :start, :user_id, presence: true
   validates_datetime :start, allow_nil: true, allow_blank: true
@@ -16,5 +20,9 @@ class Shift < ActiveRecord::Base
     super(attributes, options)
     
     self.start ||= Time.now
+  end
+  
+  def close!
+    self.update_attributes(finish: Time.now)
   end
 end
