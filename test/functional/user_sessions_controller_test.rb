@@ -88,7 +88,7 @@ class UserSessionsControllerTest < ActionController::TestCase
     assert_template 'user_sessions/new'
   end
 
-  test 'should destroy user session' do
+  test 'should destroy user session and close shift' do
     assert_difference '@user.shifts.count' do
       UserSession.create(@user)
     end
@@ -97,10 +97,24 @@ class UserSessionsControllerTest < ActionController::TestCase
     
     assert_equal 1, @user.shifts.pending.size
     
-    delete :destroy
+    delete :destroy, close_shift: true
     
     assert_equal 0, @user.shifts.pending.reload.size
 
+    assert_nil UserSession.find
+    assert_redirected_to new_user_session_url
+  end
+  
+  test 'should exit whitout close the shift' do
+    UserSession.create(@user)
+    
+    assert_equal 1, @user.shifts.pending.size
+    
+    delete :destroy
+    
+    assert_equal 1, @user.reload.shifts.pending.size
+    assert_nil @user.shifts.pending.last.finish
+    
     assert_nil UserSession.find
     assert_redirected_to new_user_session_url
   end

@@ -25,8 +25,9 @@ class UserSessionsController < ApplicationController
   end
 
   def destroy
+    current_user_session.close_shift if params[:close_shift]
     current_user_session.destroy
-
+    
     respond_to do |format|
       format.html { redirect_to(new_user_session_url, notice: t('view.user_sessions.correctly_destroyed')) }
       format.json  { head :ok }
@@ -34,15 +35,15 @@ class UserSessionsController < ApplicationController
   end
   
   private
-  
+
   def initial_url
     if @user_session.record.has_stale_shift?
       flash.notice = t('view.shifts.edit_stale')
-      
+
       edit_shift_url(@user_session.record.stale_shift)
     else
       flash.notice = t('view.user_sessions.correctly_created')
-      
+
       prints_url
     end
   end
