@@ -45,7 +45,10 @@
   </div>
 </div>
 
-<nav class="form-actions">
+<div class="form-actions">
   <%= link_to t('label.edit'), edit_user_path(@user) %> |
   <%= link_to t('label.list'), users_path %>
-</nav>
+  <div class="pull-right">
+    <%= link_to t('view.shifts.index_title'), user_shifts_path(@user) %>
+  </div>
+</div>

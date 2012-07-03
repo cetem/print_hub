@@ -116,8 +116,9 @@ PrintHubApp::Application.routes.draw do
 
     resources :users, except: [:destroy] do
       get :avatar, on: :member, path: '/avatar/:style'
+      resources :shifts
     end
-  
+
     root to: 'user_sessions#new'
   end
 end

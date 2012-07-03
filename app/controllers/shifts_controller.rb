@@ -1,11 +1,12 @@
 class ShiftsController < ApplicationController
-  before_filter :require_admin_user
+  before_filter :require_admin_user, only: :destroy
+  before_filter :require_user, except: :destroy
   
   # GET /shifts
   # GET /shifts.json
   def index
     @title = t('view.shifts.index_title')
-    @shifts = Shift.order('start DESC').paginate(
+    @shifts = shifts_scope.order('start DESC').paginate(
       page: params[:page], per_page: lines_per_page
     )
 
@@ -19,7 +20,7 @@ class ShiftsController < ApplicationController
   # GET /shifts/1.json
   def show
     @title = t('view.shifts.show_title')
-    @shift = Shift.find(params[:id])
+    @shift = shifts_scope.find(params[:id])
 
     respond_to do |format|
       format.html # show.html.erb
@@ -42,7 +43,7 @@ class ShiftsController < ApplicationController
   # GET /shifts/1/edit
   def edit
     @title = t('view.shifts.edit_title')
-    @shift = Shift.find(params[:id])
+    @shift = shifts_scope.find(params[:id])
   end
 
   # POST /shifts
@@ -66,7 +67,7 @@ class ShiftsController < ApplicationController
   # PUT /shifts/1.json
   def update
     @title = t('view.shifts.edit_title')
-    @shift = Shift.find(params[:id])
+    @shift = shifts_scope.find(params[:id])
 
     respond_to do |format|
       if @shift.update_attributes(params[:shift])
@@ -85,12 +86,24 @@ class ShiftsController < ApplicationController
   # DELETE /shifts/1
   # DELETE /shifts/1.json
   def destroy
-    @shift = Shift.find(params[:id])
+    @shift = shifts_scope.find(params[:id])
     @shift.destroy
 
     respond_to do |format|
       format.html { redirect_to shifts_url }
       format.json { head :no_content }
     end
+  end
+
+  private
+
+  def shifts_scope
+    if params[:user_id]
+      user = current_user.admin ? User.find(params[:user_id]) : current_user
+    end
+
+    user ? user.shifts : (
+      current_user.admin ? Shift.scoped : current_user.shifts
+    )
   end
 end
