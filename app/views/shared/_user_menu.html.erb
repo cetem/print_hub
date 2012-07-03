@@ -21,17 +21,37 @@
         </ul>
         <%= render partial: 'shared/nav_search' if @searchable %>
         <ul class="nav pull-right">
-          <li><a><%= current_user.username %></a></li>
           <li>
             <%= link_to(
-              '&#x2192;'.html_safe, user_sessions_path,
-              'title' => t('menu.actions.logout'), 'class' => 'iconic',
-              'data-show-tooltip' => true, 'data-placement' => 'bottom',
-              'method' => :delete
+              current_user.username, user_path(current_user.id),
+              'title' => t('label.show'),
+              data: { 'show-tooltip' => true, 'placement' => 'bottom' } 
             ) %>
+          </li>
+          <li>
+            <%= link_to '&#x2192;'.html_safe, '#logout', 
+              'title' => t('menu.actions.logout'), 'class' => 'iconic',
+              data: { 'toggle' => 'modal', 'show-tooltip' => true, 
+                'placement' => 'bottom' } %>
           </li>
         </ul>
       </div>
     </div>
+  </div>
+</div>
+
+<div class="modal hide" id="logout">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal">×</button>
+    <h2><%= t('view.shifts.close_session.title') %></h2>
+  </div>
+  <div class="modal-body">
+    <h3><%= t('view.shifts.close_session.body') %></h3>
+  </div>
+  <div class="modal-footer">
+    <%= link_to t('view.shifts.close_session.exit'), user_sessions_path, 
+      class: 'btn', 'method' => :delete %>
+    <%= link_to t('label.yes'), user_sessions_path(close_shift: true), 
+      class: 'btn btn-primary', 'method' => :delete %>
   </div>
 </div>

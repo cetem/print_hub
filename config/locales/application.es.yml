@@ -522,6 +522,10 @@
      correctly_updated: 'Turno actualizado correctamente.'
      stale_object_error: 'El turno no pudo ser actualizado, intente nuevamente.'
      edit_stale: 'Tenés un turno abierto demasiado viejo, decinos a que hora terminó...'
+     close_session:
+       title: 'Cerrando sesión...'
+       body: '¿Salir y cerrar el turno?'
+       exit: 'No, solo salir'
     stats:
       date_filter:
         start: 'Inicio'
