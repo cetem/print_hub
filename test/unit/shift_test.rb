@@ -30,15 +30,27 @@ class ShiftTest < ActiveSupport::TestCase
     end
   end
 
-  # Prueba de actualización de un turno
-  test 'update' do
+  # Prueba la no actualización de un turno
+  test 'not update' do
     1.hour.ago.to_datetime.tap do |start|
       assert_no_difference 'Shift.count' do
         assert @shift.update_attributes(start: start),
           @shift.errors.full_messages.join('; ')
       end
 
-      assert_equal start.to_i, @shift.reload.start.to_i
+      assert_not_equal start.to_i, @shift.reload.start.to_i
+    end
+  end
+  
+  # Prueba actualizar final de un turno
+  test 'update' do
+    1.minute.ago.to_datetime.tap do |finish|
+      assert_no_difference 'Shift.count' do
+        assert @shift.update_attributes(finish: finish),
+          @shift.errors.full_messages.join('; ')
+      end
+
+      assert_equal finish.to_i, @shift.reload.finish.to_i
     end
   end
 
@@ -83,6 +95,20 @@ class ShiftTest < ActiveSupport::TestCase
         @shift, :finish, :after,
         restriction: @shift.start.strftime(
           I18n.t('validates_timeliness.error_value_formats.datetime')
+        )
+      )
+    ], @shift.errors[:finish]
+  end
+  
+  # Prueba que no cierren un turno después del limite
+  test 'validate finish the shift before the limit' do
+    @shift.finish = @shift.finish_limit + 1.minute
+    assert @shift.invalid?
+    assert_equal 1, @shift.errors.count
+    assert_equal [
+      error_message_from_model(
+        @shift, :finish, :before, restriction: I18n.l(
+          @shift.finish_limit, format: '%d/%m/%Y %H:%M:%S'
         )
       )
     ], @shift.errors[:finish]

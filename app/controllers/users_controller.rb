@@ -1,5 +1,6 @@
 class UsersController < ApplicationController
-  before_filter :require_admin_user
+  before_filter :require_admin_user, except: :show
+  before_filter :require_user, only: :show
   
   # GET /users
   # GET /users.xml
@@ -19,7 +20,7 @@ class UsersController < ApplicationController
   # GET /users/1.xml
   def show
     @title = t 'view.users.show_title'
-    @user = User.find(params[:id])
+    @user = current_user.admin ? User.find(params[:id]) : current_user
 
     respond_to do |format|
       format.html # show.html.erb

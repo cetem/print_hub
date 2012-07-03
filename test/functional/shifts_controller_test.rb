@@ -48,23 +48,7 @@ class ShiftsControllerTest < ActionController::TestCase
     assert_select '#unexpected_error', false
     assert_template 'shifts/edit'
   end
-
-  test 'should update shift' do
-    1.hour.ago.to_datetime.tap do |start|
-      assert_no_difference 'Shift.count' do
-        put :update, id: @shift, shift: {
-          start: start,
-          finish: nil,
-          description: 'Some shift',
-          user_id: users(:administrator).id
-        }
-      end
-
-      assert_redirected_to shifts_url
-      assert_equal start.to_i, @shift.reload.start.to_i
-    end
-  end
-
+  
   test 'should destroy shift' do
     assert_difference('Shift.count', -1) do
       delete :destroy, id: @shift

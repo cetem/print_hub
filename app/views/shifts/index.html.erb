@@ -15,15 +15,11 @@
         <td><%= l shift.start, format: :minimal %></td>
         <td><%= l shift.finish, format: :minimal if shift.finish %></td>
         <td><%= link_to_show shift %></td>
-        <td><%= link_to_edit edit_shift_path(shift) %></td>
-        <td><%= link_to_destroy shift %></td>
+        <td><%= link_to_edit edit_shift_path(shift) if current_user.admin? %></td>
+        <td><%= link_to_destroy shift if current_user.admin? %></td>
       </tr>
     <% end %>
   </tbody>
 </table>
 
 <%= pagination_links @shifts %>
-
-<div class="form-actions">
-  <%= link_to t('label.new'), new_shift_path, class: 'btn btn-primary' %>
-</div>

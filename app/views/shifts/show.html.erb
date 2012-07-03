@@ -23,6 +23,8 @@
 </div>
 
 <div class="form-actions">
-  <%= link_to t('label.edit'), edit_shift_path(@shift) %> |
+  <% if current_user.admin? %>
+    <%= link_to t('label.edit'), edit_shift_path(@shift) %> |
+  <% end %>
   <%= link_to t('label.list'), shifts_path %>
 </div>

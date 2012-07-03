@@ -75,7 +75,9 @@ class ApplicationController < ActionController::Base
   end
 
   def require_user
-    unless current_user
+    if current_user
+      not_leave_open_shift
+    else
       flash.notice = t('messages.must_be_logged_in')
 
       store_location
@@ -109,7 +111,9 @@ class ApplicationController < ActionController::Base
   end
 
   def require_admin_user
-    unless current_user.try(:admin) == true
+    if current_user.try(:admin) == true
+      not_leave_open_shift
+    else
       flash.alert = t('messages.must_be_admin')
 
       store_location
@@ -147,5 +151,12 @@ class ApplicationController < ActionController::Base
     to_datetime ||= Time.now
 
     [from_datetime.to_datetime, to_datetime.to_datetime].sort
+  end
+
+  def not_leave_open_shift
+    if current_user.has_stale_shift? &&
+        controller_name != 'shifts' && action_name != 'edit'
+      redirect_to edit_shift_url(current_user.stale_shift)
+    end
   end
 end

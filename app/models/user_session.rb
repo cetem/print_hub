@@ -2,7 +2,6 @@ class UserSession < Authlogic::Session::Base
   find_by_login_method :find_by_username_or_email
   
   after_save :create_shift
-  before_destroy :close_shift
   
   def create_shift
     self.record.start_shift! unless self.record.has_pending_shift?
