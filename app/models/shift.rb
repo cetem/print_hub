@@ -4,6 +4,9 @@ class Shift < ActiveRecord::Base
   # Atributos "permitidos"
   attr_accessible :start, :finish, :description, :user_id, :lock_version
   
+  # Restricciones en los atributos
+  attr_readonly :start
+  
   # Scopes
   scope :pending, where(finish: nil)
   scope :stale, pending.where("#{table_name}.start < ?", 8.hours.ago)
@@ -11,7 +14,8 @@ class Shift < ActiveRecord::Base
   # Restricciones
   validates :start, :user_id, presence: true
   validates_datetime :start, allow_nil: true, allow_blank: true
-  validates_datetime :finish, after: :start, allow_nil: true, allow_blank: true
+  validates_datetime :finish, after: :start, before: :finish_limit, 
+    allow_nil: true, allow_blank: true, on: :update
   
   # Relaciones
   belongs_to :user
@@ -24,5 +28,9 @@ class Shift < ActiveRecord::Base
   
   def close!
     self.update_attributes(finish: Time.now)
+  end
+  
+  def finish_limit
+    self.start + 16.hours
   end
 end
