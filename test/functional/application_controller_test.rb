@@ -169,6 +169,16 @@ class ApplicationControllerTest < ActionController::TestCase
     assert_redirected_to new_user_session_url
   end
 
+  test 'not leave open shift' do
+    assert_nil @controller.send(:not_leave_open_shift)
+
+    UserSession.create(users(:operator_with_open_shift))
+    @controller.send(:session)[:has_an_open_shift] = true
+
+    assert_not_nil @controller.send(:not_leave_open_shift)
+    assert_redirected_to edit_shift_url(shifts(:open_shift))
+  end
+
   test 'make date range' do
     from_datetime = Time.now.at_beginning_of_day
     to_datetime = Time.now

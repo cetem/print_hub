@@ -48,6 +48,40 @@ class ShiftsControllerTest < ActionController::TestCase
     assert_select '#unexpected_error', false
     assert_template 'shifts/edit'
   end
+
+  test 'should update shift' do
+    1.minute.ago.to_datetime.tap do |finish|
+      assert_no_difference 'Shift.count' do
+        put :update, id: @shift, shift: {
+          finish: finish,
+          description: 'Some shift',
+          user_id: users(:administrator).id
+        }
+      end
+      
+      assert_redirected_to shifts_url
+      assert_equal finish.to_i, @shift.reload.finish.to_i
+    end 
+  end
+
+  test 'should update stale shift' do
+    shift = shifts(:open_shift)
+    session[:has_an_open_shift] = true
+
+    5.hours.ago.to_datetime.tap do |finish|
+      assert_no_difference 'Shift.count' do
+        put :update, id: shift, shift: {
+          finish: finish,
+          description: 'Some shift',
+          user_id: users(:administrator).id
+        }
+      end
+
+      assert_redirected_to shifts_url
+      assert_equal finish.to_i, shift.reload.finish.to_i
+      assert !session[:has_an_open_shift]
+    end
+  end
   
   test 'should destroy shift' do
     assert_difference('Shift.count', -1) do

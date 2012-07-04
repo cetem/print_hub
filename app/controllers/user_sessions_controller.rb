@@ -15,6 +15,8 @@ class UserSessionsController < ApplicationController
     
     respond_to do |format|
       if @user_session.save
+        session[:has_an_open_shift] = current_user.has_stale_shift?
+
         format.html { redirect_back_or_default initial_url }
         format.json { render json: @user_session, status: :created, location: initial_url }
       else

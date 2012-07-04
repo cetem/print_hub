@@ -132,6 +132,12 @@ class ApplicationController < ActionController::Base
 
     session[:return_to] = nil
   end
+
+  def not_leave_open_shift
+    if session[:has_an_open_shift] && controller_name != 'shifts'
+      redirect_to edit_shift_url(current_user.stale_shift)
+    end
+  end
   
   def lines_per_page
     current_user.try(:lines_per_page) || APP_LINES_PER_PAGE
@@ -151,12 +157,5 @@ class ApplicationController < ActionController::Base
     to_datetime ||= Time.now
 
     [from_datetime.to_datetime, to_datetime.to_datetime].sort
-  end
-
-  def not_leave_open_shift
-    if current_user.has_stale_shift? &&
-        controller_name != 'shifts' && action_name != 'edit'
-      redirect_to edit_shift_url(current_user.stale_shift)
-    end
   end
 end

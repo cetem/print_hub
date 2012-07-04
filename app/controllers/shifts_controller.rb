@@ -71,6 +71,8 @@ class ShiftsController < ApplicationController
 
     respond_to do |format|
       if @shift.update_attributes(params[:shift])
+        session[:has_an_open_shift] = current_user.has_stale_shift?
+
         format.html { redirect_to shifts_url, notice: t('view.shifts.correctly_updated') }
         format.json { head :no_content }
       else
@@ -98,12 +100,9 @@ class ShiftsController < ApplicationController
   private
 
   def shifts_scope
-    if params[:user_id]
-      user = current_user.admin ? User.find(params[:user_id]) : current_user
-    end
+    user = User.find params[:user_id] if params[:user_id] && current_user.admin?
 
-    user ? user.shifts : (
-      current_user.admin ? Shift.scoped : current_user.shifts
-    )
+    current_user.admin? ?
+      (user ? user.shifts : Shift.scoped) : current_user.shifts
   end
 end

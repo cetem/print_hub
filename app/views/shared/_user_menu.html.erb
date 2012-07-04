@@ -40,18 +40,21 @@
   </div>
 </div>
 
-<div class="modal hide" id="logout">
+<div class="modal fade hide" id="logout">
   <div class="modal-header">
-    <button type="button" class="close" data-dismiss="modal">×</button>
-    <h2><%= t('view.shifts.close_session.title') %></h2>
+    <button type="button" class="close" data-dismiss="modal">&times;</button>
+    <h3><%= t('view.shifts.close_session.title') %></h3>
   </div>
   <div class="modal-body">
-    <h3><%= t('view.shifts.close_session.body') %></h3>
+    <p><%= t('view.shifts.close_session.body.html') %></p>
   </div>
   <div class="modal-footer">
-    <%= link_to t('view.shifts.close_session.exit'), user_sessions_path, 
-      class: 'btn', 'method' => :delete %>
+    <div class="pull-left">
+      <%= link_to t('view.shifts.close_session.exit'), user_sessions_path, 
+        class: 'btn', method: :delete %>
+    </div>
+
     <%= link_to t('label.yes'), user_sessions_path(close_shift: true), 
-      class: 'btn btn-primary', 'method' => :delete %>
+      class: 'btn btn-primary', method: :delete %>
   </div>
 </div>

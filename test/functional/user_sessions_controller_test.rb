@@ -28,6 +28,8 @@ class UserSessionsControllerTest < ActionController::TestCase
   
   test 'should create user session with pending shift' do
     @user.start_shift!
+
+    assert !session[:has_an_open_shift]
     
     assert_no_difference '@user.shifts.count' do
       post :create, user_session: {
@@ -35,6 +37,8 @@ class UserSessionsControllerTest < ActionController::TestCase
         password: 'admin123'
       }
     end
+
+    assert !session[:has_an_open_shift]
 
     assert user_session = UserSession.find
     assert_equal @user, user_session.user
@@ -42,18 +46,21 @@ class UserSessionsControllerTest < ActionController::TestCase
   end
   
   test 'should create user session with stale shift' do
-    @user.start_shift! 20.hours.ago
+    user = users(:operator_with_open_shift)
+
+    assert !session[:has_an_open_shift]
     
     assert_no_difference '@user.shifts.count' do
       post :create, user_session: {
-        username: @user.username,
-        password: 'admin123'
+        username: user.username,
+        password: 'operator_wos123'
       }
     end
 
     assert user_session = UserSession.find
-    assert_equal @user, user_session.user
-    assert_redirected_to edit_shift_url(@user.stale_shift)
+    assert_equal user, user_session.user
+    assert session[:has_an_open_shift]
+    assert_redirected_to edit_shift_url(shifts(:open_shift))
   end
   
   test 'should not create a user session' do

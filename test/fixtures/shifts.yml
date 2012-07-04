@@ -9,3 +9,9 @@ old_shift:
   finish: <%= 2.hours.ago.to_s(:db) %>
   description: Complete shift
   user: operator
+
+open_shift:
+  start: <%= 20.hours.ago.to_s(:db) %>
+  finish:
+  description: Open shift
+  user: operator_with_open_shift
