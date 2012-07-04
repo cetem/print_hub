@@ -35,6 +35,7 @@ class PrintTest < ActiveSupport::TestCase
         user_id: users(:administrator).id,
         scheduled_at: '',
         pay_later: false,
+        comment: 'Nothing important',
         print_jobs_attributes: {
           '1' => {
             copies: 1,
@@ -731,7 +732,7 @@ class PrintTest < ActiveSupport::TestCase
     assert print.printer.blank?
     assert !print.scheduled_at.blank?
   end
-
+  
   def build_new_print_from(print)
     new_print = Print.new(
       print.attributes.slice(*Print.accessible_attributes)

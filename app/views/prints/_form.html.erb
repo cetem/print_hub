@@ -54,6 +54,10 @@
       <li>
         <%= show_print_articles_tab_title %>
       </li>
+      <li>
+        <%= link_to t('view.prints.comment'), 
+          '#comment_container', data: { toggle: 'tab' } %>
+      </li>
     </ul>
     
     <div class="tab-content">
@@ -138,6 +142,21 @@
             %>
           </div>
         <% end %>
+      </div>
+      
+      <div id="comment_container" class="tab-pane">
+        <div class="row-fluid">
+          <div class="span5">
+            <h4><%= Print.human_attribute_name 'comment' %></h4>
+          </div>
+          
+          <div id="comment">
+            <div class="span12">
+              <%= f.input :comment, label: false, 
+                input_html: { rows: 3, class: 'span12' } %>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
     <div class="page-header">

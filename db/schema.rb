@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120229224241) do
+ActiveRecord::Schema.define(:version => 20120703020315) do
 
   create_table "article_lines", :force => true do |t|
     t.integer  "print_id"
@@ -194,6 +194,7 @@ ActiveRecord::Schema.define(:version => 20120229224241) do
     t.integer  "order_id"
     t.boolean  "revoked",                   :default => false, :null => false
     t.string   "status",       :limit => 1, :default => "P",   :null => false
+    t.text     "comment"
   end
 
   add_index "prints", ["created_at"], :name => "index_prints_on_created_at"

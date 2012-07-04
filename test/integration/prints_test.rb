@@ -75,6 +75,11 @@ class PrintsTest < ActionDispatch::IntegrationTest
       find("##@ac_field").native.send_keys :arrow_down, :tab
     end
     
+    within 'form' do
+      click_link I18n.t('view.prints.comment')
+      fill_in 'print_comment', with: 'Nothing importan'
+    end
+    
     assert_difference 'Print.count' do
       click_button I18n.t('view.prints.print_title')
     end

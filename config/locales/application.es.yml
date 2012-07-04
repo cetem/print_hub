@@ -145,6 +145,7 @@
         customer_id: 'Cliente'
         user: 'Usuario'
         user_id: 'Usuario'
+        comment: 'Comentario'
       print/article_lines:
         one: 'Artículo'
         other: 'Artículos'
@@ -492,6 +493,7 @@
       new_without_stored_documents: 'Nueva impresión *sin* documentos'
       revoke: 'Revocar'
       correctly_revoked: 'Impresión revocada correctamente'
+      comment: 'Comentario'
     settings:
       index_title: 'Listado de configuraciones'
       show_title: 'Detalle de configuración'
