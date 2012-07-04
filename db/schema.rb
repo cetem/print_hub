@@ -228,6 +228,20 @@ ActiveRecord::Schema.define(:version => 20120703020315) do
 
   add_index "settings", ["thing_type", "thing_id", "var"], :name => "index_settings_on_thing_type_and_thing_id_and_var", :unique => true
 
+  create_table "shifts", :force => true do |t|
+    t.datetime "start",                       :null => false
+    t.datetime "finish"
+    t.text     "description"
+    t.integer  "lock_version", :default => 0, :null => false
+    t.integer  "user_id",                     :null => false
+    t.datetime "created_at",                  :null => false
+    t.datetime "updated_at",                  :null => false
+  end
+
+  add_index "shifts", ["finish"], :name => "index_shifts_on_finish"
+  add_index "shifts", ["start"], :name => "index_shifts_on_start"
+  add_index "shifts", ["user_id"], :name => "index_shifts_on_user_id"
+
   create_table "tags", :force => true do |t|
     t.string   "name",                            :null => false
     t.integer  "parent_id"
@@ -242,16 +256,6 @@ ActiveRecord::Schema.define(:version => 20120703020315) do
 
   add_index "tags", ["parent_id"], :name => "index_tags_on_parent_id"
   add_index "tags", ["private"], :name => "index_tags_on_private"
-
-  create_table "user_sessions", :force => true do |t|
-    t.string   "session_id",                      :null => false
-    t.string   "current_login_ip"
-    t.datetime "current_login_at"
-    t.datetime "last_request_at"
-    t.integer  "lock_version",     :default => 0
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
 
   create_table "users", :force => true do |t|
     t.string   "name",                                   :null => false

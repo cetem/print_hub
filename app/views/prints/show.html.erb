@@ -23,11 +23,11 @@
     <b><%= Print.human_attribute_name 'scheduled_at' %></b>:
     <%= l @print.scheduled_at, format: :long if @print.scheduled_at %>
   </p>
-  
-  <p>
-    <b><%= Print.human_attribute_name 'comment' %></b>:
-    <%= @print.comment || ''%>
-  </p>
+
+  <% if @print.comment.present? %>
+    <h3><%= Print.human_attribute_name 'comment' %></h3>
+    <blockquote><%= simple_format @print.comment %></blockquote>
+  <% end %>
 
   <% unless @print.print_jobs.empty? %>
     <section class="nested_items">
