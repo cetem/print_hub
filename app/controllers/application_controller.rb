@@ -135,7 +135,7 @@ class ApplicationController < ActionController::Base
 
   def not_leave_open_shift
     if session[:has_an_open_shift] && controller_name != 'shifts'
-      redirect_to edit_shift_url(current_user.stale_shift)
+      redirect_to edit_shift_url(current_user.stale_shift), notice: t('view.shifts.edit_stale')
     end
   end
   
