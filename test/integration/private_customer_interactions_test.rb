@@ -15,7 +15,7 @@ class PrivateCustomerInteractionsTest < ActionDispatch::IntegrationTest
   end
   
   test 'should search with no results and show contextual help' do
-    login
+    customer_login
     
     fill_in 'q', with: 'inexistent document'
     find('#q').native.send_keys :enter
@@ -26,7 +26,7 @@ class PrivateCustomerInteractionsTest < ActionDispatch::IntegrationTest
   end
   
   test 'should complete an order' do
-    login
+    customer_login
     
     fill_in 'q', with: 'Math'
     find('#q').native.send_keys :enter
@@ -66,7 +66,7 @@ class PrivateCustomerInteractionsTest < ActionDispatch::IntegrationTest
       assert_page_has_no_errors!
     end
     
-    login expected_path: new_order_path
+    customer_login expected_path: new_order_path
     
     assert_page_has_no_errors!
     assert page.has_css?('#check_order')
@@ -93,7 +93,7 @@ class PrivateCustomerInteractionsTest < ActionDispatch::IntegrationTest
   end
   
   test 'should customize the order' do
-    login
+    customer_login
     
     fill_in 'q', with: 'Math'
     find('#q').native.send_keys :enter
@@ -148,7 +148,7 @@ class PrivateCustomerInteractionsTest < ActionDispatch::IntegrationTest
   end
 
   test 'should change the password and login with the correct' do
-    login 
+    customer_login
     
     assert_page_has_no_errors!
     
@@ -183,7 +183,7 @@ class PrivateCustomerInteractionsTest < ActionDispatch::IntegrationTest
   
   private
   
-  def login(options = {})
+  def customer_login(options = {})
     options.reverse_merge!(
       customer_id: :student_without_bonus,
       expected_path: catalog_path

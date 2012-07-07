@@ -13,7 +13,7 @@ class PrintsTest < ActionDispatch::IntegrationTest
   end
   
   test 'should add a document with +' do
-    adm_login
+    login
     
     assert_page_has_no_errors!
     assert_equal prints_path, current_path
@@ -52,7 +52,7 @@ class PrintsTest < ActionDispatch::IntegrationTest
   end
   
   test 'should print' do
-    adm_login
+    login
     
     assert_page_has_no_errors!
     assert_equal prints_path, current_path
@@ -84,7 +84,7 @@ class PrintsTest < ActionDispatch::IntegrationTest
   end
   
   test 'should schedule for final of the day' do
-    adm_login
+    login
     
     assert_page_has_no_errors!
     assert_equal prints_path, current_path
@@ -128,7 +128,7 @@ class PrintsTest < ActionDispatch::IntegrationTest
   end
   
   test 'should cancel a print_job' do
-    adm_login
+    login
     
     assert_page_has_no_errors!
     assert_equal prints_path, current_path

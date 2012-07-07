@@ -10,7 +10,7 @@ class TagsTest < ActionDispatch::IntegrationTest
   end
   
   test 'should destroy a tag' do
-    adm_login 
+    login
 
     assert_page_has_no_errors!
     assert_equal prints_path, current_path
@@ -38,7 +38,7 @@ class TagsTest < ActionDispatch::IntegrationTest
   end
    
   test 'should create tags into tags' do
-    adm_login 
+    login
 
     assert_page_has_no_errors!
     assert_equal prints_path, current_path

@@ -10,7 +10,7 @@ class DocumentsTest < ActionDispatch::IntegrationTest
   end
   
   test 'should create a document' do
-    adm_login
+    login
 
     assert_page_has_no_errors!
     assert_equal prints_path, current_path
@@ -45,7 +45,7 @@ class DocumentsTest < ActionDispatch::IntegrationTest
   end
     
   test 'should delete a document' do
-    adm_login
+    login
 
     assert_page_has_no_errors!
     assert_equal prints_path, current_path
@@ -70,7 +70,7 @@ class DocumentsTest < ActionDispatch::IntegrationTest
   end
 
   test 'should delete a tag' do
-    adm_login
+    login
 
     assert_page_has_no_errors!
     assert_equal prints_path, current_path

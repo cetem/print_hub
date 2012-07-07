@@ -10,7 +10,7 @@ class CustomersTest < ActionDispatch::IntegrationTest
   end
   
   test 'should create a customer' do
-    adm_login 
+    login
     
     assert_page_has_no_errors!
     assert_equal prints_path, current_path
@@ -56,7 +56,7 @@ class CustomersTest < ActionDispatch::IntegrationTest
   end
   
   test 'should deposit to a customer' do
-    adm_login
+    login
     
     assert_page_has_no_errors!
     assert_equal prints_path, current_path
@@ -77,7 +77,7 @@ class CustomersTest < ActionDispatch::IntegrationTest
   end
   
   test 'should probe the nested delete in deposits' do
-    adm_login
+    login
     
     assert_page_has_no_errors!
     assert_equal prints_path, current_path
@@ -102,7 +102,7 @@ class CustomersTest < ActionDispatch::IntegrationTest
   end
   
   test 'should show the bonuses' do
-    adm_login
+    login
     
     assert_page_has_no_errors!
     assert_equal prints_path, current_path
@@ -120,7 +120,7 @@ class CustomersTest < ActionDispatch::IntegrationTest
   end
 
   test 'should pay a month debt' do
-    adm_login
+    login
     
     assert_page_has_no_errors!
     assert_equal prints_path, current_path
@@ -150,7 +150,7 @@ class CustomersTest < ActionDispatch::IntegrationTest
   end
 
   test 'should pay total debt' do
-    adm_login
+    login
     
     assert_page_has_no_errors!
     assert_equal prints_path, current_path

@@ -11,7 +11,7 @@ class OrdersTest < ActionDispatch::IntegrationTest
 
   
   test 'should print an order' do
-    adm_login
+    login
     
     assert_page_has_no_errors!
     assert_equal prints_path, current_path
@@ -76,7 +76,7 @@ class OrdersTest < ActionDispatch::IntegrationTest
   end
   
   test 'should cancel an order' do
-    adm_login
+    login
     
     assert_page_has_no_errors!
     assert_equal prints_path, current_path

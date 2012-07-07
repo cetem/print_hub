@@ -10,7 +10,7 @@ class ArticlesTest < ActionDispatch::IntegrationTest
   end
   
   test 'should create an article' do
-    adm_login
+    login
     
     assert_page_has_no_errors!
     assert_equal prints_path, current_path
@@ -35,7 +35,7 @@ class ArticlesTest < ActionDispatch::IntegrationTest
   end
   
   test 'should delete an article' do
-    adm_login
+    login
     
     assert_page_has_no_errors!
     assert_equal prints_path, current_path

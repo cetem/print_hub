@@ -10,10 +10,11 @@ class UsersTest < ActionDispatch::IntegrationTest
   end
   
   test 'should create an user' do
-    adm_login
+    login
     
     assert_page_has_no_errors!
     assert_equal prints_path, current_path
+
     visit new_user_path
     assert_page_has_no_errors!
     assert_equal new_user_path, current_path
@@ -32,12 +33,14 @@ class UsersTest < ActionDispatch::IntegrationTest
       fill_in User.human_attribute_name('password_confirmation'), 
         with: 'KillSith'
       check 'user_enable'
+
       assert_difference 'User.count' do
         click_button I18n.t(
           'helpers.submit.create', model: User.model_name.human
         )
       end
     end
+
     assert_page_has_no_errors!
     assert page.has_css?('.alert', text: I18n.t('view.users.correctly_created'))
   end  
