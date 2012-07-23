@@ -17,7 +17,7 @@ class UserSessionsController < ApplicationController
       if @user_session.save
         session[:has_an_open_shift] = current_user.has_stale_shift?
 
-        format.html { redirect_back_or_default initial_url }
+        format.html { redirect_back_or_default *initial_url_and_options }
         format.json { render json: @user_session, status: :created, location: initial_url }
       else
         format.html { render action: 'new' }
@@ -38,15 +38,14 @@ class UserSessionsController < ApplicationController
   
   private
 
-  def initial_url
+  def initial_url_and_options
     if @user_session.record.has_stale_shift?
-      flash.notice = t('view.shifts.edit_stale')
-
-      edit_shift_url(@user_session.record.stale_shift)
+      [
+        edit_shift_url(@user_session.record.stale_shift),
+        notice: t('view.shifts.edit_stale')
+      ]
     else
-      flash.notice = t('view.user_sessions.correctly_created')
-
-      prints_url
+      [prints_url, notice: t('view.user_sessions.correctly_created')]
     end
   end
 end

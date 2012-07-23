@@ -4,7 +4,7 @@ class TagsController < ApplicationController
   before_filter :get_parent
 
   # GET /tags
-  # GET /tags.xml
+  # GET /tags.json
   def index
     @title = t('view.tags.index_title')
     @searchable = true
@@ -16,31 +16,31 @@ class TagsController < ApplicationController
 
     respond_to do |format|
       format.html # index.html.erb
-      format.xml  { render xml: @tags }
+      format.json  { render json: @tags }
     end
   end
 
   # GET /tags/1
-  # GET /tags/1.xml
+  # GET /tags/1.json
   def show
     @title = t('view.tags.show_title')
     @tag = Tag.find(params[:id])
 
     respond_to do |format|
       format.html # show.html.erb
-      format.xml  { render xml: @tag }
+      format.json  { render json: @tag }
     end
   end
 
   # GET /tags/new
-  # GET /tags/new.xml
+  # GET /tags/new.json
   def new
     @title = t('view.tags.new_title')
     @tag = Tag.new(parent_id: params[:parent])
 
     respond_to do |format|
       format.html # new.html.erb
-      format.xml  { render xml: @tag }
+      format.json  { render json: @tag }
     end
   end
 
@@ -51,7 +51,7 @@ class TagsController < ApplicationController
   end
 
   # POST /tags
-  # POST /tags.xml
+  # POST /tags.json
   def create
     @title = t('view.tags.new_title')
     @tag = Tag.new(params[:tag])
@@ -59,16 +59,16 @@ class TagsController < ApplicationController
     respond_to do |format|
       if @tag.save
         format.html { redirect_to(tags_url(parent: @tag.parent), notice: t('view.tags.correctly_created')) }
-        format.xml  { render xml: @tag, status: :created, location: @tag }
+        format.json  { render json: @tag, status: :created, location: @tag }
       else
         format.html { render action: 'new' }
-        format.xml  { render xml: @tag.errors, status: :unprocessable_entity }
+        format.json  { render json: @tag.errors, status: :unprocessable_entity }
       end
     end
   end
 
   # PUT /tags/1
-  # PUT /tags/1.xml
+  # PUT /tags/1.json
   def update
     @title = t('view.tags.edit_title')
     @tag = Tag.find(params[:id])
@@ -76,10 +76,10 @@ class TagsController < ApplicationController
     respond_to do |format|
       if @tag.update_attributes(params[:tag])
         format.html { redirect_to(tags_url(parent: @tag.parent), notice: t('view.tags.correctly_updated')) }
-        format.xml  { head :ok }
+        format.json  { head :ok }
       else
         format.html { render action: 'edit' }
-        format.xml  { render xml: @tag.errors, status: :unprocessable_entity }
+        format.json  { render json: @tag.errors, status: :unprocessable_entity }
       end
     end
 
@@ -89,14 +89,14 @@ class TagsController < ApplicationController
   end
 
   # DELETE /tags/1
-  # DELETE /tags/1.xml
+  # DELETE /tags/1.json
   def destroy
     @tag = Tag.find(params[:id])
     @tag.destroy
 
     respond_to do |format|
       format.html { redirect_to(tags_url(parent: @parent_tag)) }
-      format.xml  { head :ok }
+      format.json  { head :ok }
     end
   end
 

@@ -1,0 +1,1 @@
+resources :bonuses, only: [:index]

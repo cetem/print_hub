@@ -95,6 +95,7 @@ class ShiftsTest < ActionDispatch::IntegrationTest
 
     assert_no_difference 'Shift.pending.count' do
       within '#logout' do
+        sleep 0.5 # For you Néstor... =) There is a bug in capybara and animations
         click_link I18n.t('view.shifts.close_session.exit')
       end
     end
@@ -120,6 +121,7 @@ class ShiftsTest < ActionDispatch::IntegrationTest
 
     assert_difference 'Shift.pending.count', -1 do
       within '#logout' do
+        sleep 0.5 # For you Néstor... =) There is a bug in capybara and animations
         click_link I18n.t('label.yes')
       end
     end

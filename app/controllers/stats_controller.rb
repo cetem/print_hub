@@ -1,9 +1,9 @@
 class StatsController < ApplicationController
   before_filter :require_admin_user, :load_date_range
-  respond_to :html, :xml, :json, :csv
+  respond_to :html, :json, :json, :csv
   
   # GET /printer_stats
-  # GET /printer_stats.xml
+  # GET /printer_stats.json
   def printers
     @title = t('view.stats.printers_title')
     @printers_count = {}
@@ -20,7 +20,7 @@ class StatsController < ApplicationController
   end
   
   # GET /user_stats
-  # GET /user_stats.xml
+  # GET /user_stats.json
   def users
     @title = t('view.stats.users_title')
     @users_count = {}
@@ -35,7 +35,7 @@ class StatsController < ApplicationController
   end
   
   # GET /print_stats
-  # GET /print_stats.xml
+  # GET /print_stats.json
   def prints
     @title = t('view.stats.prints_title')
     @user_prints_count = {}

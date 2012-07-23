@@ -69,10 +69,15 @@ class PrintsTest < ActionDispatch::IntegrationTest
       select @pdf_printer, from: 'print_printer'
     end
     
-    within '.print_job' do |ac|
+    within '.print_job' do
       fill_in "#@ac_field", with: 'Math'
       assert page.has_xpath?("//li[@class='ui-menu-item']", visible: true)
       find("##@ac_field").native.send_keys :arrow_down, :tab
+    end
+    
+    within 'form' do
+      click_link I18n.t('view.prints.comment')
+      fill_in 'print_comment', with: 'Nothing importan'
     end
     
     assert_difference 'Print.count' do
@@ -113,7 +118,7 @@ class PrintsTest < ActionDispatch::IntegrationTest
       end
     end
     
-    within '.print_job' do |ac|
+    within '.print_job' do
       fill_in "#@ac_field", with: 'Math'
       assert page.has_xpath?("//li[@class='ui-menu-item']", visible: true)
       find("##@ac_field").native.send_keys :arrow_down, :tab
@@ -125,6 +130,56 @@ class PrintsTest < ActionDispatch::IntegrationTest
     
     assert_page_has_no_errors!
     assert page.has_css?('.alert', text: I18n.t('view.prints.correctly_created'))
+  end
+  
+  test 'should print document with ringed' do
+    login
+    
+    assert_page_has_no_errors!
+    assert_equal prints_path, current_path
+    
+    within '.form-actions' do
+      click_link I18n.t('view.prints.new')
+    end
+    
+    assert_page_has_no_errors!
+    assert_equal new_print_path, current_path
+    assert page.has_css?('form.new_print')
+    
+    within 'form' do
+      select @pdf_printer, from: 'print_printer'
+    end
+    
+    within '.print_job' do
+      fill_in "#@ac_field", with: 'Math'
+      assert page.has_xpath?("//li[@class='ui-menu-item']", visible: true)
+      find("##@ac_field").native.send_keys :arrow_down, :tab
+    end
+    
+    print_job_price = find('#print_jobs_container .money').text.gsub('$', '')
+    
+    within 'form' do
+      art_id = 'auto_article_line_article_line_print_article_lines_attributes_0_'
+      click_link I18n.t('view.prints.article_lines')
+      
+      within '#articles_container' do
+        fill_in "#{art_id}", with: 'ringed'
+        assert page.has_xpath?("//li[@class='ui-menu-item']", visible: true)
+        find("##{art_id}").native.send_keys :arrow_down, :tab
+      end
+      
+    end
+    
+    article_price = find('#articles_container .money').text.gsub('$', '')
+    total_price = article_price.to_f + print_job_price.to_f
+    
+    assert_difference 'Print.count' do
+      click_button I18n.t('view.prints.print_title')
+    end
+    
+    assert_page_has_no_errors!
+    assert page.has_css?('.alert', text: I18n.t('view.prints.correctly_created'))
+    assert_equal total_price, Payment.last.amount.to_f
   end
   
   test 'should cancel a print_job' do
@@ -148,6 +203,14 @@ class PrintsTest < ActionDispatch::IntegrationTest
     within 'form' do
       select @pdf_printer, from: 'print_printer'
     end
+    
+    retard_input = '<input id="print_print_jobs_attributes_0_job_hold_until" '
+    retard_input << 'name="print[print_jobs_attributes][0][job_hold_until]" '
+    retard_input << 'type="hidden" value="indefinite">'
+    
+    page.execute_script(
+      "$('div.print_job .row-fluid .span2').append($('#{retard_input}'));"
+    )
     
     within '.print_job' do |ac|
       fill_in "#@ac_field", with: 'Math'

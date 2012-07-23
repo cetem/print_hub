@@ -12,9 +12,9 @@ class PaymentsControllerTest < ActionController::TestCase
 
   test 'should get filtered index' do
     UserSession.create(users(:administrator))
-    get :index, :interval => {
-      :from => 1.day.ago.to_datetime.to_s(:db),
-      :to => 1.day.from_now.to_datetime.to_s(:db)
+    get :index, interval: {
+      from: 1.day.ago.to_datetime.to_s(:db),
+      to: 1.day.from_now.to_datetime.to_s(:db)
     }
     assert_response :success
     assert_not_nil assigns(:payments)
@@ -28,9 +28,9 @@ class PaymentsControllerTest < ActionController::TestCase
 
   test 'should get filtered index with 0 amount' do
     UserSession.create(users(:administrator))
-    get :index, :interval => {
-      :from => 2.years.ago.to_datetime.to_s(:db),
-      :to => 1.year.ago.to_datetime.to_s(:db)
+    get :index, interval: {
+      from: 2.years.ago.to_datetime.to_s(:db),
+      to: 1.year.ago.to_datetime.to_s(:db)
     }
     assert_response :success
     assert_not_nil assigns(:payments)

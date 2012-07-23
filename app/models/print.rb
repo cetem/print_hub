@@ -34,7 +34,7 @@ class Print < ApplicationModel
   attr_accessible :printer, :scheduled_at, :customer_id, :order_id,
     :auto_customer_name, :avoid_printing, :include_documents,
     :credit_password, :pay_later, :lock_version, :print_jobs_attributes,
-    :article_lines_attributes, :payments_attributes
+    :article_lines_attributes, :payments_attributes, :comment
 
   # Restricciones en los atributos
   attr_readonly :user_id, :customer_id

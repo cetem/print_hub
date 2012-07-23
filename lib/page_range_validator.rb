@@ -21,7 +21,7 @@ class PageRangeValidator < ActiveModel::EachValidator
     record.errors.add attr, :overlapped if ranges_overlapped
     
     if record.document && max_page && max_page > record.document.pages
-      record.errors.add attr, :too_long, :count => record.document.pages
+      record.errors.add attr, :too_long, count: record.document.pages
     end
   end
 end
