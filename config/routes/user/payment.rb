@@ -1,0 +1,1 @@
+resources :payments, only: [:index]

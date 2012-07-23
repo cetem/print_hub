@@ -24,6 +24,21 @@
 
 <%= pagination_links(@customers) %>
 
-<nav class="form-actions">
-  <%= link_to t('label.new'), new_customer_path, class: 'btn btn-primary' %>
-</nav>
+<div class="form-actions">
+  <div class="btn-group">
+    <%= link_to t('label.new'), new_customer_path, class: 'btn btn-primary' %>
+    <button class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+      <span class="caret"></span>
+    </button>
+    <ul class="dropdown-menu">
+      <li>
+        <% if params[:status] == 'with_debt' %>
+          <%= link_to t('label.list'), customers_path %>
+        <% else %>
+          <%= link_to t('view.customers.to_pay_prints.with_debt'), 
+            customers_path(status: 'with_debt') %>
+        <% end %>
+      </li>
+    </ul>
+  </div>
+</div>

@@ -15,9 +15,9 @@ class CustomerSessionsControllerTest < ActionController::TestCase
   end
 
   test 'should create customer session' do
-    post :create, :customer_session => {
-      :email => @customer.email,
-      :password => 'student123'
+    post :create, customer_session: {
+      email: @customer.email,
+      password: 'student123'
     }
 
     assert customer_session = CustomerSession.find
@@ -26,9 +26,9 @@ class CustomerSessionsControllerTest < ActionController::TestCase
   end
 
   test 'should not create a customer session' do
-    post :create, :customer_session => {
-      :email => @customer.email,
-      :password => 'wrong'
+    post :create, customer_session: {
+      email: @customer.email,
+      password: 'wrong'
     }
 
     assert_nil CustomerSession.find
@@ -43,9 +43,9 @@ class CustomerSessionsControllerTest < ActionController::TestCase
       ActiveRecord::Fixtures.identify(:disabled_student)
     )
     
-    post :create, :customer_session => {
-      :email => customer.email,
-      :password => 'disabled_student123'
+    post :create, customer_session: {
+      email: customer.email,
+      password: 'disabled_student123'
     }
 
     assert_nil CustomerSession.find

@@ -11,8 +11,8 @@ module Paperclip
 
     def make
       thumb = RGhost::Convert.new(@file.path)
-      pages = thumb.to @format, :resolution => @resolution, :multipage => true,
-        :range => @page..@page
+      pages = thumb.to @format, resolution: @resolution, multipage: true,
+        range: @page..@page
 
       raise "Error generating PDF thumbs: #{thumb.error}" if thumb.error
 

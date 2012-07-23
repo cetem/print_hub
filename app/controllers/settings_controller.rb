@@ -2,7 +2,7 @@ class SettingsController < ApplicationController
   before_filter :require_admin_user
   
   # GET /settings
-  # GET /settings.xml
+  # GET /settings.json
   def index
     @title = t('view.settings.index_title')
     @settings = Setting.order('created_at ASC').paginate(
@@ -11,19 +11,19 @@ class SettingsController < ApplicationController
 
     respond_to do |format|
       format.html # index.html.erb
-      format.xml  { render xml: @settings }
+      format.json  { render json: @settings }
     end
   end
 
   # GET /settings/var_name
-  # GET /settings/var_name.xml
+  # GET /settings/var_name.json
   def show
     @title = t('view.settings.show_title')
     @setting = Setting.find_by_var(params[:id])
 
     respond_to do |format|
       format.html # show.html.erb
-      format.xml  { render xml: @setting }
+      format.json  { render json: @setting }
     end
   end
 
@@ -34,7 +34,7 @@ class SettingsController < ApplicationController
   end
 
   # PUT /settings/var_name
-  # PUT /settings/var_name.xml
+  # PUT /settings/var_name.json
   def update
     @title = t('view.settings.edit_title')
     @setting = Setting.find_by_var(params[:id])
@@ -42,10 +42,10 @@ class SettingsController < ApplicationController
     respond_to do |format|
       if @setting.update_attributes(params[:setting])
         format.html { redirect_to(settings_url, notice: t('view.settings.correctly_updated')) }
-        format.xml  { head :ok }
+        format.json  { head :ok }
       else
         format.html { render action: 'edit' }
-        format.xml  { render xml: @setting.errors, status: :unprocessable_entity }
+        format.json  { render json: @setting.errors, status: :unprocessable_entity }
       end
     end
 

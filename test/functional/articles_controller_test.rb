@@ -25,11 +25,11 @@ class ArticlesControllerTest < ActionController::TestCase
   test 'should create article' do
     UserSession.create(users(:administrator))
     assert_difference ['Article.count', 'Version.count'] do
-      post :create, :article => {
-        :code => '0001234',
-        :name => 'New Name',
-        :price => '15.2',
-        :description => 'New description'
+      post :create, article: {
+        code: '0001234',
+        name: 'New Name',
+        price: '15.2',
+        description: 'New description'
       }
     end
 
@@ -40,7 +40,7 @@ class ArticlesControllerTest < ActionController::TestCase
 
   test 'should show article' do
     UserSession.create(users(:administrator))
-    get :show, :id => @article.to_param
+    get :show, id: @article.to_param
     assert_response :success
     assert_select '#unexpected_error', false
     assert_template 'articles/show'
@@ -48,7 +48,7 @@ class ArticlesControllerTest < ActionController::TestCase
 
   test 'should get edit' do
     UserSession.create(users(:administrator))
-    get :edit, :id => @article.to_param
+    get :edit, id: @article.to_param
     assert_response :success
     assert_select '#unexpected_error', false
     assert_template 'articles/edit'
@@ -56,11 +56,11 @@ class ArticlesControllerTest < ActionController::TestCase
 
   test 'should update article' do
     UserSession.create(users(:administrator))
-    put :update, :id => @article.to_param, :article => {
-      :code => '003456',
-      :name => 'Updated name',
-      :price => '15.2',
-      :description => 'Updated description'
+    put :update, id: @article.to_param, article: {
+      code: '003456',
+      name: 'Updated name',
+      price: '15.2',
+      description: 'Updated description'
     }
     assert_redirected_to articles_path
     assert_equal 'Updated name', @article.reload.name
@@ -72,7 +72,7 @@ class ArticlesControllerTest < ActionController::TestCase
     article = Article.find(articles(:ringed).id)
 
     assert_difference('Article.count', -1) do
-      delete :destroy, :id => article.to_param
+      delete :destroy, id: article.to_param
     end
 
     assert_redirected_to articles_path

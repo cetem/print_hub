@@ -12,6 +12,7 @@ class Customer < ApplicationModel
   default_scope where(enable: true)
   scope :disable, where(enable: false)
   scope :with_monthly_bonus, where('free_monthly_bonus > :zero', zero: 0)
+  scope :with_debt, joins(:prints).merge(Print.pay_later).uniq
 
   # Atributos "permitidos"
   attr_accessible :name, :lastname, :identification, :email, :password,

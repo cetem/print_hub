@@ -39,10 +39,10 @@ class PasswordResetsController < ApplicationController
     respond_to do |format|
       if @customer.try(:update_attributes, params[:customer])
         format.html { redirect_to(new_customer_session_url, notice: t('view.password_resets.correctly_updated')) }
-        format.xml  { head :ok }
+        format.json  { head :ok }
       else
         format.html { render action: 'edit' }
-        format.xml  { render xml: @customer.try(:errors) || [], status: :unprocessable_entity }
+        format.json  { render json: @customer.try(:errors) || [], status: :unprocessable_entity }
       end
     end
   end

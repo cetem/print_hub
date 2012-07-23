@@ -28,7 +28,7 @@ class SettingTest < ActiveSupport::TestCase
   # Prueba de actualización de un usuario
   test 'update' do
     assert_no_difference 'Setting.count' do
-      assert @setting.update_attributes(:value => 'Updated value'),
+      assert @setting.update_attributes(value: 'Updated value'),
         @setting.errors.full_messages.join('; ')
     end
 

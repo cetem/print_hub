@@ -2,7 +2,7 @@ class ArticlesController < ApplicationController
   before_filter :require_admin_user
 
   # GET /articles
-  # GET /articles.xml
+  # GET /articles.json
   def index
     @title = t('view.articles.index_title')
     @articles = Article.order("#{Article.table_name}.name ASC").paginate(
@@ -11,31 +11,31 @@ class ArticlesController < ApplicationController
 
     respond_to do |format|
       format.html # index.html.erb
-      format.xml  { render xml: @articles }
+      format.json  { render json: @articles }
     end
   end
 
   # GET /articles/1
-  # GET /articles/1.xml
+  # GET /articles/1.json
   def show
     @title = t('view.articles.show_title')
     @article = Article.find(params[:id])
 
     respond_to do |format|
       format.html # show.html.erb
-      format.xml  { render xml: @article }
+      format.json  { render json: @article }
     end
   end
 
   # GET /articles/new
-  # GET /articles/new.xml
+  # GET /articles/new.json
   def new
     @title = t('view.articles.new_title')
     @article = Article.new
 
     respond_to do |format|
       format.html # new.html.erb
-      format.xml  { render xml: @article }
+      format.json  { render json: @article }
     end
   end
 
@@ -46,7 +46,7 @@ class ArticlesController < ApplicationController
   end
 
   # POST /articles
-  # POST /articles.xml
+  # POST /articles.json
   def create
     @title = t('view.articles.new_title')
     @article = Article.new(params[:article])
@@ -54,16 +54,16 @@ class ArticlesController < ApplicationController
     respond_to do |format|
       if @article.save
         format.html { redirect_to(articles_url, notice: t('view.articles.correctly_created')) }
-        format.xml  { render xml: @article, status: :created, location: @article }
+        format.json  { render json: @article, status: :created, location: @article }
       else
         format.html { render action: 'new' }
-        format.xml  { render xml: @article.errors, status: :unprocessable_entity }
+        format.json  { render json: @article.errors, status: :unprocessable_entity }
       end
     end
   end
 
   # PUT /articles/1
-  # PUT /articles/1.xml
+  # PUT /articles/1.json
   def update
     @title = t('view.articles.edit_title')
     @article = Article.find(params[:id])
@@ -71,10 +71,10 @@ class ArticlesController < ApplicationController
     respond_to do |format|
       if @article.update_attributes(params[:article])
         format.html { redirect_to(articles_url, notice: t('view.articles.correctly_updated')) }
-        format.xml  { head :ok }
+        format.json  { head :ok }
       else
         format.html { render action: 'edit' }
-        format.xml  { render xml: @article.errors, status: :unprocessable_entity }
+        format.json  { render json: @article.errors, status: :unprocessable_entity }
       end
     end
 
@@ -84,14 +84,14 @@ class ArticlesController < ApplicationController
   end
 
   # DELETE /articles/1
-  # DELETE /articles/1.xml
+  # DELETE /articles/1.json
   def destroy
     @article = Article.find(params[:id])
     @article.destroy
 
     respond_to do |format|
       format.html { redirect_to(articles_url) }
-      format.xml  { head :ok }
+      format.json  { head :ok }
     end
   end
 end
