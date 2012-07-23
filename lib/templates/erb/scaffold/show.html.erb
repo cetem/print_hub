@@ -4,7 +4,7 @@
   <%- attributes.each do |attribute| -%>
     <p>
       <b><%%= <%= singular_table_name.camelize %>.human_attribute_name '<%= attribute.name %>' %></b>:
-      <%%= <%= singular_table_name %>.<%= attribute.name %> %>
+      <%%= @<%= singular_table_name %>.<%= attribute.name %> %>
     </p>
   <%- end -%>
   
