@@ -176,4 +176,44 @@ class PrintsTest < ActionDispatch::IntegrationTest
     
     assert_equal cancelled_jobs_count, new_cancelled_jobs_count -1
   end
+  
+  test 'should print with customer' do
+    login
+    
+    customer = customers(:student)
+    
+    assert_page_has_no_errors!
+    assert_equal prints_path, current_path
+    
+    within '.form-actions' do
+      click_link I18n.t('view.prints.new')
+    end
+    
+    assert_page_has_no_errors!
+    assert_equal new_print_path, current_path
+    assert page.has_css?('form.new_print')
+    
+    within 'form' do
+      select @pdf_printer, from: 'print_printer'
+      
+      fill_in 'print_auto_customer_name', with: customer.identification
+      assert page.has_xpath?("//li[@class='ui-menu-item']", visible: true)
+      find('#print_auto_customer_name').native.send_keys :arrow_down, :tab
+      
+      fill_in 'print_credit_password', with: 'student123'
+    end
+    
+    within '.print_job' do |ac|
+      fill_in "#@ac_field", with: 'Math'
+      assert page.has_xpath?("//li[@class='ui-menu-item']", visible: true)
+      find("##@ac_field").native.send_keys :arrow_down, :tab
+    end
+    
+    assert_difference ['Print.count', 'customer.prints.count'] do
+      click_button I18n.t('view.prints.print_title')
+    end
+    
+    assert_page_has_no_errors!
+    assert page.has_css?('.alert', text: I18n.t('view.prints.correctly_created'))
+  end
 end
