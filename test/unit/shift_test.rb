@@ -25,7 +25,8 @@ class ShiftTest < ActiveSupport::TestCase
         start: 10.minutes.ago,
         finish: nil,
         description: 'Some shift',
-        user_id: users(:administrator).id
+        user_id: users(:administrator).id,
+        paid: false
       )
     end
   end
@@ -112,5 +113,17 @@ class ShiftTest < ActiveSupport::TestCase
         )
       )
     ], @shift.errors[:finish]
+  end
+
+  test 'pay a pending shift' do
+    @shift = shifts(:old_shift)
+
+    assert_difference('Shift.pay_pending.count', -1) { assert @shift.pay! }
+  end
+
+  test 'not pay a paid shift' do
+    @shift = shifts(:paid_shift)
+
+    assert_no_difference('Shift.pay_pending.count') { assert @shift.pay! }
   end
 end

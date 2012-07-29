@@ -2,7 +2,7 @@ class Shift < ActiveRecord::Base
   has_paper_trail
   
   # Atributos "permitidos"
-  attr_accessible :start, :finish, :description, :user_id, :lock_version
+  attr_accessible :start, :finish, :description, :user_id, :lock_version, :paid
   
   # Restricciones en los atributos
   attr_readonly :start
@@ -10,6 +10,9 @@ class Shift < ActiveRecord::Base
   # Scopes
   scope :pending, where(finish: nil)
   scope :stale, pending.where("#{table_name}.start < ?", 8.hours.ago)
+  scope :pay_pending, where(
+    "#{table_name}.finish IS NOT NULL AND #{table_name}.paid = false"
+  )
   
   # Restricciones
   validates :start, :user_id, presence: true
@@ -32,5 +35,9 @@ class Shift < ActiveRecord::Base
   
   def finish_limit
     self.start + 16.hours
+  end
+
+  def pay!
+    self.update_attributes(paid: true)
   end
 end

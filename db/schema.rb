@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120620202243) do
+ActiveRecord::Schema.define(:version => 20120728231919) do
 
   create_table "article_lines", :force => true do |t|
     t.integer  "print_id"
@@ -228,13 +228,14 @@ ActiveRecord::Schema.define(:version => 20120620202243) do
   add_index "settings", ["thing_type", "thing_id", "var"], :name => "index_settings_on_thing_type_and_thing_id_and_var", :unique => true
 
   create_table "shifts", :force => true do |t|
-    t.datetime "start",                       :null => false
+    t.datetime "start",                           :null => false
     t.datetime "finish"
     t.text     "description"
-    t.integer  "lock_version", :default => 0, :null => false
-    t.integer  "user_id",                     :null => false
-    t.datetime "created_at",                  :null => false
-    t.datetime "updated_at",                  :null => false
+    t.integer  "lock_version", :default => 0,     :null => false
+    t.integer  "user_id",                         :null => false
+    t.datetime "created_at",                      :null => false
+    t.datetime "updated_at",                      :null => false
+    t.boolean  "paid",         :default => false
   end
 
   add_index "shifts", ["finish"], :name => "index_shifts_on_finish"

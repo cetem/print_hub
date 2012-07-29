@@ -28,7 +28,8 @@ class ShiftsControllerTest < ActionController::TestCase
         start: 10.minutes.ago,
         finish: nil,
         description: 'Some shift',
-        user_id: users(:administrator).id
+        user_id: users(:administrator).id,
+        paid: false
       }
     end
 
@@ -89,5 +90,15 @@ class ShiftsControllerTest < ActionController::TestCase
     end
 
     assert_redirected_to shifts_url
+  end
+
+  test 'should pay a shift' do
+    @shift = shifts(:old_shift)
+    assert_difference 'Shift.pay_pending.count', -1 do
+      put :update, id: @shift, shift: {
+        paid: true,
+        user_id: users(:administrator).id
+      }
+    end
   end
 end
