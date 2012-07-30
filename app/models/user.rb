@@ -1,4 +1,5 @@
 class User < ApplicationModel
+  find_by_autocomplete :name
   has_paper_trail
   has_attached_file :avatar,
     path: ':rails_root/private/:attachment/:id_partition/:basename_:style.:extension',
@@ -17,6 +18,9 @@ class User < ApplicationModel
   attr_accessible :name, :last_name, :language, :email, :username, :password,
     :password_confirmation, :default_printer, :admin, :enable, :avatar,
     :lines_per_page, :lock_version
+  
+  # Alias de atributos
+  alias_attribute :informal, :username
 
   # Restricciones
   validates :name, :last_name, :language, presence: true
@@ -40,6 +44,17 @@ class User < ApplicationModel
   def to_s
     [self.name, self.last_name].join(' ')
   end
+  
+  alias_method :label, :to_s
+  
+  def as_json(options = nil)
+    default_options = {
+      only: [:id],
+      methods: [:label, :informal, :admin]
+    }
+    
+    super(default_options.merge(options || {}))
+  end
 
   def active?
     self.enable
@@ -47,5 +62,14 @@ class User < ApplicationModel
   
   def self.find_by_username_or_email(login)
     User.find_by_username(login) || User.find_by_email(login)
+  end
+  
+  def self.full_text(query_terms)
+    options = text_query(query_terms, 'username', 'name', 'last_name')
+    conditions = [options[:query]]
+    
+    where(
+      conditions.map { |c| "(#{c})" }.join(' OR '), options[:parameters]
+    ).order(options[:order])
   end
 end
