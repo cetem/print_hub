@@ -1,5 +1,6 @@
 // Graphics
 // 
-//= require raphael
-//= require raphael_pie
+//= require raphael/raphael
+//= require raphael/g.raphael
+//= require raphael/g.pie
 //= require stats
