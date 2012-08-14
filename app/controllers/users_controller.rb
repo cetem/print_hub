@@ -99,4 +99,17 @@ class UsersController < ApplicationController
       redirect_to users_url, notice: t('view.users.non_existent_avatar')
     end
   end
+  
+  # GET /users/autocomplete_for_user_name
+  def autocomplete_for_user_name
+    query = params[:q].sanitized_for_text_query
+    @query_terms = query.split(/\s+/).reject(&:blank?)
+    @users = User.scoped
+    @users = @users.full_text(@query_terms) unless @query_terms.empty?
+    @users = @users.limit(10)
+    
+    respond_to do |format|
+      format.json { render json: @users }
+    end
+  end
 end

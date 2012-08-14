@@ -188,4 +188,16 @@ class UserTest < ActiveSupport::TestCase
       error_message_from_model(@user, :lines_per_page, :less_than, count: 100)
     ], @user.errors[:lines_per_page]
   end
+  
+  test 'full text search' do
+    users = User.full_text(['administrator'])
+    
+    assert_equal 1, users.size
+    assert_equal 'Administrator', users.first.name
+    
+    users = User.full_text(['second_operator'])
+    
+    assert_equal 1, users.size
+    assert_equal 'second_operator', users.first.username
+  end
 end
