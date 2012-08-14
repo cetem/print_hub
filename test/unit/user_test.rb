@@ -199,5 +199,9 @@ class UserTest < ActiveSupport::TestCase
     
     assert_equal 1, users.size
     assert_equal 'second_operator', users.first.username
+
+    users = User.full_text(['invalid_user'])
+    
+    assert_equal 0, users.size
   end
 end

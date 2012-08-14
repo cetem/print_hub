@@ -1,5 +1,4 @@
 class User < ApplicationModel
-  find_by_autocomplete :name
   has_paper_trail
   has_attached_file :avatar,
     path: ':rails_root/private/:attachment/:id_partition/:basename_:style.:extension',
