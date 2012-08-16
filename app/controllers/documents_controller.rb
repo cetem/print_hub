@@ -18,6 +18,10 @@ class DocumentsController < ApplicationController
       redirect_to request.parameters.except(:clear_documents_for_printing)
     end
 
+    if params[:disabled_documents]
+      @documents = Document.unscoped.disable
+    end
+
     if params[:q].present?
       query = params[:q].sanitized_for_text_query
       @query_terms = query.split(/\s+/).reject(&:blank?)
@@ -38,7 +42,7 @@ class DocumentsController < ApplicationController
   # GET /documents/1.json
   def show
     @title = t('view.documents.show_title')
-    @document = Document.find(params[:id])
+    @document = Document.unscoped.find(params[:id])
 
     respond_to do |format|
       format.html # show.html.erb
@@ -61,7 +65,7 @@ class DocumentsController < ApplicationController
   # GET /documents/1/edit
   def edit
     @title = t('view.documents.edit_title')
-    @document = Document.find(params[:id])
+    @document = Document.unscoped.find(params[:id])
   end
 
   # POST /documents
@@ -86,7 +90,7 @@ class DocumentsController < ApplicationController
   # PUT /documents/1.json
   def update
     @title = t('view.documents.edit_title')
-    @document = Document.find(params[:id])
+    @document = Document.unscoped.find(params[:id])
     params[:document][:tag_ids] ||= []
 
     respond_to do |format|
@@ -107,7 +111,7 @@ class DocumentsController < ApplicationController
   # DELETE /documents/1
   # DELETE /documents/1.json
   def destroy
-    @document = Document.find(params[:id])
+    @document = Document.unscoped.find(params[:id])
 
     unless @document.destroy
       flash.alert = @document.errors.full_messages.join('; ')

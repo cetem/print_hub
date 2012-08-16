@@ -62,3 +62,16 @@ book_with_stock:
   tag_path: 'Basics ## Books'
   file_file_name: book_with_stock.pdf
   tags: books, basics
+
+disabled_book:
+  code: 6
+  name: Disabled Book
+  stock: 0
+  pages: 8
+  media: <%= Document::MEDIA_TYPES[:a4] %>
+  description: Disabled Book description
+  enable: false
+  private: false
+  tag_path: 'Basics ## Books'
+  file_file_name: disabled_book.pdf
+  tags: books, basics
