@@ -7,7 +7,7 @@
     <div class="alert alert-warning"><%= t('view.stats.empty_result') %></div>
   <% else %>
     <div id="graph"></div>
-    <table class="table" data-graph-grid="true">
+    <table class="table" data-graph-grid="true" data-others-label="<%= t('label.others') %>">
       <thead>
         <tr>
           <th><%= Print.human_attribute_name 'user' %></th>

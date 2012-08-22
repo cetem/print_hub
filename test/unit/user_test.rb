@@ -226,4 +226,20 @@ class UserTest < ActiveSupport::TestCase
     
     assert !@user.has_pending_shift?
   end
+
+  test 'full text search' do
+    users = User.full_text(['administrator'])
+    
+    assert_equal 1, users.size
+    assert_equal 'Administrator', users.first.name
+    
+    users = User.full_text(['second_operator'])
+    
+    assert_equal 1, users.size
+    assert_equal 'second_operator', users.first.username
+
+    users = User.full_text(['invalid_user'])
+    
+    assert_equal 0, users.size
+  end
 end

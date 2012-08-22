@@ -233,6 +233,7 @@
     list: 'Listado'
     new: 'Nuevo'
     or: 'o'
+    others: 'Otros'
     search: 'Buscar'
     show: 'Ver'
 
