@@ -383,6 +383,7 @@
       documents_with_tag:
         html: 'Documentos con la etiqueta <span class="label label-info">%{tag}</span>'
       clear_documents_for_printing: 'Desmarcar todos los documentos a imprimir'
+      disabled_documents: 'Documentos desactivados'
       processing_document: 'Procesando documento, espere...'
       download: 'Descargar versión actual'
       barcode: 'Código de barras'

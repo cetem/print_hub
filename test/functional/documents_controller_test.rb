@@ -246,4 +246,17 @@ class DocumentsControllerTest < ActionController::TestCase
     
     assert tags.empty?
   end
+
+  test 'should get index with disabled documents filter' do
+    UserSession.create(users(:administrator))
+    disabled_documents = Document.unscoped.disable.size
+    assert disabled_documents > 0
+    get :index, disabled_documents: true
+    assert_response :success
+    assert_not_nil assigns(:documents)
+    assert_equal disabled_documents, assigns(:documents).size
+    assert assigns(:documents).all? { |d| d.name.match(/disabled/i) }
+    assert_select '#unexpected_error', false
+    assert_template 'documents/index'
+  end
 end
