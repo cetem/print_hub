@@ -1,5 +1,6 @@
 <!doctype html>
 <% main_class = current_user || current_customer ? 'logged-in' : 'public' %>
+<% main_class << " action-#{action_name}" %>
 <html class="<%= main_class %>">
   <head>
     <meta charset="utf-8" />
@@ -19,7 +20,7 @@
     <% end %>
     <%= yield :head_extra %>
   </head>
-  <body id="<%= "ph_#{controller_name}" %>" data-action="<%= action_name %>" class="<%= main_class %>">
+  <body id="<%= "ph_#{controller_name}" %>" class="<%= main_class %>">
     <%= render 'shared/menu' %>
 
     <div id="loading-caption" class="alert" style="display: none;">
