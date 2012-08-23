@@ -9,7 +9,9 @@ class Shift < ActiveRecord::Base
   
   # Scopes
   scope :pending, where(finish: nil)
-  scope :stale, pending.where("#{table_name}.start < ?", 8.hours.ago)
+  scope :stale, -> {
+    pending.where("#{table_name}.start < ?", 8.hours.ago.utc)
+  }
   
   # Restricciones
   validates :start, :user_id, presence: true
