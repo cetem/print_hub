@@ -28,7 +28,6 @@ class ShiftsTest < ActionDispatch::IntegrationTest
     
     assert_difference 'Shift.stale.count', -1 do
       click_button I18n.t('helpers.submit.update', model: Shift.model_name.human)
-      sleep 0.5
     end
   end
   

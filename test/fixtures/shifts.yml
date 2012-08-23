@@ -1,17 +1,17 @@
 current_shift:
-  start: <%= 10.minutes.ago.to_s(:db) %>
+  start: <%= 10.minutes.ago.utc.to_s(:db) %>
   finish:
   description: Pending shift
   user: operator
 
 old_shift:
-  start: <%= 10.hours.ago.to_s(:db) %>
-  finish: <%= 2.hours.ago.to_s(:db) %>
+  start: <%= 10.hours.ago.utc.to_s(:db) %>
+  finish: <%= 2.hours.ago.utc.to_s(:db) %>
   description: Complete shift
   user: operator
 
 open_shift:
-  start: <%= 15.hours.ago.to_s(:db) %>
+  start: <%= 15.hours.ago.utc.to_s(:db) %>
   finish:
   description: Open shift
   user: operator_with_open_shift
