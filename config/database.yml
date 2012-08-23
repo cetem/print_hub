@@ -39,8 +39,8 @@ test:
   adapter: postgresql
   encoding: utf8
   pool: 5
-  username: print_hub
-  password: print_hub
+  username: <%= ENV['TRAVIS'] ? 'postgres' : 'print_hub' %>
+  password: <%= ENV['TRAVIS'] ? '' : 'print_hub' %>
   database: print_hub_test
 
   # Connect on a TCP socket. Omitted by default since the client uses a
