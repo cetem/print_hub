@@ -13,4 +13,4 @@ local_server_ip: '192.168.0.2'
 
 subdomains:
   users: 'prints'
- 	customers: 'fotocopia'
+  customers: 'fotocopia'
