@@ -551,7 +551,7 @@ class PrintTest < ActiveSupport::TestCase
     assert_equal [
       error_message_from_model(
         print, :scheduled_at, :after,
-        restriction: Time.now.strftime('%d/%m/%Y %H:%M:%S')
+        restriction: Time.zone.now.strftime('%d/%m/%Y %H:%M:%S')
       )
     ], print.errors[:scheduled_at]
   end
