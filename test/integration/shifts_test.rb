@@ -19,8 +19,7 @@ class ShiftsTest < ActionDispatch::IntegrationTest
     assert_equal edit_shift_path(@shift), current_path
     assert page.has_css?('.alert', text: I18n.t('view.shifts.edit_stale'))
     
-    fill_in 'shift_finish',
-      with: I18n.l(@shift.finish_limit - 10.minutes, format: :minimal)
+    fill_in 'shift_finish', with: ''
     assert page.has_css?('div#ui-datepicker-div')
 
     within 'div#ui-datepicker-div' do
