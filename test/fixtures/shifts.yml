@@ -11,7 +11,7 @@ old_shift:
   user: operator
 
 open_shift:
-  start: <%= 15.hours.ago.utc.to_s(:db) %>
+  start: <%= 12.hours.ago.utc.to_s(:db) %>
   finish:
   description: Open shift
   user: operator_with_open_shift
