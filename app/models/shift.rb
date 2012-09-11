@@ -2,7 +2,7 @@ class Shift < ActiveRecord::Base
   has_paper_trail
   
   # Atributos "permitidos"
-  attr_accessible :start, :finish, :description, :user_id, :lock_version, :paid
+  attr_accessible :start, :finish, :description, :paid, :user_id, :lock_version
   
   # Restricciones en los atributos
   attr_readonly :start
