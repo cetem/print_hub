@@ -121,4 +121,17 @@ module PrintsHelper
       articles_title.html_safe, '#articles_container', data: { toggle: 'tab' }
     ) 
   end
+
+  def show_related_by_customer_links
+    output = []
+    
+    ['prev', 'next'].each do |operator|
+      output << link_to(
+        textilize_without_paragraph( t("view.prints.customer_links.#{operator}") ),
+        related_by_customer_print_path(type: operator)
+      )
+    end
+
+    raw output.join(' | ')
+  end
 end

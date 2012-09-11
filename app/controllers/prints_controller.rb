@@ -1,6 +1,6 @@
 class PrintsController < ApplicationController
-  before_filter :require_user, except: [:revoke]
-  before_filter :require_admin_user, only: [:revoke]
+  before_filter :require_user, except: [:revoke, :related_by_customer]
+  before_filter :require_admin_user, only: [:revoke, :related_by_customer]
   before_filter :load_customer
 
   layout ->(controller) { controller.request.xhr? ? false : 'application' }
@@ -163,7 +163,14 @@ class PrintsController < ApplicationController
     @print_job = PrintJob.find(params[:id])
     @cancelled = @print_job.cancel
   end
-  
+
+  def related_by_customer
+    current_print = prints_scope.find(params[:id])
+    print = current_print.related_by_customer(params[:type])
+
+    redirect_to prints_scope.exists?(print) ? print : current_print
+  end
+
   private
   
   def load_customer

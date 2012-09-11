@@ -245,6 +245,16 @@ class Print < ApplicationModel
     self.payments.inject(0.0) { |t, p| t + p.amount - p.paid } > 0
   end
 
+  def related_by_customer(type)
+    Print.where(
+      [
+        "#{Print.table_name}.customer_id = :customer_id",
+        "#{Print.table_name}.created_at #{type == 'next' ? '>' : '<'} :date"
+      ].join(' AND '),
+      customer_id: self.customer_id, date: self.created_at
+    ).order("created_at #{type == 'next' ? 'ASC' : 'DESC'}").first
+  end
+
   def scheduled?
     self.printer.blank? && !self.scheduled_at.blank?
   end
