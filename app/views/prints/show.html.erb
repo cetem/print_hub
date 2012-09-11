@@ -118,12 +118,12 @@
 <div class="form-actions">
   <%= link_to t('view.prints.new'), new_print_path, class: 'btn btn-primary' %>
   <div class="pull-right">
-    <% if @print.customer_id.present? && current_user.admin? %>
-      <%= show_related_by_customer_links %> |
-    <% end %>
     <% if @print.pending_payment? %>
       <%= link_to t('label.edit'), edit_print_path(@print) %> |
     <% end %>
     <%= link_to t('label.list'), prints_path %>
+    <% if @print.customer_id.present? && current_user.admin? %>
+      | <%= show_related_by_customer_links %>
+    <% end %>
   </div>
 </div>
