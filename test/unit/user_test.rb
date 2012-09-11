@@ -226,4 +226,29 @@ class UserTest < ActiveSupport::TestCase
     
     assert !@user.has_pending_shift?
   end
+  
+  test 'full text search' do
+    users = User.full_text(['administrator'])
+    
+    assert_equal 1, users.size
+    assert_equal 'Administrator', users.first.name
+    
+    users = User.full_text(['second_operator'])
+    
+    assert_equal 1, users.size
+    assert_equal 'second_operator', users.first.username
+  end
+
+  test 'pay shifts between dates' do
+    @user = users(:operator)
+    from = 3.weeks.ago.to_date
+    to = Time.zone.today
+    pending_shifts = @user.shifts.pending_between(from, to)
+    
+    assert pending_shifts.size > 0
+    
+    assert_difference 'pending_shifts.count', -pending_shifts.count do
+      @user.pay_shifts_between(from, to)
+    end
+  end
 end

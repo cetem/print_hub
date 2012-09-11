@@ -25,3 +25,10 @@ paid_shift:
   description: Paid shift
   user: operator
   paid: true
+
+old_shift2:
+  start: <%= 2.weeks.ago.to_s(:db) %>
+  finish: <%= (2.weeks.ago + 5.hours).to_s(:db) %>
+  description: Complete shift
+  user: operator
+  paid: false

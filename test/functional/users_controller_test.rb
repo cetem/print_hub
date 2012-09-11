@@ -104,4 +104,38 @@ class UsersControllerTest < ActionController::TestCase
       @response.body
     )
   end
+  
+  test 'should get autocomplete user list' do
+    UserSession.create(@user)
+    get :autocomplete_for_user_name, format: :json, q: 'admin'
+    assert_response :success
+    
+    users = ActiveSupport::JSON.decode(@response.body)
+    
+    assert_equal 1, users.size
+    assert users.all? { |u| (u['label'] + u['informal']).match /admin/i }
+
+    get :autocomplete_for_user_name, format: :json, q: 'invalid_operator'
+    assert_response :success
+    
+    customers = ActiveSupport::JSON.decode(@response.body)
+    
+    assert customers.empty?
+  end
+
+  test 'should pay user shifts between dates' do
+    UserSession.create(@user)
+    user = users(:operator)
+    from = 3.weeks.ago.to_date
+    to = Time.zone.today
+    pending_shifts = user.shifts.pay_pending
+    
+    assert pending_shifts.size > 0
+
+    assert_difference 'pending_shifts.count', -pending_shifts.count do
+      put :pay_shifts_between, format: :json,
+        id: user.to_param, start: from, finish: to
+      assert_response :success
+    end
+  end
 end

@@ -101,4 +101,20 @@ class ShiftsControllerTest < ActionController::TestCase
       }
     end
   end
+
+  test 'should get pay pending for user between dates' do
+    from = 3.weeks.ago.to_date
+    to = Time.zone.today
+    user = users(:operator)
+    shifts = user.shifts.pending_between(from, to)
+    
+    get :index, format: :json, pay_pending_shifts_for_user_between: {
+      user_id: user.id, start: from.to_s(:db), finish: to.to_s(:db)
+    }
+    
+    assert_response :success
+    assert_not_nil assigns(:shifts)
+    assert assigns(:shifts).size > 0
+    assert_equal assigns(:shifts).sort, shifts.sort
+  end
 end

@@ -86,14 +86,14 @@ jQuery ($)->
     ajaxStart: `function() { State.ajaxInProgress = true }`
     ajaxStop: `function() { State.ajaxInProgress = false }`
   
-  $(document).on 'click', 'a.[data-action="show"]', (event)->
+  $(document).on 'click', 'a[data-action="show"]', (event)->
     $($(this).data('target')).stop(true, true).slideDown 300, ->
       $(this).find('*[autofocus]:not([readonly]):not([disabled]):visible:first').focus()
     
     event.preventDefault()
     event.stopPropagation()
   
-  $(document).on 'click', 'a.[data-action="remove"]', (event)->
+  $(document).on 'click', 'a[data-action="remove"]', (event)->
     Helper.remove($(this).data('target'))
     
     event.preventDefault()

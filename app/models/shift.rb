@@ -40,4 +40,11 @@ class Shift < ActiveRecord::Base
   def pay!
     self.update_attributes(paid: true)
   end
+
+  def self.pending_between(start, finish)
+    pay_pending.where(
+      "#{table_name}.created_at BETWEEN :start AND :finish",
+       start: start.beginning_of_day, finish: finish.end_of_day
+    ).order('created_at ASC')
+  end
 end

@@ -17,6 +17,9 @@ class User < ApplicationModel
   attr_accessible :name, :last_name, :language, :email, :username, :password,
     :password_confirmation, :default_printer, :admin, :enable, :avatar,
     :lines_per_page, :lock_version
+  
+  # Alias de atributos
+  alias_attribute :informal, :username
 
   # Restricciones
   validates :name, :last_name, :language, presence: true
@@ -40,6 +43,17 @@ class User < ApplicationModel
 
   def to_s
     [self.name, self.last_name].join(' ')
+  end
+  
+  alias_method :label, :to_s
+  
+  def as_json(options = nil)
+   default_options = {
+     only: [:id],
+     methods: [:label, :informal, :admin]
+   }
+   
+   super(default_options.merge(options || {}))
   end
 
   def active?
@@ -68,5 +82,20 @@ class User < ApplicationModel
   
   def stale_shift
     self.shifts.stale.first
+  end
+  
+  def self.full_text(query_terms)
+    options = text_query(query_terms, 'username', 'name', 'last_name')
+    conditions = [options[:query]]
+    
+    where(
+      conditions.map { |c| "(#{c})" }.join(' OR '), options[:parameters]
+    ).order(options[:order])
+  end
+
+  def pay_shifts_between(start, finish)
+    unless shifts.pending_between(start, finish).all?(&:pay!)
+      raise t('view.shifts.pay_error')
+    end
   end
 end

@@ -115,7 +115,11 @@ PrintHubApp::Application.routes.draw do
     end
 
     resources :users, except: [:destroy] do
-      get :avatar, on: :member, path: '/avatar/:style'
+      member do
+        get :avatar, path: '/avatar/:style'
+        put :pay_shifts_between
+      end
+      get :autocomplete_for_user_name, on: :collection
       resources :shifts
     end
 

@@ -514,19 +514,21 @@
         less_than: 'si la cantidad de copias es menor que *%{count}* el precio es *%{price}*'
         less_than_or_equal_to: 'si la cantidad de copias es menor que o igual a *%{count}* el precio es *%{price}*'
     shifts:
-     index_title: 'Listado de turnos'
-     show_title: 'Detalle de turno'
-     new_title: 'Nuevo turno'
-     edit_title: 'Modificar turno'
-     correctly_created: 'Turno agregado correctamente.'
-     correctly_updated: 'Turno actualizado correctamente.'
-     stale_object_error: 'El turno no pudo ser actualizado, intente nuevamente.'
-     edit_stale: 'Tenés un turno abierto demasiado viejo, decinos a que hora terminó...'
-     close_session:
-       title: 'Cerrando sesión...'
-       body:
-         html: '¿Salir y <strong>cerrar el turno</strong>?'
-       exit: 'No, solo salir'
+      index_title: 'Listado de turnos'
+      show_title: 'Detalle de turno'
+      new_title: 'Nuevo turno'
+      edit_title: 'Modificar turno'
+      correctly_created: 'Turno agregado correctamente.'
+      correctly_updated: 'Turno actualizado correctamente.'
+      stale_object_error: 'El turno no pudo ser actualizado, intente nuevamente.'
+      edit_stale: 'Tenés un turno abierto demasiado viejo, decinos a que hora terminó...'
+      close_session:
+        title: 'Cerrando sesión...'
+        body:
+          html: '¿Salir y <strong>cerrar el turno</strong>?'
+        exit: 'No, solo salir'
+      pay_error: 'Ha ocurrido un error, no se pudieron pagar los turnos...'
+
     stats:
       date_filter:
         start: 'Inicio'
