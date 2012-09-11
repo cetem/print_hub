@@ -732,7 +732,16 @@ class PrintTest < ActiveSupport::TestCase
     assert print.printer.blank?
     assert !print.scheduled_at.blank?
   end
-  
+
+  test 'related by customer' do
+    prints = @print.customer.prints.order('created_at').limit(2).all
+
+    assert_equal prints.second, prints.first.related_by_customer('next')
+    assert_equal prints.first, prints.second.related_by_customer('prev')
+
+    assert_nil prints.first.related_by_customer('prev')
+  end
+
   def build_new_print_from(print)
     new_print = Print.new(
       print.attributes.slice(*Print.accessible_attributes)

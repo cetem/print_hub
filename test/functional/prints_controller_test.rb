@@ -673,4 +673,41 @@ class PrintsControllerTest < ActionController::TestCase
     
     assert customers.empty?
   end
+  
+  test 'should get related by customer' do
+    UserSession.create(users(:administrator))
+    
+    prints = get_prints_with_customer.limit(2).all
+    
+    get :related_by_customer, id: prints.first, status: 'all', type: 'next'
+    assert_redirected_to print_url(prints.second)
+        
+    get :related_by_customer, id: prints.second, status: 'all', type: 'prev'
+    assert_redirected_to print_url(prints.first)
+  end
+
+  test 'should get the first print with related by customer prev link' do
+    UserSession.create(users(:administrator))
+    
+    print = get_prints_with_customer.first
+    
+    get :related_by_customer, id: print.to_param, status: 'all', type: 'prev'
+    assert_redirected_to print_url(print)
+  end
+  
+  test 'should get the last print with related by customer next link' do
+    UserSession.create(users(:administrator))
+    
+    print = get_prints_with_customer.last
+    
+    get :related_by_customer, id: print.to_param, status: 'all', type: 'next'
+    assert_redirected_to print_path(print)
+  end
+
+  def get_prints_with_customer(options={})
+    options[:customer] ||= customers(:teacher)
+    
+    Print.where(customer_id: options[:customer]).order(
+      'created_at ASC')
+  end
 end

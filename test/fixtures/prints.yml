@@ -4,6 +4,7 @@ math_print:
   customer: student
   status: <%= Print::STATUS[:pending_payment] %>
   revoked: false
+  created_at: <%= 1.minute.ago.to_s(:db) %>
 
 physics_print:
   printer: <%= Cups.show_destinations.detect { |p| p =~ /pdf/i } %>
@@ -11,6 +12,7 @@ physics_print:
   customer: teacher
   status: <%= Print::STATUS[:pending_payment] %>
   revoked: false
+  created_at: <%= 50.seconds.ago.to_s(:db) %>
 
 os_print:
   printer: <%= Cups.show_destinations.detect { |p| p =~ /pdf/i } %>
@@ -32,6 +34,7 @@ second_physics_print:
   customer: teacher
   status: <%= Print::STATUS[:pending_payment] %>
   revoked: false
+  created_at: <%= 49.seconds.ago.to_s(:db) %>
 
 scheduled_math_print:
   printer: ''
@@ -47,6 +50,7 @@ math_print_with_credit:
   customer: student
   status: <%= Print::STATUS[:paid] %>
   revoked: false
+  created_at: <%= 48.seconds.ago.to_s(:db) %>
   
 math_print_to_pay_later_1:
   printer: <%= Cups.show_destinations.detect { |p| p =~ /pdf/i } %>
@@ -54,6 +58,7 @@ math_print_to_pay_later_1:
   customer: student
   status: <%= Print::STATUS[:pay_later] %>
   revoked: false
+  created_at: <%= 47.seconds.ago.to_s(:db) %>
 
 math_print_to_pay_later_2:
   printer: <%= Cups.show_destinations.detect { |p| p =~ /pdf/i } %>

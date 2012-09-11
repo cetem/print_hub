@@ -4,6 +4,7 @@ scope ':status', defaults: { status: 'all' },
     member do
       put :cancel_job
       delete :revoke
+      get :related_by_customer
     end
 
     collection do

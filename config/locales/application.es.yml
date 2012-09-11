@@ -494,6 +494,9 @@
       revoke: 'Revocar'
       correctly_revoked: 'Impresión revocada correctamente'
       comment: 'Comentario'
+      customer_links:
+        next: '*Próxima* impresión del cliente &raquo;'
+        prev: '&laquo; Impresión *anterior* del cliente'
     settings:
       index_title: 'Listado de configuraciones'
       show_title: 'Detalle de configuración'
