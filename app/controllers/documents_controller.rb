@@ -5,7 +5,7 @@ class DocumentsController < ApplicationController
   layout ->(controller) { controller.request.xhr? ? false : 'application' }
 
   # GET /documents
-  # GET /documents.xml
+  # GET /documents.json
   def index
     @title = t('view.documents.index_title')
     @searchable = true
@@ -16,6 +16,10 @@ class DocumentsController < ApplicationController
       @documents_for_printing = session[:documents_for_printing].clear
       
       redirect_to request.parameters.except(:clear_documents_for_printing)
+    end
+
+    if params[:disabled_documents]
+      @documents = Document.unscoped.disable
     end
 
     if params[:q].present?
@@ -30,42 +34,42 @@ class DocumentsController < ApplicationController
 
     respond_to do |format|
       format.html # index.html.erb
-      format.xml  { render xml: @documents }
+      format.json  { render json: @documents }
     end
   end
 
   # GET /documents/1
-  # GET /documents/1.xml
+  # GET /documents/1.json
   def show
     @title = t('view.documents.show_title')
-    @document = Document.find(params[:id])
+    @document = Document.unscoped.find(params[:id])
 
     respond_to do |format|
       format.html # show.html.erb
-      format.xml  { render xml: @document }
+      format.json  { render json: @document }
     end
   end
 
   # GET /documents/new
-  # GET /documents/new.xml
+  # GET /documents/new.json
   def new
     @title = t('view.documents.new_title')
     @document = Document.new
 
     respond_to do |format|
       format.html # new.html.erb
-      format.xml  { render xml: @document }
+      format.json  { render json: @document }
     end
   end
 
   # GET /documents/1/edit
   def edit
     @title = t('view.documents.edit_title')
-    @document = Document.find(params[:id])
+    @document = Document.unscoped.find(params[:id])
   end
 
   # POST /documents
-  # POST /documents.xml
+  # POST /documents.json
   def create
     @title = t('view.documents.new_title')
     params[:document][:tag_ids] ||= []
@@ -74,28 +78,28 @@ class DocumentsController < ApplicationController
     respond_to do |format|
       if @document.save
         format.html { redirect_to(documents_url, notice: t('view.documents.correctly_created')) }
-        format.xml  { render xml: @document, status: :created, location: @document }
+        format.json  { render json: @document, status: :created, location: @document }
       else
         format.html { render action: 'new' }
-        format.xml  { render xml: @document.errors, status: :unprocessable_entity }
+        format.json  { render json: @document.errors, status: :unprocessable_entity }
       end
     end
   end
 
   # PUT /documents/1
-  # PUT /documents/1.xml
+  # PUT /documents/1.json
   def update
     @title = t('view.documents.edit_title')
-    @document = Document.find(params[:id])
+    @document = Document.unscoped.find(params[:id])
     params[:document][:tag_ids] ||= []
 
     respond_to do |format|
       if @document.update_attributes(params[:document])
         format.html { redirect_to(documents_url, notice: t('view.documents.correctly_updated')) }
-        format.xml  { head :ok }
+        format.json  { head :ok }
       else
         format.html { render action: 'edit' }
-        format.xml  { render xml: @document.errors, status: :unprocessable_entity }
+        format.json  { render json: @document.errors, status: :unprocessable_entity }
       end
     end
 
@@ -105,9 +109,9 @@ class DocumentsController < ApplicationController
   end
 
   # DELETE /documents/1
-  # DELETE /documents/1.xml
+  # DELETE /documents/1.json
   def destroy
-    @document = Document.find(params[:id])
+    @document = Document.unscoped.find(params[:id])
 
     unless @document.destroy
       flash.alert = @document.errors.full_messages.join('; ')
@@ -115,7 +119,7 @@ class DocumentsController < ApplicationController
 
     respond_to do |format|
       format.html { redirect_to(documents_url) }
-      format.xml  { head :ok }
+      format.json  { head :ok }
     end
   end
 

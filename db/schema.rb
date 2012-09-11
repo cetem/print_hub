@@ -194,6 +194,7 @@ ActiveRecord::Schema.define(:version => 20120728231919) do
     t.integer  "order_id"
     t.boolean  "revoked",                   :default => false, :null => false
     t.string   "status",       :limit => 1, :default => "P",   :null => false
+    t.text     "comment"
   end
 
   add_index "prints", ["created_at"], :name => "index_prints_on_created_at"

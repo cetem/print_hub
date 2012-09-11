@@ -146,6 +146,7 @@
         customer_id: 'Cliente'
         user: 'Usuario'
         user_id: 'Usuario'
+        comment: 'Comentario'
       print/article_lines:
         one: 'Artículo'
         other: 'Artículos'
@@ -232,6 +233,7 @@
     list: 'Listado'
     new: 'Nuevo'
     or: 'o'
+    others: 'Otros'
     search: 'Buscar'
     show: 'Ver'
 
@@ -348,6 +350,7 @@
         pay: 'Pagar %{date}'
         paid: '%{date} pagado'
         no_debt: 'Sin deuda'
+        with_debt: 'Con deuda'
         title: 'Saldo total en cuenta corriente'
         pay_off_debt: 'Pagar todo'
         debt_cancelled: 'Deuda saldada'
@@ -380,6 +383,7 @@
       documents_with_tag:
         html: 'Documentos con la etiqueta <span class="label label-info">%{tag}</span>'
       clear_documents_for_printing: 'Desmarcar todos los documentos a imprimir'
+      disabled_documents: 'Documentos desactivados'
       processing_document: 'Procesando documento, espere...'
       download: 'Descargar versión actual'
       barcode: 'Código de barras'
@@ -498,6 +502,10 @@
       new_without_stored_documents: 'Nueva impresión *sin* documentos'
       revoke: 'Revocar'
       correctly_revoked: 'Impresión revocada correctamente'
+      comment: 'Comentario'
+      customer_links:
+        next: '*Próxima* impresión del cliente &raquo;'
+        prev: '&laquo; Impresión *anterior* del cliente'
     settings:
       index_title: 'Listado de configuraciones'
       show_title: 'Detalle de configuración'

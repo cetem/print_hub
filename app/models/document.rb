@@ -15,6 +15,7 @@ class Document < ApplicationModel
     includes(:tags).where("#{Tag.table_name}.id" => tag_id)
   }
   scope :publicly_visible, where(private: false)
+  scope :disable, where(enable: false)
   
   # Atributos "permitidos"
   attr_accessible :code, :name, :description, :media, :file, :tag_ids, :enable,

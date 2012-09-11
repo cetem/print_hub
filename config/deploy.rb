@@ -4,11 +4,11 @@ set :whenever_command, 'bundle exec whenever'
 require 'whenever/capistrano'
 
 set :application, 'print_hub'
-set :repository,  'https://github.com/francocatena/print_hub.git'
+set :repository,  'https://github.com/cetem/print_hub.git'
 set :deploy_to, '/var/rails/print_hub'
 set :user, 'deployer'
 set :group_writable, false
-set :shared_children, %w(system log pids public config)
+set :shared_children, %w(log)
 set :use_sudo, false
 
 set :scm, :git

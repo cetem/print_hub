@@ -96,7 +96,7 @@ class BonusTest < ActiveSupport::TestCase
     assert_equal [error_message_from_model(@bonus, :remaining,
         :greater_than_or_equal_to, count: 0)], @bonus.errors[:remaining]
     assert_equal [error_message_from_model(@bonus, :valid_until, :on_or_after,
-        restriction: I18n.l(Date.today))], @bonus.errors[:valid_until]
+        restriction: I18n.l(Time.zone.today))], @bonus.errors[:valid_until]
 
     @bonus.reload
     @bonus.remaining = @bonus.amount + 1

@@ -1,26 +1,25 @@
-=== Print Hub
+= Print Hub
 
 Web application for manage and print documents
 
-=== Installation Guide.
+== Installation Guide.
 
 Previously run:
 - sudo apt-get install cups-bsd # Extra Cups command line utilities
 - sudo apt-get install libcups2-dev # Cups gem dependency (Ubuntu 12.04)
-- sudo apt-get install libcupsys2-dev # Cups gem dependency (Ubuntu pre 12.04)
-- sudo apt-get install libxslt-dev libxml2-dev # For nokogiri gem
-- sudo apt-get install cups-pdf # For virtual pdf printer
-- sudo apt-get install postgresql # For database best support
+- sudo apt-get install libxslt1-dev # Nokogiri gem dependency
+- sudo apt-get install cups-pdf # Virtual PDF printer
+- sudo apt-get install postgresql # Core database
 - cd projects/print_hub
 - bundle install
 
-Install a virtual pdf printer via /system/printers o  /localhost:631/
-with mark GENERIC Postcript printer
+Install a virtual pdf printer via /system/printers or http://localhost:631/
 
-Enjoy ^^
+=== Build Status {<img src="https://secure.travis-ci.org/francocatena/print_hub.png"/>}[http://travis-ci.org/francocatena/print_hub]
+  
+=== Dependency Status {<img src="https://gemnasium.com/francocatena/print_hub.png?travis"/>}[https://gemnasium.com/francocatena/print_hub]
 
-
-=== (The MIT License)
+== (The MIT License)
 
 Copyright (c) 2008-2012 Cirope S.A.
 

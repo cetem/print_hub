@@ -16,7 +16,7 @@ class BonusesControllerTest < ActionController::TestCase
     UserSession.create(users(:administrator))
     customer = customers(:student)
     
-    get :index, :customer_id => customer.to_param
+    get :index, customer_id: customer.to_param
     assert_response :success
     assert_not_nil assigns(:bonuses)
     assert_equal customer.bonuses.count, assigns(:bonuses).size

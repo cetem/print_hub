@@ -3,8 +3,8 @@
   <p>
     <em>Ayudanos a mejorar nuestra ayuda:</em> ¿Te sirvió?
     <%= link_to 'Si', new_feedback_path(item: item, score: :positive),
-      method: :post, remote: true %> o
+      data: { method: :post, remote: true } %> o
     <%= link_to 'No', new_feedback_path(item: item, score: :negative),
-      method: :post, remote: true %>
+      data: { method: :post, remote: true } %>
   </p>
 </footer>

@@ -96,7 +96,7 @@ class CreditTest < ActiveSupport::TestCase
     assert_equal [error_message_from_model(@credit, :remaining,
         :greater_than_or_equal_to, count: 0)], @credit.errors[:remaining]
     assert_equal [error_message_from_model(@credit, :valid_until, :on_or_after,
-        restriction: I18n.l(Date.today))], @credit.errors[:valid_until]
+        restriction: I18n.l(Time.zone.today))], @credit.errors[:valid_until]
 
     @credit.reload
     @credit.remaining = @credit.amount + 1

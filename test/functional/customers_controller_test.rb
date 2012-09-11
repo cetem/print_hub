@@ -24,6 +24,17 @@ class CustomersControllerTest < ActionController::TestCase
     assert_select '#unexpected_error', false
     assert_template 'customers/index'
   end
+  
+  test 'should get index with debt customers' do
+    UserSession.create(users(:administrator))
+    get :index, status: 'with_debt'
+    assert_response :success
+    assert_not_nil assigns(:customers)
+    assert_equal 2, assigns(:customers).size
+    assert_equal Customer.with_debt.to_a.sort, assigns(:customers).to_a.sort
+    assert_select '#unexpected_error', false
+    assert_template 'customers/index'
+  end
 
   test 'should get new' do
     UserSession.create(users(:administrator))

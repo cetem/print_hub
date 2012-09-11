@@ -65,7 +65,7 @@ html.public, body.public {
   }
 }
 
-.logged-in[data-action="index"] {
+.logged-in.action-index {
   .pagination, .page-entries {
     margin-right: 20px;
   }
@@ -76,14 +76,14 @@ html.public, body.public {
   }
 }
 
-.logged-in[data-action="index"], .logged-in[data-action="show"] {
+.logged-in.action-index, .logged-in.action-show {
   .form-actions {
     padding-left: 20px;
   }
 }
 
 .navbar {
-  .btn {
+  .search-query + .btn {
     margin: -7px 5px 0px 5px;
   }
 }

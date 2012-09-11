@@ -167,4 +167,27 @@ class CustomersTest < ActionDispatch::IntegrationTest
     assert_equal Customer.find(id).prints.pay_later.count, 0
     assert_page_has_no_errors!
   end
+  
+  test 'should get customers filtered with debt' do
+    login
+    
+    assert_page_has_no_errors!
+    assert_equal prints_path, current_path
+    
+    visit customers_path
+    
+    assert_page_has_no_errors!
+    assert_equal customers_path, current_path
+    
+    within '.btn-group' do
+      find('.dropdown-toggle').click
+      within '.dropdown-menu' do
+        click_link I18n.t('view.customers.to_pay_prints.with_debt')
+      end
+    end
+    
+    assert_page_has_no_errors!
+    current_page = current_url.match(/\:54163(\S+)/)[1]
+    assert_equal customers_path(status: 'with_debt'), current_page
+  end
 end

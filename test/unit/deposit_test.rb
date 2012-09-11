@@ -96,7 +96,7 @@ class DepositTest < ActiveSupport::TestCase
     assert_equal [error_message_from_model(@deposit, :remaining,
         :greater_than_or_equal_to, count: 0)], @deposit.errors[:remaining]
     assert_equal [error_message_from_model(@deposit, :valid_until, :on_or_after,
-        restriction: I18n.l(Date.today))], @deposit.errors[:valid_until]
+        restriction: I18n.l(Time.zone.today))], @deposit.errors[:valid_until]
 
     @deposit.reload
     @deposit.remaining = @deposit.amount + 1

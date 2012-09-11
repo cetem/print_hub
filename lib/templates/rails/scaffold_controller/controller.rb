@@ -5,8 +5,7 @@ class <%= controller_class_name %>Controller < ApplicationController
   # GET <%= route_url %>.json
   def index
     @title = t('view.<%= plural_table_name %>.index_title')
-    @<%= plural_table_name %> = <%= orm_class.all(class_name) %>.paginate(
-      page: params[:page] )
+    @<%= plural_table_name %> = <%= class_name %>.page(params[:page])
 
     respond_to do |format|
       format.html # index.html.erb
@@ -77,7 +76,7 @@ class <%= controller_class_name %>Controller < ApplicationController
       end
     end
   rescue ActiveRecord::StaleObjectError
-    redirect_to edit_<%= singular_table_name %>_url(@<%= singular_table_name %>), alert = t('view.<%= plural_table_name %>.stale_object_error')
+    redirect_to edit_<%= singular_table_name %>_url(@<%= singular_table_name %>), alert: t('view.<%= plural_table_name %>.stale_object_error')
   end
 
   # DELETE <%= route_url %>/1

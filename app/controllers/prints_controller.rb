@@ -1,12 +1,12 @@
 class PrintsController < ApplicationController
-  before_filter :require_user, except: [:revoke]
-  before_filter :require_admin_user, only: [:revoke]
+  before_filter :require_user, except: [:revoke, :related_by_customer]
+  before_filter :require_admin_user, only: [:revoke, :related_by_customer]
   before_filter :load_customer
 
   layout ->(controller) { controller.request.xhr? ? false : 'application' }
 
   # GET /prints
-  # GET /prints.xml
+  # GET /prints.json
   def index
     @title = t('view.prints.index_title')
     order = params[:status] == 'scheduled' ? 'scheduled_at ASC' :
@@ -18,24 +18,24 @@ class PrintsController < ApplicationController
 
     respond_to do |format|
       format.html # index.html.erb
-      format.xml  { render xml: @prints }
+      format.json  { render json: @prints }
     end
   end
 
   # GET /prints/1
-  # GET /prints/1.xml
+  # GET /prints/1.json
   def show
     @title = t('view.prints.show_title')
     @print = prints_scope.find(params[:id])
 
     respond_to do |format|
       format.html # show.html.erb
-      format.xml  { render xml: @print }
+      format.json  { render json: @print }
     end
   end
 
   # GET /prints/new
-  # GET /prints/new.xml
+  # GET /prints/new.json
   def new
     @title = t('view.prints.new_title')
     
@@ -50,7 +50,7 @@ class PrintsController < ApplicationController
 
     respond_to do |format|
       format.html # new.html.erb
-      format.xml  { render xml: @print }
+      format.json  { render json: @print }
     end
   end
 
@@ -65,7 +65,7 @@ class PrintsController < ApplicationController
   end
 
   # POST /prints
-  # POST /prints.xml
+  # POST /prints.json
   def create
     @title = t('view.prints.new_title')
     @print = current_user.prints.build(params[:print])
@@ -74,16 +74,16 @@ class PrintsController < ApplicationController
     respond_to do |format|
       if @print.save
         format.html { redirect_to(@print, notice: t('view.prints.correctly_created')) }
-        format.xml  { render xml: @print, status: :created, location: @print }
+        format.json  { render json: @print, status: :created, location: @print }
       else
         format.html { render action: 'new' }
-        format.xml  { render xml: @print.errors, status: :unprocessable_entity }
+        format.json  { render json: @print.errors, status: :unprocessable_entity }
       end
     end
   end
 
   # PUT /prints/1
-  # PUT /prints/1.xml
+  # PUT /prints/1.json
   def update
     @title = t('view.prints.edit_title')
     @print = prints_scope.find(params[:id])
@@ -95,10 +95,10 @@ class PrintsController < ApplicationController
     respond_to do |format|
       if @print.update_attributes(params[:print])
         format.html { redirect_to(@print, notice: t('view.prints.correctly_updated')) }
-        format.xml  { head :ok }
+        format.json  { head :ok }
       else
         format.html { render action: 'edit' }
-        format.xml  { render xml: @print.errors, status: :unprocessable_entity }
+        format.json  { render json: @print.errors, status: :unprocessable_entity }
       end
     end
 
@@ -108,14 +108,14 @@ class PrintsController < ApplicationController
   end
   
   # DELETE /prints/1/revoke
-  # DELETE /prints/1/revoke.xml
+  # DELETE /prints/1/revoke.json
   def revoke
     @print = prints_scope.find(params[:id])
     @print.revoke!
     
     respond_to do |format|
       format.html { redirect_to(prints_url, notice: t('view.prints.correctly_revoked')) }
-      format.xml  { head :ok }
+      format.json  { head :ok }
     end
   end
 
@@ -163,7 +163,14 @@ class PrintsController < ApplicationController
     @print_job = PrintJob.find(params[:id])
     @cancelled = @print_job.cancel
   end
-  
+
+  def related_by_customer
+    current_print = prints_scope.find(params[:id])
+    print = current_print.related_by_customer(params[:type])
+
+    redirect_to prints_scope.exists?(print) ? print : current_print
+  end
+
   private
   
   def load_customer

@@ -49,6 +49,12 @@
         <%= link_to t('view.documents.clear_documents_for_printing'),
           request.parameters.merge(clear_documents_for_printing: true) %>
       </li>
+      <li>
+        <%= link_to(
+          t('view.documents.disabled_documents'),
+          documents_path(disabled_documents: true)
+        ) %>
+      </li>
     </ul>
   </div>
 </nav>

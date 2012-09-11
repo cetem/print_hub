@@ -1,10 +1,10 @@
-#ph_customers[data-action="new"]  {
+#ph_customers.action-new  {
   .form-inputs {
     padding: 6px 20px 18px;
   }
 }
 
-#ph_customers[data-action="edit_profile"] {
+#ph_customers.action-edit_profile {
   .feedback {
     padding-left: 0px;
   }

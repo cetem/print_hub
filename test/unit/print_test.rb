@@ -35,6 +35,7 @@ class PrintTest < ActiveSupport::TestCase
         user_id: users(:administrator).id,
         scheduled_at: '',
         pay_later: false,
+        comment: 'Nothing important',
         print_jobs_attributes: {
           '1' => {
             copies: 1,
@@ -550,7 +551,7 @@ class PrintTest < ActiveSupport::TestCase
     assert_equal [
       error_message_from_model(
         print, :scheduled_at, :after,
-        restriction: Time.now.strftime('%d/%m/%Y %H:%M:%S')
+        restriction: Time.zone.now.strftime('%d/%m/%Y %H:%M:%S')
       )
     ], print.errors[:scheduled_at]
   end
@@ -730,6 +731,15 @@ class PrintTest < ActiveSupport::TestCase
     assert print.scheduled?
     assert print.printer.blank?
     assert !print.scheduled_at.blank?
+  end
+
+  test 'related by customer' do
+    prints = @print.customer.prints.order('created_at').limit(2).all
+
+    assert_equal prints.second, prints.first.related_by_customer('next')
+    assert_equal prints.first, prints.second.related_by_customer('prev')
+
+    assert_nil prints.first.related_by_customer('prev')
   end
 
   def build_new_print_from(print)

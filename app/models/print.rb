@@ -34,7 +34,7 @@ class Print < ApplicationModel
   attr_accessible :printer, :scheduled_at, :customer_id, :order_id,
     :auto_customer_name, :avoid_printing, :include_documents,
     :credit_password, :pay_later, :lock_version, :print_jobs_attributes,
-    :article_lines_attributes, :payments_attributes
+    :article_lines_attributes, :payments_attributes, :comment
 
   # Restricciones en los atributos
   attr_readonly :user_id, :customer_id
@@ -243,6 +243,16 @@ class Print < ApplicationModel
 
   def has_pending_payment?
     self.payments.inject(0.0) { |t, p| t + p.amount - p.paid } > 0
+  end
+
+  def related_by_customer(type)
+    Print.where(
+      [
+        "#{Print.table_name}.customer_id = :customer_id",
+        "#{Print.table_name}.created_at #{type == 'next' ? '>' : '<'} :date"
+      ].join(' AND '),
+      customer_id: self.customer_id, date: self.created_at
+    ).order("created_at #{type == 'next' ? 'ASC' : 'DESC'}").first
   end
 
   def scheduled?

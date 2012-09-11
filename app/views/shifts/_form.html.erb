@@ -1,15 +1,17 @@
-<%= simple_form_for(@shift) do |f| %>
+<%= simple_form_for(@shift, defaults: { input_html: { class: 'span11' } }) do |f| %>
   <div class="row-fluid">
-    <div class="form-inputs">
-      <%= f.input :start, as: :datetime_picker%>
-      <%= f.input :finish, as: :datetime_picker %>
-      <%= f.input :description, input_html: { rows: 5 } %>
+    <div class="span6">
+      <div class="form-inputs">
+          <%= f.input :start, as: :datetime_picker%>
+          <%= f.input :finish, as: :datetime_picker %>
+          <%= f.input :description, input_html: { rows: 5 } %>
+      </div>
     </div>
+  </div>
 
-    <div class="form-actions">
-      <div class="pull-right"><%= yield :form_actions %></div>
-      <%= f.input :lock_version, as: :hidden %>
-      <%= f.button :submit, class: 'btn-primary' %>
-    </div>
+  <div class="form-actions">
+    <div class="pull-right"><%= yield :form_actions %></div>
+    <%= f.input :lock_version, as: :hidden %>
+    <%= f.button :submit, class: 'btn-primary' %>
   </div>
 <% end %>

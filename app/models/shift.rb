@@ -9,7 +9,9 @@ class Shift < ActiveRecord::Base
   
   # Scopes
   scope :pending, where(finish: nil)
-  scope :stale, pending.where("#{table_name}.start < ?", 8.hours.ago)
+  scope :stale, -> {
+    pending.where("#{table_name}.start < ?", 8.hours.ago)
+  }
   scope :pay_pending, where(
     "#{table_name}.finish IS NOT NULL AND #{table_name}.paid = false"
   )

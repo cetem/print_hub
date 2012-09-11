@@ -9,4 +9,4 @@ public/assets/
 tmp/
 *~
 .rbenv-version
-
+*.swp
