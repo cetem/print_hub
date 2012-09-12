@@ -15,9 +15,9 @@ Previously run:
 
 Install a virtual pdf printer via /system/printers or http://localhost:631/
 
-=== Build Status {<img src="https://secure.travis-ci.org/francocatena/print_hub.png"/>}[http://travis-ci.org/francocatena/print_hub]
+=== Build Status {<img src="https://secure.travis-ci.org/cetem/print_hub.png"/>}[http://travis-ci.org/cetem/print_hub]
   
-=== Dependency Status {<img src="https://gemnasium.com/francocatena/print_hub.png?travis"/>}[https://gemnasium.com/francocatena/print_hub]
+=== Dependency Status {<img src="https://gemnasium.com/cetem/print_hub.png?travis"/>}[https://gemnasium.com/cetem/print_hub]
 
 == (The MIT License)
 
