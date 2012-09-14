@@ -7,12 +7,18 @@ class Customer < ApplicationModel
     c.validates_length_of_email_field_options = { maximum: 255 }
     c.crypto_provider = Authlogic::CryptoProviders::Sha512
   end
+  
+  KINDS = {
+    normal: 'n',
+    reliable: 'r'
+  }.with_indifferent_access.freeze
 
   # Scopes
   default_scope where(enable: true)
   scope :disable, where(enable: false)
   scope :with_monthly_bonus, where('free_monthly_bonus > :zero', zero: 0)
   scope :with_debt, joins(:prints).merge(Print.pay_later).uniq
+  scope :reliables, where(kind: KINDS[:reliable])
 
   # Atributos "permitidos"
   attr_accessible :name, :lastname, :identification, :email, :password,
@@ -20,7 +26,7 @@ class Customer < ApplicationModel
   attr_accessible :name, :lastname, :identification, :email, :password,
     :password_confirmation, :lock_version, :free_monthly_bonus,
     :bonus_without_expiration, :enable, :bonuses_attributes,
-    :deposits_attributes, as: :admin
+    :deposits_attributes, :kind, as: :admin
   
   # Alias de atributos
   alias_attribute :informal, :identification
@@ -43,6 +49,7 @@ class Customer < ApplicationModel
     allow_nil: true, allow_blank: true
   validates :free_monthly_bonus, allow_nil: true, allow_blank: true,
     numericality: {greater_than_or_equal_to: 0}
+  validates :kind, inclusion: { in: KINDS.values }
 
   # Relaciones
   has_many :orders, inverse_of: :customer, dependent: :destroy,
@@ -64,6 +71,7 @@ class Customer < ApplicationModel
     super(attributes, options)
     
     self.enable = options[:as] == :admin # TODO: find a better alternative
+    self.kind ||= KINDS[:normal]
   end
 
   def to_s
@@ -75,7 +83,7 @@ class Customer < ApplicationModel
   def as_json(options = nil)
     default_options = {
       only: [:id],
-      methods: [:label, :informal, :free_credit]
+      methods: [:label, :informal, :free_credit, :kind]
     }
     
     super(default_options.merge(options || {}))
@@ -287,5 +295,9 @@ class Customer < ApplicationModel
         raise ActiveRecord::Rollback
       end
     end
+  end
+
+  KINDS.each do |kind, value|
+    define_method("#{kind}?") { self.kind == value } 
   end
 end

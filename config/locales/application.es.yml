@@ -78,6 +78,7 @@
         password_confirmation: 'Confirmación'
         free_monthly_bonus: 'Bonificación mensual'
         bonus_without_expiration: 'Bonificación mensual sin caducidad'
+        kind: 'Tipo de cliente'
       customer/bonuses:
         one: 'Bonificación'
         other: 'Bonificaciones'
@@ -363,6 +364,9 @@
           one_sided: 'Simple faz'
           two_sided: 'Doble faz'
           total: 'Total'
+      kinds:
+        normal: 'Normal'
+        reliable: 'Con cuenta corriente'
     customer_sessions:
       login: 'Ingresar'
       new_title: 'Iniciar sesión'

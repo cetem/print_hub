@@ -10,6 +10,7 @@ student:
   perishable_token: <%= Authlogic::Random.friendly_token %>
   free_monthly_bonus: 100.00
   bonus_without_expiration: false
+  kind: <%= Customer::KINDS[:reliable] %>
 
 teacher:
   name: Obi Wan
@@ -23,6 +24,7 @@ teacher:
   perishable_token: <%= Authlogic::Random.friendly_token %>
   free_monthly_bonus: 10.00
   bonus_without_expiration: false
+  kind: <%= Customer::KINDS[:normal] %>
 
 student_without_bonus:
   name: Darth
@@ -36,6 +38,7 @@ student_without_bonus:
   perishable_token: <%= Authlogic::Random.friendly_token %>
   free_monthly_bonus: 0.00
   bonus_without_expiration: false
+  kind: <%= Customer::KINDS[:normal] %>
   
 disabled_student:
   name: Luke
@@ -49,6 +52,7 @@ disabled_student:
   perishable_token: <%= Authlogic::Random.friendly_token %>
   free_monthly_bonus: 0.00
   bonus_without_expiration: false
+  kind: <%= Customer::KINDS[:normal] %>
   
 disabled_and_inactive_student:
   name: Han
@@ -64,3 +68,4 @@ disabled_and_inactive_student:
   bonus_without_expiration: false
   created_at: <%= 2.days.ago.to_date.to_s(:db) %>
   updated_at: <%= 2.days.ago.to_date.to_s(:db) %>
+  kind: <%= Customer::KINDS[:normal] %>

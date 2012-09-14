@@ -155,6 +155,11 @@ jQuery ($)->
 
         Print.updateTotalPrice()
 
+    $('#print_auto_customer_name').on 'autocomplete:update', ->
+      element = $(this).data('item')
+      if element.kind == '<%= Customer::KINDS[:reliable] %>'
+        $('#print_pay_later').attr('checked', true)
+        
     $('#print_printer').change -> Print.updateSubmitLabel()
 
     $(document).on 'change keyup', 'input[name$="[auto_customer_name]"]', ->
