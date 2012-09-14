@@ -68,7 +68,7 @@ ActiveRecord::Schema.define(:version => 20120909172412) do
     t.string   "persistence_token"
     t.string   "perishable_token"
     t.boolean  "enable",                                                               :default => false
-    t.string   "kind",                     :limit => 1,                                :default => "n"
+    t.string   "kind",                     :limit => 1,                                :default => "n",   :null => false
   end
 
   add_index "customers", ["email"], :name => "index_customers_on_email", :unique => true

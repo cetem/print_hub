@@ -439,6 +439,18 @@ class CustomerTest < ActiveSupport::TestCase
     assert_difference('Bonus.count') { @customer.save }
     assert_not_nil @customer.reload.bonuses.detect { |b| b.valid_until.blank? }
   end
+
+  test 'dynamic kind methods' do
+    Customer::KINDS.each do |kind, value|
+      @customer.kind = value
+      assert @customer.send("#{kind}?")
+
+      (Customer::KINDS.values - [value]).each do |wrong_value|
+        @customer.kind = wrong_value
+        assert !@customer.send("#{kind}?")
+      end
+    end
+  end
   
   test 'full text search' do
     customers = Customer.full_text(['anakin'])

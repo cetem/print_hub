@@ -256,6 +256,10 @@ class Customer < ApplicationModel
     
     amounts
   end
+
+  KINDS.each do |kind, value|
+    define_method("#{kind}?") { self.kind == value } 
+  end
   
   def self.full_text(query_terms)
     options = text_query(query_terms, 'identification', 'name', 'lastname')
@@ -295,9 +299,5 @@ class Customer < ApplicationModel
         raise ActiveRecord::Rollback
       end
     end
-  end
-
-  KINDS.each do |kind, value|
-    define_method("#{kind}?") { self.kind == value } 
   end
 end
