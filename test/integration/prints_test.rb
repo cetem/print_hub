@@ -298,7 +298,9 @@ class PrintsTest < ActionDispatch::IntegrationTest
     
     within 'form' do
       select @pdf_printer, from: 'print_printer'
-      
+
+      assert customer.reliable?
+
       fill_in 'print_auto_customer_name', with: customer.identification
       assert page.has_xpath?("//li[@class='ui-menu-item']", visible: true)
       find('#print_auto_customer_name').native.send_keys :arrow_down, :tab

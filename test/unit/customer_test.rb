@@ -60,7 +60,7 @@ class CustomerTest < ActiveSupport::TestCase
             free_monthly_bonus: 10.0,
             bonus_without_expiration: false
           },
-          {as: :admin}
+          { as: :admin }
         )
       end
     end
@@ -84,7 +84,7 @@ class CustomerTest < ActiveSupport::TestCase
             email: 'jar_jar@printhub.com',
             password: 'jarjar123',
             password_confirmation: 'jarjar123',
-            kind: 'r'
+            kind: Customer::KINDS[:reliable]
           },
           { as: :admin }
         )
