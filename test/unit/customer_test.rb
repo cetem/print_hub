@@ -70,6 +70,30 @@ class CustomerTest < ActiveSupport::TestCase
     assert_equal Date.today.at_end_of_month, @customer.bonuses.first.valid_until
   end
   
+  test 'create with checking account' do
+    # Send welcome email
+    assert_difference 'ActionMailer::Base.deliveries.size' do
+      assert_difference(
+        ['Customer.count', 'Customer.reliables.count']
+      ) do
+        @customer = Customer.create(
+          {
+            name: 'Jar Jar',
+            lastname: 'Binks',
+            identification: '111',
+            email: 'jar_jar@printhub.com',
+            password: 'jarjar123',
+            password_confirmation: 'jarjar123',
+            kind: 'r'
+          },
+          { as: :admin }
+        )
+      end
+    end
+
+    assert @customer.reload.reliable?
+  end
+  
   test 'no create bonus without admin role' do
     assert_difference 'Customer.disable.count' do
       assert_no_difference 'Bonus.count' do
@@ -184,6 +208,21 @@ class CustomerTest < ActiveSupport::TestCase
         @customer, :free_monthly_bonus, :greater_than_or_equal_to, count: 0
       )
     ], @customer.errors[:free_monthly_bonus]
+  end
+
+  # Prueba que las validaciones del modelo se cumplan como es esperado
+  test 'validates include attributes' do
+    @customer.kind = nil
+    assert @customer.invalid?
+    assert_equal 1, @customer.errors.count
+    assert_equal [error_message_from_model(@customer, :kind, :inclusion)],
+      @customer.errors[:kind]
+
+    @customer.kind = Customer::KINDS.values.sort.last.next
+    assert @customer.invalid?
+    assert_equal 1, @customer.errors.count
+    assert_equal [error_message_from_model(@customer, :kind, :inclusion)],
+      @customer.errors[:kind]
   end
   
   # Prueba que las validaciones del modelo se cumplan como es esperado
@@ -399,6 +438,18 @@ class CustomerTest < ActiveSupport::TestCase
     assert_nil new_bonus.valid_until
     assert_difference('Bonus.count') { @customer.save }
     assert_not_nil @customer.reload.bonuses.detect { |b| b.valid_until.blank? }
+  end
+
+  test 'dynamic kind methods' do
+    Customer::KINDS.each do |kind, value|
+      @customer.kind = value
+      assert @customer.send("#{kind}?")
+
+      (Customer::KINDS.values - [value]).each do |wrong_value|
+        @customer.kind = wrong_value
+        assert !@customer.send("#{kind}?")
+      end
+    end
   end
   
   test 'full text search' do

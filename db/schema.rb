@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120728231919) do
+ActiveRecord::Schema.define(:version => 20120909172412) do
 
   create_table "article_lines", :force => true do |t|
     t.integer  "print_id"
@@ -54,20 +54,21 @@ ActiveRecord::Schema.define(:version => 20120728231919) do
   add_index "credits", ["valid_until"], :name => "index_bonuses_on_valid_until"
 
   create_table "customers", :force => true do |t|
-    t.string   "name",                                                                       :null => false
+    t.string   "name",                                                                                    :null => false
     t.string   "lastname"
-    t.string   "identification",                                                             :null => false
-    t.decimal  "free_monthly_bonus",       :precision => 15, :scale => 3
-    t.integer  "lock_version",                                            :default => 0
+    t.string   "identification",                                                                          :null => false
+    t.decimal  "free_monthly_bonus",                    :precision => 15, :scale => 3
+    t.integer  "lock_version",                                                         :default => 0
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.boolean  "bonus_without_expiration",                                :default => false, :null => false
+    t.boolean  "bonus_without_expiration",                                             :default => false, :null => false
     t.string   "email"
     t.string   "crypted_password"
     t.string   "password_salt"
     t.string   "persistence_token"
     t.string   "perishable_token"
-    t.boolean  "enable",                                                  :default => false
+    t.boolean  "enable",                                                               :default => false
+    t.string   "kind",                     :limit => 1,                                :default => "n",   :null => false
   end
 
   add_index "customers", ["email"], :name => "index_customers_on_email", :unique => true

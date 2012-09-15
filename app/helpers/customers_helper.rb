@@ -88,4 +88,11 @@ module CustomersHelper
     month = customer.months_to_pay.first
     l(Date.new(month.last, month.first, 1), format: :month_and_year)
   end
+
+  def select_for_customer_kinds(form)
+    kinds = Customer::KINDS.map { |k, v| [t("view.customers.kinds.#{k}"), v] }
+
+    form.input :kind, collection: kinds, prompt: false,
+      input_html: { class: 'span11' }
+  end
 end
