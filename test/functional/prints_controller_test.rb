@@ -707,7 +707,8 @@ class PrintsControllerTest < ActionController::TestCase
   def get_prints_with_customer(options={})
     options[:customer] ||= customers(:teacher)
     
-    Print.where(customer_id: options[:customer]).order(
-      'created_at ASC')
+    Print.where(
+      customer_id: options[:customer]
+    ).order('created_at ASC')
   end
 end

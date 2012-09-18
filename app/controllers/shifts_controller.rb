@@ -39,18 +39,6 @@ class ShiftsController < ApplicationController
     end
   end
 
-  # GET /shifts/new
-  # GET /shifts/new.json
-  def new
-    @title = t('view.shifts.new_title')
-    @shift = Shift.new
-
-    respond_to do |format|
-      format.html # new.html.erb
-      format.json { render json: @shift }
-    end
-  end
-
   # GET /shifts/1/edit
   def edit
     @title = t('view.shifts.edit_title')

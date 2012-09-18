@@ -34,7 +34,7 @@ group :assets do
 end
 
 group :development do
-  gem 'puma'
+  gem 'thin'
 end
 
 group :test do

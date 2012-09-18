@@ -126,15 +126,15 @@ class UsersControllerTest < ActionController::TestCase
   test 'should pay user shifts between dates' do
     UserSession.create(@user)
     user = users(:operator)
-    from = 3.weeks.ago.to_date
-    to = Time.zone.today
+    start = 3.weeks.ago.to_date
+    finish = Time.zone.today
     pending_shifts = user.shifts.pay_pending
     
     assert pending_shifts.size > 0
 
     assert_difference 'pending_shifts.count', -pending_shifts.count do
       put :pay_shifts_between, format: :json,
-        id: user.to_param, start: from, finish: to
+        id: user.to_param, start: start.to_s(:db), finish: finish.to_s(:db)
       assert_response :success
     end
   end

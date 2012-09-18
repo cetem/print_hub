@@ -1,1 +1,1 @@
-resources :shifts
+resources :shifts, except: :new

@@ -5,7 +5,6 @@
         <div class="form-inputs">
           <%= f.input :username, input_html: { autocomplete: 'off', autofocus: true, class: 'span3' } %>
           <%= f.input :password, input_html: { class: 'span3' } %>
-          <%= f.input :remember_me, as: :boolean %>
         </div>
         <div class="form-actions">
          <%= f.button :submit, t('view.user_sessions.login'), class: 'btn btn-primary' %>

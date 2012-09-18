@@ -15,13 +15,6 @@ class ShiftsControllerTest < ActionController::TestCase
     assert_template 'shifts/index'
   end
 
-  test 'should get new' do
-    get :new
-    assert_response :success
-    assert_select '#unexpected_error', false
-    assert_template 'shifts/new'
-  end
-
   test 'should create shift' do
     assert_difference('Shift.count') do
       post :create, shift: {
