@@ -50,7 +50,9 @@ class Document < ApplicationModel
 
   # Relaciones
   has_many :print_jobs
-  has_and_belongs_to_many :tags, order: 'name ASC'
+  has_many :document_tag_relation
+  has_many :tags, through: :document_tag_relation, autosave: true
+
   autocomplete_for :tag, :name, name: :auto_tag
 
   def initialize(attributes = nil, options = {})

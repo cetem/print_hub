@@ -22,7 +22,8 @@ class Tag < ApplicationModel
   validates :name, length: { maximum: 255 }, allow_nil: true, allow_blank: true
 
   # Relaciones
-  has_and_belongs_to_many :documents, autosave: true
+  has_many :document_tag_relation
+  has_many :documents, through: :document_tag_relation, autosave: true
 
   def to_s
     ([self] + self.ancestors).map(&:name).reverse.join(' | ')
@@ -45,7 +46,7 @@ class Tag < ApplicationModel
 
   def update_related_documents
     self.documents.each { |d| d.update_tag_path self } if self.name_changed?
-    
+
     if self.private_changed?
       self.documents.each { |d| d.update_privacy self }
     end

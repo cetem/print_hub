@@ -89,7 +89,6 @@ class TagTest < ActiveSupport::TestCase
     assert @tag.update_attributes(name: 'Updated')
 
     new_documents_tag_path = @tag.documents.reload.map(&:tag_path).compact.sort
-
     assert new_documents_tag_path.all? { |tp| tp.match /Updated/ }
   end
   
@@ -113,7 +112,7 @@ class TagTest < ActiveSupport::TestCase
   test 'private convinations in multi tag document' do
     document = Document.find(documents(:math_notes).id)
     tag_ids = document.tags.map(&:id)
-    
+
     assert_equal 2, tag_ids.size
     assert !document.private
     assert Tag.find(tag_ids.first).update_attributes(private: true)

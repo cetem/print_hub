@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20120909172412) do
+ActiveRecord::Schema.define(:version => 20121004040837) do
 
   create_table "article_lines", :force => true do |t|
     t.integer  "print_id"
@@ -68,13 +68,20 @@ ActiveRecord::Schema.define(:version => 20120909172412) do
     t.string   "persistence_token"
     t.string   "perishable_token"
     t.boolean  "enable",                                                               :default => false
-    t.string   "kind",                     :limit => 1,                                :default => "n",   :null => false
+    t.string   "kind",                     :limit => 1,                                :default => "n"
   end
 
   add_index "customers", ["email"], :name => "index_customers_on_email", :unique => true
   add_index "customers", ["enable"], :name => "index_customers_on_enable"
   add_index "customers", ["identification"], :name => "index_customers_on_identification", :unique => true
   add_index "customers", ["perishable_token"], :name => "index_customers_on_perishable_token"
+
+  create_table "document_tag_relations", :force => true do |t|
+    t.integer "document_id", :null => false
+    t.integer "tag_id",      :null => false
+  end
+
+  add_index "document_tag_relations", ["document_id", "tag_id"], :name => "index_documents_tags_on_document_id_and_tag_id", :unique => true
 
   create_table "documents", :force => true do |t|
     t.integer  "code",                                 :null => false
@@ -99,13 +106,6 @@ ActiveRecord::Schema.define(:version => 20120909172412) do
   add_index "documents", ["code"], :name => "index_documents_on_code"
   add_index "documents", ["enable"], :name => "index_documents_on_enable"
   add_index "documents", ["private"], :name => "index_documents_on_private"
-
-  create_table "documents_tags", :id => false, :force => true do |t|
-    t.integer "document_id", :null => false
-    t.integer "tag_id",      :null => false
-  end
-
-  add_index "documents_tags", ["document_id", "tag_id"], :name => "index_documents_tags_on_document_id_and_tag_id", :unique => true
 
   create_table "feedbacks", :force => true do |t|
     t.string   "item",                          :null => false
@@ -245,15 +245,17 @@ ActiveRecord::Schema.define(:version => 20120909172412) do
   add_index "shifts", ["user_id"], :name => "index_shifts_on_user_id"
 
   create_table "tags", :force => true do |t|
-    t.string   "name",                            :null => false
+    t.string   "name",                               :null => false
     t.integer  "parent_id"
-    t.integer  "lock_version", :default => 0
+    t.integer  "lock_version",    :default => 0
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.boolean  "private",      :default => false
+    t.boolean  "private",         :default => false
     t.integer  "lft"
     t.integer  "rgt"
     t.integer  "depth"
+    t.integer  "documents_count", :default => 0
+    t.integer  "children_count",  :default => 0
   end
 
   add_index "tags", ["parent_id"], :name => "index_tags_on_parent_id"

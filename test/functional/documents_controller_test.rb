@@ -60,19 +60,22 @@ class DocumentsControllerTest < ActionController::TestCase
 
   test 'should create document' do
     UserSession.create(users(:administrator))
-    assert_difference ['Document.count', 'Version.count'] do
-      post :create, document: {
-        code: '0001234',
-        name: 'New Name',
-        stock: '1',
-        pages: '15',
-        media: Document::MEDIA_TYPES.values.first,
-        enable: '1',
-        description: 'New description',
-        auto_tag_name: 'Some name given in autocomplete',
-        tag_ids: [tags(:books).id, tags(:notes).id],
-        file: fixture_file_upload('/files/test.pdf', 'application/pdf')
-      }.slice(*Document.accessible_attributes.map(&:to_sym))
+    assert_difference 'Document.count' do
+      # 1 Version for documents and other 2 for document-tags relation
+      assert_difference 'Version.count', 3 do
+        post :create, document: {
+          code: '0001234',
+          name: 'New Name',
+          stock: '1',
+          pages: '15',
+          media: Document::MEDIA_TYPES.values.first,
+          enable: '1',
+          description: 'New description',
+          auto_tag_name: 'Some name given in autocomplete',
+          tag_ids: [tags(:books).id, tags(:notes).id],
+          file: fixture_file_upload('/files/test.pdf', 'application/pdf')
+        }.slice(*Document.accessible_attributes.map(&:to_sym))
+      end
     end
 
     assert_redirected_to documents_path

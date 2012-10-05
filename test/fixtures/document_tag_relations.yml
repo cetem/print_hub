@@ -1,0 +1,48 @@
+rel1:
+  tag: notes
+  document: math_notes
+
+
+rel2:
+  tag: basics
+  document: math_notes
+
+rel3:
+  tag: books
+  document: math_book
+
+rel4:
+  tag: basics
+  document: math_book
+
+rel5:
+  tag: notes
+  document: physics_notes
+
+rel6:
+  tag: physics
+  document: physics_notes
+
+rel7:
+  tag: books
+  document: unused_book
+
+rel8:
+  tag: basics
+  document: unused_book
+
+rel9:
+  tag: books
+  document: book_with_stock
+
+rel10:
+  tag: basics
+  document: book_with_stock
+
+rel11:
+  tag: books
+  document: disabled_book
+
+rel12:
+  tag: basics
+  document: disabled_book
