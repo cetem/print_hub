@@ -4,9 +4,6 @@ class Shift < ActiveRecord::Base
   # Atributos "permitidos"
   attr_accessible :start, :finish, :description, :paid, :user_id, :lock_version
   
-  # Restricciones en los atributos
-  #attr_readonly :start
-  
   # Scopes
   scope :pending, where(finish: nil)
   scope :stale, -> {
@@ -37,11 +34,11 @@ class Shift < ActiveRecord::Base
   end
 
   def start_limit
-    (self.finish - 16.hours) if self.finish
+    (self.finish - SHIFT_MAX_RANGE) if self.finish
   end
   
   def finish_limit
-    self.start + 16.hours
+    self.start + SHIFT_MAX_RANGE
   end
 
   def pay!

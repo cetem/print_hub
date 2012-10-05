@@ -32,39 +32,17 @@ class ShiftTest < ActiveSupport::TestCase
   end
 
   # Prueba actualizar final de un turno
-  test 'update finish' do
-    1.minute.ago.to_datetime.tap do |finish|
-      assert_no_difference 'Shift.count' do
-        assert @shift.update_attributes(finish: finish),
-          @shift.errors.full_messages.join('; ')
+  test 'update ' do
+    10.minute.ago.to_datetime.tap do |start|
+      1.minute.ago.to_datetime.tap do |finish|
+        assert_no_difference 'Shift.count' do
+          assert @shift.update_attributes(start: start, finish: finish),
+            @shift.errors.full_messages.join('; ')
+        end
+
+        assert_equal start.to_i, @shift.reload.start.to_i
+        assert_equal finish.to_i, @shift.finish.to_i
       end
-
-      assert_equal finish.to_i, @shift.reload.finish.to_i
-    end
-  end
-
-  # Prueba actualizar comienzo de un turno
-  test 'update start in open shift' do
-    1.hour.ago.to_datetime.tap do |start|
-      assert_no_difference 'Shift.count' do
-        assert @shift.update_attributes(start: start),
-          @shift.errors.full_messages.join('; ')
-      end
-
-      assert_equal start.to_i, @shift.reload.start.to_i
-    end
-  end
-
-  # Prueba actualizar comienzo de un turno
-  test 'update start in finish shift' do
-    @shift = shifts(:old_shift)
-    12.hours.ago.to_datetime.tap do |start|
-      assert_no_difference 'Shift.count' do
-        assert @shift.update_attributes(start: start),
-          @shift.errors.full_messages.join('; ')
-      end
-
-      assert_equal start.to_i, @shift.reload.start.to_i
     end
   end
 
