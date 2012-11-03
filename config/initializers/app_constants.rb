@@ -16,3 +16,5 @@ PUBLIC_PROTOCOL = 'http'
 TMP_BARCODE_IMAGES = File.join(Rails.root, 'tmp', 'codes')
 # Validez de los tokens para cambiar contraseña y activar cuenta
 TOKEN_VALIDITY = 1.day
+# Cantidad de horas maximas para un turno
+SHIFT_MAX_RANGE = 16.hours
