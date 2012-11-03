@@ -3,7 +3,6 @@ class Tag < ApplicationModel
 
   has_paper_trail 
   acts_as_nested_set 
-  find_by_autocomplete :name
   
   # Scopes
   scope :publicly_visible, where(private: false)
@@ -80,5 +79,14 @@ class Tag < ApplicationModel
     end
 
     true
+  end
+
+  def self.full_text(query_terms)
+    options = text_query(query_terms, 'name')
+    conditions = [options[:query]]
+    
+    where(
+      conditions.map { |c| "(#{c})" }.join(' OR '), options[:parameters]
+    ).order(options[:order])
   end
 end

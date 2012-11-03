@@ -46,7 +46,6 @@ class PrintJob < ApplicationModel
   # Relaciones
   belongs_to :print, inverse_of: :print_jobs
   belongs_to :document, autosave: true
-  autocomplete_for :document, :name, name: :auto_document
 
   def initialize(attributes = nil, options = {})
     super(attributes, options)

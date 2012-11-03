@@ -21,7 +21,6 @@ class ArticleLine < ApplicationModel
   # Relaciones
   belongs_to :print
   belongs_to :article
-  autocomplete_for :article, :name, name: :auto_document
 
   def initialize(attributes = nil, options = {})
     super(attributes, options)

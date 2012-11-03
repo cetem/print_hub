@@ -1,6 +1,6 @@
 class Customer < ApplicationModel
   has_paper_trail ignore: [:perishable_token]
-  find_by_autocomplete :name
+
   acts_as_authentic do |c|
     c.maintain_sessions = false
     c.validates_uniqueness_of_email_field_options = { case_sensitive: false }

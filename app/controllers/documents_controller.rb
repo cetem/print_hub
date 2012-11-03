@@ -173,22 +173,19 @@ class DocumentsController < ApplicationController
     session[:documents_for_printing].delete(@document.id)
   end
   
-  def self.tag_autocomplete_options
-    pg_query = "to_tsvector('spanish', %{field})"
-    pg_query << " @@ plainto_tsquery('spanish', %{query})"
-    
-    {
-      limit: 10,
-      order: 'name ASC',
-      query: DB_ADAPTER == 'PostgreSQL' ? pg_query : nil,
-      mask: DB_ADAPTER == 'PostgreSQL' ? '%{value}' : nil
-    }
+  # GET /documents/autocomplete_for_tag_name
+  def autocomplete_for_tag_name
+    query = params[:q].sanitized_for_text_query
+    query_terms = query.split(/\s+/).reject(&:blank?)
+    tags = Tag.scoped
+    tags = tags.full_text(query_terms) unless query_terms.empty?
+    tags = tags.limit(10)
+
+    respond_to do |format|
+      format.json { render json: tags }
+    end
   end
-  
-  autocomplete_for(:tag, :name, tag_autocomplete_options) do |tags|
-    render json: tags
-  end
-  
+
   private
   
   def load_documents_for_printing

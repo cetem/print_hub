@@ -4,7 +4,6 @@ class Document < ApplicationModel
     path: ':rails_root/private/:attachment/:id_partition/:basename_:style.:extension',
     url: '/documents/:id/:style/download',
     styles: ->(attachment) { attachment.instance.choose_styles }
-  find_by_autocomplete :name
 
   # Constantes
   MEDIA_TYPES = { a4: 'A4', legal: 'na_legal_8.5x14in' }.freeze
@@ -54,8 +53,6 @@ class Document < ApplicationModel
   has_many :print_jobs
   has_many :document_tag_relation
   has_many :tags, through: :document_tag_relation, autosave: true
-
-  autocomplete_for :tag, :name, name: :auto_tag
 
   def initialize(attributes = nil, options = {})
     super(attributes, options)

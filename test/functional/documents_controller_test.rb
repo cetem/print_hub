@@ -226,7 +226,7 @@ class DocumentsControllerTest < ActionController::TestCase
 
   test 'should get autocomplete tag list' do
     UserSession.create(users(:administrator))
-    get :autocomplete_for_tag_name, q: 'note'
+    get :autocomplete_for_tag_name, format: :json, q: 'note'
     assert_response :success
     
     tags = ActiveSupport::JSON.decode(@response.body)
@@ -234,7 +234,7 @@ class DocumentsControllerTest < ActionController::TestCase
     assert_equal 2, tags.size
     assert tags.all? { |t| t['label'].match /note/i }
 
-    get :autocomplete_for_tag_name, q: 'books'
+    get :autocomplete_for_tag_name, format: :json, q: 'books'
     assert_response :success
     
     tags = ActiveSupport::JSON.decode(@response.body)
@@ -242,7 +242,7 @@ class DocumentsControllerTest < ActionController::TestCase
     assert_equal 1, tags.size
     assert tags.all? { |t| t['label'].match /books/i }
 
-    get :autocomplete_for_tag_name, q: 'boxyz'
+    get :autocomplete_for_tag_name, format: :json, q: 'boxyz'
     assert_response :success
     
     tags = ActiveSupport::JSON.decode(@response.body)

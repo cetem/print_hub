@@ -71,7 +71,6 @@ class Print < ApplicationModel
   has_many :payments, as: :payable
   has_many :print_jobs, inverse_of: :print
   has_many :article_lines
-  autocomplete_for :customer, :name, name: :auto_customer
 
   accepts_nested_attributes_for :print_jobs, allow_destroy: false,
     reject_if: :reject_print_job_attributes?
