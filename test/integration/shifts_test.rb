@@ -13,21 +13,25 @@ class ShiftsTest < ActionDispatch::IntegrationTest
     @shift = shifts(:open_shift)
     @shift.update_attributes(user_id: users(:administrator).id)
     
-    login expected_path: edit_shift_path(@shift)
+    assert_difference 'Shift.count' do
+      login expected_path: edit_shift_path(@shift)
+      
+      assert_page_has_no_errors!
+      assert_equal edit_shift_path(@shift), current_path
+      assert page.has_css?('.alert', text: I18n.t('view.shifts.edit_stale'))
+      
+      fill_in 'shift_finish', with: ''
+      assert page.has_css?('div#ui-datepicker-div')
 
-    assert_page_has_no_errors!
-    assert_equal edit_shift_path(@shift), current_path
-    assert page.has_css?('.alert', text: I18n.t('view.shifts.edit_stale'))
+      within 'div#ui-datepicker-div' do
+        find('.ui-datepicker-current').click
+      end
     
-    fill_in 'shift_finish', with: ''
-    assert page.has_css?('div#ui-datepicker-div')
-
-    within 'div#ui-datepicker-div' do
-      find('.ui-datepicker-current').click
-    end
-    
-    assert_difference 'Shift.stale.count', -1 do
-      click_button I18n.t('helpers.submit.update', model: Shift.model_name.human)
+      assert_difference 'Shift.stale.count', -1 do
+        click_button I18n.t(
+          'helpers.submit.update', model: Shift.model_name.human
+        )
+      end
     end
   end
   

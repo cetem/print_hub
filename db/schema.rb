@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121004040837) do
+ActiveRecord::Schema.define(:version => 20121103010125) do
 
   create_table "article_lines", :force => true do |t|
     t.integer  "print_id"
@@ -240,6 +240,7 @@ ActiveRecord::Schema.define(:version => 20121004040837) do
     t.boolean  "paid",         :default => false
   end
 
+  add_index "shifts", ["created_at"], :name => "index_shifts_on_created_at"
   add_index "shifts", ["finish"], :name => "index_shifts_on_finish"
   add_index "shifts", ["start"], :name => "index_shifts_on_start"
   add_index "shifts", ["user_id"], :name => "index_shifts_on_user_id"

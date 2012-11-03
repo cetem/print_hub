@@ -32,7 +32,7 @@ class UserSessionsController < ApplicationController
     
     respond_to do |format|
       format.html { redirect_to(new_user_session_url, notice: t('view.user_sessions.correctly_destroyed')) }
-      format.json  { head :ok }
+      format.json { head :ok }
     end
   end
   

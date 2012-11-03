@@ -84,6 +84,10 @@ class User < ApplicationModel
     self.shifts.stale.first
   end
   
+  def last_shift_open?
+    self.shifts.order('created_at DESC').first.pending?
+  end
+  
   def self.full_text(query_terms)
     options = text_query(query_terms, 'username', 'name', 'last_name')
     conditions = [options[:query]]

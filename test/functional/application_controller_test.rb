@@ -170,13 +170,20 @@ class ApplicationControllerTest < ActionController::TestCase
   end
 
   test 'not leave open shift' do
-    assert_nil @controller.send(:not_leave_open_shift)
+    user = users(:operator_with_open_shift)
 
-    UserSession.create(users(:operator_with_open_shift))
+    UserSession.create(user)
     @controller.send(:session)[:has_an_open_shift] = true
 
-    assert_not_nil @controller.send(:not_leave_open_shift)
+    assert_not_nil @controller.send(:run_shift_tasks)
     assert_redirected_to edit_shift_url(shifts(:open_shift))
+
+    assert user.close_pending_shifts!
+    @controller.send(:session)[:has_an_open_shift] = false
+    
+    assert_difference 'Shift.count' do
+      assert @controller.send(:run_shift_tasks)
+    end
   end
 
   test 'make date range' do

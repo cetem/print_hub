@@ -29,6 +29,10 @@ class Shift < ActiveRecord::Base
     self.start ||= Time.now
   end
   
+  def pending?
+    self.finish.blank?
+  end
+ 
   def close!
     self.update_attributes(finish: Time.now)
   end

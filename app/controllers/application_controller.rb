@@ -76,7 +76,7 @@ class ApplicationController < ActionController::Base
 
   def require_user
     if current_user
-      not_leave_open_shift
+      run_shift_tasks
     else
       flash.notice = t('messages.must_be_logged_in')
 
@@ -112,7 +112,7 @@ class ApplicationController < ActionController::Base
 
   def require_admin_user
     if current_user.try(:admin) == true
-      not_leave_open_shift
+      run_shift_tasks
     else
       flash.alert = t('messages.must_be_admin')
 
@@ -133,12 +133,15 @@ class ApplicationController < ActionController::Base
     session[:return_to] = nil
   end
 
-  def not_leave_open_shift
+  def run_shift_tasks
     if session[:has_an_open_shift] && controller_name != 'shifts'
-      redirect_to edit_shift_url(current_user.stale_shift), notice: t('view.shifts.edit_stale')
+      redirect_to edit_shift_url(current_user.stale_shift), 
+        notice: t('view.shifts.edit_stale')
+    elsif !session[:has_an_open_shift] && !current_user.last_shift_open?
+      current_user_session.create_shift
     end
   end
-  
+
   def lines_per_page
     current_user.try(:lines_per_page) || APP_LINES_PER_PAGE
   end
