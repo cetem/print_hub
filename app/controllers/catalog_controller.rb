@@ -1,5 +1,5 @@
 class CatalogController < ApplicationController
-  before_filter :require_customer, :load_documents_to_order, :load_tag
+  before_filter :require_customer, :load_documents_to_order, :load_tag, :load_parent
   helper_method :sort_column, :sort_direction
   
   layout ->(controller) { controller.request.xhr? ? false : 'application' }
@@ -92,6 +92,23 @@ class CatalogController < ApplicationController
     end
   end
   
+  # GET /catalog/tags
+  def tags
+    @title = t('view.tags.index_title')
+    @tags = @parent.try(:children) || Tag.publicly_visible
+    @tags = @tags.where('parent_id IS NULL') unless @parent
+    @tags = @tags.order(
+      "#{Tag.table_name}.name ASC"
+    ).with_documents_or_children.paginate(
+      page: params[:page], per_page: (APP_LINES_PER_PAGE / 2).round
+    )
+
+    respond_to do |format|
+      format.html # index.html.erb
+      format.json  { render json: @tags }
+    end 
+  end
+  
   private
   
   def load_documents_to_order
@@ -105,6 +122,10 @@ class CatalogController < ApplicationController
   
   def document_scope
     @tag ? @tag.documents.publicly_visible : Document.publicly_visible
+  end
+
+  def load_parent
+    @parent = Tag.publicly_visible.find(params[:parent_id]) if params[:parent_id]
   end
   
   def sort_column

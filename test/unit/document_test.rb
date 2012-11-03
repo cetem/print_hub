@@ -292,6 +292,29 @@ class DocumentTest < ActiveSupport::TestCase
     assert_equal 4, @document.use_stock(6)
     assert_equal 0, @document.stock
   end
+
+  test 'update tags documents count updating' do
+    @tag = tags(:notes)
+
+    assert_difference '@tag.reload.documents_count' do
+      @document.tags << @tag
+      assert @document.save
+    end
+    
+    assert_difference '@tag.reload.documents_count', -1 do
+      @document.tag_ids = nil
+      assert @document.save
+    end
+  end
+
+  test 'update tags documents count on delete' do
+    @document = documents(:unused_book)
+    @tag = @document.tags.first
+
+    assert_difference '@tag.reload.documents_count', -1 do
+      assert @document.destroy
+    end
+  end
   
   test 'full text search' do
     documents = Document.full_text(['unused'])

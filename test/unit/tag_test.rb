@@ -132,4 +132,12 @@ class TagTest < ActiveSupport::TestCase
     # Ahora si no se considera privado el documento
     assert !document.reload.private
   end
+
+  test 'update children count' do
+    notes_tag = tags(:notes)
+
+    assert_difference 'notes_tag.reload.children_count' do
+      Tag.create!(name: 'new tag', parent_id: notes_tag.id, private: false)
+    end
+  end
 end

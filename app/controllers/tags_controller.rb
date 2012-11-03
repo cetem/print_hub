@@ -1,16 +1,16 @@
 class TagsController < ApplicationController
   before_filter :require_admin_user, except: [:show, :index]
   before_filter :require_user, only: [:show, :index]
-  before_filter :get_parent
+  before_filter :load_parent
 
   # GET /tags
   # GET /tags.json
   def index
     @title = t('view.tags.index_title')
     @searchable = true
-    @tags = (@parent_tag.try(:children) || Tag).where(
-      ('parent_id IS NULL' unless @parent_tag)
-    ).order("#{Tag.table_name}.name ASC").paginate(
+    @tags = @parent_tag.try(:children) || Tag
+    @tags = @tags.where('parent_id IS NULL') unless @parent_tag
+    @tags = @tags.order("#{Tag.table_name}.name ASC").paginate(
       page: params[:page], per_page: lines_per_page
     )
 
@@ -102,7 +102,7 @@ class TagsController < ApplicationController
 
   private
 
-  def get_parent
+  def load_parent
     @parent_tag = Tag.find(params[:parent]) if params[:parent]
   end
 end

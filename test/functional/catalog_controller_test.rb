@@ -128,4 +128,48 @@ class CatalogControllerTest < ActionController::TestCase
     assert_equal I18n.t('view.documents.non_existent'), flash.notice
     assert session[:documents_to_order].blank?
   end
+
+  test 'should get tags' do
+    CustomerSession.create(customers(:student))
+    tags = Tag.publicly_visible.where(parent_id: nil).limit(
+      (APP_LINES_PER_PAGE / 2).round
+    ).with_documents_or_children
+
+    get :tags
+    assert_response :success
+    assert_not_nil assigns(:tags)
+    assert_equal tags.count, assigns(:tags).size
+    assert_select '#unexpected_error', false
+    assert_template 'catalog/tags'
+  end
+
+  test 'should get tag childrens' do
+    CustomerSession.create(customers(:student))
+    parent = tags(:notes)
+    tags = Tag.publicly_visible.where(parent_id: parent.id).limit(
+      (APP_LINES_PER_PAGE / 2).round
+    )
+
+    assert tags.size > 0
+
+    get :tags, parent_id: parent.to_param
+    assert_response :success
+    assert_not_nil assigns(:tags)
+    assert_equal tags.count, assigns(:tags).size
+    assert_select '#unexpected_error', false
+    assert_template 'catalog/tags'
+  end
+
+  test 'should get document through tag' do
+    CustomerSession.create(customers(:student))
+    tag = tags(:notes)
+    document_with_tag = Document.publicly_visible.with_tag(tag)
+  
+    get :index, tag_id: tag.to_param
+    assert_response :success
+    assert_not_nil assigns(:documents)
+    assert_equal document_with_tag.count, assigns(:documents).size
+    assert_select '#unexpected_error', false
+    assert_template 'catalog/index'
+  end
 end

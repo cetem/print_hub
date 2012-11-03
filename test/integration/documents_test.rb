@@ -18,6 +18,7 @@ class DocumentsTest < ActionDispatch::IntegrationTest
     visit new_document_path
     assert_page_has_no_errors!
     assert_equal new_document_path, current_path
+    notes_tag = tags(:notes)
 
     within 'form' do
       fill_in Document.human_attribute_name('code'), with: '10'
@@ -27,16 +28,19 @@ class DocumentsTest < ActionDispatch::IntegrationTest
         with: 'Testing upload a pdf'
       file = File.join(Rails.root, 'test', 'fixtures', 'files', 'test.pdf')
       attach_file(Document.human_attribute_name('file'), file)
-      fill_in 'autocomplete_tag_tag_NEW_RECORD', with: 'Notes'
+      fill_in 'autocomplete_tag_tag_NEW_RECORD', with: notes_tag.name
       sleep(0.5) #El autocomplete tarda...
       find('#autocomplete_tag_tag_NEW_RECORD').native.send_keys :arrow_down, 
         :arrow_down, :tab
       assert_difference 'Document.count' do
-        click_button I18n.t(
-          'helpers.submit.create', model: Document.model_name.human
-        )
+        assert_difference 'notes_tag.reload.documents_count' do
+          click_button I18n.t(
+            'helpers.submit.create', model: Document.model_name.human
+          )
+        end
       end
     end  
+
     assert_page_has_no_errors!
     assert_equal documents_path, current_path
     assert page.has_css?(
@@ -47,17 +51,17 @@ class DocumentsTest < ActionDispatch::IntegrationTest
   test 'should delete a document' do
     login
 
-    assert_page_has_no_errors!
-    assert_equal prints_path, current_path
-    
     visit documents_path
     assert_page_has_no_errors!
     assert_equal documents_path, current_path
 
+    unused_book = documents(:unused_book)
+    tag = unused_book.tags.first
+
     within 'table tbody' do
-      assert_difference "Document.count", -1 do
+      assert_difference ["Document.count", 'tag.reload.documents_count'], -1 do
         find(
-          "a[href*=\"/#{documents(:unused_book).id}\"][data-method='delete']"
+          "a[href*=\"/#{unused_book.id}\"][data-method='delete']"
         ).click
         sleep(1)
         page.driver.browser.switch_to.alert.accept
@@ -75,19 +79,24 @@ class DocumentsTest < ActionDispatch::IntegrationTest
     assert_page_has_no_errors!
     assert_equal prints_path, current_path
     
-    id_mb = documents(:math_book)
-    visit edit_document_path(id_mb)
+    math_book = documents(:math_book)
+    visit edit_document_path(math_book)
     assert_page_has_no_errors!
-    assert_equal edit_document_path(id_mb), current_path
+    assert_equal edit_document_path(math_book), current_path
+    first_tag = math_book.tags.first
 
     within 'form' do
-      assert_difference "Document.find(id_mb).tags.count", -1 do
-        find('[data-event=removeItem]').click
-        sleep(0.5) # Se tarda un poquito en quitarlo
-        click_button I18n.t(
-          'helpers.submit.update', model: Document.model_name.human
-        )
-        sleep(1) # Se tarda un poco en recargar
+      assert_difference "Document.find(math_book).tags.count", -1 do
+        assert_difference 'first_tag.reload.documents_count', -1 do
+          within "div#tag_#{first_tag.id}" do
+            find('[data-event=removeItem]').click
+            sleep 1
+          end
+
+          click_button I18n.t(
+            'helpers.submit.update', model: Document.model_name.human
+          )
+        end
       end
     end
       

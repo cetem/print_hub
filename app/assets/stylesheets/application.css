@@ -8,6 +8,7 @@
  *= require twitter/bootstrap-responsive
  *= require jquery/ui-custom
  *= require fonts
+ *= require catalog
  *= require common
  *= require common-responsive
  *= require help

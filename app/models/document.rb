@@ -28,7 +28,9 @@ class Document < ApplicationModel
 
   # Callbacks
   before_save :update_tag_path, :update_privacy
+  after_save :update_tags_documents_count
   before_destroy :can_be_destroyed?
+  after_destroy :update_tags_documents_count
   before_file_post_process :extract_page_count
 
   # Restricciones
@@ -96,6 +98,23 @@ class Document < ApplicationModel
     end
     
     @privacy_updated
+  end
+
+  alias_method :old_tag_ids=, :tag_ids=
+
+  def tag_ids=(ids)
+    @_old_tag_ids = self.tag_ids
+
+    self.old_tag_ids = ids
+  end
+
+  def update_tags_documents_count
+    tags = (
+      @_old_tag_ids.present? && @_old_tag_ids.size > 0 &&
+      self.tag_ids.try(:sort) != @_old_tag_ids.try(:sort)
+    ) ? Tag.find(@_old_tag_ids) : self.tags
+
+    tags.each { |d_t| d_t.update_documents_count }
   end
 
   def can_be_destroyed?

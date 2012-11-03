@@ -180,6 +180,46 @@ class PrivateCustomerInteractionsTest < ActionDispatch::IntegrationTest
     
     assert_page_has_no_errors!
   end
+
+  test 'should add documents through tags' do
+    customer_login
+
+    click_link I18n.t('menu.tags')
+
+    assert_page_has_no_errors!
+    assert_equal catalog_tags_path, current_path
+
+    tag = tags(:notes)
+    tag_link = catalog_path(tag_id: tag.id)
+    find("a[href='#{tag_link}']").click
+
+    assert_page_has_no_errors!
+    path_with_params = current_url.match /#{Capybara.app_host}(\S+)/
+    assert_equal catalog_path(tag_id: tag.id), path_with_params[1]
+
+    within 'table tbody' do
+      assert page.has_no_css?('a.remove_from_order')
+
+      tag.documents_count.times do
+        assert page.has_css?('a.add_to_order')
+        find('a.add_to_order').click
+        assert page.has_css?('a.remove_from_order')
+      end
+
+      assert page.has_no_css?('a.add_from_order')
+    end
+
+    within '.nav-collapse' do
+      click_link I18n.t('view.catalog.new_order')
+    end
+
+    assert_equal new_order_path, current_path
+    assert_page_has_no_errors!
+
+    order_lines = all('.order_line').size
+
+    assert_equal tag.documents_count, order_lines
+  end
   
   private
   
@@ -202,7 +242,7 @@ class PrivateCustomerInteractionsTest < ActionDispatch::IntegrationTest
     
     click_button I18n.t('view.customer_sessions.login')
     
-    assert_equal options[:expected_path], current_path
     assert_page_has_no_errors!
+    assert_equal options[:expected_path], current_path
   end
 end

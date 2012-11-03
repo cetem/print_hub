@@ -8,6 +8,8 @@ draft_note:
 notes:
   name: Notes
   private: false
+  children_count: 1
+  documents_count: 2
   lft: 1
   rgt: 4
   depth: 0
@@ -15,6 +17,7 @@ notes:
 basics:
   name: Basics
   private: false
+  documents_count: 4
   lft: 9
   rgt: 10
   depth: 0
@@ -22,6 +25,7 @@ basics:
 books:
   name: Books
   private: false
+  documents_count: 3
   lft: 5
   rgt: 6
   depth: 0
@@ -30,6 +34,7 @@ physics:
   name: Physics
   private: false
   parent_id: <%= ActiveRecord::Fixtures.identify(:notes) %>
+  documents_count: 1
   lft: 2
   rgt: 3
   depth: 0

@@ -61,8 +61,8 @@ class DocumentsControllerTest < ActionController::TestCase
   test 'should create document' do
     UserSession.create(users(:administrator))
     assert_difference 'Document.count' do
-      # 1 Version for documents and other 2 for document-tags relation
-      assert_difference 'Version.count', 3 do
+      # 1 document, 2 document-tags relation, 2 tags update
+      assert_difference 'Version.count', 5 do
         post :create, document: {
           code: '0001234',
           name: 'New Name',

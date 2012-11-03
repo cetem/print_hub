@@ -92,4 +92,44 @@ module CatalogHelper
       title: t('view.catalog.images.example_document_grid'),
       size: '269x39'
   end
+
+  def show_link_to_tag_documents_for_catalog(tag)
+    if tag.documents_count > 0
+      link_to(
+        t('view.tags.document_list', count: tag.documents_count),
+        catalog_path(tag_id: tag.id)
+      )
+    else
+      t('view.tags.without_documents')
+    end
+  end
+
+  def show_catalog_tag_path(tag)
+    divider = content_tag(:span, '/', class: 'divider')
+    ancestors = [
+      content_tag(:li, raw(" #{divider} #{tag.name}"), class: 'active')
+    ]
+
+    tag.ancestors.each do |a|
+      ancestors << content_tag(:li,
+        raw(
+          " #{divider} #{link_to(a.name, catalog_tags_path(parent_id: a.id))}"
+        )
+      )
+    end
+    
+    ancestors << content_tag(:li,
+      raw(link_to(t('view.tags.root_tag'), catalog_tags_path))
+    )
+    
+    raw(ancestors.reverse.join(' '))
+  end
+
+  def show_link_to_tag_for_catalog(tag)
+    if tag.children_count > 0
+      link_to(tag.name, catalog_tags_path(parent_id: tag.id))
+    else
+      tag.name
+    end
+  end
 end

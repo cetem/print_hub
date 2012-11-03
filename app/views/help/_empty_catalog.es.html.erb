@@ -6,6 +6,11 @@
   <div class="row-fluid">
     <div class="span6">
       <p class="lead">Decinos <strong>que buscás</strong>&hellip;</p>
+      <p class="lead">
+        O buscalo por <strong>
+          <%= link_to t('menu.tags'), catalog_tags_path %>
+        </strong>&hellip;
+      </p>
     </div>
     <div class="span6">
       <p><%= example_search_image %></p>

@@ -3,5 +3,4 @@ class DocumentTagRelation < ApplicationModel
 
   belongs_to :tag
   belongs_to :document
-  
 end

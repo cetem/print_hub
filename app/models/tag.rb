@@ -1,19 +1,27 @@
 class Tag < ApplicationModel
   include Comparable
 
-  has_paper_trail
-  acts_as_nested_set  
+  has_paper_trail 
+  acts_as_nested_set 
   find_by_autocomplete :name
   
   # Scopes
   scope :publicly_visible, where(private: false)
+  scope :with_documents_or_children, where(
+    [
+      "#{Tag.table_name}.documents_count > :zero",
+      "#{Tag.table_name}.children_count > :zero"
+    ].join(' OR '), zero: 0
+  )
 
   # Callbacks
   before_save :update_related_documents
-  before_destroy :remove_from_related_documents
+  after_save :update_children_count, on: :create
+  before_destroy :remove_from_related_documents, :update_children_count
   
   # Atributos "permitidos"
-  attr_accessible :name, :parent_id, :private, :lock_version
+  attr_accessible :name, :parent_id, :private, :lock_version, :children_count,
+    :documents_count
 
   # Restricciones
   validates :name, presence: true
@@ -52,6 +60,16 @@ class Tag < ApplicationModel
     end
 
     true
+  end
+
+  def update_documents_count
+    self.update_attributes(documents_count: self.documents.count)
+  end
+
+  def update_children_count
+    if self.parent_id
+      self.parent.update_attributes!(children_count: self.parent.children.count)
+    end
   end
   
   def remove_from_related_documents
