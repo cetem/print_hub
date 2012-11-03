@@ -25,5 +25,8 @@
 <%= pagination_links(@documents) %>
 
 <div class="form-actions">
+  <div class='pull-right'>
+    <%= link_to t('label.back'), catalog_tags_path(parent_id: @tag.parent_id) %>
+  </div>
   <%= link_to t('view.tags.index_title'), catalog_tags_path %>
 </div>
