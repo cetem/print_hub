@@ -117,7 +117,7 @@ class CustomersTest < ActionDispatch::IntegrationTest
     
     visit edit_customer_path(customers(:student_without_bonus))
     
-    fill_in 'deposit_amount_deposit_customer_deposits_attributes_0_', with: 12.55
+    fill_in 'deposit_amount_deposit_customer_deposits_attributes_0_', with: 12.5
     
     assert_difference 'Deposit.count' do
       click_button I18n.t(
@@ -150,7 +150,7 @@ class CustomersTest < ActionDispatch::IntegrationTest
     end
     
     assert_difference "all(:xpath, deposit).size", -1 do
-      find('[data-event=removeItem]').click
+      first(:css, '[data-event=removeItem]').click
       sleep 0.5 # Sino, sigue siendo el mismo nº de antes
     end
   end
@@ -234,7 +234,7 @@ class CustomersTest < ActionDispatch::IntegrationTest
     assert_equal customers_path, current_path
     
     within '.btn-group' do
-      find('.dropdown-toggle').click
+      first(:css, '.dropdown-toggle').click
       within '.dropdown-menu' do
         click_link I18n.t('view.customers.to_pay_prints.with_debt')
       end
