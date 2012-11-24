@@ -10,6 +10,7 @@ Previously run:
 - sudo apt-get install libxslt1-dev # Nokogiri gem dependency
 - sudo apt-get install cups-pdf # Virtual PDF printer
 - sudo apt-get install postgresql # Core database
+- sudo apt-get install imagemagick # Paperclip gem dependency
 - cd projects/print_hub
 - bundle install
 
