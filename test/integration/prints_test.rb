@@ -27,14 +27,14 @@ class PrintsTest < ActionDispatch::IntegrationTest
     assert_equal documents_path, current_path
     
     within 'table tbody' do
-      find('a.add_link').click
+      first(:css, 'a.add_link').click
       assert find('a.remove_link')
     end
     
     assert page.has_css?('.form-actions')
     
     within '.form-actions' do
-      find('.dropdown-toggle').click
+      first(:css, '.dropdown-toggle').click
       within '.dropdown-menu' do
         click_link I18n.t('view.documents.new_print')
       end
@@ -85,7 +85,9 @@ class PrintsTest < ActionDispatch::IntegrationTest
     end
     
     assert_page_has_no_errors!
-    assert page.has_css?('.alert', text: I18n.t('view.prints.correctly_created'))
+    assert page.has_css?(
+      '.alert', text: I18n.t('view.prints.correctly_created')
+    )
   end
   
   test 'should schedule for final of the day' do
@@ -103,7 +105,7 @@ class PrintsTest < ActionDispatch::IntegrationTest
     assert page.has_css?('form')
     
     within 'form' do
-      select(:blank, from: 'print_printer' )
+      select(nil, from: 'print_printer' ) # the :blank option deprecated...
       fill_in 'print_scheduled_at', with: ''
       assert page.has_css?('div.datetime_picker')
 
@@ -112,8 +114,12 @@ class PrintsTest < ActionDispatch::IntegrationTest
           "//div[@id='ui-timepicker-div-print_scheduled_at']"
         )
         within :xpath, "//div[@id='ui-timepicker-div-print_scheduled_at']" do
-          find('.ui_tpicker_hour .ui-slider-handle').native.send_keys :end
-          find('.ui_tpicker_minute .ui-slider-handle').native.send_keys :end
+          first(
+            :css, '.ui_tpicker_hour .ui-slider-handle'
+          ).native.send_keys :end
+          first(
+            :css, '.ui_tpicker_minute .ui-slider-handle'
+          ).native.send_keys :end
         end
       end
     end
@@ -129,7 +135,9 @@ class PrintsTest < ActionDispatch::IntegrationTest
     end
     
     assert_page_has_no_errors!
-    assert page.has_css?('.alert', text: I18n.t('view.prints.correctly_created'))
+    assert page.has_css?(
+      '.alert', text: I18n.t('view.prints.correctly_created')
+    )
   end
   
   test 'should print a document with an article' do
@@ -156,7 +164,9 @@ class PrintsTest < ActionDispatch::IntegrationTest
       find("##@ac_field").native.send_keys :arrow_down, :tab
     end
     
-    print_job_price = find('#print_jobs_container .money').text.gsub('$', '')
+    print_job_price = first(
+      :css, '#print_jobs_container .money'
+    ).text.gsub('$', '')
     
     within 'form' do
       art_id = 'auto_article_line_article_line_print_article_lines_attributes_0_'
@@ -170,7 +180,7 @@ class PrintsTest < ActionDispatch::IntegrationTest
       
     end
     
-    article_price = find('#articles_container .money').text.gsub('$', '')
+    article_price = first(:css, '#articles_container .money').text.gsub('$', '')
     total_price = article_price.to_f + print_job_price.to_f
     
     assert_difference 'Print.count' do
@@ -178,7 +188,9 @@ class PrintsTest < ActionDispatch::IntegrationTest
     end
     
     assert_page_has_no_errors!
-    assert page.has_css?('.alert', text: I18n.t('view.prints.correctly_created'))
+    assert page.has_css?(
+      '.alert', text: I18n.t('view.prints.correctly_created')
+    )
     assert_equal total_price, Payment.last.amount.to_f
   end
   
@@ -223,7 +235,9 @@ class PrintsTest < ActionDispatch::IntegrationTest
     end
     
     assert_page_has_no_errors!
-    assert page.has_css?('.alert', text: I18n.t('view.prints.correctly_created'))
+    assert page.has_css?(
+      '.alert', text: I18n.t('view.prints.correctly_created')
+    )
     assert page.has_no_css?('div[id^=cancel_print_job] a[disabled]')
     
     within 'div[id^=cancel_print_job]' do
@@ -277,7 +291,9 @@ class PrintsTest < ActionDispatch::IntegrationTest
     end
     
     assert_page_has_no_errors!
-    assert page.has_css?('.alert', text: I18n.t('view.prints.correctly_created'))
+    assert page.has_css?(
+      '.alert', text: I18n.t('view.prints.correctly_created')
+    )
   end
 
   test 'should print with customer with account' do
@@ -323,6 +339,8 @@ class PrintsTest < ActionDispatch::IntegrationTest
     end
     
     assert_page_has_no_errors!
-    assert page.has_css?('.alert', text: I18n.t('view.prints.correctly_created'))
+    assert page.has_css?(
+      '.alert', text: I18n.t('view.prints.correctly_created')
+    )
   end
 end

@@ -60,9 +60,7 @@ class DocumentsTest < ActionDispatch::IntegrationTest
 
     within 'table tbody' do
       assert_difference ["Document.count", 'tag.reload.documents_count'], -1 do
-        find(
-          "a[href*=\"/#{unused_book.id}\"][data-method='delete']"
-        ).click
+        find("a[href*=\"/#{unused_book.id}\"][data-method='delete']").click
         sleep(1)
         page.driver.browser.switch_to.alert.accept
         sleep(1)
@@ -89,7 +87,7 @@ class DocumentsTest < ActionDispatch::IntegrationTest
       assert_difference "Document.find(math_book).tags.count", -1 do
         assert_difference 'first_tag.reload.documents_count', -1 do
           within "div#tag_#{first_tag.id}" do
-            find('[data-event=removeItem]').click
+            first(:css, '[data-event=removeItem]').click
             sleep 1
           end
 

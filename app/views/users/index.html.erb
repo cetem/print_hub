@@ -1,12 +1,28 @@
 <table class="table table-striped">
   <thead>
     <tr>
-      <th class="visible-desktop"></th>
-      <th class="visible-desktop"><%= User.human_attribute_name 'name' %></th>
+      <th><span class="visible-desktop"></span></th>
+      <th>
+        <span class="visible-desktop">
+          <%= User.human_attribute_name 'name' %>
+        </span>
+      </th>
       <th><%= User.human_attribute_name 'username' %></th>
-      <th class="visible-desktop"><%= User.human_attribute_name 'email' %></th>
-      <th class="visible-desktop"><%= User.human_attribute_name 'admin' %></th>
-      <th class="visible-desktop"><%= User.human_attribute_name 'enable' %></th>
+      <th>
+        <span class="visible-desktop">
+          <%= User.human_attribute_name 'email' %>
+        </span>
+      </th>
+      <th>
+        <span class="visible-desktop">
+          <%= User.human_attribute_name 'admin' %>
+        </span>
+      </th>
+      <th>
+        <span class="visible-desktop">
+          <%= User.human_attribute_name 'enable' %>
+        </span>
+      </th>
       <th colspan="2"></th>
     </tr>
   </thead>
@@ -14,12 +30,30 @@
   <tbody>
     <% @users.each do |user| %>
       <tr class="<%= 'disabled' unless user.enable %>">
-        <td class="visible-desktop"><%= show_avatar user, style: :mini, show_default: true %></td>
-        <td class="visible-desktop"><%= [user.name, user.last_name].join(' ') %></td>
+        <td>
+          <span class="visible-desktop">
+            <%= show_avatar user, style: :mini, show_default: true %>
+          </span>
+        </td>
+        <td>
+          <span class="visible-desktop">
+            <%= [user.name, user.last_name].join(' ') %>
+          </span>
+        </td>
         <td><%= user.username %></td>
-        <td class="visible-desktop"><%= user.email %></td>
-        <td class="visible-desktop"><%= t(user.admin ? 'label.yes' : 'label.no') %></td>
-        <td class="visible-desktop"><%= t(user.enable ? 'label.yes' : 'label.no') %></td>
+        <td>
+          <span class="visible-desktop"><%= user.email %></span>
+        </td>
+        <td>
+          <span class="visible-desktop">
+            <%= t(user.admin ? 'label.yes' : 'label.no') %>
+          </span>
+        </td>
+        <td>
+          <span class="visible-desktop">
+            <%= t(user.enable ? 'label.yes' : 'label.no') %>
+          </span>
+        </td>
         <td><%= link_to_show user %></td>
         <td><%= link_to_edit edit_user_path(user) %></td>
       </tr>

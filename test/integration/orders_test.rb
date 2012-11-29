@@ -33,8 +33,8 @@ class OrdersTest < ActionDispatch::IntegrationTest
     link_with_show_title = "a[data-original-title=#{I18n.t('label.show')}]"
     
     within 'table tbody' do
-      show_href = find(link_with_show_title)[:href]
-      find(link_with_show_title).click
+      show_href = first(:css, link_with_show_title)[:href]
+      first(:css, link_with_show_title).click
     end
 
     id = show_href.match(/\/(\d+)/)[1]
@@ -62,7 +62,9 @@ class OrdersTest < ActionDispatch::IntegrationTest
     end
 
     assert_page_has_no_errors!
-    assert page.has_css?('.alert', text: I18n.t('view.prints.correctly_created'))
+    assert page.has_css?(
+      '.alert', text: I18n.t('view.prints.correctly_created')
+    )
 
     last_print = Print.order('id DESC').first
     assert_equal print_path(last_print), current_path
@@ -98,8 +100,8 @@ class OrdersTest < ActionDispatch::IntegrationTest
     link_with_show_title = "a[data-original-title=#{I18n.t('label.show')}]"
     
     within 'table tbody' do
-      show_href = find(link_with_show_title)[:href]
-      find(link_with_show_title).click
+      show_href = first(:css, link_with_show_title)[:href]
+      first(:css, link_with_show_title).click
     end
 
     id = show_href.match(/\/(\d+)/)[1]

@@ -9,9 +9,6 @@ class PrivateCustomerInteractionsTest < ActionDispatch::IntegrationTest
     Capybara.server_port = '54163'
     subdomain = APP_CONFIG['subdomains']['customers']
     Capybara.app_host = "http://#{subdomain}.lvh.me:54163"
-    
-    # Para evitar problemas con "ajaxInProgressWarning"
-    page.driver.options[:resynchronize] = true
   end
   
   test 'should search with no results and show contextual help' do
@@ -37,7 +34,7 @@ class PrivateCustomerInteractionsTest < ActionDispatch::IntegrationTest
     within 'table tbody' do
       assert page.has_css?('a.add_to_order')
       assert page.has_no_css?('a.remove_from_order')
-      find('a.add_to_order').click
+      first(:css, 'a.add_to_order').click
       assert page.has_css?('a.remove_from_order')
     end
     
@@ -72,14 +69,15 @@ class PrivateCustomerInteractionsTest < ActionDispatch::IntegrationTest
     assert page.has_css?('#check_order')
     
     within 'form' do
-      pages = find('input[name$="[two_sided]"]').click
-      copies = find('input[name$="[copies]"]').value.to_i || 0
-      pages = find('input[name$="[pages]"]').value.to_i || 0
-      price_per_copy = find('input[name$="[price_per_copy]"]').value.to_f || 0.0
+      copies = first(:css, 'input[name$="[copies]"]').value.to_i || 0
+      pages = first(:css, 'input[name$="[pages]"]').value.to_i || 0
+      price_per_copy = first(
+        :css, 'input[name$="[price_per_copy]"]'
+      ).value.to_f || 0.0
       total_should_be = copies * pages * price_per_copy
       
       within '.order_line' do
-        assert find('.money').has_content?("$#{total_should_be}")
+        assert first(:css, '.money').has_content?("$#{total_should_be}")
       end
       
       fill_in 'order[order_lines_attributes][0][copies]', with: '5'
@@ -87,7 +85,7 @@ class PrivateCustomerInteractionsTest < ActionDispatch::IntegrationTest
       new_total_should_be = 5 * pages * price_per_copy
       
       within '.order_line' do
-        assert find('.money').has_content?("$#{new_total_should_be}")
+        assert first(:css, '.money').has_content?("$#{new_total_should_be}")
       end
     end
   end
@@ -104,11 +102,11 @@ class PrivateCustomerInteractionsTest < ActionDispatch::IntegrationTest
     within 'table tbody' do
       assert page.has_css?('a.add_to_order')
       assert page.has_no_css?('a.remove_from_order')
-      find('a.add_to_order').click
+      first(:css, 'a.add_to_order').click
       assert page.has_css?('a.remove_from_order')
       
       assert page.has_css?('a.add_to_order')
-      find('a.add_to_order').click
+      first(:css, 'a.add_to_order').click
     end
     
     within '.nav-collapse' do
@@ -121,18 +119,18 @@ class PrivateCustomerInteractionsTest < ActionDispatch::IntegrationTest
     
     within '#check_order' do
       assert page.has_no_css?('.document_details')
-      click_link ''
+      first(:link, I18n.t('view.prints.document_details')).click
       assert page.has_css?('.document_details')
       original_price =
-        find('.order_line .money').text.match(/\d+\.\d+/)[0].to_f
+        first(:css, '.order_line .money').text.match(/\d+\.\d+/)[0].to_f
       
       assert_equal 2, page.all('.order_line').size
-      click_link '✘'
+      first(:link, '✘').click
       
-      wait_until { page.all('.order_line').size == 1 }
+      assert page.has_css?('.order_line', count: 1)
       
       new_price =
-        find('.order_line .money').text.match(/\d+\.\d+/)[0].to_f
+        first(:css, '.order_line .money').text.match(/\d+\.\d+/)[0].to_f
       
       assert_not_equal new_price, original_price
     end
@@ -202,7 +200,7 @@ class PrivateCustomerInteractionsTest < ActionDispatch::IntegrationTest
 
       tag.documents_count.times do
         assert page.has_css?('a.add_to_order')
-        find('a.add_to_order').click
+        first(:css, 'a.add_to_order').click
         assert page.has_css?('a.remove_from_order')
       end
 
