@@ -29,6 +29,7 @@ group :assets do
   gem 'sass-rails'
   gem 'coffee-rails'
   gem 'therubyracer', require: false
+  gem 'libv8' # For rubyracer
   gem 'uglifier'
 end
 
