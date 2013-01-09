@@ -3,6 +3,7 @@ class ApplicationController < ActionController::Base
   
   protect_from_forgery
   
+  before_filter :set_js_format_in_iframe_request
   after_filter -> { expires_now if current_user || current_customer }
 
   # Cualquier excepción no contemplada es capturada por esta función. Se utiliza
@@ -160,5 +161,9 @@ class ApplicationController < ActionController::Base
     to_datetime ||= Time.now
 
     [from_datetime.to_datetime, to_datetime.to_datetime].sort
+  end
+
+  def set_js_format_in_iframe_request
+    request.format = :js if params['X-Requested-With'] == 'IFrame'
   end
 end

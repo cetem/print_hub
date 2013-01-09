@@ -44,4 +44,16 @@ module OrdersHelper
     
     raw("#{t('menu.orders')} #{count_tag}")
   end
+
+  def build_order_file_form
+    form = nil
+
+    simple_fields_for(@order) do |f| 
+      f.simple_fields_for(:order_files) do |of|
+        form = of
+      end
+    end
+
+    form
+  end
 end

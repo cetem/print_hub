@@ -20,15 +20,15 @@ class PrintJob < ApplicationModel
   
   # Atributos no persistentes
   attr_writer :range_pages
-  attr_accessor :auto_document_name, :job_hold_until
+  attr_accessor :auto_document_name, :job_hold_until, :file_name
   
   # Atributos "permitidos"
   attr_accessible :id, :document_id, :copies, :pages, :range, :two_sided,
-    :print_id, :auto_document_name, :job_hold_until, :lock_version
+    :print_id, :auto_document_name, :job_hold_until, :lock_version, :order_file_id
 
   # Restricciones de atributos
   attr_readonly :id, :document_id, :copies, :pages, :range, :job_id, :two_sided,
-    :print_id
+    :print_id, :order_file_id
 
   # Restricciones
   validates :copies, :pages, :price_per_copy, :printed_copies, presence: true
@@ -46,14 +46,22 @@ class PrintJob < ApplicationModel
   # Relaciones
   belongs_to :print, inverse_of: :print_jobs
   belongs_to :document, autosave: true
+  belongs_to :order_file, inverse_of: :print_jobs
 
   def initialize(attributes = nil, options = {})
     super(attributes, options)
+    self.order_file_id ||= attributes['id'] if attributes
     
     self.two_sided = true if self.two_sided.nil?
     self.copies ||= 1
     self.printed_copies ||= 0
     self.pages = self.document.pages if self.document
+
+    if self.order_file
+      self.pages = self.order_file.pages
+      self.file_name = self.order_file.file_name
+    end
+
     self.price_per_copy ||= PriceChooser.choose(
       one_sided: !self.two_sided, copies: self.print.try(:total_pages)
     )
@@ -121,22 +129,30 @@ class PrintJob < ApplicationModel
 
   def send_to_print(printer, user = nil)
     # Imprimir solamente si el archivo existe
-    if self.document.try(:file?) && File.exists?(self.document.file.path)
+    file_existence = (
+      self.document.try(:file?) && File.exists?(self.document.file.path) ||
+      self.order_file.try(:file) && File.exists?(self.order_file.file.current_path)
+    )
+    if file_existence
       # Solamente usar documentos en existencia si no se especifica un rango
-      if self.full_document?
+      if self.document && self.full_document?
         self.printed_copies = self.document.use_stock self.copies
       else
         self.printed_copies = self.copies
       end
       
       if self.printed_copies > 0
+        file_path = (
+          self.document ? self.document.file.path : self.order_file.file.current_path
+        )
+
         timestamp = Time.now.utc.strftime('%Y%m%d%H%M%S')
         user = user.try(:username)
         options = "-d #{printer} -n #{self.printed_copies} -o fit-to-page "
         options += "-t #{user || 'ph'}-#{timestamp} "
         options += self.options.map { |o, v| "-o #{o}=#{v}" }.join(' ')
-        out = %x{lp #{options} "#{self.document.file.path}" 2>&1}
-        
+        out = %x{lp #{options} "#{file_path}" 2>&1}
+
         self.job_id = out.match(/#{Regexp.escape(printer)}-\d+/)[0] || '-'
       end
     end

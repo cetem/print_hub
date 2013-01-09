@@ -1,0 +1,41 @@
+<% order_file ||= build_order_file_form %>
+<% id = "order_file_order_order_files_attributes_#{order_file.object_id}_" %>
+<% name = "order[order_files_attributes][#{order_file.object_id}]" %>
+<div class="order_line order_file" id="<%= "#{id}" %>">
+  <div class="row-fluid">
+    <div class="span5">
+      <%= order_file.object.file_name %>
+      <%= order_file.input :file_cache, as: :hidden, label: false, 
+        input_html: { value: order_file.object.file_cache,
+        name: "#{name}[file_cache]", id: "#{id}file_cache" } %>
+    </div>
+    <div class="span1">
+      <%= order_file.input :copies, label: false, 
+        input_html: { value: 1, maxlength: 5, autocomplete: 'off',
+        name: "#{name}[copies]", id: "#{id}copies",
+        class: 'price-modifier page-modifier span12' } %>
+    </div>
+    <div class="span1 hidden-phone">
+      <%= order_file.input :pages, label: false, input_html: {
+        value: order_file.object.pages,
+        name: "#{name}[pages]", id: "#{id}pages",
+        class: 'price-modifier page-modifier span12', disabled: true } %>
+    </div>
+    <div class="span2 hidden-phone"> 
+      <%= order_file.input :price_per_copy, label: false, 
+        input_html: { value: order_file.object.price_per_copy,
+        disabled: true, class: 'price-modifier span6' } %>
+    </div>
+    <div class="span1">
+      <%= order_file.input :two_sided, label: false, input_html: {
+        name: "#{name}[two_sided]", id: "#{id}two_sided",
+        class: 'boolean price-modifier span12' } %>
+    </div>
+    <div class="span2">
+      <span class="money">
+        <%= number_to_currency order_file.object.price %>
+      </span>
+      <%= link_to_remove_nested_item(nil, 'order_line') %>
+    </div>
+  </div>
+</div>

@@ -20,8 +20,8 @@ class OrderTest < ActiveSupport::TestCase
 
   # Prueba la creación de un pedido
   test 'create' do
-    assert_difference ['Order.count', 'OrderLine.count'] do
-      assert_difference 'Version.count', 2 do
+    assert_difference ['Order.count', 'OrderLine.count', 'OrderFile.count'] do
+      assert_difference 'Version.count', 3 do
         customer = customers(:student_without_bonus)
         @order = customer.orders.create(
           scheduled_at: 10.days.from_now,
@@ -30,6 +30,13 @@ class OrderTest < ActiveSupport::TestCase
               copies: 2,
               two_sided: false,
               document_id: documents(:math_book).id
+            }
+          },
+          order_files_attributes: {
+            new_1: {
+              copies: 1,
+              two_sided: false,
+              file: pdf_test_file_processed_with_action_dispatch
             }
           }
         )
@@ -41,8 +48,8 @@ class OrderTest < ActiveSupport::TestCase
   
   # Prueba la creación de un pedido
   test 'create with credit and allow printing' do
-    assert_difference ['Order.count', 'OrderLine.count'] do
-      assert_difference 'Version.count', 2 do
+    assert_difference ['Order.count', 'OrderLine.count', 'OrderFile.count'] do
+      assert_difference 'Version.count', 3 do
         customer = customers(:student)
         @order = customer.orders.create(
           scheduled_at: 10.days.from_now,
@@ -51,6 +58,13 @@ class OrderTest < ActiveSupport::TestCase
               copies: 2,
               two_sided: false,
               document_id: documents(:math_book).id
+            }
+          },
+          order_files_attributes: {
+            new_1: {
+              copies: 1,
+              two_sided: false,
+              file: pdf_test_file_processed_with_action_dispatch
             }
           }
         )
@@ -162,6 +176,7 @@ class OrderTest < ActiveSupport::TestCase
   # Prueba que las validaciones del modelo se cumplan como es esperado
   test 'validates that has at least one item' do
     @order.order_lines.destroy_all
+    @order.order_files.destroy_all
     assert @order.invalid?
     assert_equal 1, @order.errors.count
     assert_equal [error_message_from_model(@order, :base, :must_have_one_item)],
@@ -169,9 +184,10 @@ class OrderTest < ActiveSupport::TestCase
   end
   
   test 'price' do
-    price = @order.order_lines.inject(0) { |t, ol| t + ol.price }
+    nested_models = @order.order_lines.to_a + @order.order_files.to_a
+    price = nested_models.inject(0) { |t, ol| t + ol.price }
 
-    assert @order.order_lines.any? { |ol| ol.price > 0 }
+    assert nested_models.any? { |ol| ol.price > 0 }
     assert @order.price > 0
     assert_equal @order.price, price
   end
@@ -179,6 +195,10 @@ class OrderTest < ActiveSupport::TestCase
   test 'total pages' do
     total_pages = @order.order_lines.inject(0) do |t, ol|
       t + ol.document.pages
+    end
+
+    total_pages += @order.order_files.inject(0) do |t, of|
+      t + of.pages
     end
     
     assert total_pages > 0

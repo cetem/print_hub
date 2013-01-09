@@ -11,7 +11,7 @@
 #
 # It's strongly recommended to check this file into your version control system.
 
-ActiveRecord::Schema.define(:version => 20121103010125) do
+ActiveRecord::Schema.define(:version => 20121220025450) do
 
   create_table "article_lines", :force => true do |t|
     t.integer  "print_id"
@@ -118,6 +118,19 @@ ActiveRecord::Schema.define(:version => 20121103010125) do
   add_index "feedbacks", ["item"], :name => "index_feedbacks_on_item"
   add_index "feedbacks", ["positive"], :name => "index_feedbacks_on_positive"
 
+  create_table "order_files", :force => true do |t|
+    t.string   "file",                                                            :null => false
+    t.integer  "pages",                                                           :null => false
+    t.integer  "copies",                                                          :null => false
+    t.boolean  "two_sided",                                     :default => true
+    t.decimal  "price_per_copy", :precision => 15, :scale => 3,                   :null => false
+    t.integer  "order_id"
+    t.datetime "created_at",                                                      :null => false
+    t.datetime "updated_at",                                                      :null => false
+  end
+
+  add_index "order_files", ["order_id"], :name => "index_order_files_on_order_id"
+
   create_table "order_lines", :force => true do |t|
     t.integer  "document_id"
     t.integer  "copies",                                                          :null => false
@@ -179,6 +192,7 @@ ActiveRecord::Schema.define(:version => 20121103010125) do
     t.integer  "pages",                                                           :null => false
     t.integer  "printed_pages",                                                   :null => false
     t.integer  "printed_copies",                                                  :null => false
+    t.integer  "order_file_id"
   end
 
   add_index "print_jobs", ["document_id"], :name => "index_print_jobs_on_document_id"

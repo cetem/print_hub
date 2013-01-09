@@ -86,9 +86,13 @@
         <div id="print_jobs">
           <% @print.print_jobs.build if @print.print_jobs.empty? %>
           <%= f.simple_fields_for :print_jobs do |pj_f| %>
-            <%= render partial: 'print_job', locals: {
-              f: pj_f, is_dynamic: false, disabled: @print.persisted?
-            } %>
+            <% if pj_f.object.file_name.present? %>
+              <%= render partial: 'file_print_job', locals: { f: pj_f } %>
+            <% else %>
+              <%= render partial: 'print_job', locals: {
+                f: pj_f, is_dynamic: false, disabled: @print.persisted?
+              } %>
+            <% end %>
           <% end %>
         </div>
 

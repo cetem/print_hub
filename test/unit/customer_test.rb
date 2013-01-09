@@ -25,7 +25,7 @@ class CustomerTest < ActiveSupport::TestCase
   test 'create without bonus' do
     # Send welcome email
     assert_difference 'ActionMailer::Base.deliveries.size' do
-      assert_difference ['Customer.count'] do
+      assert_difference 'Customer.count' do
         assert_no_difference 'Bonus.count' do
           @customer = Customer.create(
             {

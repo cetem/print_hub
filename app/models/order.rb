@@ -14,7 +14,7 @@ class Order < ApplicationModel
   
   # Atributos "permitidos"
   attr_accessible :scheduled_at, :notes, :lock_version, :include_documents,
-    :order_lines_attributes
+    :order_lines_attributes, :order_files_attributes
   
   # Atributos no persistentes
   attr_accessor :include_documents
@@ -40,9 +40,12 @@ class Order < ApplicationModel
   # Relaciones
   belongs_to :customer
   has_many :order_lines, inverse_of: :order, dependent: :destroy
+  has_many :order_files, inverse_of: :order, dependent: :destroy
   
   accepts_nested_attributes_for :order_lines, allow_destroy: true,
     reject_if: ->(attributes) { attributes['copies'].to_i <= 0 }
+  accepts_nested_attributes_for :order_files, allow_destroy: true,
+   reject_if: :reject_order_files_attributes?
   
   def initialize(attributes = nil, options = {})
     super(attributes, options)
@@ -50,21 +53,21 @@ class Order < ApplicationModel
     self.scheduled_at ||= 1.day.from_now
     self.status ||= STATUS[:pending]
     
-    if self.include_documents.present?
-      self.include_documents.each do |document_id|
-        self.order_lines.build(document_id: document_id)
-      end
-    end
-    
+    self.include_documents.each do |document_id|
+      self.order_lines.build(document_id: document_id)
+    end if self.include_documents.present?
+
     self.print_out = !!self.customer.try(:can_afford?, self.price)
     
-    self.order_lines.each do |ol|
-      ol.price_per_copy = PriceChooser.choose(
-        one_sided: !ol.two_sided, copies: self.total_pages
+    nested_models = self.order_lines.to_a + self.order_files.to_a
+    
+    nested_models.each do |nm|
+      nm.price_per_copy = PriceChooser.choose(
+        one_sided: !nm.two_sided, copies: self.total_pages
       )
-    end
+    end if nested_models.present?
   end
-  
+
   def avoid_destruction
     false
   end
@@ -72,9 +75,16 @@ class Order < ApplicationModel
   def can_be_modified?
     self.pending? || self.status_was == STATUS[:pending]
   end
+
+  def reject_order_files_attributes?(attributes)
+    (attributes['file'].blank? && attributes['file_cache'].blank?) || 
+      attributes['copies'].to_i <= 0
+  end
   
   def must_have_one_item
-    if self.order_lines.reject(&:marked_for_destruction?).empty?
+    nested_models = self.order_lines.to_a + self.order_files.to_a
+
+    if nested_models.reject(&:marked_for_destruction?).empty?
       self.errors.add :base, :must_have_one_item
     end
   end
@@ -98,13 +108,23 @@ class Order < ApplicationModel
   end
   
   def price
-    self.order_lines.reject(&:marked_for_destruction?).to_a.sum(&:price)
+    nested_models = self.order_lines.to_a + self.order_files.to_a
+    
+    nested_models.reject(&:marked_for_destruction?).to_a.sum(&:price)
   end
   
   def total_pages
-    self.order_lines.reject(&:marked_for_destruction?).sum do |ol|
-      ol.document.try(:pages) || 0
+    sum = 0
+
+    self.order_lines.reject(&:marked_for_destruction?).each do |ol|
+      sum += ol.document.try(:pages) || 0
     end
+
+    self.order_files.reject(&:marked_for_destruction?).each do |of| 
+      sum += of.try(:pages) || 0
+    end
+
+    sum 
   end
   
   def self.pending_for_print_count

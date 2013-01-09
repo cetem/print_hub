@@ -82,7 +82,7 @@ class OrderLineTest < ActiveSupport::TestCase
     assert_equal [error_message_from_model(@order_line, :copies, :not_a_number)],
       @order_line.errors[:copies]
     assert_equal [error_message_from_model(@order_line, :price_per_copy,
-        :not_a_number)], @order_line.errors[:price_per_copy]
+      :not_a_number)], @order_line.errors[:price_per_copy]
   end
 
   test 'validates integer attributes' do

@@ -267,6 +267,8 @@
     must_be_admin: 'Debe tener privilegios de administrador para poder ver el contenido requerido'
     must_be_logged_in: 'Debe ingresar para poder ver el contenido requerido'
     must_be_logged_out: 'Debe salir para poder ver el contenido requerido'
+    file_upload_warning: 'Si abandona esta pagina los archivos subidos se perderán'
+    only_pdf_permitted: "Solo se permiten subir pdf's"
     
   notifications:
     forgot_password:
@@ -424,6 +426,7 @@
       cancel: 'Cancelar'
       notes_link: '¿Necesitás aclarar algo sobre el pedido?'
       print: 'Imprimir comprobante'
+      upload_file: 'Subir archivo'
       status:
         pending: 'Pendiente'
         completed: 'Impreso'

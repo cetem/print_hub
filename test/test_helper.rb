@@ -47,6 +47,12 @@ class ActiveSupport::TestCase
     Setting.price_per_one_sided_copy = '0.10'
     Setting.price_per_two_sided_copy = '0.07'
   end
+
+  def pdf_test_file_processed_with_action_dispatch
+    Rack::Test::UploadedFile.new(
+      File.join(Rails.root, 'test', 'fixtures', 'files', 'test.pdf')
+    )
+  end
 end
 
 class ActionController::TestCase

@@ -49,7 +49,7 @@
         <tbody>
           <% @print.print_jobs.each do |print_job| %>
             <tr>
-              <td><%= print_job.document %></td>
+              <td><%= show_document_name_in_print_job(print_job) %></td>
               <td><%= print_job.copies %></td>
               <td><%= print_job.printed_copies %></td>
               <td><%= print_job.pages %></td>

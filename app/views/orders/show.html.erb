@@ -30,7 +30,7 @@
     <%= simple_format @order.notes %>
   <% end %>
 
-  <% unless @order.order_lines.empty? %>
+  <% if @order.order_lines.present? || @order.order_files.present? %>
     <h3><%= t 'view.orders.order_lines' %></h3>
 
     <table class="table table-striped">
@@ -44,6 +44,19 @@
         </tr>
       </thead>
       <tbody>
+        <% @order.order_files.each do |order_file| %>
+          <tr>
+            <td><%= link_to(
+              order_file.file_name, download_file_order_path(
+                @order, order_file_id: order_file.id
+              )
+            ) %></td>
+            <td><%= order_file.copies %></td>
+            <td class="hidden-phone"><%= order_file.try(:pages) %></td>
+            <td class="hidden-phone"><%= number_to_currency order_file.price_per_copy %></td>
+            <td><%= t(order_file.two_sided ? 'label.yes' : 'label.no') %></td>
+          </tr>
+        <% end %>
         <% @order.order_lines.each do |order_line| %>
           <tr>
             <td><%= order_line.document %></td>
