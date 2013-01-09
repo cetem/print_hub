@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-gem 'rails', '3.2.8'
+gem 'rails', '3.2.9'
 
 gem 'pg'
 gem 'authlogic'
@@ -24,10 +24,14 @@ gem 'whenever', require: false
 gem 'cups'
 gem 'pdf-reader'
 gem 'simple_form'
+gem 'carrierwave'
+gem 'rmagick'
+gem 'jquery-fileupload-rails'
 
 group :assets do
   gem 'sass-rails'
   gem 'coffee-rails'
+  gem 'libv8'
   gem 'therubyracer', require: false
   gem 'uglifier'
 end
