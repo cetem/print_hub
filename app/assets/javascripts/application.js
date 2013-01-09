@@ -21,6 +21,7 @@
 //= require orders
 //= require price-chooser
 //= require prints
+//= require jquery-fileupload/basic
 //
 // Mobile js
 //= require mobile

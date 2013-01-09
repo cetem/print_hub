@@ -7,6 +7,8 @@ window.State =
   newIdCounter: 0
   # Indicador de que alguna llamada por AJAX está en progreso
   ajaxInProgress: false
+  # Indicador de que se han subido archivos
+  fileUploaded: false
 
 # Manejadores de eventos
 window.EventHandler =

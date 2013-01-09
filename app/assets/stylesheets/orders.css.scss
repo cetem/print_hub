@@ -1,0 +1,28 @@
+@media (min-width: 1024px) {
+
+  #upload-file {
+    margin-right: 15%;
+    width: 380px;
+  }
+}
+
+@media (min-width: 560px) and (max-width: 1023px) {
+
+  #upload-file {
+    margin-right: 10%;
+    width: 200px;
+  }
+}
+
+@media (min-width: 475px) and(max-width: 559px) {
+  #upload-file {
+    margin-left: 4%;
+    width: 400px;
+  }
+}
+
+@media (max-width: 474px) {
+  #upload-file {
+    width: 250px;
+  }
+}

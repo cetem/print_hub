@@ -1,9 +1,12 @@
 class OrdersController < ApplicationController
   helper_method :order_type
-  before_filter :require_customer_or_user, :load_scope,
-    only: [:index, :show, :destroy]
-  before_filter :require_customer, except: [:index, :show, :destroy]
+  [:index, :show, :destroy, :download_file].tap do |actions|
+    before_filter :require_customer_or_user, :load_scope, only: actions
+    before_filter :require_customer, except: actions
+  end
   
+  ->(c) { c.request.xhr? ? false : 'application' }
+
   # GET /orders
   # GET /orders.json
   def index
@@ -113,7 +116,44 @@ class OrdersController < ApplicationController
       end
     end
   end
-  
+
+  # POST /orders/upload_file
+  def upload_file
+    @order = Order.new
+    order_file = @order.order_files.build(params[:order_file])
+    order_file.extract_page_count if order_file
+
+    respond_to do |format|
+      if order_file
+        format.html { render partial: 'orders/order_file' }
+        format.js
+      else
+        format.html { head :unprocessable_entity }
+      end
+    end
+  end
+
+  # GET /orders/1/download_file
+  def download_file
+    order_file_id = params[:order_file_id].to_i
+    order_files = Order.find(params[:id]).order_files
+
+    if order_files.map(&:id).include? order_file_id
+      file = order_files.find(order_file_id).file.url
+    end
+      
+    if File.exists?(file)
+      mime_type = Mime::Type.lookup_by_extension(File.extname(file)[1..-1])
+      
+      response.headers['Last-Modified'] = File.mtime(file).httpdate
+      response.headers['Cache-Control'] = 'private, no-store'
+
+      send_file file, type: (mime_type || 'application/octet-stream')
+    else
+      redirect_to :back, notice: 'No se encontro el archivo asociado'
+    end
+  end
+
   private
   
   def load_scope

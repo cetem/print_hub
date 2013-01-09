@@ -70,8 +70,14 @@ class OrdersControllerTest < ActionController::TestCase
     customer = Customer.find(customers(:student_without_bonus).id)
     
     CustomerSession.create(customer)
+
+    order_file = OrderFile.new(
+      file: fixture_file_upload('/files/test.pdf', 'application/pdf')
+    )
     
-    assert_difference ['customer.orders.count', 'OrderLine.count'] do
+    assert_difference [
+      'customer.orders.count', 'OrderLine.count', 'OrderFile.count'
+    ] do
       post :create, order: {
         scheduled_at: I18n.l(10.days.from_now, format: :minimal),
         order_lines_attributes: {
@@ -79,6 +85,13 @@ class OrdersControllerTest < ActionController::TestCase
             copies: '2',
             two_sided: '0',
             document_id: documents(:math_book).id.to_s
+          }
+        },
+        order_files_attributes: {
+          new_1: {
+            file_cache: order_file.file_cache,
+            copies: 2,
+            two_sided: false
           }
         }
       }
@@ -146,5 +159,21 @@ class OrdersControllerTest < ActionController::TestCase
     
     assert_redirected_to order_url(assigns(:order), type: 'all')
     assert @order.reload.cancelled?
+  end
+
+  test 'should upload file' do
+    CustomerSession.create(customers(:student_without_bonus))
+
+    file = ActionDispatch::Http::UploadedFile.new({
+      filename: 'test.pdf',
+      content_type: 'application/pdf',
+      tempfile: File.new(File.join(Rails.root, 'test', 'fixtures', 'files', 'test.pdf'))
+    })
+
+    post :upload_file, order_file: { file: file }
+
+    assert_response :success
+    assert_select '#unexpected_error', false
+    assert_template 'orders/_order_file'
   end
 end
