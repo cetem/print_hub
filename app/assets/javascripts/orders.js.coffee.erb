@@ -80,9 +80,6 @@ jQuery ($)->
       event.preventDefault()
       event.stopPropagation()
 
-    #$(document).on 'ajax:success', (data, status, xhr)->
-    #  $('#check_order').replaceWith(data)
-
     # Subir un archivo para agregarlo a la orden
     $('input:file').fileupload
       add: (e, data) ->
@@ -116,4 +113,6 @@ jQuery ($)->
     $(window).bind 'beforeunload', ->
       Messages.fileUploadWarning if State.fileUploaded &&
         !$('input:submit').attr('disabled')
-
+    
+    $('#clear_catalog_order_link').on 'click', () ->
+      State.fileUploaded = false

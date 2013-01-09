@@ -154,6 +154,13 @@ class OrdersController < ApplicationController
     end
   end
 
+  # DELETE /orders/clear_catalog_order
+  def clear_catalog_order
+    if session[:documents_to_order].try(:clear)
+      redirect_to orders_path, notice: t('view.orders.catalog_order_cleared')
+    end
+  end
+
   private
   
   def load_scope

@@ -1,5 +1,10 @@
 <div id="check_order">
   <%= content_for :form_actions do %>
+    <% if @order.order_lines.any? %>
+      <%= link_to t('view.orders.clear_catalog_order'), 
+        orders_clear_catalog_order_path, method: :delete, 
+        id: 'clear_catalog_order_link' %> | 
+    <% end %>
     <%= link_to t('label.back'), catalog_path %>
   <% end %>
   <%= render 'form' %>

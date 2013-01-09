@@ -176,4 +176,16 @@ class OrdersControllerTest < ActionController::TestCase
     assert_select '#unexpected_error', false
     assert_template 'orders/_order_file'
   end
+
+  test 'should clean catalog order' do
+    CustomerSession.create(customers(:student))
+    assert session[:documents_to_order].blank?
+
+    session[:documents_to_order] = @order.order_lines.map(&:document_id)
+    assert session[:documents_to_order].size > 0
+
+    delete :clear_catalog_order
+    assert_redirected_to orders_url
+    assert session[:documents_to_order].blank?
+  end
 end

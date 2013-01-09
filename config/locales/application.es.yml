@@ -436,6 +436,8 @@
           html: 'Pedidos para <strong>imprimir</strong>'
         all:
           html: 'Pedidos'
+      catalog_order_cleared: 'Listo, la orden ya no contiene archivos'
+      clear_catalog_order: 'Vaciar pedido'
     password_resets:
       new_title: 'Restaurar contraseña'
       edit_title: 'Modificar contraseña'

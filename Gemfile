@@ -31,7 +31,6 @@ gem 'jquery-fileupload-rails'
 group :assets do
   gem 'sass-rails'
   gem 'coffee-rails'
-  gem 'therubyracer'
   gem 'uglifier'
 end
 
