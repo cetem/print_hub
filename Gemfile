@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-gem 'rails', '3.2.9'
+gem 'rails', '3.2.11'
 
 gem 'pg'
 gem 'authlogic'
@@ -31,9 +31,7 @@ gem 'jquery-fileupload-rails'
 group :assets do
   gem 'sass-rails'
   gem 'coffee-rails'
-  gem 'libv8'
-  gem 'therubyracer', require: false
-  gem 'libv8' # For rubyracer
+  gem 'therubyracer'
   gem 'uglifier'
 end
 

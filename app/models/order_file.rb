@@ -13,7 +13,7 @@ class OrderFile < ActiveRecord::Base
     numericality: { only_integer: true, greater_than: 0, less_than: 2147483648 }
   validates :price_per_copy, numericality: {greater_than_or_equal_to: 0},
     allow_nil: true, allow_blank: true
-  validate :file_presence
+  validate :file_presence, on: :create
 
   belongs_to :order
   has_many :print_jobs

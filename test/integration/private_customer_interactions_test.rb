@@ -68,7 +68,7 @@ class PrivateCustomerInteractionsTest < ActionDispatch::IntegrationTest
     assert_page_has_no_errors!
     assert page.has_css?('#check_order')
     
-    within 'form' do
+    within '#check_order' do
       copies = first(:css, 'input[name$="[copies]"]').value.to_i || 0
       pages = first(:css, 'input[name$="[pages]"]').value.to_i || 0
       price_per_copy = first(

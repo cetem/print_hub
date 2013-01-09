@@ -53,6 +53,8 @@ window.Order =
 jQuery ($)->
   if $('#ph_orders').length > 0
     $(document).on 'ajax:success', 'a.details-link', (event, data)->
+      console.log(event)
+      console.log(data)
       Helper.show(
         $(this).parents('.order_line').find('.dynamic_details').hide().html(data)
       )
@@ -78,8 +80,8 @@ jQuery ($)->
       event.preventDefault()
       event.stopPropagation()
 
-    $(document).on 'ajax:success', (data, status, xhr)->
-      $('#check_order').replaceWith(data)
+    #$(document).on 'ajax:success', (data, status, xhr)->
+    #  $('#check_order').replaceWith(data)
 
     # Subir un archivo para agregarlo a la orden
     $('input:file').fileupload
