@@ -37,6 +37,7 @@ class PrivateCustomerInteractionsTest < ActionDispatch::IntegrationTest
       first(:css, 'a.add_to_order').click
       assert page.has_css?('a.remove_from_order')
     end
+
     
     within '.nav-collapse' do
       click_link I18n.t('view.catalog.new_order')
@@ -46,7 +47,16 @@ class PrivateCustomerInteractionsTest < ActionDispatch::IntegrationTest
     assert_page_has_no_errors!
     assert page.has_css?('#check_order')
 
-    assert_difference 'Order.count' do
+    within 'div.file' do
+      attach_file(
+        'order_file_file', 
+        File.join(Rails.root, 'test', 'fixtures', 'files', 'test.pdf')
+      )
+    end
+
+    assert page.has_css?('.order_line', count: 2)
+
+    assert_difference ['Order.count', 'OrderFile.count', 'OrderLine.count'] do
       click_button I18n.t(
         'helpers.submit.create', model: Order.model_name.human
       )
