@@ -192,6 +192,7 @@ ActiveRecord::Schema.define(:version => 20121220025450) do
     t.integer  "pages",                                                           :null => false
     t.integer  "printed_pages",                                                   :null => false
     t.integer  "printed_copies",                                                  :null => false
+    t.integer  "order_file_id"
   end
 
   add_index "print_jobs", ["document_id"], :name => "index_print_jobs_on_document_id"

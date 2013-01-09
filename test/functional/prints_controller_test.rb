@@ -120,12 +120,13 @@ class PrintsControllerTest < ActionController::TestCase
     UserSession.create(users(:operator))
     
     order = Order.find(orders(:for_tomorrow).id)
+    order_nested_models = order.order_lines.to_a + order.order_files.to_a
     
     get :new, order_id: order.id, status: 'all'
     assert_response :success
     assert_not_nil assigns(:print)
     assert_select '#unexpected_error', false
-    assert_select '.print_job', order.order_lines.count
+    assert_select '.print_job', order_nested_models.count
     assert_template 'prints/new'
   end
   

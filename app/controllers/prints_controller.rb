@@ -42,7 +42,7 @@ class PrintsController < ApplicationController
     unless params[:clear_documents_for_printing].blank?
       session[:documents_for_printing].try(:clear)
     end
-    
+
     @print = current_user.prints.build(
       order_id: params[:order_id],
       include_documents: session[:documents_for_printing]

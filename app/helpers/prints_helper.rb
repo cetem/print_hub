@@ -134,4 +134,18 @@ module PrintsHelper
 
     raw output.join(' | ')
   end
+
+  def show_document_name_in_print_job(print_job)
+
+    if print_job.document_id
+      print_job.document
+    elsif print_job.order_file_id
+      order_file = print_job.order_file
+      link_to(
+        order_file.file_name, download_file_order_path(
+          order_file.order, order_file_id: order_file.id
+        )
+      )
+    end
+  end
 end

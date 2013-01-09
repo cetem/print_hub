@@ -55,6 +55,24 @@ class PrintJobTest < ActiveSupport::TestCase
   end
 
   # Prueba la creación de un trabajo de impresión
+  test 'create with file' do
+    assert_difference 'PrintJob.count' do
+      @print_job = PrintJob.create({
+        copies: 2,
+        pages: 1,
+        price_per_copy: 0.10,
+        range: nil,
+        two_sided: false,
+        order_file_id: order_files(:for_tomorrow_cv_file).id
+      }.slice(*PrintJob.accessible_attributes.map(&:to_sym)))
+    end
+
+    assert @print_job.reload.two_sided == false
+    assert_equal 2, @print_job.printed_pages
+    assert_equal '%.2f' % @print_job.price_per_one_sided_copy,
+      '%.2f' % @print_job.price_per_copy
+  end
+  # Prueba la creación de un trabajo de impresión
   test 'create without document' do
     assert_difference 'PrintJob.count' do
       @print_job = PrintJob.create({

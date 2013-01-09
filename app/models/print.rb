@@ -86,18 +86,23 @@ class Print < ApplicationModel
     
     self.pay_later! if self.pay_later == '1' || self.pay_later == true
     self.status ||= STATUS[:pending_payment]
-    
+
     if self.order && self.print_jobs.empty?
       self.customer = self.order.customer
-      keys = ['document_id', 'copies', 'range', 'two_sided']
+      doc_keys = ['document_id', 'copies', 'range', 'two_sided']
+      file_keys = ['id', 'copies', 'range', 'two_sided']
       
-      self.order.order_lines.each do |order_line|
-        self.print_jobs.build(order_line.attributes.slice(*keys))
+      self.order.order_files.compact.each do |order_file|
+        self.print_jobs.build(order_file.attributes.slice(*file_keys))
       end
-    elsif self.include_documents.present?
+
+      self.order.order_lines.each do |order_line|
+        self.print_jobs.build(order_line.attributes.slice(*doc_keys))
+      end
+    elsif self.include_documents.present? 
       self.include_documents.each do |document_id|
         self.print_jobs.build(document_id: document_id)
-      end
+      end if self.include_documents
     end
     
     self.print_jobs.each do |pj|
@@ -195,10 +200,15 @@ class Print < ApplicationModel
   end
   
   def reject_print_job_attributes?(attributes)
-    has_document = !attributes['document_id'].blank? ||
-      !attributes['document'].blank?
+    has_no_document = attributes['document_id'].blank? &&
+      attributes['document'].blank?
+
+    has_no_order_file = attributes['order_file_id'].blank? &&
+      attributes['order_file'].blank?
     
-    !has_document && attributes['pages'].blank?
+    has_nothing_to_print = has_no_document && has_no_order_file
+    
+    has_nothing_to_print && attributes['pages'].blank?
   end
   
   def must_have_one_item
