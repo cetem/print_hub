@@ -1,1 +1,2 @@
-$('#order_files').html('<%= j render(partial: 'orders/order_file') %>');
+$('#order_files').append('<%= j render('orders/order_file') %>');
+$('#order_files .order_file:last').addClass('hide').show('slow');

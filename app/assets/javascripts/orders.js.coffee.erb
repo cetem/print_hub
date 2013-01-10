@@ -82,6 +82,7 @@ jQuery ($)->
 
     # Subir un archivo para agregarlo a la orden
     $('input:file').fileupload
+      dataType: 'script'
       add: (e, data) ->
         type = /(pdf)$/i
         file = data.files[0]
@@ -100,9 +101,6 @@ jQuery ($)->
         $('.progress .bar').css('width', progress + '%')
 
       done: (e, data) ->
-        orderFile = $(data.result).addClass('hide')
-        $('#order_files').append(orderFile)
-        orderFile.toggle('slow')
         $('.progress.hide').toggle('slow')
         $('#upload-file .file').toggle('slow')
         $('input:submit').attr('disabled', false)
