@@ -84,23 +84,6 @@ class UsersController < ApplicationController
     redirect_to edit_user_url(@user)
   end
   
-  # GET /users/1/avatar/thumb
-  def avatar
-    @user = User.find(params[:id])
-    file = @user.avatar.path(params[:style].try(:to_sym))
-
-    if File.exists?(file)
-      mime_type = Mime::Type.lookup_by_extension(File.extname(file)[1..-1])
-      
-      response.headers['Last-Modified'] = File.mtime(file).httpdate
-      response.headers['Cache-Control'] = 'private, no-store'
-
-      send_file file, type: (mime_type || 'application/octet-stream')
-    else
-      redirect_to users_url, notice: t('view.users.non_existent_avatar')
-    end
-  end
-  
   # GET /users/autocomplete_for_user_name
   def autocomplete_for_user_name
     query = params[:q].sanitized_for_text_query

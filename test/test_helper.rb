@@ -21,11 +21,12 @@ class ActiveSupport::TestCase
 
   def prepare_document_files
     Document.all.each do |document|
-      unless File.exists?(document.file.path)
-        FileUtils.mkdir_p File.dirname(document.file.path)
+      file = document.file.path
+      unless File.exists?(file)
+        FileUtils.mkdir_p File.dirname(file)
         FileUtils.ln_s(
           File.join(Rails.root, 'test', 'fixtures', 'files', 'test.pdf'),
-          document.file.path
+          file
         )
       end
     end
@@ -33,11 +34,12 @@ class ActiveSupport::TestCase
   
   def prepare_avatar_files
     User.all.each do |user|
-      unless File.exists?(user.avatar.path)
-        FileUtils.mkdir_p File.dirname(user.avatar.path)
+      file = user.avatar.path
+      unless File.exists?(file)
+        FileUtils.mkdir_p File.dirname(file)
         FileUtils.ln_s(
           File.join(Rails.root, 'test', 'fixtures', 'files', 'test.gif'),
-          user.avatar.path
+          file
         )
       end
     end

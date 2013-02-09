@@ -50,7 +50,7 @@ math_print_with_credit:
   customer: student
   status: <%= Print::STATUS[:paid] %>
   revoked: false
-  created_at: <%= 48.seconds.ago.to_s(:db) %>
+  created_at: <%= 4.hours.ago.to_s(:db) %>
   
 math_print_to_pay_later_1:
   printer: <%= Cups.show_destinations.detect { |p| p =~ /pdf/i } %>
@@ -58,7 +58,7 @@ math_print_to_pay_later_1:
   customer: student
   status: <%= Print::STATUS[:pay_later] %>
   revoked: false
-  created_at: <%= 47.seconds.ago.to_s(:db) %>
+  created_at: <%= 4.hours.ago.to_s(:db) %>
 
 math_print_to_pay_later_2:
   printer: <%= Cups.show_destinations.detect { |p| p =~ /pdf/i } %>

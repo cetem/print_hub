@@ -47,9 +47,7 @@
         <% @order.order_files.each do |order_file| %>
           <tr>
             <td><%= link_to(
-              order_file.file_name, download_file_order_path(
-                @order, order_file_id: order_file.id
-              )
+              order_file.file_name, order_file.file.url
             ) %></td>
             <td><%= order_file.copies %></td>
             <td class="hidden-phone"><%= order_file.try(:pages) %></td>

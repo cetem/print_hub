@@ -166,4 +166,8 @@ class ApplicationController < ActionController::Base
   def set_js_format_in_iframe_request
     request.format = :js if params['X-Requested-With'] == 'IFrame'
   end
+
+  def check_logged_in
+    redirect_to root_url if current_user.blank? && current_customer.blank?
+  end
 end

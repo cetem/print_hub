@@ -30,7 +30,7 @@
     <div class="span4">
       <div id="document_mini_thumbs" class="carousel" data-interval="false">
         <div class="carousel-inner">
-          <%= catalog_document_thumbs(@document) %>
+          <%= show_document_thumbs(@document) %>
         </div>
 
         <a class="carousel-control left" href="#document_mini_thumbs" data-slide="prev">&lsaquo;</a>
@@ -61,7 +61,7 @@
   <div class="modal-body">
     <div id="document_thumbs" class="carousel" data-interval="false">
       <div class="carousel-inner">
-        <%= catalog_document_thumbs(@document, :regular) %>
+        <%= show_document_thumbs(@document, :regular) %>
       </div>
 
       <a class="carousel-control left" href="#document_thumbs" data-slide="prev">&lsaquo;</a>

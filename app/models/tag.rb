@@ -15,7 +15,7 @@ class Tag < ApplicationModel
 
   # Callbacks
   before_save :update_related_documents
-  after_save :update_children_count, on: :create
+  after_create :update_children_count
   before_destroy :remove_from_related_documents, :update_children_count
   
   # Atributos "permitidos"

@@ -133,27 +133,6 @@ class OrdersController < ApplicationController
     end
   end
 
-  # GET /orders/1/download_file
-  def download_file
-    order_file_id = params[:order_file_id].to_i
-    order_files = Order.find(params[:id]).order_files
-
-    if order_files.map(&:id).include? order_file_id
-      file = order_files.find(order_file_id).file.url
-    end
-      
-    if File.exists?(file)
-      mime_type = Mime::Type.lookup_by_extension(File.extname(file)[1..-1])
-      
-      response.headers['Last-Modified'] = File.mtime(file).httpdate
-      response.headers['Cache-Control'] = 'private, no-store'
-
-      send_file file, type: (mime_type || 'application/octet-stream')
-    else
-      redirect_to :back, notice: 'No se encontro el archivo asociado'
-    end
-  end
-
   # DELETE /orders/clear_catalog_order
   def clear_catalog_order
     if session[:documents_to_order].try(:clear)

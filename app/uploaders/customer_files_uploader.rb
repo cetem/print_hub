@@ -5,7 +5,7 @@ class CustomerFilesUploader < CarrierWave::Uploader::Base
 
   def store_dir
     model_id = ('%08d' % model.id)
-    File.join(Rails.root, 'private', 'customers_files', model_id)
+    "private/customers_files/#{model_id}"
   end
 
   def extension_white_list

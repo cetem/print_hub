@@ -10,14 +10,14 @@ module UsersHelper
       collection: Cups.show_destinations.map { |d| [d, d] }, include_blank: true
   end
   
-  def show_avatar(user, options = nil)
-    options ||= {}
-    style = options[:style] || :medium
-    
-    if user.avatar? && File.exist?(user.avatar.path(style))
-      thumb_dimensions = Paperclip::Geometry.from_file user.avatar.path(style)
-      thumb_image_tag = image_tag user.avatar.url(style), alt: user.to_s,
-        size: thumb_dimensions.to_s
+  def show_avatar(user, options = {})
+    options[:style] ||= :medium
+    file = user.avatar.send(options[:style])
+
+    if user.avatar.file && File.exist?(file.path)
+      thumb_dimensions = user.image_geometry(:mini)
+      thumb_image_tag = image_tag file.url, 
+        alt: user.to_s, size: thumb_dimensions
       
       content_tag :div, thumb_image_tag
     elsif options[:show_default]

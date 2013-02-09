@@ -131,7 +131,7 @@ class PrintJob < ApplicationModel
     # Imprimir solamente si el archivo existe
     file_existence = (
       self.document.try(:file?) && File.exists?(self.document.file.path) ||
-      self.order_file.try(:file) && File.exists?(self.order_file.file.current_path)
+      self.order_file.try(:file) && File.exists?(self.order_file.file.path)
     )
     if file_existence
       # Solamente usar documentos en existencia si no se especifica un rango
@@ -143,7 +143,7 @@ class PrintJob < ApplicationModel
       
       if self.printed_copies > 0
         file_path = (
-          self.document ? self.document.file.path : self.order_file.file.current_path
+          self.document ? self.document.file.path : self.order_file.file.path
         )
 
         timestamp = Time.now.utc.strftime('%Y%m%d%H%M%S')

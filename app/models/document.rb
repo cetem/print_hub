@@ -1,9 +1,6 @@
 class Document < ApplicationModel
   has_paper_trail
-  has_attached_file :file,
-    path: ':rails_root/private/:attachment/:id_partition/:basename_:style.:extension',
-    url: '/documents/:id/:style/download',
-    styles: ->(attachment) { attachment.instance.choose_styles }
+  mount_uploader :file, DocumentsUploader, mount_on: :file_file_name
 
   # Constantes
   MEDIA_TYPES = { a4: 'A4', legal: 'na_legal_8.5x14in' }.freeze
@@ -13,8 +10,8 @@ class Document < ApplicationModel
   scope :with_tag, ->(tag_id) {
     includes(:tags).where("#{Tag.table_name}.id" => tag_id)
   }
-  scope :publicly_visible, where(private: false)
-  scope :disable, where(enable: false)
+  scope :publicly_visible, -> { where(private: false) }
+  scope :disable, -> { where(enable: false) }
   
   # Atributos "permitidos"
   attr_accessible :code, :name, :description, :media, :file, :tag_ids, :enable,
@@ -26,28 +23,30 @@ class Document < ApplicationModel
   alias_attribute :informal, :tag_path
 
   # Callbacks
-  before_save :update_tag_path, :update_privacy
-  after_save :update_tags_documents_count
+  before_save :update_tag_path, :update_privacy, :extract_page_count, 
+    :update_file_attributes
+  after_save :update_tags_documents_count, :recreate_versions
   before_destroy :can_be_destroyed?
   after_destroy :update_tags_documents_count
-  before_file_post_process :extract_page_count
 
   # Restricciones
-  validates :name, :code, :pages, :media, presence: true
+  validates :name, :code, :pages, :media, :file, presence: true
   validates :code, uniqueness: true, if: :enable, allow_nil: true,
     allow_blank: true
   validates :name, :media, length: { maximum: 255 }, allow_nil: true,
     allow_blank: true
-  validates :media, inclusion: {in: MEDIA_TYPES.values},
+  validates :media, inclusion: { in: MEDIA_TYPES.values },
     allow_nil: true, allow_blank: true
   validates :pages, :code, allow_nil: true, allow_blank: true,
     numericality: { only_integer: true, greater_than: 0, less_than: 2147483648 }
   validates :stock, allow_nil: true, allow_blank: true, numericality: {
     only_integer: true, greater_than_or_equal_to: 0, less_than: 2147483648
   }
-  validates_attachment_content_type :file, content_type: /pdf/i,
-    allow_nil: true, allow_blank: true
-  validates_attachment_presence :file
+  validates_each :file do |record, attr, value|
+    if record.identifier && File.extname(record.identifier).blank?
+      record.errors.add attr, :without_extension
+    end
+  end
 
   # Relaciones
   has_many :print_jobs
@@ -137,30 +136,10 @@ class Document < ApplicationModel
     remaining
   end
 
-  def choose_styles
-    thumb_opts = {processors: [:pdf_thumb], format: :png}
-    styles = {
-      pdf_thumb: thumb_opts.merge({resolution: 48, page: 1}),
-      pdf_mini_thumb: thumb_opts.merge({resolution: 24, page: 1})
-    }
-
-    styles.merge!(
-      pdf_thumb_2: thumb_opts.merge({resolution: 48, page: 2}),
-      pdf_mini_thumb_2: thumb_opts.merge({resolution: 24, page: 2})
-    ) if self.pages && self.pages > 1
-
-    styles.merge!(
-      pdf_thumb_3: thumb_opts.merge({resolution: 48, page: 3}),
-      pdf_mini_thumb_3: thumb_opts.merge({resolution: 24, page: 3})
-    ) if self.pages && self.pages > 2
-
-    styles
-  end
-
   def extract_page_count
-    PDF::Reader.new(self.file.queued_for_write[:original].path).tap do |pdf|
+    PDF::Reader.new(self.file.path).tap do |pdf|
       self.pages = pdf.page_count
-    end
+    end if file_file_name_changed?
 
   rescue PDF::Reader::MalformedPDFError
     false
@@ -182,6 +161,10 @@ class Document < ApplicationModel
       conditions.map { |c| "(#{c})" }.join(' OR '), parameters
     ).order(options[:order])
   end
+
+  def identifier
+    self.file.identifier || self.file_identifier
+  end
   
   private
   
@@ -189,5 +172,23 @@ class Document < ApplicationModel
     self.tags.reject do |t|
       t.id == new_tag.try(:id) || t.id == excluded_tag.try(:id)
     end | [new_tag]
+  end
+
+  def update_file_attributes
+    if file.present? && file_file_name_changed?
+      self.file_content_type = file.file.content_type
+      self.file_file_size = file.file.size
+      self.file_updated_at = Time.now
+    end
+  end
+
+  def recreate_versions
+    if file_file_name_changed?
+      begin
+        self.file.recreate_versions! unless @versions_ready
+      rescue => e
+        puts I18n.t('errors.recreate_versions_error')
+      end
+    end
   end
 end

@@ -123,40 +123,12 @@ class DocumentsController < ApplicationController
     end
   end
 
-  # GET /documents/1/pdf_thumb/download
-  def download
-    @document = Document.find(params[:id])
-    file = @document.file.path(params[:style].try(:to_sym))
-
-    if File.exists?(file)
-      mime_type = Mime::Type.lookup_by_extension(File.extname(file)[1..-1])
-      
-      response.headers['Last-Modified'] = File.mtime(file).httpdate
-      response.headers['Cache-Control'] = 'private, no-store'
-
-      send_file file, type: (mime_type || 'application/octet-stream')
-    else
-      redirect_to documents_url, notice: t('view.documents.non_existent')
-    end
-  end
-  
   # GET /document/1/barcode
   def barcode
     @document = Document.find_or_initialize_by_code(params[:id])
   end
   
-  # GET /document/1/download_barcode
-  def download_barcode
-    @document = Document.find_or_initialize_by_code(params[:id])
     
-    barcode = view_context.get_barcode_for @document
-    png_path = "#{TMP_BARCODE_IMAGES}/#{@document.code}.png"
-    
-    File.open(png_path, 'wb') { |f| f << barcode.to_png(xdim: 2, ydim: 2) }
-    
-    send_file png_path, type: 'image/png'
-  end
-  
   # POST /documents/1/add_to_next_print
   def add_to_next_print
     @document = Document.find(params[:id])

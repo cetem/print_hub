@@ -1,13 +1,7 @@
 class User < ApplicationModel
   has_paper_trail
-  has_attached_file :avatar,
-    path: ':rails_root/private/:attachment/:id_partition/:basename_:style.:extension',
-    url: '/users/:id/avatar/:style',
-    styles: {
-      mini: { geometry: '35x35>', format: :png },
-      thumb: { geometry: '75x75>', format: :png },
-      medium: { geometry: '200x200>', format: :png }
-    }
+  mount_uploader :avatar, AvatarUploader, mount_on: :avatar_file_name
+
   acts_as_authentic do |c|
     c.maintain_sessions = false
     c.crypto_provider = Authlogic::CryptoProviders::Sha512
@@ -33,8 +27,6 @@ class User < ApplicationModel
     numericality: { only_integer: true, greater_than: 0, less_than: 100 },
     allow_nil: true, allow_blank: true
   validates :language, inclusion: { in: LANGUAGES.map(&:to_s) },
-    allow_nil: true, allow_blank: true
-  validates_attachment_content_type :avatar, content_type: /^image\/.+$/i,
     allow_nil: true, allow_blank: true
 
   # Relaciones
@@ -101,5 +93,20 @@ class User < ApplicationModel
     unless shifts.pending_between(start, finish).all?(&:pay!)
       raise t('view.shifts.pay_error')
     end
+  end
+
+  def image_geometry(style_name = :original)
+    @_image_dimensions ||= {}
+    file = style_name == :original ? self.avatar : self.avatar.send(style_name)
+
+    if File.exists?(file.path)
+      ::Magick::Image::read(file.path).first.tap do |img|
+        @_image_dimensions[style_name] ||= [
+          [img.columns, img.rows].join('x')
+        ]
+      end 
+    end
+
+    @_image_dimensions[style_name] || {}
   end
 end

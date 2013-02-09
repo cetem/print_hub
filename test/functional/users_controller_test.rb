@@ -85,26 +85,7 @@ class UsersControllerTest < ActionController::TestCase
     assert_equal 'Updated name', @user.reload.name
   end
   
-  test 'should not download avatar' do
-    UserSession.create(users(:administrator))
-    FileUtils.rm @user.avatar.path if File.exists?(@user.avatar.path)
-
-    assert !File.exists?(@user.avatar.path)
-    get :avatar, id: @user.to_param, style: :original
-    assert_redirected_to action: :index
-    assert_equal I18n.t('view.users.non_existent_avatar'), flash.notice
-  end
-
-  test 'should download avatar' do
-    UserSession.create(users(:administrator))
-    get :avatar, id: @user.to_param, style: :original
-    assert_response :success
-    assert_equal(
-      File.open(@user.reload.avatar.path, encoding: 'ASCII-8BIT').read,
-      @response.body
-    )
-  end
-  
+    
   test 'should get autocomplete user list' do
     UserSession.create(@user)
     get :autocomplete_for_user_name, format: :json, q: 'admin'

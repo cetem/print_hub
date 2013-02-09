@@ -18,3 +18,5 @@ TMP_BARCODE_IMAGES = File.join(Rails.root, 'tmp', 'codes')
 TOKEN_VALIDITY = 1.day
 # Cantidad de horas maximas para un turno
 SHIFT_MAX_RANGE = 16.hours
+# Path privado /private/
+PRIVATE_PATH = Pathname.new("#{Rails.root}/private")

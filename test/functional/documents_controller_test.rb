@@ -138,26 +138,6 @@ class DocumentsControllerTest < ActionController::TestCase
     assert_redirected_to documents_path
   end
 
-  test 'should not download document' do
-    UserSession.create(users(:administrator))
-    FileUtils.rm @document.file.path if File.exists?(@document.file.path)
-
-    assert !File.exists?(@document.file.path)
-    get :download, id: @document.to_param, style: :original
-    assert_redirected_to action: :index
-    assert_equal I18n.t('view.documents.non_existent'), flash.notice
-  end
-
-  test 'should download document' do
-    UserSession.create(users(:administrator))
-    get :download, id: @document.to_param, style: :original
-    assert_response :success
-    assert_equal(
-      File.open(@document.reload.file.path, encoding: 'ASCII-8BIT').read,
-      @response.body
-    )
-  end
-  
   test 'should get barcode' do
     UserSession.create(users(:administrator))
     get :barcode, id: @document.code
@@ -176,24 +156,6 @@ class DocumentsControllerTest < ActionController::TestCase
     assert_select '#unexpected_error', false
     assert_select 'figcaption', '159321'
     assert_template 'documents/barcode'
-  end
-  
-  test 'should download barcode' do
-    UserSession.create(users(:administrator))
-    get :download_barcode, id: @document.code
-    assert_response :success
-    assert_not_nil assigns(:document)
-    assert_select '#unexpected_error', false
-    assert_equal 'image/png', @response.content_type
-  end
-  
-  test 'should download barcode of new document' do
-    UserSession.create(users(:administrator))
-    get :download_barcode, id: '159321'
-    assert_response :success
-    assert_not_nil assigns(:document)
-    assert_select '#unexpected_error', false
-    assert_equal 'image/png', @response.content_type
   end
   
   test 'should add document to next print' do

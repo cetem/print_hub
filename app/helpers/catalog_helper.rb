@@ -1,25 +1,4 @@
 module CatalogHelper
-  def catalog_document_thumbs(document, version = :mini)
-    styles = version == :mini ?
-      [:pdf_mini_thumb, :pdf_mini_thumb_2, :pdf_mini_thumb_3] :
-      [:pdf_thumb,      :pdf_thumb_2,      :pdf_thumb_3]
-
-    styles.each_with_index.map do |style, i|
-      if document.file.file? && File.exists?(document.file.path(style))
-        thumb_dimensions = Paperclip::Geometry.from_file document.file.path(style)
-        thumb_image_tag = image_tag(
-          download_catalog_path(document, style: style), alt: document.name,
-          size: thumb_dimensions.to_s
-        )
-        image_link = content_tag(
-          :a, thumb_image_tag, href: '#document_thumbs_modal',
-          data: { toggle: 'modal' }
-        )
-
-        content_tag :div, image_link, class: (i == 0 ? 'item active' : 'item')
-      end
-    end.compact.join("\n").html_safe
-  end
   
   def catalog_document_link_with_name(document)
     link_to(

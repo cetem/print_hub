@@ -96,6 +96,30 @@ class ApplicationControllerTest < ActionController::TestCase
     UserSession.create(users(:administrator))
     assert_not_equal false, @controller.send(:require_customer_or_user)
   end
+
+  test 'is logged in as user' do
+    assert @controller.send(:require_no_user)
+    assert @controller.send(:require_no_customer)
+    assert_not_nil @controller.send(:check_logged_in)
+    assert_redirected_to root_url
+
+    UserSession.create(users(:administrator))
+    assert_nil @controller.send(:check_logged_in)
+    assert_not_nil @controller.send(:current_user)
+    assert_not_equal false, @controller.send(:require_user)
+  end
+
+  test 'is logged in as customer' do
+    assert @controller.send(:require_no_user)
+    assert @controller.send(:require_no_customer)
+    assert_not_nil @controller.send(:check_logged_in)
+    assert_redirected_to root_url
+    
+    CustomerSession.create(customers(:student))
+    assert_nil @controller.send(:check_logged_in)
+    assert_not_nil @controller.send(:current_customer)
+    assert_not_equal false, @controller.send(:require_customer)
+  end
   
   test 'require customer or user with customer' do
     @request.host = "#{APP_CONFIG['subdomains']['customers']}.printhub.local"

@@ -48,9 +48,9 @@ class UserTest < ActiveSupport::TestCase
       )
       
       thumbs_dir = Pathname.new(@user.reload.avatar.path).dirname
-      # Original y 3 miñaturas
-      assert_equal 4, thumbs_dir.entries.reject(&:directory?).size
-      # Asegurar que las 3 miñaturas son imágenes y no están vacías
+      # Original y 2 miñaturas
+      assert_equal 3, thumbs_dir.entries.reject(&:directory?).size
+      # Asegurar que los archivos son imágenes y no esten vacíos
       assert_equal 3,
         thumbs_dir.entries.select { |f| f.extname == '.png' && !f.zero? }.size
     end

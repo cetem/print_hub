@@ -3,7 +3,6 @@ resources :users, except: [:destroy] do
   get :autocomplete_for_user_name, on: :collection
 
   member do
-    get :avatar, path: '/avatar/:style'
     put :pay_shifts_between
   end
 end

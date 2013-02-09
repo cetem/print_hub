@@ -14,6 +14,7 @@ PrintHubApp::Application.routes.draw do
     draw :customer, :customer
     draw :customer, :password_reset
     draw :customer, :order
+    draw :customer, :files
 
     root to: 'customer_sessions#new'
   end
@@ -32,6 +33,7 @@ PrintHubApp::Application.routes.draw do
     draw :user, :tag
     draw :user, :user_session
     draw :user, :user
+    draw :user, :files
 
     root to: 'user_sessions#new'
   end

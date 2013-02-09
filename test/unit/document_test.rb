@@ -51,9 +51,9 @@ class DocumentTest < ActiveSupport::TestCase
     assert_equal 1, @document.pages
 
     thumbs_dir = Pathname.new(@document.file.path).dirname
-    # PDF original y 2 miñaturas
+    # PDF original y 2 miniaturas
     assert_equal 3, thumbs_dir.entries.reject(&:directory?).size
-    # Asegurar que las 2 miñaturas son imágenes y no están vacías
+    # Asegurar que las 2 miniaturas son imágenes y no están vacías
     assert_equal 2,
       thumbs_dir.entries.select { |f| f.extname == '.png' && !f.zero? }.size
     
@@ -86,9 +86,9 @@ class DocumentTest < ActiveSupport::TestCase
     assert_equal 3, @document.pages
 
     thumbs_dir = Pathname.new(@document.file.path).dirname
-    # PDF original y 6 miñaturas
+    # PDF original y 6 miniaturas
     assert_equal 7, thumbs_dir.entries.reject(&:directory?).size
-    # Asegurar que las 6 miñaturas son imágenes y no están vacías
+    # Asegurar que las 6 miniaturas son imágenes y no están vacías
     assert_equal 6,
       thumbs_dir.entries.select { |f| f.extname == '.png' && !f.zero? }.size
     
@@ -122,7 +122,7 @@ class DocumentTest < ActiveSupport::TestCase
 
     assert_equal 3, @document.reload.pages
     thumbs_dir = Pathname.new(@document.file.path).dirname
-    # PDF original y 6 miñaturas
+    # PDF original y 6 miniaturas
     assert_equal 7, thumbs_dir.entries.reject(&:directory?).size
 
     file = Rack::Test::UploadedFile.new(
@@ -136,7 +136,7 @@ class DocumentTest < ActiveSupport::TestCase
     end
 
     assert_equal 1, @document.reload.pages
-    # PDF original y 2 miñaturas
+    # PDF original y 2 miniaturas
     assert_equal 3, thumbs_dir.entries.reject(&:directory?).size
   end
 
@@ -164,9 +164,9 @@ class DocumentTest < ActiveSupport::TestCase
     @document.name = '  '
     @document.media = '  '
     @document.pages = nil
-    @document.file = nil
+
     assert @document.invalid?
-    assert_equal 5, @document.errors.count
+    assert_equal 4, @document.errors.count
     assert_equal [error_message_from_model(@document, :code, :blank)],
       @document.errors[:code]
     assert_equal [error_message_from_model(@document, :name, :blank)],
@@ -175,6 +175,22 @@ class DocumentTest < ActiveSupport::TestCase
       @document.errors[:media]
     assert_equal [error_message_from_model(@document, :pages, :blank)],
       @document.errors[:pages]
+  end
+
+  test 'validate not blank file' do
+    @document = Document.new({
+        code: '00001234',
+        name: 'New name',
+        stock: 1,
+        pages: 5,
+        media: Document::MEDIA_TYPES.values.first,
+        description: 'New description',
+        enable: true,
+        tag_ids: [tags(:books).id, tags(:notes).id],
+      }.slice(*Document.accessible_attributes.map(&:to_sym)))
+
+    assert @document.invalid?
+    assert_equal 1, @document.errors.size
     assert_equal [error_message_from_model(@document, :file, :blank)],
       @document.errors[:file]
   end

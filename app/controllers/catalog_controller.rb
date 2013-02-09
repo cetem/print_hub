@@ -35,28 +35,6 @@ class CatalogController < ApplicationController
     end
   end
   
-  # GET /catalog/1/pdf_thumb/download
-  def download
-    @document = document_scope.find(params[:id])
-    style = params[:style].try(:to_sym)
-    styles = [
-      :pdf_thumb, :pdf_thumb_2, :pdf_thumb_3,
-      :pdf_mini_thumb, :pdf_mini_thumb_2, :pdf_mini_thumb_3
-    ]
-    file = @document.file.path(style)
-
-    if styles.include?(style) && File.exists?(file)
-      mime_type = Mime::Type.lookup_by_extension(File.extname(file)[1..-1])
-      
-      response.headers['Last-Modified'] = File.mtime(file).httpdate
-      response.headers['Cache-Control'] = 'private, no-store'
-
-      send_file file, type: (mime_type || 'application/octet-stream')
-    else
-      redirect_to catalog_url, notice: t('view.documents.non_existent')
-    end
-  end
-  
   # POST /catalog/1/add_to_order
   def add_to_order
     @document = document_scope.find(params[:id])

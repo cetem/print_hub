@@ -5,18 +5,17 @@ module DocumentsHelper
       [:pdf_thumb,      :pdf_thumb_2,      :pdf_thumb_3]
 
     styles.each_with_index.map do |style, i|
-      if document.file.file? && File.exists?(document.file.path(style))
-        thumb_dimensions = Paperclip::Geometry.from_file document.file.path(style)
+      file = document.file.send(style.to_sym)
+      if document.file && File.exists?(file.path)
         thumb_image_tag = image_tag(
-          document.file.url(style), alt: document.name,
-          size: thumb_dimensions.to_s
+          file.url, alt: document.name
         )
         image_link = content_tag(
-          :a, thumb_image_tag, href: '#document_thumbs_modal',
+          :a, thumb_image_tag.html_safe, href: '#document_thumbs_modal',
           data: { toggle: 'modal' }
         )
 
-        content_tag :div, image_link, class: (i == 0 ? 'item active' : 'item')
+        content_tag :div, image_link.html_safe, class: (i == 0 ? 'item active' : 'item')
       end
     end.compact.join("\n").html_safe
   end
@@ -46,7 +45,7 @@ module DocumentsHelper
   def document_link_to_barcode(code)
     out = []
     out << link_to(
-      t('label.download'), download_barcode_document_path(code),
+      t('label.download'), download_barcode_path(code),
       class: 'download_barcode'
     )
     out << link_to(
