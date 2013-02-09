@@ -372,7 +372,7 @@ class CustomerTest < ActiveSupport::TestCase
   test 'pay off debt' do
     assert_not_equal 0, @customer.reload.prints.pay_later.count
     
-    assert_difference 'Payment.count', @customer.prints.pay_later.reload.count do
+    assert_difference 'Payment.count', @customer.prints.pay_later.count do
       assert @customer.pay_off_debt
     end
     
@@ -384,8 +384,9 @@ class CustomerTest < ActiveSupport::TestCase
     month = @customer.months_to_pay.last
     date = Date.new(month.last, month.first, 1)
     
-    assert_difference '@customer.reload.months_to_pay.size', -1 do
-      assert @customer.pay_month_debt(date), @customer.errors.full_messages.join(', ')
+    assert_difference '@customer.months_to_pay.size', -1 do
+      assert @customer.pay_month_debt(date), 
+        @customer.errors.full_messages.join(', ')
     end
 
     current_date = [[Date.today.month, Date.today.year]]

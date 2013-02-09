@@ -71,20 +71,20 @@
     </div>
 
     <%= render 'printed_footer' %>
-    
-    <div class="form-actions">
-      <div class="pull-right"><%= yield :form_actions %></div>
-      <%= f.input :lock_version, as: :hidden %>
-      <%= hidden_field_tag :total_pages, @order.total_pages, id: 'total_pages',
-        data: {
-          'price-per-one-sided' => Setting.price_per_one_sided_copy,
-          'price-per-two-sided' => Setting.price_per_two_sided_copy
-        }
-      %>
-      <%= f.button :submit, class: 'btn-primary' %>
-    </div>
-  <% end %>
 </div>
+    
+  <div class="form-actions">
+    <div class="pull-right"><%= yield :form_actions %></div>
+    <%= f.input :lock_version, as: :hidden %>
+    <%= hidden_field_tag :total_pages, @order.total_pages, id: 'total_pages',
+      data: {
+        'price-per-one-sided' => Setting.price_per_one_sided_copy,
+        'price-per-two-sided' => Setting.price_per_two_sided_copy
+      }
+    %>
+    <%= f.button :submit, class: 'btn-primary' %>
+  </div>
+<% end %>
 
 <% content_for :js_extra do %>
   <%= raw "Messages.fileUploadWarning = '#{t('messages.file_upload_warning')}';" %>
