@@ -20,7 +20,7 @@ class FilesController < ApplicationController
         file, non_existent_path: users_url, 
         non_existent_notice: t('view.users.non_existent_avatar')
       )
-    elsif path.start_with?('customer_files')
+    elsif path.start_with?('customers_files')
       send_file_with_headers(
         file, non_existent_path: orders_url, 
         non_existent_notice: t('messages.customer_file_was_deleted')

@@ -1,4 +1,4 @@
-class CustomerFilesUploader < CarrierWave::Uploader::Base
+class CustomersFilesUploader < CarrierWave::Uploader::Base
 
   storage :file
   after :remove, :delete_empty_upstream_dirs

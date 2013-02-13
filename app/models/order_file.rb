@@ -1,6 +1,6 @@
 class OrderFile < ActiveRecord::Base
   has_paper_trail
-  mount_uploader :file, CustomerFilesUploader
+  mount_uploader :file, CustomersFilesUploader
 
   before_save :extract_page_count
   

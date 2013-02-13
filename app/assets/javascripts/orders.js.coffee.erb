@@ -107,10 +107,12 @@ jQuery ($)->
         Order.updateOrderTotalPages()
         State.fileUploaded = true
 
-    # No dejar la pagina sino las subidas se pierden
-    $(window).bind 'beforeunload', ->
-      Messages.fileUploadWarning if State.fileUploaded &&
-        !$('input:submit').attr('disabled')
-    
-    $('#clear_catalog_order_link').on 'click', () ->
+    $(document).on 'click', '.skip-file-warning', () ->
       State.fileUploaded = false
+      $(this).preventDefault()
+
+
+    # No dejar la pagina sino las subidas se pierden
+    $(window).bind 'beforeunload', () ->
+      Messages.fileUploadWarning if State.fileUploaded ||
+        $('input:submit').disabled
