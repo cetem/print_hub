@@ -7,6 +7,8 @@ class CustomerTest < ActiveSupport::TestCase
   # Función para inicializar las variables utilizadas en las pruebas
   def setup
     @customer = Customer.find customers(:student).id
+
+    prepare_document_files
   end
 
   # Prueba que se realicen las búsquedas como se espera
