@@ -45,8 +45,8 @@ class ShiftsTest < ActionDispatch::IntegrationTest
     assert_equal edit_shift_path(@shift), current_path
     assert page.has_css?('.alert', text: I18n.t('view.shifts.edit_stale'))
     
-    ['articles', 'bonuses', 'customers', 'documents',
-       'orders', 'payments', 'settings', 'tags', 'users'].each do |controller|
+    ['articles', 'bonuses', 'customers', 'documents', 'orders', 'payments', 
+      'print_job_types', 'tags', 'users'].each do |controller|
       
       host = Capybara.app_host.gsub('http://', '')
       visit url_for controller: controller, action: :index, host: host

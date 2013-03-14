@@ -7,6 +7,8 @@ class CustomerTest < ActiveSupport::TestCase
   # Función para inicializar las variables utilizadas en las pruebas
   def setup
     @customer = Customer.find customers(:student).id
+
+    prepare_document_files
   end
 
   # Prueba que se realicen las búsquedas como se espera
@@ -286,13 +288,12 @@ class CustomerTest < ActiveSupport::TestCase
     assert_equal '1000.0', @customer.free_credit_minus_pendings.to_s
     
     assert_difference '@customer.orders.count' do
-      prepare_settings
       @customer.orders.create(
         scheduled_at: 10.days.from_now,
         order_lines_attributes: {
           new_1: {
             copies: 1,
-            two_sided: false,
+            print_job_type_id: print_job_types((:a4)).id,
             document_id: documents(:math_book).id
           }
         }
@@ -345,28 +346,25 @@ class CustomerTest < ActiveSupport::TestCase
   
   test 'to pay amounts' do
     assert !@customer.print_jobs.pay_later.empty?
-    
-    one_sided_count = @customer.print_jobs.pay_later.one_sided.inject(0) do |t, pj|
-      t + pj.printed_pages
+
+    total_count = 0
+    total_price = 0
+
+    @customer.print_jobs.pay_later.group_by(&:print_job_type).each do |type, prints|
+      prints.each do |pr|
+        price = PriceChooser.choose(type: type.id, copies: pr.printed_pages)
+        total_count += pr.printed_pages
+        total_price += price * pr.printed_pages
+      end
     end
-    two_sided_count = @customer.print_jobs.pay_later.two_sided.inject(0) do |t, pj|
-      t + pj.printed_pages
-    end
-    total_count = one_sided_count + two_sided_count
-    one_sided_price = PriceChooser.choose(one_sided: true, copies: total_count)
-    two_sided_price = PriceChooser.choose(one_sided: false, copies: total_count)
     
-    assert one_sided_count > 0
-    assert two_sided_count > 0
+    assert total_count > 0
+    assert total_price > 0
     
     amounts = @customer.to_pay_amounts
     
-    assert_equal 5, amounts.size
-    assert_equal one_sided_count, amounts[:one_sided_count]
-    assert_equal two_sided_count, amounts[:two_sided_count]
-    assert_equal one_sided_price, amounts[:one_sided_price]
-    assert_equal two_sided_price, amounts[:two_sided_price]
     assert_equal total_count, amounts[:total_count]
+    assert_equal total_price, amounts[:total_price]
   end
   
   test 'pay off debt' do
@@ -490,7 +488,7 @@ class CustomerTest < ActiveSupport::TestCase
           order_lines_attributes: {
             new_1: {
               copies: 2,
-              two_sided: false,
+              print_job_type_id: print_job_types((:a4)).id,
               document_id: documents(:math_book).id
             }
           }

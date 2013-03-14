@@ -8,7 +8,6 @@ class PrintsControllerTest < ActionController::TestCase
     raise "Can't find a PDF printer to run tests with." unless @printer
 
     prepare_document_files
-    prepare_settings
   end
 
   test 'should get operator index' do
@@ -179,8 +178,8 @@ class PrintsControllerTest < ActionController::TestCase
               # No importa el precio, se establece desde la configuración
               price_per_copy: '12.0',
               range: '',
-              two_sided: '0',
               auto_document_name: 'Some name given in autocomplete',
+              print_job_type_id: print_job_types(:a4),
               document_id: document.id.to_s
             }.slice(*PrintJob.accessible_attributes.map(&:to_sym))
           },
@@ -230,8 +229,8 @@ class PrintsControllerTest < ActionController::TestCase
                 # No importa el precio, se establece desde la configuración
                 price_per_copy: '12.0',
                 range: '',
-                two_sided: '0',
                 auto_document_name: 'Some name given in autocomplete',
+                print_job_type_id: print_job_types(:a4).id,
                 document_id: document.id.to_s
               }.slice(*PrintJob.accessible_attributes.map(&:to_sym))
             },
@@ -276,8 +275,8 @@ class PrintsControllerTest < ActionController::TestCase
               # No importa el precio, se establece desde la configuración
               price_per_copy: '12.0',
               range: '',
-              two_sided: '0',
               auto_document_name: 'Some name given in autocomplete',
+              print_job_type_id: print_job_types(:a4).id,
               document_id: document.id.to_s
             }.slice(*PrintJob.accessible_attributes.map(&:to_sym))
           },
@@ -319,7 +318,7 @@ class PrintsControllerTest < ActionController::TestCase
             # No importa el precio, se establece desde la configuración
             price_per_copy: '12.0',
             range: '',
-            two_sided: '0'
+            print_job_type_id: print_job_types(:a4).id
           }.slice(*PrintJob.accessible_attributes.map(&:to_sym))
         },
         article_lines_attributes: {
@@ -350,7 +349,8 @@ class PrintsControllerTest < ActionController::TestCase
     counts_array = ['Print.count', 'PrintJob.count', 'Payment.count',
       'customer.prints.count', 'ArticleLine.count']
     customer = Customer.find customers(:student).id
-    Setting.price_per_one_sided_copy = '0.125'
+    print_job_type = PrintJobType.find(print_job_types(:a4))
+    assert print_job_type.update_attributes(price: '0.125')
 
     assert_difference counts_array do
       post :create, status: 'all', print: {
@@ -365,7 +365,7 @@ class PrintsControllerTest < ActionController::TestCase
             # No importa el precio, se establece desde la configuración
             price_per_copy: '12.0',
             range: '',
-            two_sided: '0'
+            print_job_type_id: print_job_type.id
           }.slice(*PrintJob.accessible_attributes.map(&:to_sym))
         },
         article_lines_attributes: {
@@ -433,6 +433,8 @@ class PrintsControllerTest < ActionController::TestCase
     UserSession.create(user)
 
     assert_not_equal customer.id, @print.customer_id
+    print_job_type_id = print_job_types(:a4).id
+
 
     assert_no_difference immutable_counts do
       assert_difference '@print.print_jobs.count' do
@@ -452,7 +454,7 @@ class PrintsControllerTest < ActionController::TestCase
               # No importa el precio, se establece desde la configuración
               price_per_copy: '12.0',
               range: '',
-              two_sided: '0'
+              print_job_type_id: print_job_type_id
             }.slice(*PrintJob.accessible_attributes.map(&:to_sym)),
             print_jobs(:math_job_2).id => {
               id: print_jobs(:math_job_2).id,
@@ -463,7 +465,7 @@ class PrintsControllerTest < ActionController::TestCase
               # No importa el precio, se establece desde la configuración
               price_per_copy: '0.2',
               range: '',
-              two_sided: '0'
+              print_job_type_id: print_job_type_id
             }.slice(*PrintJob.accessible_attributes.map(&:to_sym)),
             new_1: {
               auto_document_name: 'Some name given in autocomplete',
@@ -473,7 +475,7 @@ class PrintsControllerTest < ActionController::TestCase
               # No importa el precio, se establece desde la configuración
               price_per_copy: '0.3',
               range: '',
-              two_sided: '0'
+              print_job_type_id: print_job_type_id
             }.slice(*PrintJob.accessible_attributes.map(&:to_sym))
           },
           payments_attributes: {
@@ -525,8 +527,8 @@ class PrintsControllerTest < ActionController::TestCase
           new_1: {
             copies: '1',
             range: '',
-            two_sided: '0',
             document_id: document.id.to_s,
+            print_job_type_id: print_job_types(:a4).id,
             job_hold_until: 'indefinite'
           }.slice(*PrintJob.accessible_attributes.map(&:to_sym))
         },

@@ -9,7 +9,6 @@ class OrderLineTest < ActiveSupport::TestCase
     @order_line = OrderLine.find order_lines(:from_yesterday_math_notes).id
 
     prepare_document_files
-    prepare_settings
   end
 
   # Prueba que se realicen las búsquedas como se espera
@@ -19,8 +18,8 @@ class OrderLineTest < ActiveSupport::TestCase
       @order_line.copies
     assert_equal order_lines(:from_yesterday_math_notes).price_per_copy,
       @order_line.price_per_copy
-    assert_equal order_lines(:from_yesterday_math_notes).two_sided,
-      @order_line.two_sided
+    assert_equal order_lines(:from_yesterday_math_notes).print_job_type_id,
+      @order_line.print_job_type_id
     assert_equal order_lines(:from_yesterday_math_notes).document_id,
       @order_line.document_id
     assert_equal order_lines(:from_yesterday_math_notes).order_id,
@@ -33,14 +32,15 @@ class OrderLineTest < ActiveSupport::TestCase
       @order_line = OrderLine.create({
         copies: 2,
         price_per_copy: 1.10,
-        two_sided: false,
+        print_job_type_id: print_job_types(:color).id,
         document_id: documents(:math_book).id
       }.slice(*OrderLine.accessible_attributes.map(&:to_sym)))
     end
 
     # El precio por copia no se puede alterar
     price = PriceChooser.choose(
-      one_sided: true, copies: documents(:math_book).pages * 2
+      type: print_job_types(:color).id,
+      copies: documents(:math_book).pages * 2
     )
     assert_equal '%.2f' % price,
       '%.2f' % @order_line.reload.price_per_copy
@@ -120,26 +120,23 @@ class OrderLineTest < ActiveSupport::TestCase
   end
   
   test 'price' do
-    @order_line.copies = 1
-    @order_line.price_per_copy = 0.10
+    @order_line.copies = 35
     assert @order_line.valid?
-    assert_equal '35.00', '%.2f' % @order_line.price
+    assert_equal '42.00', '%.2f' % @order_line.price
 
     @order_line.copies = 1
-    @order_line.price_per_copy = 0.00
     assert @order_line.valid?
-    assert_equal '0.00', '%.2f' % @order_line.price
-
-    @order_line.copies = 2
-    @order_line.price_per_copy = 0.10
-    assert @order_line.valid?
-    assert_equal '70.00', '%.2f' % @order_line.price
+    assert_equal '1.20', '%.2f' % @order_line.price
 
     @order_line.copies = 1
-    @order_line.price_per_copy = 0.07
-    @order_line.two_sided = true
-    @order_line.document.pages = 11
+    @order_line.document.pages = 1
     assert @order_line.valid?
-    assert_equal '0.80', '%.2f' % @order_line.price # 0.70 + 0.10
+    assert_equal '0.10', '%.2f' % @order_line.price
+
+    @order_line.reload
+    @order_line.copies = 1
+    @order_line.print_job_type = print_job_types(:color)
+    assert @order_line.valid?
+    assert_equal '4.20', '%.2f' % @order_line.price # 12 * 0.35
   end
 end

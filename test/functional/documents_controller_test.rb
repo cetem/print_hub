@@ -68,7 +68,7 @@ class DocumentsControllerTest < ActionController::TestCase
           name: 'New Name',
           stock: '1',
           pages: '15',
-          media: Document::MEDIA_TYPES.values.first,
+          media: PrintJobType::MEDIA_TYPES.values.first,
           enable: '1',
           description: 'New description',
           auto_tag_name: 'Some name given in autocomplete',
@@ -109,7 +109,7 @@ class DocumentsControllerTest < ActionController::TestCase
       name: 'Updated name',
       stock: '1',
       pages: '15',
-      media: Document::MEDIA_TYPES.values.first,
+      media: PrintJobType::MEDIA_TYPES.values.first,
       enable: '1',
       description: 'Updated description',
       auto_tag_name: 'Some name given in autocomplete'

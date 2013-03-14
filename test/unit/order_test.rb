@@ -7,8 +7,6 @@ class OrderTest < ActiveSupport::TestCase
   # Función para inicializar las variables utilizadas en las pruebas
   def setup
     @order = Order.find orders(:for_tomorrow).id
-    
-    prepare_settings
   end
 
   # Prueba que se realicen las búsquedas como se espera
@@ -28,14 +26,14 @@ class OrderTest < ActiveSupport::TestCase
           order_lines_attributes: {
             new_1: {
               copies: 2,
-              two_sided: false,
+              print_job_type_id: print_job_types((:a4)).id,
               document_id: documents(:math_book).id
             }
           },
           order_files_attributes: {
             new_1: {
               copies: 1,
-              two_sided: false,
+              print_job_type_id: print_job_types((:a4)).id,
               file: pdf_test_file_processed_with_action_dispatch
             }
           }
@@ -56,14 +54,14 @@ class OrderTest < ActiveSupport::TestCase
           order_lines_attributes: {
             new_1: {
               copies: 2,
-              two_sided: false,
+              print_job_type_id: print_job_types((:a4)).id,
               document_id: documents(:math_book).id
             }
           },
           order_files_attributes: {
             new_1: {
               copies: 1,
-              two_sided: false,
+              print_job_type_id: print_job_types((:a4)).id,
               file: pdf_test_file_processed_with_action_dispatch
             }
           }
@@ -93,7 +91,7 @@ class OrderTest < ActiveSupport::TestCase
         order_lines_attributes: {
           new_1: {
             copies: 2,
-            two_sided: false,
+            print_job_type_id: print_job_types((:a4)).id,
             document_id: documents(:math_book).id
           }
         }
@@ -202,7 +200,7 @@ class OrderTest < ActiveSupport::TestCase
     end
     
     assert total_pages > 0
-    assert_equal total_pages, @order.total_pages
+    assert_equal total_pages, @order.total_pages_by_type(print_job_types(:a4))
   end
   
   test 'status methods' do

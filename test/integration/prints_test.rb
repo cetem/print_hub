@@ -181,7 +181,7 @@ class PrintsTest < ActionDispatch::IntegrationTest
     end
     
     article_price = first(:css, '#articles_container .money').text.gsub('$', '')
-    total_price = article_price.to_f + print_job_price.to_f
+    total_price = (article_price.to_f + print_job_price.to_f).round(3)
     
     assert_difference 'Print.count' do
       click_button I18n.t('view.prints.print_title')
