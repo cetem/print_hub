@@ -7,6 +7,7 @@ class ActionDispatch::Routing::Mapper
 end
 
 PrintHubApp::Application.routes.draw do
+
   constraints(CustomerSubdomain) do
     draw :customer, :catalog
     draw :customer, :feedback
@@ -26,7 +27,6 @@ PrintHubApp::Application.routes.draw do
     draw :user, :payment
     draw :user, :shift
     draw :user, :customer
-    draw :user, :setting
     draw :user, :order
     draw :user, :print
     draw :user, :document
@@ -34,6 +34,7 @@ PrintHubApp::Application.routes.draw do
     draw :user, :user_session
     draw :user, :user
     draw :user, :files
+    draw :user, :print_job_types
 
     root to: 'user_sessions#new'
   end

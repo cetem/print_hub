@@ -13,8 +13,12 @@ user = User.create!(
 
 # Configuración por defecto
 begin
-  Setting.price_per_one_sided_copy = '0.10'
-  Setting.price_per_two_sided_copy = '0.07'
+  PrintJobType.create!(
+    name: 'Common',
+    price: '0.10',
+    two_sided: true,
+    default: true
+  )
 rescue => ex
   p ex
 else

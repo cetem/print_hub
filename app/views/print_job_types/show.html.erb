@@ -1,0 +1,21 @@
+<div class="readonly-data">
+  <% by_default = @print_job_type.default ? 
+    PrintJobType.human_attribute_name('default') : '' %>
+
+  <h2><%= "#{@print_job_type}  #{by_default}" %></h2>
+
+  <p>
+    <b><%= PrintJobType.human_attribute_name 'price' %></b>:
+    <%= @print_job_type.price %>
+  </p>
+  <p>
+    <b><%= t(
+        "view.print_job_types.sided.#{@print_job_type.two_sided ? 'two' : 'one'}"
+    ) %></b>
+  </p>
+  
+</div>
+<div class="form-actions">
+  <%= link_to t('label.edit'), edit_print_job_type_path(@print_job_type) %> |
+  <%= link_to t('label.list'), print_job_types_path %>
+</div>

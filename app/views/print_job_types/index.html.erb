@@ -1,0 +1,34 @@
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th></th>
+      <th><%= PrintJobType.human_attribute_name 'name' %></th>
+      <th><%= PrintJobType.human_attribute_name 'price' %></th>
+      <th><%= PrintJobType.human_attribute_name 'two_sided' %></th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @print_job_types.each do |print_job_type| %>
+      <tr class="<%= 'success' if print_job_type.default %>">
+        <td><%= content_tag(
+          :span, '&#x2714;'.html_safe, class: 'iconic'
+        ) if print_job_type.default %></td>
+        <td><%= print_job_type.name %></td>
+        <td><%= print_job_type.price %></td>
+        <td><%= print_job_type.two_sided ? t('label.yes') : t('label.no') %></td>
+        <td><%= link_to_show print_job_type %></td>
+        <td><%= link_to_edit edit_print_job_type_path(print_job_type) %></td>
+        <td><%= link_to_destroy print_job_type %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<%= pagination_links(@print_job_type) %>
+
+<div class="form-actions">
+  <%= link_to t('label.new'), new_print_job_type_path, 
+    class: 'btn btn-primary' %>
+</div>

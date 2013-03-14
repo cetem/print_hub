@@ -1,0 +1,13 @@
+a4:
+  media: <%= PrintJobType::MEDIA_TYPES[:a4] %>
+  name: A4
+  price: 0.10
+  two_sided: true
+  default: true
+
+color:
+  media: <%= PrintJobType::MEDIA_TYPES[:legal] %>
+  name: Color
+  price: 0.35
+  two_sided: false
+  default: false
