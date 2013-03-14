@@ -16,12 +16,9 @@ class PriceChooser
   def self.choose(*args)
     options = args.extract_options!
     total_copies = options[:copies] || 0
+    price = PrintJobType.find(options[:type]).price
     
-    if options[:one_sided]
-      self.new(Setting.price_per_one_sided_copy, total_copies).price
-    else
-      self.new(Setting.price_per_two_sided_copy, total_copies).price
-    end
+    self.new(price, total_copies).price
   end
   
   def parse
@@ -37,9 +34,9 @@ class PriceChooser
   end
   
   def self.humanize
-    %w{price_per_one_sided_copy price_per_two_sided_copy}.map do |price_type|
-      price_chooser = self.new(Setting.send(price_type))
-      rules = price_chooser.parse.map do |cond, price|
+    PrintJobType.all.map do |print_job_type|
+      type_price = self.new(print_job_type.price)
+      rules = type_price.parse.map do |cond, price|
         if cond.match(/[><=]+\s*\.?\d+/)
           copies = cond.match(/\d+/)[0]
           rule_in_words = case cond.match(/[><=]+/)[0]
@@ -51,16 +48,19 @@ class PriceChooser
           end
 
           I18n.t(
-            "view.settings.conditions.#{rule_in_words}",
-            count: copies,
-            price: price_chooser.number_to_currency(price.to_f)
+            "view.print_job_types.conditions.#{rule_in_words}",
+            count: copies, type: print_job_type,
+            price: type_price.number_to_currency(price.to_f)
           )
         else
-          "*#{price_chooser.number_to_currency(price.to_f)}*"
+          "*#{type_price.number_to_currency(price.to_f)}*"
         end
       end
-      
-      [I18n.t("view.settings.names.#{price_type}"), rules]
+
+      [
+        I18n.t("view.print_job_types.price_per_copy", name: print_job_type),
+        rules
+      ]
     end
   end
 end

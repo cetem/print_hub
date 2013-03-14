@@ -23,36 +23,40 @@
       <h3><%= t 'view.orders.order_lines' %></h3>
       <br />
 
-      <div id="order_lines_headers" class="row-fluid">
-        <div class="span5">
-          <h4><%= OrderLine.human_attribute_name 'document_id' %></h4>
+      <div data-jobs-container
+        data-prices-list="<%= print_job_types_with_price_for_data %>"
+        data-pages-list="<%= print_job_types_for_data_pages %>">
+        <div id="order_lines_headers" class="row-fluid">
+          <div class="span4">
+            <h4><%= OrderLine.human_attribute_name 'document_id' %></h4>
+          </div>
+          <div class="span1">
+            <h4><%= OrderLine.human_attribute_name 'copies' %></h4>
+          </div>
+          <div class="span1">
+            <h4 class="hidden-phone"><%= Document.human_attribute_name 'pages' %></h4>
+          </div>
+          <div class="span2">
+            <h4 class="hidden-phone">
+              <%= OrderLine.human_attribute_name 'print_job_type_id' %>
+            </h4>
+          </div>
+          <div class="span2"></div>
         </div>
-        <div class="span1">
-          <h4><%= OrderLine.human_attribute_name 'copies' %></h4>
-        </div>
-        <div class="span1">
-          <h4 class="hidden-phone"><%= Document.human_attribute_name 'pages' %></h4>
-        </div>
-        <div class="span2">
-          <h4 class="hidden-phone"><%= OrderLine.human_attribute_name 'price_per_copy' %></h4>
-        </div>
-        <div class="span2">
-          <h4><%= OrderLine.human_attribute_name 'two_sided' %></h4>
-        </div>
-      </div>
 
-      <div id='order_files'>
-        <%= f.simple_fields_for :order_files do |of| %>
-          <% if of.object.file.present? || of.object.file_cache.present? %>
-            <%= render partial: 'order_file', locals: { order_file: of } %>
+        <div id='order_files'>
+          <%= f.simple_fields_for :order_files do |of| %>
+            <% if of.object.file.present? || of.object.file_cache.present? %>
+              <%= render partial: 'order_file', locals: { order_file: of } %>
+            <% end %>
           <% end %>
-        <% end %>
-      </div>
+        </div>
 
-      <div id="order_lines">
-        <%= f.simple_fields_for :order_lines do |ol| %>
-          <%= render 'order_line', f: ol, disabled: @order.persisted? %>
-        <% end %>
+        <div id="order_lines">
+          <%= f.simple_fields_for :order_lines do |ol| %>
+            <%= render 'order_line', f: ol, disabled: @order.persisted? %>
+          <% end %>
+        </div>
       </div>
 
       <%= render 'total', order: @order %>
@@ -76,12 +80,6 @@
   <div class="form-actions">
     <div class="pull-right"><%= yield :form_actions %></div>
     <%= f.input :lock_version, as: :hidden %>
-    <%= hidden_field_tag :total_pages, @order.total_pages, id: 'total_pages',
-      data: {
-        'price-per-one-sided' => Setting.price_per_one_sided_copy,
-        'price-per-two-sided' => Setting.price_per_two_sided_copy
-      }
-    %>
     <%= f.button :submit, class: 'btn-primary skip-file-warning' %>
   </div>
 <% end %>

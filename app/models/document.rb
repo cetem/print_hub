@@ -2,9 +2,6 @@ class Document < ApplicationModel
   has_paper_trail
   mount_uploader :file, DocumentsUploader, mount_on: :file_file_name
 
-  # Constantes
-  MEDIA_TYPES = { a4: 'A4', legal: 'na_legal_8.5x14in' }.freeze
-
   # Scopes
   default_scope where(enable: true)
   scope :with_tag, ->(tag_id) {
@@ -35,7 +32,7 @@ class Document < ApplicationModel
     allow_blank: true
   validates :name, :media, length: { maximum: 255 }, allow_nil: true,
     allow_blank: true
-  validates :media, inclusion: { in: MEDIA_TYPES.values },
+  validates :media, inclusion: { in: PrintJobType::MEDIA_TYPES.values },
     allow_nil: true, allow_blank: true
   validates :pages, :code, allow_nil: true, allow_blank: true,
     numericality: { only_integer: true, greater_than: 0, less_than: 2147483648 }

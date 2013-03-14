@@ -47,7 +47,7 @@
       payment: 'Pago'
       print: 'Impresión'
       print_job: 'Trabajo de impresión'
-      setting: 'Configuración'
+      print_job_type: 'Tipo de impresión'
       shift: 'Turno'
       tag: 'Etiqueta'
       user: 'Usuario'
@@ -128,12 +128,12 @@
         other: 'Líneas de pedido'
         copies: 'Copias'
         price_per_copy: 'Precio por página'
-        two_sided: 'Doble faz'
         document_id: 'Documento'
+        print_job_type_id: 'Tipo'
       order_line:
         copies: 'Copias'
         price_per_copy: 'Precio por página'
-        two_sided: 'Doble faz'
+        print_job_type_id: 'Tipo'
         document_id: 'Documento'
       payment:
         amount: 'Monto'
@@ -172,7 +172,7 @@
         pages: 'Páginas'
         price_per_copy: 'Precio por hoja'
         range: 'Rango'
-        two_sided: 'Doble faz'
+        print_job_type_id: 'Tipo'
         document_id: 'Documento'
       print_job:
         copies: 'Copias'
@@ -181,11 +181,13 @@
         price_per_copy: 'Precio por hoja'
         range: 'Rango'
         printed_copies: 'Copias impresas'
-        two_sided: 'Doble faz'
+        print_job_type_id: 'Tipo'
         document_id: 'Documento'
-      setting:
+      print_job_type:
         name: 'Nombre'
-        value: 'Valor'
+        price: 'Precio'
+        two_sided: 'Doble faz'
+        default: 'Por defecto'
       shift:
        start: 'Inicio'
        finish: 'Fin'
@@ -261,7 +263,7 @@
     orders: 'Pedidos'
     payments: 'Pagos'
     prints: 'Impresiones'
-    settings: 'Configuración'
+    print_job_types: 'Tipos de impresión'
     shifts: 'Turnos'
     stats: 'Estadísticas'
     tags: 'Etiquetas'
@@ -408,9 +410,6 @@
         link: 'Quitar de impresión'
         title: 'Elimina la marca del documento para que NO sea incluido en la próxima impresión'
       new_print: 'Crear impresión'
-      media_type:
-        a4: 'A4'
-        legal: 'Oficio'
     feedbacks:
       submit: 'Enviar comentario'
       positive_return: 'Nos alegra haberte ayudado. Gracias por la retroalimentación.'
@@ -476,6 +475,29 @@
       index_title: 'Listado de pagos'
       payment_details: 'Formas de pago:'
       total: 'Total'
+    print_job_types:
+      index_title: 'Listado de configuraciones'
+      show_title: 'Detalle de configuración'
+      edit_title: 'Modificar configuración'
+      correctly_updated: 'Configuración actualizada correctamente.'
+      stale_object_error: 'La configuración no pudo ser actualizada, intente nuevamente.'
+      price_per_copy: 'Precio por hoja %{name}'
+      price_per_side: 'Precio por carilla'
+      sided:
+        one: 'Simple faz'
+        two: 'Doble faz'
+        one_abbr: 'Simple'
+        two_abbr: 'Doble'
+      conditions:
+        greater_than: 'si la cantidad de copias %{type} es mayor que *%{count}* el precio es *%{price}*'
+        greater_than_or_equal_to: 'si la cantidad de copias %{type} es mayor que o igual a *%{count}* el precio es *%{price}*'
+        equal_to: 'si la cantidad de copias %{type} es igual a *%{count}* el precio es *%{price}*'
+        less_than: 'si la cantidad de copias %{type} es menor que *%{count}* el precio es *%{price}*'
+        less_than_or_equal_to: 'si la cantidad de copias %{type} es menor que o igual a *%{count}* el precio es *%{price}*'
+      media_type:
+        a3: 'A3'
+        a4: 'A4'
+        legal: 'Oficio'
     prints:
       index_title: 'Listado de impresiones'
       show_title: 'Detalle de impresión'
@@ -523,21 +545,6 @@
       customer_links:
         next: '*Próxima* impresión del cliente &raquo;'
         prev: '&laquo; Impresión *anterior* del cliente'
-    settings:
-      index_title: 'Listado de configuraciones'
-      show_title: 'Detalle de configuración'
-      edit_title: 'Modificar configuración'
-      correctly_updated: 'Configuración actualizada correctamente.'
-      stale_object_error: 'La configuración no pudo ser actualizada, intente nuevamente.'
-      names:
-        price_per_one_sided_copy: 'Precio por hoja simple faz'
-        price_per_two_sided_copy: 'Precio por hoja doble faz'
-      conditions:
-        greater_than: 'si la cantidad de copias es mayor que *%{count}* el precio es *%{price}*'
-        greater_than_or_equal_to: 'si la cantidad de copias es mayor que o igual a *%{count}* el precio es *%{price}*'
-        equal_to: 'si la cantidad de copias es igual a *%{count}* el precio es *%{price}*'
-        less_than: 'si la cantidad de copias es menor que *%{count}* el precio es *%{price}*'
-        less_than_or_equal_to: 'si la cantidad de copias es menor que o igual a *%{count}* el precio es *%{price}*'
     shifts:
       index_title: 'Listado de turnos'
       show_title: 'Detalle de turno'

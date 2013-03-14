@@ -1,9 +1,11 @@
 <% id = dynamic_object_id('print_job', f) %>
 <% hide = is_dynamic || f.object.marked_for_destruction? %>
-<div class="print_job" id="<%= id %>" data-price="<%= f.object.price %>" <%= raw 'style="display: none;"' if hide %>>
+<div class="print_job" id="<%= id %>" data-price="<%= f.object.price %>" 
+  data-price-per-copy="<%= f.object.price_per_copy %>"
+  <%= raw 'style="display: none;"' if hide %>>
   <div class="row-fluid">
     <div class="span5">
-      <% field_classes = ['autocomplete-field', 'span11'] %>
+      <% field_classes = ['autocomplete-field', 'span12'] %>
       <% field_classes << 'error' unless f.object.errors[:document_id].blank? %>
       <%= f.input :auto_document_name, label: false, input_html: {
         id: "auto-document-#{id}", class: field_classes.join(' '),
@@ -28,22 +30,20 @@
         autocomplete: 'off', disabled: disabled || !f.object.document.blank? } %>
     </div>
     <div class="span1">
-      <%= f.input :price_per_copy, label: false, 
-        input_html: { disabled: true, class: 'price-modifier span11', 
-        autocomplete: 'off' } %>
-    </div>
-    <div class="span1">
-      <%= f.input :range, label: false,
-        input_html: { class: 'price-modifier page-modifier span11',
+      <%= f.input :range, label: false, input_html: { 
+        class: 'price-modifier page-modifier span11',
         autocomplete: 'off',  'data-range-pages' => f.object.range_pages,
-        disabled: disabled || (f.object.persisted? && f.object.document.blank?)} %>
-    </div>
-    <div class="span1">
-      <%= f.input :two_sided, label: false,
-        input_html: { class: 'price-modifier span11', disabled: disabled } %>
+        disabled: disabled || (f.object.persisted? && f.object.document.blank?)
+      } %>
     </div>
     <div class="span2">
-      <span class="label money"><%= number_to_currency f.object.price %></span>
+      <%= print_job_types_select_combo(f) %>
+    </div>
+    <div class="span2">
+      <% title = show_price_per_copy_title(f.object.price_per_copy) %>
+      <span class="label money" title="<%= title %>">
+        <%= number_to_currency f.object.price %>
+      </span>
       <% unless disabled %>
         <%= link_to_remove_nested_item(f) %>
       <% end %>

@@ -12,7 +12,6 @@ class PrintTest < ActiveSupport::TestCase
     raise "Can't find a PDF printer to run tests with." unless @printer
 
     prepare_document_files
-    prepare_settings
   end
 
   # Prueba que se realicen las búsquedas como se espera
@@ -44,13 +43,13 @@ class PrintTest < ActiveSupport::TestCase
               price_per_copy: 1000,
               # No importan las páginas, se establecen desde el documento
               pages: 1,
-              two_sided: false,
+              print_job_type_id: print_job_types((:a4)).id,
               document_id: documents(:math_book).id
             }.slice(*PrintJob.accessible_attributes.map(&:to_sym)),
             '2' => {
               copies: 1,
               price_per_copy: 1000,
-              two_sided: true,
+              print_job_type_id: print_job_types(:a4).id,
               order_file_id: order_files(:from_yesterday_cv_file).id
             }.slice(*PrintJob.accessible_attributes.map(&:to_sym))
           },
@@ -135,7 +134,7 @@ class PrintTest < ActiveSupport::TestCase
               price_per_copy: 1000,
               # No importan las páginas, se establecen desde el documento
               pages: 1,
-              two_sided: false,
+              print_job_type_id: print_job_types((:a4)).id,
               document_id: documents(:math_book).id
             }.slice(*PrintJob.accessible_attributes.map(&:to_sym))
           },
@@ -175,7 +174,7 @@ class PrintTest < ActiveSupport::TestCase
               price_per_copy: 1000,
               # No importan las páginas, se establecen desde el documento
               pages: 1,
-              two_sided: false,
+              print_job_type_id: print_job_types((:a4)).id,
               document_id: documents(:math_book).id
             }.slice(*PrintJob.accessible_attributes.map(&:to_sym))
           },
@@ -219,13 +218,13 @@ class PrintTest < ActiveSupport::TestCase
                 price_per_copy: 1000,
                 # No importan las páginas, se establecen desde el documento
                 pages: 1,
-                two_sided: false,
+                print_job_type_id: print_job_types((:a4)).id,
                 document_id: document.id
               }.slice(*PrintJob.accessible_attributes.map(&:to_sym)),
               '2' => {
                 copies: 1,
                 price_per_copy: 1000,
-                two_sided: true,
+                print_job_type_id: print_job_types(:a4).id,
                 order_file_id: order_files(:from_yesterday_cv_file).id
               }.slice(*PrintJob.accessible_attributes.map(&:to_sym))
             },
@@ -269,13 +268,13 @@ class PrintTest < ActiveSupport::TestCase
             '1' => {
               copies: 1,
               price_per_copy: 0.10,
-              two_sided: false,
+              print_job_type_id: print_job_types((:a4)).id,
               document_id: documents(:math_book).id
             }.slice(*PrintJob.accessible_attributes.map(&:to_sym)),
             '2' => {
               copies: 10,
               price_per_copy: 0.10,
-              two_sided: true,
+              print_job_type_id: print_job_types(:a4).id,
               order_file_id: order_files(:from_yesterday_cv_file).id
             }.slice(*PrintJob.accessible_attributes.map(&:to_sym))
             # 360 páginas = $36.00
@@ -326,7 +325,7 @@ class PrintTest < ActiveSupport::TestCase
           '1' => {
             copies: 1,
             price_per_copy: 0.10,
-            two_sided: false,
+            print_job_type_id: print_job_types((:a4)).id,
             document_id: documents(:math_book).id
           }.slice(*PrintJob.accessible_attributes.map(&:to_sym))
           # 350 páginas = $35.00
@@ -359,13 +358,13 @@ class PrintTest < ActiveSupport::TestCase
               '1' => {
                 copies: 100,
                 price_per_copy: 0.10,
-                two_sided: false,
+                print_job_type_id: print_job_types((:a4)).id,
                 document_id: documents(:math_book).id
               }.slice(*PrintJob.accessible_attributes.map(&:to_sym)),
               '2' => {
                 copies: 1000,
                 price_per_copy: 0.10,
-                two_sided: true,
+                print_job_type_id: print_job_types(:a4).id,
                 order_file_id: order_files(:from_yesterday_cv_file).id
               }.slice(*PrintJob.accessible_attributes.map(&:to_sym))
               # 36000 páginas = $3600.00
@@ -420,8 +419,8 @@ class PrintTest < ActiveSupport::TestCase
           include_documents: [documents(:math_book).id],
           payments_attributes: {
             '1' => {
-              amount: 24.50,
-              paid: 24.50
+              amount: 35.0,
+              paid: 35.0
             }.slice(*Payment.accessible_attributes.map(&:to_sym))
           }
         }.slice(*Print.accessible_attributes.map(&:to_sym)))
@@ -433,8 +432,8 @@ class PrintTest < ActiveSupport::TestCase
     payment = @print.payments.first
 
     assert payment.cash?
-    assert_equal '24.5', payment.amount.to_s
-    assert_equal '24.5', payment.paid.to_s
+    assert_equal '35.0', payment.amount.to_s
+    assert_equal '35.0', payment.paid.to_s
     assert_equal false, @print.pending_payment?
     assert_equal documents(:math_book).id, @print.print_jobs.first.document_id
   end
@@ -445,7 +444,7 @@ class PrintTest < ActiveSupport::TestCase
     assert order.pending?
     
     assert_difference ['Print.count', 'Payment.count'] do
-      assert_difference 'PrintJob.count', 2 do
+      assert_difference 'PrintJob.count', 3 do
         assert_no_difference 'Cups.all_jobs(@printer).keys.sort.last' do
           @print = Print.create({
             printer: @printer,
@@ -455,8 +454,8 @@ class PrintTest < ActiveSupport::TestCase
             order_id: order.id,
             payments_attributes: {
               '1' => {
-                amount: '24.6',
-                paid: '24.6'
+                amount: '36.30',
+                paid: '36.30'
               }.slice(*Payment.accessible_attributes.map(&:to_sym))
             }
           }.slice(*Print.accessible_attributes.map(&:to_sym)))
@@ -469,8 +468,8 @@ class PrintTest < ActiveSupport::TestCase
     payment = @print.payments.first
 
     assert payment.cash?
-    assert_equal '24.6', payment.amount.to_s
-    assert_equal '24.6', payment.paid.to_s
+    assert_equal '36.3', payment.amount.to_s
+    assert_equal '36.3', payment.paid.to_s
     assert_equal false, @print.pending_payment?
     assert_equal order.order_lines.map(&:document_id).sort,
       @print.print_jobs.map(&:document_id).compact.sort
@@ -499,13 +498,13 @@ class PrintTest < ActiveSupport::TestCase
                 price_per_copy: 1000,
                 # No importan las páginas, se establecen desde el documento
                 pages: 1,
-                two_sided: false,
+                print_job_type_id: print_job_types((:a4)).id,
                 document_id: documents(:math_book).id
               }.slice(*PrintJob.accessible_attributes.map(&:to_sym)),
               '2' => {
                 copies: 1,
                 price_per_copy: 1000,
-                two_sided: true,
+                print_job_type_id: print_job_types(:a4).id,
                 order_file_id: order_files(:from_yesterday_cv_file).id
               }.slice(*PrintJob.accessible_attributes.map(&:to_sym))
             },
@@ -695,23 +694,15 @@ class PrintTest < ActiveSupport::TestCase
     )
   end
   
-  test 'pay with special price' do
+  test 'pay print' do
     print = prints(:math_print_to_pay_later_1)
     original_price = print.price
     
-    print.pay_with_special_price(one_sided_price: 0.02, two_sided_price: 0.01)
+    print.pay_print
     
     assert print.paid?
     assert_equal 1, print.payments.size
     assert print.payments.first.cash?
-    
-    new_price = print.price
-    calculated_price = print.print_jobs.inject(0.0) do |t, pj|
-      t + pj.printed_pages * (pj.two_sided ? 0.01 : 0.02)
-    end
-    
-    assert_equal '%.3f' % new_price, '%.3f' % calculated_price
-    assert_not_equal '%.3f' % original_price, '%.3f' % new_price
   end
 
   test 'price' do
@@ -729,7 +720,7 @@ class PrintTest < ActiveSupport::TestCase
     end
     
     assert total_pages > 0
-    assert_equal total_pages, @print.total_pages
+    assert_equal total_pages, @print.total_pages_by_type(print_job_types(:a4))
   end
 
   test 'print all jobs' do

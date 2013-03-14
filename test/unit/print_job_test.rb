@@ -13,7 +13,6 @@ class PrintJobTest < ActiveSupport::TestCase
     raise "Can't find a PDF printer to run tests with." unless @printer
 
     prepare_document_files
-    prepare_settings
   end
 
   # Prueba que se realicen las búsquedas como se espera
@@ -40,7 +39,7 @@ class PrintJobTest < ActiveSupport::TestCase
         pages: document.pages,
         price_per_copy: 0.10,
         range: nil,
-        two_sided: false,
+        print_job_type_id: print_job_types(:color).id,
         job_id: 1,
         print_id: prints(:math_print).id,
         document_id: document.id
@@ -50,7 +49,7 @@ class PrintJobTest < ActiveSupport::TestCase
     assert @print_job.reload.two_sided == false
     assert_equal document.pages * 2, @print_job.printed_pages
     # El precio por copia no se puede alterar
-    assert_equal '%.2f' % @print_job.price_per_one_sided_copy,
+    assert_equal '%.2f' % @print_job.print_job_type.price,
       '%.2f' % @print_job.price_per_copy
   end
 
@@ -62,14 +61,14 @@ class PrintJobTest < ActiveSupport::TestCase
         pages: 1,
         price_per_copy: 0.10,
         range: nil,
-        two_sided: false,
+        print_job_type_id: print_job_types(:color).id,
         order_file_id: order_files(:for_tomorrow_cv_file).id
       }.slice(*PrintJob.accessible_attributes.map(&:to_sym)))
     end
 
     assert @print_job.reload.two_sided == false
     assert_equal 2, @print_job.printed_pages
-    assert_equal '%.2f' % @print_job.price_per_one_sided_copy,
+    assert_equal '%.2f' % @print_job.print_job_type.price,
       '%.2f' % @print_job.price_per_copy
   end
   # Prueba la creación de un trabajo de impresión
@@ -80,7 +79,7 @@ class PrintJobTest < ActiveSupport::TestCase
         pages: 50,
         price_per_copy: 1111,
         range: nil,
-        two_sided: false,
+        print_job_type_id: print_job_types(:a4).id,
         job_id: 1,
         print_id: prints(:math_print).id
       }.slice(*PrintJob.accessible_attributes.map(&:to_sym)))
@@ -89,7 +88,7 @@ class PrintJobTest < ActiveSupport::TestCase
     assert_equal '5.0', @print_job.price.to_s
     assert_equal 50, @print_job.printed_pages
     # El precio por copia no se puede alterar
-    assert_equal '%.2f' % @print_job.price_per_one_sided_copy,
+    assert_equal '%.2f' % @print_job.print_job_type.price,
       '%.2f' % @print_job.price_per_copy
   end
 
@@ -274,13 +273,13 @@ class PrintJobTest < ActiveSupport::TestCase
 
   test 'options' do
     @print_job.range = '1'
-    @print_job.two_sided = true
+    @print_job.print_job_type_id = print_job_types(:a4).id
 
     assert_equal '1', @print_job.options['page-ranges']
     assert_equal 'two-sided-long-edge', @print_job.options['sides']
 
     @print_job.range = ''
-    @print_job.two_sided = false
+    @print_job.print_job_type_id = print_job_types(:color).id
 
     assert_nil @print_job.options['page-ranges']
     assert_equal 'one-sided', @print_job.options['sides']
@@ -336,33 +335,23 @@ class PrintJobTest < ActiveSupport::TestCase
 
   test 'price' do
     @print_job.copies = 1
-    @print_job.price_per_copy = 0.10
     @print_job.range = ''
     assert @print_job.valid?
     assert_equal 12, @print_job.range_pages
     assert_equal '1.20', '%.2f' % @print_job.price
 
-    @print_job.copies = 1
-    @print_job.price_per_copy = 0.00
-    @print_job.range = ''
-    assert @print_job.valid?
-    assert_equal 12, @print_job.range_pages
-    assert_equal '0.00', '%.2f' % @print_job.price
-
     @print_job.copies = 15
-    @print_job.price_per_copy = 0.10
     @print_job.range = '1'
     assert @print_job.valid?
     assert_equal 1, @print_job.range_pages
     assert_equal '1.50', '%.2f' % @print_job.price
 
     @print_job.copies = 1
-    @print_job.price_per_copy = 0.07
     @print_job.range = '1-11'
-    @print_job.two_sided = true
+    @print_job.print_job_type = print_job_types(:color)
     assert @print_job.valid?
     assert_equal 11, @print_job.range_pages
-    assert_equal '0.80', '%.2f' % @print_job.price # 0.70 + 0.10
+    assert_equal '3.85', '%.2f' % @print_job.price
   end
   
   test 'full document' do

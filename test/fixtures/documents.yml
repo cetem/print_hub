@@ -3,7 +3,7 @@ math_notes:
   name: Math
   stock: 0
   pages: 12
-  media: <%= Document::MEDIA_TYPES[:a4] %>
+  media: <%= PrintJobType::MEDIA_TYPES[:a4] %>
   description: Math Notes description
   enable: true
   private: false
@@ -15,7 +15,7 @@ math_book:
   name: Math Book
   stock: 0
   pages: 350
-  media: <%= Document::MEDIA_TYPES[:a4] %>
+  media: <%= PrintJobType::MEDIA_TYPES[:a4] %>
   description: Math Book description
   enable: true
   private: false
@@ -27,7 +27,7 @@ physics_notes:
   name: Physics
   stock: 0
   pages: 14
-  media: <%= Document::MEDIA_TYPES[:a4] %>
+  media: <%= PrintJobType::MEDIA_TYPES[:a4] %>
   description: Physics Notes description
   enable: true
   private: false
@@ -39,7 +39,7 @@ unused_book:
   name: Unused Book
   stock: 0
   pages: 10
-  media: <%= Document::MEDIA_TYPES[:a4] %>
+  media: <%= PrintJobType::MEDIA_TYPES[:a4] %>
   description: Unused Book description
   enable: true
   private: false
@@ -51,7 +51,7 @@ book_with_stock:
   name: Book with stock
   stock: 3
   pages: 10
-  media: <%= Document::MEDIA_TYPES[:a4] %>
+  media: <%= PrintJobType::MEDIA_TYPES[:a4] %>
   description: Book with stock description
   enable: true
   private: false
@@ -63,7 +63,7 @@ disabled_book:
   name: Disabled Book
   stock: 0
   pages: 8
-  media: <%= Document::MEDIA_TYPES[:a4] %>
+  media: <%= PrintJobType::MEDIA_TYPES[:a4] %>
   description: Disabled Book description
   enable: false
   private: false

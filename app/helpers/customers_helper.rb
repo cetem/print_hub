@@ -45,13 +45,6 @@ module CustomersHelper
     end
   end
   
-  def show_total_to_pay_amount(amounts)
-    one_sided_price = amounts[:one_sided_count] * amounts[:one_sided_price]
-    two_sided_price = amounts[:two_sided_count] * amounts[:two_sided_price]
-    
-    number_to_currency one_sided_price + two_sided_price
-  end
-  
   def show_button_to_pay_debt(customer)
     link_to(
       t('view.customers.to_pay_prints.pay_off_debt'),

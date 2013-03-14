@@ -21,7 +21,7 @@ module DocumentsHelper
   end
 
   def show_document_media_field(form)
-    media_types = Document::MEDIA_TYPES.values.map do |mt|
+    media_types = PrintJobType::MEDIA_TYPES.values.map do |mt|
       [show_document_media_text(mt), mt]
     end
 
@@ -29,7 +29,7 @@ module DocumentsHelper
   end
 
   def show_document_media_text(media)
-    t("view.documents.media_type.#{Document::MEDIA_TYPES.invert[media]}")
+    t("view.print_job_types.media_type.#{PrintJobType::MEDIA_TYPES.invert[media]}")
   end
   
   def show_document_barcode(document)

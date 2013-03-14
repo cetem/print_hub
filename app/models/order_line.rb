@@ -2,7 +2,8 @@ class OrderLine < ApplicationModel
   has_paper_trail
   
   # Atributos "permitidos"
-  attr_accessible :document_id, :copies, :two_sided, :order_id, :lock_version
+  attr_accessible :document_id, :copies, :order_id, :lock_version,
+    :print_job_type_id
   
   # Restricciones
   validates :copies, :price_per_copy, presence: true
@@ -14,31 +15,28 @@ class OrderLine < ApplicationModel
   # Relaciones
   belongs_to :document
   belongs_to :order
+  belongs_to :print_job_type
   
   def initialize(attributes = nil, options = {})
     super(attributes, options)
 
-    self.two_sided = true if self.two_sided.nil?
+    self.print_job_type ||= PrintJobType.default
     self.copies ||= 1
-    self.price_per_copy ||= PriceChooser.choose(
-      one_sided: !self.two_sided,
-      copies: self.copies * (self.document.try(:pages) || 0)
-    )
+    self.price_per_copy ||= job_price_per_copy
   end
   
   def price
-    pages = self.document.try(:pages) || 0
-    even_range = pages - (pages % 2)
-    rest = (pages % 2) * self.price_per_one_sided_copy
-
-    (self.copies || 0) * ((self.price_per_copy || 0) * even_range + rest)
-  end
-  
-  def price_per_one_sided_copy
-    PriceChooser.choose(one_sided: true, copies: self.order.try(:total_pages))
+    total_pages * job_price_per_copy
   end
 
-  def price_per_two_sided_copy
-    PriceChooser.choose(one_sided: false, copies: self.order.try(:total_pages))
+  def total_pages
+    (self.document.try(:pages) || 0) * (self.copies || 0)
+  end
+
+  def job_price_per_copy
+    PriceChooser.choose(
+      type: self.print_job_type,
+      copies: self.order.try(:total_pages_by_type, self.print_job_type)
+    )
   end
 end

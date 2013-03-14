@@ -182,14 +182,10 @@ class Customer < ApplicationModel
 
   def to_pay_amounts_by_month(date)
     date = Date.parse(date) unless date.is_a? Date
-    amounts = {
-      one_sided_count: self.print_jobs.pay_later.created_at_month(date).
-        one_sided.sum(:printed_pages),
-      two_sided_count: self.print_jobs.pay_later.created_at_month(date).
-        two_sided.sum(:printed_pages)
-    }
 
-    put_prices_in_copies(amounts)
+    print_jobs_current_total_prices(     
+      self.print_jobs.pay_later.created_at_month(date)
+    )
   end
   
   def months_to_pay
@@ -199,38 +195,43 @@ class Customer < ApplicationModel
     end
   end
     
-  def put_prices_in_copies(amounts)
-    amounts[:total_count] = amounts[:one_sided_count] + amounts[:two_sided_count]
-    amounts[:one_sided_price] = PriceChooser.choose(
-      one_sided: true, copies: amounts[:total_count]
-    )
-    amounts[:two_sided_price] = PriceChooser.choose(
-      one_sided: false, copies: amounts[:total_count]
-    )
-    
-    amounts
+  def print_jobs_current_total_prices(customer_print_jobs)
+    amount = { total_count: 0, total_price: 0, types: [] }
+
+    customer_print_jobs.group_by(&:print_job_type).each do |type, prints|
+      type_total_price = 0
+      type_total_count = 0
+
+      prints.each do |pr|
+        price = PriceChooser.choose(type: type, copies: pr.printed_pages)
+        total_price = price * pr.printed_pages
+
+        amount[:total_count] += pr.printed_pages
+        type_total_count += pr.printed_pages
+
+        amount[:total_price] += total_price
+        type_total_price += total_price
+      end
+
+      amount[:types] << {
+        name: type.name, count: type_total_count, price: type_total_price
+      }
+    end
+
+    amount
   end
 
   def to_pay_amounts
-    amounts = {
-      one_sided_count: self.print_jobs.pay_later.one_sided.sum(:printed_pages),
-      two_sided_count: self.print_jobs.pay_later.two_sided.sum(:printed_pages)
-    }
-    
-    put_prices_in_copies(amounts)
+    print_jobs_current_total_prices(self.print_jobs.pay_later)
   end
   
   def pay_month_debt(date)
-    amount = self.to_pay_amounts_by_month(date)
     date = Date.parse(date) unless date.is_a? Date
 
     Print.transaction do
       begin
         self.prints.pay_later.created_in_the_same_month(date).each do |p|
-          p.pay_with_special_price(
-            one_sided_price: amount[:one_sided_price],
-            two_sided_price: amount[:two_sided_price]
-          )
+          p.pay_print
         end
       rescue
         raise ActiveRecord::Rollback
@@ -239,22 +240,17 @@ class Customer < ApplicationModel
   end
 
   def pay_off_debt
-    amounts = self.to_pay_amounts
-    
     Print.transaction do
       begin
-        self.prints.pay_later.each do |p|
-          p.pay_with_special_price(
-            one_sided_price: amounts[:one_sided_price],
-            two_sided_price: amounts[:two_sided_price]
-          )
+        self.prints.pay_later.each do |p| 
+          p.pay_print
         end
       rescue
         raise ActiveRecord::Rollback
       end
     end
     
-    amounts
+    self.to_pay_amounts
   end
 
   KINDS.each do |kind, value|

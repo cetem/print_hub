@@ -89,15 +89,14 @@ class Print < ApplicationModel
 
     if self.order && self.print_jobs.empty?
       self.customer = self.order.customer
-      doc_keys = ['document_id', 'copies', 'range', 'two_sided']
-      file_keys = ['id', 'copies', 'range', 'two_sided']
+      keys = ['copies', 'range', 'print_job_type_id']
       
       self.order.order_files.compact.each do |order_file|
-        self.print_jobs.build(order_file.attributes.slice(*file_keys))
+        self.print_jobs.build(order_file.attributes.slice(*['id', keys]))
       end
 
       self.order.order_lines.each do |order_line|
-        self.print_jobs.build(order_line.attributes.slice(*doc_keys))
+        self.print_jobs.build(order_line.attributes.slice(*['document_id', keys]))
       end
     elsif self.include_documents.present? 
       self.include_documents.each do |document_id|
@@ -106,9 +105,9 @@ class Print < ApplicationModel
     end
     
     self.print_jobs.each do |pj|
-      pj.price_per_copy = PriceChooser.choose(
-        one_sided: !pj.two_sided, copies: self.total_pages
-      )
+      pj.print_job_type ||=  PrintJobType.default
+
+      pj.price_per_copy = pj.job_price_per_copy
     end
 
     if self.pay_later?
@@ -177,13 +176,8 @@ class Print < ApplicationModel
     end
   end
   
-  def pay_with_special_price(prices)
+  def pay_print
     if self.pay_later?
-      self.print_jobs.each do |pj|
-        pj.price_per_copy = pj.two_sided ?
-          prices[:two_sided_price] : prices[:one_sided_price]
-      end
-
       self.payments.build(amount: self.price, paid: self.price)
       self.paid!
       self.save!
@@ -195,8 +189,10 @@ class Print < ApplicationModel
       self.current_article_lines.to_a.sum(&:price)
   end
   
-  def total_pages
-    self.current_print_jobs.sum { |pj| pj.copies * pj.range_pages }
+  def total_pages_by_type(type)
+    self.current_print_jobs.sum do |pj| 
+       (pj.print_job_type == type) ? (pj.copies * pj.range_pages) : 0
+    end
   end
   
   def reject_print_job_attributes?(attributes)

@@ -6,8 +6,6 @@ class OrderFileTest < ActiveSupport::TestCase
   # Función para inicializar las variables utilizadas en las pruebas
   def setup
     @order_file = OrderFile.find order_files(:from_yesterday_cv_file).id
-
-    prepare_settings
   end
 
   # Prueba que se realicen las búsquedas como se espera
@@ -17,8 +15,8 @@ class OrderFileTest < ActiveSupport::TestCase
       @order_file.copies
     assert_equal order_files(:from_yesterday_cv_file).price_per_copy,
       @order_file.price_per_copy
-    assert_equal order_files(:from_yesterday_cv_file).two_sided,
-      @order_file.two_sided
+    assert_equal order_files(:from_yesterday_cv_file).print_job_type_id,
+      @order_file.print_job_type_id
     assert_equal order_files(:from_yesterday_cv_file).order_id,
       @order_file.order_id
   end
@@ -28,8 +26,7 @@ class OrderFileTest < ActiveSupport::TestCase
     assert_difference 'OrderFile.count' do
       @order_file = OrderFile.create({
         copies: 2,
-        price_per_copy: 0.10,
-        two_sided: false,
+        print_job_type_id: print_job_types(:color).id,
         file: Rack::Test::UploadedFile.new(
           File.join(Rails.root, 'test', 'fixtures', 'files', 'test.pdf')
         )
@@ -37,7 +34,7 @@ class OrderFileTest < ActiveSupport::TestCase
     end
 
     # El precio por copia no se puede alterar
-    price = PriceChooser.choose(one_sided: true, copies: 2)
+    price = PriceChooser.choose(type: print_job_types(:color).id, copies: 2)
     assert_equal '%.2f' % price,
       '%.2f' % @order_file.reload.price_per_copy
   end
@@ -116,22 +113,25 @@ class OrderFileTest < ActiveSupport::TestCase
   end
   
   test 'price' do
+    # order_file print-job-type.price = 0.10
     @order_file.copies = 35
-    @order_file.price_per_copy = 0.10
     assert @order_file.valid?
     assert_equal '3.50', '%.2f' % @order_file.price
 
     @order_file.copies = 1
     @order_file.pages = 2
-    @order_file.price_per_copy = 0.00
     assert @order_file.valid?
-    assert_equal '0.00', '%.2f' % @order_file.price
+    assert_equal '0.20', '%.2f' % @order_file.price
+
+    @order_file.copies = 10
+    @order_file.pages = 11
+    assert @order_file.valid?
+    assert_equal '11.00', '%.2f' % @order_file.price
 
     @order_file.copies = 1
-    @order_file.price_per_copy = 0.07
-    @order_file.pages = 11
-    @order_file.two_sided = true
+    @order_file.pages = 12
+    @order_file.print_job_type = print_job_types(:color)
     assert @order_file.valid?
-    assert_equal '0.80', '%.2f' % @order_file.price # 0.70 + 0.10
+    assert_equal '4.20', '%.2f' % @order_file.price # 12 * 0.35
   end
 end

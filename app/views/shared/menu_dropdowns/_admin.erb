@@ -1,5 +1,5 @@
 <% controllers = [
-  'users', 'customers', 'bonuses', 'settings', 'payments', 'stats'
+  'users', 'customers', 'bonuses', 'payments', 'print_job_types', 'stats'
 ] %>
 <li class="dropdown<%= ' active' if controllers.include?(controller_name) %>">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown">
@@ -15,13 +15,15 @@
       class: ('active' if controller_name == 'bonuses')) %>
     <%= content_tag(:li, link_to(t('menu.articles'), articles_path),
       class: ('active' if controller_name == 'articles')) %>
-    <%= content_tag(:li, link_to(t('menu.settings'), settings_path),
-      class: ('active' if controller_name == 'settings')) %>
     <%= content_tag(:li, link_to(t('menu.payments'), payments_path),
       class: ('active' if controller_name == 'payments')) %>
     <%= content_tag(:li, link_to(t('menu.stats'), printer_stats_path),
       class: ('active' if controller_name == 'stats')) %>
     <%= content_tag(:li, link_to(t('menu.shifts'), shifts_path),
       class: ('active' if controller_name == 'shifts')) %>
+    <%= content_tag(
+      :li, link_to(t('menu.print_job_types'), print_job_types_path),
+      class: ('active' if controller_name == 'print_job_types')
+    ) %>
   </ul>
 </li>

@@ -21,10 +21,10 @@ class PrivateCustomerInteractionsTest < ActionDispatch::IntegrationTest
     assert_page_has_no_errors!
     assert page.has_css?('#empty-search')
   end
-  
+
   test 'should complete an order' do
     customer_login
-    
+
     fill_in 'q', with: 'Math'
     find('#q').native.send_keys :enter
     
@@ -38,7 +38,7 @@ class PrivateCustomerInteractionsTest < ActionDispatch::IntegrationTest
       assert page.has_css?('a.remove_from_order')
     end
 
-    
+
     within '.nav-collapse' do
       click_link I18n.t('view.catalog.new_order')
     end
@@ -49,7 +49,7 @@ class PrivateCustomerInteractionsTest < ActionDispatch::IntegrationTest
 
     within 'div.file' do
       attach_file(
-        'order_file_file', 
+        'order_file_file',
         File.join(Rails.root, 'test', 'fixtures', 'files', 'test.pdf')
       )
     end
@@ -61,7 +61,7 @@ class PrivateCustomerInteractionsTest < ActionDispatch::IntegrationTest
         'helpers.submit.create', model: Order.model_name.human
       )
     end
-    
+  
     assert_page_has_no_errors!
     assert page.has_css?('#show_order')
   end
@@ -81,18 +81,17 @@ class PrivateCustomerInteractionsTest < ActionDispatch::IntegrationTest
     within '#check_order' do
       copies = first(:css, 'input[name$="[copies]"]').value.to_i || 0
       pages = first(:css, 'input[name$="[pages]"]').value.to_i || 0
-      price_per_copy = first(
-        :css, 'input[name$="[price_per_copy]"]'
-      ).value.to_f || 0.0
-      total_should_be = copies * pages * price_per_copy
+      price_per_copy = first(:css, '.order_line')['data-price-per-copy'].to_f
+
+      total_should_be = (copies * pages * price_per_copy).round(3)
       
-      within '.order_line' do
+      within 'div.order_line' do
         assert first(:css, '.money').has_content?("$#{total_should_be}")
       end
       
       fill_in 'order[order_lines_attributes][0][copies]', with: '5'
       
-      new_total_should_be = 5 * pages * price_per_copy
+      new_total_should_be = (5 * pages * price_per_copy).round(3)
       
       within '.order_line' do
         assert first(:css, '.money').has_content?("$#{new_total_should_be}")
@@ -135,12 +134,14 @@ class PrivateCustomerInteractionsTest < ActionDispatch::IntegrationTest
         first(:css, '.order_line .money').text.match(/\d+\.\d+/)[0].to_f
       
       assert_equal 2, page.all('.order_line').size
-      first(:css, '[data-event="removeItem"]').click
-      
+      first(:css, 'a[data-event="removeItem"]').click
+      sleep 1 # Remove effect
+
       assert page.has_css?('div.order_line', count: 1)
       
-      new_price =
-        first(:css, '.order_line .money').text.match(/\d+\.\d+/)[0].to_f
+      new_price = first(
+        :css, 'div.order_line span.money'
+      ).text.match(/\d+\.\d+/)[0].to_f
       
       assert_not_equal new_price, original_price
     end
@@ -228,7 +229,7 @@ class PrivateCustomerInteractionsTest < ActionDispatch::IntegrationTest
 
     assert_equal tag.documents_count, order_lines
   end
-  
+
   private
   
   def customer_login(options = {})

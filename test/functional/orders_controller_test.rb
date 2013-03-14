@@ -4,8 +4,6 @@ class OrdersControllerTest < ActionController::TestCase
   setup do
     @order = orders(:for_tomorrow)
     @request.host = "#{APP_CONFIG['subdomains']['customers']}.printhub.local"
-    
-    prepare_settings
   end
 
   test 'should get user index' do
@@ -74,6 +72,7 @@ class OrdersControllerTest < ActionController::TestCase
     order_file = OrderFile.new(
       file: fixture_file_upload('/files/test.pdf', 'application/pdf')
     )
+    print_job_type_id = print_job_types(:a4)
     
     assert_difference [
       'customer.orders.count', 'OrderLine.count', 'OrderFile.count'
@@ -83,7 +82,7 @@ class OrdersControllerTest < ActionController::TestCase
         order_lines_attributes: {
           new_1: {
             copies: '2',
-            two_sided: '0',
+            print_job_type_id: print_job_type_id,
             document_id: documents(:math_book).id.to_s
           }
         },
@@ -91,7 +90,7 @@ class OrdersControllerTest < ActionController::TestCase
           new_1: {
             file_cache: order_file.file_cache,
             copies: 2,
-            two_sided: false
+            print_job_type_id: print_job_type_id
           }
         }
       }

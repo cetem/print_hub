@@ -6,7 +6,7 @@ math_job_1:
   price_per_copy: 0.10
   range: ''
   printed_pages: <%= 3 * 12 %>
-  two_sided: true
+  print_job_type: a4
   document: math_notes
   print: math_print
 
@@ -18,7 +18,7 @@ math_job_2:
   price_per_copy: 0.10
   range: ''
   printed_pages: <%= 1 * 350 %>
-  two_sided: true
+  print_job_type: a4
   document: math_book
   print: math_print
 
@@ -30,7 +30,7 @@ physics_job_1:
   price_per_copy: 0.10
   range: ''
   printed_pages: <%= 2 * 14 %>
-  two_sided: true
+  print_job_type: a4
   document: physics_notes
   print: physics_print
 
@@ -42,7 +42,7 @@ os_job_1:
   price_per_copy: 0.10
   range: ''
   printed_pages: <%= 1 * 14 %>
-  two_sided: true
+  print_job_type: a4
   document: physics_notes
   print: os_print
 
@@ -54,7 +54,7 @@ second_math_job_1:
   price_per_copy: 0.10
   range: ''
   printed_pages: <%= 3 * 12 %>
-  two_sided: true
+  print_job_type: a4
   document: math_notes
   print: second_math_print
 
@@ -66,7 +66,7 @@ second_math_job_2:
   price_per_copy: 0.10
   range: ''
   printed_pages: <%= 1 * 350 %>
-  two_sided: true
+  print_job_type: a4
   document: math_book
   print: second_math_print
 
@@ -78,7 +78,7 @@ second_physics_job_1:
   price_per_copy: 0.10
   range: ''
   printed_pages: <%= 2 * 14 %>
-  two_sided: true
+  print_job_type: a4
   document: physics_notes
   print: second_physics_print
 
@@ -90,7 +90,7 @@ scheduled_math_job_1:
   price_per_copy: 0.10
   range: ''
   printed_pages: <%= 3 * 12 %>
-  two_sided: true
+  print_job_type: a4
   document: math_notes
   print: scheduled_math_print
 
@@ -102,7 +102,7 @@ scheduled_math_job_2:
   price_per_copy: 0.10
   range: ''
   printed_pages: <%= 1 * 350 %>
-  two_sided: true
+  print_job_type: a4
   document: math_book
   print: scheduled_math_print
   
@@ -114,7 +114,7 @@ math_job_with_credit_1:
   price_per_copy: 0.10
   range: ''
   printed_pages: <%= 3 * 12 %>
-  two_sided: true
+  print_job_type: a4
   document: math_notes
   print: math_print_with_credit
 
@@ -126,7 +126,7 @@ math_job_with_credit_2:
   price_per_copy: 0.10
   range: ''
   printed_pages: <%= 1 * 350 %>
-  two_sided: true
+  print_job_type: a4
   document: math_book
   print: math_print_with_credit
   
@@ -138,7 +138,7 @@ math_job_to_pay_later_1:
   price_per_copy: 0.10
   range: ''
   printed_pages: <%= 3 * 12 %>
-  two_sided: false
+  print_job_type: color
   document: math_notes
   print: math_print_to_pay_later_1
 
@@ -150,7 +150,7 @@ math_job_to_pay_later_2:
   price_per_copy: 0.10
   range: ''
   printed_pages: <%= 1 * 350 %>
-  two_sided: true
+  print_job_type: a4
   document: math_book
   print: math_print_to_pay_later_1
 
@@ -162,7 +162,7 @@ math_job_to_pay_later_3:
   price_per_copy: 0.10
   range: ''
   printed_pages: <%= 4 * 350 %>
-  two_sided: true
+  print_job_type: a4
   document: math_book
   print: math_print_to_pay_later_2
   created_at: <%= 2.months.ago %>
@@ -175,7 +175,7 @@ physics_job_to_pay_later_1:
   price_per_copy: 0.10
   range: ''
   printed_pages: <%= 2 * 14 %>
-  two_sided: true
+  print_job_type: a4
   document: physics_notes
   print: physics_print_to_pay_later
 
@@ -187,6 +187,6 @@ cv_job_1:
   price_per_copy: 0.10
   range: ''
   printed_pages: <%= 3 * 12 %>
-  two_sided: true
+  print_job_type: a4
   order_file: from_yesterday_cv_file
   print: physics_print

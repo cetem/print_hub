@@ -1,0 +1,20 @@
+<%= simple_form_for @print_job_type, defaults: { input_html: { class: 'span6' } } do |f| %>
+  <div class="form-inputs">
+    <%= show_print_job_type_media_field(f) %>
+    <%= f.input :name %>
+    <%= f.input :price %>
+    <div class="row-fluid">
+      <div class='span3'>
+        <%= f.input :two_sided, input_html: { class: '' } %>
+      </div>
+      <div class='span3'>
+        <%= f.input :default, input_html: { class: '' } %>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-actions">
+    <div class="pull-right"><%= yield :form_actions %></div>
+    <%= f.button :submit, class: 'btn btn-primary' %>
+  </div>
+<% end %>

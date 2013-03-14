@@ -31,18 +31,26 @@ window.Jobs =
       else
         element.parents('.control-group').addClass('error')
   
-  listenTwoSidedChanges: (itemClass)->
-    $(document).on 'change', 'input[name$="[two_sided]"]', ->
+  listenPrintJobTypeChanges: (itemClass)->
+    $(document).on 'change', 'select[name$="[print_job_type_id]"]', ->
       Jobs.updatePricePerCopy(itemClass)
   
   updatePricePerCopy: (itemClass)->
-    $('input[name$="[price_per_copy]"]').each (i, ppc)->
-      twoSidedElement = $(ppc).parents("#{itemClass}:first")
-      .find('input[name$="[two_sided]"].price-modifier')
-      
-      if twoSidedElement.is(':checked')
-        setting = $('#total_pages').data('pricePerTwoSided')
-      else
-        setting = $('#total_pages').data('pricePerOneSided')
+    $('[data-jobs-container] span.money').each (i, ppc)->
+      row = $(ppc).parents('.print_job, .order_line').first()
 
-      $(ppc).val PriceChooser.choose(setting, parseInt($('#total_pages').val()))
+      if (dataTypeId = row.find('select[name$="[print_job_type_id]"] :selected'))
+        dataTypeId = dataTypeId.val()
+
+        jobsContainer = $('[data-jobs-container]')
+        setting = jobsContainer.data('prices-list')[dataTypeId]
+        typePages = jobsContainer.data('pages-list')[dataTypeId] || 0
+
+        newPricePerCopy = PriceChooser.choose(setting, typePages).toFixed(3)
+
+        newTitle = $(ppc).attr('title').replace(
+          /(\d+\.\d+)$/, newPricePerCopy
+        )
+
+        row.data('price-per-copy', newPricePerCopy)
+        $(ppc).attr('title', newTitle)

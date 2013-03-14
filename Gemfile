@@ -4,7 +4,6 @@ gem 'rails', '3.2.12'
 
 gem 'pg'
 gem 'authlogic'
-gem 'rails-settings', git: 'https://github.com/100hz/rails-settings.git'
 gem 'jquery-rails'
 gem 'validates_timeliness'
 gem 'awesome_nested_set'
