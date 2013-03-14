@@ -1,6 +1,5 @@
 <br />
 <% date = params[:date] %>
-<% prints = @customer.to_pay_amounts_by_month(date) %>
 <h3>
   <%= t('view.customers.to_pay_prints.month_title') %>
   <%= select_tag 'month_select_to_pay', options_for_select(
@@ -11,38 +10,9 @@
     customer_path(@customer)
   ) %>
 </h3>
-<table class="table table-striped">
-  <thead>
-    <tr>
-      <th><%= t('view.customers.to_pay_prints.columns.type') %></th>
-      <th><%= t('view.customers.to_pay_prints.columns.count') %></th>
-      <th><%= t('view.customers.to_pay_prints.columns.unit_price') %></th>
-      <th><%= t('view.customers.to_pay_prints.columns.total_price') %></th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-     <td><%= t('view.customers.to_pay_prints.rows.one_sided') %></td>
-      <td><%= prints[:one_sided_count] %></td>
-      <td><%= number_to_currency prints[:one_sided_price] %></td>
-      <td><%= number_to_currency prints[:one_sided_count] * prints[:one_sided_price] %></td>
-    </tr>
-    <tr>
-    <td><%= t('view.customers.to_pay_prints.rows.two_sided') %></td>
-      <td><%= prints[:two_sided_count] %></td>
-      <td><%= number_to_currency prints[:two_sided_price] %></td>
-      <td><%= number_to_currency prints[:two_sided_count] * prints[:two_sided_price] %></td>
-    </tr>
-    <tr>
-    <td>
-      <strong><%= t('view.customers.to_pay_prints.rows.total') %></strong>
-    </td>
-    <td><strong><%= prints[:two_sided_count] + prints[:one_sided_count] %></strong></td>
-    <td></td>
-    <td><strong><%= show_total_to_pay_amount prints %></strong></td>
-    </tr>
-  </tbody>
-</table>
+
+<%= render 'related_debt', amounts: @customer.to_pay_amounts_by_month(date) %>
+
 <% if cancelled %>
   <div class="alert alert-success">
     <%= t('view.customers.to_pay_prints.debt_cancelled') %>

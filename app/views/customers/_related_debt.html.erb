@@ -1,0 +1,25 @@
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th><%= t('view.customers.to_pay_prints.columns.type') %></th>
+      <th><%= t('view.customers.to_pay_prints.columns.count') %></th>
+      <th><%= t('view.customers.to_pay_prints.columns.total_price') %></th>
+    </tr>
+  </thead>
+  <tbody>
+    <% amounts[:types].each do |type| %>
+      <tr>
+        <td><%= type[:name] %></td>
+        <td><%= type[:count] %></td>
+        <td><%= number_to_currency type[:price] %></td>
+      </tr>
+    <% end %>
+    <tr class="info">
+      <td>
+        <strong><%= t('view.customers.to_pay_prints.rows.total') %></strong>
+      </td>
+      <td><strong><%= amounts[:total_count] %></strong></td>
+      <td><strong><%= number_to_currency amounts[:total_price] %></strong></td>
+    </tr>
+  </tbody>
+</table>
