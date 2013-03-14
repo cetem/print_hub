@@ -1,7 +1,10 @@
 <% id = dynamic_object_id('order_line', f) %>
-<div class="order_line" id="<%= id %>" data-price="<%= f.object.price %>">
+<% name = "order[order_lines_attributes][#{f.object_id}]" %>
+<div class="order_line" id="<%= id %>"
+  data-price="<%= f.object.price %>" 
+  data-price-per-copy="<%= f.object.price_per_copy %>">
   <div class="row-fluid">
-    <div class="span5">
+    <div class="span4">
       <%= f.object.document %>
       <%= f.input :document_id, as: :hidden %>
     </div>
@@ -11,24 +14,20 @@
       class: 'price-modifier page-modifier span12'} %>
     </div>
     <div class="span1 hidden-phone">
-      <%= text_field_tag "document[#{f.object.document_id}][pages]",
-      f.object.document.try(:pages),
-      id: "order_line_pages_#{f.object.document_id}",
-      class: 'price-modifier page-modifier span12', disabled: true %>
-    </div>
-    <div class="span2 hidden-phone"> 
-      <%= f.input :price_per_copy, label: false, input_html: {
-      disabled: true, class: 'price-modifier span6', autocomplete: 'off'} %>
-    </div>
-    <div class="span1">
-      <%= f.input :two_sided, as: :boolean, label: false, 
-      input_html: { class: 'price-modifier span12' } %>
+      <%= f.input :pages, label: false, input_html: {
+          value: f.object.document.try(:pages), 
+          class: 'price-modifier page-modifier span12', disabled: true
+      } %>
     </div>
     <div class="span2">
-      <span class="money"><%= number_to_currency f.object.price %></span>
-      <% unless disabled %>
-        <%= link_to_remove_nested_item(f) %>
-      <% end %>
+      <%= print_job_types_select_combo(f) %>
+    </div>
+    <div class="span2">
+      <% title = show_price_per_copy_title(f.object.price_per_copy) %>
+      <span class="label money" title="<%= title %>">
+        <%= number_to_currency f.object.price %>
+      </span>
+      <%= link_to_remove_nested_item(f) unless disabled %>
       <%= link_to '&#xe054;'.html_safe, show_catalog_path(f.object.document),
         class: 'iconic details-link hidden-phone',
         data: { remote: true },

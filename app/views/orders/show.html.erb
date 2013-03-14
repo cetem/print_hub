@@ -40,7 +40,7 @@
           <th><%= OrderLine.human_attribute_name 'copies' %></th>
           <th class="hidden-phone"><%= Document.human_attribute_name 'pages' %></th>
           <th class="hidden-phone"><%= OrderLine.human_attribute_name 'price_per_copy' %></th>
-          <th><%= OrderLine.human_attribute_name 'two_sided' %></th>
+          <th class="hidden-phone"><%= OrderLine.human_attribute_name 'print_job_type_id' %></th>
         </tr>
       </thead>
       <tbody>
@@ -52,7 +52,7 @@
             <td><%= order_file.copies %></td>
             <td class="hidden-phone"><%= order_file.try(:pages) %></td>
             <td class="hidden-phone"><%= number_to_currency order_file.price_per_copy %></td>
-            <td><%= t(order_file.two_sided ? 'label.yes' : 'label.no') %></td>
+            <td class="hidden-phone"><%= order_file.print_job_type %></td>
           </tr>
         <% end %>
         <% @order.order_lines.each do |order_line| %>
@@ -61,7 +61,7 @@
             <td><%= order_line.copies %></td>
             <td class="hidden-phone"><%= order_line.document.try(:pages) %></td>
             <td class="hidden-phone"><%= number_to_currency order_line.price_per_copy %></td>
-            <td><%= t(order_line.two_sided ? 'label.yes' : 'label.no') %></td>
+            <td class="hidden-phone"><%= order_line.print_job_type %></td>
           </tr>
         <% end %>
       </tbody>

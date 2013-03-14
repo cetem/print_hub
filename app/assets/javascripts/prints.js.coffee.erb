@@ -22,13 +22,16 @@ window.Print =
   updateTotalPrice: ->
     freeCredit = parseFloat($('#customer_free_credit').val()) || 0.0
     [payWithCash, payWithBonus, totalPrice] = [0.0, 0.0, 0.0]
+
+    Print.updateTotalPages()
     
     if !$('#print_pay_later').is(':checked')
       $('.print_job:not([data-exclude-from-total])').each ->
-        totalPrice += parseFloat($(this).data('price')) || 0
+        totalPrice += parseFloat($(this).data('price') || 0)
 
       $('.article_line:not([data-exclude-from-total])').each ->
-        totalPrice += parseFloat($(this).data('price')) || 0
+        totalPrice += parseFloat($(this).data('price') || 0)
+
 
       if freeCredit > totalPrice
         payWithCash = 0.0
@@ -43,25 +46,22 @@ window.Print =
     $(Print.creditPrefix + '_paid').val(payWithBonus.toFixed(3))
 
   updatePrintJobPrice: (printJob)->
-    Jobs.updatePricePerCopy('.print_job')
+    Print.updateTotalPages()
 
     copies = parseInt(printJob.find('input[name$="[copies]"]').val())
-    pricePerCopy = parseFloat(
-      printJob.find('input[name$="[price_per_copy]"]').val()
-    )
     rangePages = parseInt(
       printJob.find('input[name$="[range]"]').data('rangePages')
     )
-    pricePerOneSidedCopy = PriceChooser.choose(
-      $('#total_pages').data('pricePerOneSided'), parseInt($('#total_pages').val())
-    )
-    evenRange = rangePages - (rangePages % 2)
-    rest = (rangePages % 2) * pricePerOneSidedCopy
-    jobPrice = (copies * (pricePerCopy * evenRange + rest)) || 0
+
+    Jobs.updatePricePerCopy('.print_job')
+
     money = printJob.find('span.money')
 
+    pricePerCopy = printJob.data('price-per-copy')
+    jobPrice = parseFloat((copies * pricePerCopy * rangePages) || 0).toFixed(3)
+
     printJob.data('price', jobPrice)
-    money.html(money.html().replace(/(\d+.)+\d+/, jobPrice.toFixed(3)))
+    money.html(money.html().replace(/(\d+.)+\d+/, jobPrice))
 
     Print.updateTotalPrice()
 
@@ -95,15 +95,35 @@ window.Print =
 
     $('#print_submit').attr('value', label)
 
+  updateTotalPages: ->
+    totalTypePages = $('[data-jobs-container]').data('pages-list')
+
+    # Reset the counts
+    $.each totalTypePages, (key, value) ->
+      totalTypePages[key] = 0
+
+    $('.print_job:not([data-exclude-from-total])').each (i, pj)->
+      copies = parseInt $(pj).find('input[name$="[copies]"]').val()
+      rangePages = parseInt(
+        $(pj).find('input[name$="[range]"]').data('rangePages')
+      )
+
+      printJobType = $(pj).find(
+        'select[name$="[print_job_type_id]"] :selected'
+      ).val()
+
+      totalTypePages[printJobType] += (copies * rangePages) || 0
+
+
 jQuery ($)->
   if $('#ph_prints').length > 0
     $(document).on 'item.removed', (event, element)->
       if $(element).hasClass('print_job')
-        $(element).attr('data-exclude-from-total', '1').find(
-          '.page-modifier:first'
-        ).trigger('ph.page_modification')
+        $(element).attr('data-exclude-from-total', '1')
 
-        Print.updateTotalPrice()
+        $('.print_job:not([data-exclude-from-total])').each (i, pj) ->
+          Print.updatePrintJobPrice $(pj)
+
       else if $(element).hasClass('article_line')
         $(element).attr('data-exclude-from-total', '1')
         
@@ -216,7 +236,7 @@ jQuery ($)->
       Print.updateStock(printJob)
     
     Jobs.listenRangeChanges('.print_job')
-    Jobs.listenTwoSidedChanges('.print_job')
+    Jobs.listenPrintJobTypeChanges('.print_job')
     
     $(document).on 'keyup', 'input[name$="[range]"]', ->
       printJob = $(this).parents('.print_job')
@@ -231,17 +251,8 @@ jQuery ($)->
         printJobStockDetails.hide()
 
     $(document).on 'change keyup ph.page_modification', '.page-modifier', (e)->
-      totalPages = 0
-
-      $('.print_job').each (i, pj)->
-        copies = parseInt $(pj).find('input[name$="[copies]"]').val()
-        rangePages = parseInt(
-          $(pj).find('input[name$="[range]"]').data('rangePages')
-        )
-
-        totalPages += (copies || 0) * (rangePages || 0)
-
-      $('#total_pages').val(totalPages)
+      Print.updateTotalPages()
+      
       $('.print_job').each (i, pj)-> Print.updatePrintJobPrice($(pj))
 
     $(document).on 'change keyup', '.price-modifier', ->
@@ -253,7 +264,7 @@ jQuery ($)->
         Print.updateArticleLinePrice(element.parents('.article_line'))
     
     $(document).on 'change', 'input[name$="[pay_later]"]', ->
-      if($(this).is(':checked')) 
+      if($(this).is(':checked'))
         $('input[name^="print[payments_attributes]"]').each (i, e)->
           $(e).val('0.000') if parseInt($(e).val()) > 0
       else
@@ -275,6 +286,8 @@ jQuery ($)->
       event.stopPropagation()
     
     Print.updateSubmitLabel()
+
+    $('.price-modifier').trigger('change') # To update prices when print an order
     
     if /^\s*$/.test($('#print_customer_id').val())
       $('#print_pay_later').parents('div.field').hide()

@@ -61,10 +61,8 @@ class Order < ApplicationModel
     
     nested_models = self.order_lines.to_a + self.order_files.to_a
     
-    nested_models.each do |nm|
-      nm.price_per_copy = PriceChooser.choose(
-        one_sided: !nm.two_sided, copies: self.total_pages
-      )
+    nested_models.compact.each do |nm|
+      nm.price_per_copy = nm.job_price_per_copy
     end if nested_models.present?
   end
 
@@ -113,15 +111,15 @@ class Order < ApplicationModel
     nested_models.reject(&:marked_for_destruction?).to_a.sum(&:price)
   end
   
-  def total_pages
+  def total_pages_by_type(type)
     sum = 0
 
     self.order_lines.reject(&:marked_for_destruction?).each do |ol|
-      sum += ol.document.try(:pages) || 0
+      sum += (ol.print_job_type == type) ? (ol.document.try(:pages) || 0) : 0
     end
 
     self.order_files.reject(&:marked_for_destruction?).each do |of| 
-      sum += of.try(:pages) || 0
+      sum += (of.print_job_type == type) ? (of.try(:pages) || 0) : 0
     end
 
     sum 

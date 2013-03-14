@@ -11,7 +11,6 @@
   
   <div class="form-inputs">
     <%= f.error_notification %>
-    
     <div class="row-fluid">
       <div class="span6">
         <%= print_destinations_field(f) %>
@@ -61,7 +60,9 @@
     </ul>
     
     <div class="tab-content">
-      <div id="print_jobs_container" class="tab-pane active">
+      <div id="print_jobs_container" class="tab-pane active" data-jobs-container
+        data-prices-list="<%= print_job_types_with_price_for_data %>"
+        data-pages-list="<%= print_job_types_for_data_pages %>">
         <div class="row-fluid">
           <div class="span5">
             <h4><%= PrintJob.human_attribute_name 'document_id' %></h4>
@@ -72,15 +73,13 @@
           <div class="span1">
             <h4><%= PrintJob.human_attribute_name 'pages' %></h4>
           </div>
-          <div class="span1">  
-            <h4><%= PrintJob.human_attribute_name 'price_per_copy' %></h4>
-          </div>
           <div class="span1">
             <h4><%= PrintJob.human_attribute_name 'range' %></h4>
           </div>
-          <div class="span1">
-            <h4><%= PrintJob.human_attribute_name 'two_sided' %></h4>
+          <div class="span2">
+            <h4><%= PrintJob.human_attribute_name 'print_job_type_id' %></h4>
           </div>
+          <div class="span2"></div>
         </div>
 
         <div id="print_jobs">
@@ -213,9 +212,6 @@
     <div class="pull-right"><%= yield :form_actions %></div>
     <%= f.input :order_id, as: :hidden %>
     <%= f.input :lock_version, as: :hidden %>
-    <%= hidden_field_tag :total_pages, @print.total_pages, id: 'total_pages',
-      'data-price-per-one-sided' => Setting.price_per_one_sided_copy,
-      'data-price-per-two-sided' => Setting.price_per_two_sided_copy %>
     <%= f.button :submit, class: 'btn-primary', id: 'print_submit',
       title: t('view.prints.print_title') %>
   </div>

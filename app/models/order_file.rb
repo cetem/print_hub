@@ -4,8 +4,8 @@ class OrderFile < ActiveRecord::Base
 
   before_save :extract_page_count
   
-  attr_accessible :file, :order_id, :pages, :price_per_copy, :two_sided,
-    :copies, :file_cache
+  attr_accessible :file, :order_id, :pages, :price_per_copy, :copies, 
+    :file_cache, :print_job_type_id
 
   # Restricciones
   validates :copies, :price_per_copy, presence: true
@@ -16,17 +16,15 @@ class OrderFile < ActiveRecord::Base
   validate :file_presence, on: :create
 
   belongs_to :order
+  belongs_to :print_job_type
   has_many :print_jobs
 
   def initialize(attributes = nil, options = {})
     super(attributes, options)
 
-    self.two_sided = true if self.two_sided.nil?
+    self.print_job_type ||= PrintJobType.default
     self.copies ||= 1
-    self.price_per_copy ||= PriceChooser.choose(
-      one_sided: !self.two_sided,
-      copies: self.copies * (self.try(:pages) || 0)
-    )
+    self.price_per_copy ||= job_price_per_copy
   end
 
   def extract_page_count
@@ -51,18 +49,17 @@ class OrderFile < ActiveRecord::Base
   end
 
   def price
-    pages = self.pages || 0
-    even_range = pages - (pages % 2)
-    rest = (pages % 2) * self.price_per_one_sided_copy
-
-    (self.copies || 0) * ((self.price_per_copy || 0) * even_range + rest)
-  end
-  
-  def price_per_one_sided_copy
-    PriceChooser.choose(one_sided: true, copies: self.order.try(:total_pages))
+    total_pages * job_price_per_copy
   end
 
-  def price_per_two_sided_copy
-    PriceChooser.choose(one_sided: false, copies: self.order.try(:total_pages))
+  def total_pages
+    (self.pages || 0) * (self.copies || 0)
+  end
+
+  def job_price_per_copy
+    PriceChooser.choose(
+      type: self.print_job_type,
+      copies: self.order.try(:total_pages_by_type, self.print_job_type)
+    )
   end
 end

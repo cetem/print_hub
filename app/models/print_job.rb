@@ -8,12 +8,24 @@ class PrintJob < ApplicationModel
       start: _start, end: _end
     )
   }
-  scope :not_revoked, includes(:print).where(Print.table_name => {revoked: false})
-  scope :pay_later, includes(:print).where(
-    Print.table_name => { status: Print::STATUS[:pay_later] }
-  )
-  scope :one_sided, where(two_sided: false)
-  scope :two_sided, where(two_sided: true)
+  scope :not_revoked, -> {
+    includes(:print).where(Print.table_name => { revoked: false })
+  }
+  scope :pay_later, -> {
+    includes(:print).where(
+      Print.table_name => { status: Print::STATUS[:pay_later] }
+    )
+  }
+  scope :one_sided, -> {
+    includes(:print_job_type).where(
+      PrintJobType.table_name => { two_sided: false }
+    )
+  }
+  scope :two_sided, -> {
+    includes(:print_job_type).where(
+      PrintJobType.table_name => { two_sided: true }
+    ) 
+  }
   
   # Callbacks
   before_save :put_printed_pages
@@ -23,12 +35,13 @@ class PrintJob < ApplicationModel
   attr_accessor :auto_document_name, :job_hold_until, :file_name
   
   # Atributos "permitidos"
-  attr_accessible :id, :document_id, :copies, :pages, :range, :two_sided,
-    :print_id, :auto_document_name, :job_hold_until, :lock_version, :order_file_id
+  attr_accessible :id, :document_id, :copies, :pages, :range, :print_id,
+    :auto_document_name, :job_hold_until, :lock_version,
+    :order_file_id, :print_job_type_id
 
   # Restricciones de atributos
-  attr_readonly :id, :document_id, :copies, :pages, :range, :job_id, :two_sided,
-    :print_id, :order_file_id
+  attr_readonly :id, :document_id, :copies, :pages, :range, :job_id, :print_id,
+    :order_file_id
 
   # Restricciones
   validates :copies, :pages, :price_per_copy, :printed_copies, presence: true
@@ -47,28 +60,32 @@ class PrintJob < ApplicationModel
   belongs_to :print, inverse_of: :print_jobs
   belongs_to :document, autosave: true
   belongs_to :order_file, inverse_of: :print_jobs
+  belongs_to :print_job_type
 
   def initialize(attributes = nil, options = {})
     super(attributes, options)
     self.order_file_id ||= attributes['id'] if attributes
     
-    self.two_sided = true if self.two_sided.nil?
     self.copies ||= 1
+    self.print_job_type ||= PrintJobType.default
     self.printed_copies ||= 0
     self.pages = self.document.pages if self.document
+    self.pages = self.order_file.pages if self.order_file
 
     if self.order_file
       self.pages = self.order_file.pages
       self.file_name = self.order_file.file_name
     end
 
-    self.price_per_copy ||= PriceChooser.choose(
-      one_sided: !self.two_sided, copies: self.print.try(:total_pages)
-    )
+    self.price_per_copy ||= job_price_per_copy
   end
   
   def put_printed_pages
     self.printed_pages = self.range_pages * self.copies
+  end
+
+  def two_sided
+    self.print_job_type.two_sided
   end
 
   def options
@@ -77,7 +94,7 @@ class PrintJob < ApplicationModel
     }
     
     options['Collate'] = 'True' unless self.two_sided
-    options['media'] = self.document.media if self.document
+    options['media'] = self.print_job_type.media
     options['page-ranges'] = self.range unless self.range.blank?
     options['job-hold-until'] = self.job_hold_until if self.job_hold_until
 
@@ -108,30 +125,25 @@ class PrintJob < ApplicationModel
   end
 
   def price
-    r_pages = self.range_pages || 0
-    even_range = r_pages - (r_pages % 2)
-    rest = (r_pages % 2) * price_per_one_sided_copy
+    (self.copies || 0) * (self.range_pages || 0) * job_price_per_copy
+  end
 
-    (self.copies || 0) * ((self.price_per_copy || 0) * even_range + rest)
+  def job_price_per_copy
+    PriceChooser.choose(
+      type: self.print_job_type,
+      copies: self.print.try(:total_pages_by_type, self.print_job_type)
+    )
   end
   
   def full_document?
     self.range_pages == self.pages
   end
 
-  def price_per_one_sided_copy
-    PriceChooser.choose one_sided: true, copies: self.print.try(:total_pages)
-  end
-
-  def price_per_two_sided_copy
-    PriceChooser.choose one_sided: false, copies: self.print.try(:total_pages)
-  end
-
   def send_to_print(printer, user = nil)
     # Imprimir solamente si el archivo existe
     file_existence = (
       self.document.try(:file?) && File.exists?(self.document.file.path) ||
-      self.order_file.try(:file) && File.exists?(self.order_file.file.path)
+      self.order_file.try(:file?) && File.exists?(self.order_file.file.path)
     )
     if file_existence
       # Solamente usar documentos en existencia si no se especifica un rango

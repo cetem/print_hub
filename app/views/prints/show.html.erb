@@ -42,7 +42,7 @@
             <th><%= PrintJob.human_attribute_name 'pages' %></th>
             <th><%= PrintJob.human_attribute_name 'price_per_copy' %></th>
             <th><%= PrintJob.human_attribute_name 'range' %></th>
-            <th><%= PrintJob.human_attribute_name 'two_sided' %></th>
+            <th><%= PrintJob.human_attribute_name 'print_job_type_id' %></th>
             <th></th>
           </tr>
         </thead>
@@ -55,7 +55,7 @@
               <td><%= print_job.pages %></td>
               <td><%= number_to_currency print_job.price_per_copy %></td>
               <td><%= print_job.range %></td>
-              <td><%= t(print_job.two_sided ? 'label.yes' : 'label.no') %></td>
+              <td><%= print_job.print_job_type %></td>
               <td><%= link_to_cancel_print_job(print_job) %></td>
             </tr>
           <% end %>
