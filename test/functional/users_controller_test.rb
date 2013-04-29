@@ -102,6 +102,13 @@ class UsersControllerTest < ActionController::TestCase
     customers = ActiveSupport::JSON.decode(@response.body)
     
     assert customers.empty?
+
+    get :autocomplete_for_user_name, format: :json, q: 'disabled operator'
+    assert_response :success
+    
+    customers = ActiveSupport::JSON.decode(@response.body)
+    
+    assert customers.empty?
   end
 
   test 'should pay user shifts between dates' do

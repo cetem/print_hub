@@ -6,6 +6,9 @@ class User < ApplicationModel
     c.maintain_sessions = false
     c.crypto_provider = Authlogic::CryptoProviders::Sha512
   end
+
+  # Scopes
+  scope :actives, -> { where(enable: true) }
   
   # Atributos "permitidos"
   attr_accessible :name, :last_name, :language, :email, :username, :password,
