@@ -10,33 +10,38 @@
       <br />
 
       <p>
-        <b><%= User.human_attribute_name :username %></b>:
+        <b><%= User.human_attribute_name 'username' %></b>:
         <%= @user.username %>
       </p>
 
       <p>
-        <b><%= User.human_attribute_name :language %></b>:
+        <b><%= User.human_attribute_name 'language' %></b>:
         <%= t(@user.language, scope: :lang) %>
       </p>
 
       <p>
-        <b><%= User.human_attribute_name :default_printer %></b>:
+        <b><%= User.human_attribute_name 'default_printer' %></b>:
         <%= @user.default_printer %>
       </p>
 
       <p>
-        <b><%= User.human_attribute_name :lines_per_page %></b>:
+        <b><%= User.human_attribute_name 'lines_per_page' %></b>:
         <%= @user.lines_per_page %>
       </p>
 
       <p>
-        <b><%= User.human_attribute_name :admin %></b>:
+        <b><%= User.human_attribute_name 'admin' %></b>:
         <%= t(@user.admin ? 'label.yes' : 'label.no') %>
       </p>
 
       <p>
-        <b><%= User.human_attribute_name :enable %></b>:
+        <b><%= User.human_attribute_name 'enable' %></b>:
         <%= t(@user.enable ? 'label.yes' : 'label.no') %>
+        </p>
+
+      <p>
+        <b><%= User.human_attribute_name 'not_shifted' %></b>:
+        <%= t(@user.not_shifted ? 'label.yes' : 'label.no') %>
       </p>
     </div>
     <div class="span6">

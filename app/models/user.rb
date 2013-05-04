@@ -10,7 +10,7 @@ class User < ApplicationModel
   # Atributos "permitidos"
   attr_accessible :name, :last_name, :language, :email, :username, :password,
     :password_confirmation, :default_printer, :admin, :enable, :avatar,
-    :lines_per_page, :lock_version
+    :lines_per_page, :lock_version, :not_shifted
   
   # Alias de atributos
   alias_attribute :informal, :username

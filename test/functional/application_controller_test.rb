@@ -210,6 +210,17 @@ class ApplicationControllerTest < ActionController::TestCase
     end
   end
 
+  test 'dont ask for shift on not_shifted user' do
+    user = users(:developer)
+
+    assert_no_difference 'Shift.count' do
+      UserSession.create(user)
+      @controller.send(:session)[:has_an_open_shift] = true
+      assert_nil @controller.send(:run_shift_tasks)
+      assert_response :success
+    end
+  end
+
   test 'make date range' do
     from_datetime = Time.now.at_beginning_of_day
     to_datetime = Time.now

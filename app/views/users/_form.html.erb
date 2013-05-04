@@ -11,8 +11,17 @@
         <%= f.input :username, required: true %>
         <%= f.input :password, required: true %>
         <%= f.input :password_confirmation, required: true %>
-        <%= f.input :admin, input_html: { class: ''} %>
-        <%= f.input :enable, input_html: { class: ''} %>
+        <div class='row-fluid'>
+          <div class='span3'>
+            <%= f.input :admin, input_html: { class: ''} %>
+          </div>
+          <div class='span3'>
+            <%= f.input :enable, input_html: { class: ''} %>
+          </div>
+          <div class='span3'>
+            <%= f.input :not_shifted, input_html: { class: ''} %>
+          </div>
+        </div>
         <%= f.input :avatar %>
       </div>
       <div class="span4 hidden-phone">
