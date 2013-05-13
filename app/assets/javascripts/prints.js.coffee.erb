@@ -148,6 +148,10 @@ jQuery ($)->
         printJob.find('input[name$="[range]"]').val('').data(
           'rangePages', pages
         ).trigger('ph.page_modification')
+
+        if item.print_job_type
+          printJob.find('select[name$="[print_job_type_id]"]')
+            .val(item.print_job_type).change()
           
         if stock > 0
           printJobStockDetails.data('stock', stock).show()

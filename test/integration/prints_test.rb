@@ -68,11 +68,18 @@ class PrintsTest < ActionDispatch::IntegrationTest
     within 'form' do
       select @pdf_printer, from: 'print_printer'
     end
+
+    documents(:math_book).update_attributes(
+      media: PrintJobType::MEDIA_TYPES[:legal]
+    )
     
     within '.print_job' do
-      fill_in "#@ac_field", with: 'Math'
+      fill_in "#@ac_field", with: 'Math Book'
       assert page.has_xpath?("//li[@class='ui-menu-item']", visible: true)
       find("##@ac_field").native.send_keys :arrow_down, :tab
+
+      assert_equal find('select[name$="[print_job_type_id]"]').value,
+        print_job_types(:color).id.to_s
     end
     
     within 'form' do

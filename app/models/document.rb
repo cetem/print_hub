@@ -65,12 +65,23 @@ class Document < ApplicationModel
   def as_json(options = nil)
     default_options = {
       only: [:id, :pages, :stock],
-      methods: [:label, :informal]
+      methods: [:label, :informal, :print_job_type]
     }
     
     super(default_options.merge(options || {}))
   end
-  
+
+  # TODO Mejorar método, se hizo en el apuro =)
+  def print_job_type
+    print_job_types = PrintJobType.where(media: self.media)
+
+    if (two_sided = print_job_types.where(two_sided: true)).size > 0
+      two_sided.first.try(:id)
+    elsif print_job_types.size > 0
+      print_job_types.first.try(:id)
+    end
+  end
+
   def update_tag_path(new_tag = nil, excluded_tag = nil)
     unless @tag_path_updated
       tags = conditional_tags(new_tag, excluded_tag)
