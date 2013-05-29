@@ -29,7 +29,9 @@ class TagsTest < ActionDispatch::IntegrationTest
       assert_difference 'Tag.count', -1 do
         remove_confirm = "$('a[data-confirm]').data('confirm', '').removeAttr('data-confirm')"
         page.execute_script(remove_confirm)
+        sleep 0.3
         first(:css, 'a[data-method="delete"]').click
+        sleep 0.5
       end
     end
     

@@ -3,7 +3,7 @@ source 'https://rubygems.org'
 gem 'rails', '3.2.12'
 
 gem 'pg'
-gem 'authlogic'
+gem 'authlogic', '3.2.0'
 gem 'jquery-rails'
 gem 'validates_timeliness'
 gem 'awesome_nested_set'
@@ -25,6 +25,7 @@ gem 'simple_form'
 gem 'carrierwave'
 gem 'rmagick'
 gem 'jquery-fileupload-rails'
+gem 'turbolinks'
 
 group :assets do
   gem 'sass-rails'
@@ -39,6 +40,7 @@ end
 group :test do
   gem 'turn', require: false
   gem 'minitest', require: false
+  gem 'selenium-webdriver', require: false
   gem 'capybara', require: false
   gem 'database_cleaner' # For Capybara
 end

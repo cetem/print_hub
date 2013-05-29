@@ -9,6 +9,7 @@ class PrivateCustomerInteractionsTest < ActionDispatch::IntegrationTest
     Capybara.server_port = '54163'
     subdomain = APP_CONFIG['subdomains']['customers']
     Capybara.app_host = "http://#{subdomain}.lvh.me:54163"
+    Capybara.reset_sessions!    # Forget the (simulated) browser state
   end
   
   test 'should search with no results and show contextual help' do
@@ -169,9 +170,8 @@ class PrivateCustomerInteractionsTest < ActionDispatch::IntegrationTest
     fill_in 'customer_password_confirmation', with: '123456'
     click_button I18n.t('view.customers.update_profile')
     
-    assert_page_has_no_errors!
-    
     assert_equal new_customer_session_path, current_path
+    assert_page_has_no_errors!
     
     fill_in 'customer_session_email',
               with: customers(:student_without_bonus).email
@@ -179,7 +179,6 @@ class PrivateCustomerInteractionsTest < ActionDispatch::IntegrationTest
     click_button I18n.t('view.customer_sessions.login')
     
     assert_equal customer_sessions_path, current_path
-    
     assert_page_has_no_errors!
     
     fill_in 'customer_session_email',
@@ -225,9 +224,7 @@ class PrivateCustomerInteractionsTest < ActionDispatch::IntegrationTest
     assert_equal new_order_path, current_path
     assert_page_has_no_errors!
 
-    order_lines = all('.order_line').size
-
-    assert_equal tag.documents_count, order_lines
+    page.all 'div.order_line', count: tag.documents_count
   end
 
   private
