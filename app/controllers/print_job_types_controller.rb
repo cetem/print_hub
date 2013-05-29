@@ -49,7 +49,7 @@ class PrintJobTypesController < ApplicationController
   # POST /print_job_types.json
   def create
     @title = t('view.print_job_types.new_title')
-    @print_job_type = PrintJobType.new(params[:print_job_type])
+    @print_job_type = PrintJobType.new(print_job_type_params)
 
     respond_to do |format|
       if @print_job_type.save
@@ -69,7 +69,7 @@ class PrintJobTypesController < ApplicationController
     @print_job_type = PrintJobType.find(params[:id])
 
     respond_to do |format|
-      if @print_job_type.update_attributes(params[:print_job_type])
+      if @print_job_type.update_attributes(print_job_type_params)
         format.html { redirect_to @print_job_type, notice: t('view.print_job_types.correctly_updated') }
         format.json { head :ok }
       else
@@ -91,5 +91,13 @@ class PrintJobTypesController < ApplicationController
       format.html { redirect_to print_job_types_url }
       format.json { head :ok }
     end
+  end
+
+  private
+  
+  def print_job_type_params
+    params.require(:print_job_type).permit(
+      :name, :price, :two_sided, :default, :media
+    )
   end
 end

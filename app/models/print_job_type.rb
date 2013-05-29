@@ -4,8 +4,6 @@ class PrintJobType < ActiveRecord::Base
   # Constantes
   MEDIA_TYPES = { a3: 'A3', a4: 'A4', legal: 'na_legal_8.5x14in' }.freeze
   
-  attr_accessible :name, :price, :two_sided, :default, :media
-
   validates :name, :price, :media, presence: true
   validates :name, uniqueness: true
   validates :media, inclusion: { in: MEDIA_TYPES.values },

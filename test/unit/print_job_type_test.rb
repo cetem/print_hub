@@ -1,8 +1,6 @@
 require 'test_helper'
 
 class PrintJobTypeTest < ActiveSupport::TestCase
-  fixtures :print_job_types
-
   def setup
     @print_job_type = PrintJobType.find print_job_types(:a4)
   end
@@ -64,7 +62,7 @@ class PrintJobTypeTest < ActiveSupport::TestCase
     @print_job_type = PrintJobType.new(
       media: PrintJobType::MEDIA_TYPES[:a4],
       name: print_job_types(:a4).name,
-      price: 1,
+      price: 1
     )
 
     assert @print_job_type.invalid?
