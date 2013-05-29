@@ -21,7 +21,6 @@ class ShiftsControllerTest < ActionController::TestCase
         start: 10.minutes.ago,
         finish: nil,
         description: 'Some shift',
-        user_id: users(:administrator).id,
         paid: false
       }
     end
@@ -48,8 +47,7 @@ class ShiftsControllerTest < ActionController::TestCase
       assert_no_difference 'Shift.count' do
         put :update, id: @shift, shift: {
           finish: finish,
-          description: 'Some shift',
-          user_id: users(:administrator).id
+          description: 'Some shift'
         }
       end
       
@@ -66,8 +64,7 @@ class ShiftsControllerTest < ActionController::TestCase
       assert_no_difference 'Shift.count' do
         put :update, id: shift, shift: {
           finish: finish,
-          description: 'Some shift',
-          user_id: users(:administrator).id
+          description: 'Some shift'
         }
       end
 
@@ -89,8 +86,7 @@ class ShiftsControllerTest < ActionController::TestCase
     @shift = shifts(:old_shift)
     assert_difference 'Shift.pay_pending.count', -1 do
       put :update, id: @shift, shift: {
-        paid: true,
-        user_id: users(:administrator).id
+        paid: true
       }
     end
   end

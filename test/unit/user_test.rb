@@ -27,11 +27,7 @@ class UserTest < ActiveSupport::TestCase
   # Prueba la creación de un usuario
   test 'create' do
     assert_difference 'User.count' do
-      avatar = Rack::Test::UploadedFile.new(
-        File.join(Rails.root, 'test', 'fixtures', 'files', 'test.gif'),
-        'image/gif'
-      )
-      
+
       @user = User.create(
         name: 'New name',
         last_name: 'New last name',
@@ -44,7 +40,7 @@ class UserTest < ActiveSupport::TestCase
         password_confirmation: 'new_password',
         admin: true,
         enable: true,
-        avatar: avatar
+        avatar: avatar_test_file
       )
       
       thumbs_dir = Pathname.new(@user.reload.avatar.path).dirname

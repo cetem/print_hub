@@ -49,7 +49,7 @@ class ShiftsController < ApplicationController
   # POST /shifts.json
   def create
     @title = t('view.shifts.new_title')
-    @shift = Shift.new(params[:shift].merge(user_id: current_user.id))
+    @shift = Shift.new(shift_params.merge(user_id: current_user.id))
 
     respond_to do |format|
       if @shift.save
@@ -69,7 +69,7 @@ class ShiftsController < ApplicationController
     @shift = shifts_scope.find(params[:id])
 
     respond_to do |format|
-      if @shift.update_attributes(params[:shift])
+      if @shift.update_attributes(shift_params)
         session[:has_an_open_shift] = current_user.has_stale_shift?
 
         format.html { redirect_to shifts_url, notice: t('view.shifts.correctly_updated') }
@@ -103,5 +103,11 @@ class ShiftsController < ApplicationController
 
     current_user.admin? ?
       (user ? user.shifts : Shift.scoped) : current_user.shifts
+  end
+
+  def shift_params
+    params.require(:shift).permit(
+      :start, :finish, :description, :paid, :lock_version
+    )
   end
 end

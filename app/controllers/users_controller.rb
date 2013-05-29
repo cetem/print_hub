@@ -50,7 +50,7 @@ class UsersController < ApplicationController
   # POST /users.json
   def create
     @title = t 'view.users.new_title'
-    @user = User.new(params[:user])
+    @user = User.new(user_params)
 
     respond_to do |format|
       if @user.save
@@ -70,7 +70,7 @@ class UsersController < ApplicationController
     @user = User.find(params[:id])
 
     respond_to do |format|
-      if @user.update_attributes(params[:user])
+      if @user.update_attributes(user_params)
         format.html { redirect_to(users_url, notice: t('view.users.correctly_updated')) }
         format.json { head :ok }
       else
@@ -107,5 +107,15 @@ class UsersController < ApplicationController
     respond_to do |format|
       format.json { head :ok }
     end
+  end
+
+  private
+
+  def user_params
+    params.require(:user).permit(
+      :name, :last_name, :language, :email, :username, :password,
+      :password_confirmation, :default_printer, :admin, :enable, :avatar,
+      :lines_per_page, :lock_version
+    )
   end
 end

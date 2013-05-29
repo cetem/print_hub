@@ -1,9 +1,6 @@
 class Shift < ActiveRecord::Base
   has_paper_trail
   
-  # Atributos "permitidos"
-  attr_accessible :start, :finish, :description, :paid, :user_id, :lock_version
-  
   # Scopes
   scope :pending, where(finish: nil)
   scope :stale, -> {
