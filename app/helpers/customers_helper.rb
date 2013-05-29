@@ -88,4 +88,10 @@ module CustomersHelper
     form.input :kind, collection: kinds, prompt: false,
       input_html: { class: 'span11' }
   end
+
+  def link_to_activate_customer(customer)
+    link_to '&#xe014;'.html_safe, manual_activation_customer_path(customer),
+      class: 'iconic', method: :put, title: t('view.customers.activate'),
+      data: { 'show-tooltip' => true }
+  end
 end
