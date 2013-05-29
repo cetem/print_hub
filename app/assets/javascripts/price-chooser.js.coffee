@@ -1,4 +1,4 @@
-window.PriceChooser =
+@PriceChooser =
   choose: (setting, copies)->
     rules = PriceChooser.parse(setting + '')
     price = 0.0

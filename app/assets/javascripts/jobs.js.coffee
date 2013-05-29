@@ -1,4 +1,4 @@
-window.Jobs =
+@Jobs =
   listenRangeChanges: (itemClass)->
     $(document).on 'keyup', 'input[name$="[range]"]', ->
       element = $(this)
