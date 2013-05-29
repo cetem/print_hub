@@ -34,30 +34,10 @@
       <h3><%= t 'view.prints.print_jobs' %></h3>
 
       <table class="table table-condensed">
-        <thead>
-          <tr>
-            <th><%= PrintJob.human_attribute_name 'document_id' %></th>
-            <th><%= PrintJob.human_attribute_name 'copies' %></th>
-            <th><%= PrintJob.human_attribute_name 'printed_copies' %></th>
-            <th><%= PrintJob.human_attribute_name 'pages' %></th>
-            <th><%= PrintJob.human_attribute_name 'price_per_copy' %></th>
-            <th><%= PrintJob.human_attribute_name 'range' %></th>
-            <th><%= PrintJob.human_attribute_name 'print_job_type_id' %></th>
-            <th></th>
-          </tr>
-        </thead>
+        <%= render 'print_job_titles' %>
         <tbody>
           <% @print.print_jobs.each do |print_job| %>
-            <tr>
-              <td><%= show_document_name_in_print_job(print_job) %></td>
-              <td><%= print_job.copies %></td>
-              <td><%= print_job.printed_copies %></td>
-              <td><%= print_job.pages %></td>
-              <td><%= number_to_currency print_job.price_per_copy %></td>
-              <td><%= print_job.range %></td>
-              <td><%= print_job.print_job_type %></td>
-              <td><%= link_to_cancel_print_job(print_job) %></td>
-            </tr>
+            <%= render 'print_job_detail', print_job: print_job %>
           <% end %>
         </tbody>
       </table>
@@ -69,20 +49,10 @@
       <h3><%= t 'view.prints.article_lines' %></h3>
 
       <table class="table table-condensed">
-        <thead>
-          <tr>
-            <th><%= ArticleLine.human_attribute_name 'article_id' %></th>
-            <th><%= ArticleLine.human_attribute_name 'units' %></th>
-            <th><%= ArticleLine.human_attribute_name 'unit_price' %></th>
-          </tr>
-        </thead>
+        <%= render 'article_line_titles' %>
         <tbody>
           <% @print.article_lines.each do |article_line| %>
-            <tr>
-              <td><%= article_line.article %></td>
-              <td><%= article_line.units %></td>
-              <td><%= number_to_currency article_line.unit_price %></td>
-            </tr>
+            <%= render 'article_line_detail', article_line: article_line %>
           <% end %>
         </tbody>
       </table>

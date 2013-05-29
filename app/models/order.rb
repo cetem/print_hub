@@ -39,6 +39,7 @@ class Order < ApplicationModel
   
   # Relaciones
   belongs_to :customer
+  has_one :print
   has_many :order_lines, inverse_of: :order, dependent: :destroy
   has_many :order_files, inverse_of: :order, dependent: :destroy
   

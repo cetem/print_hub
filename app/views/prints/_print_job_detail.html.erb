@@ -1,0 +1,10 @@
+<tr>
+  <td><%= show_document_name_in_print_job(print_job) %></td>
+  <td><%= print_job.copies %></td>
+  <td><%= print_job.printed_copies %></td>
+  <td><%= print_job.pages %></td>
+  <td><%= number_to_currency print_job.price_per_copy %></td>
+  <td><%= print_job.range %></td>
+  <td><%= print_job.print_job_type %></td>
+  <td><%= link_to_cancel_print_job(print_job) if current_user %></td>
+</tr>

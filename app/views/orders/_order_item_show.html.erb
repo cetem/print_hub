@@ -1,0 +1,11 @@
+<tr>
+  <td>
+    <%= document ? oi.document : link_to(
+    oi.file_name, oi.file.url
+    ) %>
+  </td>
+  <td><%= oi.copies %></td>
+  <td class="hidden-phone"><%= oi.pages %></td>
+  <td class="hidden-phone"><%= number_to_currency oi.price_per_copy %></td>
+  <td class="hidden-phone"><%= oi.print_job_type %></td>
+</tr>
