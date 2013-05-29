@@ -1,9 +1,6 @@
 class Article < ApplicationModel
   has_paper_trail
   
-  # Atributos "permitidos"
-  attr_accessible :name, :code, :price, :description, :lock_version
-  
   # Alias de atributos
   alias_attribute :unit_price, :price
   
