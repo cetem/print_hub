@@ -1,4 +1,4 @@
-window.Order =
+@Order =
   updateTotalPrice: ->
     totalPrice = 0.0
     credit = parseFloat($('#user').data('credit')) || 0
@@ -57,35 +57,55 @@ window.Order =
       Order.updateOrderLinePrice $(this)
 
 
-jQuery ($)->
-  if $('#ph_orders').length > 0
-    # Update all prices on load
+new Rule
+  condition: -> $('#ph_orders').length
+  load: ->
+    # Actualizar precios
     Order.updateAllOrderLines()
+    Jobs.listenPrintJobTypeChanges('.order_line')
 
-    $(document).on 'ajax:success', 'a.details-link', (event, data)->
+    # Mostrar detalles del documento
+    @map.showDocumentDetails ||= (event, data)->
       Helper.show(
         $(this).parents('.order_line').find('.dynamic_details').hide().html(data)
       )
     
-    $(document).on 'item.removed', (event, element)->
+    # Eliminar item de la orden
+    @map.removeItem ||= (event, element)->
       if $(element).hasClass('order_line')
         $(element).attr('data-exclude-from-total', '1')
         Order.updateTotalPrice()
 
-    Jobs.listenPrintJobTypeChanges('.order_line')
-
-    $(document).on 'change keyup', '.price-modifier', '.page-modifier', ->
-      Order.updateAllOrderLines()
-
-    $(document).on 'change', '.order_file', ->
-      Order.updateAllOrderLines()
-
-    $(document).on 'click', 'a[data-action="print"]', (event)->
+    # Al hacer click en botón imprimir -> Imprimir =)
+    @map.print ||= (event)->
       window.print()
       
       event.preventDefault()
       event.stopPropagation()
+    
+    @map.skipFileWarning ||= ->
+      State.fileUploaded = false
+      $(this).preventDefault()
 
+    $(document).on 'click', '.skip-file-warning', @map.skipFileWarning
+    $(document).on 'ajax:success', 'a.details-link', @map.showDocumentDetails
+    $(document).on 'item.removed', @map.removeItem
+    $(document).on 'change keyup', '.price-modifier, .page-modifier, .order_file',
+      Order.updateAllOrderLines
+    $(document).on 'click', 'a[data-action="print"]', @map.print
+    
+  unload: ->
+    $(document).off 'click', '.skip-file-warning', @map.skipFileWarning
+    $(document).off 'ajax:success', 'a.details-link', @map.showDocumentDetails
+    $(document).off 'item.removed', @map.removeItem
+    $(document).off 'change keyup', '.price-modifier, .page-modifier, .order_file',
+      Order.updateAllOrderLines
+    $(document).off 'click', 'a[data-action="print"]', @map.print
+
+
+new Rule
+  condition: -> $('#order_file_file').length
+  load: ->
     # Subir un archivo para agregarlo a la orden
     $('input:file').fileupload
       dataType: 'script'
@@ -112,13 +132,3 @@ jQuery ($)->
         $('input:submit').attr('disabled', false)
         State.fileUploaded = true
         $('.order_file:last').change()
-
-    $(document).on 'click', '.skip-file-warning', () ->
-      State.fileUploaded = false
-      $(this).preventDefault()
-
-
-    # No dejar la pagina sino las subidas se pierden
-    $(window).bind 'beforeunload', () ->
-      Messages.fileUploadWarning if State.fileUploaded ||
-        $('input:submit').disabled

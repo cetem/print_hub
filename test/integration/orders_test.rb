@@ -30,7 +30,7 @@ class OrdersTest < ActionDispatch::IntegrationTest
     assert_equal orders_path, current_path
 
     show_href = nil
-    link_with_show_title = "a[data-original-title=#{I18n.t('label.show')}]"
+    link_with_show_title = "a[data-original-title='#{I18n.t('label.show')}']"
     
     within 'table tbody' do
       show_href = first(:css, link_with_show_title)[:href]
@@ -97,8 +97,9 @@ class OrdersTest < ActionDispatch::IntegrationTest
     assert_equal orders_path, current_path
 
     show_href = nil
-    link_with_show_title = "a[data-original-title=#{I18n.t('label.show')}]"
-    
+    link_with_show_title = "a[data-original-title='#{I18n.t('label.show')}']"
+    assert page.has_css?(link_with_show_title)
+
     within 'table tbody' do
       show_href = first(:css, link_with_show_title)[:href]
       first(:css, link_with_show_title).click
