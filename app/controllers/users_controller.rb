@@ -88,7 +88,7 @@ class UsersController < ApplicationController
   def autocomplete_for_user_name
     query = params[:q].sanitized_for_text_query
     query_terms = query.split(/\s+/).reject(&:blank?)
-    users = User.scoped
+    users = User.actives
     users = users.full_text(query_terms) unless query_terms.empty?
     users = users.limit(10)
     
