@@ -37,7 +37,7 @@ class PasswordResetsController < ApplicationController
     )
     
     respond_to do |format|
-      if @customer.try(:update_attributes, params[:customer])
+      if @customer.try(:update_attributes, customer_params)
         format.html { redirect_to(new_customer_session_url, notice: t('view.password_resets.correctly_updated')) }
         format.json  { head :ok }
       else
@@ -45,5 +45,11 @@ class PasswordResetsController < ApplicationController
         format.json  { render json: @customer.try(:errors) || [], status: :unprocessable_entity }
       end
     end
+  end
+
+  private
+
+  def customer_params
+    params.require(:customer).permit(:password, :password_confirmation)
   end
 end
