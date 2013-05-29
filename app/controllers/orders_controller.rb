@@ -65,7 +65,7 @@ class OrdersController < ApplicationController
   # POST /orders.json
   def create
     @title = t 'view.orders.new_title'
-    @order = current_customer.orders.build(params[:order])
+    @order = current_customer.orders.build(order_params)
     session[:documents_to_order].try(:clear)
 
     respond_to do |format|
@@ -86,7 +86,7 @@ class OrdersController < ApplicationController
     @order = current_customer.orders.find(params[:id])
 
     respond_to do |format|
-      if @order.update_attributes(params[:order])
+      if @order.update_attributes(order_params)
         format.html { redirect_to @order, notice: t('view.orders.correctly_updated') }
         format.json { head :ok }
       else
@@ -120,7 +120,7 @@ class OrdersController < ApplicationController
   # POST /orders/upload_file
   def upload_file
     @order = Order.new
-    order_file = @order.order_files.build(params[:order_file])
+    order_file = @order.order_files.build(order_file_params)
     order_file.extract_page_count if order_file
 
     respond_to do |format|
@@ -153,5 +153,25 @@ class OrdersController < ApplicationController
   
   def order_type
     %w[print all].include?(params[:type]) ? params[:type] : 'print'
+  end
+
+  def order_params
+    order_items_shared_attrs = [:order_id, :copies, :print_job_type_id]
+
+    params.require(:order).permit(
+      :scheduled_at, :notes, :lock_version, :include_documents, 
+      {
+        order_files_attributes: [
+          :file, :pages, :file_cache, *order_items_shared_attrs
+        ],
+        order_lines_attributes: [
+          :document_id, :lock_version, *order_items_shared_attrs
+        ]
+      }
+    )
+  end
+
+  def order_file_params
+    params.require(:order_file).permit(:file)
   end
 end

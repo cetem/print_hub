@@ -34,7 +34,7 @@ class OrderLineTest < ActiveSupport::TestCase
         price_per_copy: 1.10,
         print_job_type_id: print_job_types(:color).id,
         document_id: documents(:math_book).id
-      }.slice(*OrderLine.accessible_attributes.map(&:to_sym)))
+      })
     end
 
     # El precio por copia no se puede alterar

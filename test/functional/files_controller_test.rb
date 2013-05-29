@@ -89,6 +89,7 @@ class FilesControllerTest < ActionController::TestCase
   end
 
   private
+
   def drop_private_dir(path)
     path.sub("#{PRIVATE_PATH}/", '')
   end

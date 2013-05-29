@@ -24,17 +24,17 @@ class OrderTest < ActiveSupport::TestCase
         @order = customer.orders.create(
           scheduled_at: 10.days.from_now,
           order_lines_attributes: {
-            new_1: {
+            '1' => {
               copies: 2,
               print_job_type_id: print_job_types((:a4)).id,
               document_id: documents(:math_book).id
             }
           },
           order_files_attributes: {
-            new_1: {
+            '1' => {
               copies: 1,
               print_job_type_id: print_job_types((:a4)).id,
-              file: pdf_test_file_processed_with_action_dispatch
+              file: pdf_test_file
             }
           }
         )
@@ -52,17 +52,17 @@ class OrderTest < ActiveSupport::TestCase
         @order = customer.orders.create(
           scheduled_at: 10.days.from_now,
           order_lines_attributes: {
-            new_1: {
+            '1' => {
               copies: 2,
               print_job_type_id: print_job_types((:a4)).id,
               document_id: documents(:math_book).id
             }
           },
           order_files_attributes: {
-            new_1: {
+            '1' => {
               copies: 1,
               print_job_type_id: print_job_types((:a4)).id,
-              file: pdf_test_file_processed_with_action_dispatch
+              file: pdf_test_file
             }
           }
         )
@@ -89,7 +89,7 @@ class OrderTest < ActiveSupport::TestCase
       @order = customer.orders.create(
         scheduled_at: Time.now,
         order_lines_attributes: {
-          new_1: {
+          '1' => {
             copies: 2,
             print_job_type_id: print_job_types((:a4)).id,
             document_id: documents(:math_book).id

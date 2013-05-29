@@ -4,9 +4,6 @@ class OrderFile < ActiveRecord::Base
 
   before_save :extract_page_count
   
-  attr_accessible :file, :order_id, :pages, :price_per_copy, :copies, 
-    :file_cache, :print_job_type_id
-
   # Restricciones
   validates :copies, :price_per_copy, presence: true
   validates :copies, allow_nil: true, allow_blank: true,
@@ -24,7 +21,7 @@ class OrderFile < ActiveRecord::Base
 
     self.print_job_type ||= PrintJobType.default
     self.copies ||= 1
-    self.price_per_copy ||= job_price_per_copy
+    self.price_per_copy = job_price_per_copy
   end
 
   def extract_page_count
