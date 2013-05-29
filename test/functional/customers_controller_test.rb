@@ -291,7 +291,7 @@ class CustomersControllerTest < ActionController::TestCase
     customer = Customer.disable.first
 
     assert_difference 'Customer.disable.count', -1 do
-      assert_difference 'Customer.count' do
+      assert_difference 'Customer.active.count' do
         put :manual_activation, id: customer.id
       end
     end
