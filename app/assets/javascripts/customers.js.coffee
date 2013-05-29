@@ -1,10 +1,14 @@
-jQuery ->
-  if $('#ph_customers form').length > 0
-    $(document).keydown (e)->
+new Rule
+  condition: -> $('#ph_customers form').length
+  load: ->
+    @map.addShortCuts ||= (e)->
       key = e.which
 
-      # CTRL + ALT + E = Agregar una bonificación
+      # CTRL + ALT + B = Agregar una bonificación
       if (key == 66 || key == 98) && e.ctrlKey && e.altKey
+        # Mostrar si está oculto
+        Helper.show $('#bonuses_section:hidden')
+          
         $('#add_bonus_link').click()
         e.preventDefault()
         e.stopPropagation()
@@ -14,14 +18,21 @@ jQuery ->
         $('#add_deposit_link').click()
         e.preventDefault()
         e.stopPropagation()
-        
-  $('#month_select_to_pay').change ->
-    window.location = window.location.href.replace(
-      /date=([^&])+/, "date=#{$(this).val()}"
-    )
-    $(this).attr 'disabled', true
-    $('#loading-caption').stop(true, true).slideDown(100)
-  
-  if $('#ph_customers[data-action="show"]').length > 0
+
+    $(document).on 'keydown', @map.addShortCuts
+
+  unload: ->
+    $(document).off 'keydown', @map.addShortCuts
+
+new Rule
+  condition: -> $('#ph_customers[data-action="show"]').length
+  load: ->
+    $('#month_select_to_pay').on 'change', ->
+      Turbolinks.visit window.location.href.replace(
+        /date=([^&])+/, "date=#{$(this).val()}"
+      )
+      $(this).attr 'disabled', true
+    
     $(document).on 'ajax:success', 'a[data-event="pay-debt"]', (xhr, data)->
       $(this).parents('section.nested_items').replaceWith(data)
+

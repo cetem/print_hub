@@ -7,6 +7,7 @@ class CustomersTest < ActionDispatch::IntegrationTest
     Capybara.current_driver = Capybara.javascript_driver # :selenium by default
     Capybara.server_port = '54163'
     Capybara.app_host = "http://localhost:54163"
+    Capybara.reset_sessions!    # Forget the (simulated) browser state
   end
   
   test 'should create a customer' do
@@ -168,7 +169,7 @@ class CustomersTest < ActionDispatch::IntegrationTest
       edit_customer_path(customers(:student_without_bonus)), current_path
     )
     
-    assert !find('#bonuses_section').visible?
+    assert find('#bonuses_section', visible: false)
     click_link I18n.t('view.customers.show_bonuses')
     assert find('#bonuses_section').visible?
   end
