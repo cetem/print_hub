@@ -499,6 +499,7 @@
         a3: 'A3'
         a4: 'A4'
         legal: 'Oficio'
+      syntax_explanation: "Precio-Global ; >= Cant-Hojas @ Precio; >= Cant-Hojas2 @ Precio2 \n \n 0.18; >= 200 @ 0.17; >= 500 @ 0.165 "
     prints:
       index_title: 'Listado de impresiones'
       show_title: 'Detalle de impresión'
