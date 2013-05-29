@@ -1,12 +1,23 @@
-$(document).on 'focus', 'input[data-date-picker]:not(.hasDatepicker)', ->
-  $(this).datepicker
-    showOn: 'both',
-    onSelect: -> $(this).datepicker('hide')
-  .focus()
-  
-$(document).on 'focus', 'input[data-datetime-picker]:not(.hasDatepicker)', ->
-  $(this).datetimepicker
-    showOn: 'both',
-    stepHour: 1,
-    stepMinute: 5
-  .focus()
+jQuery ($)->
+  $(document).on 'focus keydown click', 'input[data-date-picker]', ->
+    $(this).datepicker
+      showOn: 'both',
+      onSelect: -> $(this).datepicker('hide')
+    .removeAttr('data-date-picker').focus()
+    
+  $(document).on 'focus keydown click', 'input[data-datetime-picker]', ->
+    $(this).datetimepicker
+      showOn: 'both',
+      stepHour: 1,
+      stepMinute: 5
+    .removeAttr('data-datetime-picker').focus()
+
+  # Due to a bug in jQuery UI, nasty hack...
+  $(document).on 'page:change', ->
+    $('.hasDatepicker').attr('data-date-picker', true)
+      .datepicker('destroy').removeClass('hasDatepicker')
+
+    $('.hasDatepicker').attr('data-datetime-picker', true)
+      .datetimepicker('destroy').removeClass('hasDatepicker')
+
+    $.datepicker.initialized = false
