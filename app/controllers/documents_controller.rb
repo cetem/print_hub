@@ -73,7 +73,7 @@ class DocumentsController < ApplicationController
   def create
     @title = t('view.documents.new_title')
     params[:document][:tag_ids] ||= []
-    @document = Document.new(params[:document])
+    @document = Document.new(document_params)
 
     respond_to do |format|
       if @document.save
@@ -94,7 +94,7 @@ class DocumentsController < ApplicationController
     params[:document][:tag_ids] ||= []
 
     respond_to do |format|
-      if @document.update_attributes(params[:document])
+      if @document.update_attributes(document_params)
         format.html { redirect_to(documents_url, notice: t('view.documents.correctly_updated')) }
         format.json  { head :ok }
       else
@@ -174,5 +174,13 @@ class DocumentsController < ApplicationController
   
   def default_direction
     sort_column == 'code' ? 'desc' : 'asc'
+  end
+
+  # Atributos permitidos
+  def document_params
+    params.require(:document).permit(
+      :code, :name, :description, :media, :enable, :stock, :file_cache,
+      :pages, :auto_tag_name, :lock_version, :file, tag_ids: []
+    )
   end
 end

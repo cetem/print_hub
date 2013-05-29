@@ -42,7 +42,7 @@ class DocumentTest < ActiveSupport::TestCase
         enable: true,
         tag_ids: [tags(:books).id, tags(:notes).id],
         file: file
-      }.slice(*Document.accessible_attributes.map(&:to_sym)))
+      })
 
       assert @document.save
     end
@@ -73,7 +73,7 @@ class DocumentTest < ActiveSupport::TestCase
         enable: true,
         description: 'New description',
         tag_ids: [tags(:books).id, tags(:notes).id]
-      }.slice(*Document.accessible_attributes.map(&:to_sym)))
+      })
 
       @document.file = Rack::Test::UploadedFile.new(
         File.join(Rails.root, 'test', 'fixtures', 'files', 'multipage_test.pdf'),
@@ -187,7 +187,7 @@ class DocumentTest < ActiveSupport::TestCase
         description: 'New description',
         enable: true,
         tag_ids: [tags(:books).id, tags(:notes).id],
-      }.slice(*Document.accessible_attributes.map(&:to_sym)))
+      })
 
     assert @document.invalid?
     assert_equal 1, @document.errors.size

@@ -61,7 +61,7 @@ class DocumentsControllerTest < ActionController::TestCase
   test 'should create document' do
     UserSession.create(users(:administrator))
     assert_difference 'Document.count' do
-      # 1 document, 2 document-tags relation, 2 tags update
+      # 1 document, 2 document-tags-relation, 2 tags update
       assert_difference 'Version.count', 5 do
         post :create, document: {
           code: '0001234',
@@ -73,8 +73,8 @@ class DocumentsControllerTest < ActionController::TestCase
           description: 'New description',
           auto_tag_name: 'Some name given in autocomplete',
           tag_ids: [tags(:books).id, tags(:notes).id],
-          file: fixture_file_upload('/files/test.pdf', 'application/pdf')
-        }.slice(*Document.accessible_attributes.map(&:to_sym))
+          file: pdf_test_file
+        }
       end
     end
 
@@ -113,7 +113,8 @@ class DocumentsControllerTest < ActionController::TestCase
       enable: '1',
       description: 'Updated description',
       auto_tag_name: 'Some name given in autocomplete'
-    }.slice(*Document.accessible_attributes.map(&:to_sym))
+    }
+
     assert_redirected_to documents_path
     assert_equal 'Updated name', @document.reload.name
   end
