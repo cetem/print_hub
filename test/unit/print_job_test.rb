@@ -268,7 +268,7 @@ class PrintJobTest < ActiveSupport::TestCase
     assert @print_job.invalid?
     assert_equal 1, @print_job.errors.count
     assert_equal [error_message_from_model(@print_job, :range, :too_long,
-        count: @print_job.document.pages)], @print_job.errors[:range]
+        count: @print_job.pages)], @print_job.errors[:range]
   end
 
   test 'options' do
@@ -306,7 +306,7 @@ class PrintJobTest < ActiveSupport::TestCase
   test 'range pages' do
     @print_job.range = ' '
     assert @print_job.valid?
-    assert_equal @print_job.document.pages, @print_job.range_pages
+    assert_equal @print_job.pages, @print_job.range_pages
 
     @print_job.range = '1'
     assert @print_job.valid?
