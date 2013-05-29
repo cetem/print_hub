@@ -43,7 +43,7 @@ class PrintJobTest < ActiveSupport::TestCase
         job_id: 1,
         print_id: prints(:math_print).id,
         document_id: document.id
-      }.slice(*PrintJob.accessible_attributes.map(&:to_sym)))
+      })
     end
 
     assert @print_job.reload.two_sided == false
@@ -63,7 +63,7 @@ class PrintJobTest < ActiveSupport::TestCase
         range: nil,
         print_job_type_id: print_job_types(:color).id,
         order_file_id: order_files(:for_tomorrow_cv_file).id
-      }.slice(*PrintJob.accessible_attributes.map(&:to_sym)))
+      })
     end
 
     assert @print_job.reload.two_sided == false
@@ -82,7 +82,7 @@ class PrintJobTest < ActiveSupport::TestCase
         print_job_type_id: print_job_types(:a4).id,
         job_id: 1,
         print_id: prints(:math_print).id
-      }.slice(*PrintJob.accessible_attributes.map(&:to_sym)))
+      })
     end
 
     assert_equal '5.0', @print_job.price.to_s
@@ -453,9 +453,7 @@ class PrintJobTest < ActiveSupport::TestCase
   end
 
   test 'completed' do
-    print_job = PrintJob.create(
-      @print_job.attributes.slice(*PrintJob.accessible_attributes - ['id'])
-    )
+    print_job = PrintJob.create(@print_job.attributes)
 
     assert !print_job.completed?
 

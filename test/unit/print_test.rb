@@ -45,13 +45,13 @@ class PrintTest < ActiveSupport::TestCase
               pages: 1,
               print_job_type_id: print_job_types((:a4)).id,
               document_id: documents(:math_book).id
-            }.slice(*PrintJob.accessible_attributes.map(&:to_sym)),
+            },
             '2' => {
               copies: 1,
               price_per_copy: 1000,
               print_job_type_id: print_job_types(:a4).id,
               order_file_id: order_files(:from_yesterday_cv_file).id
-            }.slice(*PrintJob.accessible_attributes.map(&:to_sym))
+            }
           },
           article_lines_attributes: {
             '1' => {
@@ -59,15 +59,15 @@ class PrintTest < ActiveSupport::TestCase
               units: 1,
               # No importa el precio, se establece desde el artículo
               unit_price: 12.0
-            }.slice(*ArticleLine.accessible_attributes.map(&:to_sym))
+            }
           },
           payments_attributes: {
             '1' => {
               amount: 36.89,
               paid: 36.89
-            }.slice(*Payment.accessible_attributes.map(&:to_sym))
+            }
           }
-        }.slice(*Print.accessible_attributes.map(&:to_sym)))
+        })
       end
     end
 
@@ -97,15 +97,15 @@ class PrintTest < ActiveSupport::TestCase
             units: 1,
             # No importa el precio, se establece desde el artículo
             unit_price: 12.0
-          }.slice(*ArticleLine.accessible_attributes.map(&:to_sym))
+          }
         },
         payments_attributes: {
           '1' => {
             amount: 1.79,
             paid: 1.79
-          }.slice(*Payment.accessible_attributes.map(&:to_sym))
+          }
         }
-      }.slice(*Print.accessible_attributes.map(&:to_sym)))
+      })
     end
 
     assert_equal 1, @print.reload.payments.size
@@ -136,15 +136,15 @@ class PrintTest < ActiveSupport::TestCase
               pages: 1,
               print_job_type_id: print_job_types((:a4)).id,
               document_id: documents(:math_book).id
-            }.slice(*PrintJob.accessible_attributes.map(&:to_sym))
+            }
           },
           payments_attributes: {
             '1' => {
               amount: 35.00,
               paid: 35.00
-            }.slice(*Payment.accessible_attributes.map(&:to_sym))
+            }
           }
-        }.slice(*Print.accessible_attributes.map(&:to_sym)))
+        })
       end
     end
 
@@ -176,15 +176,15 @@ class PrintTest < ActiveSupport::TestCase
               pages: 1,
               print_job_type_id: print_job_types((:a4)).id,
               document_id: documents(:math_book).id
-            }.slice(*PrintJob.accessible_attributes.map(&:to_sym))
+            }
           },
           payments_attributes: {
             '1' => {
               amount: 35.00,
               paid: 35.00
-            }.slice(*Payment.accessible_attributes.map(&:to_sym))
+            }
           }
-        }.slice(*Print.accessible_attributes.map(&:to_sym)))
+        })
       end
     end
 
@@ -220,21 +220,21 @@ class PrintTest < ActiveSupport::TestCase
                 pages: 1,
                 print_job_type_id: print_job_types((:a4)).id,
                 document_id: document.id
-              }.slice(*PrintJob.accessible_attributes.map(&:to_sym)),
+              },
               '2' => {
                 copies: 1,
                 price_per_copy: 1000,
                 print_job_type_id: print_job_types(:a4).id,
                 order_file_id: order_files(:from_yesterday_cv_file).id
-              }.slice(*PrintJob.accessible_attributes.map(&:to_sym))
+              }
             },
             payments_attributes: {
               '1' => {
                 amount: 1.10,
                 paid: 1.10
-              }.slice(*Payment.accessible_attributes.map(&:to_sym))
+              }
             }
-          }.slice(*Print.accessible_attributes.map(&:to_sym)))
+          })
         end
       end
     end
@@ -270,13 +270,13 @@ class PrintTest < ActiveSupport::TestCase
               price_per_copy: 0.10,
               print_job_type_id: print_job_types((:a4)).id,
               document_id: documents(:math_book).id
-            }.slice(*PrintJob.accessible_attributes.map(&:to_sym)),
+            },
             '2' => {
               copies: 10,
               price_per_copy: 0.10,
               print_job_type_id: print_job_types(:a4).id,
               order_file_id: order_files(:from_yesterday_cv_file).id
-            }.slice(*PrintJob.accessible_attributes.map(&:to_sym))
+            }
             # 360 páginas = $36.00
           },
           article_lines_attributes: {
@@ -285,16 +285,16 @@ class PrintTest < ActiveSupport::TestCase
               units: 1,
               # No importa el precio, se establece desde el artículo
               unit_price: 12.0
-            }.slice(*ArticleLine.accessible_attributes.map(&:to_sym))
+            }
           },
           payments_attributes: {
             '1' => {
               amount: 37.79,
               paid: 37.79,
               paid_with: Payment::PAID_WITH[:credit]
-            }.slice(*Payment.accessible_attributes.map(&:to_sym))
+            }
           }
-        }.slice(*Print.accessible_attributes.map(&:to_sym)))
+        })
       end
     end
 
@@ -327,7 +327,7 @@ class PrintTest < ActiveSupport::TestCase
             price_per_copy: 0.10,
             print_job_type_id: print_job_types((:a4)).id,
             document_id: documents(:math_book).id
-          }.slice(*PrintJob.accessible_attributes.map(&:to_sym))
+          }
           # 350 páginas = $35.00
         },
         payments_attributes: {
@@ -335,9 +335,9 @@ class PrintTest < ActiveSupport::TestCase
             amount: 35.00,
             paid: 35.00,
             paid_with: Payment::PAID_WITH[:credit]
-          }.slice(*Payment.accessible_attributes.map(&:to_sym))
+          }
         }
-      }.slice(*Print.accessible_attributes.map(&:to_sym)))
+      })
     end
     
     assert_equal [error_message_from_model(@print, :credit_password, :invalid)],
@@ -360,13 +360,13 @@ class PrintTest < ActiveSupport::TestCase
                 price_per_copy: 0.10,
                 print_job_type_id: print_job_types((:a4)).id,
                 document_id: documents(:math_book).id
-              }.slice(*PrintJob.accessible_attributes.map(&:to_sym)),
+              },
               '2' => {
                 copies: 1000,
                 price_per_copy: 0.10,
                 print_job_type_id: print_job_types(:a4).id,
                 order_file_id: order_files(:from_yesterday_cv_file).id
-              }.slice(*PrintJob.accessible_attributes.map(&:to_sym))
+              }
               # 36000 páginas = $3600.00
             },
             article_lines_attributes: {
@@ -375,20 +375,20 @@ class PrintTest < ActiveSupport::TestCase
                 units: 1,
                 # No importa el precio, se establece desde el artículo
                 unit_price: 12.0
-              }.slice(*ArticleLine.accessible_attributes.map(&:to_sym))
+              }
             },
             payments_attributes: {
               '1' => {
                 amount: 3101.79,
                 paid: 3101.79
-              }.slice(*Payment.accessible_attributes.map(&:to_sym)),
+              },
               '2' => {
                 amount: 500.00,
                 paid: 500.00,
                 paid_with: Payment::PAID_WITH[:credit]
-              }.slice(*Payment.accessible_attributes.map(&:to_sym))
+              }
             }
-          }.slice(*Print.accessible_attributes.map(&:to_sym)))
+          })
         end
       end
     end
@@ -421,9 +421,9 @@ class PrintTest < ActiveSupport::TestCase
             '1' => {
               amount: 35.0,
               paid: 35.0
-            }.slice(*Payment.accessible_attributes.map(&:to_sym))
+            }
           }
-        }.slice(*Print.accessible_attributes.map(&:to_sym)))
+        })
       end
     end
 
@@ -456,9 +456,9 @@ class PrintTest < ActiveSupport::TestCase
               '1' => {
                 amount: '36.30',
                 paid: '36.30'
-              }.slice(*Payment.accessible_attributes.map(&:to_sym))
+              }
             }
-          }.slice(*Print.accessible_attributes.map(&:to_sym)))
+          })
         end
       end
     end
@@ -500,21 +500,21 @@ class PrintTest < ActiveSupport::TestCase
                 pages: 1,
                 print_job_type_id: print_job_types((:a4)).id,
                 document_id: documents(:math_book).id
-              }.slice(*PrintJob.accessible_attributes.map(&:to_sym)),
+              },
               '2' => {
                 copies: 1,
                 price_per_copy: 1000,
                 print_job_type_id: print_job_types(:a4).id,
                 order_file_id: order_files(:from_yesterday_cv_file).id
-              }.slice(*PrintJob.accessible_attributes.map(&:to_sym))
+              }
             },
             payments_attributes: {
               '1' => {
                 amount: 35.00,
                 paid: 35.00
-              }.slice(*Payment.accessible_attributes.map(&:to_sym))
+              }
             }
-          }.slice(*Print.accessible_attributes.map(&:to_sym)))
+          })
         end
       end
     end
@@ -776,18 +776,18 @@ class PrintTest < ActiveSupport::TestCase
 
   def build_new_print_from(print)
     new_print = Print.new(
-      print.attributes.slice(*Print.accessible_attributes)
+      print.attributes
     )
     new_print.print_jobs.clear
 
     print.print_jobs.each do |pj|
       new_print.print_jobs.build(
-        pj.attributes.slice(*PrintJob.accessible_attributes)
+        pj.attributes
       )
     end
     print.article_lines.each do |al|
       new_print.article_lines.build(
-        al.attributes.slice(*ArticleLine.accessible_attributes)
+        al.attributes
       )
     end
 

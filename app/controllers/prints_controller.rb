@@ -68,7 +68,7 @@ class PrintsController < ApplicationController
   # POST /prints.json
   def create
     @title = t('view.prints.new_title')
-    @print = current_user.prints.build(params[:print])
+    @print = current_user.prints.build(print_params)
     session[:documents_for_printing].try(:clear)
 
     respond_to do |format|
@@ -93,7 +93,7 @@ class PrintsController < ApplicationController
     end
 
     respond_to do |format|
-      if @print.update_attributes(params[:print])
+      if @print.update_attributes(print_params)
         format.html { redirect_to(@print, notice: t('view.prints.correctly_updated')) }
         format.json  { head :ok }
       else
@@ -194,5 +194,22 @@ class PrintsController < ApplicationController
     end
 
     scope
+  end
+
+  def print_params
+    shared_attrs = [:id, :lock_version]
+
+    params.require(:print).permit(
+      :printer, :scheduled_at, :customer_id, :order_id, :auto_customer_name, 
+      :avoid_printing, :include_documents, :credit_password, :pay_later, 
+      :lock_version, :comment, print_jobs_attributes: [
+        :document_id, :copies, :pages, :range, :print_id, :auto_document_name, 
+        :job_hold_until, :order_file_id, :print_job_type_id, *shared_attrs
+      ], article_lines_attributes: [
+        :print_id, :article_id, :units, :auto_article_name, *shared_attrs
+      ], payments_attributes: [
+        :amount, :paid, :paid_with, :payable_id, *shared_attrs
+      ]
+    )
   end
 end

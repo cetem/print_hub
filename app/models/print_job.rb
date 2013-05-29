@@ -34,11 +34,6 @@ class PrintJob < ApplicationModel
   attr_writer :range_pages
   attr_accessor :auto_document_name, :job_hold_until, :file_name
   
-  # Atributos "permitidos"
-  attr_accessible :id, :document_id, :copies, :pages, :range, :print_id,
-    :auto_document_name, :job_hold_until, :lock_version,
-    :order_file_id, :print_job_type_id
-
   # Restricciones de atributos
   attr_readonly :id, :document_id, :copies, :pages, :range, :job_id, :print_id,
     :order_file_id
@@ -77,7 +72,7 @@ class PrintJob < ApplicationModel
       self.file_name = self.order_file.file_name
     end
 
-    self.price_per_copy ||= job_price_per_copy
+    self.price_per_copy = job_price_per_copy
   end
   
   def put_printed_pages
