@@ -6,5 +6,6 @@ resources :customers do
     get :credit_detail
     put :pay_off_debt
     put :pay_month_debt
+    put :manual_activation
   end
 end

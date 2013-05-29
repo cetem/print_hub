@@ -285,4 +285,17 @@ class CustomersControllerTest < ActionController::TestCase
     assert_select '#unexpected_error', false
     assert_template 'customers/_month_paid'
   end
+
+  test 'should manual activate a disable customer' do
+    UserSession.create(users(:administrator))
+    customer = Customer.disable.first
+
+    assert_difference 'Customer.disable.count', -1 do
+      assert_difference 'Customer.count' do
+        put :manual_activation, id: customer.id
+      end
+    end
+
+    assert_redirected_to customers_url
+  end
 end

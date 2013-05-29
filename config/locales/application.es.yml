@@ -379,6 +379,10 @@
       kinds:
         normal: 'Normal'
         reliable: 'Con cuenta corriente'
+      total_free_credit: 'Credito total disponible: '
+      activate: 'Activar cuenta'
+      manual_activation_correct: 'La cuenta se activó correctamente'
+      can_not_be_manually_activated: 'La cuenta no se ha podido activar'
     customer_sessions:
       login: 'Ingresar'
       new_title: 'Iniciar sesión'

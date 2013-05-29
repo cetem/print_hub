@@ -188,4 +188,15 @@ class CustomersController < ApplicationController
 
     render partial: 'month_paid'
   end
+
+  # PUT /customers/1/manual_activate
+  def manual_activation
+    @customer = Customer.disable.find(params[:id])
+
+    notice = @customer.activate! ?
+      t('view.customers.manual_activation_correct') :
+      t('view.customers.can_not_be_manually_activated')
+
+    redirect_to customers_url, notice: notice
+  end
 end
