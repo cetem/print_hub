@@ -10,6 +10,10 @@
 //= require jquery-ui-timepicker-addon
 //= require datepicker/jquery.ui.datepicker-es
 //= require twitter/bootstrap
+//= require inspector
+//= require turboevents
+//= require turbolinks
+//= require helpers
 //= require common
 //= require autocomplete
 //= require datepicker
