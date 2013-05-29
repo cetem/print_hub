@@ -25,6 +25,7 @@ class PrintsTest < ActionDispatch::IntegrationTest
     
     assert_page_has_no_errors!
     assert_equal documents_path, current_path
+    assert page.has_css?('a.add_link')
     
     within 'table tbody' do
       first(:css, 'a.add_link').click

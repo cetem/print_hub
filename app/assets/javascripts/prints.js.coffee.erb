@@ -1,4 +1,4 @@
-window.Print =
+@Print =
   updateArticleCount: ->
     articleCount = $('.article_line:not([data-exclude-from-total])').length
     title = $('a[href="#articles_container"]')
@@ -115,9 +115,11 @@ window.Print =
       totalTypePages[printJobType] += (copies * rangePages) || 0
 
 
-jQuery ($)->
-  if $('#ph_prints').length > 0
-    $(document).on 'item.removed', (event, element)->
+new Rule
+  condition: -> $('#ph_prints').length
+  load: ->
+    # Elimina con efecto y recalcula
+    @map.removeItem ||= (event, element)->
       if $(element).hasClass('print_job')
         $(element).attr('data-exclude-from-total', '1')
 
@@ -130,7 +132,8 @@ jQuery ($)->
         Print.updateArticleCount()
         Print.updateTotalPrice()
 
-    $(document).on 'autocomplete:update', 'input.autocomplete-field', ->
+    # Después del autocomplete, completa con todos los datos
+    @map.pagesAndPriceAfterAutocomplete ||= ->
       item = $(this).data('item')
 
       if item.pages
@@ -175,18 +178,19 @@ jQuery ($)->
 
         Print.updateTotalPrice()
 
-    $('#print_auto_customer_name').on 'autocomplete:update', ->
+    # Si el cliente es 'confiable' autoselecciona Cuenta corriente
+    @map.autoSelectCustomerKind ||= ->
       element = $(this).data('item')
       checked = element.kind == '<%= Customer::KINDS[:reliable] %>'
       
       $('#print_pay_later').attr('checked', checked)
         
-    $('#print_printer').change -> Print.updateSubmitLabel()
-
-    $(document).on 'change keyup', 'input[name$="[auto_customer_name]"]', ->
+    # Elimina el cliente del trabajo de impresión
+    @map.removeCustomer ||= ->
       Print.clearCustomer() if /^\s*$/.test($(this).val())
 
-    $(document).on 'change', 'input[name$="[auto_document_name]"]', ->
+    # Limpia el documento en caso de cambiar el _autocomplete_
+    @map.resetPrintJobElements ||= ->
       element = $(this)
       printJob = element.parents('.print_job')
 
@@ -199,7 +203,8 @@ jQuery ($)->
 
         Print.updatePrintJobPrice(printJob)
 
-    $(document).on 'change', 'input[name$="[auto_article_name]"]', ->
+    # Limpia articulo en caso de cambiar el _autocomplete_
+    @map.resetArticlesElements ||= ->
       element = $(this)
       articleLine = element.parents('.article_line')
 
@@ -209,10 +214,8 @@ jQuery ($)->
 
         Print.updateArticleLinePrice(articleLine)
         
-    $(document).on 'autocomplete:update', 'input[name$="[auto_article_name]"]', ->
-      Print.updateArticleCount()
-
-    $(document).on 'change keyup', 'input[name$="[pages]"]', ->
+    # Deshabilita el campo documento, y solo hace calculos contemplando paginas/copias
+    @map.printJobWithoutDocument ||= ->
       element = $(this)
       printJob = element.parents('.print_job')
       range = printJob.find('input[name$="[range]"]')
@@ -228,17 +231,16 @@ jQuery ($)->
       range.data('rangePages', parseInt(element.val()))
 
       Print.updatePrintJobPrice(printJob)
-    
-    $(document).on 'change keyup', 'input[name$="[copies]"]', ->
+
+    # Actualiza el stock a imprimir
+    @map.updateStock ||= ->
       element = $(this)
       printJob = element.parents('.print_job')
       
       Print.updateStock(printJob)
-    
-    Jobs.listenRangeChanges('.print_job')
-    Jobs.listenPrintJobTypeChanges('.print_job')
-    
-    $(document).on 'keyup', 'input[name$="[range]"]', ->
+
+    # Recalcula precio y paginas con el rango
+    @map.calcWithRange ||= ->
       printJob = $(this).parents('.print_job')
       printJobStockDetails = printJob.find('.document_stock')
       stock = parseInt printJobStockDetails.data('stock')
@@ -250,50 +252,49 @@ jQuery ($)->
       else
         printJobStockDetails.hide()
 
-    $(document).on 'change keyup ph.page_modification', '.page-modifier', (e)->
+    # Actualiza el total de paginas del trabajo de impresión
+    @map.updateTotalPages ||= (e)->
       Print.updateTotalPages()
       
       $('.print_job').each (i, pj)-> Print.updatePrintJobPrice($(pj))
 
-    $(document).on 'change keyup', '.price-modifier', ->
+    # Actualiza el precio de linea modificada
+    @map.updateLinePrice ||= ->
       element = $(this)
 
       if element.parents('.print_job').length > 0
         Print.updatePrintJobPrice(element.parents('.print_job'))
       else if element.parents('.article_line').length > 0
         Print.updateArticleLinePrice(element.parents('.article_line'))
-    
-    $(document).on 'change', 'input[name$="[pay_later]"]', ->
+
+    # Pone los pagos en 0 (ya que va a cuenta corriente)
+    @map.resetPayments ||= ->
       if($(this).is(':checked'))
         $('input[name^="print[payments_attributes]"]').each (i, e)->
           $(e).val('0.000') if parseInt($(e).val()) > 0
       else
         Print.updateTotalPrice()
 
-    $(document).on 'ajax:success', 'a.details-link', (event, data)->
+    # Muestra los detalles del documento
+    @map.showDocumentDetails ||= (event, data)->
       Helper.show(
         $(this).parents('.print_job').find('.dynamic_details').hide().html(data)
       )
 
-    $(document).on 'click', '#link_to_customer_credit_detail', ->
+    # Muestra el credito del cliente
+    @map.showCustomerCredit ||= ->
       $("#{$(this).attr('data-target')} .modal-body").load($(this).attr('href'))
-    
-    $(document).on 'click', 'a[data-action="clear-customer"]', (event)->
+
+    # Quita el cliente de la impresión
+    @map.clearCustomer ||= (event)->
       Print.clearCustomer()
       $(this).remove()
       
       event.preventDefault()
       event.stopPropagation()
     
-    Print.updateSubmitLabel()
-
-    $('.price-modifier').trigger('change') # To update prices when print an order
-    
-    if /^\s*$/.test($('#print_customer_id').val())
-      $('#print_pay_later').parents('div.field').hide()
-
     # Captura de atajos de teclado
-    $(document).keydown (e)->
+    @map.setShortCuts ||= (e)->
       key = e.which
 
       # CTRL + ALT + I = Agregar un trabajo
@@ -308,3 +309,62 @@ jQuery ($)->
       else if (key == 80 || key == 112) && e.ctrlKey && e.altKey
         $('#print_submit').click()
         e.preventDefault()
+    
+   
+    $(document).on 'item.removed', @map.removeItem
+    $(document).on 'autocomplete:update', 'input.autocomplete-field',
+      @map.pagesAndPriceAfterAutocomplete
+    $(document).on 'autocomplete:update', '#print_auto_customer_name',
+      @map.autoSelectCustomerKind
+    $(document).on 'change', '#print_printer', Print.updateSubmitLabel
+    $(document).on 'change keyup', 'input[name$="[auto_customer_name]"]',
+      @map.removeCustomer
+    $(document).on 'change', 'input[name$="[auto_document_name]"]', @map.resetPrintJobElements
+    $(document).on 'change', 'input[name$="[auto_article_name]"]', @map.resetArticlesElements
+    $(document).on 'autocomplete:update', 'input[name$="[auto_article_name]"]',
+      Print.updateArticleCount
+    $(document).on 'change keyup', 'input[name$="[pages]"]', @map.printJobWithoutDocument
+    $(document).on 'change keyup', 'input[name$="[copies]"]', @map.updateStock
+    $(document).on 'keyup', 'input[name$="[range]"]', @map.calcWithRange
+    $(document).on 'change keyup ph.page_modification', '.page-modifier', @map.updateTotalPages
+    $(document).on 'change keyup', '.price-modifier', @map.updateLinePrice
+    $(document).on 'change', 'input[name$="[pay_later]"]', @map.resetPayments
+    $(document).on 'ajax:success', 'a.details-link', @map.showDocumentDetails
+    $(document).on 'click', '#link_to_customer_credit_detail', @map.showCustomerCredit
+    $(document).on 'click', 'a[data-action="clear-customer"]', @map.clearCustomer
+    $(document).on 'keydown', @map.setShortCuts
+
+    Jobs.listenRangeChanges('.print_job')
+    Jobs.listenPrintJobTypeChanges('.print_job')
+    Print.updateSubmitLabel()
+    
+    if /^\s*$/.test($('#print_customer_id').val())
+      $('#print_pay_later').parents('div.field').hide()
+  
+  unload: ->
+    $(document).off 'item.removed', @map.removeItem
+    $(document).off 'autocomplete:update', 'input.autocomplete-field',
+      @map.pagesAndPriceAfterAutocomplete
+    $(document).off 'autocomplete:update', '#print_auto_customer_name',
+      @map.autoSelectCustomerKind
+    $(document).off 'change', '#print_printer', Print.updateSubmitLabel
+    $(document).off 'change keyup', 'input[name$="[auto_customer_name]"]',
+      @map.removeCustomer
+    $(document).off 'change', 'input[name$="[auto_document_name]"]', @map.resetPrintJobElements
+    $(document).off 'change', 'input[name$="[auto_article_name]"]', @map.resetArticlesElements
+    $(document).off 'autocomplete:update', 'input[name$="[auto_article_name]"]',
+      Print.updateArticleCount
+    $(document).off 'change keyup', 'input[name$="[pages]"]', @map.printJobWithoutDocument
+    $(document).off 'change keyup', 'input[name$="[copies]"]', @map.updateStock
+    $(document).off 'keyup', 'input[name$="[range]"]', @map.calcWithRange
+    $(document).off 'change keyup ph.page_modification', '.page-modifier', @map.updateTotalPages
+    $(document).off 'change keyup', '.price-modifier', @map.updateLinePrice
+    $(document).off 'change', 'input[name$="[pay_later]"]', @map.resetPayments
+    $(document).off 'ajax:success', 'a.details-link', @map.showDocumentDetails
+    $(document).off 'click', '#link_to_customer_credit_detail', @map.showCustomerCredit
+    $(document).off 'click', 'a[data-action="clear-customer"]', @map.clearCustomer
+    $(document).off 'keydown', @map.setShortCuts
+
+jQuery ($) ->
+  $(document).on 'page:change', ->
+    $('.price-modifier:first').trigger('change') # To update prices when print an order
