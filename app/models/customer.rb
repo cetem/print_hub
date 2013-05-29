@@ -14,20 +14,12 @@ class Customer < ApplicationModel
   }.with_indifferent_access.freeze
 
   # Scopes
-  default_scope where(enable: true)
+  scope :active, where(enable: true)
   scope :disable, where(enable: false)
   scope :with_monthly_bonus, where('free_monthly_bonus > :zero', zero: 0)
   scope :with_debt, joins(:prints).merge(Print.pay_later).uniq
   scope :reliables, where(kind: KINDS[:reliable])
 
-  # Atributos "permitidos"
-  attr_accessible :name, :lastname, :identification, :email, :password,
-    :password_confirmation, :lock_version
-  attr_accessible :name, :lastname, :identification, :email, :password,
-    :password_confirmation, :lock_version, :free_monthly_bonus,
-    :bonus_without_expiration, :enable, :bonuses_attributes,
-    :deposits_attributes, :kind, as: :admin
-  
   # Alias de atributos
   alias_attribute :informal, :identification
 
@@ -43,7 +35,7 @@ class Customer < ApplicationModel
   validates :name, :identification, presence: true
   validates :identification, uniqueness: true, allow_nil: true,
     allow_blank: true
-  validates :name, uniqueness: {scope: :lastname}, allow_nil: true,
+  validates :name, uniqueness: { scope: :lastname }, allow_nil: true,
     allow_blank: true
   validates :name, :lastname, :identification, length: {maximum: 255},
     allow_nil: true, allow_blank: true
@@ -69,8 +61,7 @@ class Customer < ApplicationModel
 
   def initialize(attributes = nil, options = {})
     super(attributes, options)
-    
-    self.enable = options[:as] == :admin # TODO: find a better alternative
+
     self.kind ||= KINDS[:normal]
   end
 
@@ -87,6 +78,10 @@ class Customer < ApplicationModel
     }
     
     super(default_options.merge(options || {}))
+  end
+
+  def self.find_by_activated_email(email)
+    Customer.active.where(email: email).first
   end
   
   def reject_credits(attributes)

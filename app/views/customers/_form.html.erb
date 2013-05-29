@@ -109,6 +109,7 @@
   </div>
   <div class="form-actions">
     <div class="pull-right"><%= yield :form_actions %></div>
+    <%= f.input :enable, as: :hidden, input_html: { value: true } %>
     <%= f.input :lock_version, as: :hidden %>
     <%= f.button :submit, class: 'btn-primary' %>
   </div>

@@ -68,9 +68,7 @@ class CustomersController < ApplicationController
   # POST /customers.json
   def create
     @title = t('view.customers.new_title')
-    @customer = Customer.new(
-      params[:customer], {as: (current_user.try(:admin) ? :admin : :default)}
-    )
+    @customer = Customer.new(customer_params)
 
     respond_to do |format|
       if @customer.save
@@ -93,7 +91,7 @@ class CustomersController < ApplicationController
     @customer = Customer.unscoped.find(params[:id])
 
     respond_to do |format|
-      if @customer.update_attributes(params[:customer], as: :admin)
+      if @customer.update_attributes(customer_params_as_admin)
         format.html { redirect_to(customer_url(@customer), notice: t('view.customers.correctly_updated')) }
         format.json  { head :ok }
       else
@@ -141,7 +139,7 @@ class CustomersController < ApplicationController
     @customer = current_customer
 
     respond_to do |format|
-      if @customer.update_attributes(params[:customer])
+      if @customer.update_attributes(customer_params_as_default)
         format.html { redirect_to(edit_profile_customer_url(@customer), notice: t('view.customers.profile_correctly_updated')) }
         format.json  { head :ok }
       else
@@ -187,5 +185,31 @@ class CustomersController < ApplicationController
     @customer.pay_month_debt(params[:date])
 
     render partial: 'month_paid'
+  end
+
+  private
+  
+  # Atributos permitidos
+  def customer_params
+    current_user.try(:admin) ? 
+      customer_params_as_admin : customer_params_as_default
+  end
+
+  def customer_params_as_admin
+    credit_attrs = [:amount, :remaining, :valid_until, :customer_id]
+
+    params.require(:customer).permit(
+      :name, :lastname, :identification, :email, :password,
+      :password_confirmation, :lock_version, :free_monthly_bonus,
+      :bonus_without_expiration, :enable, :kind,
+      bonuses_attributes: credit_attrs, deposits_attributes: credit_attrs
+    )
+  end
+
+  def customer_params_as_default
+    params.require(:customer).permit(
+      :name, :lastname, :identification, :email, :password,
+      :password_confirmation, :lock_version
+    )
   end
 end
