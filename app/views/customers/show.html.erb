@@ -1,5 +1,5 @@
 <div class="readonly-data">
-  <h2><%= @customer %></h2>
+  <h2 class="<%= 'disabled' unless @customer.enable %>"><%= @customer %></h2>
 
   <p>
     <%= mail_to @customer.email %>

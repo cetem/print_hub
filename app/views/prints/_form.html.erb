@@ -38,7 +38,9 @@
             <%= f.input :avoid_printing, as: :boolean %>
           </div>
           <div class="span6">
-            <%= f.input :pay_later, as: :boolean %>
+            <%= f.input :pay_later, as: :boolean, input_html: {
+              checked: @print.customer.try(:reliable?)
+            } %>
           </div>
         </div>
       </div>

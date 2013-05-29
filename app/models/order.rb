@@ -35,6 +35,7 @@ class Order < ApplicationModel
   
   # Relaciones
   belongs_to :customer
+  has_one :print
   has_many :order_lines, inverse_of: :order, dependent: :destroy
   has_many :order_files, inverse_of: :order, dependent: :destroy
   
@@ -55,11 +56,9 @@ class Order < ApplicationModel
 
     self.print_out = !!self.customer.try(:can_afford?, self.price)
     
-    nested_models = self.order_lines.to_a + self.order_files.to_a
-    
-    nested_models.compact.each do |nm|
+    order_items.each do |nm|
       nm.price_per_copy = nm.job_price_per_copy
-    end if nested_models.present?
+    end if order_items.present?
   end
 
   def avoid_destruction
@@ -76,11 +75,13 @@ class Order < ApplicationModel
   end
   
   def must_have_one_item
-    nested_models = self.order_lines.to_a + self.order_files.to_a
+    self.errors.add :base, :must_have_one_item if order_items.empty?
+  end
 
-    if nested_models.reject(&:marked_for_destruction?).empty?
-      self.errors.add :base, :must_have_one_item
-    end
+  def order_items
+    (
+      self.order_lines.to_a + self.order_files.to_a
+    ).compact.reject(&:marked_for_destruction?)
   end
   
   def status_text
@@ -102,23 +103,13 @@ class Order < ApplicationModel
   end
   
   def price
-    nested_models = self.order_lines.to_a + self.order_files.to_a
-    
-    nested_models.reject(&:marked_for_destruction?).to_a.sum(&:price)
+    self.completed? ? self.print.price : order_items.sum(&:price)
   end
   
   def total_pages_by_type(type)
-    sum = 0
-
-    self.order_lines.reject(&:marked_for_destruction?).each do |ol|
-      sum += (ol.print_job_type == type) ? (ol.document.try(:pages) || 0) : 0
+    self.order_items.inject(0) do |t, oi|
+      t + (oi.print_job_type == type ? (oi.pages || 0) : 0)
     end
-
-    self.order_files.reject(&:marked_for_destruction?).each do |of| 
-      sum += (of.print_job_type == type) ? (of.try(:pages) || 0) : 0
-    end
-
-    sum 
   end
   
   def self.pending_for_print_count

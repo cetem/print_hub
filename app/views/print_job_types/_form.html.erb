@@ -2,7 +2,11 @@
   <div class="form-inputs">
     <%= show_print_job_type_media_field(f) %>
     <%= f.input :name %>
-    <%= f.input :price %>
+    <abbr title="<%= t('view.print_job_types.syntax_explanation') %>">
+      <%= f.label :price %>
+    </abbr>
+    <%= f.input :price, label: false,
+      input_html: { placeholder: '0.20; >= 500 @ 0.18; >= 1000 @ 0.16' } %>
     <div class="row-fluid">
       <div class='span3'>
         <%= f.input :two_sided, input_html: { class: '' } %>

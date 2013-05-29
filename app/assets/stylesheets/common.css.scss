@@ -107,3 +107,8 @@ html.public, body.public {
 .ui-datepicker-trigger {
   display: none;
 }
+
+.disabled {
+  color: #bebebe;
+  font-style: italic;
+}

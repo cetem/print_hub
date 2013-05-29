@@ -12,6 +12,7 @@ class OrderLine < ApplicationModel
   belongs_to :document
   belongs_to :order
   belongs_to :print_job_type
+  delegate :pages, to: :document
   
   def initialize(attributes = nil, options = {})
     super(attributes, options)
@@ -26,7 +27,7 @@ class OrderLine < ApplicationModel
   end
 
   def total_pages
-    (self.document.try(:pages) || 0) * (self.copies || 0)
+    (self.pages || 0) * (self.copies || 0)
   end
 
   def job_price_per_copy

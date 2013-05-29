@@ -182,22 +182,16 @@ class OrderTest < ActiveSupport::TestCase
   end
   
   test 'price' do
-    nested_models = @order.order_lines.to_a + @order.order_files.to_a
-    price = nested_models.inject(0) { |t, ol| t + ol.price }
+    order_items = @order.order_items
+    price = order_items.inject(0) { |t, ol| t + ol.price }
 
-    assert nested_models.any? { |ol| ol.price > 0 }
+    assert order_items.any? { |ol| ol.price > 0 }
     assert @order.price > 0
     assert_equal @order.price, price
   end
   
   test 'total pages' do
-    total_pages = @order.order_lines.inject(0) do |t, ol|
-      t + ol.document.pages
-    end
-
-    total_pages += @order.order_files.inject(0) do |t, of|
-      t + of.pages
-    end
+    total_pages = @order.order_items.inject(0) { |t, oi| t + oi.pages }
     
     assert total_pages > 0
     assert_equal total_pages, @order.total_pages_by_type(print_job_types(:a4))

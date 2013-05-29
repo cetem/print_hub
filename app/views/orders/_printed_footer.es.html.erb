@@ -34,7 +34,13 @@
   
   <div id="credit">
     <p>
-      Tenés&nbsp;
+      Crédito disponible &nbsp;
+      <span class="money label label-inverse">
+        <%= number_to_currency current_customer.free_credit %>
+      </span>
+    </p>
+    <p>
+      Tendrías con los pedidos encargados&nbsp;
       <span class="money label label-inverse">
         <%= number_to_currency current_customer.free_credit_minus_pendings %>
       </span>

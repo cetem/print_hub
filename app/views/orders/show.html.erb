@@ -31,41 +31,51 @@
   <% end %>
 
   <% if @order.order_lines.present? || @order.order_files.present? %>
-    <h3><%= t 'view.orders.order_lines' %></h3>
+    <% if @order.completed? %>
+      <table class="table table-striped">
+        <%= render 'prints/print_job_titles' %>
 
-    <table class="table table-striped">
-      <thead>
-        <tr>
-          <th><%= OrderLine.human_attribute_name 'document_id' %></th>
-          <th><%= OrderLine.human_attribute_name 'copies' %></th>
-          <th class="hidden-phone"><%= Document.human_attribute_name 'pages' %></th>
-          <th class="hidden-phone"><%= OrderLine.human_attribute_name 'price_per_copy' %></th>
-          <th class="hidden-phone"><%= OrderLine.human_attribute_name 'print_job_type_id' %></th>
-        </tr>
-      </thead>
-      <tbody>
-        <% @order.order_files.each do |order_file| %>
+        <tbody>
+          <% @order.print.print_jobs.each do |print_job| %>
+            <%= render 'prints/print_job_detail', print_job: print_job %>
+          <% end %>
+        </tbody>
+      </table>
+      <% if @order.print.article_lines.size > 0 %>
+        <table class="table table-striped">
+
+          <%= render 'prints/article_line_titles' %>
+
+          <tbody>
+            <% @order.print.article_lines.each do |article_line| %>
+              <%= render 'prints/article_line_detail', article_line: article_line %>
+            <% end %>
+          </tbody>
+        </table>
+      <% end %>
+    <% else %>
+      <h3><%= t 'view.orders.order_lines' %></h3>
+
+      <table class="table table-striped">
+        <thead>
           <tr>
-            <td><%= link_to(
-              order_file.file_name, order_file.file.url
-            ) %></td>
-            <td><%= order_file.copies %></td>
-            <td class="hidden-phone"><%= order_file.try(:pages) %></td>
-            <td class="hidden-phone"><%= number_to_currency order_file.price_per_copy %></td>
-            <td class="hidden-phone"><%= order_file.print_job_type %></td>
+            <th><%= OrderLine.human_attribute_name 'document_id' %></th>
+            <th><%= OrderLine.human_attribute_name 'copies' %></th>
+            <th class="hidden-phone"><%= Document.human_attribute_name 'pages' %></th>
+            <th class="hidden-phone"><%= OrderLine.human_attribute_name 'price_per_copy' %></th>
+            <th class="hidden-phone"><%= OrderLine.human_attribute_name 'print_job_type_id' %></th>
           </tr>
-        <% end %>
-        <% @order.order_lines.each do |order_line| %>
-          <tr>
-            <td><%= order_line.document %></td>
-            <td><%= order_line.copies %></td>
-            <td class="hidden-phone"><%= order_line.document.try(:pages) %></td>
-            <td class="hidden-phone"><%= number_to_currency order_line.price_per_copy %></td>
-            <td class="hidden-phone"><%= order_line.print_job_type %></td>
-          </tr>
-        <% end %>
-      </tbody>
-    </table>
+        </thead>
+        <tbody>
+          <% @order.order_files.each do |order_item| %>
+            <%= render 'order_item_show', oi: order_item, document: false %>
+          <% end %>
+          <% @order.order_lines.each do |order_item| %>
+            <%= render 'order_item_show', oi: order_item, document: true %>
+          <% end %>
+        </tbody>
+      </table>
+    <% end %>
     <%= render 'total', order: @order %>
   <% end %>
 </div>

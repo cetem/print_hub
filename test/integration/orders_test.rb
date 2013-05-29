@@ -9,7 +9,6 @@ class OrdersTest < ActionDispatch::IntegrationTest
     Capybara.app_host = "http://localhost:54163"
   end
 
-  
   test 'should print an order' do
     login
     
@@ -51,7 +50,6 @@ class OrdersTest < ActionDispatch::IntegrationTest
     assert_page_has_no_errors!
     assert_equal new_print_path, current_path
 
-
     within 'form' do
       select(
         Cups.show_destinations.detect { |p| p =~ /pdf/i }, from: 'print_printer'
@@ -75,6 +73,73 @@ class OrdersTest < ActionDispatch::IntegrationTest
 
     assert_page_has_no_errors!
     assert_equal prints_path, current_path
+  end
+
+  test 'should print an order of reliable customer' do
+    login
+
+    assert_page_has_no_errors!
+    assert_equal prints_path, current_path
+
+    within '.nav-collapse' do
+      click_link I18n.t('menu.orders')
+    end
+
+    assert_page_has_no_errors!
+
+    within '.form-actions' do
+      click_link I18n.t('view.orders.show_all').gsub('*', '')
+    end
+
+    assert_page_has_no_errors!
+    assert_equal orders_path, current_path
+
+    customer = customers(:student)
+    debt = customer.to_pay_amounts[:total_price]
+
+    order = orders(:from_yesterday)
+    order.customer_id = customer.id
+    order.save
+
+    link = "a[href='/orders/#{order.id}?type=all']"
+
+    within 'table tbody' do
+      first(:css, link).click
+    end
+
+    assert_page_has_no_errors!
+    assert_equal order_path(order.id), current_path
+
+    within '.form-actions' do
+      click_link I18n.t('view.orders.new_print')
+    end
+
+    assert_page_has_no_errors!
+    assert_equal new_print_path, current_path
+
+    within 'form' do
+      select(
+        Cups.show_destinations.detect { |p| p =~ /pdf/i }, from: 'print_printer'
+      )
+
+      assert find('#print_pay_later').checked?
+      assert find('#payment_C_amount').value.to_f == 0.0
+      assert find('#payment_C_paid').value.to_f == 0.0
+
+      assert_difference 'Print.count' do
+        click_button I18n.t('view.prints.print_title')
+      end
+    end
+
+    new_debt = customer.reload.to_pay_amounts[:total_price]
+
+    assert_not_equal debt, new_debt
+    assert_equal debt + order.price, new_debt
+
+    assert_page_has_no_errors!
+    assert page.has_css?(
+      '.alert', text: I18n.t('view.prints.correctly_created')
+    )
   end
   
   test 'should cancel an order' do
