@@ -12,10 +12,6 @@ class Order < ApplicationModel
   before_destroy :avoid_destruction
   before_save :can_be_modified?
   
-  # Atributos "permitidos"
-  attr_accessible :scheduled_at, :notes, :lock_version, :include_documents,
-    :order_lines_attributes, :order_files_attributes
-  
   # Atributos no persistentes
   attr_accessor :include_documents
   # Atributos de sólo lectura

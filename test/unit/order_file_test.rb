@@ -30,7 +30,7 @@ class OrderFileTest < ActiveSupport::TestCase
         file: Rack::Test::UploadedFile.new(
           File.join(Rails.root, 'test', 'fixtures', 'files', 'test.pdf')
         )
-      }.slice(*OrderFile.accessible_attributes.map(&:to_sym)))
+      })
     end
 
     # El precio por copia no se puede alterar

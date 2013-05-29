@@ -57,7 +57,7 @@ class CustomersControllerTest < ActionController::TestCase
 
   test 'should create customer' do
     UserSession.create(users(:administrator))
-    assert_difference ['Customer.count', 'Bonus.count'] do
+    assert_difference ['Customer.unscoped.count', 'Bonus.count'] do
       assert_difference 'Version.count', 2 do
         post :create, customer: {
           name: 'Jar Jar',
@@ -69,17 +69,17 @@ class CustomersControllerTest < ActionController::TestCase
           free_monthly_bonus: '0.0',
           bonus_without_expiration: '0',
           bonuses_attributes: {
-            new_1: {
+            '1' => {
               amount: '100',
               valid_until: I18n.l(1.day.from_now.to_date)
-            }.slice(*Bonus.accessible_attributes(:admin).map(&:to_sym)),
+            },
             # Debe ser ignorado por su monto = 0
-            new_2: {
+            '2' => {
               amount: '0',
               valid_until: I18n.l(1.day.from_now.to_date)
-            }.slice(*Bonus.accessible_attributes(:admin).map(&:to_sym))
+            }
           }
-        }.slice(*Customer.accessible_attributes(:admin).map(&:to_sym))
+        }
       end
     end
 
@@ -98,7 +98,7 @@ class CustomersControllerTest < ActionController::TestCase
         email: 'jar_jar@printhub.com',
         password: 'jarjar123',
         password_confirmation: 'jarjar123'
-      }.slice(*Customer.accessible_attributes.map(&:to_sym))
+      }
     end
 
     assert_redirected_to new_customer_session_url
@@ -117,12 +117,12 @@ class CustomersControllerTest < ActionController::TestCase
           password: 'jarjar123',
           password_confirmation: 'jarjar123',
           bonuses_attributes: {
-            new_1: {
+            '1' => {
               amount: '100',
               valid_until: I18n.l(1.day.from_now.to_date)
-            }.slice(*Bonus.accessible_attributes.map(&:to_sym))
+            }
           }
-        }.slice(*Customer.accessible_attributes.map(&:to_sym))
+        }
       end
     end
 
@@ -159,12 +159,12 @@ class CustomersControllerTest < ActionController::TestCase
           free_monthly_bonus: '0.0',
           bonus_without_expiration: '0',
           bonuses_attributes: {
-            new_1: {
+            '1' => {
               amount: '100.0',
               valid_until: '' # Por siempre
-            }.slice(*Bonus.accessible_attributes(:admin).map(&:to_sym))
+            }
           }
-        }.slice(*Customer.accessible_attributes(:admin).map(&:to_sym))
+        }
       end
     end
 
@@ -220,12 +220,12 @@ class CustomersControllerTest < ActionController::TestCase
           lastname: 'Updated lastname',
           identification: '111x',
           bonuses_attributes: {
-            new_1: {
+            '1' => {
               amount: '100.0',
               valid_until: '' # Por siempre
-            }.slice(*Bonus.accessible_attributes.map(&:to_sym))
+            }
           }
-        }.slice(*Customer.accessible_attributes.map(&:to_sym))
+        }
       end
     end
 

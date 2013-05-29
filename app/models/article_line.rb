@@ -1,10 +1,6 @@
 class ArticleLine < ApplicationModel
   has_paper_trail
   
-  # Atributos "permitidos"
-  attr_accessible :id, :print_id, :article_id, :units, :auto_article_name,
-    :lock_version
-  
   # Atributos no persistentes
   attr_accessor :auto_article_name
   

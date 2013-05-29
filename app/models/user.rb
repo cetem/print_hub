@@ -7,11 +7,6 @@ class User < ApplicationModel
     c.crypto_provider = Authlogic::CryptoProviders::Sha512
   end
   
-  # Atributos "permitidos"
-  attr_accessible :name, :last_name, :language, :email, :username, :password,
-    :password_confirmation, :default_printer, :admin, :enable, :avatar,
-    :lines_per_page, :lock_version
-  
   # Alias de atributos
   alias_attribute :informal, :username
 

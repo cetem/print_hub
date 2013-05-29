@@ -54,7 +54,7 @@ class TagsController < ApplicationController
   # POST /tags.json
   def create
     @title = t('view.tags.new_title')
-    @tag = Tag.new(params[:tag])
+    @tag = Tag.new(tag_params)
 
     respond_to do |format|
       if @tag.save
@@ -74,7 +74,7 @@ class TagsController < ApplicationController
     @tag = Tag.find(params[:id])
 
     respond_to do |format|
-      if @tag.update_attributes(params[:tag])
+      if @tag.update_attributes(tag_params)
         format.html { redirect_to(tags_url(parent: @tag.parent), notice: t('view.tags.correctly_updated')) }
         format.json  { head :ok }
       else
@@ -104,5 +104,9 @@ class TagsController < ApplicationController
 
   def load_parent
     @parent_tag = Tag.find(params[:parent]) if params[:parent]
+  end
+
+  def tag_params
+    params.require(:tag).permit(:name, :parent_id, :private, :lock_version)
   end
 end

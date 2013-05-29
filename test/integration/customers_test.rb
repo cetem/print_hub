@@ -42,7 +42,7 @@ class CustomersTest < ActionDispatch::IntegrationTest
       fill_in Customer.human_attribute_name('password_confirmation'), 
         with: 'lightsaber'
 
-      assert_difference 'Customer.count' do
+      assert_difference 'Customer.unscoped.count' do
         click_button I18n.t(
           'helpers.submit.create', model: Customer.model_name.human
         )
@@ -50,7 +50,7 @@ class CustomersTest < ActionDispatch::IntegrationTest
     end
     
     assert_page_has_no_errors!
-    id = Customer.order('created_at DESC, id DESC').first.id
+    id = Customer.order('id DESC').first.id
     assert_equal customer_path(id), current_path
     assert page.has_css?(
       '.alert', text: I18n.t('view.customers.correctly_created')
@@ -89,8 +89,7 @@ class CustomersTest < ActionDispatch::IntegrationTest
       fill_in Customer.human_attribute_name('password_confirmation'), 
         with: 'lightsaber'
       select(
-        I18n.t('view.customers.kinds.reliable'), 
-        from: 'customer_kind'
+        I18n.t('view.customers.kinds.reliable'), from: 'customer_kind'
       )
 
       assert_difference(
@@ -169,9 +168,9 @@ class CustomersTest < ActionDispatch::IntegrationTest
       edit_customer_path(customers(:student_without_bonus)), current_path
     )
     
-    assert find('#bonuses_section', visible: false)
+    assert page.has_css?('#bonuses_section', visible: false)
     click_link I18n.t('view.customers.show_bonuses')
-    assert find('#bonuses_section').visible?
+    assert page.has_css?('#bonuses_section', visible: true)
   end
 
   test 'should pay a month debt' do

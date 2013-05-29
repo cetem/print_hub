@@ -38,9 +38,9 @@ class CustomerTest < ActiveSupport::TestCase
               password: 'jarjar123',
               password_confirmation: 'jarjar123',
               free_monthly_bonus: nil,
-              bonus_without_expiration: false
-            },
-            { as: :admin }
+              bonus_without_expiration: false,
+              enable: true
+            }
           )
         end
       end
@@ -60,9 +60,9 @@ class CustomerTest < ActiveSupport::TestCase
             password: 'jarjar123',
             password_confirmation: 'jarjar123',
             free_monthly_bonus: 10.0,
-            bonus_without_expiration: false
-          },
-          { as: :admin }
+            bonus_without_expiration: false,
+            enable: true
+          }
         )
       end
     end
@@ -86,9 +86,9 @@ class CustomerTest < ActiveSupport::TestCase
             email: 'jar_jar@printhub.com',
             password: 'jarjar123',
             password_confirmation: 'jarjar123',
-            kind: Customer::KINDS[:reliable]
-          },
-          { as: :admin }
+            kind: Customer::KINDS[:reliable],
+            enable: true
+          }
         )
       end
     end
@@ -106,9 +106,8 @@ class CustomerTest < ActiveSupport::TestCase
           email: 'jar_jar@printhub.com',
           password: 'jarjar123',
           password_confirmation: 'jarjar123',
-          free_monthly_bonus: 10.0,
           bonus_without_expiration: false
-        }.slice(*Customer.accessible_attributes.map(&:to_sym)))
+        })
       end
     end
   end
@@ -227,17 +226,6 @@ class CustomerTest < ActiveSupport::TestCase
       @customer.errors[:kind]
   end
   
-  # Prueba que las validaciones del modelo se cumplan como es esperado
-  test 'ignores nasty attributes' do
-    # Si no es admin no funciona, ¡¡pillín!!
-    assert @customer.update_attributes({
-      free_monthly_bonus: 10, enable: false, bonus_without_expiration: true
-    }.slice(*Customer.accessible_attributes.map(&:to_sym)))
-    assert_not_equal '10.00', '%.2f' % @customer.reload.free_monthly_bonus
-    assert @customer.enable
-    assert !@customer.bonus_without_expiration
-  end
-  
   test 'activate' do
     customer = Customer.unscoped.find(ActiveRecord::Fixtures.identify(:disabled_student))
     
@@ -291,7 +279,7 @@ class CustomerTest < ActiveSupport::TestCase
       @customer.orders.create(
         scheduled_at: 10.days.from_now,
         order_lines_attributes: {
-          new_1: {
+          '1' => {
             copies: 1,
             print_job_type_id: print_job_types((:a4)).id,
             document_id: documents(:math_book).id
@@ -486,7 +474,7 @@ class CustomerTest < ActiveSupport::TestCase
         c.orders.build(
           scheduled_at: 10.days.from_now,
           order_lines_attributes: {
-            new_1: {
+            '1' => {
               copies: 2,
               print_job_type_id: print_job_types((:a4)).id,
               document_id: documents(:math_book).id

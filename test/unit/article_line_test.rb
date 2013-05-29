@@ -29,7 +29,7 @@ class ArticleLineTest < ActiveSupport::TestCase
         print_id: prints(:math_print).id,
         units: 1,
         unit_price: articles(:binding).price
-      }.slice(*ArticleLine.accessible_attributes.map(&:to_sym)))
+      })
     end
   end
 

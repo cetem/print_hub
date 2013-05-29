@@ -49,7 +49,7 @@ class ArticlesController < ApplicationController
   # POST /articles.json
   def create
     @title = t('view.articles.new_title')
-    @article = Article.new(params[:article])
+    @article = Article.new(article_params)
 
     respond_to do |format|
       if @article.save
@@ -69,7 +69,7 @@ class ArticlesController < ApplicationController
     @article = Article.find(params[:id])
 
     respond_to do |format|
-      if @article.update_attributes(params[:article])
+      if @article.update_attributes(article_params)
         format.html { redirect_to(articles_url, notice: t('view.articles.correctly_updated')) }
         format.json  { head :ok }
       else
@@ -93,5 +93,14 @@ class ArticlesController < ApplicationController
       format.html { redirect_to(articles_url) }
       format.json  { head :ok }
     end
+  end
+
+  private
+
+  # Atributos permitidos
+  def article_params
+    params.require(:article).permit(
+      :name, :code, :price, :description, :lock_version
+    )
   end
 end

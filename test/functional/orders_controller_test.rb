@@ -80,14 +80,14 @@ class OrdersControllerTest < ActionController::TestCase
       post :create, order: {
         scheduled_at: I18n.l(10.days.from_now, format: :minimal),
         order_lines_attributes: {
-          new_1: {
+          '1' => {
             copies: '2',
             print_job_type_id: print_job_type_id,
             document_id: documents(:math_book).id.to_s
           }
         },
         order_files_attributes: {
-          new_1: {
+          '1' => {
             file_cache: order_file.file_cache,
             copies: 2,
             print_job_type_id: print_job_type_id

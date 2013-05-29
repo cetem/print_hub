@@ -12,9 +12,10 @@
         <%= f.input :stock, input_html: { maxlength: 5 } %>
         <%= show_document_media_field(f) %>
         <%= f.input :description, input_html: { rows: 4 } %>
-        <%= f.input :file, input_html: {
+        <%= f.input :file, hint: document_file_identifier(f.object), input_html: {
             class: ('error' unless @document.errors[:file_file_name].blank?)
         } %>
+        <%= f.input :file_cache, as: :hidden %>
         <%= f.input :enable, input_html: { class: '' } %>
       </div>
 

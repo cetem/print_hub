@@ -172,7 +172,7 @@ class PrintsControllerTest < ActionController::TestCase
           scheduled_at: '',
           avoid_printing: '0',
           print_jobs_attributes: {
-            new_1: {
+            '1' => {
               copies: '1',
               pages: document.pages.to_s,
               # No importa el precio, se establece desde la configuración
@@ -181,23 +181,23 @@ class PrintsControllerTest < ActionController::TestCase
               auto_document_name: 'Some name given in autocomplete',
               print_job_type_id: print_job_types(:a4),
               document_id: document.id.to_s
-            }.slice(*PrintJob.accessible_attributes.map(&:to_sym))
+            }
           },
           article_lines_attributes: {
-            new_1: {
+            '1' => {
               article_id: articles(:binding).id.to_s,
               units: '1',
               # No importa el precio, se establece desde el artículo
               unit_price: '12.0'
-            }.slice(*ArticleLine.accessible_attributes.map(&:to_sym))
+            }
           },
           payments_attributes: {
-            new_1: {
+            '1' => {
               amount: '36.79',
               paid: '36.79'
-            }.slice(*Payment.accessible_attributes.map(&:to_sym))
+            }
           }
-        }.slice(*Print.accessible_attributes.map(&:to_sym))
+        }
       end
     end
 
@@ -223,7 +223,7 @@ class PrintsControllerTest < ActionController::TestCase
             scheduled_at: '',
             avoid_printing: '1',
             print_jobs_attributes: {
-              new_1: {
+              '1' => {
                 copies: '1',
                 pages: document.pages.to_s,
                 # No importa el precio, se establece desde la configuración
@@ -232,15 +232,15 @@ class PrintsControllerTest < ActionController::TestCase
                 auto_document_name: 'Some name given in autocomplete',
                 print_job_type_id: print_job_types(:a4).id,
                 document_id: document.id.to_s
-              }.slice(*PrintJob.accessible_attributes.map(&:to_sym))
+              }
             },
             payments_attributes: {
-              new_1: {
+              '1' => {
                 amount: '35.00',
                 paid: '35.00'
-              }.slice(*Payment.accessible_attributes.map(&:to_sym))
+              }
             }
-          }.slice(*Print.accessible_attributes.map(&:to_sym))
+          }
         end
       end
     end
@@ -269,7 +269,7 @@ class PrintsControllerTest < ActionController::TestCase
           avoid_printing: '0',
           credit_password: 'student123',
           print_jobs_attributes: {
-            new_1: {
+            '1' => {
               copies: '1',
               pages: document.pages.to_s,
               # No importa el precio, se establece desde la configuración
@@ -278,16 +278,16 @@ class PrintsControllerTest < ActionController::TestCase
               auto_document_name: 'Some name given in autocomplete',
               print_job_type_id: print_job_types(:a4).id,
               document_id: document.id.to_s
-            }.slice(*PrintJob.accessible_attributes.map(&:to_sym))
+            }
           },
           payments_attributes: {
-            new_1: {
+            '1' => {
               amount: '35.00',
               paid: '35.00',
               paid_with: Payment::PAID_WITH[:credit].to_s
-            }.slice(*Payment.accessible_attributes.map(&:to_sym))
+            }
           }
-        }.slice(*Print.accessible_attributes.map(&:to_sym))
+        }
       end
     end
 
@@ -312,30 +312,30 @@ class PrintsControllerTest < ActionController::TestCase
         scheduled_at: '',
         avoid_printing: '0',
         print_jobs_attributes: {
-          new_1: {
+          '1' => {
             copies: '1',
             pages: '30',
             # No importa el precio, se establece desde la configuración
             price_per_copy: '12.0',
             range: '',
             print_job_type_id: print_job_types(:a4).id
-          }.slice(*PrintJob.accessible_attributes.map(&:to_sym))
+          }
         },
         article_lines_attributes: {
-          new_1: {
+          '1' => {
             article_id: articles(:binding).id.to_s,
             units: '1',
             # No importa el precio, se establece desde el artículo
             unit_price: '12.0'
-          }.slice(*ArticleLine.accessible_attributes.map(&:to_sym))
+          }
         },
         payments_attributes: {
-          new_1: {
+          '1' => {
             amount: '4.79',
             paid: '4.79'
-          }.slice(*Payment.accessible_attributes.map(&:to_sym))
+          }
         }
-      }.slice(*Print.accessible_attributes.map(&:to_sym))
+      }
     end
 
     assert_redirected_to print_path(assigns(:print))
@@ -359,28 +359,28 @@ class PrintsControllerTest < ActionController::TestCase
         scheduled_at: '',
         avoid_printing: '0',
         print_jobs_attributes: {
-          new_1: {
+          '1' => {
             copies: '1',
             pages: '3',
             # No importa el precio, se establece desde la configuración
             price_per_copy: '12.0',
             range: '',
             print_job_type_id: print_job_type.id
-          }.slice(*PrintJob.accessible_attributes.map(&:to_sym))
+          }
         },
         article_lines_attributes: {
-          new_1: {
+          '1' => {
             article_id: articles(:binding).id.to_s,
             units: '3',
             # No importa el precio, se establece desde el artículo
             unit_price: '12.0'
-          }.slice(*ArticleLine.accessible_attributes.map(&:to_sym))
+          }
         },
         payments_attributes: {
-          new_1: {
+          '1' => {
             amount: '5.745',
             paid: '5.745'
-          }.slice(*Payment.accessible_attributes.map(&:to_sym))
+          }
         }
       }
     end
@@ -445,7 +445,7 @@ class PrintsControllerTest < ActionController::TestCase
           avoid_printing: '0',
           user_id: users(:administrator).id,
           print_jobs_attributes: {
-            print_jobs(:math_job_1).id => {
+            print_jobs(:math_job_1).id.to_s => {
               id: print_jobs(:math_job_1).id,
               auto_document_name: 'Some name given in autocomplete',
               document_id: math_notes.id.to_s,
@@ -455,8 +455,8 @@ class PrintsControllerTest < ActionController::TestCase
               price_per_copy: '12.0',
               range: '',
               print_job_type_id: print_job_type_id
-            }.slice(*PrintJob.accessible_attributes.map(&:to_sym)),
-            print_jobs(:math_job_2).id => {
+            },
+            print_jobs(:math_job_2).id.to_s => {
               id: print_jobs(:math_job_2).id,
               auto_document_name: 'Some name given in autocomplete',
               document_id: math_book.id.to_s,
@@ -466,8 +466,8 @@ class PrintsControllerTest < ActionController::TestCase
               price_per_copy: '0.2',
               range: '',
               print_job_type_id: print_job_type_id
-            }.slice(*PrintJob.accessible_attributes.map(&:to_sym)),
-            new_1: {
+            },
+            '1' => {
               auto_document_name: 'Some name given in autocomplete',
               document_id: math_book.id.to_s,
               copies: '1',
@@ -476,16 +476,16 @@ class PrintsControllerTest < ActionController::TestCase
               price_per_copy: '0.3',
               range: '',
               print_job_type_id: print_job_type_id
-            }.slice(*PrintJob.accessible_attributes.map(&:to_sym))
+            }
           },
           payments_attributes: {
-            payments(:math_payment).id => {
+            payments(:math_payment).id.to_s => {
               id: payments(:math_payment).id.to_s,
               amount: '8376.18',
               paid: '7.50'
-            }.slice(*Payment.accessible_attributes.map(&:to_sym))
+            }
           }
-        }.slice(*Print.accessible_attributes.map(&:to_sym))
+        }
       end
     end
 
@@ -524,21 +524,21 @@ class PrintsControllerTest < ActionController::TestCase
         scheduled_at: '',
         avoid_printing: '0',
         print_jobs_attributes: {
-          new_1: {
+          '1' => {
             copies: '1',
             range: '',
             document_id: document.id.to_s,
             print_job_type_id: print_job_types(:a4).id,
             job_hold_until: 'indefinite'
-          }.slice(*PrintJob.accessible_attributes.map(&:to_sym))
+          }
         },
         payments_attributes: {
-          new_1: {
+          '1' => {
             amount: '35.00',
             paid: '35.00'
-          }.slice(*Payment.accessible_attributes.map(&:to_sym))
+          }
         }
-      }.slice(*Print.accessible_attributes.map(&:to_sym))
+      }
     end
 
     print_job = Print.find(assigns(:print).id).print_jobs.first

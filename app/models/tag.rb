@@ -18,10 +18,6 @@ class Tag < ApplicationModel
   after_create :update_children_count
   before_destroy :remove_from_related_documents, :update_children_count
   
-  # Atributos "permitidos"
-  attr_accessible :name, :parent_id, :private, :lock_version, :children_count,
-    :documents_count
-
   # Restricciones
   validates :name, presence: true
   validates :name, uniqueness: { scope: :parent_id }, allow_nil: true,

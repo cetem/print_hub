@@ -45,10 +45,25 @@ class ActiveSupport::TestCase
     end
   end
 
-  def pdf_test_file_processed_with_action_dispatch
-    Rack::Test::UploadedFile.new(
-      File.join(Rails.root, 'test', 'fixtures', 'files', 'test.pdf')
-    )
+  def pdf_test_file
+    process_with_action_dispatch('test.pdf', 'application/pdf')
+  end
+
+  def avatar_test_file
+    process_with_action_dispatch('test.gif', 'image/gif')
+  end
+
+  private
+
+  def process_with_action_dispatch(filename, content_type)
+    ActionDispatch::Http::UploadedFile.new({
+      filename: filename,
+      content_type: content_type,
+      tempfile: 
+      File.open( # Need File.open for path-method
+        Rails.root.join('test', 'fixtures', 'files', filename)
+      )
+    })
   end
 end
 

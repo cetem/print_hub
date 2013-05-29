@@ -10,10 +10,6 @@ class Document < ApplicationModel
   scope :publicly_visible, -> { where(private: false) }
   scope :disable, -> { where(enable: false) }
   
-  # Atributos "permitidos"
-  attr_accessible :code, :name, :description, :media, :file, :tag_ids, :enable,
-    :stock, :auto_tag_name, :lock_version
-
   # Atributos no persistentes
   attr_accessor :auto_tag_name
   # Alias de atributos
