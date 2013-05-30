@@ -207,7 +207,9 @@ class CustomersController < ApplicationController
   end
 
   def customer_params_as_admin
-    credit_attrs = [:amount, :remaining, :valid_until, :customer_id]
+    credit_attrs = [
+      :amount, :remaining, :valid_until, :customer_id, :_destroy, :id
+    ]
 
     params.require(:customer).permit(
       :name, :lastname, :identification, :email, :password,
