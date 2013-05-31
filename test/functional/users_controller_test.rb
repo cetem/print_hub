@@ -126,4 +126,14 @@ class UsersControllerTest < ActionController::TestCase
       assert_response :success
     end
   end
+
+  test 'should get current workers' do
+    UserSession.create(@user)
+    get :current_workers, format: :json
+    assert_response :success
+
+    users = ActiveSupport::JSON.decode(@response.body)
+
+    assert_equal 4, users.size    
+  end
 end

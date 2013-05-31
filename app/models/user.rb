@@ -9,6 +9,7 @@ class User < ApplicationModel
 
   # Scopes
   scope :actives, -> { where(enable: true) }
+  scope :with_shifts_control, -> { where(not_shifted: false) }
   
   # Alias de atributos
   alias_attribute :informal, :username

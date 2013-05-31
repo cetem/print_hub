@@ -109,6 +109,15 @@ class UsersController < ApplicationController
     end
   end
 
+  # GET /users/current_workings.json
+  def current_workers
+    users = User.actives.with_shifts_control.order(:admin, :last_name)
+
+    respond_to do |format|
+      format.json { render json: users }
+    end
+  end
+
   private
 
   def user_params
