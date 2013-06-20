@@ -7,20 +7,19 @@ class ShiftsController < ApplicationController
   def index
     @title = t('view.shifts.index_title')
     
-    if params[:pay_pending_shifts_for_user_between]
+    @shifts = if params[:pay_pending_shifts_for_user_between]
       param = params[:pay_pending_shifts_for_user_between]
       start, finish = make_datetime_range(
         from: param[:start], to: param[:finish]
       ).map(&:to_date)
 
-      user = User.find(param[:user_id])
-      @shifts = user.shifts.pending_between(start, finish)
+      shifts_scope.pending_between(start, finish)
     else
-      @shifts = shifts_scope.order('start DESC').paginate(
+      shifts_scope.order('start DESC').paginate(
         page: params[:page], per_page: lines_per_page
       )
     end
-    
+
     respond_to do |format|
       format.html # index.html.erb
       format.json { render json: @shifts }
@@ -93,6 +92,15 @@ class ShiftsController < ApplicationController
     respond_to do |format|
       format.html { redirect_to shifts_url }
       format.json { head :no_content }
+    end
+  end
+
+  def json_paginate
+    shifts = shifts_scope.finished.order('created_at DESC').
+      limit(params[:limit].try(:to_i)).offset(params[:offset].to_i)
+
+    respond_to do |format|
+      format.json { render json: shifts }
     end
   end
 

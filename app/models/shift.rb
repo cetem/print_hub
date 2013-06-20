@@ -3,6 +3,7 @@ class Shift < ActiveRecord::Base
   
   # Scopes
   scope :pending, where(finish: nil)
+  scope :finished, where("finish IS NOT NULL")
   scope :stale, -> {
     pending.where("#{table_name}.start < ?", 8.hours.ago)
   }
@@ -22,8 +23,16 @@ class Shift < ActiveRecord::Base
   
   def initialize(attributes = nil, options = {})
     super(attributes, options)
-    
+
     self.start ||= Time.now
+  end
+
+  def as_json(options = nil)
+   default_options = {
+     only: [:id, :user_id, :start, :finish, :paid, :created_at]
+   }
+
+   super(default_options.merge(options || {}))
   end
   
   def pending?

@@ -106,4 +106,42 @@ class ShiftsControllerTest < ActionController::TestCase
     assert assigns(:shifts).size > 0
     assert_equal assigns(:shifts).sort, shifts.sort
   end
+
+  test 'should get json pagination' do
+    UserSession.create(users(:administrator))
+    operator = users(:operator) # Operator closed shifts = 3
+
+    get :json_paginate, format: :json, user_id: operator.id
+    assert_response :success
+
+    shifts = ActiveSupport::JSON.decode(@response.body)
+
+    assert_equal 3, shifts.size
+    assert shifts.all? { |s| s['user_id'] == operator.id }
+
+    get :json_paginate, format: :json, user_id: operator.id, limit: 2
+    assert_response :success
+
+    shifts = ActiveSupport::JSON.decode(@response.body)
+
+    assert_equal 2, shifts.size
+    assert shifts.all? { |s| s['user_id'] == operator.id }
+
+    get :json_paginate, format: :json, user_id: operator.id, offset: 2
+    assert_response :success
+
+    shifts = ActiveSupport::JSON.decode(@response.body)
+
+    assert_equal 1, shifts.size
+    assert shifts.all? { |s| s['user_id'] == operator.id }
+
+    get :json_paginate, format: :json, user_id: operator.id, offset: 1,
+      limit: 3
+    assert_response :success
+
+    shifts = ActiveSupport::JSON.decode(@response.body)
+
+    assert_equal 2, shifts.size
+    assert shifts.all? { |s| s['user_id'] == operator.id }
+  end
 end
