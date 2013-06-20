@@ -1,9 +1,9 @@
 source 'https://rubygems.org'
 
-gem 'rails', '3.2.12'
+gem 'rails', '3.2.13'
 
 gem 'pg'
-gem 'authlogic', '3.2.0'
+gem 'authlogic'
 gem 'jquery-rails'
 gem 'validates_timeliness'
 gem 'awesome_nested_set'
