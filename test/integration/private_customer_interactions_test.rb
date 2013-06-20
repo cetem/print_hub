@@ -89,17 +89,19 @@ class PrivateCustomerInteractionsTest < ActionDispatch::IntegrationTest
       within 'div.order_line' do
         assert first(:css, '.money').has_content?("$#{total_should_be}")
       end
-      
+
       fill_in 'order[order_lines_attributes][0][copies]', with: '5'
       
-      new_total_should_be = (5 * pages * price_per_copy).round(3)
+      new_total_should_be = (5.00 * pages * price_per_copy).round(3)
       
       within '.order_line' do
-        assert first(:css, '.money').has_content?("$#{new_total_should_be}")
+        assert first(:css, 'span.money').has_content?(
+          "$#{new_total_should_be}"
+        )
       end
     end
   end
-  
+
   test 'should customize the order' do
     customer_login
     

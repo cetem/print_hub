@@ -26,6 +26,17 @@ module PrintJobTypesHelper
     types.to_json
   end
 
+  def one_sided_print_job_types_for_data
+    two_sided = {}
+
+    PrintJobType.two_sided.each do |ts|
+      one_sided = PrintJobType.one_sided.where(media: ts.media).first
+      two_sided[ts.id] = one_sided.id if one_sided
+    end
+
+    two_sided.to_json
+  end
+
   def show_price_per_copy_title(price)
     [
       t('view.print_job_types.price_per_side'), number_to_currency(price)

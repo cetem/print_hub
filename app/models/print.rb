@@ -188,6 +188,18 @@ class Print < ApplicationModel
        (pj.print_job_type == type) ? (pj.copies * pj.range_pages) : 0
     end
   end
+
+  def pages_per_type
+    types = self.print_jobs.map(&:print_job_type).uniq
+    total = {}
+
+    types.each do |t|
+      type = PrintJobType.find(t)
+      total[type.id] = total_pages_by_type(type)
+    end
+
+    total
+  end
   
   def reject_print_job_attributes?(attributes)
     has_no_document = attributes['document_id'].blank? &&

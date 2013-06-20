@@ -120,14 +120,25 @@ class PrintJob < ApplicationModel
   end
 
   def price
-    (self.copies || 0) * (self.range_pages || 0) * job_price_per_copy
+    PriceCalculator.final_job_price(
+      (self.print.try(:pages_per_type) || {}).merge(
+        price_per_copy: self.job_price_per_copy,
+        type: self.print_job_type, 
+        total_pages: self.total_pages_to_print
+      )
+    )
   end
 
   def job_price_per_copy
-    PriceChooser.choose(
-      type: self.print_job_type,
-      copies: self.print.try(:total_pages_by_type, self.print_job_type)
-    )
+    PriceCalculator.price_per_copy(self)
+  end
+
+  def total_pages_to_print
+    (self.copies || 0) * (self.range_pages || 0)
+  end
+
+  def print_total_pages
+    self.print.try(:total_pages_by_type, self.print_job_type) || 0
   end
   
   def full_document?
