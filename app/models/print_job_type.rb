@@ -3,6 +3,9 @@ class PrintJobType < ActiveRecord::Base
 
   # Constantes
   MEDIA_TYPES = { a3: 'A3', a4: 'A4', legal: 'na_legal_8.5x14in' }.freeze
+
+  scope :one_sided, -> { where(two_sided: false) }
+  scope :two_sided, -> { where(two_sided: true) }
   
   validates :name, :price, :media, presence: true
   validates :name, uniqueness: true
@@ -33,5 +36,9 @@ class PrintJobType < ActiveRecord::Base
     if self.default && current_default && (current_default.id != self.try(:id))
       current_default.update_attributes(default: false)
     end
+  end
+
+  def one_sided_for
+    PrintJobType.one_sided.where(media: self.media).first if self.two_sided
   end
 end

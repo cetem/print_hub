@@ -21,18 +21,34 @@
   
   updateOrderLinePrice: (orderLine)->
     Order.updateTotalPages()
-
-    copies = parseInt orderLine.find('input[name$="[copies]"]').val()
-    pages = parseInt orderLine.find('input[name$="[pages]"]').val()
-
     Jobs.updatePricePerCopy('.order_line')
 
-    pricePerCopy = parseFloat(orderLine.data('price-per-copy')).toFixed(3)
-    olPrice = (copies || 0) * (pages || 0 ) * pricePerCopy || 0
+    orderLinesContainer = $('div[data-jobs-container]')
+    mediaType = orderLine.find(
+      'select[name$="[print_job_type_id]"] :selected'
+    ).val()
+
+    copies = parseInt(orderLine.find('input[name$="[copies]"]').val())
+    pages = parseInt(orderLine.find('input[name$="[pages]"]').val())
+    evenPages = pages - (pages % 2)
+    rest = (pages % 2)
+
+    pricePerCopy = orderLine.data('price-per-copy')
+    oneSidedType = orderLinesContainer.data('prices-one-sided')[mediaType] || mediaType
+    oneSidedSettings = orderLinesContainer.data('prices-list')[oneSidedType]
+    mediaPages = orderLinesContainer.data('pages-list')[mediaType]
+
+    oneSidedPages = if rest then mediaPages || rest else 0
+    pricePerOneSidedCopy = PriceChooser.choose(
+      oneSidedSettings, parseInt(oneSidedPages)
+    )
+    jobPrice = parseFloat(
+      (copies * (pricePerCopy * evenPages + pricePerOneSidedCopy)) || 0
+    ).toFixed(3)
 
     money = orderLine.find('span.money')
-    orderLine.data 'price', olPrice.toFixed(3)
-    money.html(money.html().replace(/(\d+.)+\d+/, olPrice.toFixed(3)))
+    orderLine.data('price', jobPrice)
+    money.html(money.html().replace(/(\d+.)+\d+/, jobPrice))
 
     Order.updateTotalPrice()
 

@@ -47,18 +47,35 @@
 
   updatePrintJobPrice: (printJob)->
     Print.updateTotalPages()
+    Jobs.updatePricePerCopy('.print_job')
 
+    printJobsContainer = $('#print_jobs_container')
+
+    mediaType = printJob.find(
+      'select[name$="[print_job_type_id]"] :selected'
+    ).val()
     copies = parseInt(printJob.find('input[name$="[copies]"]').val())
     rangePages = parseInt(
       printJob.find('input[name$="[range]"]').data('rangePages')
     )
+    evenRange = rangePages - (rangePages % 2)
+    rest = (rangePages % 2)
+    pricePerCopy = printJob.data('price-per-copy')
 
-    Jobs.updatePricePerCopy('.print_job')
+    oneSidedType = printJobsContainer.data('prices-one-sided')[mediaType] || mediaType
+    oneSidedSettings = printJobsContainer.data('prices-list')[oneSidedType]
+    mediaPages = printJobsContainer.data('pages-list')[mediaType]
+
+    oneSidedPages = if rest then mediaPages || rest else 0
+    pricePerOneSidedCopy = PriceChooser.choose(
+      oneSidedSettings, parseInt(oneSidedPages)
+    )
 
     money = printJob.find('span.money')
 
-    pricePerCopy = printJob.data('price-per-copy')
-    jobPrice = parseFloat((copies * pricePerCopy * rangePages) || 0).toFixed(3)
+    jobPrice = parseFloat(
+      (copies * (pricePerCopy * evenRange + pricePerOneSidedCopy)) || 0
+    ).toFixed(3)
 
     printJob.data('price', jobPrice)
     money.html(money.html().replace(/(\d+.)+\d+/, jobPrice))
