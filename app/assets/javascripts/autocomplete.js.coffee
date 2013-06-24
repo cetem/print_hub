@@ -35,7 +35,7 @@ jQuery ($)->
         false
       open: -> $('.ui-menu').css('width', input.width())
 
-    input.data('autocomplete')._renderItem = (ul, item)->
+    input.data('ui-autocomplete')._renderItem = (ul, item)->
       $('<li></li>').data('item.autocomplete', item).append(
         $('<a></a>').html(item.label)
       ).appendTo(ul)
