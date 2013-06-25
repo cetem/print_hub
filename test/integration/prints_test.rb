@@ -1,8 +1,6 @@
 require 'test_helper'
 
 class PrintsTest < ActionDispatch::IntegrationTest
-  fixtures :all
-  
   setup do
     Capybara.current_driver = Capybara.javascript_driver # :selenium by default
     Capybara.server_port = '54163'
@@ -308,6 +306,8 @@ class PrintsTest < ActionDispatch::IntegrationTest
     login
     
     customer = customers(:student)
+
+    customer.prints.each { |pr| pr.pay_print }
 
     assert_page_has_no_errors!
     assert_equal prints_path, current_path
