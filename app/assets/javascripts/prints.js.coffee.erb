@@ -57,7 +57,7 @@
     copies = parseInt(printJob.find('input[name$="[copies]"]').val())
     rangePages = parseInt(
       printJob.find('input[name$="[range]"]').data('rangePages')
-    )
+    ) * copies
     evenRange = rangePages - (rangePages % 2)
     rest = (rangePages % 2)
     pricePerCopy = printJob.data('price-per-copy')
@@ -74,7 +74,7 @@
     money = printJob.find('span.money')
 
     jobPrice = parseFloat(
-      (copies * (pricePerCopy * evenRange + pricePerOneSidedCopy)) || 0
+      (pricePerCopy * evenRange + pricePerOneSidedCopy) || 0
     ).toFixed(3)
 
     printJob.data('price', jobPrice)

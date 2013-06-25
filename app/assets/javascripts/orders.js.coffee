@@ -30,8 +30,9 @@
 
     copies = parseInt(orderLine.find('input[name$="[copies]"]').val())
     pages = parseInt(orderLine.find('input[name$="[pages]"]').val())
-    evenPages = pages - (pages % 2)
-    rest = (pages % 2)
+    totalPages = pages * copies
+    evenPages = totalPages - (totalPages % 2)
+    rest = (totalPages % 2)
 
     pricePerCopy = orderLine.data('price-per-copy')
     oneSidedType = orderLinesContainer.data('prices-one-sided')[mediaType] || mediaType
@@ -43,7 +44,7 @@
       oneSidedSettings, parseInt(oneSidedPages)
     )
     jobPrice = parseFloat(
-      (copies * (pricePerCopy * evenPages + pricePerOneSidedCopy)) || 0
+      (pricePerCopy * evenPages + pricePerOneSidedCopy) || 0
     ).toFixed(3)
 
     money = orderLine.find('span.money')
