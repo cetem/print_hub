@@ -57,8 +57,8 @@ class PrintJob < ApplicationModel
   belongs_to :order_file, inverse_of: :print_jobs
   belongs_to :print_job_type
 
-  def initialize(attributes = nil, options = {})
-    super(attributes, options)
+  def initialize(attributes = nil)
+    super(attributes)
     self.order_file_id ||= attributes['id'] if attributes
     
     self.copies ||= 1
@@ -122,7 +122,7 @@ class PrintJob < ApplicationModel
   def price
     PriceCalculator.final_job_price(
       (self.print.try(:pages_per_type) || {}).merge(
-        price_per_copy: self.job_price_per_copy,
+        price_per_copy: job_price_per_copy,
         type: self.print_job_type, 
         total_pages: self.total_pages_to_print
       )

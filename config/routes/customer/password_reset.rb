@@ -5,4 +5,4 @@ match 'password_resets' => 'password_resets#create',
 match 'password_resets/:token/edit' => 'password_resets#edit',
   as: 'edit_password_reset', via: :get
 match 'password_resets/:token' => 'password_resets#update',
-  as: 'update_password_reset', via: :put
+  as: 'update_password_reset', via: :patch

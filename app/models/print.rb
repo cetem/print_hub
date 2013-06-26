@@ -15,16 +15,16 @@ class Print < ApplicationModel
   before_destroy :can_be_destroyed?
 
   # Scopes
-  scope :pending, where(status: STATUS[:pending_payment])
-  scope :pay_later, where(status: STATUS[:pay_later])
-  scope :not_revoked, where(revoked: false)
+  scope :pending, -> { where(status: STATUS[:pending_payment]) }
+  scope :pay_later, -> { where(status: STATUS[:pay_later]) }
+  scope :not_revoked, -> { where(revoked: false) }
   scope :between, ->(_start, _end) {
     where('created_at BETWEEN :start AND :end', start: _start, end: _end)
   }
-  scope :scheduled, where(
+  scope :scheduled, -> { where(
     '(printer = :blank OR printer IS NULL) AND scheduled_at IS NOT NULL',
     blank: ''
-  )
+  ) }
   
   # Atributos no persistentes
   attr_accessor :auto_customer_name, :avoid_printing, :include_documents,
@@ -70,11 +70,10 @@ class Print < ApplicationModel
     reject_if: :reject_print_job_attributes?
   accepts_nested_attributes_for :article_lines, allow_destroy: false,
     reject_if: ->(attributes) { attributes['article_id'].blank? }
-  accepts_nested_attributes_for :payments, allow_destroy: false,
-    reject_if: ->(attributes) { attributes['amount'].to_f <= 0 }
+  accepts_nested_attributes_for :payments, allow_destroy: false
 
-  def initialize(attributes = nil, options = {})
-    super(attributes, options)
+  def initialize(attributes = nil)
+    super(attributes)
 
     self.user = UserSession.find.try(:user) || self.user rescue self.user
     
@@ -229,7 +228,7 @@ class Print < ApplicationModel
   end
 
   def remove_unnecessary_payments
-    self.payments.delete_if { |p| p.amount <= 0 }
+    self.payments.each { |p| p.destroy if p.amount.to_f <= 0 }
   end
 
   def update_customer_credit

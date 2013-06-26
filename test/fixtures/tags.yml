@@ -33,7 +33,7 @@ books:
 physics:
   name: Physics
   private: false
-  parent_id: <%= ActiveRecord::Fixtures.identify(:notes) %>
+  parent_id: <%= ActiveRecord::FixtureSet.identify(:notes) %>
   documents_count: 1
   lft: 2
   rgt: 3

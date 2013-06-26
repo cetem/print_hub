@@ -72,6 +72,12 @@
     )
 
     money = printJob.find('span.money')
+    console.log(mediaType)
+    console.log(copies)
+    console.log(rangePages)
+    console.log(evenRange)
+    console.log(rest)
+    console.log(pricePerCopy)
 
     jobPrice = parseFloat(
       (copies * (pricePerCopy * evenRange + pricePerOneSidedCopy)) || 0

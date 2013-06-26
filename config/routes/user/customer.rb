@@ -4,8 +4,8 @@ resources :customers do
 
   member do
     get :credit_detail
-    put :pay_off_debt
-    put :pay_month_debt
-    put :manual_activation
+    patch :pay_off_debt
+    patch :pay_month_debt
+    patch :manual_activation
   end
 end

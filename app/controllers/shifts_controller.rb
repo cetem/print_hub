@@ -110,7 +110,7 @@ class ShiftsController < ApplicationController
     user = User.find params[:user_id] if params[:user_id] && current_user.admin?
 
     current_user.admin? ?
-      (user ? user.shifts : Shift.scoped) : current_user.shifts
+      (user ? user.shifts : Shift.all) : current_user.shifts
   end
 
   def shift_params

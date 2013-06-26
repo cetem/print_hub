@@ -14,8 +14,8 @@ class OrderLine < ApplicationModel
   belongs_to :print_job_type
   delegate :pages, to: :document
   
-  def initialize(attributes = nil, options = {})
-    super(attributes, options)
+  def initialize(attributes = nil)
+    super(attributes)
 
     self.print_job_type ||= PrintJobType.default
     self.copies ||= 1

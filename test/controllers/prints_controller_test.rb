@@ -259,8 +259,10 @@ class PrintsControllerTest < ActionController::TestCase
       'customer.prints.count', 'Cups.all_jobs(@printer).keys.sort.last']
     customer = Customer.find customers(:student).id
 
+
     assert_difference counts_array do
-      assert_difference 'Version.count', 4 do
+      assert_difference 'Version.count', 5 do
+        # Customer.token, credit, payment, print, print_job
         post :create, status: 'all', print: {
           printer: @printer,
           customer_id: customer.id,
@@ -282,7 +284,6 @@ class PrintsControllerTest < ActionController::TestCase
           payments_attributes: {
             '1' => {
               amount: '35.00',
-              paid: '35.00',
               paid_with: Payment::PAID_WITH[:credit].to_s
             }
           }

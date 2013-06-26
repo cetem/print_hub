@@ -18,7 +18,7 @@ class DocumentsTest < ActionDispatch::IntegrationTest
     visit new_document_path
     assert_page_has_no_errors!
     assert_equal new_document_path, current_path
-    notes_tag = tags(:notes)
+    draft_tag = tags(:draft_note)
 
     within 'form' do
       fill_in Document.human_attribute_name('code'), with: '10'
@@ -28,12 +28,13 @@ class DocumentsTest < ActionDispatch::IntegrationTest
         with: 'Testing upload a pdf'
       file = File.join(Rails.root, 'test', 'fixtures', 'files', 'test.pdf')
       attach_file(Document.human_attribute_name('file'), file)
-      fill_in 'autocomplete_tag_tag_NEW_RECORD', with: notes_tag.name
-      sleep(0.5) #El autocomplete tarda...
-      find('#autocomplete_tag_tag_NEW_RECORD').native.send_keys :arrow_down, 
-        :arrow_down, :tab
+      fill_in 'autocomplete_tag_tag_NEW_RECORD', with: draft_tag.name
+      sleep 2
+      assert page.has_xpath?("//li[@class='ui-menu-item']", visible: true)
+      find('#autocomplete_tag_tag_NEW_RECORD').native.send_keys :arrow_down, :tab
+
       assert_difference 'Document.count' do
-        assert_difference 'notes_tag.reload.documents_count' do
+        assert_difference 'draft_tag.reload.documents_count' do
           click_button I18n.t(
             'helpers.submit.create', model: Document.model_name.human
           )

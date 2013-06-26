@@ -30,6 +30,7 @@ class OrdersTest < ActionDispatch::IntegrationTest
 
     show_href = nil
     link_with_show_title = "a[data-original-title='#{I18n.t('label.show')}']"
+    assert page.has_css?(link_with_show_title)
     
     within 'table tbody' do
       show_href = first(:css, link_with_show_title)[:href]

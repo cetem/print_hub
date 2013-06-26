@@ -7,6 +7,6 @@ resources :users, except: [:destroy] do
   end
 
   member do
-    put :pay_shifts_between
+    patch :pay_shifts_between
   end
 end

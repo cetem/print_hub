@@ -18,11 +18,11 @@ class Order < ApplicationModel
   attr_readonly :scheduled_at
   
   # Scopes
-  scope :pending, where(status: STATUS[:pending])
-  scope :completed, where(status: STATUS[:completed])
-  scope :cancelled, where(status: STATUS[:cancelled])
-  scope :for_print, where(print_out: true)
-  scope :scheduled_soon, where('scheduled_at <= ?', 6.hour.from_now)
+  scope :pending, -> { where(status: STATUS[:pending]) }
+  scope :completed, -> { where(status: STATUS[:completed]) }
+  scope :cancelled, -> { where(status: STATUS[:cancelled]) }
+  scope :for_print, -> { where(print_out: true) }
+  scope :scheduled_soon, -> { where('scheduled_at <= ?', 6.hour.from_now) }
   
   # Restricciones
   validates :scheduled_at, :customer, presence: true
@@ -44,9 +44,9 @@ class Order < ApplicationModel
   accepts_nested_attributes_for :order_files, allow_destroy: true,
    reject_if: :reject_order_files_attributes?
   
-  def initialize(attributes = nil, options = {})
-    super(attributes, options)
-    
+  def initialize(attributes = nil)
+    super(attributes)
+
     self.scheduled_at ||= 1.day.from_now
     self.status ||= STATUS[:pending]
     

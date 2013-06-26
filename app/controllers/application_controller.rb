@@ -1,7 +1,7 @@
 class ApplicationController < ActionController::Base
   helper_method :current_user_session, :current_user, :current_customer
   
-  protect_from_forgery
+  protect_from_forgery with: :exception
   
   before_filter :set_js_format_in_iframe_request
   after_filter -> { expires_now if current_user || current_customer }

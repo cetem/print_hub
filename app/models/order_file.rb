@@ -16,8 +16,8 @@ class OrderFile < ActiveRecord::Base
   belongs_to :print_job_type
   has_many :print_jobs
 
-  def initialize(attributes = nil, options = {})
-    super(attributes, options)
+  def initialize(attributes = nil)
+    super(attributes)
 
     self.print_job_type ||= PrintJobType.default
     self.copies ||= 1

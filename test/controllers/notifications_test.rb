@@ -17,7 +17,7 @@ class NotificationsTest < ActionMailer::TestCase
   
   test 'signup with disabled customer' do
     customer = Customer.unscoped.find(
-      ActiveRecord::Fixtures.identify(:disabled_student)
+      ActiveRecord::FixtureSet.identify(:disabled_student)
     )
     mail = Notifications.signup(customer)
     assert_equal I18n.t('notifications.signup.subject'), mail.subject
@@ -33,7 +33,7 @@ class NotificationsTest < ActionMailer::TestCase
   
   test 'reactivation' do
     customer = Customer.unscoped.find(
-      ActiveRecord::Fixtures.identify(:disabled_student)
+      ActiveRecord::FixtureSet.identify(:disabled_student)
     )
     mail = Notifications.reactivation(customer)
     assert_equal I18n.t('notifications.reactivation.subject'), mail.subject

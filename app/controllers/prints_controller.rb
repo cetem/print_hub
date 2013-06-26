@@ -123,7 +123,7 @@ class PrintsController < ApplicationController
   def autocomplete_for_document_name
     query = params[:q].sanitized_for_text_query
     @query_terms = query.split(/\s+/).reject(&:blank?)
-    @docs = Document.scoped
+    @docs = Document.all
     @docs = @docs.full_text(@query_terms) unless @query_terms.empty?
     @docs = @docs.limit(10)
     
@@ -136,7 +136,7 @@ class PrintsController < ApplicationController
   def autocomplete_for_article_name
     query = params[:q].sanitized_for_text_query
     query_terms = query.split(/\s+/).reject(&:blank?)
-    articles = Article.scoped
+    articles = Article.all
     articles = articles.full_text(query_terms) unless query_terms.empty?
     articles = articles.limit(10)
     
@@ -149,7 +149,7 @@ class PrintsController < ApplicationController
   def autocomplete_for_customer_name
     query = params[:q].sanitized_for_text_query
     query_terms = query.split(/\s+/).reject(&:blank?)
-    customers = Customer.scoped
+    customers = Customer.all
     customers = customers.full_text(query_terms) unless query_terms.empty?
     customers = customers.limit(10)
     
@@ -181,7 +181,7 @@ class PrintsController < ApplicationController
     if @customer
       scope = @customer.prints
     else
-      scope = current_user.admin ? Print.scoped : current_user.prints
+      scope = current_user.admin ? Print.all : current_user.prints
     end
 
     case params[:status]

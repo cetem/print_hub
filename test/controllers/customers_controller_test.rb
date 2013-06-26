@@ -16,9 +16,11 @@ class CustomersControllerTest < ActionController::TestCase
   
   test 'should get filtered index' do
     UserSession.create(users(:administrator))
-    get :index, q: 'Anakin|Darth'
+
+    get :index, q: 'Anakin | Darth', format: :html
     assert_response :success
     assert_not_nil assigns(:customers)
+    assert assigns(:customers)
     assert_equal 2, assigns(:customers).size
     assert assigns(:customers).all? { |c| c.to_s.match /anakin|darth/i }
     assert_select '#unexpected_error', false
@@ -253,7 +255,7 @@ class CustomersControllerTest < ActionController::TestCase
   test 'should activate customer' do
     @request.host = "#{APP_CONFIG['subdomains']['customers']}.printhub.local"
     customer = Customer.disable.find(
-      ActiveRecord::Fixtures.identify(:disabled_student)
+      ActiveRecord::FixtureSet.identify(:disabled_student)
     )
     
     get :activate, token: customer.perishable_token

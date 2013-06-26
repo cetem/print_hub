@@ -11,7 +11,7 @@ module PrintsHelper
     if print_job.pending?
       button = link_to(
         t('view.prints.cancel_job'), cancel_job_print_path(print_job),
-        method: :put, remote: true, class: 'btn btn-mini',
+        method: :patch, remote: true, class: 'btn btn-mini',
         data: { 'disable-with' => t('view.prints.disabled_cancel_job') }
       )
     else

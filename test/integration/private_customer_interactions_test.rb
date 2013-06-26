@@ -5,11 +5,11 @@ class PrivateCustomerInteractionsTest < ActionDispatch::IntegrationTest
   fixtures :all
 
   setup do
+    Capybara.reset_sessions!    # Forget the (simulated) browser state
     Capybara.current_driver = Capybara.javascript_driver # :selenium by default
     Capybara.server_port = '54163'
     subdomain = APP_CONFIG['subdomains']['customers']
     Capybara.app_host = "http://#{subdomain}.lvh.me:54163"
-    Capybara.reset_sessions!    # Forget the (simulated) browser state
   end
   
   test 'should search with no results and show contextual help' do
@@ -120,7 +120,7 @@ class PrivateCustomerInteractionsTest < ActionDispatch::IntegrationTest
       assert page.has_css?('a.add_to_order')
       first(:css, 'a.add_to_order').click
     end
-    
+
     within '.nav-collapse' do
       click_link I18n.t('view.catalog.new_order')
     end
@@ -154,7 +154,7 @@ class PrivateCustomerInteractionsTest < ActionDispatch::IntegrationTest
         'helpers.submit.create', model: Order.model_name.human
       )
     end
-    
+
     assert_page_has_no_errors!
     assert page.has_css?('#show_order')
   end
@@ -219,14 +219,17 @@ class PrivateCustomerInteractionsTest < ActionDispatch::IntegrationTest
       assert page.has_no_css?('a.add_from_order')
     end
 
+    sleep 3
+
     within '.nav-collapse' do
       click_link I18n.t('view.catalog.new_order')
     end
 
+    sleep 2
     assert_equal new_order_path, current_path
     assert_page_has_no_errors!
 
-    page.all 'div.order_line', count: tag.documents_count
+    page.all 'div.order_line', count: tag.reload.documents_count
   end
 
   private
