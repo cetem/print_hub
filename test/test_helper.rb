@@ -4,6 +4,9 @@ require 'rails/test_help'
 require 'authlogic/test_case'
 require 'capybara/rails'
 require 'database_cleaner'
+require 'coveralls'
+
+Coveralls.wear!('rails')
 
 class ActiveSupport::TestCase
   ActiveRecord::Migration.check_pending!
@@ -94,6 +97,7 @@ class ActionDispatch::IntegrationTest
 
   setup do
     Capybara.reset!    # Forget the (simulated) browser state
+    Capybara.default_wait_time = ENV['TRAVIS'] ? 4 : 2
   end
 
   teardown do
