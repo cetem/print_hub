@@ -1,47 +1,50 @@
 source 'https://rubygems.org'
 
-gem 'rails', '3.2.13'
+gem 'rails', '4.0.0'
 
 gem 'pg'
 gem 'authlogic'
-gem 'jquery-rails'
-gem 'jquery-ui-rails'
 gem 'validates_timeliness'
-gem 'awesome_nested_set'
-gem 'rghost'
-gem 'will_paginate'
+gem 'awesome_nested_set', github: 'collectiveidea/awesome_nested_set', branch: 'rails4'
+gem 'will_paginate', github: 'mislav/will_paginate'
 gem 'foreigner'
-gem 'memcache-client'
-gem 'paper_trail'
+gem 'paper_trail', github: 'airblade/paper_trail', branch: 'rails4'
 gem 'RedCloth'
 gem 'newrelic_rpm'
-gem 'barby'
-gem 'rqrcode'
-gem 'chunky_png'
 gem 'capistrano'
 gem 'whenever', require: false
 gem 'cups'
-gem 'pdf-reader'
-gem 'simple_form'
+gem 'simple_form', '~> 3.0.0.rc'
+
+# Files Processors
 gem 'carrierwave'
 gem 'rmagick'
-gem 'jquery-fileupload-rails'
-gem 'turbolinks'
-gem 'strong_parameters'
+gem 'rghost'
+gem 'pdf-reader'
+gem 'barby'
+gem 'rqrcode'
+gem 'chunky_png'
 
-group :assets do
-  gem 'sass-rails'
-  gem 'coffee-rails'
-  gem 'uglifier'
-end
+# Cache performance
+gem 'memcache-client'
+gem 'dalli'
+
+# Old assets group / Styles & js
+gem 'sass-rails', '~> 4.0.0'
+gem 'coffee-rails'
+gem 'uglifier'
+gem 'jquery-rails'
+gem 'jquery-ui-rails'
+gem 'turbolinks'
+gem 'jquery-fileupload-rails'
 
 group :development do
   gem 'thin'
 end
 
 group :test do
-  gem 'turn', require: false
+  gem 'turn'
   gem 'capybara', require: false
-  gem 'selenium-webdriver', require: false
-  gem 'database_cleaner' # For Capybara
+  gem 'selenium-webdriver'
+  gem 'database_cleaner', require: false # For Capybara
 end

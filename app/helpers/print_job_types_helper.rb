@@ -1,11 +1,11 @@
 module PrintJobTypesHelper
-  def print_job_types_select_combo(form, form_name = nil)
+  def print_job_types_select_combo(form)
     collection = PrintJobType.all.map { |pjt| [pjt.name, pjt.id] }
 
     form.input :print_job_type_id, collection: collection, prompt: false, 
       selected: form.object.print_job_type_id || PrintJobType.default.try(:id), 
       label: false, input_html: {
-        class: 'span10 page-modifier price-modifier', name: form_name
+        class: 'span10 page-modifier price-modifier'
       }
   end
 

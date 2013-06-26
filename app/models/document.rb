@@ -3,7 +3,7 @@ class Document < ApplicationModel
   mount_uploader :file, DocumentsUploader, mount_on: :file_file_name
 
   # Scopes
-  default_scope where(enable: true)
+  default_scope -> { where(enable: true ) }
   scope :with_tag, ->(tag_id) {
     includes(:tags).where("#{Tag.table_name}.id" => tag_id)
   }
@@ -46,8 +46,8 @@ class Document < ApplicationModel
   has_many :document_tag_relation
   has_many :tags, through: :document_tag_relation, autosave: true
 
-  def initialize(attributes = nil, options = {})
-    super(attributes, options)
+  def initialize(attributes = nil)
+    super(attributes)
 
     self.pages ||= 1
   end

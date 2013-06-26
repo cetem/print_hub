@@ -120,7 +120,7 @@ class UserTest < ActiveSupport::TestCase
     assert @user.invalid?
     assert_equal 1, @user.errors.count
     assert_equal [error_message_from_model(@user, :password, :confirmation)],
-      @user.errors[:password]
+      @user.errors[:password_confirmation]
   end
 
   # Prueba que las validaciones del modelo se cumplan como es esperado

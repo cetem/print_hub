@@ -2,14 +2,14 @@ class Shift < ActiveRecord::Base
   has_paper_trail
   
   # Scopes
-  scope :pending, where(finish: nil)
-  scope :finished, where("finish IS NOT NULL")
+  scope :pending, -> { where(finish: nil) }
+  scope :finished, -> { where("finish IS NOT NULL") }
   scope :stale, -> {
     pending.where("#{table_name}.start < ?", 8.hours.ago)
   }
-  scope :pay_pending, where(
+  scope :pay_pending, -> { where(
     "#{table_name}.finish IS NOT NULL AND #{table_name}.paid = false"
-  )
+  ) }
   
   # Restricciones
   validates :start, :user_id, presence: true
@@ -21,8 +21,8 @@ class Shift < ActiveRecord::Base
   # Relaciones
   belongs_to :user
   
-  def initialize(attributes = nil, options = {})
-    super(attributes, options)
+  def initialize(attributes = nil)
+    super(attributes)
 
     self.start ||= Time.now
   end

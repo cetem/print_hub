@@ -23,10 +23,9 @@ class PriceCalculator
 
   def self.price_per_copy(pj)
     total_pages = pj.print_total_pages
+    one_sided = pj.print_job_type.one_sided_for
 
-    if total_pages == 1 && pj.print_job_type.two_sided
-      one_sided = pj.print_job_type.one_sided_for
-
+    if total_pages == 1 && pj.print_job_type.two_sided && one_sided
       PriceChooser.new(
         one_sided.price, pj.print.try(:total_pages_by_type, one_sided)
       ).price

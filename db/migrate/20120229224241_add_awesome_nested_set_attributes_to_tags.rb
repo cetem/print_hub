@@ -6,6 +6,6 @@ class AddAwesomeNestedSetAttributesToTags < ActiveRecord::Migration
       t.integer :depth
     end
     
-    Tag.rebuild! # Awesome! =)
+    # Tag.rebuild! # Awesome! =) Don't work in rails 4
   end
 end

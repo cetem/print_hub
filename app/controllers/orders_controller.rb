@@ -147,7 +147,7 @@ class OrdersController < ApplicationController
       @order_scope = current_customer.orders
     else
       @order_scope = order_type == 'print' ?
-        Order.pending.for_print : Order.scoped
+        Order.pending.for_print : Order.all
     end
   end
   

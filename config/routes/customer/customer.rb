@@ -4,6 +4,6 @@ match 'customers/activate/:token' => 'customers#activate',
 resources :customers, only: [:new, :create] do
   member do
     get :edit_profile
-    put :update_profile
+    patch :update_profile
   end
 end

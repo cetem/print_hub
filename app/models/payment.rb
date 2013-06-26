@@ -11,7 +11,7 @@ class Payment < ApplicationModel
   scope :between, ->(_start, _end) {
     where('created_at BETWEEN :start AND :end', start: _start, end: _end)
   }
-  scope :not_revoked, where(revoked: false)
+  scope :not_revoked, -> { where(revoked: false) }
   
   # Restricciones de los atributos
   attr_readonly :id, :amount
@@ -27,8 +27,8 @@ class Payment < ApplicationModel
   # Relaciones
   belongs_to :payable, polymorphic: true
 
-  def initialize(attributes = nil, options = {})
-    super(attributes, options)
+  def initialize(attributes = nil)
+    super(attributes)
 
     self.amount ||= 0.0
     self.paid ||= 0.0

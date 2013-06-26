@@ -3,7 +3,7 @@ require 'test_helper'
 class CustomerSessionsControllerTest < ActionController::TestCase
   setup do
     @customer = customers(:student)
-    @request.host = 'facultad.printhub.local'
+    @request.host = 'fotocopia.printhub.local'
   end
 
   test 'should get new' do
@@ -40,7 +40,7 @@ class CustomerSessionsControllerTest < ActionController::TestCase
   
   test 'should not create a customer session with a disabled customer' do
     customer = Customer.disable.find(
-      ActiveRecord::Fixtures.identify(:disabled_student)
+      ActiveRecord::FixtureSet.identify(:disabled_student)
     )
     
     post :create, customer_session: {

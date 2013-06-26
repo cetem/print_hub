@@ -2,7 +2,6 @@ require 'test_helper'
 
 # Clase para probar el modelo "Print"
 class PrintTest < ActiveSupport::TestCase
-  fixtures :prints
 
   # Función para inicializar las variables utilizadas en las pruebas
   def setup
@@ -675,17 +674,17 @@ class PrintTest < ActiveSupport::TestCase
     
     assert_equal false, @print.reload.revoked
   end
-  
+
   test 'revoke a print paid with credit returns the value to the customer' do
     UserSession.create(users(:administrator))
     print = prints(:math_print_with_credit)
     initial_bonus = print.customer.bonuses.to_a.sum(&:remaining)
     payments_amount = print.payments.select(&:credit?).sum(&:paid)
-    
+
     assert_difference 'Bonus.count' do
       assert print.revoke!
     end
-    
+
     assert print.reload.revoked
     assert print.payments.reload.all?(&:revoked)
     assert_equal(
@@ -766,17 +765,21 @@ class PrintTest < ActiveSupport::TestCase
   end
 
   test 'related by customer' do
-    prints = @print.customer.prints.order('created_at').limit(2).all
+    customer_prints = @print.customer.prints
+    assert customer_prints.size >= 2
 
-    assert_equal prints.second, prints.first.related_by_customer('next')
-    assert_equal prints.first, prints.second.related_by_customer('prev')
+    first_print, second_print = 
+      *customer_prints.unscoped.order(:created_at).limit(2)
 
-    assert_nil prints.first.related_by_customer('prev')
+    assert_equal second_print, first_print.related_by_customer('next')
+    assert_equal first_print, second_print.related_by_customer('prev')
+
+    assert_nil first_print.related_by_customer('prev')
   end
 
   def build_new_print_from(print)
-    new_print = Print.new(
-      print.attributes
+    new_print = Print.create(
+      print.attributes.except('id')
     )
     new_print.print_jobs.clear
 
@@ -792,7 +795,7 @@ class PrintTest < ActiveSupport::TestCase
     end
 
     new_print.payments.build(amount: new_print.price)
-
+    
     new_print
   end
 end

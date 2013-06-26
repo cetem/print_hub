@@ -10,7 +10,7 @@ class DocumentsController < ApplicationController
     @title = t('view.documents.index_title')
     @searchable = true
     @tag = Tag.find(params[:tag_id]) if params[:tag_id]
-    @documents = @tag ? @tag.documents : Document.scoped
+    @documents = @tag ? @tag.documents : Document.all
     
     unless params[:clear_documents_for_printing].blank?
       @documents_for_printing = session[:documents_for_printing].clear
@@ -149,7 +149,7 @@ class DocumentsController < ApplicationController
   def autocomplete_for_tag_name
     query = params[:q].sanitized_for_text_query
     query_terms = query.split(/\s+/).reject(&:blank?)
-    tags = Tag.scoped
+    tags = Tag.all
     tags = tags.full_text(query_terms) unless query_terms.empty?
     tags = tags.limit(10)
 

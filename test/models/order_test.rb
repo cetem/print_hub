@@ -239,7 +239,7 @@ class OrderTest < ActiveSupport::TestCase
     assert_equal 1, orders.size
     assert_equal 'Anakin', orders.first.customer.name
     
-    id = ActiveRecord::Fixtures.identify(:from_yesterday)
+    id = ActiveRecord::FixtureSet.identify(:from_yesterday)
     orders = Order.full_text([id.to_s])
     
     assert_equal 1, orders.size

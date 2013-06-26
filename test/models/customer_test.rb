@@ -227,7 +227,7 @@ class CustomerTest < ActiveSupport::TestCase
   end
   
   test 'activate' do
-    customer = Customer.unscoped.find(ActiveRecord::Fixtures.identify(:disabled_student))
+    customer = Customer.unscoped.find(ActiveRecord::FixtureSet.identify(:disabled_student))
     
     assert !customer.enable
     assert customer.activate!
@@ -269,7 +269,7 @@ class CustomerTest < ActiveSupport::TestCase
     assert_equal '1100.0', @customer.free_credit.to_s
 
     # Un cliente nuevo no debería tener crédito
-    assert_equal '0.0', Customer.new.free_credit.to_s
+    assert_equal '0.0', Customer.new.free_credit.round(2).to_s
   end
   
   test 'free credit minus pendings' do
@@ -299,10 +299,11 @@ class CustomerTest < ActiveSupport::TestCase
   end
 
   test 'use credit' do
-    # Usa el crédito que tiene disponible
+    # Usa el crédito que tiene disponible (comienza con [500.0, 500.0])
     assert_equal '0',
       @customer.use_credit(100, 'student123').to_s
     assert_equal '900.0', @customer.reload.free_credit.to_s
+    # Crédito [400, 500]
 
     assert_difference '@customer.bonuses.count' do
       @customer.bonuses.create(
@@ -311,11 +312,12 @@ class CustomerTest < ActiveSupport::TestCase
       )
     end
 
+    # Crédito [1000, 400, 500]
     # Usa primero el crédito más próximo a vencer
     assert_equal '0',
       @customer.use_credit(200, 'student123').to_s
     assert_equal '1700.0', @customer.free_credit.to_s
-    assert_equal ['200.0', '500.0', '1000.0'],
+    assert_equal ['800.0', '400.0', '500.0'],
       @customer.credits.valids.map(&:remaining).map(&:to_s)
     # Pagar más de lo que se puede con crédito
     assert_equal '300.0',
@@ -416,9 +418,7 @@ class CustomerTest < ActiveSupport::TestCase
     assert_difference('Bonus.count') { @customer.save }
     assert_nil @customer.reload.bonuses.detect { |b| b.valid_until.blank? }
     
-    assert @customer.update_attributes(
-      { bonus_without_expiration: true }, { as: :admin }
-    )
+    assert @customer.update_attributes(bonus_without_expiration: true)
     
     new_bonus = @customer.build_monthly_bonus
     

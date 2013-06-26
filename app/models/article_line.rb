@@ -18,8 +18,8 @@ class ArticleLine < ApplicationModel
   belongs_to :print
   belongs_to :article
 
-  def initialize(attributes = nil, options = {})
-    super(attributes, options)
+  def initialize(attributes = nil)
+    super(attributes)
 
     self.units ||= 1
     self.unit_price = self.article.price if self.article

@@ -23,7 +23,7 @@
         autocomplete: 'off', disabled: true } %>
     </div>
     <div class="span2">
-      <%= print_job_types_select_combo(order_file, "#{name}[print_job_type_id]") %>
+      <%= print_job_types_select_combo(order_file) %>
     </div>
     <div class="span2">
       <% title = show_price_per_copy_title(order_file.object.price_per_copy) %>

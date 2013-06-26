@@ -58,7 +58,7 @@ class PublicCustomerInteractionsTest < ActionDispatch::IntegrationTest
     assert_page_has_no_errors!
     
     Customer.unscoped.find(
-      ActiveRecord::Fixtures.identify(:disabled_student)).tap do |customer|
+      ActiveRecord::FixtureSet.identify(:disabled_student)).tap do |customer|
       fill_in I18n.t('authlogic.attributes.customer_session.email'),
         with: customer.email
       fill_in I18n.t('authlogic.attributes.customer_session.password'),

@@ -2,21 +2,21 @@ class Tag < ApplicationModel
   include Comparable
 
   has_paper_trail 
-  acts_as_nested_set 
+  acts_as_nested_set order_column: "tags.lft"
   
   # Scopes
-  scope :publicly_visible, where(private: false)
-  scope :with_documents_or_children, where(
+  scope :publicly_visible, -> { where(private: false) }
+  scope :with_documents_or_children,  -> { where(
     [
       "#{Tag.table_name}.documents_count > :zero",
       "#{Tag.table_name}.children_count > :zero"
     ].join(' OR '), zero: 0
-  )
+  ) }
 
   # Callbacks
   before_save :update_related_documents
-  after_create :update_children_count
   before_destroy :remove_from_related_documents, :update_children_count
+  after_create :update_children_count
   
   # Restricciones
   validates :name, presence: true
@@ -58,7 +58,7 @@ class Tag < ApplicationModel
   end
 
   def update_documents_count
-    self.update_attributes(documents_count: self.documents.count)
+    self.update_attributes(documents_count: self.reload.documents.count)
   end
 
   def update_children_count

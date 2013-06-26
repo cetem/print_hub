@@ -17,7 +17,7 @@ PrintHubApp::Application.routes.draw do
     draw :customer, :order
     draw :customer, :files
 
-    root to: 'customer_sessions#new'
+#    root 'customer_sessions#new'
   end
   
   constraints(UserSubdomain) do
@@ -36,6 +36,6 @@ PrintHubApp::Application.routes.draw do
     draw :user, :files
     draw :user, :print_job_types
 
-    root to: 'user_sessions#new'
+    root 'user_sessions#new'
   end
 end

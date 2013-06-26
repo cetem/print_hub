@@ -49,7 +49,7 @@ module CustomersHelper
     link_to(
       t('view.customers.to_pay_prints.pay_off_debt'),
       pay_off_debt_customer_path(customer, format: 'html'),
-      method: :put, remote: true, id: 'pay_off_debt',
+      method: :patch, remote: true, id: 'pay_off_debt',
       class: 'btn btn-primary', data: { event: 'pay-debt' }
     )
   end
@@ -60,7 +60,7 @@ module CustomersHelper
     link_to(
       t('view.customers.to_pay_prints.pay', date: date_s),
       pay_month_debt_customer_path(customer, date: date, format: 'html'),
-      method: :put, remote: true, id: 'pay_month_debt',
+      method: :patch, remote: true, id: 'pay_month_debt',
       class: 'btn btn-primary', data: { event: 'pay-debt' }
     )
   end
@@ -91,7 +91,7 @@ module CustomersHelper
 
   def link_to_activate_customer(customer)
     link_to '&#xe014;'.html_safe, manual_activation_customer_path(customer),
-      class: 'iconic', method: :put, title: t('view.customers.activate'),
+      class: 'iconic', method: :patch, title: t('view.customers.activate'),
       data: { 'show-tooltip' => true }
   end
 end

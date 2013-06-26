@@ -14,11 +14,11 @@ class Customer < ApplicationModel
   }.with_indifferent_access.freeze
 
   # Scopes
-  scope :active, where(enable: true)
-  scope :disable, where(enable: false)
-  scope :with_monthly_bonus, where('free_monthly_bonus > :zero', zero: 0)
-  scope :with_debt, joins(:prints).merge(Print.pay_later).uniq
-  scope :reliables, where(kind: KINDS[:reliable])
+  scope :active, -> { where(enable: true) }
+  scope :disable, -> { where(enable: false) }
+  scope :with_monthly_bonus, -> { where('free_monthly_bonus > :zero', zero: 0) }
+  scope :with_debt, -> { joins(:prints).merge(Print.pay_later).uniq }
+  scope :reliables, -> { where(kind: KINDS[:reliable]) }
 
   # Alias de atributos
   alias_attribute :informal, :identification
@@ -44,14 +44,13 @@ class Customer < ApplicationModel
   validates :kind, inclusion: { in: KINDS.values }
 
   # Relaciones
-  has_many :orders, inverse_of: :customer, dependent: :destroy,
-    order: 'scheduled_at ASC'
+  has_many :orders, inverse_of: :customer, dependent: :destroy
   has_many :prints, inverse_of: :customer, dependent: :nullify
-  has_many :credits, inverse_of: :customer, order: 'valid_until ASC'
+  has_many :credits, inverse_of: :customer
   has_many :bonuses, inverse_of: :customer, dependent: :destroy,
-    autosave: true, class_name: 'Bonus', order: 'valid_until ASC'
+    autosave: true, class_name: 'Bonus'
   has_many :deposits, inverse_of: :customer, dependent: :destroy,
-    autosave: true, order: 'valid_until ASC'
+    autosave: true
   has_many :print_jobs, through: :prints
   
   accepts_nested_attributes_for :bonuses, allow_destroy: true,
@@ -59,8 +58,8 @@ class Customer < ApplicationModel
   accepts_nested_attributes_for :deposits, allow_destroy: true,
     reject_if: :reject_credits
 
-  def initialize(attributes = nil, options = {})
-    super(attributes, options)
+  def initialize(attributes = nil)
+    super(attributes)
 
     self.kind ||= KINDS[:normal]
   end

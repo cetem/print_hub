@@ -29,8 +29,8 @@ class Credit < ApplicationModel
   # Relaciones
   belongs_to :customer
 
-  def initialize(attributes = nil, options = {})
-    super(attributes, options)
+  def initialize(attributes = nil)
+    super(attributes)
 
     self.amount ||= 0.0
     self.remaining = self.amount

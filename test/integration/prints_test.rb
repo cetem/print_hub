@@ -85,7 +85,7 @@ class PrintsTest < ActionDispatch::IntegrationTest
       click_link I18n.t('view.prints.comment')
       fill_in 'print_comment', with: 'Nothing importan'
     end
-    
+
     assert_difference 'Print.count' do
       click_button I18n.t('view.prints.print_title')
     end
@@ -235,7 +235,7 @@ class PrintsTest < ActionDispatch::IntegrationTest
       assert page.has_xpath?("//li[@class='ui-menu-item']", visible: true)
       find("##@ac_field").native.send_keys :arrow_down, :tab
     end
-    
+
     assert_difference 'Print.count' do
       click_button I18n.t('view.prints.print_title')
     end
@@ -306,6 +306,7 @@ class PrintsTest < ActionDispatch::IntegrationTest
     login
     
     customer = customers(:student)
+    customer.prints.each { |pr| pr.pay_print }
 
     customer.prints.each { |pr| pr.pay_print }
 

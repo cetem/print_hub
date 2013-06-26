@@ -2,7 +2,7 @@
   <div class="row">
     <div class="public-form-container span4 offset4">
       <% url = update_password_reset_path(token: params[:token]) %>
-      <%= simple_form_for @customer, url: url, html: { method: :put } do |f| %>
+      <%= simple_form_for @customer, url: url, html: { method: :patch } do |f| %>
       <div class="form-inputs">
         <%= f.input :password, input_html: { autofocus: true, class: 'span3' } %>
         <%= f.input :password_confirmation, input_html: { class: 'span3' } %>
