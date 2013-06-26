@@ -10,7 +10,6 @@ gem 'will_paginate', github: 'mislav/will_paginate'
 gem 'foreigner'
 gem 'paper_trail', github: 'airblade/paper_trail', branch: 'rails4'
 gem 'RedCloth'
-gem 'newrelic_rpm'
 gem 'capistrano'
 gem 'whenever', require: false
 gem 'cups'
@@ -28,6 +27,10 @@ gem 'chunky_png'
 # Cache performance
 gem 'memcache-client'
 gem 'dalli'
+
+# Code stats
+gem 'newrelic_rpm'
+gem 'coveralls', require: false
 
 # Old assets group / Styles & js
 gem 'sass-rails', '~> 4.0.0'
