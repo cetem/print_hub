@@ -16,8 +16,6 @@ PrintHubApp::Application.routes.draw do
     draw :customer, :password_reset
     draw :customer, :order
     draw :customer, :files
-
-#    root 'customer_sessions#new'
   end
   
   constraints(UserSubdomain) do
@@ -35,7 +33,7 @@ PrintHubApp::Application.routes.draw do
     draw :user, :user
     draw :user, :files
     draw :user, :print_job_types
-
-    root 'user_sessions#new'
   end
+
+  root to: 'subdomains#redirection' # Momentary solution for double root-to
 end
