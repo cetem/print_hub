@@ -4,7 +4,7 @@ namespace :tasks do
     puts 'Cleaning'
 
     puts 'Cleaning public/uploads'
-    dir = "#{Rails.root}/public/uploads/tmp/"
+    dir = "#{Rails.root}/uploads/tmp/"
     delete_files_older_than_7_days(dir)
     delete_empty_files_folder(dir)
 
@@ -19,11 +19,11 @@ namespace :tasks do
   private
 
   def delete_files_older_than_7_days(directory)
-    puts %x{find #{directory} -type f -mtime +7 | rm -rf}
+    puts %x{find #{directory} -type f -mtime +7 | xargs rm -rf}
   end
 
   def delete_empty_files_folder(directory)
-    dirs = %x{find #{directory} -type d -mtime +7}.split("\n").reverse
+    dirs = %x{find #{directory} -type d}.split("\n").reverse
 
     dirs.each { |d| Dir.rmdir(d) if (Dir.entries(d) - %w[. ..]).empty? }
   end
