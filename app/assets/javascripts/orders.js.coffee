@@ -69,16 +69,18 @@
         jobsContainer.data('prices-one-sided')[jobType] || jobType
       )
 
-      $(ol).data('oddPages', { oneSidedType: copies * (pages % 2) })
+      list = {}
+      list[oneSidedType] = copies * (pages % 2)
+
+      $(ol).data('oddPages', list)
       totalTypePages[jobType] += (copies * pages) || 0
 
     $('.order_line:not([data-exclude-from-total])').each (i, ol)->
       oddPages = $(ol).data('oddPages')
-      type = Object.keys(oddPages)[0]
-      pages = oddPages[type]
 
-      totalTypePages = $('[data-jobs-container]').data('pages-list')
-      totalTypePages[type] += pages
+      for type, pages of oddPages
+        totalTypePages = $('[data-jobs-container]').data('pages-list')
+        totalTypePages[type] += pages
 
   updateAllOrderLines: ->
     $('.order_line:not([data-exclude-from-total])').each ->

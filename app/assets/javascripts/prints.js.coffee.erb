@@ -135,16 +135,18 @@
         printJobType
       )
 
-      $(pj).data('oddPages', { oneSidedType: copies * (rangePages % 2) })
+      list = {}
+      list[oneSidedType] = copies * (rangePages % 2)
+
+      $(pj).data('oddPages', list)
       totalTypePages[printJobType] += (copies * evenPages) || 0
 
     $('.print_job:not([data-exclude-from-total])').each (i, pj)->
       oddPages = $(pj).data('oddPages')
-      type = Object.keys(oddPages)[0]
-      pages = oddPages[type]
 
-      totalTypePages = $('[data-jobs-container]').data('pages-list')
-      totalTypePages[type] += pages
+      for type, pages of oddPages
+        totalTypePages = $('[data-jobs-container]').data('pages-list')
+        totalTypePages[type] += pages
 
 
 new Rule
