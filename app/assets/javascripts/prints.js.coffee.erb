@@ -51,17 +51,17 @@
 
     printJobsContainer = $('#print_jobs_container')
 
-    mediaType = printJob.find(
-      'select[name$="[print_job_type_id]"] :selected'
-    ).val()
     copies = parseInt(printJob.find('input[name$="[copies]"]').val())
     rangePages = parseInt(
       printJob.find('input[name$="[range]"]').data('rangePages')
-    ) * copies
+    )
     evenRange = rangePages - (rangePages % 2)
     rest = (rangePages % 2)
     pricePerCopy = printJob.data('price-per-copy')
 
+    mediaType = printJob.find(
+      'select[name$="[print_job_type_id]"] :selected'
+    ).val()
     oneSidedType = printJobsContainer.data('prices-one-sided')[mediaType] || mediaType
     oneSidedSettings = printJobsContainer.data('prices-list')[oneSidedType]
     mediaPages = printJobsContainer.data('pages-list')[mediaType]
@@ -74,7 +74,7 @@
     money = printJob.find('span.money')
 
     jobPrice = parseFloat(
-      (pricePerCopy * evenRange + pricePerOneSidedCopy) || 0
+      copies * (pricePerCopy * evenRange + pricePerOneSidedCopy) || 0
     ).toFixed(3)
 
     printJob.data('price', jobPrice)
@@ -113,7 +113,8 @@
     $('#print_submit').attr('value', label)
 
   updateTotalPages: ->
-    totalTypePages = $('[data-jobs-container]').data('pages-list')
+    printJobsContainer = $('[data-jobs-container]')
+    totalTypePages = printJobsContainer.data('pages-list')
 
     # Reset the counts
     $.each totalTypePages, (key, value) ->
@@ -124,12 +125,26 @@
       rangePages = parseInt(
         $(pj).find('input[name$="[range]"]').data('rangePages')
       )
+      evenPages = rangePages - (rangePages % 2)
 
       printJobType = $(pj).find(
         'select[name$="[print_job_type_id]"] :selected'
       ).val()
+      oneSidedType = (
+        printJobsContainer.data('prices-one-sided')[printJobType] ||
+        printJobType
+      )
 
-      totalTypePages[printJobType] += (copies * rangePages) || 0
+      $(pj).data('oddPages', { oneSidedType: copies * (rangePages % 2) })
+      totalTypePages[printJobType] += (copies * evenPages) || 0
+
+    $('.print_job:not([data-exclude-from-total])').each (i, pj)->
+      oddPages = $(pj).data('oddPages')
+      type = Object.keys(oddPages)[0]
+      pages = oddPages[type]
+
+      totalTypePages = $('[data-jobs-container]').data('pages-list')
+      totalTypePages[type] += pages
 
 
 new Rule

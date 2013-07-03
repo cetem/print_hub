@@ -1,7 +1,7 @@
 class PriceCalculator
   def self.final_job_price(options = {})
-    rest = options[:total_pages] % 2
-    even_pages = (options[:total_pages] - rest)
+    rest = options[:pages] % 2
+    even_pages = (options[:pages] - rest)
 
     if !rest.zero? && options[:type].two_sided
       one_sided_type = options[:type].one_sided_for
@@ -14,11 +14,13 @@ class PriceCalculator
 
     one_sided_price ||= 0.00
 
-    if one_sided_price.zero?
-      options[:total_pages] * options[:price_per_copy]
+    partial_price = if one_sided_price.zero?
+      options[:pages] * options[:price_per_copy]
     else
       even_pages * options[:price_per_copy] + one_sided_price
     end
+
+    options[:copies] * partial_price
   end
 
   def self.price_per_copy(pj)

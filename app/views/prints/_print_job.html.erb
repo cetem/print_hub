@@ -2,6 +2,7 @@
 <% hide = is_dynamic || f.object.marked_for_destruction? %>
 <div class="print_job" id="<%= id %>" data-price="<%= f.object.price %>" 
   data-price-per-copy="<%= f.object.price_per_copy %>"
+  data-odd-pages=""
   <%= raw 'style="display: none;"' if hide %>>
   <div class="row-fluid">
     <div class="span5">

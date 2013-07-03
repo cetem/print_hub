@@ -30,9 +30,8 @@
 
     copies = parseInt(orderLine.find('input[name$="[copies]"]').val())
     pages = parseInt(orderLine.find('input[name$="[pages]"]').val())
-    totalPages = pages * copies
-    evenPages = totalPages - (totalPages % 2)
-    rest = (totalPages % 2)
+    evenPages = pages - (pages % 2)
+    rest = (pages % 2)
 
     pricePerCopy = orderLine.data('price-per-copy')
     oneSidedType = orderLinesContainer.data('prices-one-sided')[mediaType] || mediaType
@@ -44,7 +43,7 @@
       oneSidedSettings, parseInt(oneSidedPages)
     )
     jobPrice = parseFloat(
-      (pricePerCopy * evenPages + pricePerOneSidedCopy) || 0
+      copies * (pricePerCopy * evenPages + pricePerOneSidedCopy) || 0
     ).toFixed(3)
 
     money = orderLine.find('span.money')
@@ -54,7 +53,8 @@
     Order.updateTotalPrice()
 
   updateTotalPages: ->
-    totalTypePages = $('[data-jobs-container]').data('pages-list')
+    jobsContainer = $('[data-jobs-container]')
+    totalTypePages = jobsContainer.data('pages-list')
 
     # Reset the counts
     $.each totalTypePages, (key, value) ->
@@ -65,8 +65,20 @@
       pages = parseInt($(ol).find('input[name$="[pages]"]').val()) || 0
 
       jobType = $(ol).find('select[name$="[print_job_type_id]"] :selected').val()
+      oneSidedType = (
+        jobsContainer.data('prices-one-sided')[jobType] || jobType
+      )
 
+      $(ol).data('oddPages', { oneSidedType: copies * (pages % 2) })
       totalTypePages[jobType] += (copies * pages) || 0
+
+    $('.order_line:not([data-exclude-from-total])').each (i, ol)->
+      oddPages = $(ol).data('oddPages')
+      type = Object.keys(oddPages)[0]
+      pages = oddPages[type]
+
+      totalTypePages = $('[data-jobs-container]').data('pages-list')
+      totalTypePages[type] += pages
 
   updateAllOrderLines: ->
     $('.order_line:not([data-exclude-from-total])').each ->

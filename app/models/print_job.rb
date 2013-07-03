@@ -124,17 +124,14 @@ class PrintJob < ApplicationModel
       (self.print.try(:pages_per_type) || {}).merge(
         price_per_copy: job_price_per_copy,
         type: self.print_job_type, 
-        total_pages: self.total_pages_to_print
+        pages: self.range_pages,
+        copies: self.copies || 0
       )
     )
   end
 
   def job_price_per_copy
     PriceCalculator.price_per_copy(self)
-  end
-
-  def total_pages_to_print
-    (self.copies || 0) * (self.range_pages || 0)
   end
 
   def print_total_pages

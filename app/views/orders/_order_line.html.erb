@@ -2,6 +2,7 @@
 <% name = "order[order_lines_attributes][#{f.object_id}]" %>
 <div class="order_line" id="<%= id %>"
   data-price="<%= f.object.price %>" 
+  data-odd-pages=""
   data-price-per-copy="<%= f.object.price_per_copy %>">
   <div class="row-fluid">
     <div class="span4">

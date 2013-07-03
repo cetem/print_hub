@@ -3,6 +3,7 @@
 <% name = "order[order_files_attributes][#{order_file.object_id}]" %>
 <div class="order_line order_file" id="<%= "#{id}" %>"
   data-price="<%= order_file.object.price %>" 
+  data-odd-pages=""
   data-price-per-copy="<%= order_file.object.price_per_copy %>">
   <div class="row-fluid">
     <div class="span4">
