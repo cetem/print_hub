@@ -10,3 +10,4 @@ tmp/
 *~
 .rbenv-version
 *.swp
+coverage/

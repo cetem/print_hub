@@ -62,7 +62,7 @@ class PrintJobTest < ActiveSupport::TestCase
         price_per_copy: 0.10,
         range: nil,
         print_job_type_id: print_job_types(:color).id,
-        order_file_id: order_files(:for_tomorrow_cv_file).id
+        file_line_id: file_lines(:for_tomorrow_cv_file).id
       })
     end
 

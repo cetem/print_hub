@@ -188,5 +188,5 @@ cv_job_1:
   range: ''
   printed_pages: <%= 3 * 12 %>
   print_job_type: a4
-  order_file: from_yesterday_cv_file
+  file_line: from_yesterday_cv_file
   print: physics_print

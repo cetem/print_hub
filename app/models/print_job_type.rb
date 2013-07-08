@@ -13,7 +13,7 @@ class PrintJobType < ActiveRecord::Base
     allow_nil: true, allow_blank: true
 
   has_many :print_jobs
-  has_many :order_files
+  has_many :file_lines
   has_many :order_lines
 
   before_save :keep_only_one_default

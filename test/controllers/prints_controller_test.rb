@@ -707,6 +707,14 @@ class PrintsControllerTest < ActionController::TestCase
     assert_redirected_to print_path(print)
   end
 
+  test 'should upload a file' do
+    UserSession.create(users(:administrator))
+
+    post :upload_file, file_line: { file: pdf_test_file }, status: 'all'
+    assert_response :success
+    assert_template 'prints/_file_print_job'
+  end
+
   def get_prints_with_customer(options={})
     options[:customer] ||= customers(:teacher)
     

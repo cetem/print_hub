@@ -13,6 +13,10 @@ namespace :tasks do
     delete_files_older_than_7_days(dir)
     delete_empty_files_folder(dir)
 
+    puts 'Cleaning tmp/codes'
+    dir = "#{Rails.root}/tmp/codes/"
+    delete_files_older_than_7_days(dir)
+
     puts 'Ready'
   end
 

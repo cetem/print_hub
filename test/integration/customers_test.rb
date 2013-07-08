@@ -117,7 +117,9 @@ class CustomersTest < ActionDispatch::IntegrationTest
     
     visit edit_customer_path(customers(:student_without_bonus))
     
-    fill_in 'deposit_amount_deposit_customer_deposits_attributes_0_', with: 12.5
+    find(
+      :css, "input[id^='deposit_amount_deposit_customer_deposits_attributes_']"
+    ).set(12.5)
     
     assert_difference 'Deposit.count' do
       click_button I18n.t(

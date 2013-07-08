@@ -37,12 +37,12 @@ class Order < ApplicationModel
   belongs_to :customer
   has_one :print
   has_many :order_lines, inverse_of: :order, dependent: :destroy
-  has_many :order_files, inverse_of: :order, dependent: :destroy
+  has_many :file_lines, inverse_of: :order, dependent: :destroy
   
   accepts_nested_attributes_for :order_lines, allow_destroy: true,
     reject_if: ->(attributes) { attributes['copies'].to_i <= 0 }
-  accepts_nested_attributes_for :order_files, allow_destroy: true,
-   reject_if: :reject_order_files_attributes?
+  accepts_nested_attributes_for :file_lines, allow_destroy: true,
+   reject_if: :reject_file_lines_attributes?
   
   def initialize(attributes = nil)
     super(attributes)
@@ -69,7 +69,7 @@ class Order < ApplicationModel
     self.pending? || self.status_was == STATUS[:pending]
   end
 
-  def reject_order_files_attributes?(attributes)
+  def reject_file_lines_attributes?(attributes)
     (attributes['file'].blank? && attributes['file_cache'].blank?) || 
       attributes['copies'].to_i <= 0
   end
@@ -80,7 +80,7 @@ class Order < ApplicationModel
 
   def order_items
     (
-      self.order_lines.to_a + self.order_files.to_a
+      self.order_lines.to_a + self.file_lines.to_a
     ).compact.reject(&:marked_for_destruction?)
   end
   

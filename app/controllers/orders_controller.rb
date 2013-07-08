@@ -120,12 +120,12 @@ class OrdersController < ApplicationController
   # POST /orders/upload_file
   def upload_file
     @order = Order.new
-    order_file = @order.order_files.build(order_file_params)
-    order_file.extract_page_count if order_file
+    file_line = @order.file_lines.build(file_line_params)
+    file_line.extract_page_count if file_line
 
     respond_to do |format|
-      if order_file
-        format.html { render partial: 'orders/order_file' }
+      if file_line
+        format.html { render partial: 'file_line' }
         format.js
       else
         format.html { head :unprocessable_entity }
@@ -161,7 +161,7 @@ class OrdersController < ApplicationController
     params.require(:order).permit(
       :scheduled_at, :notes, :lock_version, :include_documents, 
       {
-        order_files_attributes: [
+        file_lines_attributes: [
           :file, :pages, :file_cache, *order_items_shared_attrs
         ],
         order_lines_attributes: [
@@ -171,7 +171,7 @@ class OrdersController < ApplicationController
     )
   end
 
-  def order_file_params
-    params.require(:order_file).permit(:file)
+  def file_line_params
+    params.require(:file_line).permit(:file)
   end
 end

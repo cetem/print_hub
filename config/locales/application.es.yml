@@ -551,6 +551,7 @@
       customer_links:
         next: '*Próxima* impresión del cliente &raquo;'
         prev: '&laquo; Impresión *anterior* del cliente'
+      upload_file: 'Subir archivo'
     shifts:
       index_title: 'Listado de turnos'
       show_title: 'Detalle de turno'

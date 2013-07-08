@@ -18,7 +18,7 @@ class OrderTest < ActiveSupport::TestCase
 
   # Prueba la creación de un pedido
   test 'create' do
-    assert_difference ['Order.count', 'OrderLine.count', 'OrderFile.count'] do
+    assert_difference ['Order.count', 'OrderLine.count', 'FileLine.count'] do
       assert_difference 'Version.count', 3 do
         customer = customers(:student_without_bonus)
         @order = customer.orders.create(
@@ -30,7 +30,7 @@ class OrderTest < ActiveSupport::TestCase
               document_id: documents(:math_book).id
             }
           },
-          order_files_attributes: {
+          file_lines_attributes: {
             '1' => {
               copies: 1,
               print_job_type_id: print_job_types((:a4)).id,
@@ -46,7 +46,7 @@ class OrderTest < ActiveSupport::TestCase
   
   # Prueba la creación de un pedido
   test 'create with credit and allow printing' do
-    assert_difference ['Order.count', 'OrderLine.count', 'OrderFile.count'] do
+    assert_difference ['Order.count', 'OrderLine.count', 'FileLine.count'] do
       assert_difference 'Version.count', 3 do
         customer = customers(:student)
         @order = customer.orders.create(
@@ -58,7 +58,7 @@ class OrderTest < ActiveSupport::TestCase
               document_id: documents(:math_book).id
             }
           },
-          order_files_attributes: {
+          file_lines_attributes: {
             '1' => {
               copies: 1,
               print_job_type_id: print_job_types((:a4)).id,
@@ -174,7 +174,7 @@ class OrderTest < ActiveSupport::TestCase
   # Prueba que las validaciones del modelo se cumplan como es esperado
   test 'validates that has at least one item' do
     @order.order_lines.destroy_all
-    @order.order_files.destroy_all
+    @order.file_lines.destroy_all
     assert @order.invalid?
     assert_equal 1, @order.errors.count
     assert_equal [error_message_from_model(@order, :base, :must_have_one_item)],

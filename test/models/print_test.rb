@@ -49,7 +49,7 @@ class PrintTest < ActiveSupport::TestCase
               copies: 1,
               price_per_copy: 1000,
               print_job_type_id: print_job_types(:a4).id,
-              order_file_id: order_files(:from_yesterday_cv_file).id
+              file_line_id: file_lines(:from_yesterday_cv_file).id
             }
           },
           article_lines_attributes: {
@@ -224,7 +224,7 @@ class PrintTest < ActiveSupport::TestCase
                 copies: 1,
                 price_per_copy: 1000,
                 print_job_type_id: print_job_types(:a4).id,
-                order_file_id: order_files(:from_yesterday_cv_file).id
+                file_line_id: file_lines(:from_yesterday_cv_file).id
               }
             },
             payments_attributes: {
@@ -274,7 +274,7 @@ class PrintTest < ActiveSupport::TestCase
               copies: 10,
               price_per_copy: 0.10,
               print_job_type_id: print_job_types(:a4).id,
-              order_file_id: order_files(:from_yesterday_cv_file).id
+              file_line_id: file_lines(:from_yesterday_cv_file).id
             }
             # 360 páginas = $36.00
           },
@@ -364,7 +364,7 @@ class PrintTest < ActiveSupport::TestCase
                 copies: 1000,
                 price_per_copy: 0.10,
                 print_job_type_id: print_job_types(:a4).id,
-                order_file_id: order_files(:from_yesterday_cv_file).id
+                file_line_id: file_lines(:from_yesterday_cv_file).id
               }
               # 36000 páginas = $3600.00
             },
@@ -472,8 +472,8 @@ class PrintTest < ActiveSupport::TestCase
     assert_equal false, @print.pending_payment?
     assert_equal order.order_lines.map(&:document_id).sort,
       @print.print_jobs.map(&:document_id).compact.sort
-    assert_equal order.order_files.map(&:id).sort,
-      @print.print_jobs.map(&:order_file_id).compact.sort
+    assert_equal order.file_lines.map(&:id).sort,
+      @print.print_jobs.map(&:file_line_id).compact.sort
     assert order.reload.completed?
   end
   
@@ -504,7 +504,7 @@ class PrintTest < ActiveSupport::TestCase
                 copies: 1,
                 price_per_copy: 1000,
                 print_job_type_id: print_job_types(:a4).id,
-                order_file_id: order_files(:from_yesterday_cv_file).id
+                file_line_id: file_lines(:from_yesterday_cv_file).id
               }
             },
             payments_attributes: {

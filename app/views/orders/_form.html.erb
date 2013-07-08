@@ -1,5 +1,5 @@
 <div id='upload-file' class='pull-right'>
-  <%= simple_form_for :order_file, url: upload_file_orders_path, data: { 'form-data' => 'script=true' } do |of| %>
+  <%= simple_form_for :file_line, url: upload_file_orders_path, data: { 'form-data' => 'script=true' } do |of| %>
     <%= t('view.orders.upload_file') %>
     <%= of.input :file, as: :file, label: false, data: { 'form-data' => '{"script": "true"}' } %>
   <% end %>
@@ -43,10 +43,10 @@
         </div>
       </div>
 
-      <div id='order_files'>
-        <%= f.simple_fields_for :order_files do |of| %>
+      <div id='file_lines'>
+        <%= f.simple_fields_for :file_lines do |of| %>
           <% if of.object.file.present? || of.object.file_cache.present? %>
-            <%= render partial: 'order_file', locals: { order_file: of } %>
+            <%= render partial: 'file_line', locals: { file_line: of } %>
           <% end %>
         <% end %>
       </div>

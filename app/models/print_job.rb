@@ -36,7 +36,7 @@ class PrintJob < ApplicationModel
   
   # Restricciones de atributos
   attr_readonly :id, :document_id, :copies, :pages, :range, :job_id, :print_id,
-    :order_file_id
+    :file_line_id
 
   # Restricciones
   validates :copies, :pages, :price_per_copy, :printed_copies, presence: true
@@ -54,22 +54,22 @@ class PrintJob < ApplicationModel
   # Relaciones
   belongs_to :print, inverse_of: :print_jobs
   belongs_to :document, autosave: true
-  belongs_to :order_file, inverse_of: :print_jobs
+  belongs_to :file_line, inverse_of: :print_jobs
   belongs_to :print_job_type
 
   def initialize(attributes = nil)
     super(attributes)
-    self.order_file_id ||= attributes['id'] if attributes
+    self.file_line_id ||= attributes['id'] if attributes
     
     self.copies ||= 1
     self.print_job_type ||= PrintJobType.default
     self.printed_copies ||= 0
     self.pages = self.document.pages if self.document
-    self.pages = self.order_file.pages if self.order_file
+    self.pages = self.file_line.pages if self.file_line
 
-    if self.order_file
-      self.pages = self.order_file.pages
-      self.file_name = self.order_file.file_name
+    if self.file_line
+      self.pages = self.file_line.pages
+      self.file_name = self.file_line.file_name
     end
 
     self.price_per_copy = job_price_per_copy
@@ -146,7 +146,7 @@ class PrintJob < ApplicationModel
     # Imprimir solamente si el archivo existe
     file_existence = (
       self.document.try(:file?) && File.exists?(self.document.file.path) ||
-      self.order_file.try(:file?) && File.exists?(self.order_file.file.path)
+      self.file_line.try(:file?) && File.exists?(self.file_line.file.path)
     )
     if file_existence
       # Solamente usar documentos en existencia si no se especifica un rango
@@ -158,7 +158,7 @@ class PrintJob < ApplicationModel
       
       if self.printed_copies > 0
         file_path = (
-          self.document ? self.document.file.path : self.order_file.file.path
+          self.document ? self.document.file.path : self.file_line.file.path
         )
 
         timestamp = Time.now.utc.strftime('%Y%m%d%H%M%S')

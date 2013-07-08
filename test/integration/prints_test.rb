@@ -6,7 +6,7 @@ class PrintsTest < ActionDispatch::IntegrationTest
     Capybara.server_port = '54163'
     Capybara.app_host = "http://localhost:54163"
     
-    @ac_field = 'auto-document-print_job_print_print_jobs_attributes_0_'
+    @ac_field = 'auto-document-print_job_print_print_jobs_attributes_'
     @pdf_printer = Cups.show_destinations.detect { |p| p =~ /pdf/i }
   end
   
@@ -43,7 +43,7 @@ class PrintsTest < ActionDispatch::IntegrationTest
     assert_equal new_print_path, current_path
     assert page.has_css?('.print_job', count: 1)
     
-    barcode = find("##@ac_field").value
+    barcode = find(:css, "input[id^='#@ac_field']").value
     
     assert_equal Document.order('code DESC').first.code.to_i, 
       barcode.match(/\[(\d+)/)[1].to_i
@@ -64,7 +64,7 @@ class PrintsTest < ActionDispatch::IntegrationTest
     assert_equal new_print_path, current_path
     assert page.has_css?('form.new_print')
     
-    within 'form' do
+    within 'form.new_print' do
       select @pdf_printer, from: 'print_printer'
     end
 
@@ -73,15 +73,15 @@ class PrintsTest < ActionDispatch::IntegrationTest
     )
     
     within '.print_job' do
-      fill_in "#@ac_field", with: 'Math Book'
+      find(:css, "input[id^='#@ac_field']").set('Math Book')
       assert page.has_xpath?("//li[@class='ui-menu-item']", visible: true)
-      find("##@ac_field").native.send_keys :arrow_down, :tab
+      find(:css, "input[id^='#@ac_field']").native.send_keys :arrow_down, :tab
 
       assert_equal find('select[name$="[print_job_type_id]"]').value,
         print_job_types(:color).id.to_s
     end
     
-    within 'form' do
+    within 'form.new_print' do
       click_link I18n.t('view.prints.comment')
       fill_in 'print_comment', with: 'Nothing importan'
     end
@@ -108,9 +108,9 @@ class PrintsTest < ActionDispatch::IntegrationTest
     
     assert_page_has_no_errors!
     assert_equal new_print_path, current_path
-    assert page.has_css?('form')
+    assert page.has_css?('form.new_print')
     
-    within 'form' do
+    within 'form.new_print' do
       select(nil, from: 'print_printer' ) # the :blank option deprecated...
       fill_in 'print_scheduled_at', with: ''
       assert page.has_css?('div.datetime_picker')
@@ -131,9 +131,9 @@ class PrintsTest < ActionDispatch::IntegrationTest
     end
     
     within '.print_job' do
-      fill_in "#@ac_field", with: 'Math'
+      find(:css, "input[id^='#@ac_field']").set('Math')
       assert page.has_xpath?("//li[@class='ui-menu-item']", visible: true)
-      find("##@ac_field").native.send_keys :arrow_down, :tab
+      find(:css, "input[id^='#@ac_field']").native.send_keys :arrow_down, :tab
     end
     
     assert_difference 'Print.count' do
@@ -160,28 +160,28 @@ class PrintsTest < ActionDispatch::IntegrationTest
     assert_equal new_print_path, current_path
     assert page.has_css?('form.new_print')
     
-    within 'form' do
+    within 'form.new_print' do
       select @pdf_printer, from: 'print_printer'
     end
     
     within '.print_job' do
-      fill_in "#@ac_field", with: 'Math'
+      find(:css, "input[id^='#@ac_field']").set('Math')
       assert page.has_xpath?("//li[@class='ui-menu-item']", visible: true)
-      find("##@ac_field").native.send_keys :arrow_down, :tab
+      find(:css, "input[id^='#@ac_field']").native.send_keys :arrow_down, :tab
     end
     
     print_job_price = first(
       :css, '#print_jobs_container .money'
     ).text.gsub('$', '')
     
-    within 'form' do
-      art_id = 'auto_article_line_article_line_print_article_lines_attributes_0_'
+    within 'form.new_print' do
+      art_id = 'auto_article_line_article_line_print_article_lines_attributes_'
       click_link I18n.t('view.prints.article_lines')
       
       within '#articles_container' do
-        fill_in "#{art_id}", with: 'ringed'
+        find(:css, "input[id^='#{art_id}']").set('ringed')
         assert page.has_xpath?("//li[@class='ui-menu-item']", visible: true)
-        find("##{art_id}").native.send_keys :arrow_down, :tab
+        find(:css, "input[id^='#{art_id}']").native.send_keys :arrow_down, :tab
       end
       
     end
@@ -231,9 +231,9 @@ class PrintsTest < ActionDispatch::IntegrationTest
     )
     
     within '.print_job' do |ac|
-      fill_in "#@ac_field", with: 'Math'
+      find(:css, "input[id^='#@ac_field']").set('Math')
       assert page.has_xpath?("//li[@class='ui-menu-item']", visible: true)
-      find("##@ac_field").native.send_keys :arrow_down, :tab
+      find(:css, "input[id^='#@ac_field']").native.send_keys :arrow_down, :tab
     end
 
     assert_difference 'Print.count' do
@@ -276,7 +276,7 @@ class PrintsTest < ActionDispatch::IntegrationTest
     assert_equal new_print_path, current_path
     assert page.has_css?('form.new_print')
     
-    within 'form' do
+    within 'form.new_print' do
       select @pdf_printer, from: 'print_printer'
       
       fill_in 'print_auto_customer_name', with: customer.identification
@@ -287,9 +287,9 @@ class PrintsTest < ActionDispatch::IntegrationTest
     end
     
     within '.print_job' do |ac|
-      fill_in "#@ac_field", with: 'Math'
+      find(:css, "input[id^='#@ac_field']").set('Math')
       assert page.has_xpath?("//li[@class='ui-menu-item']", visible: true)
-      find("##@ac_field").native.send_keys :arrow_down, :tab
+      find(:css, "input[id^='#@ac_field']").native.send_keys :arrow_down, :tab
     end
     
     assert_difference ['Print.count', 'customer.prints.count'] do
@@ -321,7 +321,7 @@ class PrintsTest < ActionDispatch::IntegrationTest
     assert_equal new_print_path, current_path
     assert page.has_css?('form.new_print')
     
-    within 'form' do
+    within 'form.new_print' do
       select @pdf_printer, from: 'print_printer'
 
       assert customer.reliable?
@@ -336,14 +336,61 @@ class PrintsTest < ActionDispatch::IntegrationTest
     assert find('#print_pay_later').checked?
 
     within '.print_job' do |ac|
-      fill_in "#@ac_field", with: 'Math'
+      find(:css, "input[id^='#@ac_field']").set('Math')
       assert page.has_xpath?("//li[@class='ui-menu-item']", visible: true)
-      find("##@ac_field").native.send_keys :arrow_down, :tab
+      find(:css, "input[id^='#@ac_field']").native.send_keys :arrow_down, :tab
     end
     
     assert_difference(
       ['Print.count', 'customer.prints.count', 'Customer.with_debt.count']
     ) do
+      click_button I18n.t('view.prints.print_title')
+    end
+    
+    assert_page_has_no_errors!
+    assert page.has_css?(
+      '.alert', text: I18n.t('view.prints.correctly_created')
+    )
+  end
+
+  test 'should print with file upload' do
+    login
+    
+    assert_page_has_no_errors!
+    assert_equal prints_path, current_path
+    
+    within '.form-actions' do
+      click_link I18n.t('view.prints.new')
+    end
+    
+    assert_page_has_no_errors!
+    assert_equal new_print_path, current_path
+    assert page.has_css?('form.new_print')
+    
+    within 'form.new_print' do
+      select @pdf_printer, from: 'print_printer'
+      assert page.has_css?('.file_line_item', count: 0)
+    end
+
+    assert_difference 'FileLine.count' do
+      # Muestra el form sino selenium no lo encuentra
+      page.execute_script(
+        "$('#upload-file').removeClass('hidden');"
+      )
+
+      within 'form.file_line' do
+        attach_file(
+          'file_line_file', 
+          File.join(Rails.root, 'test', 'fixtures', 'files', 'test.pdf')
+        )
+      end
+
+      within 'form.new_print' do
+        assert page.has_css?('.file_line_item', count: 1)
+      end
+    end
+
+    assert_difference 'Print.count' do
       click_button I18n.t('view.prints.print_title')
     end
     

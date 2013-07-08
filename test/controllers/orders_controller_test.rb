@@ -69,13 +69,13 @@ class OrdersControllerTest < ActionController::TestCase
     
     CustomerSession.create(customer)
 
-    order_file = OrderFile.new(
+    file_line = FileLine.new(
       file: fixture_file_upload('/files/test.pdf', 'application/pdf')
     )
     print_job_type_id = print_job_types(:a4)
     
     assert_difference [
-      'customer.orders.count', 'OrderLine.count', 'OrderFile.count'
+      'customer.orders.count', 'OrderLine.count', 'FileLine.count'
     ] do
       post :create, order: {
         scheduled_at: I18n.l(10.days.from_now, format: :minimal),
@@ -86,9 +86,9 @@ class OrdersControllerTest < ActionController::TestCase
             document_id: documents(:math_book).id.to_s
           }
         },
-        order_files_attributes: {
+        file_lines_attributes: {
           '1' => {
-            file_cache: order_file.file_cache,
+            file_cache: file_line.file_cache,
             copies: 2,
             print_job_type_id: print_job_type_id
           }
@@ -169,11 +169,11 @@ class OrdersControllerTest < ActionController::TestCase
       tempfile: File.new(File.join(Rails.root, 'test', 'fixtures', 'files', 'test.pdf'))
     })
 
-    post :upload_file, order_file: { file: file }
+    post :upload_file, file_line: { file: file }
 
     assert_response :success
     assert_select '#unexpected_error', false
-    assert_template 'orders/_order_file'
+    assert_template 'orders/_file_line'
   end
 
   test 'should clean catalog order' do

@@ -50,14 +50,14 @@ class PrivateCustomerInteractionsTest < ActionDispatch::IntegrationTest
 
     within 'div.file' do
       attach_file(
-        'order_file_file',
+        'file_line_file',
         File.join(Rails.root, 'test', 'fixtures', 'files', 'test.pdf')
       )
     end
 
     assert page.has_css?('.order_line', count: 2)
 
-    assert_difference ['Order.count', 'OrderFile.count', 'OrderLine.count'] do
+    assert_difference ['Order.count', 'FileLine.count', 'OrderLine.count'] do
       click_button I18n.t(
         'helpers.submit.create', model: Order.model_name.human
       )

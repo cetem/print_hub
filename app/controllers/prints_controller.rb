@@ -119,6 +119,22 @@ class PrintsController < ApplicationController
     end
   end
 
+  # POST /prints/upload_file
+  def upload_file
+    @print = Print.new
+    file_line = FileLine.create(file_line_params)
+    @print.print_jobs.build(file_line.attributes.slice('id'))
+
+    respond_to do |format|
+      if file_line
+        format.html { render partial: 'file_print_job' }
+        format.js
+      else
+        format.html { head :unprocessable_entity }
+      end
+    end
+  end
+
   # GET /prints/autocomplete_for_document_name
   def autocomplete_for_document_name
     query = params[:q].sanitized_for_text_query
@@ -204,12 +220,16 @@ class PrintsController < ApplicationController
       :avoid_printing, :include_documents, :credit_password, :pay_later, 
       :lock_version, :comment, print_jobs_attributes: [
         :document_id, :copies, :pages, :range, :print_id, :auto_document_name, 
-        :job_hold_until, :order_file_id, :print_job_type_id, *shared_attrs
+        :job_hold_until, :file_line_id, :print_job_type_id, *shared_attrs
       ], article_lines_attributes: [
         :print_id, :article_id, :units, :auto_article_name, *shared_attrs
       ], payments_attributes: [
         :amount, :paid, :paid_with, :payable_id, *shared_attrs
       ]
     )
+  end
+
+  def file_line_params
+    params.require(:file_line).permit(:file)
   end
 end

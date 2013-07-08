@@ -1,0 +1,37 @@
+<% file_line ||= build_order_file_line_form %>
+<% id = "file_line_file_line_lines_attributes_#{file_line.object_id}_" %>
+<% name = "order[file_lines_attributes][#{file_line.object_id}]" %>
+<div class="order_line file_line_item" id="<%= "#{id}" %>"
+  data-price="<%= file_line.object.price %>" 
+  data-odd-pages=""
+  data-price-per-copy="<%= file_line.object.price_per_copy %>">
+  <div class="row-fluid">
+    <div class="span4">
+      <%= file_line.object.file_name %>
+      <%= file_line.input :file_cache, as: :hidden, label: false, 
+        input_html: { value: file_line.object.file_cache,
+        name: "#{name}[file_cache]", id: "#{id}file_cache" } %>
+    </div>
+    <div class="span1">
+      <%= file_line.input :copies, label: false, 
+        input_html: { value: 1, maxlength: 5, autocomplete: 'off',
+        name: "#{name}[copies]", id: "#{id}copies",
+        class: 'price-modifier page-modifier span12' } %>
+    </div>
+    <div class="span1">
+      <%= file_line.input :pages, label: false,
+        input_html: { maxlength: 5, class: 'price-modifier page-modifier span11',
+        autocomplete: 'off', disabled: true } %>
+    </div>
+    <div class="span2">
+      <%= print_job_types_select_combo(file_line) %>
+    </div>
+    <div class="span2">
+      <% title = show_price_per_copy_title(file_line.object.price_per_copy) %>
+      <span class="label money" title="<%= title %>">
+        <%= number_to_currency file_line.object.price %>
+      </span>
+      <%= link_to_remove_nested_item(nil, 'order_line') %>
+    </div>
+  </div>
+</div>

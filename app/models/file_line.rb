@@ -1,4 +1,4 @@
-class OrderFile < ActiveRecord::Base
+class FileLine < ActiveRecord::Base
   has_paper_trail
   mount_uploader :file, CustomersFilesUploader
 
@@ -13,6 +13,7 @@ class OrderFile < ActiveRecord::Base
   validate :file_presence, on: :create
 
   belongs_to :order
+  belongs_to :print
   belongs_to :print_job_type
   has_many :print_jobs
 

@@ -11,6 +11,7 @@
   
   <div class="form-inputs">
     <%= f.error_notification %>
+    <%= f.object.errors.full_messages.join(', ') %>
     <div class="row-fluid">
       <div class="span6">
         <%= print_destinations_field(f) %>
@@ -99,16 +100,31 @@
         </div>
 
         <% if @print.new_record? %>
-          <div>
-            <%= link_to t('view.prints.add_print_job'), '#',
-              id: 'add_print_job_link', class: 'btn btn-mini',
-              title: t('view.prints.add_print_job_title'),
-              data: {
-                template: 'print_job',
-                container: '#print_jobs',
-                event: 'addNestedItem'
-              }
-            %>
+          <div class="row-fluid">
+            <div class="span2">
+              <%= link_to t('view.prints.add_print_job'), '#',
+                id: 'add_print_job_link', class: 'btn btn-mini',
+                title: t('view.prints.add_print_job_title'),
+                data: {
+                  template: 'print_job',
+                  container: '#print_jobs',
+                  event: 'addNestedItem'
+                }
+              %>
+            </div>
+            <div class="span8">
+              <div class='hide progress progress-success progress-striped active'>
+                <div class='bar' style='width: 0%;'></div>
+              </div>
+              <div id='file-upload-error' class="alert alert-error hide fade in">
+                <%= t('messages.only_pdf_permitted') %>
+              </div>
+            </div>
+            <div class="span2 pull-right">
+              <%= link_to '&#xe045;'.html_safe, '#', 
+                title: t('view.prints.upload_file'),
+                id: 'upload_file_buttom', class: 'btn btn-success iconic' %>
+            </div>
           </div>
         <% end %>
       </div>
@@ -219,6 +235,15 @@
       title: t('view.prints.print_title') %>
   </div>
 <% end %>
+
+<div id='upload-file' class='hidden'>
+  <%= simple_form_for :file_line, url: upload_file_prints_path, 
+    data: { 'form-data' => 'script=true' } do |of| %>
+      <%= of.input :file, as: :file, label: false, 
+         input_html: { data: { invisible: true } } %>
+  <% end %>
+</div>
+
 <%= javascript_tag 'jQuery(function() { Print.updateTotalPrice(); });' if @print.new_record? %>
 <script type="text/javascript">
   Print.cashPrefix = '#payment_<%= Payment::PAID_WITH[:cash] %>';

@@ -21,7 +21,13 @@ module ApplicationHelper
   # Devuelve una etiqueta con el mismo nombre que el del objeto para que sea
   # reemplazado con un ID único por la rutina que reemplaza todo en el navegador
   def dynamic_object_id(prefix, form_builder)
-    "#{prefix}_#{form_builder.object_name.to_s.gsub(/[_\]\[]+/, '_')}"
+    "#{prefix}_#{form_builder.object_name.to_s.gsub(/[_\]\[]+/, '_')}".gsub(
+      /(\d+)/, form_builder.object_id.to_s
+    )
+  end
+
+  def dynamic_object_name(form_builder)
+    form_builder.object_name.gsub(/(\d+)/, form_builder.object_id.to_s)
   end
 
   # Devuelve los mensajes de error con etiquetas HTML

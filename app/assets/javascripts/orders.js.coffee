@@ -121,7 +121,7 @@ new Rule
     $(document).on 'click', '.skip-file-warning', @map.skipFileWarning
     $(document).on 'ajax:success', 'a.details-link', @map.showDocumentDetails
     $(document).on 'item.removed', @map.removeItem
-    $(document).on 'change keyup', '.price-modifier, .page-modifier, .order_file',
+    $(document).on 'change keyup', '.price-modifier, .page-modifier, .file_line',
       Order.updateAllOrderLines
     $(document).on 'click', 'a[data-action="print"]', @map.print
     
@@ -129,37 +129,7 @@ new Rule
     $(document).off 'click', '.skip-file-warning', @map.skipFileWarning
     $(document).off 'ajax:success', 'a.details-link', @map.showDocumentDetails
     $(document).off 'item.removed', @map.removeItem
-    $(document).off 'change keyup', '.price-modifier, .page-modifier, .order_file',
+    $(document).off 'change keyup', '.price-modifier, .page-modifier, .file_line',
       Order.updateAllOrderLines
     $(document).off 'click', 'a[data-action="print"]', @map.print
 
-
-new Rule
-  condition: -> $('#order_file_file').length
-  load: ->
-    # Subir un archivo para agregarlo a la orden
-    $('input:file').fileupload
-      dataType: 'script'
-      add: (e, data) ->
-        type = /(pdf)$/i
-        file = data.files[0]
-
-        if type.test(file.type) || type.test(file.name)
-          $('#file-upload-error').hide()
-          $('.progress.hide').toggle('slow')
-          $('#upload-file .file').toggle('slow')
-          $('input:submit').attr('disabled', true)
-          data.submit()
-        else
-          $('#file-upload-error').show('slow')
-      
-      progressall: (e, data) ->
-        progress = parseInt(data.loaded / data.total * 100, 10)
-        $('.progress .bar').css('width', progress + '%')
-
-      done: (e, data) ->
-        $('.progress.hide').toggle('slow')
-        $('#upload-file .file').toggle('slow')
-        $('input:submit').attr('disabled', false)
-        State.fileUploaded = true
-        $('.order_file:last').change()

@@ -8,6 +8,7 @@ scope ':status', defaults: { status: 'all' },
     end
 
     collection do
+      post :upload_file
       get :autocomplete_for_customer_name
       get :autocomplete_for_document_name
       get :autocomplete_for_article_name

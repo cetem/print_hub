@@ -357,18 +357,24 @@ new Rule
     $(document).on 'change', '#print_printer', Print.updateSubmitLabel
     $(document).on 'change keyup', 'input[name$="[auto_customer_name]"]',
       @map.removeCustomer
-    $(document).on 'change', 'input[name$="[auto_document_name]"]', @map.resetPrintJobElements
-    $(document).on 'change', 'input[name$="[auto_article_name]"]', @map.resetArticlesElements
+    $(document).on 'change', 'input[name$="[auto_document_name]"]',
+      @map.resetPrintJobElements
+    $(document).on 'change', 'input[name$="[auto_article_name]"]',
+      @map.resetArticlesElements
     $(document).on 'autocomplete:update', 'input[name$="[auto_article_name]"]',
       Print.updateArticleCount
-    $(document).on 'change keyup', 'input[name$="[pages]"]', @map.printJobWithoutDocument
+    $(document).on 'change keyup', 'input[name$="[pages]"]',
+      @map.printJobWithoutDocument
     $(document).on 'change keyup', 'input[name$="[copies]"]', @map.updateStock
     $(document).on 'keyup', 'input[name$="[range]"]', @map.calcWithRange
-    $(document).on 'change keyup ph.page_modification', '.page-modifier', @map.updateTotalPages
-    $(document).on 'change keyup', '.price-modifier', @map.updateLinePrice
+    $(document).on 'change keyup ph.page_modification',
+      '.page-modifier', @map.updateTotalPages
+    $(document).on 'change keyup ph.price_modification',
+      '.price-modifier', @map.updateLinePrice
     $(document).on 'change', 'input[name$="[pay_later]"]', @map.resetPayments
     $(document).on 'ajax:success', 'a.details-link', @map.showDocumentDetails
-    $(document).on 'click', '#link_to_customer_credit_detail', @map.showCustomerCredit
+    $(document).on 'click', '#link_to_customer_credit_detail',
+      @map.showCustomerCredit
     $(document).on 'click', 'a[data-action="clear-customer"]', @map.clearCustomer
     $(document).on 'keydown', @map.setShortCuts
 

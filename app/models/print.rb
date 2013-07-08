@@ -65,6 +65,7 @@ class Print < ApplicationModel
   has_many :payments, as: :payable
   has_many :print_jobs, inverse_of: :print
   has_many :article_lines
+  has_many :file_lines
 
   accepts_nested_attributes_for :print_jobs, allow_destroy: false,
     reject_if: :reject_print_job_attributes?
@@ -79,13 +80,13 @@ class Print < ApplicationModel
     
     self.pay_later! if self.pay_later == '1' || self.pay_later == true
     self.status ||= STATUS[:pending_payment]
+    keys = ['copies', 'range', 'print_job_type_id']
 
     if self.order && self.print_jobs.empty?
       self.customer = self.order.customer
-      keys = ['copies', 'range', 'print_job_type_id']
       
-      self.order.order_files.compact.each do |order_file|
-        self.print_jobs.build(order_file.attributes.slice(*['id', keys]))
+      self.order.file_lines.compact.each do |file_line|
+        self.print_jobs.build(file_line.attributes.slice(*['id', keys]))
       end
 
       self.order.order_lines.each do |order_line|
@@ -204,10 +205,10 @@ class Print < ApplicationModel
     has_no_document = attributes['document_id'].blank? &&
       attributes['document'].blank?
 
-    has_no_order_file = attributes['order_file_id'].blank? &&
-      attributes['order_file'].blank?
+    has_no_file_line = attributes['file_line_id'].blank? &&
+      attributes['file_line'].blank?
     
-    has_nothing_to_print = has_no_document && has_no_order_file
+    has_nothing_to_print = has_no_document && has_no_file_line
     
     has_nothing_to_print && attributes['pages'].blank?
   end

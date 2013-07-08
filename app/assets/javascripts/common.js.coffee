@@ -12,6 +12,49 @@ new Rule
   unload: ->
     clearTimeout timer for i, timer of @map.timers
 
+new Rule
+  condition: -> $('#file_line_file').length
+  load: ->
+    @map.addUploadFileEventToButtom ||= (e)->
+      e.preventDefault()
+      e.stopPropagation()
+
+      $('#file_line_file').click()
+
+    # Subir un archivo para agregarlo a la orden
+    fileInput = $('#upload-file .file')
+    $('input:file').fileupload
+      dataType: 'script'
+      add: (e, data) ->
+        type = /(pdf)$/i
+        file = data.files[0]
+
+        if type.test(file.type) || type.test(file.name)
+          $('#file-upload-error').hide()
+          $('.progress.hide').toggle('slow')
+          fileInput.toggle('slow') unless fileInput.data('invisible')
+          $('input:submit').attr('disabled', true)
+          data.submit()
+        else
+          $('#file-upload-error').show('slow')
+      
+      progressall: (e, data) ->
+        progress = parseInt(data.loaded / data.total * 100, 10)
+        $('.progress .bar').css('width', progress + '%')
+
+      done: (e, data) ->
+        $('.progress.hide').toggle('slow')
+        fileInput.toggle('slow') unless fileInput.data('invisible')
+        $('input:submit').attr('disabled', false)
+        State.fileUploaded = true
+        $('.file_line_item:last').change()
+
+    $(document).on 'click', '#upload_file_buttom', @map.addUploadFileEventToButtom
+
+  unload: ->
+    $(document).off 'click', '#upload_file_buttom', @map.addUploadFileEventToButtom
+
+
 jQuery ($)->
   # Envía el formulario si en vez de un botón creamos un link-submit
   $(document).on 'click', 'a.submit', -> $('form').submit(); false

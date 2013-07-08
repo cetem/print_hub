@@ -139,13 +139,22 @@ module PrintsHelper
 
     if print_job.document_id
       print_job.document
-    elsif print_job.order_file_id
-      order_file = print_job.order_file
-      link_to(
-        order_file.file_name, download_file_order_path(
-          order_file.order, order_file_id: order_file.id
-        )
-      )
+    elsif print_job.file_line_id
+      file_line = print_job.file_line
+
+      link_to(file_line.file_name, file_line.file.url)
     end
+  end
+
+  def build_print_file_line_form
+    form = nil
+
+    simple_fields_for(@print) do |f| 
+      f.simple_fields_for(:print_jobs) do |job|
+        form = job
+      end
+    end
+
+    form
   end
 end
