@@ -1,8 +1,8 @@
 class OrdersController < ApplicationController
   helper_method :order_type
   [:index, :show, :destroy, :download_file].tap do |actions|
-    before_filter :require_customer_or_user, :load_scope, only: actions
-    before_filter :require_customer, except: actions
+    before_action :require_customer_or_user, :load_scope, only: actions
+    before_action :require_customer, except: actions
   end
   
   ->(c) { c.request.xhr? ? false : 'application' }

@@ -1,6 +1,6 @@
 class FilesController < ApplicationController
-  before_filter :require_user, only: :download_barcode
-  before_filter :check_logged_in, except: :download_barcode
+  before_action :require_user, only: :download_barcode
+  before_action :check_logged_in, except: :download_barcode
 
   def download
     path = params[:path].to_s

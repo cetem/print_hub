@@ -1,6 +1,6 @@
 class UsersController < ApplicationController
-  before_filter :require_admin_user, except: :show
-  before_filter :require_user, only: :show
+  before_action :require_admin_user, except: :show
+  before_action :require_user, only: :show
   
   # GET /users
   # GET /users.json

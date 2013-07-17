@@ -96,6 +96,9 @@ class ActionDispatch::IntegrationTest
   self.use_transactional_fixtures = false
 
   setup do
+    Capybara.current_driver = Capybara.javascript_driver # :selenium by default
+    Capybara.server_port = '54163'
+    Capybara.app_host = "http://localhost:54163"
     Capybara.reset!    # Forget the (simulated) browser state
     Capybara.default_wait_time = ENV['TRAVIS'] ? 4 : 2
   end
@@ -103,7 +106,6 @@ class ActionDispatch::IntegrationTest
   teardown do
     DatabaseCleaner.clean       # Truncate the database
     Capybara.reset!             # Forget the (simulated) browser state
-    Capybara.use_default_driver # Revert Capybara.current_driver to Capybara.default_driver
   end
   
   def assert_page_has_no_errors!

@@ -1,13 +1,7 @@
-# encoding: utf-8
 require 'test_helper'
 
 class PrivateCustomerInteractionsTest < ActionDispatch::IntegrationTest
-  fixtures :all
-
   setup do
-    Capybara.reset_sessions!    # Forget the (simulated) browser state
-    Capybara.current_driver = Capybara.javascript_driver # :selenium by default
-    Capybara.server_port = '54163'
     subdomain = APP_CONFIG['subdomains']['customers']
     Capybara.app_host = "http://#{subdomain}.lvh.me:54163"
   end

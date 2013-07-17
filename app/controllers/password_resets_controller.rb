@@ -1,5 +1,5 @@
 class PasswordResetsController < ApplicationController
-  before_filter :require_no_customer
+  before_action :require_no_customer
   
   # GET /password_resets/new
   def new

@@ -1,7 +1,7 @@
 class TagsController < ApplicationController
-  before_filter :require_admin_user, except: [:show, :index]
-  before_filter :require_user, only: [:show, :index]
-  before_filter :load_parent
+  before_action :require_admin_user, except: [:show, :index]
+  before_action :require_user, only: [:show, :index]
+  before_action :load_parent
 
   # GET /tags
   # GET /tags.json

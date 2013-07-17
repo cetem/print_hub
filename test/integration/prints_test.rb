@@ -2,10 +2,6 @@ require 'test_helper'
 
 class PrintsTest < ActionDispatch::IntegrationTest
   setup do
-    Capybara.current_driver = Capybara.javascript_driver # :selenium by default
-    Capybara.server_port = '54163'
-    Capybara.app_host = "http://localhost:54163"
-    
     @ac_field = 'auto-document-print_job_print_print_jobs_attributes_'
     @pdf_printer = Cups.show_destinations.detect { |p| p =~ /pdf/i }
   end

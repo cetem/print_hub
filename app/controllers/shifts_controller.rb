@@ -1,6 +1,6 @@
 class ShiftsController < ApplicationController
-  before_filter :require_admin_user, only: :destroy
-  before_filter :require_user, except: :destroy
+  before_action :require_admin_user, only: :destroy
+  before_action :require_user, except: :destroy
   
   # GET /shifts
   # GET /shifts.json

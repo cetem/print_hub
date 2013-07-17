@@ -254,7 +254,7 @@ class Customer < ApplicationModel
   def self.full_text(query_terms)
     options = text_query(query_terms, 'identification', 'name', 'lastname')
     conditions = [options[:query]]
-    
+
     where(
       conditions.map { |c| "(#{c})" }.join(' OR '), options[:parameters]
     ).order(options[:order])

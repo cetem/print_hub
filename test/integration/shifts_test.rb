@@ -1,14 +1,6 @@
 require 'test_helper'
 
 class ShiftsTest < ActionDispatch::IntegrationTest
-  fixtures :all
-  
-  setup do
-    Capybara.current_driver = Capybara.javascript_driver # :selenium by default
-    Capybara.server_port = '54163'
-    Capybara.app_host = "http://localhost:54163"
-  end
-  
   test 'should close stale shift' do
     @shift = shifts(:open_shift)
     @shift.update_attributes(user_id: users(:administrator).id)

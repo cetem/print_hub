@@ -1,5 +1,5 @@
 class PrintJobTypesController < ApplicationController
-  before_filter :require_admin_user
+  before_action :require_admin_user
   
   # GET /print_job_types
   # GET /print_job_types.json

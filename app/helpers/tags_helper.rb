@@ -5,7 +5,7 @@ module TagsHelper
       content_tag(:li, raw(" #{divider} #{tag.name}"), class: 'active')
     ]
 
-    tag.ancestors.each do |a|
+    tag.ancestors.reverse.each do |a|
       ancestors << content_tag(:li,
         raw(" #{divider} #{link_to(a.name, tags_path(parent: a))}")
       )

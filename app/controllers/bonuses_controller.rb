@@ -1,5 +1,5 @@
 class BonusesController < ApplicationController
-  before_filter :require_admin_user
+  before_action :require_admin_user
   
   def index
     @title = t('view.bonuses.index_title')

@@ -1,5 +1,5 @@
 class StatsController < ApplicationController
-  before_filter :require_admin_user, :load_date_range
+  before_action :require_admin_user, :load_date_range
   respond_to :html, :json, :csv
   
   # GET /printer_stats

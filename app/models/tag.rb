@@ -2,7 +2,7 @@ class Tag < ApplicationModel
   include Comparable
 
   has_paper_trail 
-  acts_as_nested_set order_column: "tags.lft"
+  acts_as_nested_set
   
   # Scopes
   scope :publicly_visible, -> { where(private: false) }
@@ -29,7 +29,7 @@ class Tag < ApplicationModel
   has_many :documents, through: :document_tag_relation, autosave: true
 
   def to_s
-    ([self] + self.ancestors).map(&:name).reverse.join(' | ')
+    ([self] + self.ancestors.reverse).map(&:name).reverse.join(' | ')
   end
   
   alias_method :label, :to_s

@@ -1,11 +1,11 @@
 class CustomersController < ApplicationController
-  before_filter :require_admin_user, except: [
+  before_action :require_admin_user, except: [
     :new, :create, :credit_detail, :activate, :edit_profile, :update_profile
   ]
-  before_filter :require_customer, only: [:edit_profile, :update_profile]
-  before_filter :require_user, only: [:credit_detail]
-  before_filter :require_no_customer_or_admin, only: [:new, :create]
-  before_filter :require_no_customer, only: [:activate]
+  before_action :require_customer, only: [:edit_profile, :update_profile]
+  before_action :require_user, only: [:credit_detail]
+  before_action :require_no_customer_or_admin, only: [:new, :create]
+  before_action :require_no_customer, only: [:activate]
   
   layout ->(controller) { controller.request.xhr? ? false : 'application' }
 
@@ -14,7 +14,7 @@ class CustomersController < ApplicationController
   def index
     @title = t('view.customers.index_title')
     @searchable = true
-    @customers = Customer.unscoped.order('lastname ASC')
+    @customers = Customer.order('lastname ASC')
     
     if params[:q].present?
       query = params[:q].sanitized_for_text_query

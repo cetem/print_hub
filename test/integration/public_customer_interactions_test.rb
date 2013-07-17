@@ -1,11 +1,7 @@
 require 'test_helper'
 
 class PublicCustomerInteractionsTest < ActionDispatch::IntegrationTest
-  fixtures :all
-  
   setup do
-    Capybara.current_driver = Capybara.javascript_driver # :selenium by default
-    Capybara.server_port = '54163'
     subdomain = APP_CONFIG['subdomains']['customers']
     Capybara.app_host = "http://#{subdomain}.lvh.me:54163"
   end

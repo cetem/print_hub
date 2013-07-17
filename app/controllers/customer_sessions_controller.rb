@@ -1,6 +1,6 @@
 class CustomerSessionsController < ApplicationController
-  before_filter :require_no_customer, only: [:new, :create]
-  before_filter :require_customer, only: :destroy
+  before_action :require_no_customer, only: [:new, :create]
+  before_action :require_customer, only: :destroy
 
   # GET /customer_sessions/new
   # GET /customer_sessions/new.json

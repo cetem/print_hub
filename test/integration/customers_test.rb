@@ -1,15 +1,6 @@
 require 'test_helper'
 
 class CustomersTest < ActionDispatch::IntegrationTest
- fixtures :all
-  
-  setup do
-    Capybara.current_driver = Capybara.javascript_driver # :selenium by default
-    Capybara.server_port = '54163'
-    Capybara.app_host = "http://localhost:54163"
-    Capybara.reset_sessions!    # Forget the (simulated) browser state
-  end
-  
   test 'should create a customer' do
     login
     

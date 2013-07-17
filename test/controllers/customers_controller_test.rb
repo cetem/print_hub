@@ -17,7 +17,7 @@ class CustomersControllerTest < ActionController::TestCase
   test 'should get filtered index' do
     UserSession.create(users(:administrator))
 
-    get :index, q: 'Anakin | Darth', format: :html
+    get :index, q: 'Anakin|Darth'
     assert_response :success
     assert_not_nil assigns(:customers)
     assert assigns(:customers)

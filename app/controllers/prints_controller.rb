@@ -1,7 +1,7 @@
 class PrintsController < ApplicationController
-  before_filter :require_user, except: [:revoke, :related_by_customer]
-  before_filter :require_admin_user, only: [:revoke, :related_by_customer]
-  before_filter :load_customer
+  before_action :require_user, except: [:revoke, :related_by_customer]
+  before_action :require_admin_user, only: [:revoke, :related_by_customer]
+  before_action :load_customer
 
   layout ->(controller) { controller.request.xhr? ? false : 'application' }
 

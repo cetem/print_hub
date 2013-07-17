@@ -1,23 +1,23 @@
 GIT
   remote: git://github.com/airblade/paper_trail.git
-  revision: e76fb279eb5f0bbfa481f16b820a075419ab3d3f
+  revision: 1baead241804bbe476a8fa89b24ab4bdcb6d0c95
   branch: rails4
   specs:
     paper_trail (2.7.2)
-      activerecord (>= 4.0.0.beta, < 5.0)
-      railties (>= 4.0.0.beta, < 5.0)
+      activerecord (~> 4.0)
+      railties (~> 4.0)
 
 GIT
   remote: git://github.com/collectiveidea/awesome_nested_set.git
-  revision: f1cdd2266ad9a6e993d854b2577598aa5108efb7
+  revision: dc95e0d64600d32f36568360ccb83951b2a9034f
   branch: rails4
   specs:
     awesome_nested_set (2.1.6)
-      activerecord (>= 4.0.0.beta)
+      activerecord (~> 4.0.0)
 
 GIT
   remote: git://github.com/mislav/will_paginate.git
-  revision: 7a45eab080ff0da7917ac4f6e76cfb2db29d90b1
+  revision: 0da168851b9356f678106abd19055fc6e9a6df72
   specs:
     will_paginate (3.0.4)
 
@@ -53,13 +53,13 @@ GEM
     afm (0.2.0)
     ansi (1.4.3)
     arel (4.0.0)
-    atomic (1.1.9)
+    atomic (1.1.10)
     authlogic (3.3.0)
       activerecord (>= 3.2)
       activesupport (>= 3.2)
     barby (0.5.1)
     builder (3.1.4)
-    capistrano (2.15.4)
+    capistrano (2.15.5)
       highline
       net-scp (>= 1.0.0)
       net-sftp (>= 2.0.0)
@@ -71,9 +71,10 @@ GEM
       rack (>= 1.0.0)
       rack-test (>= 0.5.4)
       xpath (~> 2.0)
-    carrierwave (0.8.0)
+    carrierwave (0.9.0)
       activemodel (>= 3.2.0)
       activesupport (>= 3.2.0)
+      json (>= 1.7)
     childprocess (0.3.9)
       ffi (~> 1.0, >= 1.0.11)
     chronic (0.9.1)
@@ -84,7 +85,7 @@ GEM
     coffee-script (2.2.0)
       coffee-script-source
       execjs
-    coffee-script-source (1.6.2)
+    coffee-script-source (1.6.3)
     colorize (0.5.8)
     coveralls (0.6.7)
       colorize
@@ -92,7 +93,7 @@ GEM
       rest-client
       simplecov (>= 0.7)
       thor
-    cups (0.1.5)
+    cups (0.1.6)
     daemons (1.1.9)
     dalli (2.6.4)
     database_cleaner (1.0.1)
@@ -110,28 +111,29 @@ GEM
     jquery-fileupload-rails (0.4.1)
       actionpack (>= 3.1)
       railties (>= 3.1)
-    jquery-rails (3.0.1)
+    jquery-rails (3.0.2)
       railties (>= 3.0, < 5.0)
       thor (>= 0.14, < 2.0)
     jquery-ui-rails (4.0.3)
       jquery-rails
       railties (>= 3.1.0)
+    json (1.8.0)
     mail (2.5.4)
       mime-types (~> 1.16)
       treetop (~> 1.4.8)
     memcache-client (1.8.5)
     mime-types (1.23)
-    mini_portile (0.5.0)
+    mini_portile (0.5.1)
     minitest (4.7.5)
     multi_json (1.7.7)
-    net-scp (1.1.1)
+    net-scp (1.1.2)
       net-ssh (>= 2.6.5)
     net-sftp (2.1.2)
       net-ssh (>= 2.6.5)
-    net-ssh (2.6.7)
+    net-ssh (2.6.8)
     net-ssh-gateway (1.2.0)
       net-ssh (>= 2.6.5)
-    newrelic_rpm (3.6.4.122)
+    newrelic_rpm (3.6.5.130)
     nokogiri (1.6.0)
       mini_portile (~> 0.5.0)
     pdf-reader (1.3.3)
