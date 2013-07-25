@@ -100,7 +100,7 @@ class ActionDispatch::IntegrationTest
     Capybara.server_port = '54163'
     Capybara.app_host = "http://localhost:54163"
     Capybara.reset!    # Forget the (simulated) browser state
-    Capybara.default_wait_time = ENV['TRAVIS'] ? 4 : 2
+    Capybara.default_wait_time = 4
   end
 
   teardown do
@@ -109,6 +109,7 @@ class ActionDispatch::IntegrationTest
   end
   
   def assert_page_has_no_errors!
+    sleep 0.5
     assert page.has_no_css?('#unexpected_error')
   end
 

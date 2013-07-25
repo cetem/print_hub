@@ -48,7 +48,7 @@ class ShiftsController < ApplicationController
   # POST /shifts.json
   def create
     @title = t('view.shifts.new_title')
-    @shift = Shift.new(shift_params.merge(user_id: current_user.id))
+    @shift = Shift.new(shift_params)
 
     respond_to do |format|
       if @shift.save
@@ -114,8 +114,16 @@ class ShiftsController < ApplicationController
   end
 
   def shift_params
-    params.require(:shift).permit(
-      :start, :finish, :description, :paid, :lock_version
+    permited_params = params.require(:shift).permit(
+      :user_id, :start, :finish, :description, :paid, :lock_version
     )
+
+    permited_params[:user_id] = if current_user.admin?
+      permited_params[:user_id] || current_user.id
+    else
+      current_user.id
+    end
+
+    permited_params
   end
 end

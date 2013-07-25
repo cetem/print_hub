@@ -13,10 +13,11 @@ class Shift < ActiveRecord::Base
   
   # Restricciones
   validates :start, :user_id, presence: true
+  validates_datetime :start, allow_nil: true, allow_blank: true
   validates_datetime :start, after: :start_limit, before: :finish,
-    allow_nil: true, allow_blank: true, on: :update
+    allow_nil: true, allow_blank: true, if: :finish_present?
   validates_datetime :finish, after: :start, before: :finish_limit, 
-    allow_nil: true, allow_blank: true, on: :update
+    allow_nil: true, allow_blank: true
   
   # Relaciones
   belongs_to :user
@@ -35,6 +36,10 @@ class Shift < ActiveRecord::Base
    super(default_options.merge(options || {}))
   end
   
+  def finish_present?
+    self.finish.present?
+  end
+
   def pending?
     self.finish.blank?
   end

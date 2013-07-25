@@ -109,7 +109,7 @@ class UsersController < ApplicationController
     end
   end
 
-  # GET /users/current_workings.json
+  # GET /users/current_workers.json
   def current_workers
     users = User.actives.with_shifts_control.order(:admin, :last_name)
 
