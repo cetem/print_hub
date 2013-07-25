@@ -38,8 +38,8 @@ class PrivateCustomerInteractionsTest < ActionDispatch::IntegrationTest
       click_link I18n.t('view.catalog.new_order')
     end
     
-    assert_equal new_order_path, current_path
     assert_page_has_no_errors!
+    assert_equal new_order_path, current_path
     assert page.has_css?('#check_order')
 
     within 'div.file' do
@@ -119,8 +119,8 @@ class PrivateCustomerInteractionsTest < ActionDispatch::IntegrationTest
       click_link I18n.t('view.catalog.new_order')
     end
     
-    assert_equal new_order_path, current_path
     assert_page_has_no_errors!
+    assert_equal new_order_path, current_path
     assert page.has_css?('#check_order')
     
     within '#check_order' do
@@ -213,7 +213,7 @@ class PrivateCustomerInteractionsTest < ActionDispatch::IntegrationTest
       assert page.has_no_css?('a.add_from_order')
     end
 
-    sleep 3
+    sleep 2
 
     within '.nav-collapse' do
       click_link I18n.t('view.catalog.new_order')
