@@ -121,7 +121,7 @@ new Rule
     $(document).on 'click', '.skip-file-warning', @map.skipFileWarning
     $(document).on 'ajax:success', 'a.details-link', @map.showDocumentDetails
     $(document).on 'item.removed', @map.removeItem
-    $(document).on 'change keyup', '.price-modifier, .page-modifier, .file_line',
+    $(document).on 'change keyup', '.price-modifier, .page-modifier, .file_line_item',
       Order.updateAllOrderLines
     $(document).on 'click', 'a[data-action="print"]', @map.print
     
