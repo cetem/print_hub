@@ -118,12 +118,12 @@ class ShiftsController < ApplicationController
       :user_id, :start, :finish, :description, :paid, :lock_version
     )
     
-    if action_name == 'create'
-      permited_params[:user_id] = if current_user.admin?
-        permited_params[:user_id] || current_user.id
-      else
-        current_user.id
-      end
+    permited_params[:user_id] = if current_user.admin?
+      permited_params[:user_id] || current_user.id
+    elsif @shift.try(:user_id)
+      @shift.user_id
+    else
+      current_user.id
     end
 
     permited_params
