@@ -117,11 +117,13 @@ class ShiftsController < ApplicationController
     permited_params = params.require(:shift).permit(
       :user_id, :start, :finish, :description, :paid, :lock_version
     )
-
-    permited_params[:user_id] = if current_user.admin?
-      permited_params[:user_id] || current_user.id
-    else
-      current_user.id
+    
+    if action_name == 'create'
+      permited_params[:user_id] = if current_user.admin?
+        permited_params[:user_id] || current_user.id
+      else
+        current_user.id
+      end
     end
 
     permited_params
