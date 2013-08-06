@@ -104,8 +104,8 @@ class PublicCustomerInteractionsTest < ActionDispatch::IntegrationTest
     
     click_link I18n.t('view.customers.forgot_password')
     
-    assert_equal new_password_reset_path, current_path
     assert_page_has_no_errors!
+    assert_equal new_password_reset_path, current_path
     
     customers(:student).tap do |customer|
       fill_in Customer.human_attribute_name('email'), with: customer.email

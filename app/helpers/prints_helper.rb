@@ -1,8 +1,15 @@
 module PrintsHelper
   def print_destinations_field(form)
     selected_printer = form.object.printer || current_user.default_printer
+    printers_collection = []
+
+    Cups.show_destinations.each do |d|
+      unless d.match(PRIVATE_PRINTERS_REGEXP) && !current_user.admin?
+        printers_collection << d 
+      end
+    end
     
-    form.input :printer, collection: Cups.show_destinations.map { |d| [d, d] },
+    form.input :printer, collection: printers_collection,
       selected: selected_printer, include_blank: true, autofocus: true,
       input_html: { class: 'span11' }
   end

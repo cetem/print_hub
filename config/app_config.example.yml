@@ -1,3 +1,4 @@
+# Email config
 smtp:
   address: 'smtp.gmail.com'
   port: 587
@@ -6,11 +7,17 @@ smtp:
   password: '<password>'
   authentication: 'plain'
   enable_starttls_auto: true
-  
+
+# Public host for customer mailer
 public_host: 'public.domain.com'
 
-local_server_ip: '192.168.0.2'
+# Local IP for domains
+local_server_ip: '192.168.0.7'
 
+# Printers that show only for admin, Pipe separated (without spaces)
+private_printers: 'printer_1|printer_2'
+
+# Name of the subdomains
 subdomains:
   users: 'prints'
   customers: 'fotocopia'

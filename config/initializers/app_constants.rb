@@ -20,3 +20,5 @@ TOKEN_VALIDITY = 1.day
 SHIFT_MAX_RANGE = 16.hours
 # Path privado private/
 PRIVATE_PATH = Pathname.new("#{Rails.root}/private")
+# RegEx for private printers
+PRIVATE_PRINTERS_REGEXP = Regexp.new(APP_CONFIG['private_printers'])

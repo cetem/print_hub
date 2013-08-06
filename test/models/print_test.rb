@@ -1,5 +1,3 @@
-require 'test_helper'
-
 # Clase para probar el modelo "Print"
 class PrintTest < ActiveSupport::TestCase
 
@@ -765,11 +763,9 @@ class PrintTest < ActiveSupport::TestCase
   end
 
   test 'related by customer' do
-    customer_prints = @print.customer.prints
-    assert customer_prints.size >= 2
+    customer_prints = @print.customer.reload.prints.reload
 
-    first_print, second_print = 
-      *customer_prints.unscoped.order(:created_at).limit(2)
+    first_print, second_print = *customer_prints.limit(2)
 
     assert_equal second_print, first_print.related_by_customer('next')
     assert_equal first_print, second_print.related_by_customer('prev')
