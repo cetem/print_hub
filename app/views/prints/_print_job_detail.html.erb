@@ -6,5 +6,9 @@
   <td><%= number_to_currency print_job.price_per_copy %></td>
   <td><%= print_job.range %></td>
   <td><%= print_job.print_job_type %></td>
-  <td><%= link_to_cancel_print_job(print_job) if current_user %></td>
+  <td>
+    <% if current_user && controller_name == 'prints' %>
+      <%= link_to_cancel_print_job(print_job)  %>
+    <% end %>
+  </td>
 </tr>

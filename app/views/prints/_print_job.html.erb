@@ -1,4 +1,5 @@
 <% id = dynamic_object_id('print_job', f) %>
+<% name = dynamic_object_name(f) %>
 <% hide = is_dynamic || f.object.marked_for_destruction? %>
 <div class="print_job" id="<%= id %>" data-price="<%= f.object.price %>" 
   data-price-per-copy="<%= f.object.price_per_copy %>"
@@ -38,7 +39,7 @@
       } %>
     </div>
     <div class="span2">
-      <%= print_job_types_select_combo(f) %>
+      <%= print_job_types_select_combo(f, name) %>
     </div>
     <div class="span2">
       <% title = show_price_per_copy_title(f.object.price_per_copy) %>

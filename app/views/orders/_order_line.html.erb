@@ -1,5 +1,5 @@
 <% id = dynamic_object_id('order_line', f) %>
-<% name = "order[order_lines_attributes][#{f.object_id}]" %>
+<% name = dynamic_object_name(f) %>
 <div class="order_line" id="<%= id %>"
   data-price="<%= f.object.price %>" 
   data-odd-pages=""
@@ -21,7 +21,7 @@
       } %>
     </div>
     <div class="span2">
-      <%= print_job_types_select_combo(f) %>
+      <%= print_job_types_select_combo(f, name) %>
     </div>
     <div class="span2">
       <% title = show_price_per_copy_title(f.object.price_per_copy) %>
