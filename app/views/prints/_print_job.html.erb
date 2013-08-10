@@ -18,24 +18,27 @@
         }
       } %>
       <%= f.input :document_id, as: :hidden, input_html: {
-        class: 'autocomplete-id', id: "auto_document_id_#{id}"
+        class: 'autocomplete-id', id: "auto_document_id_#{id}",
+        name: "#{name}[document_id]"
       } %>
     </div>
     <div class="span1">
       <%= f.input :copies, label: false, 
         input_html: { maxlength: 5, class: 'price-modifier page-modifier span11',
-        autocomplete: 'off', disabled: disabled } %>
+        autocomplete: 'off', disabled: disabled, name: "#{name}[copies]" } %>
     </div>
     <div class="span1">
       <%= f.input :pages, label: false,
         input_html: { maxlength: 5, class: 'price-modifier page-modifier span11',
-        autocomplete: 'off', disabled: disabled || !f.object.document.blank? } %>
+          autocomplete: 'off', disabled: disabled || !f.object.document.blank?,
+          name: "#{name}[pages]" } %>
     </div>
     <div class="span1">
       <%= f.input :range, label: false, input_html: { 
         class: 'price-modifier page-modifier span11',
         autocomplete: 'off',  'data-range-pages' => f.object.range_pages,
-        disabled: disabled || (f.object.persisted? && f.object.document.blank?)
+        disabled: disabled || (f.object.persisted? && f.object.document.blank?),
+        name: "#{name}[range]"
       } %>
     </div>
     <div class="span2">
@@ -51,7 +54,8 @@
       <% end %>
       <%= link_to_document_details f.object.document %>
       <%= show_document_stock f.object %>
-      <%= f.input :lock_version, as: :hidden %>
+      <%= f.input :lock_version, as: :hidden,
+        input_html: { name: "#{name}[lock_version]" } %>
     </div>
   </div>
   <div class="dynamic_details" id="<%= "document_details_#{id}" %>"></div>

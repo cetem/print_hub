@@ -217,9 +217,11 @@ class PrintsTest < ActionDispatch::IntegrationTest
     within 'form' do
       select @pdf_printer, from: 'print_printer'
     end
+
+    object_id = first(:css, 'input.price-modifier')[:name].match(/(\d+)/)[1]
     
     retard_input = '<input id="print_print_jobs_attributes_0_job_hold_until" '
-    retard_input << 'name="print[print_jobs_attributes][0][job_hold_until]" '
+    retard_input << "name=\"print[print_jobs_attributes][#{object_id}][job_hold_until]\" "
     retard_input << 'type="hidden" value="indefinite">'
     
     page.execute_script(
@@ -247,6 +249,7 @@ class PrintsTest < ActionDispatch::IntegrationTest
     end
     
     assert_page_has_no_errors!
+    sleep 1
     assert page.has_content? I18n.t('view.prints.job_canceled')
     
     new_cancelled_jobs_count = Cups.all_jobs(@pdf_printer).map do |_, j|
