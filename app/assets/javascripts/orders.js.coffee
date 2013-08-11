@@ -114,7 +114,8 @@ new Rule
       event.preventDefault()
       event.stopPropagation()
     
-    @map.skipFileWarning ||= ->
+    # TODO Rectificar ya que no funciona el beforeunload para uploads
+    @map.skipFileWarning ||= (e)->
       State.fileUploaded = false
       $(this).preventDefault()
 

@@ -86,7 +86,7 @@ class OrdersController < ApplicationController
     @order = current_customer.orders.find(params[:id])
 
     respond_to do |format|
-      if @order.update_attributes(order_params)
+      if @order.update(order_params)
         format.html { redirect_to @order, notice: t('view.orders.correctly_updated') }
         format.json { head :ok }
       else
@@ -156,7 +156,7 @@ class OrdersController < ApplicationController
   end
 
   def order_params
-    order_items_shared_attrs = [:order_id, :copies, :print_job_type_id]
+    order_items_shared_attrs = [:order_id, :copies, :print_job_type_id, :id]
 
     params.require(:order).permit(
       :scheduled_at, :notes, :lock_version, :include_documents, 

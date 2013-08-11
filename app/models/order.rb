@@ -49,7 +49,7 @@ class Order < ApplicationModel
 
     self.scheduled_at ||= 1.day.from_now
     self.status ||= STATUS[:pending]
-    
+
     self.include_documents.each do |document_id|
       self.order_lines.build(document_id: document_id)
     end if self.include_documents.present?
