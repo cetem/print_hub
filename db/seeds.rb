@@ -15,6 +15,7 @@ user = User.create!(
 begin
   PrintJobType.create!(
     name: 'Common',
+    media: PrintJobType::MEDIA_TYPES[:a4],
     price: '0.10',
     two_sided: true,
     default: true
