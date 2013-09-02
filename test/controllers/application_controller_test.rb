@@ -1,8 +1,6 @@
 require 'test_helper'
 
 class ApplicationControllerTest < ActionController::TestCase
-  fixtures :users
-
   def setup
     @controller.send :reset_session
     @controller.send 'response=', @response

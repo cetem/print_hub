@@ -2,8 +2,6 @@ require 'test_helper'
 
 # Clase para probar el modelo "Shift"
 class ShiftTest < ActiveSupport::TestCase
-  fixtures :shifts
-
   # Función para inicializar las variables utilizadas en las pruebas
   def setup
     @shift = Shift.find shifts(:current_shift).id

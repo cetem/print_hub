@@ -2,8 +2,6 @@ require 'test_helper'
 
 # Clase para probar el modelo "User"
 class UserTest < ActiveSupport::TestCase
-  fixtures :users
-
   # Función para inicializar las variables utilizadas en las pruebas
   def setup
     @user = User.find users(:administrator).id

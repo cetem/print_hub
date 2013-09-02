@@ -2,8 +2,6 @@ require 'test_helper'
 
 # Clase para probar el modelo "OrderLine"
 class OrderLineTest < ActiveSupport::TestCase
-  fixtures :order_lines
-
   # Función para inicializar las variables utilizadas en las pruebas
   def setup
     @order_line = OrderLine.find order_lines(:from_yesterday_math_notes).id

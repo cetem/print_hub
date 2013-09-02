@@ -2,8 +2,6 @@ require 'test_helper'
 
 # Clase para probar el modelo "Payment"
 class PaymentTest < ActiveSupport::TestCase
-  fixtures :payments
-
   # Función para inicializar las variables utilizadas en las pruebas
   def setup
     @payment = Payment.find payments(:math_payment).id

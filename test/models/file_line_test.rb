@@ -1,8 +1,6 @@
 require 'test_helper'
 
 class FileLineTest < ActiveSupport::TestCase
-  fixtures :file_lines
-
   # Función para inicializar las variables utilizadas en las pruebas
   def setup
     @file_line = FileLine.find file_lines(:from_yesterday_cv_file).id

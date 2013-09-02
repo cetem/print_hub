@@ -2,8 +2,6 @@ require 'test_helper'
 
 # Clase para probar el modelo "ArticleLine"
 class ArticleLineTest < ActiveSupport::TestCase
-  fixtures :article_lines
-
   # Función para inicializar las variables utilizadas en las pruebas
   def setup
     @article_line = ArticleLine.find article_lines(:math_binding_line).id

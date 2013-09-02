@@ -2,8 +2,6 @@ require 'test_helper'
 
 # Clase para probar el modelo "PrintJob"
 class PrintJobTest < ActiveSupport::TestCase
-  fixtures :print_jobs
-
   # Función para inicializar las variables utilizadas en las pruebas
   def setup
     @print_job = PrintJob.find print_jobs(:math_job_1).id

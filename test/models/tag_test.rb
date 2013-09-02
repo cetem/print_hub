@@ -2,8 +2,6 @@ require 'test_helper'
 
 # Clase para probar el modelo "Tag"
 class TagTest < ActiveSupport::TestCase
-  fixtures :tags
-
   # Función para inicializar las variables utilizadas en las pruebas
   def setup
     @tag = Tag.find tags(:books).id

@@ -2,8 +2,6 @@ require 'test_helper'
 
 # Clase para probar el modelo "Credit"
 class CreditTest < ActiveSupport::TestCase
-  fixtures :credits
-
   # Función para inicializar las variables utilizadas en las pruebas
   def setup
     @credit = Credit.find(credits(:big_bonus).id)

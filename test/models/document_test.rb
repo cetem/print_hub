@@ -2,8 +2,6 @@ require 'test_helper'
 
 # Clase para probar el modelo "Document"
 class DocumentTest < ActiveSupport::TestCase
-  fixtures :documents
-
   # Función para inicializar las variables utilizadas en las pruebas
   def setup
     @document = Document.find documents(:math_book).id

@@ -763,9 +763,8 @@ class PrintTest < ActiveSupport::TestCase
   end
 
   test 'related by customer' do
-    customer_prints = @print.customer.reload.prints.reload
-
-    first_print, second_print = *customer_prints.limit(2)
+    customer_prints = @print.customer.prints.order(created_at: :asc).limit(2)
+    first_print, second_print = *customer_prints
 
     assert_equal second_print, first_print.related_by_customer('next')
     assert_equal first_print, second_print.related_by_customer('prev')

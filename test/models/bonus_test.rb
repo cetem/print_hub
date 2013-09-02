@@ -2,8 +2,6 @@ require 'test_helper'
 
 # Clase para probar el modelo "Bonus"
 class BonusTest < ActiveSupport::TestCase
-  fixtures :credits
-
   # Función para inicializar las variables utilizadas en las pruebas
   def setup
     @bonus = Bonus.find(credits(:big_bonus).id)

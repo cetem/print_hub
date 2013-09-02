@@ -2,8 +2,6 @@ require 'test_helper'
 
 # Clase para probar el modelo "Customer"
 class CustomerTest < ActiveSupport::TestCase
-  fixtures :customers
-
   # Función para inicializar las variables utilizadas en las pruebas
   def setup
     @customer = Customer.find customers(:student).id

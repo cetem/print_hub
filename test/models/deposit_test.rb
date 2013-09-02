@@ -2,8 +2,6 @@ require 'test_helper'
 
 # Clase para probar el modelo "Deposit"
 class DepositTest < ActiveSupport::TestCase
-  fixtures :credits
-
   # Función para inicializar las variables utilizadas en las pruebas
   def setup
     @deposit = Deposit.find(credits(:big_deposit).id)

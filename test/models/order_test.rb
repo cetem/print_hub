@@ -2,8 +2,6 @@ require 'test_helper'
 
 # Clase para probar el modelo "Order"
 class OrderTest < ActiveSupport::TestCase
-  fixtures :orders
-
   # Función para inicializar las variables utilizadas en las pruebas
   def setup
     @order = Order.find orders(:for_tomorrow).id

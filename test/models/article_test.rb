@@ -2,8 +2,6 @@ require 'test_helper'
 
 # Clase para probar el modelo "Article"
 class ArticleTest < ActiveSupport::TestCase
-  fixtures :articles
-
   # Función para inicializar las variables utilizadas en las pruebas
   def setup
     @article = Article.find articles(:binding).id

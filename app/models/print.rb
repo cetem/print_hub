@@ -263,7 +263,7 @@ class Print < ApplicationModel
         "#{Print.table_name}.created_at #{type == 'next' ? '>' : '<'} :date"
       ].join(' AND '),
       customer_id: self.customer_id, date: self.created_at
-    ).order("created_at #{type == 'next' ? 'ASC' : 'DESC'}").first
+    ).order(created_at: :asc).first
   end
 
   def scheduled?

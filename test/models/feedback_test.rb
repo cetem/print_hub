@@ -2,8 +2,6 @@ require 'test_helper'
 
 # Clase para probar el modelo "Feedback"
 class FeedbackTest < ActiveSupport::TestCase
-  fixtures :feedbacks
-
   # Función para inicializar las variables utilizadas en las pruebas
   def setup
     @feedback = Feedback.find(feedbacks(:needs_polishing).id)
