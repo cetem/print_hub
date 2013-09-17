@@ -152,6 +152,7 @@
         user: 'Usuario'
         user_id: 'Usuario'
         comment: 'Comentario'
+        payments: 'Pago'
       print/article_lines:
         one: 'Artículo'
         other: 'Artículos'

@@ -3,10 +3,10 @@ require 'test_helper'
 class ArticlesControllerTest < ActionController::TestCase
   setup do
     @article = articles(:binding)
+    UserSession.create(users(:administrator))
   end
 
   test 'should get index' do
-    UserSession.create(users(:administrator))
     get :index
     assert_response :success
     assert_not_nil assigns(:articles)
@@ -15,7 +15,6 @@ class ArticlesControllerTest < ActionController::TestCase
   end
 
   test 'should get new' do
-    UserSession.create(users(:administrator))
     get :new
     assert_response :success
     assert_select '#unexpected_error', false
@@ -23,7 +22,6 @@ class ArticlesControllerTest < ActionController::TestCase
   end
 
   test 'should create article' do
-    UserSession.create(users(:administrator))
     assert_difference ['Article.count', 'Version.count'] do
       post :create, article: {
         code: '0001234',
@@ -39,7 +37,6 @@ class ArticlesControllerTest < ActionController::TestCase
   end
 
   test 'should show article' do
-    UserSession.create(users(:administrator))
     get :show, id: @article.to_param
     assert_response :success
     assert_select '#unexpected_error', false
@@ -47,7 +44,6 @@ class ArticlesControllerTest < ActionController::TestCase
   end
 
   test 'should get edit' do
-    UserSession.create(users(:administrator))
     get :edit, id: @article.to_param
     assert_response :success
     assert_select '#unexpected_error', false
@@ -55,7 +51,6 @@ class ArticlesControllerTest < ActionController::TestCase
   end
 
   test 'should update article' do
-    UserSession.create(users(:administrator))
     put :update, id: @article.to_param, article: {
       code: '003456',
       name: 'Updated name',
@@ -67,8 +62,6 @@ class ArticlesControllerTest < ActionController::TestCase
   end
 
   test 'should destroy article' do
-    UserSession.create(users(:administrator))
-
     article = Article.find(articles(:ringed).id)
 
     assert_difference('Article.count', -1) do

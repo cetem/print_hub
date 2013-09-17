@@ -17,7 +17,7 @@ module OrdersHelper
         new_print_path(order_id: order.id)
       )
       out << link_to_if(order.pending?, t('view.orders.cancel'),
-        order_path(order, type: order_type),
+        order_path(order, type: 'all'),
         method: :delete, data: { confirm: t('messages.confirmation') }
       )
       out << link_to(t('label.list'), orders_path(type: order_type))

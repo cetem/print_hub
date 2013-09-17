@@ -124,7 +124,7 @@ class UsersController < ApplicationController
     params.require(:user).permit(
       :name, :last_name, :language, :email, :username, :password,
       :password_confirmation, :default_printer, :admin, :enable, :avatar,
-      :lines_per_page, :lock_version
+      :lines_per_page, :not_shifted, :lock_version
     )
   end
 end
