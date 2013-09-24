@@ -13,7 +13,7 @@ gem 'RedCloth'
 gem 'capistrano'
 gem 'whenever', require: false
 gem 'cups'
-gem 'simple_form', '~> 3.0.0.rc'
+gem 'simple_form'
 
 # Files Processors
 gem 'carrierwave'
