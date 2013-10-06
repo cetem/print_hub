@@ -84,7 +84,7 @@ class ShiftsTest < ActionDispatch::IntegrationTest
     assert page.has_css?('.navbar')
 
     within '.navbar' do
-      find("[data-original-title=#{I18n.t('menu.actions.logout')}]").click
+      find("a[title=#{I18n.t('menu.actions.logout')}]").click
     end
 
     assert page.has_css?('#logout')
@@ -110,7 +110,7 @@ class ShiftsTest < ActionDispatch::IntegrationTest
     assert page.has_css?('.navbar')
 
     within '.navbar' do
-      find("[data-original-title=#{I18n.t('menu.actions.logout')}]").click
+      find("a[title=#{I18n.t('menu.actions.logout')}]").click
     end
 
     assert page.has_css?('#logout')
