@@ -17,7 +17,7 @@ gem 'simple_form'
 
 # Files Processors
 gem 'carrierwave'
-gem 'rmagick'
+gem 'mini_magick'
 gem 'rghost'
 gem 'pdf-reader'
 gem 'barby'

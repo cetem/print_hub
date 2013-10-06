@@ -29,10 +29,14 @@
             ) %>
           </li>
           <li>
-            <%= link_to '&#x2192;'.html_safe, '#logout', 
-              'title' => t('menu.actions.logout'), 'class' => 'iconic',
-              data: { 'toggle' => 'modal', 'show-tooltip' => true, 
-                'placement' => 'bottom' } %>
+            <% if current_user.not_shifted %>
+              <%= link_to '&#x2192;'.html_safe, user_sessions_path,
+                title: t('menu.actions.logout'), class: 'iconic', method: :delete %>
+            <% else %>
+              <%= link_to '&#x2192;'.html_safe, '#logout', 'class' => 'iconic',
+                data: { 'toggle' => 'modal', 'placement' => 'bottom',
+                'title' => t('menu.actions.logout'), 'show-tooltip' => true } %>
+            <% end %>
           </li>
         </ul>
       </div>

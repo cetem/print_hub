@@ -1,5 +1,5 @@
 class AvatarUploader < CarrierWave::Uploader::Base
-  include CarrierWave::RMagick
+  include CarrierWave::MiniMagick
 
   storage :file
   after :remove, :delete_empty_upstream_dirs

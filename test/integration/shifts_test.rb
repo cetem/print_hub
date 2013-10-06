@@ -127,4 +127,23 @@ class ShiftsTest < ActionDispatch::IntegrationTest
     assert page.has_css?('.alert',
       text: I18n.t('view.user_sessions.correctly_destroyed'))
   end
+
+  test 'should close the shift for not shifted user' do
+    login(user_id: :developer)
+
+    assert page.has_css?('.navbar')
+
+    assert_no_difference 'Shift.pending.count' do
+      within '.navbar' do
+        find("a[title=#{I18n.t('menu.actions.logout')}]").click
+      end
+
+      assert page.has_no_css?('#logout')
+    end
+
+    assert_page_has_no_errors!
+    assert_equal new_user_session_path, current_path
+    assert page.has_css?('.alert',
+      text: I18n.t('view.user_sessions.correctly_destroyed'))
+  end
 end

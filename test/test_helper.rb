@@ -115,7 +115,7 @@ class ActionDispatch::IntegrationTest
 
   def login(*args)
     options = args.extract_options!
-    
+
     options[:user_id] ||= args.shift if args.first.kind_of?(Symbol)
     options[:user_id] ||= :administrator
     options[:expected_path] ||= args.shift if args.first.kind_of?(String)
@@ -133,7 +133,7 @@ class ActionDispatch::IntegrationTest
     end
 
     click_button I18n.t('view.user_sessions.login')
-    
+
     assert_page_has_no_errors!
     assert_equal options[:expected_path], current_path
   end
