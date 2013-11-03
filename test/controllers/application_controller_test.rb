@@ -5,8 +5,6 @@ class ApplicationControllerTest < ActionController::TestCase
     @controller.send :reset_session
     @controller.send 'response=', @response
     @controller.send 'request=', @request
-    @operator = users(:operator)
-    UserSession.create(@operator)
   end
   
   test 'current customer session' do
@@ -29,14 +27,18 @@ class ApplicationControllerTest < ActionController::TestCase
   test 'current user session' do
     assert_nil @controller.send(:current_user_session)
 
+    UserSession.create(users(:operator))
+
     assert_not_nil @controller.send(:current_user_session)
   end
 
   test 'current user' do
     assert_nil @controller.send(:current_user)
 
+    UserSession.create(users(:operator))
+
     assert_not_nil @controller.send(:current_user)
-    assert_equal @operator.id, @controller.send(:current_user).id
+    assert_equal users(:operator).id, @controller.send(:current_user).id
   end
   
   test 'require customer' do
@@ -69,12 +71,14 @@ class ApplicationControllerTest < ActionController::TestCase
     assert_equal I18n.t('messages.must_be_logged_in'),
       @controller.send(:flash)[:notice]
 
+    UserSession.create(users(:operator))
     assert_not_equal false, @controller.send(:require_user)
   end
 
   test 'require no user' do
     assert @controller.send(:require_no_user)
 
+    UserSession.create(users(:operator))
     assert !@controller.send(:require_no_user)
     assert_redirected_to prints_url
     assert_equal I18n.t('messages.must_be_logged_out'),
@@ -87,6 +91,7 @@ class ApplicationControllerTest < ActionController::TestCase
     assert_equal I18n.t('messages.must_be_logged_in'),
       @controller.send(:flash)[:notice]
 
+    UserSession.create(users(:operator))
     assert_not_equal false, @controller.send(:require_customer_or_user)
   end
 
@@ -96,6 +101,7 @@ class ApplicationControllerTest < ActionController::TestCase
     assert_not_nil @controller.send(:check_logged_in)
     assert_redirected_to root_url
 
+    UserSession.create(users(:operator))
     assert_nil @controller.send(:check_logged_in)
     assert_not_nil @controller.send(:current_user)
     assert_not_equal false, @controller.send(:require_user)
@@ -130,6 +136,7 @@ class ApplicationControllerTest < ActionController::TestCase
     assert_equal I18n.t('messages.must_be_admin'),
       @controller.send(:flash)[:alert]
 
+    UserSession.create(users(:operator))
     assert_not_equal false, @controller.send(:require_no_customer_or_admin)
   end
   
@@ -145,7 +152,11 @@ class ApplicationControllerTest < ActionController::TestCase
   end
   
   test 'require no customer or admin with user' do
-    @operator.update_attributes(admin: false)
+    
+    user = users(:operator) 
+    user.update_attributes(admin: false)
+    UserSession.create(users)
+
     assert !@controller.send(:require_no_customer_or_admin)
     assert_redirected_to prints_url
     assert_equal I18n.t('messages.must_be_admin'),
@@ -153,11 +164,14 @@ class ApplicationControllerTest < ActionController::TestCase
   end
 
   test 'require admin user with admin user' do
+    UserSession.create(users(:operator))
     assert_not_equal false, @controller.send(:require_admin_user)
   end
 
   test 'require admin with a non admin user' do
-    @operator.update_attributes(admin: false)
+    user = users(:operator)    
+    user.update_attributes(admin: false)
+    UserSession.create(user)
     assert_equal false, @controller.send(:require_admin_user)
     assert_redirected_to prints_url
     assert_equal I18n.t('messages.must_be_admin'),
@@ -184,12 +198,16 @@ class ApplicationControllerTest < ActionController::TestCase
   end
 
   test 'not leave open shift' do
+    user = users(:operator)
+    user.update_attributes(admin: false)
+
+    UserSession.create(user)
     @controller.send(:session)[:has_an_open_shift] = true
 
     assert_not_nil @controller.send(:run_shift_tasks)
     assert_redirected_to edit_shift_url(shifts(:open_shift))
 
-    assert @operator.close_pending_shifts!
+    assert user.close_pending_shifts!
     @controller.send(:session)[:has_an_open_shift] = false
     
     assert_difference 'Shift.count' do
@@ -198,9 +216,11 @@ class ApplicationControllerTest < ActionController::TestCase
   end
 
   test 'dont ask for shift on not_shifted user' do
-    @operator.update_attributes(not_shifted: true)
+    user = users(:operator)
+    user.update_attributes(not_shifted: true)
 
     assert_no_difference 'Shift.count' do
+      UserSession.create(user)
       @controller.send(:session)[:has_an_open_shift] = true
       assert_nil @controller.send(:run_shift_tasks)
       assert_response :success
