@@ -425,8 +425,8 @@ class PrintsControllerTest < ActionController::TestCase
   end
 
   test 'should update print' do
-    user = User.find @operator.id
-    customer = Customer.find customers(:teacher).id
+    user = @operator
+    customer = Customer.find(customers(:teacher).id)
     math_notes = Document.find(documents(:math_notes).id)
     math_book = Document.find(documents(:math_book).id)
     immutable_counts = ['user.prints.count', 'Payment.count',
