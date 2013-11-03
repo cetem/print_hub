@@ -4,11 +4,12 @@ class OrdersControllerTest < ActionController::TestCase
   setup do
     @order = orders(:for_tomorrow)
     @request.host = "#{APP_CONFIG['subdomains']['customers']}.printhub.local"
+    @operator = users(:operator)
   end
 
   test 'should get user index' do
     @request.host = 'localhost'
-    UserSession.create(users(:administrator))
+    UserSession.create(@operator)
     get :index, type: 'all'
     assert_response :success
     assert_not_nil assigns(:orders)
@@ -21,7 +22,7 @@ class OrdersControllerTest < ActionController::TestCase
   
   test 'should get user for print index' do
     @request.host = 'localhost'
-    UserSession.create(users(:administrator))
+    UserSession.create(@operator)
     get :index, type: 'print'
     assert_response :success
     assert_not_nil assigns(:orders)
@@ -32,7 +33,7 @@ class OrdersControllerTest < ActionController::TestCase
   
   test 'should get user filtered index' do
     @request.host = 'localhost'
-    UserSession.create(users(:administrator))
+    UserSession.create(@operator)
     get :index, type: 'all', q: 'darth'
     assert_response :success
     assert_not_nil assigns(:orders)
@@ -103,7 +104,7 @@ class OrdersControllerTest < ActionController::TestCase
   
   test 'should show user order' do
     @request.host = 'localhost'
-    UserSession.create(users(:administrator))
+    UserSession.create(@operator)
     get :show, type: 'all', id: @order.to_param
     assert_response :success
     assert_select '#unexpected_error', false
@@ -151,7 +152,7 @@ class OrdersControllerTest < ActionController::TestCase
   
   test 'should cancel order as user' do
     @request.host = 'localhost'
-    UserSession.create(users(:administrator))
+    UserSession.create(@operator)
     assert_no_difference 'Order.count' do
       delete :destroy, id: @order.to_param, type: 'all'
     end
