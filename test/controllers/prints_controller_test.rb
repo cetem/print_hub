@@ -4,14 +4,16 @@ class PrintsControllerTest < ActionController::TestCase
   setup do
     @print = prints(:math_print)
     @printer = Cups.show_destinations.select {|p| p =~ /pdf/i}.first
-    
+    @operator, @administrator = users(:operator)    
+    @operator.update_attributes(admin: false)
+
     raise "Can't find a PDF printer to run tests with." unless @printer
 
     prepare_document_files
   end
 
   test 'should get operator index' do
-    user = users(:operator)
+    user = @operator
 
     UserSession.create(user)
     get :index, status: 'all'
@@ -24,7 +26,7 @@ class PrintsControllerTest < ActionController::TestCase
   end
 
   test 'should get operator pending index' do
-    user = users(:operator)
+    user = @operator
 
     UserSession.create(user)
     get :index, status: 'pending'
@@ -37,7 +39,7 @@ class PrintsControllerTest < ActionController::TestCase
   end
 
   test 'should get admin index' do
-    user = users(:administrator)
+    user = @administrator
     
     UserSession.create(user)
     get :index, status: 'all'
@@ -50,7 +52,7 @@ class PrintsControllerTest < ActionController::TestCase
   end
 
   test 'should get admin pending index' do
-    user = users(:administrator)
+    user = @administrator
 
     UserSession.create(user)
     get :index, status: 'pending'
@@ -64,7 +66,7 @@ class PrintsControllerTest < ActionController::TestCase
   end
 
   test 'should get admin scheduled index' do
-    user = users(:administrator)
+    user = @administrator
 
     UserSession.create(user)
     get :index, status: 'scheduled'
@@ -78,7 +80,7 @@ class PrintsControllerTest < ActionController::TestCase
   end
   
   test 'should get admin pay later index' do
-    user = users(:administrator)
+    user = @administrator
 
     UserSession.create(user)
     get :index, status: 'pay_later'
@@ -92,7 +94,7 @@ class PrintsControllerTest < ActionController::TestCase
   end
   
   test 'should get customer index' do
-    user = users(:administrator)
+    user = @administrator
     customer = customers(:student)
 
     UserSession.create(user)
@@ -106,7 +108,7 @@ class PrintsControllerTest < ActionController::TestCase
   end
 
   test 'should get new' do
-    UserSession.create(users(:operator))
+    UserSession.create(@operator)
     get :new, status: 'all'
     assert_response :success
     assert_not_nil assigns(:print)
@@ -116,7 +118,7 @@ class PrintsControllerTest < ActionController::TestCase
   end
   
   test 'should get new from order' do
-    UserSession.create(users(:operator))
+    UserSession.create(@operator)
     
     order = Order.find(orders(:for_tomorrow).id)
     
@@ -129,7 +131,7 @@ class PrintsControllerTest < ActionController::TestCase
   end
   
   test 'should get new with stored documents' do
-    UserSession.create(users(:administrator))
+    UserSession.create(@administrator)
     session[:documents_for_printing] =
       [documents(:math_notes).id, documents(:math_book).id]
     
@@ -142,7 +144,7 @@ class PrintsControllerTest < ActionController::TestCase
   end
   
   test 'should get new without stored documents' do
-    UserSession.create(users(:administrator))
+    UserSession.create(@administrator)
     session[:documents_for_printing] = [documents(:math_notes).id]
     
     get :new, clear_documents_for_printing: true, status: 'all'
@@ -155,7 +157,7 @@ class PrintsControllerTest < ActionController::TestCase
   end
 
   test 'should create print' do
-    UserSession.create(users(:operator))
+    UserSession.create(@operator)
 
     document = Document.find(documents(:math_book).id)
     counts_array = ['Print.count', 'PrintJob.count', 'Payment.count',
@@ -202,13 +204,13 @@ class PrintsControllerTest < ActionController::TestCase
 
     assert_redirected_to print_path(assigns(:print))
     # Debe asignar el usuario autenticado como el creador de la impresión
-    assert_equal users(:operator).id, assigns(:print).user.id
+    assert_equal @operator.id, assigns(:print).user.id
     # Prueba básica para "asegurar" el funcionamiento del versionado
-    assert_equal users(:operator).id, Version.last.whodunnit
+    assert_equal @operator.id, Version.last.whodunnit
   end
 
   test 'should create print and avoid printing' do
-    UserSession.create(users(:operator))
+    UserSession.create(@operator)
 
     document = Document.find(documents(:math_book).id)
     counts_array = ['Print.count', 'PrintJob.count', 'Payment.count']
@@ -246,13 +248,13 @@ class PrintsControllerTest < ActionController::TestCase
 
     assert_redirected_to print_path(assigns(:print))
     # Debe asignar el usuario autenticado como el creador de la impresión
-    assert_equal users(:operator).id, assigns(:print).user.id
+    assert_equal @operator.id, assigns(:print).user.id
     # Prueba básica para "asegurar" el funcionamiento del versionado
-    assert_equal users(:operator).id, Version.last.whodunnit
+    assert_equal @operator.id, Version.last.whodunnit
   end
   
   test 'should create print with free credit' do
-    UserSession.create(users(:operator))
+    UserSession.create(@operator)
 
     document = Document.find(documents(:math_book).id)
     counts_array = ['Print.count', 'PrintJob.count', 'Payment.count',
@@ -293,13 +295,13 @@ class PrintsControllerTest < ActionController::TestCase
 
     assert_redirected_to print_path(assigns(:print))
     # Debe asignar el usuario autenticado como el creador de la impresión
-    assert_equal users(:operator).id, assigns(:print).user.id
+    assert_equal @operator.id, assigns(:print).user.id
     # Prueba básica para "asegurar" el funcionamiento del versionado
-    assert_equal users(:operator).id, Version.last.whodunnit
+    assert_equal @operator.id, Version.last.whodunnit
   end
 
   test 'should create print without documents in print jobs' do
-    UserSession.create(users(:operator))
+    UserSession.create(@operator)
 
     counts_array = ['Print.count', 'PrintJob.count', 'Payment.count',
       'customer.prints.count', 'ArticleLine.count']
@@ -340,11 +342,11 @@ class PrintsControllerTest < ActionController::TestCase
 
     assert_redirected_to print_path(assigns(:print))
     # Debe asignar el usuario autenticado como el creador de la impresión
-    assert_equal users(:operator).id, assigns(:print).user.id
+    assert_equal @operator.id, assigns(:print).user.id
   end
 
   test 'should create print with 3 decimal payment' do
-    UserSession.create(users(:operator))
+    UserSession.create(@operator)
 
     counts_array = ['Print.count', 'PrintJob.count', 'Payment.count',
       'customer.prints.count', 'ArticleLine.count']
@@ -387,11 +389,11 @@ class PrintsControllerTest < ActionController::TestCase
 
     assert_redirected_to print_path(assigns(:print))
     # Debe asignar el usuario autenticado como el creador de la impresión
-    assert_equal users(:operator).id, assigns(:print).user.id
+    assert_equal @operator.id, assigns(:print).user.id
   end
 
   test 'should show print' do
-    UserSession.create(users(:operator))
+    UserSession.create(@operator)
     get :show, id: @print.to_param, status: 'all'
     assert_response :success
     assert_not_nil assigns(:print)
@@ -400,7 +402,7 @@ class PrintsControllerTest < ActionController::TestCase
   end
 
   test 'should get edit' do
-    UserSession.create(users(:operator))
+    UserSession.create(@operator)
     get :edit, id: @print.to_param, status: 'all'
     assert_response :success
     assert_not_nil assigns(:print)
@@ -409,7 +411,7 @@ class PrintsControllerTest < ActionController::TestCase
   end
 
   test 'should not get edit' do
-    UserSession.create(users(:administrator))
+    UserSession.create(@administrator)
 
     print = Print.find(prints(:os_print).id)
 
@@ -423,7 +425,7 @@ class PrintsControllerTest < ActionController::TestCase
   end
 
   test 'should update print' do
-    user = User.find users(:operator).id
+    user = User.find @operator.id
     customer = Customer.find customers(:teacher).id
     math_notes = Document.find(documents(:math_notes).id)
     math_book = Document.find(documents(:math_book).id)
@@ -443,7 +445,7 @@ class PrintsControllerTest < ActionController::TestCase
           customer_id: customer.id,
           scheduled_at: '',
           avoid_printing: '0',
-          user_id: users(:administrator).id,
+          user_id: @administrator.id,
           print_jobs_attributes: {
             print_jobs(:math_job_1).id.to_s => {
               id: print_jobs(:math_job_1).id,
@@ -491,7 +493,7 @@ class PrintsControllerTest < ActionController::TestCase
 
     assert_redirected_to print_path(@print)
     # No se puede cambiar el usuario que creo una impresión
-    assert_not_equal users(:administrator).id, @print.reload.user_id
+    assert_not_equal @administrator.id, @print.reload.user_id
     # No se puede cambiar el cliente de la impresión
     assert_not_equal customer.id, @print.reload.customer_id
     # No se puede cambiar ningún trabajo de impresión
@@ -502,7 +504,7 @@ class PrintsControllerTest < ActionController::TestCase
   end
   
   test 'should revoke print' do
-    UserSession.create(users(:administrator))
+    UserSession.create(@administrator)
     
     delete :revoke, id: @print.to_param, status: 'all'
     assert_redirected_to prints_url
@@ -510,7 +512,7 @@ class PrintsControllerTest < ActionController::TestCase
   end
 
   test 'should cancel job' do
-    UserSession.create(users(:operator))
+    UserSession.create(@operator)
     
     canceled_count = Cups.all_jobs(@printer).select do |_, j|
       j[:state] == :cancelled
@@ -559,7 +561,7 @@ class PrintsControllerTest < ActionController::TestCase
   end
 
   test 'can not cancel a completed job' do
-    UserSession.create(users(:operator))
+    UserSession.create(@operator)
     
     print_job = PrintJob.find print_jobs(:math_job_1).id
 
@@ -571,7 +573,7 @@ class PrintsControllerTest < ActionController::TestCase
   end
 
   test 'should get autocomplete document list' do
-    UserSession.create(users(:operator))
+    UserSession.create(@operator)
     get :autocomplete_for_document_name, format: :json, q: 'Math', status: 'all'
     assert_response :success
     
@@ -615,7 +617,7 @@ class PrintsControllerTest < ActionController::TestCase
   end
 
   test 'should get autocomplete article list' do
-    UserSession.create(users(:operator))
+    UserSession.create(@operator)
     get :autocomplete_for_article_name, format: :json, q: '111', status: 'all'
     assert_response :success
     
@@ -650,7 +652,7 @@ class PrintsControllerTest < ActionController::TestCase
   end
 
   test 'should get autocomplete customer list' do
-    UserSession.create(users(:operator))
+    UserSession.create(@operator)
     get :autocomplete_for_customer_name, format: :json, q: 'anakin',
       status: 'all'
     assert_response :success
@@ -678,7 +680,7 @@ class PrintsControllerTest < ActionController::TestCase
   end
   
   test 'should get related by customer' do
-    UserSession.create(users(:administrator))
+    UserSession.create(@administrator)
     
     prints = get_prints_with_customer.limit(2).all
     
@@ -690,7 +692,7 @@ class PrintsControllerTest < ActionController::TestCase
   end
 
   test 'should get the first print with related by customer prev link' do
-    UserSession.create(users(:administrator))
+    UserSession.create(@administrator)
     
     print = get_prints_with_customer.first
     
@@ -699,7 +701,7 @@ class PrintsControllerTest < ActionController::TestCase
   end
   
   test 'should get the last print with related by customer next link' do
-    UserSession.create(users(:administrator))
+    UserSession.create(@administrator)
     
     print = get_prints_with_customer.last
     
@@ -708,7 +710,7 @@ class PrintsControllerTest < ActionController::TestCase
   end
 
   test 'should upload a file' do
-    UserSession.create(users(:administrator))
+    UserSession.create(@administrator)
 
     post :upload_file, file_line: { file: pdf_test_file }, status: 'all'
     assert_response :success
