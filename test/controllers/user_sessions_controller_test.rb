@@ -2,7 +2,7 @@ require 'test_helper'
 
 class UserSessionsControllerTest < ActionController::TestCase
   setup do
-    @user = users(:administrator)
+    @user = users(:operator)
   end
 
   test 'should get new' do
@@ -16,8 +16,8 @@ class UserSessionsControllerTest < ActionController::TestCase
   test 'should create user session' do
     assert_difference '@user.shifts.count' do
       post :create, user_session: {
-        username: @user.username,
-        password: 'admin123'
+        username: @user.username, 
+        password: "#{@user.username}123"
       }
     end
 
@@ -33,8 +33,8 @@ class UserSessionsControllerTest < ActionController::TestCase
     
     assert_no_difference '@user.shifts.count' do
       post :create, user_session: {
-        username: @user.username,
-        password: 'admin123'
+        username: @user.username, 
+        password: "#{@user.username}123"
       }
     end
 
@@ -46,14 +46,14 @@ class UserSessionsControllerTest < ActionController::TestCase
   end
   
   test 'should create user session with stale shift' do
-    user = users(:operator_with_open_shift)
+    user = users(:operator)
 
     assert !session[:has_an_open_shift]
     
     assert_no_difference '@user.shifts.count' do
       post :create, user_session: {
         username: user.username,
-        password: 'operator_wos123'
+        password: "#{@user.username}123"
       }
     end
 
@@ -79,12 +79,13 @@ class UserSessionsControllerTest < ActionController::TestCase
   end
 
   test 'should not create a user session with a disabled user' do
-    disabled_user = users(:disabled_operator)
+    disabled_user = users(:operator)
+    disabled_user.update_attributes(enable: false)
     
     assert_no_difference 'disabled_user.shifts.count' do
       post :create, user_session: {
-        username: disabled_user.username,
-        password: 'disabled_operator123'
+        username: disabled_user.username, 
+        password: "#{@user.username}123"
       }
     end
 
