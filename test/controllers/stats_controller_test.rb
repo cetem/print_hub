@@ -1,9 +1,11 @@
 require 'test_helper'
 
 class StatsControllerTest < ActionController::TestCase
+  
   def setup 
     UserSession.create(users(:operator))
   end
+
   test 'should get printers stats' do
     get :printers
     assert_response :success
