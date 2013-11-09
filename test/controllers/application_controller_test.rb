@@ -200,6 +200,11 @@ class ApplicationControllerTest < ActionController::TestCase
   end
 
   test 'not leave open shift' do
+    user = user(:operator)
+    user.update_attribute(admin: false)
+    UserSession.create(user)
+    @controller.send(:session)[:has_an_open_shift] = true
+
     assert_not_nil @controller.send(:run_shift_tasks)
     assert_redirected_to edit_shift_url(shifts(:open_shift))
 
