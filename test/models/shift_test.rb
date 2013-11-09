@@ -23,7 +23,7 @@ class ShiftTest < ActiveSupport::TestCase
         start: 10.minutes.ago,
         finish: nil,
         description: 'Some shift',
-        user_id: users(:administrator).id,
+        user_id: users(:operator).id,
         paid: false
       )
     end
