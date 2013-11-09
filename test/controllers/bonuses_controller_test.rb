@@ -1,8 +1,10 @@
 require 'test_helper'
 
 class BonusesControllerTest < ActionController::TestCase
+  def setup
+    UserSession.create(users(:operator)) 
+  end
   test 'should get index' do
-    UserSession.create(users(:administrator))
     
     get :index
     assert_response :success
@@ -13,7 +15,6 @@ class BonusesControllerTest < ActionController::TestCase
   end
   
   test 'should get customer index' do
-    UserSession.create(users(:administrator))
     customer = customers(:student)
     
     get :index, customer_id: customer.to_param

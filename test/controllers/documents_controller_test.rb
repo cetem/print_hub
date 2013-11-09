@@ -3,12 +3,13 @@ require 'test_helper'
 class DocumentsControllerTest < ActionController::TestCase
   setup do
     @document = documents(:math_book)
-
+    @operator = users(:operator)
+    UserSession.create(@operator)
     prepare_document_files
   end
 
   test 'should get index' do
-    UserSession.create(users(:administrator))
+    UserSession.create(@operator)
     get :index
     assert_response :success
     assert_not_nil assigns(:documents)
@@ -18,9 +19,8 @@ class DocumentsControllerTest < ActionController::TestCase
   end
 
   test 'should get index with tag filter' do
-    UserSession.create(users(:administrator))
+    UserSession.create(@operator)
     tag = Tag.find(tags(:notes).id)
-
     get :index, tag_id: tag.to_param
     assert_response :success
     assert_not_nil assigns(:documents)
@@ -31,7 +31,7 @@ class DocumentsControllerTest < ActionController::TestCase
   end
 
   test 'should get index with search filter' do
-    UserSession.create(users(:administrator))
+    UserSession.create(@operator)
     get :index, q: 'Math'
     assert_response :success
     assert_not_nil assigns(:documents)
@@ -42,16 +42,17 @@ class DocumentsControllerTest < ActionController::TestCase
   end
   
   test 'should clear documents for printing' do
-    UserSession.create(users(:administrator))
+    UserSession.create(@operator)
     session[:documents_for_printing] = [@document.id]
-    
+
     get :index, clear_documents_for_printing: true
     assert_redirected_to action: :index
     assert session[:documents_for_printing].blank?
   end
 
   test 'should get new' do
-    UserSession.create(users(:administrator))
+    UserSession.create(@operator)
+    
     get :new
     assert_response :success
     assert_select '#unexpected_error', false
@@ -59,7 +60,8 @@ class DocumentsControllerTest < ActionController::TestCase
   end
 
   test 'should create document' do
-    UserSession.create(users(:administrator))
+    UserSession.create(@operator)
+
     assert_difference 'Document.count' do
       # 1 document, 2 document-tags-relation, 2 tags update
       assert_difference 'Version.count', 5 do
@@ -83,11 +85,12 @@ class DocumentsControllerTest < ActionController::TestCase
     # Debe poner 1 ya que cuenta las que tiene efectivamente el PDF
     assert_equal 1, Document.find_by_code('0001234').pages
     # Prueba básica para "asegurar" el funcionamiento del versionado
-    assert_equal users(:administrator).id, Version.last.whodunnit
+    assert_equal @operator.id, Version.last.whodunnit
   end
 
   test 'should show document' do
-    UserSession.create(users(:administrator))
+    UserSession.create(@operator)
+
     get :show, id: @document.to_param
     assert_response :success
     assert_select '#unexpected_error', false
@@ -95,7 +98,8 @@ class DocumentsControllerTest < ActionController::TestCase
   end
 
   test 'should get edit' do
-    UserSession.create(users(:administrator))
+    UserSession.create(@operator)
+
     get :edit, id: @document.to_param
     assert_response :success
     assert_select '#unexpected_error', false
@@ -103,7 +107,7 @@ class DocumentsControllerTest < ActionController::TestCase
   end
 
   test 'should update document' do
-    UserSession.create(users(:administrator))
+    UserSession.create(@operator)
     put :update, id: @document.to_param, document: {
       code: '003456',
       name: 'Updated name',
@@ -121,26 +125,26 @@ class DocumentsControllerTest < ActionController::TestCase
 
   test 'should destroy document' do
     document = Document.find(documents(:unused_book).id)
+    UserSession.create(@operator)
 
-    UserSession.create(users(:administrator))
     assert_difference('Document.count', -1) do
       delete :destroy, id: document.to_param
     end
-
     assert_redirected_to documents_path
   end
 
   test 'should not destroy document' do
-    UserSession.create(users(:administrator))
+    UserSession.create(@operator)
+
     assert_no_difference('Document.count') do
       delete :destroy, id: @document.to_param
     end
-
     assert_redirected_to documents_path
   end
 
   test 'should get barcode' do
-    UserSession.create(users(:administrator))
+    UserSession.create(@operator)
+  
     get :barcode, id: @document.code
     assert_response :success
     assert_not_nil assigns(:document)
@@ -150,7 +154,8 @@ class DocumentsControllerTest < ActionController::TestCase
   end
   
   test 'should get barcode of new document' do
-    UserSession.create(users(:administrator))
+    UserSession.create(@operator)
+  
     get :barcode, id: '159321'
     assert_response :success
     assert_not_nil assigns(:document)
@@ -160,25 +165,29 @@ class DocumentsControllerTest < ActionController::TestCase
   end
   
   test 'should add document to next print' do
-    UserSession.create(users(:administrator))
-    assert session[:documents_for_printing].blank?
-    
+    UserSession.create(@operator)
+  
+    assert session[:documents_for_printing].blank?  
+  
     i18n_scope = [:view, :documents, :remove_from_next_print]
-    
+  
     xhr :post, :add_to_next_print, id: @document.to_param
+  
     assert_response :success
     assert_match %r{#{I18n.t(:title, scope: i18n_scope)}}, @response.body
     assert session[:documents_for_printing].include?(@document.id)
   end
   
   test 'should remove document from next print' do
-    UserSession.create(users(:administrator))
+    UserSession.create(@operator)
+  
     assert session[:documents_for_printing].blank?
     
     session[:documents_for_printing] = [@document.id]
     i18n_scope = [:view, :documents, :add_to_next_print]
     
     xhr :delete, :remove_from_next_print, id: @document.to_param
+  
     assert_response :success
     assert_match %r{#{I18n.t(:title, scope: i18n_scope)}},
       @response.body
@@ -188,7 +197,8 @@ class DocumentsControllerTest < ActionController::TestCase
   end
 
   test 'should get autocomplete tag list' do
-    UserSession.create(users(:administrator))
+    UserSession.create(@operator)
+  
     get :autocomplete_for_tag_name, format: :json, q: 'note'
     assert_response :success
     
@@ -214,8 +224,10 @@ class DocumentsControllerTest < ActionController::TestCase
   end
 
   test 'should get index with disabled documents filter' do
-    UserSession.create(users(:administrator))
+    UserSession.create(@operator)
+  
     disabled_documents = Document.unscoped.disable.size
+  
     assert disabled_documents > 0
     get :index, disabled_documents: true
     assert_response :success

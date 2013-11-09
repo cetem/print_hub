@@ -4,7 +4,7 @@ class ShiftsControllerTest < ActionController::TestCase
   setup do
     @shift = shifts(:current_shift)
     
-    UserSession.create(users(:administrator))
+    UserSession.create(users(:operator))
   end
 
   test 'should get index' do
@@ -94,11 +94,13 @@ class ShiftsControllerTest < ActionController::TestCase
   test 'should get pay pending for user between dates' do
     from = 3.weeks.ago.to_date
     to = Time.zone.today
-    user = users(:operator)
-    shifts = user.shifts.pending_between(from, to)
+    operator = users(:operator)
+    operator.update_attributes(admin: false) 
+
+    shifts = operator.shifts.pending_between(from, to)
     
     get :index, format: :json, pay_pending_shifts_for_user_between: {
-      user_id: user.id, start: from.to_s(:db), finish: to.to_s(:db)
+      user_id: operator.id, start: from.to_s(:db), finish: to.to_s(:db)
     }
     
     assert_response :success
@@ -108,8 +110,8 @@ class ShiftsControllerTest < ActionController::TestCase
   end
 
   test 'should get json pagination' do
-    UserSession.create(users(:administrator))
     operator = users(:operator) # Operator closed shifts = 3
+    operator.update_attributes(admin: false)
 
     get :json_paginate, format: :json, user_id: operator.id
     assert_response :success

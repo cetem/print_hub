@@ -2,13 +2,12 @@ require 'test_helper'
 
 class UsersControllerTest < ActionController::TestCase
   setup do
-    @user = users(:administrator)
-    
+    @operator = users(:operator)
+    UserSession.create(@operator)
     prepare_avatar_files
   end
 
   test 'should get index' do
-    UserSession.create(@user)
     get :index
     assert_response :success
     assert_not_nil assigns(:users)
@@ -17,7 +16,6 @@ class UsersControllerTest < ActionController::TestCase
   end
 
   test 'should get new' do
-    UserSession.create(@user)
     get :new
     assert_response :success
     assert_not_nil assigns(:user)
@@ -26,7 +24,6 @@ class UsersControllerTest < ActionController::TestCase
   end
 
   test 'should create user' do
-    UserSession.create(@user)
     assert_difference ['User.count', 'Version.count'] do
       post :create, user: {
         name: 'New name',
@@ -46,12 +43,11 @@ class UsersControllerTest < ActionController::TestCase
 
     assert_redirected_to users_path
     # Prueba básica para "asegurar" el funcionamiento del versionado
-    assert_equal users(:administrator).id, Version.last.whodunnit
+    assert_equal @operator.id, Version.last.whodunnit
   end
 
   test 'should show user' do
-    UserSession.create(@user)
-    get :show, id: @user.to_param
+    get :show, id: @operator.to_param
     assert_response :success
     assert_not_nil assigns(:user)
     assert_select '#unexpected_error', false
@@ -59,8 +55,7 @@ class UsersControllerTest < ActionController::TestCase
   end
 
   test 'should get edit' do
-    UserSession.create(@user)
-    get :edit, id: @user.to_param
+    get :edit, id: @operator.to_param
     assert_response :success
     assert_not_nil assigns(:user)
     assert_select '#unexpected_error', false
@@ -68,8 +63,7 @@ class UsersControllerTest < ActionController::TestCase
   end
 
   test 'should update user' do
-    UserSession.create(@user)
-    put :update, id: @user.to_param, user: {
+    put :update, id: @operator.to_param, user: {
       name: 'Updated name',
       last_name: 'Updated last name',
       email: 'updated_user@printhub.com',
@@ -82,19 +76,18 @@ class UsersControllerTest < ActionController::TestCase
       enable: '1'
     }
     assert_redirected_to users_path
-    assert_equal 'Updated name', @user.reload.name
+    assert_equal 'Updated name', @operator.reload.name
   end
   
     
   test 'should get autocomplete user list' do
-    UserSession.create(@user)
-    get :autocomplete_for_user_name, format: :json, q: 'admin'
+    get :autocomplete_for_user_name, format: :json, q: 'operator'
     assert_response :success
     
     users = ActiveSupport::JSON.decode(@response.body)
     
     assert_equal 1, users.size
-    assert users.all? { |u| (u['label'] + u['informal']).match /admin/i }
+    assert users.all? { |u| (u['label'] + u['informal']).match /operator/i }
 
     get :autocomplete_for_user_name, format: :json, q: 'invalid_operator'
     assert_response :success
@@ -112,7 +105,6 @@ class UsersControllerTest < ActionController::TestCase
   end
 
   test 'should pay user shifts between dates' do
-    UserSession.create(@user)
     user = users(:operator)
     start = 3.weeks.ago.to_date
     finish = Time.zone.today
@@ -128,12 +120,11 @@ class UsersControllerTest < ActionController::TestCase
   end
 
   test 'should get current workers' do
-    UserSession.create(@user)
     get :current_workers, format: :json
     assert_response :success
 
     users = ActiveSupport::JSON.decode(@response.body)
 
-    assert_equal 4, users.size    
+    assert_equal 1, users.size    
   end
 end

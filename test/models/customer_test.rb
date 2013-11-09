@@ -21,7 +21,7 @@ class CustomerTest < ActiveSupport::TestCase
       @customer.bonus_without_expiration
   end
 
-  # Prueba la creación de un cliente
+  # Prueba la creación de un cliente sin bonus
   test 'create without bonus' do
     # Send welcome email
     assert_difference 'ActionMailer::Base.deliveries.size' do
