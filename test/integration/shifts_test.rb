@@ -84,7 +84,7 @@ class ShiftsTest < ActionDispatch::IntegrationTest
     assert page.has_css?('.navbar')
 
     within '.navbar' do
-      find("a[title=#{I18n.t('menu.actions.logout')}]").click
+      find("a[data-title=\"#{I18n.t('menu.actions.logout')}\"]").click
     end
 
     assert page.has_css?('#logout')
@@ -110,7 +110,7 @@ class ShiftsTest < ActionDispatch::IntegrationTest
     assert page.has_css?('.navbar')
 
     within '.navbar' do
-      find("a[title=#{I18n.t('menu.actions.logout')}]").click
+      find("a[data-title=\"#{I18n.t('menu.actions.logout')}\"]").click
     end
 
     assert page.has_css?('#logout')
@@ -135,7 +135,7 @@ class ShiftsTest < ActionDispatch::IntegrationTest
 
     assert_no_difference 'Shift.pending.count' do
       within '.navbar' do
-        find("a[title=#{I18n.t('menu.actions.logout')}]").click
+        find("a[data-title=\"#{I18n.t('menu.actions.logout')}\"]").click
       end
 
       assert page.has_no_css?('#logout')

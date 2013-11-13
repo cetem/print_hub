@@ -1,10 +1,11 @@
 class CustomersController < ApplicationController
-  before_action :require_admin_user, except: [
-    :new, :create, :credit_detail, :activate, :edit_profile, :update_profile
-  ]
-  before_action :require_customer, only: [:edit_profile, :update_profile]
-  before_action :require_user, only: [:credit_detail]
-  before_action :require_no_customer_or_admin, only: [:new, :create]
+  customer_actions = [:edit_profile, :update_profile]
+  before_action :require_user, except: [
+    :new, :create, :pay_off_debt, :pay_month_debt, :activate, customer_actions
+  ].flatten
+  before_action :require_admin_user, only: [:pay_off_debt, :pay_month_debt]
+  before_action :require_customer, only: customer_actions
+  before_action :require_no_customer_or_user, only: [:new, :create]
   before_action :require_no_customer, only: [:activate]
   
   layout ->(controller) { controller.request.xhr? ? false : 'application' }
@@ -91,7 +92,7 @@ class CustomersController < ApplicationController
     @customer = Customer.unscoped.find(params[:id])
 
     respond_to do |format|
-      if @customer.update_attributes(customer_params_as_admin)
+      if @customer.update_attributes(customer_params_as_user)
         format.html { redirect_to(customer_url(@customer), notice: t('view.customers.correctly_updated')) }
         format.json  { head :ok }
       else
@@ -203,10 +204,10 @@ class CustomersController < ApplicationController
   # Atributos permitidos
   def customer_params
     current_user.try(:admin) ? 
-      customer_params_as_admin : customer_params_as_default
+      customer_params_as_user : customer_params_as_default
   end
 
-  def customer_params_as_admin
+  def customer_params_as_user
     credit_attrs = [
       :amount, :remaining, :valid_until, :customer_id, :_destroy, :id
     ]

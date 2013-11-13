@@ -77,25 +77,28 @@
       </tbody>
     </table>
   <% end %>
-
-  <% amounts = @customer.to_pay_amounts %>
-  <% if amounts[:total_count] > 0 %>
-    <% if params[:date] && @customer.months_to_pay.size > 1 %>
-      <%= render 'month_debt', date: params[:date], cancelled: false %>
+  <% if current_user.admin %>
+    <% amounts = @customer.to_pay_amounts %>
+    <% if amounts[:total_count] > 0 %>
+      <% if params[:date] && @customer.months_to_pay.size > 1 %>
+        <%= render 'month_debt', date: params[:date], cancelled: false %>
+      <% else %>
+        <%= render 'debt', amounts: amounts, cancelled: false %>
+      <% end %>
     <% else %>
-      <%= render 'debt', amounts: amounts, cancelled: false %>
+      <br />
+      <p>
+        <strong><%= t('view.customers.to_pay_prints.no_debt') %></strong>
+      </p>
     <% end %>
-  <% else %>
-    <br />
-    <p>
-      <strong><%= t('view.customers.to_pay_prints.no_debt') %></strong>
-    </p>
   <% end %>
 </div>
 <nav class="form-actions">
   <%= link_to t('label.edit'), edit_customer_path(@customer) %> |
-  <%= show_link_to_customer_prints(@customer) %> |
-  <%= show_link_to_customer_bonuses(@customer) %> |
-  <%= show_link_to_customer_non_payments(@customer) %> |
+  <% if current_user.admin %>
+    <%= show_link_to_customer_prints(@customer) %> |
+    <%= show_link_to_customer_bonuses(@customer) %> |
+    <%= show_link_to_customer_non_payments(@customer) %> |
+  <% end %>
   <%= link_to t('label.list'), customers_path %>
 </nav>

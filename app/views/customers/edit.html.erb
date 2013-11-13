@@ -1,8 +1,10 @@
 <%= content_for :form_actions do %>
   <%= link_to t('label.show'), @customer %> |
-  <%= show_link_to_customer_prints(@customer) %> |
-  <%= show_link_to_customer_bonuses(@customer) %> |
-  <%= show_link_to_customer_non_payments(@customer) %> |
+  <% if current_user.admin %>
+    <%= show_link_to_customer_prints(@customer) %> |
+    <%= show_link_to_customer_bonuses(@customer) %> |
+    <%= show_link_to_customer_non_payments(@customer) %> |
+  <% end %>
   <%= link_to t('label.list'), customers_path %>
 <% end %>
 

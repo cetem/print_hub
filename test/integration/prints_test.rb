@@ -210,9 +210,7 @@ class PrintsTest < ActionDispatch::IntegrationTest
     assert_equal new_print_path, current_path
     assert page.has_css?('form')
     
-    cancelled_jobs_count = Cups.all_jobs(@pdf_printer).map do |_, j|
-      j[:state] == :cancelled
-    end.count
+    last_cancelled_job_id = Cups.all_jobs(@pdf_printer).sort.last.first
         
     within 'form' do
       select @pdf_printer, from: 'print_printer'
@@ -220,9 +218,8 @@ class PrintsTest < ActionDispatch::IntegrationTest
 
     object_id = first(:css, 'input.price-modifier')[:name].match(/(\d+)/)[1]
     
-    retard_input = '<input id="print_print_jobs_attributes_0_job_hold_until" '
-    retard_input << "name=\"print[print_jobs_attributes][#{object_id}][job_hold_until]\" "
-    retard_input << 'type="hidden" value="indefinite">'
+    retard_input = "<input name=\"print[print_jobs_attributes][#{object_id}][job_hold_until]\" "
+    retard_input << 'type="hidden" value="infinite">'
     
     page.execute_script(
       "$('div.print_job .row-fluid .span2').append($('#{retard_input}'));"
@@ -249,14 +246,11 @@ class PrintsTest < ActionDispatch::IntegrationTest
     end
     
     assert_page_has_no_errors!
-    sleep 1
     assert page.has_content? I18n.t('view.prints.job_canceled')
     
-    new_cancelled_jobs_count = Cups.all_jobs(@pdf_printer).map do |_, j|
-      j[:state] == :cancelled
-    end.count
+    new_last_cancelled_job_id = Cups.all_jobs(@pdf_printer).sort.last.first
     
-    assert_equal cancelled_jobs_count, new_cancelled_jobs_count -1
+    assert_equal last_cancelled_job_id, new_last_cancelled_job_id - 1
   end
   
   test 'should print with customer' do

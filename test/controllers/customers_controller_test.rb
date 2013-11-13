@@ -257,7 +257,7 @@ class CustomersControllerTest < ActionController::TestCase
     customer = Customer.disable.find(
       ActiveRecord::FixtureSet.identify(:disabled_student)
     )
-    
+
     get :activate, token: customer.perishable_token
     assert_redirected_to new_customer_session_url
     assert I18n.t('view.customers.correctly_activated'), flash.notice

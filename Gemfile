@@ -5,8 +5,8 @@ gem 'rails', '4.0.0'
 gem 'pg'
 gem 'authlogic'
 gem 'validates_timeliness'
-gem 'awesome_nested_set', "~> 3.0.0.rc.1"
-gem 'will_paginate', github: 'mislav/will_paginate'
+gem 'awesome_nested_set', "~> 3.0.0.rc.2"
+gem 'will_paginate'
 gem 'foreigner'
 gem 'paper_trail', github: 'airblade/paper_trail', branch: 'rails4'
 gem 'RedCloth'

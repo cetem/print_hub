@@ -3,10 +3,8 @@ module CustomersHelper
     prints_count = customer.prints.count
 
     if prints_count > 0
-      link_to(
-        t('view.customers.print_list', count: prints_count),
-        customer_prints_path(customer)
-      )
+      text = t('view.customers.print_list', count: prints_count)
+      current_user.admin ? link_to(text, customer_prints_path(customer)) : text
     else
       t('view.customers.without_prints')
     end

@@ -16,57 +16,59 @@
       </div>
       
       <div class="span6">
-        <%= f.input :free_monthly_bonus, input_html: { maxlength: 15 } %>
-        <div class="row-fluid">
-          <div class="span6">
-            <%= f.input :bonus_without_expiration, input_html: { class: ''} %> 
-          </div>
-          <div class="span6">
-            <%= link_to(
-              t('view.customers.show_bonuses'), '#', data: {
-                action: 'show', target: '#bonuses_section'
-              }
-            ) %>
-          </div>
-        </div>
-        <div id="bonuses_section" style="display: none;">
-          <h3>
-            <%= t(
-              'view.customers.current_bonuses',
-              count: @customer.current_bonuses.size
-            ) %>
-          </h3>
-          
-          <br />
-
-          <div id="bonuses_headers" class="row-fluid">
-            <div class="span3">
-              <h4><%= Bonus.human_attribute_name 'amount' %></h4>
+        <% if current_user.admin %>
+          <%= f.input :free_monthly_bonus, input_html: { maxlength: 15 } %>
+          <div class="row-fluid">
+            <div class="span6">
+              <%= f.input :bonus_without_expiration, input_html: { class: ''} %>
             </div>
-            <div class="span3">
-              <h4><%= Bonus.human_attribute_name 'remaining' %></h4>
-            </div>
-            <div class="span4">
-              <h4><%= Bonus.human_attribute_name 'valid_until' %></h4>
+            <div class="span6">
+              <%= link_to(
+                t('view.customers.show_bonuses'), '#', data: {
+                  action: 'show', target: '#bonuses_section'
+                }
+              ) %>
             </div>
           </div>
+          <div id="bonuses_section" style="display: none;">
+            <h3>
+              <%= t(
+                'view.customers.current_bonuses',
+                count: @customer.current_bonuses.size
+              ) %>
+            </h3>
 
-          <div id="bonuses">
-            <%= f.simple_fields_for :bonuses, @customer.current_bonuses do |b_f| %>
-              <%= render partial: 'bonus', locals: { f: b_f, is_dynamic: false } %>
-            <% end %>
-          </div>
+            <br />
 
-          <div class="add_nested_item">
-            <%= link_to t('view.customers.add_bonus'), '#',
-              id: 'add_bonus_link', class: 'btn btn-mini',
-              'title' => t('view.customers.add_bonus_title'),
-              'data-template' => 'bonus', 'data-container' => '#bonuses',
-              'data-event' => 'addNestedItem' %>
+            <div id="bonuses_headers" class="row-fluid">
+              <div class="span3">
+                <h4><%= Bonus.human_attribute_name 'amount' %></h4>
+              </div>
+              <div class="span3">
+                <h4><%= Bonus.human_attribute_name 'remaining' %></h4>
+              </div>
+              <div class="span4">
+                <h4><%= Bonus.human_attribute_name 'valid_until' %></h4>
+              </div>
+            </div>
+
+            <div id="bonuses">
+              <%= f.simple_fields_for :bonuses, @customer.current_bonuses do |b_f| %>
+                <%= render partial: 'bonus', locals: { f: b_f, is_dynamic: false } %>
+              <% end %>
+            </div>
+
+            <div class="add_nested_item">
+              <%= link_to t('view.customers.add_bonus'), '#',
+                id: 'add_bonus_link', class: 'btn btn-mini',
+                'title' => t('view.customers.add_bonus_title'),
+                'data-template' => 'bonus', 'data-container' => '#bonuses',
+                'data-event' => 'addNestedItem' %>
+            </div>
+            
+            <br />
           </div>
-          
-          <br />
-        </div>
+        <% end %>
         <div id="nested_items">
           <% @customer.deposits.build if @customer.current_deposits.empty? %>
           <h3>
@@ -75,7 +77,7 @@
               count: @customer.current_deposits.size
             ) %>
           </h3>
-          
+
           <br />
 
           <div id="deposits_headers" class="row-fluid">

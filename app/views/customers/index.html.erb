@@ -17,7 +17,7 @@
         <td><%= link_to_activate_customer customer unless customer.enable %></td>
         <td><%= link_to_show customer %></td>
         <td><%= link_to_edit edit_customer_path(customer) %></td>
-        <td><%= link_to_destroy customer %></td>
+        <td><%= link_to_destroy customer if current_user.admin %></td>
       </tr>
     <% end %>
   </tbody>

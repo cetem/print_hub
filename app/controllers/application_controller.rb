@@ -106,9 +106,9 @@ class ApplicationController < ActionController::Base
       require_customer : require_user
   end
   
-  def require_no_customer_or_admin
+  def require_no_customer_or_user
     request.subdomains.first == APP_CONFIG['subdomains']['customers'] ?
-      require_no_customer : require_admin_user
+      require_no_customer : require_user
   end
 
   def require_admin_user
@@ -141,6 +141,8 @@ class ApplicationController < ActionController::Base
           notice: t('view.shifts.edit_stale') if current_user.stale_shift
       elsif !session[:has_an_open_shift] && !current_user.last_shift_open?
         current_user_session.create_shift
+      else
+        true
       end
     end
   end

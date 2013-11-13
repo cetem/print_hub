@@ -10,6 +10,10 @@
       <div class="nav-collapse">
         <ul class="nav">
           <%= render partial: 'shared/menu_dropdowns/admin'  if current_user.admin %>
+          <%= content_tag(
+            :li, link_to(t('menu.customers'), customers_path),
+            class: ('active' if controller_name == 'customers')
+           ) unless current_user.admin %>
           <%= content_tag(:li, link_to(t('menu.prints'), prints_path),
             class: ('active' if controller_name == 'prints')) %>
           <%= content_tag(:li, link_to(t('menu.documents'), documents_path),
@@ -30,8 +34,8 @@
           </li>
           <li>
             <% if current_user.not_shifted %>
-              <%= link_to '&#x2192;'.html_safe, user_sessions_path,
-                title: t('menu.actions.logout'), class: 'iconic', method: :delete %>
+              <%= link_to '&#x2192;'.html_safe, user_sessions_path, class: 'iconic',
+                data: { title: t('menu.actions.logout'), method: :delete } %>
             <% else %>
               <%= link_to '&#x2192;'.html_safe, '#logout', 'class' => 'iconic',
                 data: { 'toggle' => 'modal', 'placement' => 'bottom',
