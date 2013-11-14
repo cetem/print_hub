@@ -8,7 +8,7 @@
       )}';" %>
     <% end %>
   <% end %>
-  
+
   <div class="form-inputs">
     <%= f.error_notification %>
     <%= f.object.errors.full_messages.join(', ') %>
@@ -23,14 +23,14 @@
           for: :print_auto_customer_name %>
         <% field_classes = ['autocomplete-field', 'span11'] %>
         <% field_classes << 'error' unless @print.errors[:customer_id].blank? %>
-        <%= f.input :auto_customer_name, label: false, input_html: { 
+        <%= f.input :auto_customer_name, label: false, input_html: {
           value: @print.customer, class: field_classes.join(' '),
           data: {
             'autocomplete-id-target' => '#print_customer_id',
             'autocomplete-url' => autocomplete_for_customer_name_prints_path(format: :json)
           }
         } %>
-        <%= f.input :customer_id, as: :hidden, 
+        <%= f.input :customer_id, as: :hidden,
           input_html: { class: 'autocomplete-id' } %>
         <%= hidden_field_tag :customer_free_credit,
           @print.customer.try(:free_credit), id: 'customer_free_credit' %>
@@ -46,7 +46,7 @@
         </div>
       </div>
     </div>
-    
+
     <ul class="nav nav-tabs">
       <li class="active">
         <%= link_to(t('view.prints.print_jobs'),
@@ -57,11 +57,11 @@
         <%= show_print_articles_tab_title %>
       </li>
       <li>
-        <%= link_to t('view.prints.comment'), 
+        <%= link_to t('view.prints.comment'),
           '#comment_container', data: { toggle: 'tab' } %>
       </li>
     </ul>
-    
+
     <div class="tab-content">
       <div id="print_jobs_container" class="tab-pane active" data-jobs-container
         data-prices-list="<%= print_job_types_with_price_for_data %>"
@@ -121,7 +121,7 @@
               </div>
             </div>
             <div class="span2 pull-right">
-              <%= link_to '&#xe045;'.html_safe, '#', 
+              <%= link_to '&#xe045;'.html_safe, '#',
                 title: t('view.prints.upload_file'),
                 id: 'upload_file_buttom', class: 'btn btn-success iconic' %>
             </div>
@@ -165,7 +165,7 @@
           </div>
         <% end %>
       </div>
-      
+
       <div id="comment_container" class="tab-pane">
         <div class="row-fluid">
           <div class="span12">
@@ -193,11 +193,11 @@
           <h4><%= Payment.human_attribute_name 'paid_with' %></h4>
         </div>
       </div>
-      
+
       <%= f.simple_fields_for :payments do |p_f| %>
         <div class="row-fluid payment">
           <div class="span3">
-            <%= p_f.input :amount, label: false, input_html: { 
+            <%= p_f.input :amount, label: false, input_html: {
               value: '%.3f' % p_f.object.amount,
               id: "payment_#{p_f.object.paid_with}_amount",
               maxlength: 15, size: nil, readonly: true } %>
@@ -237,9 +237,9 @@
 <% end %>
 
 <div id='upload-file' class='hidden'>
-  <%= simple_form_for :file_line, url: upload_file_prints_path, 
+  <%= simple_form_for :file_line, url: upload_file_prints_path,
     data: { 'form-data' => 'script=true' } do |of| %>
-      <%= of.input :file, as: :file, label: false, 
+      <%= of.input :file, as: :file, label: false,
          input_html: { data: { invisible: true } } %>
   <% end %>
 </div>

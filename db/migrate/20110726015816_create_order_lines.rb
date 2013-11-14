@@ -10,10 +10,10 @@ class CreateOrderLines < ActiveRecord::Migration
 
       t.timestamps
     end
-    
+
     add_index :order_lines, :document_id
     add_index :order_lines, :order_id
-    
+
     add_foreign_key :order_lines, :documents, :dependent => :restrict
     add_foreign_key :order_lines, :orders, :dependent => :restrict
   end

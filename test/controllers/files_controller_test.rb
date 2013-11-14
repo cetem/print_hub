@@ -40,7 +40,7 @@ class FilesControllerTest < ActionController::TestCase
     assert_equal I18n.t('view.documents.non_existent'), flash.notice
   end
 
- 
+
   test 'should download barcode' do
     UserSession.create(users(:administrator))
     get :download_barcode, code: @document.code
@@ -48,7 +48,7 @@ class FilesControllerTest < ActionController::TestCase
     assert_select '#unexpected_error', false
     assert_equal 'image/png', @response.content_type
   end
-  
+
   test 'should download barcode of new document' do
     UserSession.create(users(:administrator))
     get :download_barcode, code: '159321'
@@ -64,13 +64,13 @@ class FilesControllerTest < ActionController::TestCase
 
     assert_redirected_to catalog_url
     assert_equal I18n.t('view.documents.non_existent'), flash.notice
-  end  
-  
+  end
+
   test 'should not download document thumb if no exist' do
     CustomerSession.create(customers(:student))
     file = @document.file.pdf_thumb.path
     FileUtils.rm file if File.exists?(file)
-    
+
     assert !File.exists?(file)
     get :download, path: drop_private_dir(file)
     assert_redirected_to catalog_url

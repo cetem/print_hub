@@ -6,7 +6,7 @@ class DocumentsTest < ActionDispatch::IntegrationTest
 
     assert_page_has_no_errors!
     assert_equal prints_path, current_path
-    
+
     visit new_document_path
     assert_page_has_no_errors!
     assert_equal new_document_path, current_path
@@ -16,7 +16,7 @@ class DocumentsTest < ActionDispatch::IntegrationTest
       fill_in Document.human_attribute_name('code'), with: '10'
       fill_in Document.human_attribute_name('name'), with: 'Test'
       select('A4', from: Document.human_attribute_name('media'))
-      fill_in Document.human_attribute_name('description'), 
+      fill_in Document.human_attribute_name('description'),
         with: 'Testing upload a pdf'
       file = File.join(Rails.root, 'test', 'fixtures', 'files', 'test.pdf')
       attach_file(Document.human_attribute_name('file'), file)
@@ -32,7 +32,7 @@ class DocumentsTest < ActionDispatch::IntegrationTest
           )
         end
       end
-    end  
+    end
 
     assert_page_has_no_errors!
     assert_equal documents_path, current_path
@@ -40,7 +40,7 @@ class DocumentsTest < ActionDispatch::IntegrationTest
       '.alert', text: I18n.t('view.documents.correctly_created')
     )
   end
-    
+
   test 'should delete a document' do
     login
 
@@ -69,7 +69,7 @@ class DocumentsTest < ActionDispatch::IntegrationTest
 
     assert_page_has_no_errors!
     assert_equal prints_path, current_path
-    
+
     math_book = documents(:math_book)
     visit edit_document_path(math_book)
     assert_page_has_no_errors!
@@ -90,7 +90,7 @@ class DocumentsTest < ActionDispatch::IntegrationTest
         end
       end
     end
-      
+
     assert_page_has_no_errors!
     assert_equal documents_path, current_path
     assert page.has_css?(

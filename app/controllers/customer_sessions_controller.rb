@@ -12,7 +12,7 @@ class CustomerSessionsController < ApplicationController
   def create
     @title = t('view.customer_sessions.new_title')
     @customer_session = CustomerSession.new(params[:customer_session])
-    
+
     respond_to do |format|
       if @customer_session.save
         format.html { redirect_back_or_default(catalog_url, notice: t('view.customer_sessions.correctly_created')) }

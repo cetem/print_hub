@@ -1,6 +1,6 @@
 class PrintJob < ApplicationModel
   has_paper_trail
-  
+
   # Scopes
   scope :with_print_between, ->(_start, _end) {
     includes(:print).where(
@@ -24,16 +24,16 @@ class PrintJob < ApplicationModel
   scope :two_sided, -> {
     includes(:print_job_type).where(
       PrintJobType.table_name => { two_sided: true }
-    ) 
+    )
   }
-  
+
   # Callbacks
   before_save :put_printed_pages
-  
+
   # Atributos no persistentes
   attr_writer :range_pages
   attr_accessor :auto_document_name, :job_hold_until, :file_name
-  
+
   # Restricciones de atributos
   attr_readonly :id, :document_id, :copies, :pages, :range, :job_id, :print_id,
     :file_line_id
@@ -60,7 +60,7 @@ class PrintJob < ApplicationModel
   def initialize(attributes = nil)
     super(attributes)
     self.file_line_id ||= attributes['id'] if attributes
-    
+
     self.copies ||= 1
     self.print_job_type ||= PrintJobType.default
     self.printed_copies ||= 0
@@ -74,7 +74,7 @@ class PrintJob < ApplicationModel
 
     self.price_per_copy = job_price_per_copy
   end
-  
+
   def put_printed_pages
     self.printed_pages = self.range_pages * self.copies
   end
@@ -87,7 +87,7 @@ class PrintJob < ApplicationModel
     options = {
       'sides' => self.two_sided ? 'two-sided-long-edge' : 'one-sided'
     }
-    
+
     options['Collate'] = 'True' unless self.two_sided
     options['media'] = self.print_job_type.media
     options['page-ranges'] = self.range unless self.range.blank?
@@ -123,7 +123,7 @@ class PrintJob < ApplicationModel
     PriceCalculator.final_job_price(
       (self.print.try(:pages_per_type) || {}).merge(
         price_per_copy: job_price_per_copy,
-        type: self.print_job_type, 
+        type: self.print_job_type,
         pages: self.range_pages,
         copies: self.copies || 0
       )
@@ -137,7 +137,7 @@ class PrintJob < ApplicationModel
   def print_total_pages
     self.print.try(:total_pages_by_type, self.print_job_type) || 0
   end
-  
+
   def full_document?
     self.range_pages == self.pages
   end
@@ -155,7 +155,7 @@ class PrintJob < ApplicationModel
       else
         self.printed_copies = self.copies
       end
-      
+
       if self.printed_copies > 0
         file_path = (
           self.document ? self.document.file.path : self.file_line.file.path
@@ -177,7 +177,7 @@ class PrintJob < ApplicationModel
     job = self.job_id ? self.job_id.match(/\d+$/)[0] : nil
 
     out = job ? %x{lprm #{job} 2>&1} : 'Error'
-    
+
     out.blank?
   end
 
@@ -188,11 +188,11 @@ class PrintJob < ApplicationModel
   def completed?
     %x{lpstat -W completed | grep "^#{self.job_id} "}.present?
   end
-  
+
   def self.printer_stats_between(from, to)
     with_print_between(from, to).not_revoked.group(:printer).sum(:printed_pages)
   end
-  
+
   def self.user_stats_between(from, to)
     with_print_between(from, to).not_revoked.group(:user_id).sum(:printed_pages)
   end

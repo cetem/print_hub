@@ -9,14 +9,14 @@ class Document < ApplicationModel
   }
   scope :publicly_visible, -> { where(private: false) }
   scope :disable, -> { where(enable: false) }
-  
+
   # Atributos no persistentes
   attr_accessor :auto_tag_name
   # Alias de atributos
   alias_attribute :informal, :tag_path
 
   # Callbacks
-  before_save :update_tag_path, :update_privacy, :extract_page_count, 
+  before_save :update_tag_path, :update_privacy, :extract_page_count,
     :update_file_attributes
   after_save :update_tags_documents_count, :recreate_versions
   before_destroy :can_be_destroyed?
@@ -55,15 +55,15 @@ class Document < ApplicationModel
   def to_s
     "[#{self.code}] #{self.name}"
   end
-  
+
   alias_method :label, :to_s
-  
+
   def as_json(options = nil)
     default_options = {
       only: [:id, :pages, :stock],
       methods: [:label, :informal, :print_job_type]
     }
-    
+
     super(default_options.merge(options || {}))
   end
 
@@ -82,21 +82,21 @@ class Document < ApplicationModel
     unless @tag_path_updated
       tags = conditional_tags(new_tag, excluded_tag)
       self.tag_path = tags.compact.map(&:to_s).join(' ## ')
-      
+
       @tag_path_updated = true
     end
-    
+
     @tag_path_updated
   end
-  
+
   def update_privacy(new_tag = nil, excluded_tag = nil)
     unless @privacy_updated
       tags = conditional_tags(new_tag, excluded_tag)
       self.private = tags.compact.any?(&:private)
-      
+
       @privacy_updated = true
     end
-    
+
     @privacy_updated
   end
 
@@ -127,7 +127,7 @@ class Document < ApplicationModel
       false
     end
   end
-  
+
   def use_stock(amount)
     if self.stock >= amount
       remaining = 0
@@ -136,7 +136,7 @@ class Document < ApplicationModel
       remaining = amount - self.stock
       self.stock = 0
     end
-    
+
     remaining
   end
 
@@ -148,19 +148,19 @@ class Document < ApplicationModel
   rescue PDF::Reader::MalformedPDFError
     false
   end
-  
+
   def self.full_text(query_terms)
     options = text_query(query_terms, 'name', 'tag_path')
     conditions = [options[:query]]
     parameters = options[:parameters]
-    
+
     query_terms.each_with_index do |term, i|
       if term =~ /^\d+$/ # Sólo si es un número vale la pena la condición
         conditions << "#{table_name}.code = :clean_term_#{i}"
         parameters[:"clean_term_#{i}"] = term.to_i
       end
     end
-    
+
     where(
       conditions.map { |c| "(#{c})" }.join(' OR '), parameters
     ).order(options[:order])
@@ -169,9 +169,9 @@ class Document < ApplicationModel
   def identifier
     self.file.identifier || self.file_identifier
   end
-  
+
   private
-  
+
   def conditional_tags(new_tag = nil, excluded_tag = nil)
     self.tags.reject do |t|
       t.id == new_tag.try(:id) || t.id == excluded_tag.try(:id)

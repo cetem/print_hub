@@ -4,21 +4,21 @@ class ShiftsTest < ActionDispatch::IntegrationTest
   test 'should close stale shift' do
     @shift = shifts(:open_shift)
     @shift.update_attributes(user_id: users(:administrator).id)
-    
+
     assert_difference 'Shift.count' do
       login expected_path: edit_shift_path(@shift)
-      
+
       assert_page_has_no_errors!
       assert_equal edit_shift_path(@shift), current_path
       assert page.has_css?('.alert', text: I18n.t('view.shifts.edit_stale'))
-      
+
       fill_in 'shift_finish', with: ''
       assert page.has_css?('div#ui-datepicker-div')
 
       within 'div#ui-datepicker-div' do
         first(:css, '.ui-datepicker-current').click
       end
-    
+
       assert_difference 'Shift.stale.count', -1 do
         click_button I18n.t(
           'helpers.submit.update', model: Shift.model_name.human
@@ -26,23 +26,23 @@ class ShiftsTest < ActionDispatch::IntegrationTest
       end
     end
   end
-  
+
   test 'should not view another page with stale shift' do
     @shift = shifts(:open_shift)
     @shift.update_attributes(user_id: users(:administrator).id)
-    
+
     login expected_path: edit_shift_path(@shift)
 
     assert_page_has_no_errors!
     assert_equal edit_shift_path(@shift), current_path
     assert page.has_css?('.alert', text: I18n.t('view.shifts.edit_stale'))
-    
-    ['articles', 'bonuses', 'customers', 'documents', 'orders', 'payments', 
+
+    ['articles', 'bonuses', 'customers', 'documents', 'orders', 'payments',
       'print_job_types', 'tags', 'users'].each do |controller|
-      
+
       host = Capybara.app_host.gsub('http://', '')
       visit url_for controller: controller, action: :index, host: host
-     
+
       assert_page_has_no_errors!
       assert_equal edit_shift_path(@shift), current_path
       assert page.has_css?('.alert', text: I18n.t('view.shifts.edit_stale'))
@@ -51,24 +51,24 @@ class ShiftsTest < ActionDispatch::IntegrationTest
 
   test 'should view the own shifts' do
     login(:operator)
-        
+
     assert page.has_css?('.navbar')
 
     within '.navbar' do
       click_link users(:operator).username
     end
 
-    assert_page_has_no_errors!    
+    assert_page_has_no_errors!
     assert_equal user_path(users(:operator)), current_path
-   
+
     within '.form-actions' do
       click_link I18n.t('view.shifts.index_title')
-    end 
-    
+    end
+
     assert_page_has_no_errors!
     assert_equal user_shifts_path(users(:operator)), current_path
     assert page.has_no_content?(users(:administrator).name)
-    
+
     visit shifts_path
 
     assert_page_has_no_errors!
@@ -80,7 +80,7 @@ class ShiftsTest < ActionDispatch::IntegrationTest
     @shift = shifts(:current_shift)
 
     login
-    
+
     assert page.has_css?('.navbar')
 
     within '.navbar' do

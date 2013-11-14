@@ -1,9 +1,9 @@
 class ArticleLine < ApplicationModel
   has_paper_trail
-  
+
   # Atributos no persistentes
   attr_accessor :auto_article_name
-  
+
   # Atributos de solo lectura
   attr_readonly :id, :article_id, :units, :unit_price, :print_id
 

@@ -1,17 +1,17 @@
 <% f ||= build_print_file_line_form %>
 <% id = dynamic_object_id('print_job', f) %>
 <% name = dynamic_object_name(f) %>
-<div class="print_job file_line_item page-modifier price-modifier" 
-  id="<%= id %>" data-price="<%= f.object.price %>" 
+<div class="print_job file_line_item page-modifier price-modifier"
+  id="<%= id %>" data-price="<%= f.object.price %>"
   data-price-per-copy="<%= f.object.price_per_copy %>">
   <div class="row-fluid">
     <div class="span5">
       <%= f.object.file_name %>
     </div>
     <div class="span1">
-      <%= f.input :copies, label: false, input_html: { 
+      <%= f.input :copies, label: false, input_html: {
         maxlength: 5, value: f.object.copies, name: "#{name}[copies]",
-        class: 'price-modifier page-modifier span11', autocomplete: 'off' 
+        class: 'price-modifier page-modifier span11', autocomplete: 'off'
       } %>
     </div>
     <div class="span1">
@@ -36,7 +36,7 @@
       </span>
       <%= link_to_remove_nested_item(f) %>
       <%= f.input :lock_version, as: :hidden %>
-      <%= f.input :file_line_id, as: :hidden, 
+      <%= f.input :file_line_id, as: :hidden,
         input_html: { name: "#{name}[file_line_id]" } %>
     </div>
   </div>

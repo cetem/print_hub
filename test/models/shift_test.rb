@@ -74,7 +74,7 @@ class ShiftTest < ActiveSupport::TestCase
     assert_equal [error_message_from_model(@shift, :finish, :invalid_date)],
       @shift.errors[:finish]
   end
-  
+
   # Prueba que las validaciones del modelo se cumplan como es esperado
   test 'validates attributes boundaries' do
     @shift.finish = @shift.start - 1
@@ -97,7 +97,7 @@ class ShiftTest < ActiveSupport::TestCase
       )
     ], @shift.errors[:finish]
   end
-  
+
   # Prueba que no cierren un turno después del limite
   test 'validate finish the shift before the limit' do
     @shift.finish = @shift.finish_limit + 1.minute

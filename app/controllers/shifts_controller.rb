@@ -1,12 +1,12 @@
 class ShiftsController < ApplicationController
   before_action :require_admin_user, only: :destroy
   before_action :require_user, except: :destroy
-  
+
   # GET /shifts
   # GET /shifts.json
   def index
     @title = t('view.shifts.index_title')
-    
+
     @shifts = if params[:pay_pending_shifts_for_user_between]
       param = params[:pay_pending_shifts_for_user_between]
       start, finish = make_datetime_range(
@@ -78,7 +78,7 @@ class ShiftsController < ApplicationController
         format.json { render json: @shift.errors, status: :unprocessable_entity }
       end
     end
-    
+
   rescue ActiveRecord::StaleObjectError
     redirect_to edit_shift_url(@shift), alert: t('view.shifts.stale_object_error')
   end
@@ -117,7 +117,7 @@ class ShiftsController < ApplicationController
     permited_params = params.require(:shift).permit(
       :user_id, :start, :finish, :description, :paid, :lock_version
     )
-    
+
     permited_params[:user_id] = if @shift.try(:user_id)
       @shift.user_id
     elsif current_user.admin?

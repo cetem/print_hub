@@ -7,7 +7,7 @@ class CustomersController < ApplicationController
   before_action :require_customer, only: customer_actions
   before_action :require_no_customer_or_user, only: [:new, :create]
   before_action :require_no_customer, only: [:activate]
-  
+
   layout ->(controller) { controller.request.xhr? ? false : 'application' }
 
   # GET /customers
@@ -16,15 +16,15 @@ class CustomersController < ApplicationController
     @title = t('view.customers.index_title')
     @searchable = true
     @customers = Customer.order('lastname ASC')
-    
+
     if params[:q].present?
       query = params[:q].sanitized_for_text_query
       @query_terms = query.split(/\s+/).reject(&:blank?)
       @customers = @customers.full_text(@query_terms) unless @query_terms.empty?
     end
-    
+
     @customers = @customers.with_debt if params[:status] == 'with_debt'
-    
+
     @customers = @customers.paginate(
       page: params[:page], per_page: lines_per_page
     )
@@ -75,7 +75,7 @@ class CustomersController < ApplicationController
       if @customer.save
         url = current_user ? customer_url(@customer) : new_customer_session_url
         notice = current_user ? t('view.customers.correctly_created') : t('view.customers.correctly_registered')
-        
+
         format.html { redirect_to(url, notice: notice) }
         format.json  { render json: @customer, status: :created, location: @customer }
       else
@@ -117,22 +117,22 @@ class CustomersController < ApplicationController
       format.json  { head :ok }
     end
   end
-  
+
   # GET /customers/1/credit_detail
   def credit_detail
     @customer = Customer.find(params[:id])
-    
+
     respond_to do |format|
       format.html
     end
   end
-  
+
   # GET /customers/1/edit_profile
   def edit_profile
     @title = t('view.customers.edit_title')
     @customer = current_customer
   end
-  
+
   # PUT /customers/1/update_profile
   # PUT /customers/1/update_profile.json
   def update_profile
@@ -153,14 +153,14 @@ class CustomersController < ApplicationController
     flash.alert = t('view.customers.stale_object_error')
     redirect_to edit_profile_customer_url(@customer)
   end
-  
+
   # GET /customers/activate/token
   def activate
     @title = t('view.customers.activation_title')
     @customer = Customer.disable.find_using_perishable_token(
       params[:token], TOKEN_VALIDITY
     )
-    
+
     respond_to do |format|
       if @customer.try(:activate!)
         format.html { redirect_to(new_customer_session_url, notice: t('view.customers.correctly_activated')) }
@@ -171,12 +171,12 @@ class CustomersController < ApplicationController
       end
     end
   end
-  
+
   # PUT /customers/1/pay_off_debt
   def pay_off_debt
     @customer = Customer.find(params[:id])
     amounts = @customer.pay_off_debt
-    
+
     render partial: 'debt', locals: { amounts: amounts, cancelled: true }
   end
 
@@ -200,10 +200,10 @@ class CustomersController < ApplicationController
   end
 
   private
-  
+
   # Atributos permitidos
   def customer_params
-    current_user.try(:admin) ? 
+    current_user.try(:admin) ?
       customer_params_as_user : customer_params_as_default
   end
 

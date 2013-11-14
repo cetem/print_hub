@@ -14,15 +14,15 @@ class FilesController < ApplicationController
       else
         redirect_to @redirect_path, notice: t('view.documents.non_existent')
       end
-        
+
     elsif path.start_with?('avatar') && current_user
       send_file_with_headers(
-        file, non_existent_path: users_url, 
+        file, non_existent_path: users_url,
         non_existent_notice: t('view.users.non_existent_avatar')
       )
     elsif path.start_with?('customers_files')
       send_file_with_headers(
-        file, non_existent_path: orders_url, 
+        file, non_existent_path: orders_url,
         non_existent_notice: t('messages.customer_file_was_deleted')
       )
     end
@@ -30,15 +30,15 @@ class FilesController < ApplicationController
 
   def download_barcode
     document = Document.find_or_initialize_by_code(params[:code])
-    
+
     barcode = view_context.get_barcode_for document
     png_path = "#{TMP_BARCODE_IMAGES}/#{document.code}.png"
-    
+
     File.open(png_path, 'wb') { |f| f << barcode.to_png(xdim: 2, ydim: 2) }
-    
+
     send_file png_path, type: 'image/png'
   end
-  
+
   private
 
   def send_file_with_headers(file, options = {})
@@ -49,7 +49,7 @@ class FilesController < ApplicationController
 
     if file.exist? && file.file?
       mime_type = Mime::Type.lookup_by_extension(File.extname(file)[1..-1])
-      
+
       response.headers['Last-Modified'] = File.mtime(file).httpdate
       response.headers['Cache-Control'] = 'private, no-store'
 

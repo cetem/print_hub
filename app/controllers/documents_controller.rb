@@ -1,7 +1,7 @@
 class DocumentsController < ApplicationController
   before_action :require_user, :load_documents_for_printing
   helper_method :sort_column, :sort_direction
-  
+
   layout ->(controller) { controller.request.xhr? ? false : 'application' }
 
   # GET /documents
@@ -11,10 +11,10 @@ class DocumentsController < ApplicationController
     @searchable = true
     @tag = Tag.find(params[:tag_id]) if params[:tag_id]
     @documents = @tag ? @tag.documents : Document.all
-    
+
     unless params[:clear_documents_for_printing].blank?
       @documents_for_printing = session[:documents_for_printing].clear
-      
+
       redirect_to request.parameters.except(:clear_documents_for_printing)
     end
 
@@ -127,24 +127,24 @@ class DocumentsController < ApplicationController
   def barcode
     @document = Document.find_or_initialize_by_code(params[:id])
   end
-  
-    
+
+
   # POST /documents/1/add_to_next_print
   def add_to_next_print
     @document = Document.find(params[:id])
-    
+
     unless @documents_for_printing.include?(@document.id)
       session[:documents_for_printing] << @document.id
     end
   end
-  
+
   # DELETE /documents/1/remove_from_next_print
   def remove_from_next_print
     @document = Document.find(params[:id])
-    
+
     session[:documents_for_printing].delete(@document.id)
   end
-  
+
   # GET /documents/autocomplete_for_tag_name
   def autocomplete_for_tag_name
     query = params[:q].sanitized_for_text_query
@@ -159,19 +159,19 @@ class DocumentsController < ApplicationController
   end
 
   private
-  
+
   def load_documents_for_printing
     @documents_for_printing = (session[:documents_for_printing] ||= [])
   end
-  
+
   def sort_column
     %w[code name].include?(params[:sort]) ? params[:sort] : 'code'
   end
-  
+
   def sort_direction
     %w[asc desc].include?(params[:direction]) ? params[:direction] : default_direction
   end
-  
+
   def default_direction
     sort_column == 'code' ? 'desc' : 'asc'
   end

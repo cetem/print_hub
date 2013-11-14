@@ -3,7 +3,7 @@
     <div id="password_reset">
       <h3><%= t('view.password_resets.reset_title') %></h3>
       <p><%= t('view.password_resets.reset_subtitle') %></p>
-      
+
       <% url = password_resets_path %>
       <%= simple_form_for :customer, url: url, html: { method: :post } do |f| %>
         <div class="form-inputs">
@@ -11,7 +11,7 @@
           input_html: { name: 'email', autofocus: true, class: 'span4' } %>
         </div>
         <div class="form-actions">
-          <%= f.button :submit, t('view.password_resets.request_reset'), 
+          <%= f.button :submit, t('view.password_resets.request_reset'),
             class: 'btn-primary' %>
           <div class="pull-right">
             <%= link_to t('label.back'), new_customer_session_path %>

@@ -3,18 +3,18 @@
 <% #TODO arreglar id como se debe %>
 <% name = dynamic_object_name(file_line) %>
 <div class="order_line file_line_item" id="<%= "#{id}" %>"
-  data-price="<%= file_line.object.price %>" 
+  data-price="<%= file_line.object.price %>"
   data-odd-pages=""
   data-price-per-copy="<%= file_line.object.price_per_copy %>">
   <div class="row-fluid">
     <div class="span4">
       <%= file_line.object.file_name %>
-      <%= file_line.input :file_cache, as: :hidden, label: false, 
+      <%= file_line.input :file_cache, as: :hidden, label: false,
         input_html: { value: file_line.object.file_cache,
         name: "#{name}[file_cache]", id: "#{id}file_cache" } %>
     </div>
     <div class="span1">
-      <%= file_line.input :copies, label: false, 
+      <%= file_line.input :copies, label: false,
         input_html: { value: 1, maxlength: 5, autocomplete: 'off',
         name: "#{name}[copies]", id: "#{id}copies",
         class: 'price-modifier page-modifier span12' } %>

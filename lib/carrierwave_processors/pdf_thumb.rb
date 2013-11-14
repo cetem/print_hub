@@ -19,9 +19,9 @@ module CarrierWave
       thumb = RGhost::Convert.new(tmp_path)
       pages = thumb.to format, resolution: resolution, multipage: true,
         range: [page]
-      
+
       FileUtils.mv pages.first, current_path if pages.present?
-  
+
        # delete tmp file
        File.delete tmp_path
     end

@@ -1,6 +1,6 @@
 class PaymentsController < ApplicationController
   before_action :require_admin_user
-  
+
   # GET /payments
   # GET /payments.json
   def index

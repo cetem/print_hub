@@ -40,11 +40,11 @@ class DocumentsControllerTest < ActionController::TestCase
     assert_select '#unexpected_error', false
     assert_template 'documents/index'
   end
-  
+
   test 'should clear documents for printing' do
     UserSession.create(users(:administrator))
     session[:documents_for_printing] = [@document.id]
-    
+
     get :index, clear_documents_for_printing: true
     assert_redirected_to action: :index
     assert session[:documents_for_printing].blank?
@@ -148,7 +148,7 @@ class DocumentsControllerTest < ActionController::TestCase
     assert_select 'figcaption', @document.code.to_s
     assert_template 'documents/barcode'
   end
-  
+
   test 'should get barcode of new document' do
     UserSession.create(users(:administrator))
     get :barcode, id: '159321'
@@ -158,32 +158,32 @@ class DocumentsControllerTest < ActionController::TestCase
     assert_select 'figcaption', '159321'
     assert_template 'documents/barcode'
   end
-  
+
   test 'should add document to next print' do
     UserSession.create(users(:administrator))
     assert session[:documents_for_printing].blank?
-    
+
     i18n_scope = [:view, :documents, :remove_from_next_print]
-    
+
     xhr :post, :add_to_next_print, id: @document.to_param
     assert_response :success
     assert_match %r{#{I18n.t(:title, scope: i18n_scope)}}, @response.body
     assert session[:documents_for_printing].include?(@document.id)
   end
-  
+
   test 'should remove document from next print' do
     UserSession.create(users(:administrator))
     assert session[:documents_for_printing].blank?
-    
+
     session[:documents_for_printing] = [@document.id]
     i18n_scope = [:view, :documents, :add_to_next_print]
-    
+
     xhr :delete, :remove_from_next_print, id: @document.to_param
     assert_response :success
     assert_match %r{#{I18n.t(:title, scope: i18n_scope)}},
       @response.body
     assert !session[:documents_for_printing].include?(@document.id)
-    
+
     assert session[:documents_for_printing].blank?
   end
 
@@ -191,25 +191,25 @@ class DocumentsControllerTest < ActionController::TestCase
     UserSession.create(users(:administrator))
     get :autocomplete_for_tag_name, format: :json, q: 'note'
     assert_response :success
-    
+
     tags = ActiveSupport::JSON.decode(@response.body)
-    
+
     assert_equal 2, tags.size
     assert tags.all? { |t| t['label'].match /note/i }
 
     get :autocomplete_for_tag_name, format: :json, q: 'books'
     assert_response :success
-    
+
     tags = ActiveSupport::JSON.decode(@response.body)
-    
+
     assert_equal 1, tags.size
     assert tags.all? { |t| t['label'].match /books/i }
 
     get :autocomplete_for_tag_name, format: :json, q: 'boxyz'
     assert_response :success
-    
+
     tags = ActiveSupport::JSON.decode(@response.body)
-    
+
     assert tags.empty?
   end
 

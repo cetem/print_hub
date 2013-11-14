@@ -6,7 +6,7 @@ class ApplicationControllerTest < ActionController::TestCase
     @controller.send 'response=', @response
     @controller.send 'request=', @request
   end
-  
+
   test 'current customer session' do
     assert_nil @controller.send(:current_customer_session)
 
@@ -40,10 +40,10 @@ class ApplicationControllerTest < ActionController::TestCase
     assert_not_nil @controller.send(:current_user)
     assert_equal users(:administrator).id, @controller.send(:current_user).id
   end
-  
+
   test 'require customer' do
     @request.host = "#{APP_CONFIG['subdomains']['customers']}.printhub.local"
-    
+
     assert_equal false, @controller.send(:require_customer)
     assert_redirected_to new_customer_session_url
     assert_equal I18n.t('messages.must_be_logged_in'),
@@ -55,7 +55,7 @@ class ApplicationControllerTest < ActionController::TestCase
 
   test 'require no customer' do
     @request.host = "#{APP_CONFIG['subdomains']['customers']}.printhub.local"
-    
+
     assert @controller.send(:require_no_customer)
 
     CustomerSession.create(customers(:student))
@@ -84,7 +84,7 @@ class ApplicationControllerTest < ActionController::TestCase
     assert_equal I18n.t('messages.must_be_logged_out'),
       @controller.send(:flash)[:notice]
   end
-  
+
   test 'require customer or user with user' do
     assert_equal false, @controller.send(:require_customer_or_user)
     assert_redirected_to new_user_session_url
@@ -112,13 +112,13 @@ class ApplicationControllerTest < ActionController::TestCase
     assert @controller.send(:require_no_customer)
     assert_not_nil @controller.send(:check_logged_in)
     assert_redirected_to root_url
-    
+
     CustomerSession.create(customers(:student))
     assert_nil @controller.send(:check_logged_in)
     assert_not_nil @controller.send(:current_customer)
     assert_not_equal false, @controller.send(:require_customer)
   end
-  
+
   test 'require customer or user with customer' do
     @request.host = "#{APP_CONFIG['subdomains']['customers']}.printhub.local"
     assert_equal false, @controller.send(:require_customer_or_user)
@@ -129,7 +129,7 @@ class ApplicationControllerTest < ActionController::TestCase
     CustomerSession.create(customers(:student))
     assert_not_equal false, @controller.send(:require_customer_or_user)
   end
-  
+
   test 'require no customer or admin with admin' do
     assert_equal false, @controller.send(:require_no_customer_or_user)
     assert_redirected_to new_user_session_url
@@ -139,18 +139,18 @@ class ApplicationControllerTest < ActionController::TestCase
     UserSession.create(users(:administrator))
     assert_not_equal false, @controller.send(:require_no_customer_or_user)
   end
-  
+
   test 'require no customer or admin with customer' do
     @request.host = "#{APP_CONFIG['subdomains']['customers']}.printhub.local"
     assert @controller.send(:require_no_customer_or_user)
-    
+
     CustomerSession.create(customers(:student))
     assert !@controller.send(:require_no_customer_or_user)
     assert_redirected_to catalog_url
     assert_equal I18n.t('messages.must_be_logged_out'),
       @controller.send(:flash)[:notice]
   end
-  
+
   test 'require no customer or admin with user' do
     UserSession.create(users(:operator))
     assert @controller.send(:require_no_customer_or_user)
@@ -200,7 +200,7 @@ class ApplicationControllerTest < ActionController::TestCase
 
     assert user.close_pending_shifts!
     @controller.send(:session)[:has_an_open_shift] = false
-    
+
     assert_difference 'Shift.count' do
       assert @controller.send(:run_shift_tasks)
     end

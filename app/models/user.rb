@@ -10,7 +10,7 @@ class User < ApplicationModel
   # Scopes
   scope :actives, -> { where(enable: true) }
   scope :with_shifts_control, -> { where(not_shifted: false) }
-  
+
   # Alias de atributos
   alias_attribute :informal, :username
 
@@ -35,54 +35,54 @@ class User < ApplicationModel
   def to_s
     [self.name, self.last_name].join(' ')
   end
-  
+
   alias_method :label, :to_s
-  
+
   def as_json(options = nil)
    default_options = {
      only: [:id],
      methods: [:label, :informal, :admin]
    }
-   
+
    super(default_options.merge(options || {}))
   end
 
   def active?
     self.enable
   end
-  
+
   def self.find_by_username_or_email(login)
     User.find_by_username(login) || User.find_by_email(login)
   end
-  
+
   def start_shift!(start = Time.now)
     self.shifts.create!(start: start)
   end
-  
+
   def has_pending_shift?
     self.shifts.pending.present?
   end
-  
+
   def close_pending_shifts!
     self.shifts.pending.all?(&:close!)
   end
-  
+
   def has_stale_shift?
     self.shifts.stale.present?
   end
-  
+
   def stale_shift
     self.shifts.stale.first
   end
-  
+
   def last_shift_open?
     self.shifts.order('created_at DESC').first.pending?
   end
-  
+
   def self.full_text(query_terms)
     options = text_query(query_terms, 'username', 'name', 'last_name')
     conditions = [options[:query]]
-    
+
     where(
       conditions.map { |c| "(#{c})" }.join(' OR '), options[:parameters]
     ).order(options[:order])
@@ -103,7 +103,7 @@ class User < ApplicationModel
         @_image_dimensions[style_name] ||= [
           [img.columns, img.rows].join('x')
         ]
-      end 
+      end
     end
 
     @_image_dimensions[style_name] || {}

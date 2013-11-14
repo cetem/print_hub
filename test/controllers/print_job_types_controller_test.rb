@@ -22,7 +22,7 @@ class PrintJobTypesControllerTest < ActionController::TestCase
     assert_difference('PrintJobType.count') do
       post :create, print_job_type: {
         media: PrintJobType::MEDIA_TYPES[:a4],
-        name: 'Color text', 
+        name: 'Color text',
         price: 0.88,
         two_sided: true
       }

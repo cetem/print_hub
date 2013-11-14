@@ -8,13 +8,13 @@ class CreateSettings < ActiveRecord::Migration
 
       t.timestamps
     end
-    
+
     add_index :settings, [:thing_type, :thing_id, :var], :unique => true
   end
 
   def self.down
     remove_index :settings, :column => [:thing_type, :thing_id, :var]
-    
+
     drop_table :settings
   end
 end

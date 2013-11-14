@@ -3,7 +3,7 @@ require 'test_helper'
 class BonusesControllerTest < ActionController::TestCase
   test 'should get index' do
     UserSession.create(users(:administrator))
-    
+
     get :index
     assert_response :success
     assert_not_nil assigns(:bonuses)
@@ -11,11 +11,11 @@ class BonusesControllerTest < ActionController::TestCase
     assert_select '#unexpected_error', false
     assert_template 'bonuses/index'
   end
-  
+
   test 'should get customer index' do
     UserSession.create(users(:administrator))
     customer = customers(:student)
-    
+
     get :index, customer_id: customer.to_param
     assert_response :success
     assert_not_nil assigns(:bonuses)

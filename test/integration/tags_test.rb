@@ -26,11 +26,11 @@ class TagsTest < ActionDispatch::IntegrationTest
         sleep 0.5
       end
     end
-    
+
     assert_page_has_no_errors!
     assert_equal tags_path, current_path
   end
-   
+
   test 'should create tags into tags' do
     login
 

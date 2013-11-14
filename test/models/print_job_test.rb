@@ -194,7 +194,7 @@ class PrintJobTest < ActiveSupport::TestCase
     assert_equal [error_message_from_model(@print_job, :price_per_copy,
         :greater_than_or_equal_to, count: 0)
     ], @print_job.errors[:price_per_copy]
-    
+
     @print_job.reload
     @print_job.copies = '2147483648'
     @print_job.pages = '2147483648'
@@ -351,16 +351,16 @@ class PrintJobTest < ActiveSupport::TestCase
     assert_equal 11, @print_job.range_pages
     assert_equal '3.85', '%.2f' % @print_job.price
   end
-  
+
   test 'full document' do
     assert @print_job.full_document?
-    
+
     @print_job.range = "1-#{@print_job.pages - 1}"
-    
+
     assert !@print_job.full_document?
-    
+
     @print_job.range = "1-#{@print_job.pages}"
-    
+
     assert @print_job.full_document?
   end
 
@@ -368,43 +368,43 @@ class PrintJobTest < ActiveSupport::TestCase
     assert_difference 'Cups.all_jobs(@printer).keys.sort.last' do
       @print_job.send_to_print(@printer)
     end
-    
+
     assert_equal @print_job.copies, @print_job.printed_copies
   end
-  
+
   test 'not print if there is stock available' do
     @print_job.document.stock = @print_job.copies
-    
+
     assert_no_difference 'Cups.all_jobs(@printer).keys.sort.last' do
       assert_difference '@print_job.document.stock', -@print_job.copies do
         @print_job.send_to_print(@printer)
       end
     end
-    
+
     assert_equal 0, @print_job.printed_copies
   end
-  
+
   test 'print if the stock is not enough' do
     @print_job.document.stock = @print_job.copies - 1
-    
+
     assert_difference 'Cups.all_jobs(@printer).keys.sort.last' do
       @print_job.send_to_print(@printer)
     end
-    
+
     assert_equal 0, @print_job.document.stock
     assert_equal 1, @print_job.printed_copies
   end
-  
+
   test 'print if there is stock but the range is set' do
     @print_job.document.stock = @print_job.copies
     @print_job.range = '1,2'
-    
+
     assert_difference 'Cups.all_jobs(@printer).keys.sort.last' do
       assert_no_difference '@print_job.document.stock' do
         @print_job.send_to_print(@printer)
       end
     end
-    
+
     assert_equal @print_job.copies, @print_job.document.stock
     assert_equal @print_job.copies, @print_job.printed_copies
   end
@@ -416,7 +416,7 @@ class PrintJobTest < ActiveSupport::TestCase
 
     assert_difference 'Cups.all_jobs(@printer).keys.sort.last || 0' do
       @print_job.job_hold_until = 'indefinite'
-      
+
       @print_job.send_to_print(@printer)
     end
 
@@ -434,7 +434,7 @@ class PrintJobTest < ActiveSupport::TestCase
     new_canceled_count = Cups.all_jobs(@printer).select do |_, j|
       j[:state] == :cancelled
     end.size
-    
+
     assert_equal canceled_count, new_canceled_count - 1
   end
 

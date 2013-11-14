@@ -3,7 +3,7 @@
   <div class="page-header">
     <h2><%= @document %></h2>
   </div>
-  
+
   <div class="row-fluid">
     <div class="span8">
       <dl class="dl-horizontal">
@@ -23,7 +23,7 @@
         <dd><%= link_to(
           t('label.download'), @document.file.url
         ) if @document.file? %></dd>
-        
+
         <dt><%= t('view.documents.barcode') %>:</dt>
         <dd><%= document_link_to_barcode @document.code %></dd>
       </dl>
@@ -48,7 +48,7 @@
       </div>
     </div>
   </div>
-  
+
   <% if request.xhr? %>
     <nav class="form-actions">
       <%= link_to t('label.show'), document_path(@document) %> |

@@ -105,7 +105,7 @@ class OrderLineTest < ActiveSupport::TestCase
         @order_line, :price_per_copy, :greater_than_or_equal_to, count: 0
       )
     ], @order_line.errors[:price_per_copy]
-    
+
     @order_line.reload
     @order_line.copies = '2147483648'
     assert @order_line.invalid?
@@ -116,7 +116,7 @@ class OrderLineTest < ActiveSupport::TestCase
       )
     ], @order_line.errors[:copies]
   end
-  
+
   test 'price' do
     @order_line.copies = 35
     assert @order_line.valid?

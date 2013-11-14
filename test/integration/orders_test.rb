@@ -3,7 +3,7 @@ require 'test_helper'
 class OrdersTest < ActionDispatch::IntegrationTest
   test 'should print an order' do
     login
-    
+
     assert_page_has_no_errors!
     assert_equal prints_path, current_path
 
@@ -23,7 +23,7 @@ class OrdersTest < ActionDispatch::IntegrationTest
     show_href = nil
     link_with_show_title = "a[data-original-title='#{I18n.t('label.show')}']"
     assert page.has_css?(link_with_show_title)
-    
+
     within 'table tbody' do
       show_href = first(:css, link_with_show_title)[:href]
       first(:css, link_with_show_title).click
@@ -32,7 +32,7 @@ class OrdersTest < ActionDispatch::IntegrationTest
     id = show_href.match(/\/(\d+)/)[1]
     order = Order.find(id.to_i)
     assert order.pending?
-    
+
     assert_page_has_no_errors!
     assert_equal order_path(id), current_path
 
@@ -134,10 +134,10 @@ class OrdersTest < ActionDispatch::IntegrationTest
       '.alert', text: I18n.t('view.prints.correctly_created')
     )
   end
-  
+
   test 'should cancel an order' do
     login
-    
+
     assert_page_has_no_errors!
     assert_equal prints_path, current_path
 
@@ -166,17 +166,17 @@ class OrdersTest < ActionDispatch::IntegrationTest
     id = show_href.match(/\/(\d+)/)[1]
     order = Order.find(id.to_i)
     assert order.pending?
-    
+
     assert_page_has_no_errors!
     assert_equal order_path(id), current_path
-    
+
     within '.form-actions' do
       assert_difference 'Order.cancelled.count' do
         click_link I18n.t('view.orders.cancel')
         sleep(1)
         page.driver.browser.switch_to.alert.accept
         sleep(1)
-      end 
+      end
     end
 
     assert_page_has_no_errors!

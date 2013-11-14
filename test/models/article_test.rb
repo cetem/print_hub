@@ -104,7 +104,7 @@ class ArticleTest < ActiveSupport::TestCase
         :greater_than_or_equal_to, count: 0)], @article.errors[:price]
     assert_equal [error_message_from_model(@article, :code, :greater_than,
         count: 0)], @article.errors[:code]
-    
+
     @article.reload
     @article.code = '2147483648'
     assert @article.invalid?
@@ -120,15 +120,15 @@ class ArticleTest < ActiveSupport::TestCase
     assert_equal [error_message_from_model(@article, :code, :not_an_integer)],
       @article.errors[:code]
   end
-  
+
   test 'full text search' do
     articles = Article.full_text(['Ringed'])
-    
+
     assert_equal 1, articles.size
     assert_equal 'Ringed', articles.first.name
-    
+
     articles = Article.full_text(['111'])
-    
+
     assert_equal 1, articles.size
     assert_equal 111, articles.first.code
   end

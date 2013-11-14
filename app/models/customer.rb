@@ -7,7 +7,7 @@ class Customer < ApplicationModel
     c.validates_length_of_email_field_options = { maximum: 255 }
     c.crypto_provider = Authlogic::CryptoProviders::Sha512
   end
-  
+
   KINDS = {
     normal: 'n',
     reliable: 'r'
@@ -30,7 +30,7 @@ class Customer < ApplicationModel
   before_create :build_monthly_bonus, :send_welcome_email!
   before_update :must_be_reactivate?
   before_destroy :has_no_orders?
-  
+
   # Restricciones
   validates :name, :identification, presence: true
   validates :identification, uniqueness: true, allow_nil: true,
@@ -52,7 +52,7 @@ class Customer < ApplicationModel
   has_many :deposits, inverse_of: :customer, dependent: :destroy,
     autosave: true
   has_many :print_jobs, through: :prints
-  
+
   accepts_nested_attributes_for :bonuses, allow_destroy: true,
     reject_if: :reject_credits
   accepts_nested_attributes_for :deposits, allow_destroy: true,
@@ -67,41 +67,41 @@ class Customer < ApplicationModel
   def to_s
     [self.name, self.lastname].compact.join(' ')
   end
-  
+
   alias_method :label, :to_s
-  
+
   def as_json(options = nil)
     default_options = {
       only: [:id],
       methods: [:label, :informal, :free_credit, :kind]
     }
-    
+
     super(default_options.merge(options || {}))
   end
 
   def self.find_by_activated_email(email)
     Customer.active.where(email: email).first
   end
-  
+
   def reject_credits(attributes)
     attributes['amount'].to_f <= 0
   end
-  
+
   def activate!
     self.enable = true
     self.save
   end
-  
+
   def current_bonuses
     self.bonuses.select { |b| b.new_record? || b.marked_for_destruction? } |
       self.bonuses.valids
   end
-  
+
   def current_deposits
     self.deposits.select { |d| d.new_record? || d.marked_for_destruction? } |
       self.deposits.valids
   end
-  
+
   def add_bonus(amount, valid_until = nil)
     self.bonuses.build(amount: amount, valid_until: valid_until)
   end
@@ -114,22 +114,22 @@ class Customer < ApplicationModel
       )
     end
   end
-  
+
   def send_welcome_email!
     Notifications.signup(self).deliver
   end
-  
+
   def must_be_reactivate?
     if self.email_changed?
       self.enable = false
       Notifications.reactivation(self).deliver
     end
   end
-  
+
   def deliver_password_reset_instructions!
     Notifications.forgot_password(self).deliver
   end
-  
+
   def has_no_orders?
     self.orders.empty?
   end
@@ -137,11 +137,11 @@ class Customer < ApplicationModel
   def free_credit
     self.credits.valids.sum('remaining')
   end
-  
+
   def free_credit_minus_pendings
     self.free_credit - self.orders.pending.to_a.sum(&:price)
   end
-  
+
   def can_afford?(price)
     self.free_credit_minus_pendings >= (price * CREDIT_THRESHOLD)
   end
@@ -150,7 +150,7 @@ class Customer < ApplicationModel
     if self.valid_password?(password) || options[:avoid_password_check]
       to_pay = BigDecimal.new(amount.to_s)
       available_credits = self.credits.valids.order('valid_until DESC').to_a
-      
+
       while to_pay > 0 && available_credits.size > 0
         credit = available_credits.shift
         remaining = credit.remaining
@@ -162,10 +162,10 @@ class Customer < ApplicationModel
           credit.remaining = 0
           to_pay -= remaining
         end
-        
+
         credit.save!
       end
-      
+
       self.save!
 
       to_pay
@@ -177,18 +177,18 @@ class Customer < ApplicationModel
   def to_pay_amounts_by_month(date)
     date = Date.parse(date) unless date.is_a? Date
 
-    print_jobs_current_total_prices(     
+    print_jobs_current_total_prices(
       self.print_jobs.pay_later.created_at_month(date)
     )
   end
-  
+
   def months_to_pay
     self.print_jobs.pay_later.order('created_at ASC').inject([]) do |date, p|
       month_year = [p.created_at.month, p.created_at.year]
       date.include?(month_year) ? date : date + [month_year]
     end
   end
-    
+
   def print_jobs_current_total_prices(customer_print_jobs)
     amount = { total_count: 0, total_price: 0, types: [] }
 
@@ -218,7 +218,7 @@ class Customer < ApplicationModel
   def to_pay_amounts
     print_jobs_current_total_prices(self.print_jobs.pay_later)
   end
-  
+
   def pay_month_debt(date)
     date = Date.parse(date) unless date.is_a? Date
 
@@ -236,21 +236,21 @@ class Customer < ApplicationModel
   def pay_off_debt
     Print.transaction do
       begin
-        self.prints.pay_later.each do |p| 
+        self.prints.pay_later.each do |p|
           p.pay_print
         end
       rescue
         raise ActiveRecord::Rollback
       end
     end
-    
+
     self.to_pay_amounts
   end
 
   KINDS.each do |kind, value|
-    define_method("#{kind}?") { self.kind == value } 
+    define_method("#{kind}?") { self.kind == value }
   end
-  
+
   def self.full_text(query_terms)
     options = text_query(query_terms, 'identification', 'name', 'lastname')
     conditions = [options[:query]]
@@ -273,12 +273,12 @@ class Customer < ApplicationModel
       end
     end
   end
-  
+
   def self.destroy_inactive_accounts
     Customer.transaction do
       begin
         customers = Customer.disable.where('updated_at <= ?', 1.day.ago.to_date)
-        
+
         customers.find_each do |customer|
           if customer.orders.count == 0
             raise "#{customer} can not be destroyed" unless customer.destroy

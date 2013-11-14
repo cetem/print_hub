@@ -31,17 +31,17 @@ module DocumentsHelper
   def show_document_media_text(media)
     t("view.print_job_types.media_type.#{PrintJobType::MEDIA_TYPES.invert[media]}")
   end
-  
+
   def show_document_barcode(document)
     barcode = get_barcode_for document
     outputter = barcode.outputter_for(:to_svg)
-    
+
     outputter.title = document.to_s
     outputter.xdim = outputter.ydim = 3
-    
+
     raw outputter.to_svg.split("\n")[1..-1].join("\n")
   end
-  
+
   def document_link_to_barcode(code)
     out = []
     out << link_to(
@@ -52,13 +52,13 @@ module DocumentsHelper
       t('label.show'), barcode_document_path(code),
       class: 'show_barcode', remote: true, data: { type: 'html' }
     )
-    
+
     raw out.join(' | ') << content_tag(:div, nil, class: 'barcode_container')
   end
-  
+
   def document_link_for_use_in_next_print(document)
     content = ''
-    
+
     if @documents_for_printing.include?(document.id)
       content << link_to(
         '&#xe009;'.html_safe,
@@ -74,11 +74,11 @@ module DocumentsHelper
         remote: true, method: :post, class: 'add_link iconic'
       )
     end
-    
+
     content_tag :span, raw(content),
       id: "document_for_use_in_next_print_#{document.id}"
   end
-  
+
   def get_barcode_for(document)
     Barby::QrCode.new(
       add_to_order_by_code_catalog_url(

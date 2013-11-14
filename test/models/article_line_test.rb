@@ -88,7 +88,7 @@ class ArticleLineTest < ActiveSupport::TestCase
     assert_equal [
       error_message_from_model(@article_line, :units, :greater_than, count: 0)
     ], @article_line.errors[:units]
-    
+
     @article_line.reload
     @article_line.units = '2147483648'
     assert @article_line.invalid?

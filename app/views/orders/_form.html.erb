@@ -59,13 +59,13 @@
     </div>
 
     <%= render 'total', order: @order %>
-    
+
     <hr />
-    
+
     <div class="row-fluid">
       <div class="span5">
         <%= link_to t('view.orders.notes_link'), '#',
-          data: { target: '#notes', action: 'show' } %>    
+          data: { target: '#notes', action: 'show' } %>
         <div id="notes" style="display: none;">
           <%= f.input :notes, input_html: { autofocus: true, rows: 4 } %>
         </div>
@@ -74,7 +74,7 @@
   </div>
 
   <%= render 'printed_footer' %>
-  
+
   <div class="form-actions">
     <div class="pull-right"><%= yield :form_actions %></div>
     <%= f.input :lock_version, as: :hidden %>

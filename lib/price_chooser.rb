@@ -1,38 +1,38 @@
 class PriceChooser
   include ActionView::Helpers::NumberHelper
-  
+
   attr_accessor :copies
-  
+
   def initialize(raw_setting, copies = 0)
     @raw_setting, @copies = raw_setting, copies
   end
-  
+
   def price
     BigDecimal.new(
       parse.select { |cond, price| eval(cond % { c: @copies }) }.last[1]
     )
   end
-  
+
   def self.choose(*args)
     options = args.extract_options!
     total_copies = options[:copies] || 0
     price = PrintJobType.find(options[:type]).price
-    
+
     self.new(price, total_copies).price
   end
-  
+
   def parse
     @raw_setting.split(/\s*;\s*/).map do |rule|
       splited_rule = rule.split(/\s*@\s*/)
       condition = splited_rule.length > 1 ? splited_rule.shift : '%{c}'
       price = splited_rule.first
-      
+
       condition.insert(0, '%{c} ') unless condition.include?('%{c}')
-      
+
       [condition, price]
     end
   end
-  
+
   def self.humanize
     PrintJobType.all.map do |print_job_type|
       type_price = self.new(print_job_type.price)

@@ -1,9 +1,9 @@
 class Tag < ApplicationModel
   include Comparable
 
-  has_paper_trail 
+  has_paper_trail
   acts_as_nested_set
-  
+
   # Scopes
   scope :publicly_visible, -> { where(private: false) }
   scope :with_documents_or_children,  -> { where(
@@ -17,7 +17,7 @@ class Tag < ApplicationModel
   before_save :update_related_documents
   before_destroy :remove_from_related_documents, :update_children_count
   after_create :update_children_count
-  
+
   # Restricciones
   validates :name, presence: true
   validates :name, uniqueness: { scope: :parent_id }, allow_nil: true,
@@ -31,15 +31,15 @@ class Tag < ApplicationModel
   def to_s
     ([self] + self.ancestors.reverse).map(&:name).reverse.join(' | ')
   end
-  
+
   alias_method :label, :to_s
-  
+
   def as_json(options = nil)
     default_options = {
       only: [:id],
       methods: [:label]
     }
-    
+
     super(default_options.merge(options || {}))
   end
 
@@ -66,7 +66,7 @@ class Tag < ApplicationModel
       self.parent.update_attributes!(children_count: self.parent.children.count)
     end
   end
-  
+
   def remove_from_related_documents
     self.documents.each do |d|
       d.update_tag_path nil, self
@@ -80,7 +80,7 @@ class Tag < ApplicationModel
   def self.full_text(query_terms)
     options = text_query(query_terms, 'name')
     conditions = [options[:query]]
-    
+
     where(
       conditions.map { |c| "(#{c})" }.join(' OR '), options[:parameters]
     ).order(options[:order])

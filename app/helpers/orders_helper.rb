@@ -2,10 +2,10 @@ module OrdersHelper
   def custom_order_path(order)
     current_customer ? order : order_path(order, type: order_type)
   end
-  
+
   def nav_links_in_show_order(order)
     out = []
-    
+
     if current_customer
       out << link_to_if(order.pending?, t('label.edit'), edit_order_path(order))
       out << link_to_if(order.pending?, t('view.orders.cancel'), order,
@@ -22,10 +22,10 @@ module OrdersHelper
       )
       out << link_to(t('label.list'), orders_path(type: order_type))
     end
-    
+
     raw out.join(' | ')
   end
-  
+
   def show_orders_table_caption
     unless current_customer
       content_tag(:caption,
@@ -33,7 +33,7 @@ module OrdersHelper
       )
     end
   end
-  
+
   def orders_text
     count = Order.pending_for_print_count
     classes = ['badge']
@@ -41,14 +41,14 @@ module OrdersHelper
     count_tag = content_tag(
       :span, count, id: 'orders_count', class: classes.join(' ')
     )
-    
+
     raw("#{t('menu.orders')} #{count_tag}")
   end
 
   def build_order_file_line_form
     form = nil
 
-    simple_fields_for(@order) do |f| 
+    simple_fields_for(@order) do |f|
       f.simple_fields_for(:file_lines) do |of|
         form = of
       end

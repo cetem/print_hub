@@ -22,9 +22,9 @@
       </div>
     <% end %>
   </div>
-  
+
   <br />
-  
+
   <% if @order.notes.present? %>
     <h4><%= Order.human_attribute_name 'notes' %></h4>
     <%= simple_format @order.notes %>

@@ -24,7 +24,7 @@ class PrintTest < ActiveSupport::TestCase
   test 'create' do
     counts = ['Print.count', 'Payment.count','ArticleLine.count',
       'Cups.all_jobs(@printer).keys.sort.last']
-    
+
     assert_difference counts do
       assert_difference 'PrintJob.count', 2 do
         @print = Print.create({
@@ -77,11 +77,11 @@ class PrintTest < ActiveSupport::TestCase
     assert_equal '36.89', payment.paid.to_s
     assert_equal false, @print.pending_payment?
   end
-  
+
   # Prueba la creación de una impresión
   test 'create with one article only' do
     counts = ['Print.count', 'Payment.count', 'ArticleLine.count']
-    
+
     assert_difference counts do
       @print = Print.create({
         printer: @printer,
@@ -194,12 +194,12 @@ class PrintTest < ActiveSupport::TestCase
     assert_equal '35.0', payment.paid.to_s
     assert_equal false, @print.pending_payment?
   end
-  
+
   # Prueba la creación de una impresión de documentos con existencia suficiente
   test 'create with stock' do
     document = documents(:book_with_stock)
     original_stock = document.stock
-    
+
     assert_difference ['Print.count', 'Payment.count'] do
       assert_difference 'PrintJob.count', 2 do
         assert_no_difference 'Cups.all_jobs(@printer).keys.sort.last' do
@@ -305,7 +305,7 @@ class PrintTest < ActiveSupport::TestCase
     assert_equal '962.21',
       Customer.find(customers(:student).id).free_credit.to_s
   end
-  
+
   test 'create with free credit and wrong password' do
     counts = ['Print.count', 'PrintJob.count', 'Payment.count',
       'Cups.all_jobs(@printer).keys.sort.last', 'ArticleLine.count']
@@ -336,7 +336,7 @@ class PrintTest < ActiveSupport::TestCase
         }
       })
     end
-    
+
     assert_equal [error_message_from_model(@print, :credit_password, :invalid)],
       @print.errors[:credit_password]
   end
@@ -402,7 +402,7 @@ class PrintTest < ActiveSupport::TestCase
     assert_equal '3101.79', cash_payment.amount.to_s
     assert_equal '3101.79', cash_payment.paid.to_s
   end
-  
+
   # Prueba la creación de una impresión con documentos incluidos
   test 'create with included documents' do
     assert_difference ['Print.count', 'PrintJob.count', 'Payment.count'] do
@@ -434,12 +434,12 @@ class PrintTest < ActiveSupport::TestCase
     assert_equal false, @print.pending_payment?
     assert_equal documents(:math_book).id, @print.print_jobs.first.document_id
   end
-  
+
   # Prueba la creación de una impresión a partir de un pedido
   test 'create with order and mark it as completed' do
     order = Order.find(orders(:for_tomorrow).id)
     assert order.pending?
-    
+
     assert_difference ['Print.count', 'Payment.count'] do
       assert_difference 'PrintJob.count', 3 do
         assert_no_difference 'Cups.all_jobs(@printer).keys.sort.last' do
@@ -474,7 +474,7 @@ class PrintTest < ActiveSupport::TestCase
       @print.print_jobs.map(&:file_line_id).compact.sort
     assert order.reload.completed?
   end
-  
+
   # Prueba la creación de una impresión que evita imprimir =)
   test 'create with pay later' do
     assert_difference ['Print.count',
@@ -523,7 +523,7 @@ class PrintTest < ActiveSupport::TestCase
   # Prueba de actualización de una impresión
   test 'can not update' do
     counts = ['Print.count', 'Cups.all_jobs(@printer).keys.sort.last']
-    
+
     assert_not_equal customers(:teacher).id, @print.customer_id
 
     assert_no_difference counts do
@@ -579,10 +579,10 @@ class PrintTest < ActiveSupport::TestCase
   # Prueba que las validaciones del modelo se cumplan como es esperado
   test 'validates attributes boundaries' do
     print = build_new_print_from(@print)
-    
+
     print.printer = nil
     print.scheduled_at = 2.seconds.ago
-    
+
     assert print.invalid?
     assert_equal 1, print.errors.count
     assert_equal [
@@ -603,7 +603,7 @@ class PrintTest < ActiveSupport::TestCase
       error_message_from_model(@print, :printer, :too_long, count: 255)
     ].sort, @print.errors[:printer].sort
   end
-  
+
   # Prueba que las validaciones del modelo se cumplan como es esperado
   test 'validates included attributes' do
     @print.status = Print::STATUS.values.sort.last.next
@@ -612,7 +612,7 @@ class PrintTest < ActiveSupport::TestCase
     assert_equal [error_message_from_model(@print, :status, :inclusion)],
       @print.errors[:status]
   end
-  
+
   test 'validates payments' do
     @print.payments.build(amount: '10.00')
     assert @print.invalid?
@@ -622,7 +622,7 @@ class PrintTest < ActiveSupport::TestCase
         @print, :payments, :invalid, price: '42.180', payment: '52.180'
       )
     ], @print.errors[:payments]
-    
+
     # Sólo se valida cuando el pago está pendiente
     @print.paid!
     assert @print.valid?
@@ -643,33 +643,33 @@ class PrintTest < ActiveSupport::TestCase
     new_print.scheduled_at = nil
     assert new_print.valid?
   end
-  
+
   test 'current print jobs' do
     assert_difference '@print.current_print_jobs.size', -1 do
       @print.current_print_jobs.first.mark_for_destruction
     end
   end
-  
+
   test 'current article lines' do
     assert_difference '@print.current_article_lines.size', -1 do
       @print.current_article_lines.first.mark_for_destruction
     end
   end
-  
+
   test 'revoke' do
     UserSession.create(users(:administrator))
-    
+
     assert_no_difference('Bonus.count') { assert @print.revoke! }
-    
+
     assert @print.reload.revoked
     assert @print.payments.reload.all?(&:revoked)
   end
-  
+
   test 'can not revoke if is not admin' do
     UserSession.create(users(:operator))
-    
+
     assert_no_difference('Bonus.count') { assert_nil @print.revoke! }
-    
+
     assert_equal false, @print.reload.revoked
   end
 
@@ -690,13 +690,13 @@ class PrintTest < ActiveSupport::TestCase
       print.customer.bonuses.to_a.sum(&:remaining).to_s
     )
   end
-  
+
   test 'pay print' do
     print = prints(:math_print_to_pay_later_1)
     original_price = print.price
-    
+
     print.pay_print
-    
+
     assert print.paid?
     assert_equal 1, print.payments.size
     assert print.payments.first.cash?
@@ -710,12 +710,12 @@ class PrintTest < ActiveSupport::TestCase
     assert @print.price > 0
     assert_equal @print.price, price
   end
-  
+
   test 'total pages' do
     total_pages = @print.print_jobs.inject(0) do |t, j|
       t + j.copies * j.range_pages
     end
-    
+
     assert total_pages > 0
     assert_equal total_pages, @print.total_pages_by_type(print_job_types(:a4))
   end
@@ -740,7 +740,7 @@ class PrintTest < ActiveSupport::TestCase
   test 'pending payment' do
     assert @print.has_pending_payment?
     assert @print.pending_payment?
-    
+
     assert @print.update_attributes(
       payments_attributes: {
         '0' => {
@@ -763,7 +763,7 @@ class PrintTest < ActiveSupport::TestCase
   end
 
   test 'related by customer' do
-    first_print, second_print = 
+    first_print, second_print =
       @print.customer.prints.order(:created_at).limit(2)
 
     assert_equal second_print, first_print.related_by_customer('next')
@@ -790,7 +790,7 @@ class PrintTest < ActiveSupport::TestCase
     end
 
     new_print.payments.build(amount: new_print.price)
-    
+
     new_print
   end
 end

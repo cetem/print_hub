@@ -23,7 +23,7 @@ class StatsControllerTest < ActionController::TestCase
     assert_select '#unexpected_error', false
     assert_template 'stats/printers'
   end
-  
+
   test 'should get filtered printers stats with 0 printed pages' do
     UserSession.create(users(:administrator))
     get :printers, interval: {
@@ -37,7 +37,7 @@ class StatsControllerTest < ActionController::TestCase
     assert_select '#unexpected_error', false
     assert_template 'stats/printers'
   end
-  
+
   test 'should get filtered printers stats in csv' do
     UserSession.create(users(:administrator))
     get :printers, format: :csv, interval: {
@@ -50,7 +50,7 @@ class StatsControllerTest < ActionController::TestCase
     assert_equal 2, response.size
     assert_equal PrintJob.sum(:printed_pages), response.sum {|row| row[1].to_i}
   end
-  
+
   test 'should get users stats' do
     UserSession.create(users(:administrator))
     get :users
@@ -87,7 +87,7 @@ class StatsControllerTest < ActionController::TestCase
     assert_select '#unexpected_error', false
     assert_template 'stats/users'
   end
-  
+
   test 'should get filtered users stats in csv' do
     UserSession.create(users(:administrator))
     get :users, format: :csv, interval: {
@@ -100,7 +100,7 @@ class StatsControllerTest < ActionController::TestCase
     assert_equal 2, response.size
     assert_equal PrintJob.sum(:printed_pages), response.sum {|row| row[1].to_i}
   end
-  
+
   test 'should get prints stats' do
     UserSession.create(users(:administrator))
     get :prints
@@ -137,7 +137,7 @@ class StatsControllerTest < ActionController::TestCase
     assert_select '#unexpected_error', false
     assert_template 'stats/prints'
   end
-  
+
   test 'should get filtered prints stats in csv' do
     UserSession.create(users(:administrator))
     get :prints, format: :csv, interval: {

@@ -4,7 +4,7 @@
   <div class="span12">
     <%= simple_form_for @feedback, url: update_feedback_path(@feedback), remote: true do |f| %>
       <%= f.input :comments, label: false, input_html: { cols: 35, rows: 3, class: 'span11' } %>
-      <%= f.button :submit, t('view.feedbacks.submit'), class: 'btn-primary' %> 
+      <%= f.button :submit, t('view.feedbacks.submit'), class: 'btn-primary' %>
     <% end %>
   </div>
 </div>

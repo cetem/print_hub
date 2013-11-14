@@ -25,12 +25,12 @@ class UserSessionsControllerTest < ActionController::TestCase
     assert_equal @user, user_session.user
     assert_redirected_to prints_url
   end
-  
+
   test 'should create user session with pending shift' do
     @user.start_shift!
 
     assert !session[:has_an_open_shift]
-    
+
     assert_no_difference '@user.shifts.count' do
       post :create, user_session: {
         username: @user.username,
@@ -44,12 +44,12 @@ class UserSessionsControllerTest < ActionController::TestCase
     assert_equal @user, user_session.user
     assert_redirected_to prints_url
   end
-  
+
   test 'should create user session with stale shift' do
     user = users(:operator_with_open_shift)
 
     assert !session[:has_an_open_shift]
-    
+
     assert_no_difference '@user.shifts.count' do
       post :create, user_session: {
         username: user.username,
@@ -62,7 +62,7 @@ class UserSessionsControllerTest < ActionController::TestCase
     assert session[:has_an_open_shift]
     assert_redirected_to edit_shift_url(shifts(:open_shift))
   end
-  
+
   test 'should not create a user session' do
     assert_no_difference '@user.shifts.count' do
       post :create, user_session: {
@@ -80,7 +80,7 @@ class UserSessionsControllerTest < ActionController::TestCase
 
   test 'should not create a user session with a disabled user' do
     disabled_user = users(:disabled_operator)
-    
+
     assert_no_difference 'disabled_user.shifts.count' do
       post :create, user_session: {
         username: disabled_user.username,
@@ -113,14 +113,14 @@ class UserSessionsControllerTest < ActionController::TestCase
 
   test 'should exit whitout close the shift' do
     UserSession.create(@user)
-    
+
     assert_equal 1, @user.shifts.pending.size
-    
+
     delete :destroy
-    
+
     assert_equal 1, @user.reload.shifts.pending.size
     assert_nil @user.shifts.pending.last.finish
-    
+
     assert_nil UserSession.find
     assert_redirected_to new_user_session_url
   end

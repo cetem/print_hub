@@ -3,7 +3,7 @@ class FileLine < ActiveRecord::Base
   mount_uploader :file, CustomersFilesUploader
 
   before_save :extract_page_count
-  
+
   # Restricciones
   validates :copies, :price_per_copy, presence: true
   validates :copies, allow_nil: true, allow_blank: true,

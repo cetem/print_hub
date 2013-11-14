@@ -1,13 +1,13 @@
 class Print < ApplicationModel
   has_paper_trail
-  
+
   # Constantes
   STATUS = {
     paid: 'P',
     pending_payment: 'X',
     pay_later: 'L'
   }.with_indifferent_access.freeze
-  
+
   # Callbacks
   before_validation :remove_unnecessary_payments
   before_save :mark_order_as_completed, :update_customer_credit, if: :new_record?
@@ -25,7 +25,7 @@ class Print < ApplicationModel
     '(printer = :blank OR printer IS NULL) AND scheduled_at IS NOT NULL',
     blank: ''
   ) }
-  
+
   # Atributos no persistentes
   attr_accessor :auto_customer_name, :avoid_printing, :include_documents,
     :credit_password, :pay_later
@@ -77,14 +77,14 @@ class Print < ApplicationModel
     super(attributes)
 
     self.user = UserSession.find.try(:user) || self.user rescue self.user
-    
+
     self.pay_later! if self.pay_later == '1' || self.pay_later == true
     self.status ||= STATUS[:pending_payment]
     keys = ['copies', 'range', 'print_job_type_id']
 
     if self.order && self.print_jobs.empty?
       self.customer = self.order.customer
-      
+
       self.order.file_lines.compact.each do |file_line|
         self.print_jobs.build(file_line.attributes.slice(*['id', keys]))
       end
@@ -92,12 +92,12 @@ class Print < ApplicationModel
       self.order.order_lines.each do |order_line|
         self.print_jobs.build(order_line.attributes.slice(*['document_id', keys]))
       end
-    elsif self.include_documents.present? 
+    elsif self.include_documents.present?
       self.include_documents.each do |document_id|
         self.print_jobs.build(document_id: document_id)
       end if self.include_documents
     end
-    
+
     self.print_jobs.each do |pj|
       pj.print_job_type ||=  PrintJobType.default
 
@@ -111,11 +111,11 @@ class Print < ApplicationModel
       self.payment(:credit)
     end
   end
-  
+
   def current_print_jobs
     self.print_jobs.reject(&:marked_for_destruction?)
   end
-  
+
   def current_article_lines
     self.article_lines.reject(&:marked_for_destruction?)
   end
@@ -128,7 +128,7 @@ class Print < ApplicationModel
     self.payments.detect(&:"#{type}?") ||
       self.payments.build(paid_with: Payment::PAID_WITH[type])
   end
-  
+
   def avoid_printing?
     self.avoid_printing == true || self.avoid_printing == '1'
   end
@@ -150,13 +150,13 @@ class Print < ApplicationModel
 
     true
   end
-  
+
   def mark_order_as_completed
     self.order.try(:completed!)
-    
+
     true
   end
-  
+
   def revoke!
     if UserSession.find.try(:record).try(:admin)
       self.revoked = true
@@ -165,11 +165,11 @@ class Print < ApplicationModel
       if self.customer && self.payments.any?(&:credit?)
         self.customer.add_bonus self.payments.select(&:credit?).sum(&:paid)
       end
-      
+
       self.save validate: false
     end
   end
-  
+
   def pay_print
     if self.pay_later?
       self.payments.build(amount: self.price, paid: self.price)
@@ -182,9 +182,9 @@ class Print < ApplicationModel
     self.current_print_jobs.to_a.sum(&:price) +
       self.current_article_lines.to_a.sum(&:price)
   end
-  
+
   def total_pages_by_type(type)
-    self.current_print_jobs.sum do |pj| 
+    self.current_print_jobs.sum do |pj|
        (pj.print_job_type == type) ? (pj.copies * pj.range_pages) : 0
     end
   end
@@ -200,19 +200,19 @@ class Print < ApplicationModel
 
     total
   end
-  
+
   def reject_print_job_attributes?(attributes)
     has_no_document = attributes['document_id'].blank? &&
       attributes['document'].blank?
 
     has_no_file_line = attributes['file_line_id'].blank? &&
       attributes['file_line'].blank?
-    
+
     has_nothing_to_print = has_no_document && has_no_file_line
-    
+
     has_nothing_to_print && attributes['pages'].blank?
   end
-  
+
   def must_have_one_item
     if self.current_print_jobs.empty? && self.current_article_lines.empty?
       self.errors.add :base, :must_have_one_item
@@ -242,11 +242,11 @@ class Print < ApplicationModel
 
       if remaining == false
         self.errors.add :credit_password, :invalid
-        
+
         false
       elsif remaining > 0
         expected_remaining = self.payments.detect(&:cash?).try(:amount) || 0
-        
+
         raise 'Invalid payment' if remaining != expected_remaining
       end
     end
@@ -269,16 +269,16 @@ class Print < ApplicationModel
   def scheduled?
     self.printer.blank? && !self.scheduled_at.blank?
   end
-  
+
   def status_symbol
     STATUS.invert[self.status]
   end
-  
+
   STATUS.each do |status, value|
     define_method("#{status}?") { self.status == value }
     define_method("#{status}!") { self.status = value }
   end
-  
+
   def self.stats_between(from, to)
     between(from, to).not_revoked.group(:user_id).count
   end

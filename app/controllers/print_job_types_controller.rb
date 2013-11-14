@@ -1,6 +1,6 @@
 class PrintJobTypesController < ApplicationController
   before_action :require_admin_user
-  
+
   # GET /print_job_types
   # GET /print_job_types.json
   def index
@@ -94,7 +94,7 @@ class PrintJobTypesController < ApplicationController
   end
 
   private
-  
+
   def print_job_type_params
     params.require(:print_job_type).permit(
       :name, :price, :two_sided, :default, :media

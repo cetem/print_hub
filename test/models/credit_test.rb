@@ -65,7 +65,7 @@ class CreditTest < ActiveSupport::TestCase
       error_message_from_model(@credit, :remaining, :not_a_number)].sort,
       @credit.errors[:remaining].sort
   end
-  
+
   # Prueba que las validaciones del modelo se cumplan como es esperado
   test 'validates well formated attributes' do
     @credit.amount = '1.2x'
@@ -104,22 +104,22 @@ class CreditTest < ActiveSupport::TestCase
         :less_than_or_equal_to, count: @credit.amount)],
       @credit.errors[:remaining]
   end
-  
+
   test 'still valid' do
     @credit.valid_until = nil
-    
+
     assert @credit.still_valid?
-    
+
     @credit.valid_until = 1.day.from_now.to_date
-    
+
     assert @credit.still_valid?
-    
+
     @credit.valid_until = Date.today
-    
+
     assert @credit.still_valid?
-    
+
     @credit.valid_until = 1.day.ago.to_date
-    
+
     assert !@credit.still_valid?
   end
 end

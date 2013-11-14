@@ -1,8 +1,8 @@
 class ApplicationController < ActionController::Base
   helper_method :current_user_session, :current_user, :current_customer
-  
+
   protect_from_forgery with: :null_session
-  
+
   before_action :set_js_format_in_iframe_request
   after_action -> { expires_now if current_user || current_customer }
 
@@ -17,7 +17,7 @@ class ApplicationController < ActionController::Base
       unless response.redirect_url
         render template: 'shared/show_error', locals: {error: exception}
       end
-      
+
       logger.error(error)
 
     # En caso que la presentación misma de la excepción no salga como se espera
@@ -30,7 +30,7 @@ class ApplicationController < ActionController::Base
   end
 
   private
-  
+
   def current_customer_session
     @current_customer_session ||= CustomerSession.find
   end
@@ -50,7 +50,7 @@ class ApplicationController < ActionController::Base
   def user_for_paper_trail
     current_user.try(:id)
   end
-  
+
   def require_customer
     unless current_customer
       flash.notice = t('messages.must_be_logged_in')
@@ -100,12 +100,12 @@ class ApplicationController < ActionController::Base
       true
     end
   end
-  
+
   def require_customer_or_user
     request.subdomains.first == APP_CONFIG['subdomains']['customers'] ?
       require_customer : require_user
   end
-  
+
   def require_no_customer_or_user
     request.subdomains.first == APP_CONFIG['subdomains']['customers'] ?
       require_no_customer : require_user
@@ -137,7 +137,7 @@ class ApplicationController < ActionController::Base
   def run_shift_tasks
     unless current_user.not_shifted
       if session[:has_an_open_shift] && controller_name != 'shifts'
-        redirect_to edit_shift_url(current_user.stale_shift), 
+        redirect_to edit_shift_url(current_user.stale_shift),
           notice: t('view.shifts.edit_stale') if current_user.stale_shift
       elsif !session[:has_an_open_shift] && !current_user.last_shift_open?
         current_user_session.create_shift

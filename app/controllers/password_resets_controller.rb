@@ -1,6 +1,6 @@
 class PasswordResetsController < ApplicationController
   before_action :require_no_customer
-  
+
   # GET /password_resets/new
   def new
     @title = t('view.password_resets.new_title')
@@ -10,7 +10,7 @@ class PasswordResetsController < ApplicationController
   def create
     @title = t('view.password_resets.new_title')
     @customer = Customer.find_by_email params[:email].try(:downcase).try(:strip)
-    
+
     if @customer
       @customer.touch
       @customer.deliver_password_reset_instructions!
@@ -35,7 +35,7 @@ class PasswordResetsController < ApplicationController
     @customer = Customer.find_using_perishable_token(
       params[:token], TOKEN_VALIDITY
     )
-    
+
     respond_to do |format|
       if @customer.try(:update_attributes, customer_params)
         format.html { redirect_to(new_customer_session_url, notice: t('view.password_resets.correctly_updated')) }

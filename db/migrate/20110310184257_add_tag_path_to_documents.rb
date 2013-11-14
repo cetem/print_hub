@@ -1,7 +1,7 @@
 class AddTagPathToDocuments < ActiveRecord::Migration
   def self.up
     add_column :documents, :tag_path, :text
-    
+
     Document.unscoped.all.each do |d|
       d.update_attributes!(:tag_path => d.tags.map(&:to_s).join(' ## '))
     end

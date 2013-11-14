@@ -1,7 +1,7 @@
 <% id = dynamic_object_id('print_job', f) %>
 <% name = dynamic_object_name(f) %>
 <% hide = is_dynamic || f.object.marked_for_destruction? %>
-<div class="print_job" id="<%= id %>" data-price="<%= f.object.price %>" 
+<div class="print_job" id="<%= id %>" data-price="<%= f.object.price %>"
   data-price-per-copy="<%= f.object.price_per_copy %>"
   data-odd-pages=""
   <%= raw 'style="display: none;"' if hide %>>
@@ -23,7 +23,7 @@
       } %>
     </div>
     <div class="span1">
-      <%= f.input :copies, label: false, 
+      <%= f.input :copies, label: false,
         input_html: { maxlength: 5, class: 'price-modifier page-modifier span11',
         autocomplete: 'off', disabled: disabled, name: "#{name}[copies]" } %>
     </div>
@@ -34,7 +34,7 @@
           name: "#{name}[pages]" } %>
     </div>
     <div class="span1">
-      <%= f.input :range, label: false, input_html: { 
+      <%= f.input :range, label: false, input_html: {
         class: 'price-modifier page-modifier span11',
         autocomplete: 'off',  'data-range-pages' => f.object.range_pages,
         disabled: disabled || (f.object.persisted? && f.object.document.blank?),

@@ -24,7 +24,7 @@
         <%= document_link_to_barcode(@document.code.blank? ? 0 : @document.code) %>
       </div>
     </div>
-    
+
     <div class="page-header">
       <h3><%= t('menu.tags') %></h3>
     </div>
@@ -45,7 +45,7 @@
         title: t('view.documents.add_tag_title'), class: 'btn btn-mini' %>
     </div>
   </div>
-  
+
   <div class="form-actions">
     <div class="pull-right"><%= yield :form_actions %></div>
     <%= f.input :lock_version, as: :hidden %>

@@ -7,7 +7,7 @@ class AvatarUploader < CarrierWave::Uploader::Base
 
   def store_dir
     model_id = ('%09d' % model.id).scan(/\d{3}/).join('/')
-  
+
     "private/avatars/#{model_id}"
   end
 

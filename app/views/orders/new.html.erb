@@ -1,8 +1,8 @@
 <div id="check_order">
   <%= content_for :form_actions do %>
-    <%= link_to t('view.orders.clear_catalog_order'), 
-      orders_clear_catalog_order_path, method: :delete, 
-      class: 'skip-file-warning' %> | 
+    <%= link_to t('view.orders.clear_catalog_order'),
+      orders_clear_catalog_order_path, method: :delete,
+      class: 'skip-file-warning' %> |
     <%= link_to t('label.back'), catalog_path %>
   <% end %>
   <%= render 'form' %>

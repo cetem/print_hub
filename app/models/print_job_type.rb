@@ -6,7 +6,7 @@ class PrintJobType < ActiveRecord::Base
 
   scope :one_sided, -> { where(two_sided: false) }
   scope :two_sided, -> { where(two_sided: true) }
-  
+
   validates :name, :price, :media, presence: true
   validates :name, uniqueness: true
   validates :media, inclusion: { in: MEDIA_TYPES.values },

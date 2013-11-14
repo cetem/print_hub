@@ -5,7 +5,7 @@ class DocumentTest < ActiveSupport::TestCase
   # Función para inicializar las variables utilizadas en las pruebas
   def setup
     @document = Document.find documents(:math_book).id
-    
+
     prepare_document_files
   end
 
@@ -54,7 +54,7 @@ class DocumentTest < ActiveSupport::TestCase
     # Asegurar que las 2 miniaturas son imágenes y no están vacías
     assert_equal 2,
       thumbs_dir.entries.select { |f| f.extname == '.png' && !f.zero? }.size
-    
+
     # Asegurar la "limpieza" del directorio
     Pathname.new(@document.file.path).dirname.rmtree
   end
@@ -89,7 +89,7 @@ class DocumentTest < ActiveSupport::TestCase
     # Asegurar que las 6 miniaturas son imágenes y no están vacías
     assert_equal 6,
       thumbs_dir.entries.select { |f| f.extname == '.png' && !f.zero? }.size
-    
+
     # Asegurar la "limpieza" del directorio
     Pathname.new(@document.file.path).dirname.rmtree
   end
@@ -267,7 +267,7 @@ class DocumentTest < ActiveSupport::TestCase
         @document, :stock, :greater_than_or_equal_to, count: 0
       )
     ], @document.errors[:stock]
-    
+
     @document.pages = '2147483648'
     @document.code = '2147483648'
     @document.stock = '2147483648'
@@ -294,13 +294,13 @@ class DocumentTest < ActiveSupport::TestCase
     assert @document.save
     assert_not_equal original_path, @document.tag_path
   end
-  
+
   test 'use stock' do
     assert_equal 5, @document.use_stock(5)
     assert_equal 0, @document.stock
-    
+
     @document.stock = 10
-    
+
     assert_equal 0, @document.use_stock(8)
     assert_equal 2, @document.stock
     assert_equal 4, @document.use_stock(6)
@@ -314,7 +314,7 @@ class DocumentTest < ActiveSupport::TestCase
       @document.tags << @tag
       assert @document.save
     end
-    
+
     assert_difference '@tag.reload.documents_count', -1 do
       @document.tag_ids = nil
       assert @document.save
@@ -329,15 +329,15 @@ class DocumentTest < ActiveSupport::TestCase
       assert @document.destroy
     end
   end
-  
+
   test 'full text search' do
     documents = Document.full_text(['unused'])
-    
+
     assert_equal 1, documents.size
     assert_equal 'Unused Book', documents.first.name
-    
+
     documents = Document.full_text(['2'])
-    
+
     assert_equal 1, documents.size
     assert_equal 2, documents.first.code
   end

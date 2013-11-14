@@ -7,7 +7,7 @@ class CreateFeedbacks < ActiveRecord::Migration
 
       t.timestamps
     end
-    
+
     add_index :feedbacks, :item
     add_index :feedbacks, :positive
   end

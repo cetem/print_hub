@@ -1,7 +1,7 @@
 <% id = dynamic_object_id('order_line', f) %>
 <% name = dynamic_object_name(f) %>
 <div class="order_line" id="<%= id %>"
-  data-price="<%= f.object.price %>" 
+  data-price="<%= f.object.price %>"
   data-odd-pages=""
   data-price-per-copy="<%= f.object.price_per_copy %>">
   <div class="row-fluid">
@@ -10,13 +10,13 @@
       <%= f.input :document_id, as: :hidden %>
     </div>
     <div class="span1">
-      <%= f.input :copies, label: false, 
-      input_html: { maxlength: 5, autocomplete: 'off', 
+      <%= f.input :copies, label: false,
+      input_html: { maxlength: 5, autocomplete: 'off',
       class: 'price-modifier page-modifier span12'} %>
     </div>
     <div class="span1 hidden-phone">
       <%= f.input :pages, label: false, input_html: {
-          value: f.object.document.try(:pages), 
+          value: f.object.document.try(:pages),
           class: 'price-modifier page-modifier span12', disabled: true
       } %>
     </div>

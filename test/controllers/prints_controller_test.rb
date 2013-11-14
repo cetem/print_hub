@@ -4,7 +4,7 @@ class PrintsControllerTest < ActionController::TestCase
   setup do
     @print = prints(:math_print)
     @printer = Cups.show_destinations.select {|p| p =~ /pdf/i}.first
-    
+
     raise "Can't find a PDF printer to run tests with." unless @printer
 
     prepare_document_files
@@ -38,7 +38,7 @@ class PrintsControllerTest < ActionController::TestCase
 
   test 'should get admin index' do
     user = users(:administrator)
-    
+
     UserSession.create(user)
     get :index, status: 'all'
     assert_response :success
@@ -76,7 +76,7 @@ class PrintsControllerTest < ActionController::TestCase
     assert_select '#unexpected_error', false
     assert_template 'prints/index'
   end
-  
+
   test 'should get admin pay later index' do
     user = users(:administrator)
 
@@ -90,7 +90,7 @@ class PrintsControllerTest < ActionController::TestCase
     assert_select '#unexpected_error', false
     assert_template 'prints/index'
   end
-  
+
   test 'should get customer index' do
     user = users(:administrator)
     customer = customers(:student)
@@ -114,12 +114,12 @@ class PrintsControllerTest < ActionController::TestCase
     assert_select '.print_job', 1
     assert_template 'prints/new'
   end
-  
+
   test 'should get new from order' do
     UserSession.create(users(:operator))
-    
+
     order = Order.find(orders(:for_tomorrow).id)
-    
+
     get :new, order_id: order.id, status: 'all'
     assert_response :success
     assert_not_nil assigns(:print)
@@ -127,12 +127,12 @@ class PrintsControllerTest < ActionController::TestCase
     assert_select '.print_job', order.order_items.count
     assert_template 'prints/new'
   end
-  
+
   test 'should get new with stored documents' do
     UserSession.create(users(:administrator))
     session[:documents_for_printing] =
       [documents(:math_notes).id, documents(:math_book).id]
-    
+
     get :new, status: 'all'
     assert_response :success
     assert_not_nil assigns(:print)
@@ -140,11 +140,11 @@ class PrintsControllerTest < ActionController::TestCase
     assert_select '.print_job', 2
     assert_template 'prints/new'
   end
-  
+
   test 'should get new without stored documents' do
     UserSession.create(users(:administrator))
     session[:documents_for_printing] = [documents(:math_notes).id]
-    
+
     get :new, clear_documents_for_printing: true, status: 'all'
     assert_response :success
     assert_not_nil assigns(:print)
@@ -250,7 +250,7 @@ class PrintsControllerTest < ActionController::TestCase
     # Prueba básica para "asegurar" el funcionamiento del versionado
     assert_equal users(:operator).id, Version.last.whodunnit
   end
-  
+
   test 'should create print with free credit' do
     UserSession.create(users(:operator))
 
@@ -500,10 +500,10 @@ class PrintsControllerTest < ActionController::TestCase
     assert_equal math_book.pages, @print.print_jobs.order('id ASC').last.pages
     assert @print.pending_payment?
   end
-  
+
   test 'should revoke print' do
     UserSession.create(users(:administrator))
-    
+
     delete :revoke, id: @print.to_param, status: 'all'
     assert_redirected_to prints_url
     assert @print.reload.revoked
@@ -511,7 +511,7 @@ class PrintsControllerTest < ActionController::TestCase
 
   test 'should cancel job' do
     UserSession.create(users(:operator))
-    
+
     canceled_count = Cups.all_jobs(@printer).select do |_, j|
       j[:state] == :cancelled
     end.size
@@ -548,7 +548,7 @@ class PrintsControllerTest < ActionController::TestCase
     assert_response :success
     assert_match %r{#{I18n.t(:job_canceled, scope: [:view, :prints])}},
       @response.body
-    
+
     sleep 0.5
 
     new_canceled_count = Cups.all_jobs(@printer).select do |_, j|
@@ -560,7 +560,7 @@ class PrintsControllerTest < ActionController::TestCase
 
   test 'can not cancel a completed job' do
     UserSession.create(users(:operator))
-    
+
     print_job = PrintJob.find print_jobs(:math_job_1).id
 
     xhr :put, :cancel_job, id: print_job.to_param, status: 'all'
@@ -574,43 +574,43 @@ class PrintsControllerTest < ActionController::TestCase
     UserSession.create(users(:operator))
     get :autocomplete_for_document_name, format: :json, q: 'Math', status: 'all'
     assert_response :success
-    
+
     documents = ActiveSupport::JSON.decode(@response.body)
-    
+
     assert_equal 2, documents.size
     assert documents.all? { |d| (d['label'] + d['informal']).match /math/i }
 
     get :autocomplete_for_document_name, format: :json, q: 'note', status: 'all'
     assert_response :success
-    
+
     documents = ActiveSupport::JSON.decode(@response.body)
-    
+
     assert_equal 2, documents.size
     assert documents.all? { |d| (d['label'] + d['informal']).match /note/i }
 
     get :autocomplete_for_document_name, format: :json, q: '001', status: 'all'
     assert_response :success
-    
+
     documents = ActiveSupport::JSON.decode(@response.body)
-    
+
     assert_equal 1, documents.size
     assert documents.all? { |d| (d['label'] + d['informal']).match /1/i }
 
     get :autocomplete_for_document_name, format: :json, q: 'physics',
       status: 'all'
     assert_response :success
-    
+
     documents = ActiveSupport::JSON.decode(@response.body)
-    
+
     assert_equal 1, documents.size
     assert documents.all? { |d| (d['label'] + d['informal']).match /physics/i }
 
     get :autocomplete_for_document_name, format: :json, q: 'phyxyz',
       status: 'all'
     assert_response :success
-    
+
     documents = ActiveSupport::JSON.decode(@response.body)
-    
+
     assert documents.empty?
   end
 
@@ -618,34 +618,34 @@ class PrintsControllerTest < ActionController::TestCase
     UserSession.create(users(:operator))
     get :autocomplete_for_article_name, format: :json, q: '111', status: 'all'
     assert_response :success
-    
+
     articles = ActiveSupport::JSON.decode(@response.body)
-    
+
     assert_equal 1, articles.size
     assert articles.all? { |a| a['label'].match /111/i }
 
     get :autocomplete_for_article_name, format: :json, q: 'binding',
       status: 'all'
     assert_response :success
-    
+
     articles = ActiveSupport::JSON.decode(@response.body)
-    
+
     assert_equal 2, articles.size
     assert articles.all? { |a| a['label'].match /binding/i }
 
     get :autocomplete_for_article_name, format: :json, q: '333', status: 'all'
     assert_response :success
-    
+
     articles = ActiveSupport::JSON.decode(@response.body)
-    
+
     assert_equal 1, articles.size
     assert articles.all? { |a| a['label'].match /333/i }
 
     get :autocomplete_for_article_name, format: :json, q: 'xyz', status: 'all'
     assert_response :success
-    
+
     articles = ActiveSupport::JSON.decode(@response.body)
-    
+
     assert articles.empty?
   end
 
@@ -654,55 +654,55 @@ class PrintsControllerTest < ActionController::TestCase
     get :autocomplete_for_customer_name, format: :json, q: 'anakin',
       status: 'all'
     assert_response :success
-    
+
     customers = ActiveSupport::JSON.decode(@response.body)
-    
+
     assert_equal 1, customers.size
     assert customers.all? { |c| (c['label'] + c['informal']).match /anakin/i }
 
     get :autocomplete_for_customer_name, format: :json, q: 'obi', status: 'all'
     assert_response :success
-    
+
     customers = ActiveSupport::JSON.decode(@response.body)
-    
+
     assert_equal 1, customers.size
     assert customers.all? { |c| (c['label'] + c['informal']).match /obi/i }
 
     get :autocomplete_for_customer_name, format: :json, q: 'phyxyz',
       status: 'all'
     assert_response :success
-    
+
     customers = ActiveSupport::JSON.decode(@response.body)
-    
+
     assert customers.empty?
   end
-  
+
   test 'should get related by customer' do
     UserSession.create(users(:administrator))
-    
+
     prints = get_prints_with_customer.limit(2).all
-    
+
     get :related_by_customer, id: prints.first, status: 'all', type: 'next'
     assert_redirected_to print_url(prints.second)
-        
+
     get :related_by_customer, id: prints.second, status: 'all', type: 'prev'
     assert_redirected_to print_url(prints.first)
   end
 
   test 'should get the first print with related by customer prev link' do
     UserSession.create(users(:administrator))
-    
+
     print = get_prints_with_customer.first
-    
+
     get :related_by_customer, id: print.to_param, status: 'all', type: 'prev'
     assert_redirected_to print_url(print)
   end
-  
+
   test 'should get the last print with related by customer next link' do
     UserSession.create(users(:administrator))
-    
+
     print = get_prints_with_customer.last
-    
+
     get :related_by_customer, id: print.to_param, status: 'all', type: 'next'
     assert_redirected_to print_path(print)
   end
@@ -717,7 +717,7 @@ class PrintsControllerTest < ActionController::TestCase
 
   def get_prints_with_customer(options={})
     options[:customer] ||= customers(:teacher)
-    
+
     Print.where(
       customer_id: options[:customer]
     ).order('created_at ASC')

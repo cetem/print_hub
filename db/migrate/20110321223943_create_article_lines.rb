@@ -23,7 +23,7 @@ class CreateArticleLines < ActiveRecord::Migration
 
     remove_foreign_key :article_lines, :column => :print_id
     remove_foreign_key :article_lines, :column => :article_id
-    
+
     drop_table :article_lines
   end
 end

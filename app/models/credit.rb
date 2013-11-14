@@ -1,6 +1,6 @@
 class Credit < ApplicationModel
   has_paper_trail
-  
+
   # Restricciones de atributos
   attr_readonly :amount
 

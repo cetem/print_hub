@@ -37,7 +37,7 @@ class ActiveSupport::TestCase
       end
     end
   end
-  
+
   def prepare_avatar_files
     User.all.each do |user|
       file = user.avatar.path
@@ -65,7 +65,7 @@ class ActiveSupport::TestCase
     ActionDispatch::Http::UploadedFile.new({
       filename: filename,
       content_type: content_type,
-      tempfile: 
+      tempfile:
       File.open( # Need File.open for path-method
         Rails.root.join('test', 'fixtures', 'files', filename)
       )
@@ -107,7 +107,7 @@ class ActionDispatch::IntegrationTest
     DatabaseCleaner.clean       # Truncate the database
     Capybara.reset!             # Forget the (simulated) browser state
   end
-  
+
   def assert_page_has_no_errors!
     sleep 0.5
     assert page.has_no_css?('#unexpected_error')

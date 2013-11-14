@@ -1,7 +1,7 @@
 class UsersController < ApplicationController
   before_action :require_admin_user, except: :show
   before_action :require_user, only: :show
-  
+
   # GET /users
   # GET /users.json
   def index
@@ -21,7 +21,7 @@ class UsersController < ApplicationController
   def show
     @title = t 'view.users.show_title'
     @user = current_user.admin ? User.find(params[:id]) : current_user
-    
+
     respond_to do |format|
       format.html # show.html.erb
       format.json { render json: @user }
@@ -83,7 +83,7 @@ class UsersController < ApplicationController
     flash.alert = t 'view.users.stale_object_error'
     redirect_to edit_user_url(@user)
   end
-  
+
   # GET /users/autocomplete_for_user_name
   def autocomplete_for_user_name
     query = params[:q].sanitized_for_text_query
@@ -91,7 +91,7 @@ class UsersController < ApplicationController
     users = User.actives
     users = users.full_text(query_terms) unless query_terms.empty?
     users = users.limit(10)
-    
+
     respond_to do |format|
       format.json { render json: users }
     end
@@ -103,7 +103,7 @@ class UsersController < ApplicationController
       from: params[:start], to: params[:finish]
     )
     User.find(params[:id]).pay_shifts_between(start, finish)
-    
+
     respond_to do |format|
       format.json { head :ok }
     end

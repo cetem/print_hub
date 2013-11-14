@@ -13,7 +13,7 @@ class AddSessionsTable < ActiveRecord::Migration
   def self.down
     remove_index :sessions, :column => :session_id
     remove_index :sessions, :column => :updated_at
-    
+
     drop_table :sessions
   end
 end

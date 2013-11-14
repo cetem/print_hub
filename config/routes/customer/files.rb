@@ -1,2 +1,2 @@
-get 'private/:path', to: 'files#download', 
+get 'private/:path', to: 'files#download',
   constraints: { path: /.+/ }

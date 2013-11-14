@@ -98,7 +98,7 @@ class FileLineTest < ActiveSupport::TestCase
         @file_line, :price_per_copy, :greater_than_or_equal_to, count: 0
       )
     ], @file_line.errors[:price_per_copy]
-    
+
     @file_line.reload
     @file_line.copies = '2147483648'
     assert @file_line.invalid?
@@ -109,7 +109,7 @@ class FileLineTest < ActiveSupport::TestCase
       )
     ], @file_line.errors[:copies]
   end
-  
+
   test 'price' do
     # file_line print-job-type.price = 0.10
     @file_line.copies = 35

@@ -17,7 +17,7 @@ PrintHubApp::Application.routes.draw do
     draw :customer, :order
     draw :customer, :files
   end
-  
+
   constraints(UserSubdomain) do
     draw :user, :stat
     draw :user, :bonus

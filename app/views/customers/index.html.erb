@@ -36,7 +36,7 @@
         <% if params[:status] == 'with_debt' %>
           <%= link_to t('label.list'), customers_path %>
         <% else %>
-          <%= link_to t('view.customers.to_pay_prints.with_debt'), 
+          <%= link_to t('view.customers.to_pay_prints.with_debt'),
             customers_path(status: 'with_debt') %>
         <% end %>
       </li>

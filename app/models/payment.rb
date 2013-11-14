@@ -1,18 +1,18 @@
 class Payment < ApplicationModel
   has_paper_trail
-  
+
   # Constantes
   PAID_WITH = {
     credit: 'B',
     cash: 'C'
   }.with_indifferent_access.freeze
-  
+
   # Scopes
   scope :between, ->(_start, _end) {
     where('created_at BETWEEN :start AND :end', start: _start, end: _end)
   }
   scope :not_revoked, -> { where(revoked: false) }
-  
+
   # Restricciones de los atributos
   attr_readonly :id, :amount
 
@@ -34,7 +34,7 @@ class Payment < ApplicationModel
     self.paid ||= 0.0
     self.paid_with ||= PAID_WITH[:cash]
   end
-  
+
   def paid_with_text
     I18n.t("view.payments.paid_with.#{PAID_WITH.invert[self.paid_with]}")
   end

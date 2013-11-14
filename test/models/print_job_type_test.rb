@@ -8,11 +8,11 @@ class PrintJobTypeTest < ActiveSupport::TestCase
   test 'find' do
     assert_kind_of PrintJobType, @print_job_type
     assert_equal print_job_types(:a4).name, @print_job_type.name
-    assert_equal print_job_types(:a4).price, 
+    assert_equal print_job_types(:a4).price,
       @print_job_type.price
-    assert_equal print_job_types(:a4).two_sided, 
+    assert_equal print_job_types(:a4).two_sided,
       @print_job_type.two_sided
-    assert_equal print_job_types(:a4).default, 
+    assert_equal print_job_types(:a4).default,
       @print_job_type.default
   end
 

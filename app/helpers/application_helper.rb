@@ -34,36 +34,36 @@ module ApplicationHelper
   def show_error_messages(model)
     render 'shared/error_messages', model: model unless model.errors.empty?
   end
-  
+
   def link_to_show(*args)
     options = args.extract_options!
-    
+
     options['class'] ||= 'iconic'
     options['title'] ||= t('label.show')
     options['data-show-tooltip'] = true
-    
+
     link_to '&#xe074;'.html_safe, *args, options
   end
-  
+
   def link_to_edit(*args)
     options = args.extract_options!
-    
+
     options['class'] ||= 'iconic'
     options['title'] ||= t('label.edit')
     options['data-show-tooltip'] = true
-    
+
     link_to '&#x270e;'.html_safe, *args, options
   end
-  
+
   def link_to_destroy(*args)
     options = args.extract_options!
-    
+
     options['class'] ||= 'iconic'
     options['title'] ||= t('label.delete')
     options['method'] ||= :delete
     options['data-confirm'] ||= t('messages.confirmation')
     options['data-show-tooltip'] = true
-    
+
     link_to '&#xe05a;'.html_safe, *args, options
   end
 
@@ -140,7 +140,7 @@ module ApplicationHelper
         class: 'page-entries hidden-desktop pull-right'
       )
     )
-    
+
     unless result
       previous_tag = content_tag(
         :li,
@@ -152,7 +152,7 @@ module ApplicationHelper
         content_tag(:a, t('will_paginate.next_label').html_safe),
         class: 'next disabled'
       )
-      
+
       result = content_tag(
         :div,
         content_tag(:ul, previous_tag + next_tag),
@@ -162,19 +162,19 @@ module ApplicationHelper
 
     result + page_entries
   end
-  
+
   def sortable(column, title = nil)
     css_class = column == sort_column ? "current #{sort_direction}" : nil
     direction = column == sort_column && sort_direction == 'asc' ? 'desc' : 'asc'
     query = request.query_parameters.merge(sort: column, direction: direction)
-    
+
     link_to(
       title || column.titleize, "#{request.path}?#{query.to_query}",
       { class: css_class, title: request.path.class }
     )
   end
-  
-  def image_sprite(image, options = {}) 
+
+  def image_sprite(image, options = {})
     sprites = {
       copyleft: {w: 70, h: 40, x: 0, y: 0},
       solidarity: {w: 70, h: 40, x: 0, y: 50},
@@ -187,14 +187,14 @@ module ApplicationHelper
       padding-top: #{sprites[image][:h]}px;
       #{options[:style]}
     CSS
-    
+
     content_tag('span', options[:title],
       class: "sprite #{options[:class]}",
       style: style,
       title: "#{options[:title]}"
     )
   end
-  
+
   def explorer?
     request.env['HTTP_USER_AGENT'] =~ /msie/i
   end

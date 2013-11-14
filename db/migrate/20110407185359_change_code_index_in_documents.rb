@@ -7,7 +7,7 @@ class ChangeCodeIndexInDocuments < ActiveRecord::Migration
 
   def self.down
     remove_index :documents, :column => :code
-    
+
     add_index :documents, :code, :unique => true
   end
 end

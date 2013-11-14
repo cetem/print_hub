@@ -33,7 +33,7 @@ class FeedbackTest < ActiveSupport::TestCase
         comments: 'It seems to me that needs polishing'
       ), @feedback.errors.full_messages.join('; ')
     end
-    
+
     assert_not_equal 'this_should_be_ignored', @feedback.reload.item
     assert_equal 'It seems to me that needs polishing', @feedback.comments
   end

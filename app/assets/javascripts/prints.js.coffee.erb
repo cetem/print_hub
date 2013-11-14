@@ -2,11 +2,11 @@
   updateArticleCount: ->
     articleCount = $('.article_line:not([data-exclude-from-total])').length
     title = $('a[href="#articles_container"]')
-    
+
     if title.find('.badge').length == 0
       count = $('<span class="badge badge-info"></span>')
       title.append('&nbsp;').append(count)
-    
+
     title.find('.badge').text(articleCount)
     title.find('.badge').remove() if articleCount == 0
   updateStock: (printJob)->
@@ -18,13 +18,13 @@
       printedCopies = if stock > copies then 0 else copies - stock
 
       printJobStockDetails.html('#' + stock + '!' + printedCopies)
-  
+
   updateTotalPrice: ->
     freeCredit = parseFloat($('#customer_free_credit').val()) || 0.0
     [payWithCash, payWithBonus, totalPrice] = [0.0, 0.0, 0.0]
 
     Print.updateTotalPages()
-    
+
     if !$('#print_pay_later').is(':checked')
       $('.print_job:not([data-exclude-from-total])').each ->
         totalPrice += parseFloat($(this).data('price') || 0)
@@ -103,7 +103,7 @@
     $('#print_pay_later').attr('checked', false).parents('div.field').hide()
 
     Print.updateTotalPrice()
-  
+
   updateSubmitLabel: ->
     if /^\s*$/.test($('#print_printer').val())
       label = Print.saveMessage
@@ -162,7 +162,7 @@ new Rule
 
       else if $(element).hasClass('article_line')
         $(element).attr('data-exclude-from-total', '1')
-        
+
         Print.updateArticleCount()
         Print.updateTotalPrice()
 
@@ -189,7 +189,7 @@ new Rule
         if item.print_job_type
           printJob.find('select[name$="[print_job_type_id]"]')
             .val(item.print_job_type).change()
-          
+
         if stock > 0
           printJobStockDetails.data('stock', stock).show()
           Print.updateStock(printJob)
@@ -206,7 +206,7 @@ new Rule
         Print.updateArticleLinePrice(articleLine)
       else if item.free_credit
         customerDetailsLink = $('#link_to_customer_credit_detail')
-        
+
         $('#customer_free_credit').val(item.free_credit)
         $('#print_pay_later').parents('div.field').show()
 
@@ -220,9 +220,9 @@ new Rule
     @map.autoSelectCustomerKind ||= ->
       element = $(this).data('item')
       checked = element.kind == '<%= Customer::KINDS[:reliable] %>'
-      
+
       $('#print_pay_later').attr('checked', checked)
-        
+
     # Elimina el cliente del trabajo de impresión
     @map.removeCustomer ||= ->
       Print.clearCustomer() if /^\s*$/.test($(this).val())
@@ -251,7 +251,7 @@ new Rule
         articleLine.find('input[name$="[unit_price]"]').val('')
 
         Print.updateArticleLinePrice(articleLine)
-        
+
     # Deshabilita el campo documento, y solo hace calculos contemplando paginas/copias
     @map.printJobWithoutDocument ||= ->
       element = $(this)
@@ -265,7 +265,7 @@ new Rule
       else
         range.removeAttr('disabled')
         autoDocument.removeAttr('disabled')
-      
+
       range.data('rangePages', parseInt(element.val()))
 
       Print.updatePrintJobPrice(printJob)
@@ -274,7 +274,7 @@ new Rule
     @map.updateStock ||= ->
       element = $(this)
       printJob = element.parents('.print_job')
-      
+
       Print.updateStock(printJob)
 
     # Recalcula precio y paginas con el rango
@@ -284,7 +284,7 @@ new Rule
       stock = parseInt printJobStockDetails.data('stock')
       rangePages = parseInt $(this).data('rangePages')
       pages = parseInt printJob.find('input[name$="[pages]"]').val()
-      
+
       if rangePages == pages && stock > 0
         printJobStockDetails.show()
       else
@@ -293,7 +293,7 @@ new Rule
     # Actualiza el total de paginas del trabajo de impresión
     @map.updateTotalPages ||= (e)->
       Print.updateTotalPages()
-      
+
       $('.print_job').each (i, pj)-> Print.updatePrintJobPrice($(pj))
 
     # Actualiza el precio de linea modificada
@@ -327,10 +327,10 @@ new Rule
     @map.clearCustomer ||= (event)->
       Print.clearCustomer()
       $(this).remove()
-      
+
       event.preventDefault()
       event.stopPropagation()
-    
+
     # Captura de atajos de teclado
     @map.setShortCuts ||= (e)->
       key = e.which
@@ -347,8 +347,8 @@ new Rule
       else if (key == 80 || key == 112) && e.ctrlKey && e.altKey
         $('#print_submit').click()
         e.preventDefault()
-    
-   
+
+
     $(document).on 'item.removed', @map.removeItem
     $(document).on 'autocomplete:update', 'input.autocomplete-field',
       @map.pagesAndPriceAfterAutocomplete
@@ -381,10 +381,10 @@ new Rule
     Jobs.listenRangeChanges('.print_job')
     Jobs.listenPrintJobTypeChanges('.print_job')
     Print.updateSubmitLabel()
-    
+
     if /^\s*$/.test($('#print_customer_id').val())
       $('#print_pay_later').parents('div.field').hide()
-  
+
   unload: ->
     $(document).off 'item.removed', @map.removeItem
     $(document).off 'autocomplete:update', 'input.autocomplete-field',

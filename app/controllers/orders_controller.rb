@@ -4,7 +4,7 @@ class OrdersController < ApplicationController
     before_action :require_customer_or_user, :load_scope, only: actions
     before_action :require_customer, except: actions
   end
-  
+
   ->(c) { c.request.xhr? ? false : 'application' }
 
   # GET /orders
@@ -13,13 +13,13 @@ class OrdersController < ApplicationController
     @title = t 'view.orders.index_title'
     @searchable = current_customer.nil?
     @orders = @order_scope.order('scheduled_at ASC')
-    
+
     if params[:q].present? && current_user
       query = params[:q].sanitized_for_text_query
       @query_terms = query.split(/\s+/).reject(&:blank?)
       @orders = @orders.full_text(@query_terms) unless @query_terms.empty?
     end
-    
+
     @orders = @orders.paginate(page: params[:page], per_page: lines_per_page)
 
     respond_to do |format|
@@ -94,17 +94,17 @@ class OrdersController < ApplicationController
         format.json { render json: @order.errors, status: :unprocessable_entity }
       end
     end
-    
+
   rescue ActiveRecord::StaleObjectError
     flash.alert = t 'view.orders.stale_object_error'
     redirect_to edit_order_url(@order)
   end
-  
+
   # DELETE /orders/1
   # DELETE /orders/1.json
   def destroy
     @order = @order_scope.find(params[:id])
-    
+
     respond_to do |format|
       if @order.cancelled! && @order.save
         path = current_customer ? @order : order_path(@order, type: order_type)
@@ -141,7 +141,7 @@ class OrdersController < ApplicationController
   end
 
   private
-  
+
   def load_scope
     if current_customer
       @order_scope = current_customer.orders
@@ -150,7 +150,7 @@ class OrdersController < ApplicationController
         Order.pending.for_print : Order.all
     end
   end
-  
+
   def order_type
     %w[print all].include?(params[:type]) ? params[:type] : 'print'
   end
@@ -159,7 +159,7 @@ class OrdersController < ApplicationController
     order_items_shared_attrs = [:order_id, :copies, :print_job_type_id, :id]
 
     params.require(:order).permit(
-      :scheduled_at, :notes, :lock_version, :include_documents, 
+      :scheduled_at, :notes, :lock_version, :include_documents,
       {
         file_lines_attributes: [
           :file, :pages, :file_cache, *order_items_shared_attrs

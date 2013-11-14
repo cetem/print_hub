@@ -11,9 +11,9 @@ class String
       [/[|&!\\]+\W+/, ''],
       [/\W+[|&!\\]+/, ''],
     ]
-    
+
     replacements.each { |regex, replace| sanitized.gsub!(regex, replace) }
-    
+
     sanitized
   end
 end

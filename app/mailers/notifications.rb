@@ -11,7 +11,7 @@ class Notifications < ActionMailer::Base
 
   def reactivation(customer)
     @customer = customer
-    
+
     mail to: customer.email, date: -> { Time.now }
   end
 

@@ -10,7 +10,7 @@ gem 'will_paginate'
 gem 'foreigner'
 gem 'paper_trail', github: 'airblade/paper_trail', branch: 'rails4'
 gem 'RedCloth'
-gem 'capistrano'
+gem 'capistrano', '2.15.5'
 gem 'whenever', require: false
 gem 'cups'
 gem 'simple_form'
@@ -30,7 +30,6 @@ gem 'dalli'
 
 # Code stats
 gem 'newrelic_rpm'
-gem 'coveralls', require: false
 
 # Old assets group / Styles & js
 gem 'sass-rails'

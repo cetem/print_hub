@@ -11,7 +11,7 @@ class PrintsController < ApplicationController
     @title = t('view.prints.index_title')
     order = params[:status] == 'scheduled' ? 'scheduled_at ASC' :
       'created_at DESC'
-    
+
     @prints = prints_scope.order(order).paginate(
       page: params[:page], per_page: lines_per_page
     )
@@ -38,7 +38,7 @@ class PrintsController < ApplicationController
   # GET /prints/new.json
   def new
     @title = t('view.prints.new_title')
-    
+
     unless params[:clear_documents_for_printing].blank?
       session[:documents_for_printing].try(:clear)
     end
@@ -106,13 +106,13 @@ class PrintsController < ApplicationController
     flash.alert = t('view.prints.stale_object_error')
     redirect_to edit_print_url(@print)
   end
-  
+
   # DELETE /prints/1/revoke
   # DELETE /prints/1/revoke.json
   def revoke
     @print = prints_scope.find(params[:id])
     @print.revoke!
-    
+
     respond_to do |format|
       format.html { redirect_to(prints_url, notice: t('view.prints.correctly_revoked')) }
       format.json  { head :ok }
@@ -142,7 +142,7 @@ class PrintsController < ApplicationController
     @docs = Document.all
     @docs = @docs.full_text(@query_terms) unless @query_terms.empty?
     @docs = @docs.limit(10)
-    
+
     respond_to do |format|
       format.json { render json: @docs }
     end
@@ -155,12 +155,12 @@ class PrintsController < ApplicationController
     articles = Article.all
     articles = articles.full_text(query_terms) unless query_terms.empty?
     articles = articles.limit(10)
-    
+
     respond_to do |format|
       format.json { render json: articles }
     end
   end
-  
+
   # GET /prints/autocomplete_for_customer_name
   def autocomplete_for_customer_name
     query = params[:q].sanitized_for_text_query
@@ -168,7 +168,7 @@ class PrintsController < ApplicationController
     customers = Customer.all
     customers = customers.full_text(query_terms) unless query_terms.empty?
     customers = customers.limit(10)
-    
+
     respond_to do |format|
       format.json { render json: customers }
     end
@@ -188,7 +188,7 @@ class PrintsController < ApplicationController
   end
 
   private
-  
+
   def load_customer
     @customer = Customer.find(params[:customer_id]) if params[:customer_id]
   end
@@ -216,10 +216,10 @@ class PrintsController < ApplicationController
     shared_attrs = [:id, :lock_version]
 
     params.require(:print).permit(
-      :printer, :scheduled_at, :customer_id, :order_id, :auto_customer_name, 
-      :avoid_printing, :include_documents, :credit_password, :pay_later, 
+      :printer, :scheduled_at, :customer_id, :order_id, :auto_customer_name,
+      :avoid_printing, :include_documents, :credit_password, :pay_later,
       :lock_version, :comment, print_jobs_attributes: [
-        :document_id, :copies, :pages, :range, :print_id, :auto_document_name, 
+        :document_id, :copies, :pages, :range, :print_id, :auto_document_name,
         :job_hold_until, :file_line_id, :print_job_type_id, *shared_attrs
       ], article_lines_attributes: [
         :print_id, :article_id, :units, :auto_article_name, *shared_attrs

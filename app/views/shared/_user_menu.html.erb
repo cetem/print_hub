@@ -4,9 +4,9 @@
       <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
         <span class="iconic">&#xe055;</span>
       </a>
-      
+
       <%= link_to t('app_name'), root_path, class: 'brand' %>
-      
+
       <div class="nav-collapse">
         <ul class="nav">
           <%= render partial: 'shared/menu_dropdowns/admin'  if current_user.admin %>
@@ -29,7 +29,7 @@
             <%= link_to(
               current_user.username, user_path(current_user.id),
               'title' => t('label.show'),
-              data: { 'show-tooltip' => true, 'placement' => 'bottom' } 
+              data: { 'show-tooltip' => true, 'placement' => 'bottom' }
             ) %>
           </li>
           <li>
@@ -58,11 +58,11 @@
   </div>
   <div class="modal-footer">
     <div class="pull-left">
-      <%= link_to t('view.shifts.close_session.exit'), user_sessions_path, 
+      <%= link_to t('view.shifts.close_session.exit'), user_sessions_path,
         class: 'btn', method: :delete %>
     </div>
 
-    <%= link_to t('label.yes'), user_sessions_path(close_shift: true), 
+    <%= link_to t('label.yes'), user_sessions_path(close_shift: true),
       class: 'btn btn-primary', method: :delete %>
   </div>
 </div>

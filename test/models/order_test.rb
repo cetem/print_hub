@@ -38,10 +38,10 @@ class OrderTest < ActiveSupport::TestCase
         )
       end
     end
-    
+
     assert !@order.reload.print_out
   end
-  
+
   # Prueba la creación de un pedido
   test 'create with credit and allow printing' do
     assert_difference ['Order.count', 'OrderLine.count', 'FileLine.count'] do
@@ -66,10 +66,10 @@ class OrderTest < ActiveSupport::TestCase
         )
       end
     end
-    
+
     assert @order.reload.print_out
   end
-  
+
   test 'create with included documents' do
     assert_difference ['Order.count', 'OrderLine.count'] do
       customer = customers(:student_without_bonus)
@@ -79,7 +79,7 @@ class OrderTest < ActiveSupport::TestCase
       )
     end
   end
-  
+
   # Prueba la creación de un pedido
   test 'can not create for current date' do
     assert_no_difference ['Order.count', 'OrderLine.count'] do
@@ -95,7 +95,7 @@ class OrderTest < ActiveSupport::TestCase
         }
       )
     end
-    
+
     assert_equal 1, @order.errors.size
     assert_equal [
       error_message_from_model(
@@ -118,16 +118,16 @@ class OrderTest < ActiveSupport::TestCase
     assert_not_equal 5.days.from_now.at_midnight, @order.reload.scheduled_at
     assert_equal 'Updated notes', @order.notes
   end
-  
+
   # Prueba de actualización de un pedido
   test 'not update completed orders' do
     @order.completed!
     assert @order.save
-    
+
     assert !@order.update_attributes(
       scheduled_at: 5.days.from_now.at_midnight
     )
-    
+
     assert_not_equal 5.days.from_now.at_midnight, @order.reload.scheduled_at
   end
 
@@ -159,7 +159,7 @@ class OrderTest < ActiveSupport::TestCase
       error_message_from_model(@order, :scheduled_at, :invalid_date)
     ].sort, @order.errors[:scheduled_at].sort
   end
-  
+
   # Prueba que las validaciones del modelo se cumplan como es esperado
   test 'validates included attributes' do
     @order.status = 'x'
@@ -168,7 +168,7 @@ class OrderTest < ActiveSupport::TestCase
     assert_equal [error_message_from_model(@order, :status, :inclusion)],
       @order.errors[:status]
   end
-  
+
   # Prueba que las validaciones del modelo se cumplan como es esperado
   test 'validates that has at least one item' do
     @order.order_lines.destroy_all
@@ -178,7 +178,7 @@ class OrderTest < ActiveSupport::TestCase
     assert_equal [error_message_from_model(@order, :base, :must_have_one_item)],
       @order.errors[:base]
   end
-  
+
   test 'price' do
     order_items = @order.order_items
     price = order_items.inject(0) { |t, ol| t + ol.price }
@@ -187,59 +187,59 @@ class OrderTest < ActiveSupport::TestCase
     assert @order.price > 0
     assert_equal @order.price, price
   end
-  
+
   test 'total pages' do
     total_pages = @order.order_items.inject(0) { |t, oi| t + oi.pages }
-    
+
     assert total_pages > 0
     assert_equal total_pages, @order.total_pages_by_type(print_job_types(:a4))
   end
-  
+
   test 'status methods' do
     assert_equal Order::STATUS[:pending], @order.status
     assert @order.pending?
     assert !@order.completed?
     assert !@order.cancelled?
-    
+
     assert @order.completed!
     assert !@order.pending?
     assert @order.completed?
     assert !@order.cancelled?
-    
+
     assert @order.reload.cancelled!
     assert !@order.pending?
     assert !@order.completed?
     assert @order.cancelled?
-    
+
     assert !@order.completed!
   end
-  
+
   test 'allow status' do
     assert @order.pending?
     assert @order.allow_status?(Order::STATUS[:completed])
     assert @order.allow_status?(Order::STATUS[:cancelled])
     assert @order.allow_status?(Order::STATUS[:pending])
-    
+
     assert @order.completed!
     assert !@order.allow_status?(Order::STATUS[:completed])
     assert !@order.allow_status?(Order::STATUS[:cancelled])
     assert !@order.allow_status?(Order::STATUS[:pending])
-    
+
     assert @order.reload.cancelled!
     assert !@order.allow_status?(Order::STATUS[:completed])
     assert !@order.allow_status?(Order::STATUS[:cancelled])
     assert !@order.allow_status?(Order::STATUS[:pending])
   end
-  
+
   test 'full text search' do
     orders = Order.full_text(['anakin'])
-    
+
     assert_equal 1, orders.size
     assert_equal 'Anakin', orders.first.customer.name
-    
+
     id = ActiveRecord::FixtureSet.identify(:from_yesterday)
     orders = Order.full_text([id.to_s])
-    
+
     assert_equal 1, orders.size
     assert_equal id, orders.first.id
   end

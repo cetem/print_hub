@@ -37,12 +37,12 @@ class CustomerSessionsControllerTest < ActionController::TestCase
     assert_select '#unexpected_error', false
     assert_template 'customer_sessions/new'
   end
-  
+
   test 'should not create a customer session with a disabled customer' do
     customer = Customer.disable.find(
       ActiveRecord::FixtureSet.identify(:disabled_student)
     )
-    
+
     post :create, customer_session: {
       email: customer.email,
       password: 'disabled_student123'
@@ -57,9 +57,9 @@ class CustomerSessionsControllerTest < ActionController::TestCase
 
   test 'should destroy customer session' do
     CustomerSession.create(@customer)
-    
+
     assert_not_nil CustomerSession.find
-    
+
     delete :destroy
 
     assert_nil CustomerSession.find

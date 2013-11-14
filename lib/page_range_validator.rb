@@ -6,7 +6,7 @@ class PageRangeValidator < ActiveModel::EachValidator
     end
 
     record.send(:"#{attr}=", ranges.join(','))
-    
+
     record.extract_ranges.each do |r|
       n1 = r.kind_of?(Array) ? r[0] : r
       n2 = r[1] if r.kind_of?(Array)
@@ -19,7 +19,7 @@ class PageRangeValidator < ActiveModel::EachValidator
 
     record.errors.add attr, :invalid unless valid_ranges
     record.errors.add attr, :overlapped if ranges_overlapped
-    
+
     if record.document && max_page && max_page > record.document.pages
       record.errors.add attr, :too_long, count: record.document.pages
     end

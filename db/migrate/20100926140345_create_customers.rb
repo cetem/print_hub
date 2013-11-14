@@ -15,7 +15,7 @@ class CreateCustomers < ActiveRecord::Migration
 
   def self.down
     remove_index :customers, :column => :identification
-    
+
     drop_table :customers
   end
 end

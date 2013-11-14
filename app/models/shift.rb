@@ -1,6 +1,6 @@
 class Shift < ActiveRecord::Base
   has_paper_trail
-  
+
   # Scopes
   scope :pending, -> { where(finish: nil) }
   scope :finished, -> { where("finish IS NOT NULL") }
@@ -10,18 +10,18 @@ class Shift < ActiveRecord::Base
   scope :pay_pending, -> { where(
     "#{table_name}.finish IS NOT NULL AND #{table_name}.paid = false"
   ) }
-  
+
   # Restricciones
   validates :start, :user_id, presence: true
   validates_datetime :start, allow_nil: true, allow_blank: true
   validates_datetime :start, after: :start_limit, before: :finish,
     allow_nil: true, allow_blank: true, if: :finish_present?
-  validates_datetime :finish, after: :start, before: :finish_limit, 
+  validates_datetime :finish, after: :start, before: :finish_limit,
     allow_nil: true, allow_blank: true
-  
+
   # Relaciones
   belongs_to :user
-  
+
   def initialize(attributes = nil)
     super(attributes)
 
@@ -35,7 +35,7 @@ class Shift < ActiveRecord::Base
 
    super(default_options.merge(options || {}))
   end
-  
+
   def finish_present?
     self.finish.present?
   end
@@ -43,7 +43,7 @@ class Shift < ActiveRecord::Base
   def pending?
     self.finish.blank?
   end
- 
+
   def close!
     self.update_attributes(finish: Time.now)
   end
@@ -51,7 +51,7 @@ class Shift < ActiveRecord::Base
   def start_limit
     (self.finish - SHIFT_MAX_RANGE) if self.finish
   end
-  
+
   def finish_limit
     self.start + SHIFT_MAX_RANGE
   end

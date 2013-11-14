@@ -14,7 +14,7 @@
         <%= f.input :password_confirmation %>
         <%= select_for_customer_kinds(f) %>
       </div>
-      
+
       <div class="span6">
         <% if current_user.admin %>
           <%= f.input :free_monthly_bonus, input_html: { maxlength: 15 } %>
@@ -65,7 +65,7 @@
                 'data-template' => 'bonus', 'data-container' => '#bonuses',
                 'data-event' => 'addNestedItem' %>
             </div>
-            
+
             <br />
           </div>
         <% end %>

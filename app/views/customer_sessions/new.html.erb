@@ -13,7 +13,7 @@
           <%= f.input :password, input_html: { class: 'span3' } %>
           <%= f.input :remember_me, as: :boolean %>
         </div>
-          
+
         <div class="form-actions">
           <%= f.button :submit, t('view.customer_sessions.login'),
             class: 'btn-primary' %>
@@ -24,9 +24,9 @@
         </div>
       <% end %>
     </div>
-    
+
     <br />
-    
+
     <div class="alert alert-success">
       <h4 class="alert-heading">
         <%= t('view.customers.registration_text') %>
@@ -48,4 +48,4 @@
     <strong><%= @customer_session.errors.full_messages.join('; ') %></strong>
   </footer>
 <% end %>
-<%= render 'unsupported_warning' if explorer? %>  
+<%= render 'unsupported_warning' if explorer? %>

@@ -40,7 +40,7 @@ class UserTest < ActiveSupport::TestCase
         enable: true,
         avatar: avatar_test_file
       )
-      
+
       thumbs_dir = Pathname.new(@user.reload.avatar.path).dirname
       # Original y 2 miñaturas
       assert_equal 3, thumbs_dir.entries.reject(&:directory?).size
@@ -165,7 +165,7 @@ class UserTest < ActiveSupport::TestCase
     assert_equal [error_message_from_model(@user, :language, :inclusion)],
       @user.errors[:language]
   end
-  
+
   # Prueba que las validaciones del modelo se cumplan como es esperado
   test 'validates range of attributes' do
     @user.lines_per_page = '0'
@@ -174,7 +174,7 @@ class UserTest < ActiveSupport::TestCase
     assert_equal [
       error_message_from_model(@user, :lines_per_page, :greater_than, count: 0)
     ], @user.errors[:lines_per_page]
-    
+
     @user.lines_per_page = '100'
     assert @user.invalid?
     assert_equal 1, @user.errors.count
@@ -182,53 +182,53 @@ class UserTest < ActiveSupport::TestCase
       error_message_from_model(@user, :lines_per_page, :less_than, count: 100)
     ], @user.errors[:lines_per_page]
   end
-  
+
   test 'start shift' do
     assert_difference '@user.shifts.count' do
       @user.start_shift!
     end
   end
-  
+
   test 'has pending shift' do
     assert_equal 0, @user.shifts.pending.count
     assert !@user.has_pending_shift?
-    
+
     @user.start_shift!
-    
+
     assert_equal 1, @user.shifts.pending.reload.count
     assert @user.has_pending_shift?
   end
-  
+
   test 'has stale shift' do
     assert_nil @user.stale_shift
     assert !@user.has_stale_shift?
-    
+
     @user.start_shift!(20.hours.ago)
-    
+
     assert_not_nil @user.stale_shift
     assert @user.has_stale_shift?
   end
-  
+
   test 'close pending shifts' do
     assert !@user.has_pending_shift?
-    
+
     @user.start_shift!
-    
+
     assert @user.has_pending_shift?
-    
+
     @user.close_pending_shifts!
-    
+
     assert !@user.has_pending_shift?
   end
-  
+
   test 'full text search' do
     users = User.full_text(['administrator'])
-    
+
     assert_equal 1, users.size
     assert_equal 'Administrator', users.first.name
-    
+
     users = User.full_text(['second_operator'])
-    
+
     assert_equal 1, users.size
     assert_equal 'second_operator', users.first.username
   end
@@ -238,9 +238,9 @@ class UserTest < ActiveSupport::TestCase
     from = 3.weeks.ago.to_date
     to = Time.zone.today
     pending_shifts = @user.shifts.pending_between(from, to)
-    
+
     assert pending_shifts.size > 0
-    
+
     assert_difference 'pending_shifts.count', -pending_shifts.count do
       @user.pay_shifts_between(from, to)
     end

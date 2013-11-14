@@ -3,7 +3,7 @@ require 'test_helper'
 class UsersControllerTest < ActionController::TestCase
   setup do
     @user = users(:administrator)
-    
+
     prepare_avatar_files
   end
 
@@ -84,30 +84,30 @@ class UsersControllerTest < ActionController::TestCase
     assert_redirected_to users_path
     assert_equal 'Updated name', @user.reload.name
   end
-  
-    
+
+
   test 'should get autocomplete user list' do
     UserSession.create(@user)
     get :autocomplete_for_user_name, format: :json, q: 'admin'
     assert_response :success
-    
+
     users = ActiveSupport::JSON.decode(@response.body)
-    
+
     assert_equal 1, users.size
     assert users.all? { |u| (u['label'] + u['informal']).match /admin/i }
 
     get :autocomplete_for_user_name, format: :json, q: 'invalid_operator'
     assert_response :success
-    
+
     customers = ActiveSupport::JSON.decode(@response.body)
-    
+
     assert customers.empty?
 
     get :autocomplete_for_user_name, format: :json, q: 'disabled operator'
     assert_response :success
-    
+
     customers = ActiveSupport::JSON.decode(@response.body)
-    
+
     assert customers.empty?
   end
 
@@ -117,7 +117,7 @@ class UsersControllerTest < ActionController::TestCase
     start = 3.weeks.ago.to_date
     finish = Time.zone.today
     pending_shifts = user.shifts.pay_pending
-    
+
     assert pending_shifts.size > 0
 
     assert_difference 'pending_shifts.count', -pending_shifts.count do
@@ -134,6 +134,6 @@ class UsersControllerTest < ActionController::TestCase
 
     users = ActiveSupport::JSON.decode(@response.body)
 
-    assert_equal 4, users.size    
+    assert_equal 4, users.size
   end
 end

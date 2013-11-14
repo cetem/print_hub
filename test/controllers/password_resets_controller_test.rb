@@ -1,12 +1,12 @@
 require 'test_helper'
 
 class PasswordResetsControllerTest < ActionController::TestCase
-  
+
   def setup
     @customer = customers(:student)
     @request.host = "#{APP_CONFIG['subdomains']['customers']}.printhub.local"
   end
-  
+
   test 'should get new' do
     get :new
     assert_response :success
@@ -22,7 +22,7 @@ class PasswordResetsControllerTest < ActionController::TestCase
         flash.notice
     end
   end
-  
+
   test 'should not create' do
     assert_no_difference 'ActionMailer::Base.deliveries.size' do
       post :create, email: 'wrong@email.com'
@@ -40,8 +40,8 @@ class PasswordResetsControllerTest < ActionController::TestCase
     assert_select '#unexpected_error', false
     assert_template 'password_resets/edit'
   end
-  
-  
+
+
   test 'should get edit with wrong token' do
     get :edit, token: 'wrong_token'
     assert_response :success
