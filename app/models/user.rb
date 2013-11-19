@@ -99,9 +99,9 @@ class User < ApplicationModel
     file = style_name == :original ? self.avatar : self.avatar.send(style_name)
 
     if File.exists?(file.path)
-      ::Magick::Image::read(file.path).first.tap do |img|
+      MiniMagick::Image::open(file.path).tap do |img|
         @_image_dimensions[style_name] ||= [
-          [img.columns, img.rows].join('x')
+          [img[:width], img[:height]].join('x')
         ]
       end
     end

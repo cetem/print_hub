@@ -4,9 +4,6 @@ require 'rails/test_help'
 require 'authlogic/test_case'
 require 'capybara/rails'
 require 'database_cleaner'
-require 'coveralls'
-
-Coveralls.wear!('rails')
 
 class ActiveSupport::TestCase
   ActiveRecord::Migration.check_pending!

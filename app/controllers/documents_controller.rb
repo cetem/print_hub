@@ -128,7 +128,6 @@ class DocumentsController < ApplicationController
     @document = Document.find_or_initialize_by_code(params[:id])
   end
 
-
   # POST /documents/1/add_to_next_print
   def add_to_next_print
     @document = Document.find(params[:id])
