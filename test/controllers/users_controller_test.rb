@@ -27,7 +27,7 @@ class UsersControllerTest < ActionController::TestCase
 
   test 'should create user' do
     UserSession.create(@user)
-    assert_difference ['User.count', 'Version.count'] do
+    assert_difference ['User.count', 'PaperTrail::Version.count'] do
       post :create, user: {
         name: 'New name',
         last_name: 'New last name',
@@ -46,7 +46,7 @@ class UsersControllerTest < ActionController::TestCase
 
     assert_redirected_to users_path
     # Prueba básica para "asegurar" el funcionamiento del versionado
-    assert_equal users(:administrator).id, Version.last.whodunnit
+    assert_equal users(:administrator).id, PaperTrail::Version.last.whodunnit
   end
 
   test 'should show user' do

@@ -164,7 +164,7 @@ class PrintsControllerTest < ActionController::TestCase
     customer = Customer.find customers(:student).id
 
     assert_difference counts_array do
-      assert_difference 'Version.count', 4 do
+      assert_difference 'PaperTrail::Version.count', 4 do
         post :create, status: 'all', print: {
           printer: @printer,
           customer_id: customer.id,
@@ -204,7 +204,7 @@ class PrintsControllerTest < ActionController::TestCase
     # Debe asignar el usuario autenticado como el creador de la impresión
     assert_equal users(:operator).id, assigns(:print).user.id
     # Prueba básica para "asegurar" el funcionamiento del versionado
-    assert_equal users(:operator).id, Version.last.whodunnit
+    assert_equal users(:operator).id, PaperTrail::Version.last.whodunnit
   end
 
   test 'should create print and avoid printing' do
@@ -214,7 +214,7 @@ class PrintsControllerTest < ActionController::TestCase
     counts_array = ['Print.count', 'PrintJob.count', 'Payment.count']
 
     assert_difference counts_array do
-      assert_difference 'Version.count', 3 do
+      assert_difference 'PaperTrail::Version.count', 3 do
         assert_no_difference 'Cups.all_jobs(@printer).keys.sort.last' do
           post :create, status: 'all', print: {
             printer: @printer,
@@ -248,7 +248,7 @@ class PrintsControllerTest < ActionController::TestCase
     # Debe asignar el usuario autenticado como el creador de la impresión
     assert_equal users(:operator).id, assigns(:print).user.id
     # Prueba básica para "asegurar" el funcionamiento del versionado
-    assert_equal users(:operator).id, Version.last.whodunnit
+    assert_equal users(:operator).id, PaperTrail::Version.last.whodunnit
   end
 
   test 'should create print with free credit' do
@@ -261,7 +261,7 @@ class PrintsControllerTest < ActionController::TestCase
 
 
     assert_difference counts_array do
-      assert_difference 'Version.count', 5 do
+      assert_difference 'PaperTrail::Version.count', 5 do
         # Customer.token, credit, payment, print, print_job
         post :create, status: 'all', print: {
           printer: @printer,
@@ -295,7 +295,7 @@ class PrintsControllerTest < ActionController::TestCase
     # Debe asignar el usuario autenticado como el creador de la impresión
     assert_equal users(:operator).id, assigns(:print).user.id
     # Prueba básica para "asegurar" el funcionamiento del versionado
-    assert_equal users(:operator).id, Version.last.whodunnit
+    assert_equal users(:operator).id, PaperTrail::Version.last.whodunnit
   end
 
   test 'should create print without documents in print jobs' do

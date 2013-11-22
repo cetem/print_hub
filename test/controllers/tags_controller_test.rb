@@ -36,7 +36,7 @@ class TagsControllerTest < ActionController::TestCase
 
   test 'should create tag' do
     UserSession.create(users(:administrator))
-    assert_difference ['Tag.count', 'Version.count'] do
+    assert_difference ['Tag.count', 'PaperTrail::Version.count'] do
       post :create, tag: {
         name: 'New tag'
       }
@@ -44,7 +44,7 @@ class TagsControllerTest < ActionController::TestCase
 
     assert_redirected_to tags_path
     # Prueba básica para "asegurar" el funcionamiento del versionado
-    assert_equal users(:administrator).id, Version.last.whodunnit
+    assert_equal users(:administrator).id, PaperTrail::Version.last.whodunnit
   end
 
   test 'should show tag' do

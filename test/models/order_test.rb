@@ -17,7 +17,7 @@ class OrderTest < ActiveSupport::TestCase
   # Prueba la creación de un pedido
   test 'create' do
     assert_difference ['Order.count', 'OrderLine.count', 'FileLine.count'] do
-      assert_difference 'Version.count', 3 do
+      assert_difference 'PaperTrail::Version.count', 3 do
         customer = customers(:student_without_bonus)
         @order = customer.orders.create(
           scheduled_at: 10.days.from_now,
@@ -45,7 +45,7 @@ class OrderTest < ActiveSupport::TestCase
   # Prueba la creación de un pedido
   test 'create with credit and allow printing' do
     assert_difference ['Order.count', 'OrderLine.count', 'FileLine.count'] do
-      assert_difference 'Version.count', 3 do
+      assert_difference 'PaperTrail::Version.count', 3 do
         customer = customers(:student)
         @order = customer.orders.create(
           scheduled_at: 10.days.from_now,

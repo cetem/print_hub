@@ -98,7 +98,7 @@ class OrdersControllerTest < ActionController::TestCase
 
     assert_redirected_to order_url(assigns(:order))
     # Prueba básica para "asegurar" el funcionamiento del versionado
-    assert_nil Version.last.whodunnit
+    assert_nil PaperTrail::Version.last.whodunnit
   end
 
   test 'should show user order' do

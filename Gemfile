@@ -8,10 +8,8 @@ gem 'validates_timeliness'
 gem 'awesome_nested_set', "~> 3.0.0.rc.2"
 gem 'will_paginate'
 gem 'foreigner'
-gem 'paper_trail', github: 'airblade/paper_trail', branch: 'rails4'
+gem 'paper_trail', "~> 3.0.0.rc2"
 gem 'RedCloth'
-gem 'capistrano', '2.15.5'
-gem 'whenever', require: false
 gem 'cups'
 gem 'simple_form'
 
@@ -23,6 +21,13 @@ gem 'pdf-reader'
 gem 'barby'
 gem 'rqrcode'
 gem 'chunky_png'
+
+# Deployer Gems
+gem 'capistrano'
+gem 'capistrano-bundler'
+gem 'capistrano-rails'
+gem 'capistrano-rbenv', github: 'capistrano/rbenv'
+gem 'whenever', require: false
 
 # Cache performance
 gem 'memcache-client'

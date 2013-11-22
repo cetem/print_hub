@@ -60,7 +60,7 @@ class CustomersControllerTest < ActionController::TestCase
   test 'should create customer' do
     UserSession.create(users(:administrator))
     assert_difference ['Customer.unscoped.count', 'Bonus.count'] do
-      assert_difference 'Version.count', 2 do
+      assert_difference 'PaperTrail::Version.count', 2 do
         post :create, customer: {
           name: 'Jar Jar',
           lastname: 'Binks',
@@ -87,7 +87,7 @@ class CustomersControllerTest < ActionController::TestCase
 
     assert_redirected_to customer_url(assigns(:customer))
     # Prueba básica para "asegurar" el funcionamiento del versionado
-    assert_equal users(:administrator).id, Version.last.whodunnit
+    assert_equal users(:administrator).id, PaperTrail::Version.last.whodunnit
   end
 
   test 'should create public customer' do

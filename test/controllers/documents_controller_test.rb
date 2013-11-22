@@ -62,7 +62,7 @@ class DocumentsControllerTest < ActionController::TestCase
     UserSession.create(users(:administrator))
     assert_difference 'Document.count' do
       # 1 document, 2 document-tags-relation, 2 tags update
-      assert_difference 'Version.count', 5 do
+      assert_difference 'PaperTrail::Version.count', 5 do
         post :create, document: {
           code: '0001234',
           name: 'New Name',
@@ -83,7 +83,7 @@ class DocumentsControllerTest < ActionController::TestCase
     # Debe poner 1 ya que cuenta las que tiene efectivamente el PDF
     assert_equal 1, Document.find_by_code('0001234').pages
     # Prueba básica para "asegurar" el funcionamiento del versionado
-    assert_equal users(:administrator).id, Version.last.whodunnit
+    assert_equal users(:administrator).id, PaperTrail::Version.last.whodunnit
   end
 
   test 'should show document' do

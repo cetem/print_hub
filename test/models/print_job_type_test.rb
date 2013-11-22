@@ -78,7 +78,7 @@ class PrintJobTypeTest < ActiveSupport::TestCase
     assert !@print_job_type.default
 
     assert_no_difference 'PrintJobType.count' do
-      assert_difference 'Version.count', 2 do
+      assert_difference 'PaperTrail::Version.count', 2 do
         @print_job_type.update_attributes(default: true)
       end
     end
