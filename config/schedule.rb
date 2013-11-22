@@ -14,6 +14,10 @@ every 1.day, at: '00:01' do
   runner 'Customer.destroy_inactive_accounts'
 end
 
+every 1.day, at: '03:00' do
+  rake 'tasks:clear_prints'
+end
+
 every 7.days, at: '01:00' do
   rake 'tasks:clean_temp_files'
 end

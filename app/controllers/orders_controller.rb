@@ -12,7 +12,7 @@ class OrdersController < ApplicationController
   def index
     @title = t 'view.orders.index_title'
     @searchable = current_customer.nil?
-    @orders = @order_scope.order('scheduled_at ASC')
+    @orders = @order_scope.order(id: :desc)
 
     if params[:q].present? && current_user
       query = params[:q].sanitized_for_text_query
