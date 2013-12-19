@@ -3,10 +3,10 @@ require 'test_helper'
 class TagsControllerTest < ActionController::TestCase
   setup do
     @tag = tags(:books)
+    UserSession.create(users(:operator))
   end
 
   test 'should get index' do
-    UserSession.create(users(:administrator))
     get :index
     assert_response :success
     assert_not_nil assigns(:tags)
@@ -16,7 +16,6 @@ class TagsControllerTest < ActionController::TestCase
   end
 
   test 'should get nested index' do
-    UserSession.create(users(:administrator))
     get :index, parent: tags(:notes)
     assert_response :success
     assert_not_nil assigns(:tags)
@@ -26,7 +25,6 @@ class TagsControllerTest < ActionController::TestCase
   end
 
   test 'should get new' do
-    UserSession.create(users(:administrator))
     get :new
     assert_response :success
     assert_not_nil assigns(:tag)
@@ -35,7 +33,6 @@ class TagsControllerTest < ActionController::TestCase
   end
 
   test 'should create tag' do
-    UserSession.create(users(:administrator))
     assert_difference ['Tag.count', 'Version.count'] do
       post :create, tag: {
         name: 'New tag'
@@ -44,11 +41,10 @@ class TagsControllerTest < ActionController::TestCase
 
     assert_redirected_to tags_path
     # Prueba básica para "asegurar" el funcionamiento del versionado
-    assert_equal users(:administrator).id, Version.last.whodunnit
+    assert_equal users(:operator).id, Version.last.whodunnit
   end
 
   test 'should show tag' do
-    UserSession.create(users(:administrator))
     get :show, id: @tag.to_param
     assert_response :success
     assert_not_nil assigns(:tag)
@@ -57,7 +53,6 @@ class TagsControllerTest < ActionController::TestCase
   end
 
   test 'should get edit' do
-    UserSession.create(users(:administrator))
     get :edit, id: @tag.to_param
     assert_response :success
     assert_not_nil assigns(:tag)
@@ -66,7 +61,6 @@ class TagsControllerTest < ActionController::TestCase
   end
 
   test 'should update tag' do
-    UserSession.create(users(:administrator))
     put :update, id: @tag.to_param, tag: {
       name: 'Updated name'
     }
@@ -75,7 +69,6 @@ class TagsControllerTest < ActionController::TestCase
   end
 
   test 'should destroy tag' do
-    UserSession.create(users(:administrator))
     assert_difference('Tag.count', -1) do
       delete :destroy, id: @tag.to_param
     end

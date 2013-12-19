@@ -4,7 +4,7 @@ require 'test_helper'
 class BonusTest < ActiveSupport::TestCase
   # Función para inicializar las variables utilizadas en las pruebas
   def setup
-    @bonus = Bonus.find(credits(:big_bonus).id)
+    @bonus = credits(:big_bonus)
   end
 
   # Prueba que se realicen las búsquedas como se espera
@@ -35,7 +35,7 @@ class BonusTest < ActiveSupport::TestCase
   # Prueba de actualización de una bonificación
   test 'update' do
     assert_no_difference 'Bonus.count' do
-      assert @bonus.update_attributes(
+      assert @bonus.update(
         amount: '1500.0',
         valid_until: 10.years.from_now.to_date
       ), @bonus.errors.full_messages.join('; ')

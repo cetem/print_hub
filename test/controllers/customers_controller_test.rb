@@ -3,10 +3,12 @@ require 'test_helper'
 class CustomersControllerTest < ActionController::TestCase
   setup do
     @customer = customers(:student)
+    @operator = users(:operator)
   end
 
   test 'should get index' do
-    UserSession.create(users(:administrator))
+    UserSession.create(@operator)
+
     get :index
     assert_response :success
     assert_not_nil assigns(:customers)
@@ -15,7 +17,7 @@ class CustomersControllerTest < ActionController::TestCase
   end
 
   test 'should get filtered index' do
-    UserSession.create(users(:administrator))
+    UserSession.create(@operator)
 
     get :index, q: 'Anakin|Darth'
     assert_response :success
@@ -28,7 +30,8 @@ class CustomersControllerTest < ActionController::TestCase
   end
 
   test 'should get index with debt customers' do
-    UserSession.create(users(:administrator))
+    UserSession.create(@operator)
+
     get :index, status: 'with_debt'
     assert_response :success
     assert_not_nil assigns(:customers)
@@ -39,7 +42,8 @@ class CustomersControllerTest < ActionController::TestCase
   end
 
   test 'should get new' do
-    UserSession.create(users(:administrator))
+    UserSession.create(@operator)
+
     get :new
     assert_response :success
     assert_not_nil assigns(:customer)
@@ -58,7 +62,8 @@ class CustomersControllerTest < ActionController::TestCase
   end
 
   test 'should create customer' do
-    UserSession.create(users(:administrator))
+    UserSession.create(@operator)
+
     assert_difference ['Customer.unscoped.count', 'Bonus.count'] do
       assert_difference 'Version.count', 2 do
         post :create, customer: {
@@ -87,12 +92,13 @@ class CustomersControllerTest < ActionController::TestCase
 
     assert_redirected_to customer_url(assigns(:customer))
     # Prueba básica para "asegurar" el funcionamiento del versionado
-    assert_equal users(:administrator).id, Version.last.whodunnit
+    assert_equal @operator.id, Version.last.whodunnit
   end
 
   test 'should create public customer' do
     @request.host = "#{APP_CONFIG['subdomains']['customers']}.printhub.local"
-    assert_difference 'Customer.disable.count' do
+
+    assert_difference 'Customer.count' do
       post :create, customer: {
         name: 'Jar Jar',
         lastname: 'Binks',
@@ -108,6 +114,7 @@ class CustomersControllerTest < ActionController::TestCase
 
   test 'should create public customer and ignore bonuses' do
     @request.host = "#{APP_CONFIG['subdomains']['customers']}.printhub.local"
+
     assert_difference 'Customer.disable.count' do
       # Bonuses are silently ignored for customers
       assert_no_difference 'Bonus.count' do
@@ -132,7 +139,8 @@ class CustomersControllerTest < ActionController::TestCase
   end
 
   test 'should show customer' do
-    UserSession.create(users(:administrator))
+    UserSession.create(@operator)
+
     get :show, id: @customer.to_param
     assert_response :success
     assert_not_nil assigns(:customer)
@@ -141,7 +149,8 @@ class CustomersControllerTest < ActionController::TestCase
   end
 
   test 'should get edit' do
-    UserSession.create(users(:administrator))
+    UserSession.create(@operator)
+
     get :edit, id: @customer.to_param
     assert_response :success
     assert_not_nil assigns(:customer)
@@ -150,7 +159,7 @@ class CustomersControllerTest < ActionController::TestCase
   end
 
   test 'should update customer' do
-    UserSession.create(users(:administrator))
+    UserSession.create(@operator)
 
     assert_no_difference 'Customer.count' do
       assert_difference 'Bonus.count' do
@@ -175,7 +184,8 @@ class CustomersControllerTest < ActionController::TestCase
   end
 
   test 'should destroy customer' do
-    UserSession.create(users(:administrator))
+    UserSession.create(@operator)
+
     assert_difference('Customer.count', -1) do
       delete :destroy, id: Customer.find(customers(:teacher).id).to_param
     end
@@ -184,8 +194,10 @@ class CustomersControllerTest < ActionController::TestCase
   end
 
   test 'should get credit detail' do
-    UserSession.create(users(:administrator))
+    UserSession.create(@operator)
+
     xhr :get, :credit_detail, id: @customer.to_param
+
     assert_response :success
     assert_not_nil assigns(:customer)
     assert_select '#unexpected_error', false
@@ -194,6 +206,7 @@ class CustomersControllerTest < ActionController::TestCase
 
   test 'should get edit profile' do
     CustomerSession.create(customers(:student))
+
     get :edit_profile, id: @customer.to_param
     assert_response :success
     assert_not_nil assigns(:customer)
@@ -202,9 +215,10 @@ class CustomersControllerTest < ActionController::TestCase
   end
 
   test 'should not get alien edit profile' do
-    logged_customer = Customer.find(customers(:teacher).id)
+    logged_customer = customers(:teacher)
 
     CustomerSession.create(logged_customer)
+
     get :edit_profile, id: @customer.to_param
     assert_response :success
     assert_not_nil assigns(:customer)
@@ -215,6 +229,7 @@ class CustomersControllerTest < ActionController::TestCase
 
   test 'should update customer profile and avoid create a bonus' do
     CustomerSession.create(customers(:student))
+
     assert_no_difference 'Customer.count' do
       assert_no_difference 'Bonus.count' do
         put :update_profile, id: @customer.to_param, customer: {
@@ -236,9 +251,10 @@ class CustomersControllerTest < ActionController::TestCase
   end
 
   test 'should not update alien customer profile' do
-    logged_customer = Customer.find(customers(:teacher).id)
+    logged_customer = customers(:teacher)
 
     CustomerSession.create(logged_customer)
+
     assert_no_difference 'Customer.count' do
       put :update_profile, id: @customer.to_param, customer: {
         name: 'Updated name',
@@ -265,7 +281,7 @@ class CustomersControllerTest < ActionController::TestCase
   end
 
   test 'should pay off customer debt' do
-    UserSession.create(users(:administrator))
+    UserSession.create(@operator)
 
     xhr :put, :pay_off_debt, id: @customer.to_param
 
@@ -276,7 +292,8 @@ class CustomersControllerTest < ActionController::TestCase
   end
 
   test 'should pay off a customer month debt' do
-    UserSession.create(users(:administrator))
+    UserSession.create(@operator)
+
     month = @customer.months_to_pay.last
     date = Date.new(month.last, month.first, 1)
 
@@ -289,8 +306,9 @@ class CustomersControllerTest < ActionController::TestCase
   end
 
   test 'should manual activate a disable customer' do
-    UserSession.create(users(:administrator))
-    customer = Customer.disable.first
+    UserSession.create(@operator)
+
+    customer = customers(:disabled_student)
 
     assert_difference 'Customer.disable.count', -1 do
       assert_difference 'Customer.active.count' do

@@ -4,7 +4,7 @@ require 'test_helper'
 class PaymentTest < ActiveSupport::TestCase
   # Función para inicializar las variables utilizadas en las pruebas
   def setup
-    @payment = Payment.find payments(:math_payment).id
+    @payment = payments(:math_payment)
   end
 
   # Prueba que se realicen las búsquedas como se espera
@@ -32,7 +32,7 @@ class PaymentTest < ActiveSupport::TestCase
   # Prueba de actualización de un pago
   test 'update' do
     assert_no_difference 'Payment.count' do
-      assert @payment.update_attributes(paid: '38.00'),
+      assert @payment.update(paid: '38.00'),
         @payment.errors.full_messages.join('; ')
     end
 

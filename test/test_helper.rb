@@ -56,6 +56,24 @@ class ActiveSupport::TestCase
     process_with_action_dispatch('test.gif', 'image/gif')
   end
 
+  def new_generic_operator(atributes={})
+    atributes[:name]                  ||= 'generic name'
+    atributes[:last_name]             ||= 'generic last name'
+    atributes[:email]                 ||= 'generic_user@printhub.com'
+    atributes[:default_printer]       ||= ''
+    atributes[:lines_per_page]        ||= 12
+    atributes[:language]              ||= LANGUAGES.first.to_s
+    atributes[:username]              ||= 'generic_user'
+    atributes[:password]              ||= 'generic_user123'
+    atributes[:password_confirmation] ||= 'generic_user123'
+    atributes[:admin]                 ||= 'false'
+    atributes[:enable]                ||= true
+    atributes[:avatar]                ||= avatar_test_file
+    atributes[:not_shifted]           ||= false
+    User.create! atributes
+
+  end
+
   private
 
   def process_with_action_dispatch(filename, content_type)
@@ -113,8 +131,8 @@ class ActionDispatch::IntegrationTest
   def login(*args)
     options = args.extract_options!
 
-    options[:user_id] ||= args.shift if args.first.kind_of?(Symbol)
-    options[:user_id] ||= :administrator
+    options[:user_id] ||= args.shift #if args.first.kind_of?(Symbol)
+    options[:user_id] ||= users(:operator).id
     options[:expected_path] ||= args.shift if args.first.kind_of?(String)
     options[:expected_path] ||= prints_path
 
@@ -122,7 +140,7 @@ class ActionDispatch::IntegrationTest
 
     assert_page_has_no_errors!
 
-    users(options[:user_id]).tap do |user|
+    User.find(options[:user_id]).tap do |user|
       fill_in I18n.t('authlogic.attributes.user_session.username'),
         with: user.email
       fill_in I18n.t('authlogic.attributes.user_session.password'),

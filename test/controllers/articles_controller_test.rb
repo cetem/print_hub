@@ -3,7 +3,9 @@ require 'test_helper'
 class ArticlesControllerTest < ActionController::TestCase
   setup do
     @article = articles(:binding)
-    UserSession.create(users(:administrator))
+    @operator = users(:operator)
+
+    UserSession.create(@operator)
   end
 
   test 'should get index' do
@@ -33,7 +35,7 @@ class ArticlesControllerTest < ActionController::TestCase
 
     assert_redirected_to articles_path
     # Prueba básica para "asegurar" el funcionamiento del versionado
-    assert_equal users(:administrator).id, Version.last.whodunnit
+    assert_equal @operator.id, Version.last.whodunnit
   end
 
   test 'should show article' do
@@ -62,7 +64,7 @@ class ArticlesControllerTest < ActionController::TestCase
   end
 
   test 'should destroy article' do
-    article = Article.find(articles(:ringed).id)
+    article = articles(:ringed)
 
     assert_difference('Article.count', -1) do
       delete :destroy, id: article.to_param

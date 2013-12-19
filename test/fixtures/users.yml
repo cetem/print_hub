@@ -1,18 +1,3 @@
-administrator:
-  name: Administrator
-  last_name: Administrator
-  language: <%= LANGUAGES.first.to_s %>
-  email: admin@printhub.com
-  default_printer: <%= Cups.show_destinations.select {|p| p =~ /pdf/i}.first %>
-  lines_per_page: 10
-  username: admin
-  password_salt: <%= salt = Authlogic::Random.hex_token %>
-  crypted_password: <%= Authlogic::CryptoProviders::Sha512.encrypt('admin123' + salt) %>
-  persistence_token: 6cde0674657a8a313ce952df979de2830309aa4c11ca65805dd00bfdc65dbcc2f5e36718660a1d2e68c1a08c276d996763985d2f06fd3d076eb7bc4d97b1e317
-  admin: true
-  enable: true
-  avatar_file_name: avatar.gif
-
 operator:
   name: Operator
   last_name: Operator
@@ -24,69 +9,7 @@ operator:
   password_salt: <%= salt = Authlogic::Random.hex_token %>
   crypted_password: <%= Authlogic::CryptoProviders::Sha512.encrypt('operator123' + salt) %>
   persistence_token: 6cde0674657a8a313ce952df979de2830309aa4c11ca65805dd00bfdc65dbcc2f5e36718660a1d2e68c1a08c276d996763985d2f06fd3d076eb7bc4d97b1e317
-  admin: false
-  enable: true
-  avatar_file_name: avatar.gif
-
-second_operator:
-  name: Second
-  last_name: Operator
-  language: <%= LANGUAGES.first.to_s %>
-  email: second_operator@printhub.com
-  default_printer: <%= Cups.show_destinations.select {|p| p =~ /pdf/i}.first %>
-  lines_per_page: 10
-  username: second_operator
-  password_salt: <%= salt = Authlogic::Random.hex_token %>
-  crypted_password: <%= Authlogic::CryptoProviders::Sha512.encrypt('second_operator123' + salt) %>
-  persistence_token: 6cde0674657a8a313ce952df979de2830309aa4c11ca65805dd00bfdc65dbcc2f5e36718660a1d2e68c1a08c276d996763985d2f06fd3d076eb7bc4d97b1e317
-  admin: false
-  enable: true
-  avatar_file_name: avatar.gif
-
-disabled_operator:
-  name: Disabled
-  last_name: Operator
-  language: <%= LANGUAGES.first.to_s %>
-  email: disabled_operator@printhub.com
-  default_printer: <%= Cups.show_destinations.select {|p| p =~ /pdf/i}.first %>
-  lines_per_page: 10
-  username: disabled_operator
-  password_salt: <%= salt = Authlogic::Random.hex_token %>
-  crypted_password: <%= Authlogic::CryptoProviders::Sha512.encrypt('disabled_operator123' + salt) %>
-  persistence_token: 6cde0674657a8a313ce952df979de2830309aa4c11ca65805dd00bfdc65dbcc2f5e36718660a1d2e68c1a08c276d996763985d2f06fd3d076eb7bc4d97b1e317
-  admin: false
-  enable: false
-  avatar_file_name: avatar.gif
-
-operator_with_open_shift:
-  name: Operator WOS
-  last_name: Operator WOS
-  language: <%= LANGUAGES.first.to_s %>
-  email: operator_wos@printhub.com
-  default_printer: <%= Cups.show_destinations.select {|p| p =~ /pdf/i}.first %>
-  lines_per_page: 10
-  username: operator_wos
-  password_salt: <%= salt = Authlogic::Random.hex_token %>
-  crypted_password: <%= Authlogic::CryptoProviders::Sha512.encrypt('operator_wos123' + salt) %>
-  persistence_token: 6cde0674657a8a313ce952df979de2830309aa4c11ca65805dd00bfdc65dbcc2f5e36718660a1d2e68c1a08c276d996763985d2f06fd3d076eb7bc4d97b1e317
-  admin: false
-  enable: true
-  avatar_file_name: avatar.gif
-
-developer:
-  name: Developer
-  last_name: Developer
-  language: <%= LANGUAGES.first.to_s %>
-  email: deploy@printhub.com
-  default_printer: <%= Cups.show_destinations.select {|p| p =~ /pdf/i}.first %>
-  lines_per_page: 10
-  username: deploy
-  password_salt: <%= salt = Authlogic::Random.hex_token %>
-  crypted_password: <%= Authlogic::CryptoProviders::Sha512.encrypt('deploy123' + salt) %>
-  persistence_token: 6cde0674657a8a313ce952df979de2830309aa4c11ca65805dd00bfdc65dbcc2f5e36718660a1d2e68c1a08c276d996763985d2f06fd3d076eb7bc4d97b1e317
   admin: true
   enable: true
-  not_shifted: true
+  not_shifted: false
   avatar_file_name: avatar.gif
-
-

@@ -4,7 +4,7 @@ require 'test_helper'
 class DepositTest < ActiveSupport::TestCase
   # Función para inicializar las variables utilizadas en las pruebas
   def setup
-    @deposit = Deposit.find(credits(:big_deposit).id)
+    @deposit = credits(:big_deposit)
   end
 
   # Prueba que se realicen las búsquedas como se espera
@@ -35,7 +35,7 @@ class DepositTest < ActiveSupport::TestCase
   # Prueba de actualización de un depósito
   test 'update' do
     assert_no_difference 'Deposit.count' do
-      assert @deposit.update_attributes(
+      assert @deposit.update(
         amount: '1500.0',
         valid_until: 10.years.from_now.to_date
       ), @deposit.errors.full_messages.join('; ')
@@ -78,8 +78,6 @@ class DepositTest < ActiveSupport::TestCase
       @deposit.errors[:amount]
     assert_equal [error_message_from_model(@deposit, :remaining, :not_a_number)],
       @deposit.errors[:remaining]
-#    assert_equal [error_message_from_model(@deposit, :valid_until,
-#        :invalid_date)], @deposit.errors[:valid_until]
   end
 
   # Prueba que las validaciones del modelo se cumplan como es esperado

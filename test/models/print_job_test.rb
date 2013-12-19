@@ -4,7 +4,7 @@ require 'test_helper'
 class PrintJobTest < ActiveSupport::TestCase
   # Función para inicializar las variables utilizadas en las pruebas
   def setup
-    @print_job = PrintJob.find print_jobs(:math_job_1).id
+    @print_job = print_jobs(:math_job_1)
 
     @printer = Cups.show_destinations.select {|p| p =~ /pdf/i}.first
 
@@ -93,7 +93,7 @@ class PrintJobTest < ActiveSupport::TestCase
   # Prueba de actualización de un trabajo de impresión
   test 'update' do
     assert_no_difference 'PrintJob.count' do
-      assert @print_job.update_attributes(copies: 20),
+      assert @print_job.update(copies: 20),
         @print_job.errors.full_messages.join('; ')
     end
 
@@ -134,10 +134,14 @@ class PrintJobTest < ActiveSupport::TestCase
     @print_job.price_per_copy = '?xx'
     assert @print_job.invalid?
     assert_equal 4, @print_job.errors.count
-    assert_equal [error_message_from_model(@print_job, :copies, :not_a_number)],
+    assert_equal(
+      [error_message_from_model(@print_job, :copies, :not_a_number)],
       @print_job.errors[:copies]
-    assert_equal [error_message_from_model(@print_job, :pages, :not_a_number)],
+    )
+    assert_equal(
+      [error_message_from_model(@print_job, :pages, :not_a_number)],
       @print_job.errors[:pages]
+    )
     assert_equal [
       error_message_from_model(@print_job, :printed_copies, :not_a_number)
     ], @print_job.errors[:printed_copies]

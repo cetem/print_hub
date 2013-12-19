@@ -4,7 +4,7 @@ require 'test_helper'
 class TagTest < ActiveSupport::TestCase
   # Función para inicializar las variables utilizadas en las pruebas
   def setup
-    @tag = Tag.find tags(:books).id
+    @tag = tags(:books)
   end
 
   # Prueba que se realicen las búsquedas como se espera
@@ -24,7 +24,7 @@ class TagTest < ActiveSupport::TestCase
   # Prueba de actualización de una etiqueta
   test 'update' do
     assert_no_difference 'Tag.count' do
-      assert @tag.update_attributes(name: 'Updated name'),
+      assert @tag.update(name: 'Updated name'),
         @tag.errors.full_messages.join('; ')
     end
 
@@ -84,7 +84,7 @@ class TagTest < ActiveSupport::TestCase
     documents_tag_path = @tag.documents.map(&:tag_path).compact.sort
 
     assert !documents_tag_path.any? { |tp| tp.match /Updated/ }
-    assert @tag.update_attributes(name: 'Updated')
+    assert @tag.update(name: 'Updated')
 
     new_documents_tag_path = @tag.documents.reload.map(&:tag_path).compact.sort
     assert new_documents_tag_path.all? { |tp| tp.match /Updated/ }
@@ -102,7 +102,7 @@ class TagTest < ActiveSupport::TestCase
   test 'private is saved in related documents' do
     assert !@tag.documents.any?(&:private)
 
-    assert @tag.update_attributes(private: true)
+    assert @tag.update(private: true)
 
     assert @tag.documents.reload.all?(&:private)
   end
@@ -113,19 +113,19 @@ class TagTest < ActiveSupport::TestCase
 
     assert_equal 2, tag_ids.size
     assert !document.private
-    assert Tag.find(tag_ids.first).update_attributes(private: true)
+    assert Tag.find(tag_ids.first).update(private: true)
 
     # Con solo una etiqueta privada ya se considera privado el documento
     assert document.reload.private
-    assert Tag.find(tag_ids.second).update_attributes(private: true)
+    assert Tag.find(tag_ids.second).update(private: true)
 
     # Sin cambios, ahora las dos son privadas
     assert document.reload.private
-    assert Tag.find(tag_ids.first).update_attributes(private: false)
+    assert Tag.find(tag_ids.first).update(private: false)
 
     # Sin cambios, falta que la segunda sea pública
     assert document.reload.private
-    assert Tag.find(tag_ids.second).update_attributes(private: false)
+    assert Tag.find(tag_ids.second).update(private: false)
 
     # Ahora si no se considera privado el documento
     assert !document.reload.private

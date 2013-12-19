@@ -4,7 +4,7 @@ require 'test_helper'
 class OrderLineTest < ActiveSupport::TestCase
   # Función para inicializar las variables utilizadas en las pruebas
   def setup
-    @order_line = OrderLine.find order_lines(:from_yesterday_math_notes).id
+    @order_line = order_lines(:from_yesterday_math_notes)
 
     prepare_document_files
   end
@@ -47,7 +47,7 @@ class OrderLineTest < ActiveSupport::TestCase
   # Prueba de actualización de un ítem de una orden
   test 'update' do
     assert_no_difference 'OrderLine.count' do
-      assert @order_line.update_attributes(copies: 20),
+      assert @order_line.update(copies: 20),
         @order_line.errors.full_messages.join('; ')
     end
 

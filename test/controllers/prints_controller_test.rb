@@ -4,6 +4,9 @@ class PrintsControllerTest < ActionController::TestCase
   setup do
     @print = prints(:math_print)
     @printer = Cups.show_destinations.select {|p| p =~ /pdf/i}.first
+    @operator = users(:operator)
+
+    UserSession.create(@operator)
 
     raise "Can't find a PDF printer to run tests with." unless @printer
 
@@ -11,22 +14,16 @@ class PrintsControllerTest < ActionController::TestCase
   end
 
   test 'should get operator index' do
-    user = users(:operator)
-
-    UserSession.create(user)
     get :index, status: 'all'
     assert_response :success
     assert_not_nil assigns(:prints)
-    assert_equal user.prints.count, assigns(:prints).size
-    assert assigns(:prints).all? { |p| p.user_id == user.id }
+    assert_equal @operator.prints.count, assigns(:prints).size
+    assert assigns(:prints).all? { |p| p.user_id == @operator.id }
     assert_select '#unexpected_error', false
     assert_template 'prints/index'
   end
 
   test 'should get operator pending index' do
-    user = users(:operator)
-
-    UserSession.create(user)
     get :index, status: 'pending'
     assert_response :success
     assert_not_nil assigns(:prints)
@@ -37,65 +34,67 @@ class PrintsControllerTest < ActionController::TestCase
   end
 
   test 'should get admin index' do
-    user = users(:administrator)
+    new_operator = new_generic_operator
 
-    UserSession.create(user)
+    @print.update_column(:user_id, new_operator.id)
+
     get :index, status: 'all'
     assert_response :success
     assert_not_nil assigns(:prints)
     assert_equal Print.count, assigns(:prints).size
-    assert assigns(:prints).any? { |p| p.user_id != user.id }
+    assert assigns(:prints).any? { |p| p.user_id != @operator.id }
     assert_select '#unexpected_error', false
     assert_template 'prints/index'
   end
 
   test 'should get admin pending index' do
-    user = users(:administrator)
+    new_operator = new_generic_operator
 
-    UserSession.create(user)
+    Print.pending.take.update_column(:user_id, new_operator.id)
+
     get :index, status: 'pending'
     assert_response :success
     assert_not_nil assigns(:prints)
     assert_equal Print.pending.count, assigns(:prints).size
-    assert assigns(:prints).any? { |p| p.user_id != user.id }
+    assert assigns(:prints).any? { |p| p.user_id != @operator.id }
     assert assigns(:prints).all?(&:pending_payment?)
     assert_select '#unexpected_error', false
     assert_template 'prints/index'
   end
 
   test 'should get admin scheduled index' do
-    user = users(:administrator)
+    new_operator = new_generic_operator
 
-    UserSession.create(user)
+    Print.scheduled.take.update_column(:user_id, new_operator.id)
+
     get :index, status: 'scheduled'
     assert_response :success
     assert_not_nil assigns(:prints)
     assert_equal Print.scheduled.count, assigns(:prints).size
-    assert assigns(:prints).any? { |p| p.user_id != user.id }
+    assert assigns(:prints).any? { |p| p.user_id != @operator.id }
     assert assigns(:prints).all?(&:scheduled?)
     assert_select '#unexpected_error', false
     assert_template 'prints/index'
   end
 
   test 'should get admin pay later index' do
-    user = users(:administrator)
+    new_operator = new_generic_operator
 
-    UserSession.create(user)
+    Print.pay_later.take.update_column(:user_id, new_operator.id)
+
     get :index, status: 'pay_later'
     assert_response :success
     assert_not_nil assigns(:prints)
     assert_equal Print.pay_later.count, assigns(:prints).size
-    assert assigns(:prints).any? { |p| p.user_id != user.id }
+    assert assigns(:prints).any? { |p| p.user_id != @operator.id }
     assert assigns(:prints).all?(&:pay_later?)
     assert_select '#unexpected_error', false
     assert_template 'prints/index'
   end
 
   test 'should get customer index' do
-    user = users(:administrator)
     customer = customers(:student)
 
-    UserSession.create(user)
     get :index, status: 'all', customer_id: customer.to_param
     assert_response :success
     assert_not_nil assigns(:prints)
@@ -106,7 +105,6 @@ class PrintsControllerTest < ActionController::TestCase
   end
 
   test 'should get new' do
-    UserSession.create(users(:operator))
     get :new, status: 'all'
     assert_response :success
     assert_not_nil assigns(:print)
@@ -116,9 +114,7 @@ class PrintsControllerTest < ActionController::TestCase
   end
 
   test 'should get new from order' do
-    UserSession.create(users(:operator))
-
-    order = Order.find(orders(:for_tomorrow).id)
+    order = orders(:for_tomorrow)
 
     get :new, order_id: order.id, status: 'all'
     assert_response :success
@@ -129,7 +125,6 @@ class PrintsControllerTest < ActionController::TestCase
   end
 
   test 'should get new with stored documents' do
-    UserSession.create(users(:administrator))
     session[:documents_for_printing] =
       [documents(:math_notes).id, documents(:math_book).id]
 
@@ -142,7 +137,6 @@ class PrintsControllerTest < ActionController::TestCase
   end
 
   test 'should get new without stored documents' do
-    UserSession.create(users(:administrator))
     session[:documents_for_printing] = [documents(:math_notes).id]
 
     get :new, clear_documents_for_printing: true, status: 'all'
@@ -155,13 +149,11 @@ class PrintsControllerTest < ActionController::TestCase
   end
 
   test 'should create print' do
-    UserSession.create(users(:operator))
-
-    document = Document.find(documents(:math_book).id)
+    document = documents(:math_book)
     counts_array = ['Print.count', 'PrintJob.count', 'Payment.count',
       'customer.prints.count', 'ArticleLine.count',
       'Cups.all_jobs(@printer).keys.sort.last']
-    customer = Customer.find customers(:student).id
+    customer = customers(:student)
 
     assert_difference counts_array do
       assert_difference 'Version.count', 4 do
@@ -202,15 +194,13 @@ class PrintsControllerTest < ActionController::TestCase
 
     assert_redirected_to print_path(assigns(:print))
     # Debe asignar el usuario autenticado como el creador de la impresión
-    assert_equal users(:operator).id, assigns(:print).user.id
+    assert_equal @operator.id, assigns(:print).user.id
     # Prueba básica para "asegurar" el funcionamiento del versionado
-    assert_equal users(:operator).id, Version.last.whodunnit
+    assert_equal @operator.id, Version.last.whodunnit
   end
 
   test 'should create print and avoid printing' do
-    UserSession.create(users(:operator))
-
-    document = Document.find(documents(:math_book).id)
+    document = documents(:math_book)
     counts_array = ['Print.count', 'PrintJob.count', 'Payment.count']
 
     assert_difference counts_array do
@@ -246,19 +236,18 @@ class PrintsControllerTest < ActionController::TestCase
 
     assert_redirected_to print_path(assigns(:print))
     # Debe asignar el usuario autenticado como el creador de la impresión
-    assert_equal users(:operator).id, assigns(:print).user.id
+    assert_equal @operator.id, assigns(:print).user.id
     # Prueba básica para "asegurar" el funcionamiento del versionado
-    assert_equal users(:operator).id, Version.last.whodunnit
+    assert_equal @operator.id, Version.last.whodunnit
   end
 
   test 'should create print with free credit' do
-    UserSession.create(users(:operator))
+    @operator.update(admin: false)
 
-    document = Document.find(documents(:math_book).id)
+    document = documents(:math_book)
     counts_array = ['Print.count', 'PrintJob.count', 'Payment.count',
       'customer.prints.count', 'Cups.all_jobs(@printer).keys.sort.last']
-    customer = Customer.find customers(:student).id
-
+    customer = customers(:student)
 
     assert_difference counts_array do
       assert_difference 'Version.count', 5 do
@@ -293,17 +282,17 @@ class PrintsControllerTest < ActionController::TestCase
 
     assert_redirected_to print_path(assigns(:print))
     # Debe asignar el usuario autenticado como el creador de la impresión
-    assert_equal users(:operator).id, assigns(:print).user.id
+    assert_equal @operator.id, assigns(:print).user.id
     # Prueba básica para "asegurar" el funcionamiento del versionado
-    assert_equal users(:operator).id, Version.last.whodunnit
+    assert_equal @operator.id, Version.last.whodunnit
   end
 
   test 'should create print without documents in print jobs' do
-    UserSession.create(users(:operator))
+    @operator.update(admin: false)
 
     counts_array = ['Print.count', 'PrintJob.count', 'Payment.count',
       'customer.prints.count', 'ArticleLine.count']
-    customer = Customer.find customers(:student).id
+    customer = customers(:student)
 
     assert_difference counts_array do
       post :create, status: 'all', print: {
@@ -340,16 +329,16 @@ class PrintsControllerTest < ActionController::TestCase
 
     assert_redirected_to print_path(assigns(:print))
     # Debe asignar el usuario autenticado como el creador de la impresión
-    assert_equal users(:operator).id, assigns(:print).user.id
+    assert_equal @operator.id, assigns(:print).user.id
   end
 
   test 'should create print with 3 decimal payment' do
-    UserSession.create(users(:operator))
+    @operator.update(admin: false)
 
     counts_array = ['Print.count', 'PrintJob.count', 'Payment.count',
       'customer.prints.count', 'ArticleLine.count']
-    customer = Customer.find customers(:student).id
-    print_job_type = PrintJobType.find(print_job_types(:a4))
+    customer = customers(:student)
+    print_job_type = print_job_types(:a4)
     assert print_job_type.update_attributes(price: '0.125')
 
     assert_difference counts_array do
@@ -387,11 +376,12 @@ class PrintsControllerTest < ActionController::TestCase
 
     assert_redirected_to print_path(assigns(:print))
     # Debe asignar el usuario autenticado como el creador de la impresión
-    assert_equal users(:operator).id, assigns(:print).user.id
+    assert_equal @operator.id, assigns(:print).user.id
   end
 
   test 'should show print' do
-    UserSession.create(users(:operator))
+    @operator.update(admin: false)
+
     get :show, id: @print.to_param, status: 'all'
     assert_response :success
     assert_not_nil assigns(:print)
@@ -400,7 +390,8 @@ class PrintsControllerTest < ActionController::TestCase
   end
 
   test 'should get edit' do
-    UserSession.create(users(:operator))
+    @operator.update(admin: false)
+
     get :edit, id: @print.to_param, status: 'all'
     assert_response :success
     assert_not_nil assigns(:print)
@@ -409,9 +400,7 @@ class PrintsControllerTest < ActionController::TestCase
   end
 
   test 'should not get edit' do
-    UserSession.create(users(:administrator))
-
-    print = Print.find(prints(:os_print).id)
+    print = prints(:os_print)
 
     # Se debe producir un error al tratar de editar una impresión "cerrada"
     get :edit, id: print.to_param, status: 'all'
@@ -423,14 +412,13 @@ class PrintsControllerTest < ActionController::TestCase
   end
 
   test 'should update print' do
-    user = User.find users(:operator).id
-    customer = Customer.find customers(:teacher).id
-    math_notes = Document.find(documents(:math_notes).id)
-    math_book = Document.find(documents(:math_book).id)
-    immutable_counts = ['user.prints.count', 'Payment.count',
+    new_operator = new_generic_operator
+    customer = customers(:teacher)
+    math_notes = documents(:math_notes)
+    math_book = documents(:math_book)
+    immutable_counts = ['new_operator.prints.count', 'Payment.count',
       'customer.prints.count']
 
-    UserSession.create(user)
 
     assert_not_equal customer.id, @print.customer_id
     print_job_type_id = print_job_types(:a4).id
@@ -440,10 +428,10 @@ class PrintsControllerTest < ActionController::TestCase
       assert_difference '@print.print_jobs.count' do
         put :update, id: @print.to_param, status: 'all', print: {
           printer: @printer,
-          customer_id: customer.id,
+          customer_id: @operator.id,
           scheduled_at: '',
           avoid_printing: '0',
-          user_id: users(:administrator).id,
+          user_id: new_operator.id,
           print_jobs_attributes: {
             print_jobs(:math_job_1).id.to_s => {
               id: print_jobs(:math_job_1).id,
@@ -491,32 +479,32 @@ class PrintsControllerTest < ActionController::TestCase
 
     assert_redirected_to print_path(@print)
     # No se puede cambiar el usuario que creo una impresión
-    assert_not_equal users(:administrator).id, @print.reload.user_id
+    assert_not_equal new_operator.id, @print.reload.user_id
     # No se puede cambiar el cliente de la impresión
     assert_not_equal customer.id, @print.reload.customer_id
     # No se puede cambiar ningún trabajo de impresión
-    assert_not_equal 123, @print.print_jobs.find_by_document_id(
+    assert_not_equal(
+      123, @print.print_jobs.find_by_document_id(
       documents(:math_notes).id).copies
+    )
     assert_equal math_book.pages, @print.print_jobs.order('id ASC').last.pages
     assert @print.pending_payment?
   end
 
   test 'should revoke print' do
-    UserSession.create(users(:administrator))
-
     delete :revoke, id: @print.to_param, status: 'all'
     assert_redirected_to prints_url
     assert @print.reload.revoked
   end
 
   test 'should cancel job' do
-    UserSession.create(users(:operator))
+    @operator.update(admin: false)
 
     canceled_count = Cups.all_jobs(@printer).select do |_, j|
       j[:state] == :cancelled
     end.size
 
-    document = Document.find documents(:math_book).id
+    document = documents(:math_book)
 
     assert_difference 'Cups.all_jobs(@printer).keys.sort.last' do
       post :create, status: 'all', print: {
@@ -541,7 +529,7 @@ class PrintsControllerTest < ActionController::TestCase
       }
     end
 
-    print_job = Print.find(assigns(:print).id).print_jobs.first
+    print_job = assigns(:print).print_jobs.first
 
     xhr :put, :cancel_job, id: print_job.to_param, status: 'all'
 
@@ -559,9 +547,9 @@ class PrintsControllerTest < ActionController::TestCase
   end
 
   test 'can not cancel a completed job' do
-    UserSession.create(users(:operator))
+    @operator.update(admin: false)
 
-    print_job = PrintJob.find print_jobs(:math_job_1).id
+    print_job = print_jobs(:math_job_1)
 
     xhr :put, :cancel_job, id: print_job.to_param, status: 'all'
 
@@ -571,7 +559,6 @@ class PrintsControllerTest < ActionController::TestCase
   end
 
   test 'should get autocomplete document list' do
-    UserSession.create(users(:operator))
     get :autocomplete_for_document_name, format: :json, q: 'Math', status: 'all'
     assert_response :success
 
@@ -615,7 +602,6 @@ class PrintsControllerTest < ActionController::TestCase
   end
 
   test 'should get autocomplete article list' do
-    UserSession.create(users(:operator))
     get :autocomplete_for_article_name, format: :json, q: '111', status: 'all'
     assert_response :success
 
@@ -650,7 +636,8 @@ class PrintsControllerTest < ActionController::TestCase
   end
 
   test 'should get autocomplete customer list' do
-    UserSession.create(users(:operator))
+    @operator.update(admin: false)
+
     get :autocomplete_for_customer_name, format: :json, q: 'anakin',
       status: 'all'
     assert_response :success
@@ -678,7 +665,6 @@ class PrintsControllerTest < ActionController::TestCase
   end
 
   test 'should get related by customer' do
-    UserSession.create(users(:administrator))
 
     prints = get_prints_with_customer.limit(2).all
 
@@ -690,7 +676,6 @@ class PrintsControllerTest < ActionController::TestCase
   end
 
   test 'should get the first print with related by customer prev link' do
-    UserSession.create(users(:administrator))
 
     print = get_prints_with_customer.first
 
@@ -699,7 +684,6 @@ class PrintsControllerTest < ActionController::TestCase
   end
 
   test 'should get the last print with related by customer next link' do
-    UserSession.create(users(:administrator))
 
     print = get_prints_with_customer.last
 
@@ -708,7 +692,6 @@ class PrintsControllerTest < ActionController::TestCase
   end
 
   test 'should upload a file' do
-    UserSession.create(users(:administrator))
 
     post :upload_file, file_line: { file: pdf_test_file }, status: 'all'
     assert_response :success

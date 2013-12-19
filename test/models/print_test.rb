@@ -3,11 +3,11 @@ class PrintTest < ActiveSupport::TestCase
 
   # Función para inicializar las variables utilizadas en las pruebas
   def setup
-    @print = Print.find prints(:math_print).id
+    @print = prints(:math_print)
     @printer = Cups.show_destinations.detect { |p| p =~ /pdf/i }
 
     raise "Can't find a PDF printer to run tests with." unless @printer
-
+    @operator = users(:operator)
     prepare_document_files
   end
 
@@ -29,7 +29,7 @@ class PrintTest < ActiveSupport::TestCase
       assert_difference 'PrintJob.count', 2 do
         @print = Print.create({
           printer: @printer,
-          user_id: users(:administrator).id,
+          user_id: @operator.id,
           scheduled_at: '',
           pay_later: false,
           comment: 'Nothing important',
@@ -85,7 +85,7 @@ class PrintTest < ActiveSupport::TestCase
     assert_difference counts do
       @print = Print.create({
         printer: @printer,
-        user_id: users(:administrator).id,
+        user_id: @operator.id,
         scheduled_at: '',
         pay_later: false,
         article_lines_attributes: {
@@ -121,7 +121,7 @@ class PrintTest < ActiveSupport::TestCase
       assert_no_difference 'Cups.all_jobs(@printer).keys.sort.last' do
         @print = Print.create({
           printer: '',
-          user_id: users(:administrator).id,
+          user_id: @operator.id,
           scheduled_at: 2.hours.from_now,
           pay_later: false,
           print_jobs_attributes: {
@@ -161,7 +161,7 @@ class PrintTest < ActiveSupport::TestCase
       assert_no_difference 'Cups.all_jobs(@printer).keys.sort.last' do
         @print = Print.create({
           printer: @printer,
-          user_id: users(:administrator).id,
+          user_id: @operator.id,
           scheduled_at: '',
           avoid_printing: true,
           print_jobs_attributes: {
@@ -205,7 +205,7 @@ class PrintTest < ActiveSupport::TestCase
         assert_no_difference 'Cups.all_jobs(@printer).keys.sort.last' do
           @print = Print.create({
             printer: @printer,
-            user_id: users(:administrator).id,
+            user_id: @operator.id,
             scheduled_at: '',
             pay_later: false,
             print_jobs_attributes: {
@@ -257,7 +257,7 @@ class PrintTest < ActiveSupport::TestCase
       assert_difference 'PrintJob.count', 2 do
         @print = Print.create({
           printer: @printer,
-          user_id: users(:administrator).id,
+          user_id: @operator.id,
           customer_id: customers(:student).id,
           scheduled_at: '',
           credit_password: 'student123',
@@ -302,8 +302,7 @@ class PrintTest < ActiveSupport::TestCase
     assert payment.credit?
     assert_equal '37.79', payment.amount.to_s
     assert_equal '37.79', payment.paid.to_s
-    assert_equal '962.21',
-      Customer.find(customers(:student).id).free_credit.to_s
+    assert_equal '962.21', customers(:student).free_credit.to_s
   end
 
   test 'create with free credit and wrong password' do
@@ -313,7 +312,7 @@ class PrintTest < ActiveSupport::TestCase
     assert_no_difference counts do
       @print = Print.create({
         printer: @printer,
-        user_id: users(:administrator).id,
+        user_id: @operator.id,
         customer_id: customers(:student).id,
         scheduled_at: '',
         pay_later: false,
@@ -347,7 +346,7 @@ class PrintTest < ActiveSupport::TestCase
         assert_difference ['PrintJob.count', 'Payment.count'], 2 do
           @print = Print.create({
             printer: @printer,
-            user_id: users(:administrator).id,
+            user_id: @operator.id,
             customer_id: customers(:student).id,
             scheduled_at: '',
             credit_password: 'student123',
@@ -409,7 +408,7 @@ class PrintTest < ActiveSupport::TestCase
       assert_no_difference 'Cups.all_jobs(@printer).keys.sort.last' do
         @print = Print.create({
           printer: @printer,
-          user_id: users(:administrator).id,
+          user_id: @operator.id,
           scheduled_at: '',
           avoid_printing: true,
           pay_later: false,
@@ -437,7 +436,7 @@ class PrintTest < ActiveSupport::TestCase
 
   # Prueba la creación de una impresión a partir de un pedido
   test 'create with order and mark it as completed' do
-    order = Order.find(orders(:for_tomorrow).id)
+    order = orders(:for_tomorrow)
     assert order.pending?
 
     assert_difference ['Print.count', 'Payment.count'] do
@@ -445,7 +444,7 @@ class PrintTest < ActiveSupport::TestCase
         assert_no_difference 'Cups.all_jobs(@printer).keys.sort.last' do
           @print = Print.create({
             printer: @printer,
-            user_id: users(:administrator).id,
+            user_id: @operator.id,
             scheduled_at: '',
             avoid_printing: true,
             order_id: order.id,
@@ -527,7 +526,7 @@ class PrintTest < ActiveSupport::TestCase
     assert_not_equal customers(:teacher).id, @print.customer_id
 
     assert_no_difference counts do
-      assert @print.update_attributes(customer_id: customers(:teacher).id),
+      assert @print.update(customer_id: customers(:teacher).id),
         @print.errors.full_messages.join('; ')
     end
 
@@ -657,7 +656,7 @@ class PrintTest < ActiveSupport::TestCase
   end
 
   test 'revoke' do
-    UserSession.create(users(:administrator))
+    UserSession.create(@operator)
 
     assert_no_difference('Bonus.count') { assert @print.revoke! }
 
@@ -666,6 +665,7 @@ class PrintTest < ActiveSupport::TestCase
   end
 
   test 'can not revoke if is not admin' do
+    @operator.update(admin: false)
     UserSession.create(users(:operator))
 
     assert_no_difference('Bonus.count') { assert_nil @print.revoke! }
@@ -674,7 +674,7 @@ class PrintTest < ActiveSupport::TestCase
   end
 
   test 'revoke a print paid with credit returns the value to the customer' do
-    UserSession.create(users(:administrator))
+    UserSession.create(@operator)
     print = prints(:math_print_with_credit)
     initial_bonus = print.customer.bonuses.to_a.sum(&:remaining)
     payments_amount = print.payments.select(&:credit?).sum(&:paid)
@@ -741,7 +741,7 @@ class PrintTest < ActiveSupport::TestCase
     assert @print.has_pending_payment?
     assert @print.pending_payment?
 
-    assert @print.update_attributes(
+    assert @print.update(
       payments_attributes: {
         '0' => {
           id: payments(:math_payment).id,
@@ -755,7 +755,7 @@ class PrintTest < ActiveSupport::TestCase
   end
 
   test 'scheduled' do
-    print = Print.find(prints(:scheduled_math_print).id)
+    print = prints(:scheduled_math_print)
 
     assert print.scheduled?
     assert print.printer.blank?
