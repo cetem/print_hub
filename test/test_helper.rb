@@ -1,4 +1,4 @@
-ENV["RAILS_ENV"] ||= "test"
+ENV['RAILS_ENV'] ||= 'test'
 require File.expand_path('../../config/environment', __FILE__)
 require 'rails/test_help'
 require 'authlogic/test_case'
@@ -23,29 +23,11 @@ class ActiveSupport::TestCase
   end
 
   def prepare_document_files
-    Document.all.each do |document|
-      file = document.file.path
-      unless File.exists?(file)
-        FileUtils.mkdir_p File.dirname(file)
-        FileUtils.ln_s(
-          File.join(Rails.root, 'test', 'fixtures', 'files', 'test.pdf'),
-          file
-        )
-      end
-    end
+    Document.all.each { |document| link_file document.file.path, 'test.pdf' }
   end
 
   def prepare_avatar_files
-    User.all.each do |user|
-      file = user.avatar.path
-      unless File.exists?(file)
-        FileUtils.mkdir_p File.dirname(file)
-        FileUtils.ln_s(
-          File.join(Rails.root, 'test', 'fixtures', 'files', 'test.gif'),
-          file
-        )
-      end
-    end
+    User.all.each { |user| link_file user.avatar.path, 'test.gif' }
   end
 
   def pdf_test_file
@@ -70,8 +52,8 @@ class ActiveSupport::TestCase
     atributes[:enable]                ||= true
     atributes[:avatar]                ||= avatar_test_file
     atributes[:not_shifted]           ||= false
-    User.create! atributes
 
+    User.create! atributes
   end
 
   private
@@ -85,6 +67,16 @@ class ActiveSupport::TestCase
         Rails.root.join('test', 'fixtures', 'files', filename)
       )
     })
+  end
+
+  def link_file(destiny_file, link_from)
+    unless File.exists?(destiny_file)
+      FileUtils.mkdir_p File.dirname(destiny_file)
+      FileUtils.ln_s(
+        Rails.root.join('test', 'fixtures', 'files', link_from),
+        destiny_file
+      )
+    end
   end
 end
 
