@@ -33,7 +33,7 @@ class CustomersTest < ActionDispatch::IntegrationTest
       fill_in Customer.human_attribute_name('password_confirmation'),
         with: 'lightsaber'
 
-      assert_difference 'Customer.unscoped.count' do
+      assert_difference 'Customer.count' do
         click_button I18n.t(
           'helpers.submit.create', model: Customer.model_name.human
         )

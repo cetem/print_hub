@@ -23,14 +23,14 @@ os_print:
 
 second_math_print:
   printer: <%= Cups.show_destinations.detect { |p| p =~ /pdf/i } %>
-  user: second_operator
+  user: operator
   customer: student
   status: <%= Print::STATUS[:pending_payment] %>
   revoked: false
 
 second_physics_print:
   printer: <%= Cups.show_destinations.detect { |p| p =~ /pdf/i } %>
-  user: second_operator
+  user: operator
   customer: teacher
   status: <%= Print::STATUS[:pending_payment] %>
   revoked: false
@@ -43,7 +43,7 @@ scheduled_math_print:
   status: <%= Print::STATUS[:paid] %>
   scheduled_at: <%= 1.hour.from_now.to_s(:db) %>
   revoked: false
-  
+
 math_print_with_credit:
   printer: <%= Cups.show_destinations.detect { |p| p =~ /pdf/i } %>
   user: operator
@@ -51,7 +51,7 @@ math_print_with_credit:
   status: <%= Print::STATUS[:paid] %>
   revoked: false
   created_at: <%= 4.hours.ago.to_s(:db) %>
-  
+
 math_print_to_pay_later_1:
   printer: <%= Cups.show_destinations.detect { |p| p =~ /pdf/i } %>
   user: operator

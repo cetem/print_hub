@@ -4,7 +4,7 @@ require 'test_helper'
 class ShiftTest < ActiveSupport::TestCase
   # Función para inicializar las variables utilizadas en las pruebas
   def setup
-    @shift = Shift.find shifts(:current_shift).id
+    @shift = shifts(:current_shift)
   end
 
   # Prueba que se realicen las búsquedas como se espera
@@ -23,7 +23,7 @@ class ShiftTest < ActiveSupport::TestCase
         start: 10.minutes.ago,
         finish: nil,
         description: 'Some shift',
-        user_id: users(:administrator).id,
+        user_id: users(:operator).id,
         paid: false
       )
     end
@@ -34,7 +34,7 @@ class ShiftTest < ActiveSupport::TestCase
     10.minute.ago.to_datetime.tap do |start|
       1.minute.ago.to_datetime.tap do |finish|
         assert_no_difference 'Shift.count' do
-          assert @shift.update_attributes(start: start, finish: finish),
+          assert @shift.update(start: start, finish: finish),
             @shift.errors.full_messages.join('; ')
         end
 

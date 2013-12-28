@@ -4,7 +4,7 @@ class PrintJobTypesControllerTest < ActionController::TestCase
   setup do
     @print_job_type = PrintJobType.find print_job_types(:a4)
 
-    UserSession.create(users(:administrator))
+    UserSession.create(users(:operator))
   end
 
   test "should get index" do

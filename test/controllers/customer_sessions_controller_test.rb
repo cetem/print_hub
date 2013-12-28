@@ -39,9 +39,7 @@ class CustomerSessionsControllerTest < ActionController::TestCase
   end
 
   test 'should not create a customer session with a disabled customer' do
-    customer = Customer.disable.find(
-      ActiveRecord::FixtureSet.identify(:disabled_student)
-    )
+    customer = customers(:disabled_student)
 
     post :create, customer_session: {
       email: customer.email,

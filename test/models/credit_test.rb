@@ -1,10 +1,9 @@
 require 'test_helper'
-
 # Clase para probar el modelo "Credit"
 class CreditTest < ActiveSupport::TestCase
   # Función para inicializar las variables utilizadas en las pruebas
   def setup
-    @credit = Credit.find(credits(:big_bonus).id)
+    @credit = credits(:big_bonus)
   end
 
   # Prueba que se realicen las búsquedas como se espera
@@ -35,7 +34,7 @@ class CreditTest < ActiveSupport::TestCase
   # Prueba de actualización de un crédito
   test 'update' do
     assert_no_difference 'Credit.count' do
-      assert @credit.update_attributes(
+      assert @credit.update(
         amount: '1500.0',
         valid_until: 10.years.from_now.to_date
       ), @credit.errors.full_messages.join('; ')

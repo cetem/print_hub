@@ -5,11 +5,12 @@ class CatalogControllerTest < ActionController::TestCase
     @document = documents(:math_book)
     @request.host = "#{APP_CONFIG['subdomains']['customers']}.printhub.local"
 
+    CustomerSession.create(customers(:student))
+
     prepare_document_files
   end
 
   test 'should get index' do
-    CustomerSession.create(customers(:student))
     get :index
     assert_response :success
     assert_nil assigns(:documents) # Index with no search give no documents =)
@@ -18,8 +19,7 @@ class CatalogControllerTest < ActionController::TestCase
   end
 
   test 'should get index with tag filter' do
-    CustomerSession.create(customers(:student))
-    tag = Tag.find(tags(:notes).id)
+    tag = tags(:notes)
 
     get :index, tag_id: tag.to_param
     assert_response :success
@@ -31,7 +31,6 @@ class CatalogControllerTest < ActionController::TestCase
   end
 
   test 'should get index with search filter' do
-    CustomerSession.create(customers(:student))
     get :index, q: 'Math'
     assert_response :success
     assert_not_nil assigns(:documents)
@@ -42,7 +41,6 @@ class CatalogControllerTest < ActionController::TestCase
   end
 
   test 'should show document' do
-    CustomerSession.create(customers(:student))
     get :show, id: @document.to_param
     assert_response :success
     assert_select '#unexpected_error', false
@@ -51,7 +49,6 @@ class CatalogControllerTest < ActionController::TestCase
 
 
   test 'should add document to order' do
-    CustomerSession.create(customers(:student))
     assert session[:documents_to_order].blank?
 
     i18n_scope = [:view, :catalog, :remove_from_order]
@@ -63,7 +60,6 @@ class CatalogControllerTest < ActionController::TestCase
   end
 
   test 'should remove document from next print' do
-    CustomerSession.create(customers(:student))
     assert session[:documents_to_order].blank?
 
     session[:documents_to_order] = [@document.id]
@@ -79,7 +75,6 @@ class CatalogControllerTest < ActionController::TestCase
   end
 
   test 'should add document by code to a new order' do
-    CustomerSession.create(customers(:student))
     assert session[:documents_to_order].blank?
 
     get :add_to_order_by_code, id: @document.code
@@ -88,7 +83,6 @@ class CatalogControllerTest < ActionController::TestCase
   end
 
   test 'should not add document by code to a new order if not exists' do
-    CustomerSession.create(customers(:student))
     assert session[:documents_to_order].blank?
 
     get :add_to_order_by_code, id: 'wrong_code'
@@ -98,7 +92,6 @@ class CatalogControllerTest < ActionController::TestCase
   end
 
   test 'should get tags' do
-    CustomerSession.create(customers(:student))
     tags = Tag.publicly_visible.where(parent_id: nil).limit(
       (APP_LINES_PER_PAGE / 2).round
     ).with_documents_or_children
@@ -112,7 +105,6 @@ class CatalogControllerTest < ActionController::TestCase
   end
 
   test 'should get tag childrens' do
-    CustomerSession.create(customers(:student))
     parent = tags(:notes)
     tags = Tag.publicly_visible.where(parent_id: parent.id).limit(
       (APP_LINES_PER_PAGE / 2).round
@@ -129,7 +121,6 @@ class CatalogControllerTest < ActionController::TestCase
   end
 
   test 'should get document through tag' do
-    CustomerSession.create(customers(:student))
     tag = tags(:notes)
     document_with_tag = Document.publicly_visible.with_tag(tag)
 

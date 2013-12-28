@@ -4,7 +4,7 @@ require 'test_helper'
 class ArticleLineTest < ActiveSupport::TestCase
   # Función para inicializar las variables utilizadas en las pruebas
   def setup
-    @article_line = ArticleLine.find article_lines(:math_binding_line).id
+    @article_line = article_lines(:math_binding_line)
   end
 
   # Prueba que se realicen las búsquedas como se espera
@@ -34,7 +34,7 @@ class ArticleLineTest < ActiveSupport::TestCase
   # Prueba de actualización de una línea de artículo
   test 'update' do
     assert_no_difference 'ArticleLine.count' do
-      assert @article_line.update_attributes(units: 100),
+      assert @article_line.update(units: 100),
         @article_line.errors.full_messages.join('; ')
     end
 

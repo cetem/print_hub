@@ -4,7 +4,7 @@ require 'test_helper'
 class DocumentTest < ActiveSupport::TestCase
   # Función para inicializar las variables utilizadas en las pruebas
   def setup
-    @document = Document.find documents(:math_book).id
+    @document = documents(:math_book)
 
     prepare_document_files
   end
@@ -97,7 +97,7 @@ class DocumentTest < ActiveSupport::TestCase
   # Prueba de actualización de un documento
   test 'update' do
     assert_no_difference 'Document.count' do
-      assert @document.update_attributes(name: 'Updated name'),
+      assert @document.update(name: 'Updated name'),
         @document.errors.full_messages.join('; ')
     end
 
@@ -114,7 +114,7 @@ class DocumentTest < ActiveSupport::TestCase
     thumbs_dir = Pathname.new(@document.file.path).dirname.rmtree
 
     assert_no_difference 'Document.count' do
-      assert @document.update_attributes(file: file),
+      assert @document.update(file: file),
         @document.errors.full_messages.join('; ')
     end
 
@@ -129,7 +129,7 @@ class DocumentTest < ActiveSupport::TestCase
     )
 
     assert_no_difference 'Document.count' do
-      assert @document.update_attributes(file: file),
+      assert @document.update(file: file),
         @document.errors.full_messages.join('; ')
     end
 
@@ -140,7 +140,7 @@ class DocumentTest < ActiveSupport::TestCase
 
   # Prueba de eliminación de documentos
   test 'destroy' do
-    document = Document.find(documents(:unused_book).id)
+    document = documents(:unused_book)
 
     assert_difference('Document.count', -1) { document.destroy }
   end
@@ -152,7 +152,7 @@ class DocumentTest < ActiveSupport::TestCase
 
   test 'disable a document' do
     assert_difference('Document.count', -1) do
-      @document.update_attributes(enable: false)
+      @document.update(enable: false)
     end
   end
 
@@ -288,7 +288,7 @@ class DocumentTest < ActiveSupport::TestCase
     original_path = @document.update_tag_path
 
     assert_difference '@document.tags.count' do
-      @document.tags << Tag.find(tags(:draft_note).id)
+      @document.tags << tags(:draft_note)
     end
 
     assert @document.save

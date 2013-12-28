@@ -1,4 +1,4 @@
-ENV["RAILS_ENV"] ||= "test"
+ENV['RAILS_ENV'] ||= 'test'
 require File.expand_path('../../config/environment', __FILE__)
 require 'rails/test_help'
 require 'authlogic/test_case'
@@ -23,29 +23,11 @@ class ActiveSupport::TestCase
   end
 
   def prepare_document_files
-    Document.all.each do |document|
-      file = document.file.path
-      unless File.exists?(file)
-        FileUtils.mkdir_p File.dirname(file)
-        FileUtils.ln_s(
-          File.join(Rails.root, 'test', 'fixtures', 'files', 'test.pdf'),
-          file
-        )
-      end
-    end
+    Document.all.each { |document| link_file document.file.path, 'test.pdf' }
   end
 
   def prepare_avatar_files
-    User.all.each do |user|
-      file = user.avatar.path
-      unless File.exists?(file)
-        FileUtils.mkdir_p File.dirname(file)
-        FileUtils.ln_s(
-          File.join(Rails.root, 'test', 'fixtures', 'files', 'test.gif'),
-          file
-        )
-      end
-    end
+    User.all.each { |user| link_file user.avatar.path, 'test.gif' }
   end
 
   def pdf_test_file
@@ -54,6 +36,24 @@ class ActiveSupport::TestCase
 
   def avatar_test_file
     process_with_action_dispatch('test.gif', 'image/gif')
+  end
+
+  def new_generic_operator(atributes={})
+    atributes[:name]                  ||= 'generic name'
+    atributes[:last_name]             ||= 'generic last name'
+    atributes[:email]                 ||= 'generic_user@printhub.com'
+    atributes[:default_printer]       ||= ''
+    atributes[:lines_per_page]        ||= 12
+    atributes[:language]              ||= LANGUAGES.first.to_s
+    atributes[:username]              ||= 'generic_user'
+    atributes[:password]              ||= 'generic_user123'
+    atributes[:password_confirmation] ||= 'generic_user123'
+    atributes[:admin]                 ||= 'false'
+    atributes[:enable]                ||= true
+    atributes[:avatar]                ||= avatar_test_file
+    atributes[:not_shifted]           ||= false
+
+    User.create! atributes
   end
 
   private
@@ -67,6 +67,16 @@ class ActiveSupport::TestCase
         Rails.root.join('test', 'fixtures', 'files', filename)
       )
     })
+  end
+
+  def link_file(destiny_file, link_from)
+    unless File.exists?(destiny_file)
+      FileUtils.mkdir_p File.dirname(destiny_file)
+      FileUtils.ln_s(
+        Rails.root.join('test', 'fixtures', 'files', link_from),
+        destiny_file
+      )
+    end
   end
 end
 
@@ -113,8 +123,8 @@ class ActionDispatch::IntegrationTest
   def login(*args)
     options = args.extract_options!
 
-    options[:user_id] ||= args.shift if args.first.kind_of?(Symbol)
-    options[:user_id] ||= :administrator
+    options[:user_id] ||= args.shift #if args.first.kind_of?(Symbol)
+    options[:user_id] ||= users(:operator).id
     options[:expected_path] ||= args.shift if args.first.kind_of?(String)
     options[:expected_path] ||= prints_path
 
@@ -122,7 +132,7 @@ class ActionDispatch::IntegrationTest
 
     assert_page_has_no_errors!
 
-    users(options[:user_id]).tap do |user|
+    User.find(options[:user_id]).tap do |user|
       fill_in I18n.t('authlogic.attributes.user_session.username'),
         with: user.email
       fill_in I18n.t('authlogic.attributes.user_session.password'),

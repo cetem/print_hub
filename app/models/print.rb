@@ -31,7 +31,7 @@ class Print < ApplicationModel
     :credit_password, :pay_later
 
   # Restricciones en los atributos
-  attr_readonly :user_id, :customer_id
+  attr_readonly :customer_id
 
   # Restricciones
   validates :printer, presence: true, if: ->(p) {

@@ -22,7 +22,7 @@ class FeedbacksControllerTest < ActionController::TestCase
   end
 
   test 'should update feedback' do
-    feedback = Feedback.find(feedbacks(:needs_polishing).id)
+    feedback = feedbacks(:needs_polishing)
 
     xhr :put, :update, id: feedback.to_param, feedback: {
       item: 'this_should_be_ignored',

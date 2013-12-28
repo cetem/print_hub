@@ -4,7 +4,7 @@ require 'test_helper'
 class FeedbackTest < ActiveSupport::TestCase
   # Función para inicializar las variables utilizadas en las pruebas
   def setup
-    @feedback = Feedback.find(feedbacks(:needs_polishing).id)
+    @feedback = feedbacks(:needs_polishing)
   end
 
   # Prueba que se realicen las búsquedas como se espera
@@ -28,7 +28,7 @@ class FeedbackTest < ActiveSupport::TestCase
   # Prueba de actualización de una retroalimentación
   test 'update' do
     assert_no_difference 'Feedback.count' do
-      assert @feedback.update_attributes(
+      assert @feedback.update(
         item: 'this_should_be_ignored',
         comments: 'It seems to me that needs polishing'
       ), @feedback.errors.full_messages.join('; ')

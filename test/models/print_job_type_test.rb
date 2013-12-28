@@ -2,7 +2,7 @@ require 'test_helper'
 
 class PrintJobTypeTest < ActiveSupport::TestCase
   def setup
-    @print_job_type = PrintJobType.find print_job_types(:a4)
+    @print_job_type = print_job_types(:a4)
   end
 
   test 'find' do
@@ -29,7 +29,7 @@ class PrintJobTypeTest < ActiveSupport::TestCase
 
   test 'update' do
     assert_no_difference 'PrintJobType.count' do
-      assert @print_job_type.update_attributes(name: 'Updated name'),
+      assert @print_job_type.update(name: 'Updated name'),
         @print_job_type.errors.full_messages.join('; ')
     end
 
@@ -79,7 +79,7 @@ class PrintJobTypeTest < ActiveSupport::TestCase
 
     assert_no_difference 'PrintJobType.count' do
       assert_difference 'PaperTrail::Version.count', 2 do
-        @print_job_type.update_attributes(default: true)
+        @print_job_type.update(default: true)
       end
     end
 
