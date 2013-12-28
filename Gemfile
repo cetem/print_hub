@@ -26,7 +26,7 @@ gem 'chunky_png'
 gem 'capistrano'
 gem 'capistrano-bundler'
 gem 'capistrano-rails'
-gem 'capistrano-rbenv', github: 'capistrano/rbenv'
+gem 'capistrano-rbenv', github: 'capistrano/rbenv', group: :staging
 gem 'whenever', require: false
 
 # Cache performance
