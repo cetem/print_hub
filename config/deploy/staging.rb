@@ -5,4 +5,4 @@ set :rbenv_ruby, '2.0.0-p247'
 
 role :all, %w{192.168.0.8}
 
-server '192.168.0.8', user: 'rotsen', roles: :all
+server '192.168.0.8', user: 'rotsen', roles: %w{web app db}

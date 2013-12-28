@@ -35,6 +35,7 @@ gem 'dalli'
 
 # Code stats
 gem 'newrelic_rpm'
+gem 'bugsnag'
 
 # Old assets group / Styles & js
 gem 'sass-rails'
