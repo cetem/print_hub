@@ -1,14 +1,14 @@
 source 'https://rubygems.org'
 
-gem 'rails', '4.0.0'
+gem 'rails', '4.0.2'
 
 gem 'pg'
 gem 'authlogic'
 gem 'validates_timeliness'
-gem 'awesome_nested_set', "~> 3.0.0.rc.2"
+gem 'awesome_nested_set', "~> 3.0.0.rc.3"
 gem 'will_paginate'
 gem 'foreigner'
-gem 'paper_trail', "~> 3.0.0.rc2"
+gem 'paper_trail'
 gem 'RedCloth'
 gem 'cups'
 gem 'simple_form'
