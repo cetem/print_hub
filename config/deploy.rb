@@ -1,3 +1,5 @@
+require "bugsnag/capistrano"
+
 set :application, 'print_hub'
 set :user, 'deployer'
 set :repo_url, 'https://github.com/cetem/print_hub.git'
