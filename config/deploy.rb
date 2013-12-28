@@ -1,5 +1,3 @@
-require "bugsnag/capistrano"
-
 set :application, 'print_hub'
 set :user, 'deployer'
 set :repo_url, 'https://github.com/cetem/print_hub.git'
@@ -9,7 +7,7 @@ set :deploy_to, '/var/rails/print_hub'
 set :deploy_via, :remote_cache
 
 set :format, :pretty
-set :log_level, :info
+set :log_level, :debug
 
 set :linked_files, %w{config/app_config.yml}
 set :linked_dirs, %w{log private}

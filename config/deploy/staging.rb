@@ -2,6 +2,7 @@ set :stage, :staging
 set :ssh_options, { port: 26 }
 set :rbenv_type, :user
 set :rbenv_ruby, '2.0.0-p247'
+set :user, 'rotsen'
 
 role :all, %w{192.168.0.8}
 
