@@ -113,9 +113,9 @@ class PrintsTest < ActionDispatch::IntegrationTest
 
       within 'div.datetime_picker' do
         assert page.has_xpath?(
-          "//div[@id='ui-timepicker-div-print_scheduled_at']"
+          "//div[@class='ui-timepicker-div']"
         )
-        within :xpath, "//div[@id='ui-timepicker-div-print_scheduled_at']" do
+        within :xpath, "//div[@class='ui-timepicker-div']" do
           first(
             :css, '.ui_tpicker_hour .ui-slider-handle'
           ).native.send_keys :end

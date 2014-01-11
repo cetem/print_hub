@@ -6,6 +6,12 @@
     "keywords": "process version"
   },
 
+  "app/inputs/*_input.rb": {
+    "command": "inputs",
+    "template": "class %SInput < SimpleForm::Inputs::Base",
+    "keywords": "additional inputs"
+  },
+
   "test/fabricators/*_fabricator.rb": {
     "command": "fabricator",
     "affinity": "model",
