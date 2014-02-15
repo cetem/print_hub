@@ -4,6 +4,7 @@ require 'rails/test_help'
 require 'authlogic/test_case'
 require 'capybara/rails'
 require 'database_cleaner'
+require 'sidekiq/testing'
 
 class ActiveSupport::TestCase
   ActiveRecord::Migration.check_pending!

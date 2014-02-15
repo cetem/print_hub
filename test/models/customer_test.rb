@@ -24,7 +24,7 @@ class CustomerTest < ActiveSupport::TestCase
   # Prueba la creación de un cliente
   test 'create without bonus' do
     # Send welcome email
-    assert_difference 'ActionMailer::Base.deliveries.size' do
+    assert_difference 'Sidekiq::Extensions::DelayedMailer.jobs.size' do
       assert_difference 'Customer.count' do
         assert_no_difference 'Bonus.count' do
           @customer = Customer.create(
@@ -47,7 +47,7 @@ class CustomerTest < ActiveSupport::TestCase
 
   test 'create with bonus' do
     # Send welcome email
-    assert_difference 'ActionMailer::Base.deliveries.size' do
+    assert_difference 'Sidekiq::Extensions::DelayedMailer.jobs.size' do
       assert_difference ['Customer.count', 'Bonus.count'] do
         @customer = Customer.create(
           {
@@ -72,7 +72,7 @@ class CustomerTest < ActiveSupport::TestCase
 
   test 'create with checking account' do
     # Send welcome email
-    assert_difference 'ActionMailer::Base.deliveries.size' do
+    assert_difference 'Sidekiq::Extensions::DelayedMailer.jobs.size' do
       assert_difference(
         ['Customer.count', 'Customer.reliables.count']
       ) do
@@ -113,7 +113,7 @@ class CustomerTest < ActiveSupport::TestCase
   # Prueba de actualización de un cliente
   test 'update' do
     invariable_counts = [
-      'ActionMailer::Base.deliveries.size', 'Customer.count', 'Bonus.count'
+      'Sidekiq::Extensions::DelayedMailer.jobs.size', 'Customer.count', 'Bonus.count'
     ]
     assert_no_difference invariable_counts do
       assert @customer.update_attributes(
@@ -234,13 +234,13 @@ class CustomerTest < ActiveSupport::TestCase
 
   test 'reactivation' do
     # Must sent the reactivation email if the address change
-    assert_difference 'ActionMailer::Base.deliveries.size' do
+    assert_difference 'Sidekiq::Extensions::DelayedMailer.jobs.size' do
       assert @customer.update_attributes(email: 'new_email@new.com')
     end
   end
 
   test 'deliver password reset instructions' do
-    assert_difference 'ActionMailer::Base.deliveries.size' do
+    assert_difference 'Sidekiq::Extensions::DelayedMailer.jobs.size' do
       @customer.deliver_password_reset_instructions!
     end
   end

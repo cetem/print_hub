@@ -116,18 +116,18 @@ class Customer < ApplicationModel
   end
 
   def send_welcome_email!
-    Notifications.signup(self).deliver
+    Notifications.delay.signup(self)
   end
 
   def must_be_reactivate?
     if self.email_changed?
       self.enable = false
-      Notifications.reactivation(self).deliver
+      Notifications.delay.reactivation(self)
     end
   end
 
   def deliver_password_reset_instructions!
-    Notifications.forgot_password(self).deliver
+    Notifications.delay.forgot_password(self)
   end
 
   def has_no_orders?

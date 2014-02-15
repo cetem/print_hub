@@ -27,7 +27,10 @@ gem 'capistrano'
 gem 'capistrano-bundler'
 gem 'capistrano-rails'
 gem 'capistrano-rbenv', github: 'capistrano/rbenv', group: :staging
+
+# Tasks Gems
 gem 'whenever', require: false
+gem 'sidekiq'
 
 # Cache performance
 gem 'memcache-client'
@@ -48,6 +51,8 @@ gem 'jquery-fileupload-rails'
 
 group :development do
   gem 'thin'
+  gem 'railroady'
+  gem 'awesome_print'
 end
 
 group :test do

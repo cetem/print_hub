@@ -15,7 +15,7 @@ class PasswordResetsControllerTest < ActionController::TestCase
   end
 
   test 'should create' do
-    assert_difference 'ActionMailer::Base.deliveries.size' do
+    assert_difference 'Sidekiq::Extensions::DelayedMailer.jobs.size' do
       post :create, email: @customer.email
       assert_redirected_to new_customer_session_url
       assert_equal I18n.t('view.password_resets.instructions_delivered'),
@@ -24,7 +24,7 @@ class PasswordResetsControllerTest < ActionController::TestCase
   end
 
   test 'should not create' do
-    assert_no_difference 'ActionMailer::Base.deliveries.size' do
+    assert_no_difference 'Sidekiq::Extensions::DelayedMailer.jobs.size' do
       post :create, email: 'wrong@email.com'
       assert_response :success
       assert_equal I18n.t('view.password_resets.email_not_found'), flash.notice

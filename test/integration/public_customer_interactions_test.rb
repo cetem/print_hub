@@ -23,7 +23,7 @@ class PublicCustomerInteractionsTest < ActionDispatch::IntegrationTest
     fill_in Customer.human_attribute_name('password'), with: 'jj12'
     fill_in Customer.human_attribute_name('password_confirmation'), with: 'jj12'
 
-    ['Customer.disable.count', 'ActionMailer::Base.deliveries.size'].tap do |c|
+    ['Customer.disable.count', 'Sidekiq::Extensions::DelayedMailer.jobs.size'].tap do |c|
       assert_difference(c) { click_button I18n.t('view.customers.register') }
     end
 
@@ -110,7 +110,7 @@ class PublicCustomerInteractionsTest < ActionDispatch::IntegrationTest
     customers(:student).tap do |customer|
       fill_in Customer.human_attribute_name('email'), with: customer.email
 
-      assert_difference 'ActionMailer::Base.deliveries.size' do
+      assert_difference 'Sidekiq::Extensions::DelayedMailer.jobs.size' do
         click_button I18n.t('view.password_resets.request_reset')
       end
 
