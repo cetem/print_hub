@@ -13,6 +13,7 @@
         <%= f.input :password %>
         <%= f.input :password_confirmation %>
         <%= select_for_customer_kinds(f) %>
+        <%= autocomplete_for_customer_group(f) %>
       </div>
 
       <div class="span6">

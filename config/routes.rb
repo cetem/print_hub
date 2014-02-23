@@ -33,6 +33,7 @@ PrintHubApp::Application.routes.draw do
     draw :user, :user
     draw :user, :files
     draw :user, :print_job_types
+    draw :user, :customers_groups
   end
 
   root to: 'subdomains#redirection' # Momentary solution for double root-to

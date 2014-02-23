@@ -92,4 +92,21 @@ module CustomersHelper
       class: 'iconic', method: :patch, title: t('view.customers.activate'),
       data: { 'show-tooltip' => true }
   end
+
+  def autocomplete_for_customer_group(form)
+    classes = ['autocomplete-field', 'span11']
+    classes << 'error' if @customer.errors[:group_id].present?
+
+    inputs = (form.label :group_id)
+    inputs << (form.input :auto_group_name, label: false, input_html: {
+      value: form.object.try(:group), class: classes.join(' '), data: {
+        'autocomplete-id-target' => '#customer_group_id',
+        'autocomplete-url' => autocomplete_for_name_customers_groups_path(format: :json)
+      }
+    })
+    inputs << (form.input :group_id, as: :hidden, input_html: {
+      value: form.object.try(:group_id), class: 'autocomplete-id'
+    })
+    inputs
+  end
 end

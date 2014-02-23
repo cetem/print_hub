@@ -52,6 +52,7 @@ class Customer < ApplicationModel
   has_many :deposits, inverse_of: :customer, dependent: :destroy,
     autosave: true
   has_many :print_jobs, through: :prints
+  belongs_to :group, class_name: CustomersGroup
 
   accepts_nested_attributes_for :bonuses, allow_destroy: true,
     reject_if: :reject_credits

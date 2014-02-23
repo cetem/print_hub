@@ -1,0 +1,26 @@
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th><%= CustomersGroup.human_attribute_name 'name' %></th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @customers_groups.each do |customers_group| %>
+      <tr>
+        <td><%= customers_group.name %></td>
+        <td><%= link_to_show customers_group %></td>
+        <td><%= link_to_edit edit_customers_group_path(customers_group) %></td>
+        <td><%= link_to_destroy customers_group %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<%= pagination_links(@customers_group) %>
+
+<div class="form-actions">
+  <%= link_to t('label.new'), new_customers_group_path,
+    class: 'btn btn-primary' %>
+</div>

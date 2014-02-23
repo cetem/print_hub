@@ -1,10 +1,10 @@
 'es':
   app_name: 'Impresiones'
-  
+
   attributes:
     created_at: 'Creación'
     updated_at: 'Actualización'
-  
+
   activerecord:
     errors:
       models:
@@ -52,6 +52,7 @@
       tag: 'Etiqueta'
       user: 'Usuario'
       user_session: 'Sesión'
+      customers_group: 'Grupo de usuarios'
 
     attributes:
       article:
@@ -83,6 +84,7 @@
         free_monthly_bonus: 'Bonificación mensual'
         bonus_without_expiration: 'Bonificación mensual sin caducidad'
         kind: 'Tipo de cliente'
+        group_id: 'Grupo'
       customer/bonuses:
         one: 'Bonificación'
         other: 'Bonificaciones'
@@ -95,6 +97,8 @@
         amount: 'Monto'
         remaining: 'Restante'
         valid_until: 'Válido hasta'
+      customers_group:
+        name: 'Nombre'
       deposit:
         amount: 'Monto'
         remaining: 'Restante'
@@ -215,12 +219,12 @@
       user_session:
         username: 'Usuario'
         password: 'Contraseña'
-        
+
   customer_menu:
     catalog: 'Documentos'
     orders: 'Pedidos'
     profile: 'Mis datos'
-    
+
   errors:
     title: 'Error'
     header_message: 'Se ha encontrado un problema'
@@ -230,7 +234,7 @@
     recreate_versions_error: 'Ha sucedido un error al procesar las miniaturas %{e}'
     messages:
       extension_white_list_error: 'Solo se permiten archivos PDF'
-    
+
   label:
     'yes': 'Si'
     'no': 'No'
@@ -261,6 +265,7 @@
     articles: 'Artículos'
     bonuses: 'Bonificaciones'
     customers: 'Clientes'
+    customers_groups: 'Grupos de Clientes'
     documents: 'Documentos'
     orders: 'Pedidos'
     payments: 'Pagos'
@@ -281,7 +286,7 @@
     file_upload_warning: 'Si abandona esta pagina los archivos subidos se perderán'
     only_pdf_permitted: "Solo se permiten subir pdf's"
     customer_file_was_deleted: 'El archivo de cliente ya ha sido eliminado'
-    
+
   notifications:
     forgot_password:
       subject: 'Restablecer contraseña'
@@ -289,7 +294,7 @@
       subject: 'Re-activar cuenta'
     signup:
       subject: 'Registro'
-      
+
   view:
     articles:
       index_title: 'Listado de artículos'

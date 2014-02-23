@@ -1,0 +1,13 @@
+<div class="readonly-data">
+  <h2><%= @customers_group %></h2>
+
+    <p>
+      <b><%= CustomersGroup.human_attribute_name 'name' %></b>:
+      <%= @customers_group.name %>
+    </p>
+
+</div>
+<div class="form-actions">
+  <%= link_to t('label.edit'), edit_customers_group_path(@customers_group) %> |
+  <%= link_to t('label.list'), customers_groups_path %>
+</div>

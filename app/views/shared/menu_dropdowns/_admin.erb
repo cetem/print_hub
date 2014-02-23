@@ -26,5 +26,7 @@
       :li, link_to(t('menu.print_job_types'), print_job_types_path),
       class: ('active' if controller_name == 'print_job_types')
     ) %>
+    <%= content_tag(:li, link_to(t('menu.customers_groups'), customers_groups_path),
+      class: ('active' if controller_name == 'customers_groups')) %>
   </ul>
 </li>

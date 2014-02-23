@@ -1,0 +1,6 @@
+<%= content_for :form_actions do %>
+  <%= link_to t('label.show'), @customers_group %> |
+  <%= link_to t('label.list'), customers_groups_path %>
+<% end %>
+
+<%= render 'form' %>
