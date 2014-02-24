@@ -620,3 +620,12 @@
       new_title: 'Iniciar sesión'
       correctly_created: 'Bienvenido a Central de Impresión.'
       correctly_destroyed: 'Sesión cerrada correctamente.'
+    customers_groups:
+      date: 'Fecha'
+      simple: 'Simple'
+      double: 'Doble'
+      pages: 'Paginas'
+      copies: 'Copias'
+      total: 'Total'
+      subtotal_copies: 'Subtotal (copias)'
+      debt: 'Deuda'

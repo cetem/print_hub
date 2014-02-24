@@ -1,13 +1,29 @@
 <div class="readonly-data">
   <h2><%= @customers_group %></h2>
 
-    <p>
-      <b><%= CustomersGroup.human_attribute_name 'name' %></b>:
-      <%= @customers_group.name %>
-    </p>
+  <table class="table table-striped">
+    <thead>
+      <th><%= Customer.human_attribute_name 'name' %></th>
+      <th><%= t('view.customers_groups.debt') %></th>
+    </thead>
+    <tbody>
+      <% @customers.each do |customer| %>
+        <tr>
+          <td><%= customer %></td>
+          <td><%= number_to_currency customer.to_pay_amounts[:total_price] %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
 
+  <%= pagination_links(@customers) %>
 </div>
+
 <div class="form-actions">
+  <div class="pull-right">
+    <%= link_to "Liquidación", settlement_customers_group_path(@customers_group),
+          target: '_blank', class: 'btn btn-primary' %>
+  </div>
   <%= link_to t('label.edit'), edit_customers_group_path(@customers_group) %> |
   <%= link_to t('label.list'), customers_groups_path %>
 </div>

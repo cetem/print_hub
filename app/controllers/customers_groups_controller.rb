@@ -1,6 +1,7 @@
 class CustomersGroupsController < ApplicationController
   before_filter :require_admin_user, except: :autocomplete_for_name
   before_filter :require_user, only: :autocomplete_for_name
+  before_filter :load_group, only: [:show, :edit, :update, :destroy, :settlement]
 
   # GET /customers_groups
   # GET /customers_groups.json
@@ -18,7 +19,7 @@ class CustomersGroupsController < ApplicationController
   # GET /customers_groups/1.json
   def show
     @title = t('view.customers_groups.show_title')
-    @customers_group = CustomersGroup.find(params[:id])
+    @customers = @customers_group.customers.page(params[:page])
 
     respond_to do |format|
       format.html # show.html.erb
@@ -41,7 +42,6 @@ class CustomersGroupsController < ApplicationController
   # GET /customers_groups/1/edit
   def edit
     @title = t('view.customers_groups.new_title')
-    @customers_group = CustomersGroup.find(params[:id])
   end
 
   # POST /customers_groups
@@ -65,7 +65,6 @@ class CustomersGroupsController < ApplicationController
   # PUT /customers_groups/1.json
   def update
     @title = t('view.customers_groups.edit_title')
-    @customers_group = CustomersGroup.find(params[:id])
 
     respond_to do |format|
       if @customers_group.update(customers_group_params)
@@ -83,7 +82,6 @@ class CustomersGroupsController < ApplicationController
   # DELETE /customers_groups/1
   # DELETE /customers_groups/1.json
   def destroy
-    @customers_group = CustomersGroup.find(params[:id])
     @customers_group.destroy
 
     respond_to do |format|
@@ -104,9 +102,17 @@ class CustomersGroupsController < ApplicationController
     end
   end
 
+  def settlement
+    send_data @customers_group.settlement_as_csv, filename: "#{@customers_group}.csv", type: 'text/csv'
+  end
+
   private
 
     def customers_group_params
       params.require(:customers_group).permit(:id, :name)
+    end
+
+    def load_group
+      @customers_group = CustomersGroup.find(params[:id])
     end
 end
