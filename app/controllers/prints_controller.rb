@@ -1,5 +1,5 @@
 class PrintsController < ApplicationController
-  before_action :require_user, except: [:revoke, :related_by_customer]
+  before_action :require_customer_or_user, except: [:revoke, :related_by_customer]
   before_action :require_admin_user, only: [:revoke, :related_by_customer]
   before_action :load_customer
 
@@ -190,24 +190,24 @@ class PrintsController < ApplicationController
   private
 
   def load_customer
-    @customer = Customer.find(params[:customer_id]) if params[:customer_id]
+    id = current_customer.try(:id) || params[:customer_id]
+    @customer = Customer.find(id) if id
   end
 
   def prints_scope
-    if @customer
-      scope = @customer.prints
-    else
-      scope = current_user.admin ? Print.all : current_user.prints
-    end
+    scope = if @customer
+              @customer.prints
+            else
+              current_user.admin ? Print.all : current_user.prints
+            end
 
-    case params[:status]
-      when 'pending'
-        scope = scope.pending
-      when 'scheduled'
-        scope = scope.scheduled
-      when 'pay_later'
-        scope = scope.pay_later
-    end
+    scope = case params[:status]
+            when 'pending'   then scope.pending
+            when 'scheduled' then scope.scheduled
+            when 'pay_later' then scope.pay_later
+            else
+              scope
+            end
 
     scope
   end

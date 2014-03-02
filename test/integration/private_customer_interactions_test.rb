@@ -155,11 +155,12 @@ class PrivateCustomerInteractionsTest < ActionDispatch::IntegrationTest
 
   test 'should change the password and login with the correct' do
     customer_login
+    customer = customers(:student_without_bonus)
 
     assert_page_has_no_errors!
 
-    within '.nav-collapse' do
-      click_link I18n.t('customer_menu.profile')
+    within '.nav.pull-right' do
+      click_link customer.email
     end
 
     fill_in 'customer_password', with: '123456'
@@ -169,16 +170,14 @@ class PrivateCustomerInteractionsTest < ActionDispatch::IntegrationTest
     assert_equal new_customer_session_path, current_path
     assert_page_has_no_errors!
 
-    fill_in 'customer_session_email',
-              with: customers(:student_without_bonus).email
+    fill_in 'customer_session_email', with: customer.email
     fill_in 'customer_session_password', with: '654321'
     click_button I18n.t('view.customer_sessions.login')
 
     assert_equal customer_sessions_path, current_path
     assert_page_has_no_errors!
 
-    fill_in 'customer_session_email',
-              with: customers(:student_without_bonus).email
+    fill_in 'customer_session_email', with: customer.email
     fill_in 'customer_session_password', with: '123456'
     click_button I18n.t('view.customer_sessions.login')
 

@@ -143,11 +143,10 @@ class OrdersController < ApplicationController
   private
 
   def load_scope
-    if current_customer
-      @order_scope = current_customer.orders
+    @order_scope = if current_customer
+      current_customer.orders
     else
-      @order_scope = order_type == 'print' ?
-        Order.pending.for_print : Order.all
+      order_type == 'print' ? Order.pending.for_print : Order.all
     end
   end
 

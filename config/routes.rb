@@ -10,12 +10,13 @@ PrintHubApp::Application.routes.draw do
 
   constraints(CustomerSubdomain) do
     draw :customer, :catalog
-    draw :customer, :feedback
-    draw :customer, :customer_session
     draw :customer, :customer
-    draw :customer, :password_reset
-    draw :customer, :order
+    draw :customer, :customer_session
+    draw :customer, :feedback
     draw :customer, :files
+    draw :customer, :order
+    draw :customer, :password_reset
+    draw :customer, :print
   end
 
   constraints(UserSubdomain) do

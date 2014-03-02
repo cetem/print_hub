@@ -665,7 +665,6 @@ class PrintsControllerTest < ActionController::TestCase
   end
 
   test 'should get related by customer' do
-
     prints = get_prints_with_customer.limit(2).all
 
     get :related_by_customer, id: prints.first, status: 'all', type: 'next'
@@ -676,7 +675,6 @@ class PrintsControllerTest < ActionController::TestCase
   end
 
   test 'should get the first print with related by customer prev link' do
-
     print = get_prints_with_customer.first
 
     get :related_by_customer, id: print.to_param, status: 'all', type: 'prev'
@@ -684,7 +682,6 @@ class PrintsControllerTest < ActionController::TestCase
   end
 
   test 'should get the last print with related by customer next link' do
-
     print = get_prints_with_customer.last
 
     get :related_by_customer, id: print.to_param, status: 'all', type: 'next'
@@ -692,17 +689,40 @@ class PrintsControllerTest < ActionController::TestCase
   end
 
   test 'should upload a file' do
-
     post :upload_file, file_line: { file: pdf_test_file }, status: 'all'
     assert_response :success
     assert_template 'prints/_file_print_job'
   end
 
-  def get_prints_with_customer(options={})
-    options[:customer] ||= customers(:teacher)
+  test 'should get customer private index' do
+    @request.host = "#{APP_CONFIG['subdomains']['customers']}.printhub.local"
+    customer = customers(:student)
+    CustomerSession.create(customers(:student))
 
-    Print.where(
-      customer_id: options[:customer]
-    ).order('created_at ASC')
+    get :index, status: 'all'
+    assert_response :success
+    assert_not_nil assigns(:prints)
+    assert_equal customer.prints.count, assigns(:prints).size
+    assert assigns(:prints).all? { |p| p.customer_id == customer.id }
+    assert_select '#unexpected_error', false
+    assert_template 'prints/index'
+  end
+
+  test 'should get customer private show' do
+    @request.host = "#{APP_CONFIG['subdomains']['customers']}.printhub.local"
+    customer = customers(:student)
+    CustomerSession.create(customers(:student))
+
+    get :show, id: customer.prints.first.to_param, status: 'all'
+    assert_response :success
+    assert_not_nil assigns(:print)
+    assert_select '#unexpected_error', false
+    assert_template 'prints/show'
+  end
+
+  def get_prints_with_customer(opts={})
+    opts[:customer] ||= customers(:teacher)
+
+    Print.where(customer_id: opts[:customer]).order(created_at: :asc)
   end
 end
