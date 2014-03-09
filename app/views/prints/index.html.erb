@@ -2,7 +2,13 @@
   <h2>
     <%= t('view.prints.prints_with_customer', customer: @customer.to_s) %>
   </h2>
+
+  <h3><%= [
+    t('view.customers.to_pay_prints.title'),
+    number_to_currency(@customer.to_pay_amounts[:total_price])
+  ].join(': ') %></h3>
 <% end %>
+
 <table class="table table-striped">
   <thead>
     <tr>
