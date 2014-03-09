@@ -374,6 +374,7 @@
         title: 'Saldo total en cuenta corriente'
         pay_off_debt: 'Pagar todo'
         debt_cancelled: 'Deuda saldada'
+        total_debt: 'Deuda total'
         columns:
           type: 'Tipo de copia'
           count: 'Cantidad'

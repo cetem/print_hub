@@ -198,14 +198,11 @@ class Customer < ApplicationModel
       type_total_count = 0
 
       prints.each do |pr|
-        price = PriceChooser.choose(type: type, copies: pr.printed_pages)
-        total_price = price * pr.printed_pages
-
         amount[:total_count] += pr.printed_pages
         type_total_count += pr.printed_pages
 
-        amount[:total_price] += total_price
-        type_total_price += total_price
+        amount[:total_price] += pr.price
+        type_total_price += pr.price
       end
 
       amount[:types] << {
