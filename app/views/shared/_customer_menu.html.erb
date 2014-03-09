@@ -17,7 +17,7 @@
             class: "strong #{('active' if controller_name == 'orders' && ['new', 'create'].include?(action_name))}") %>
           <%= content_tag(
             :li, link_to(t('menu.prints'), prints_path),
-            class: "strong #{'active' if controller_name == 'prints'}"i
+            class: "strong #{'active' if controller_name == 'prints'}"
           ) if current_customer.group_id? %>
         </ul>
         <%= render partial: 'shared/nav_search' if @searchable %>
