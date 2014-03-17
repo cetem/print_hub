@@ -36,8 +36,7 @@ class CustomerTest < ActiveSupport::TestCase
               password: 'jarjar123',
               password_confirmation: 'jarjar123',
               free_monthly_bonus: nil,
-              bonus_without_expiration: false,
-              enable: true
+              bonus_without_expiration: false
             }
           )
         end
@@ -58,8 +57,7 @@ class CustomerTest < ActiveSupport::TestCase
             password: 'jarjar123',
             password_confirmation: 'jarjar123',
             free_monthly_bonus: 10.0,
-            bonus_without_expiration: false,
-            enable: true
+            bonus_without_expiration: false
           }
         )
       end
@@ -84,8 +82,7 @@ class CustomerTest < ActiveSupport::TestCase
             email: 'jar_jar@printhub.com',
             password: 'jarjar123',
             password_confirmation: 'jarjar123',
-            kind: Customer::KINDS[:reliable],
-            enable: true
+            kind: Customer::KINDS[:reliable]
           }
         )
       end
@@ -95,7 +92,7 @@ class CustomerTest < ActiveSupport::TestCase
   end
 
   test 'no create bonus without admin role' do
-    assert_difference 'Customer.disable.count' do
+    assert_difference 'Customer.count' do
       assert_no_difference 'Bonus.count' do
         @customer = Customer.create({
           name: 'Jar Jar',
@@ -112,10 +109,7 @@ class CustomerTest < ActiveSupport::TestCase
 
   # Prueba de actualización de un cliente
   test 'update' do
-    invariable_counts = [
-      'Sidekiq::Extensions::DelayedMailer.jobs.size', 'Customer.count', 'Bonus.count'
-    ]
-    assert_no_difference invariable_counts do
+    assert_no_difference ['Customer.count', 'Bonus.count'] do
       assert @customer.update_attributes(
         name: 'Updated name'
       ), @customer.errors.full_messages.join('; ')
@@ -222,21 +216,6 @@ class CustomerTest < ActiveSupport::TestCase
     assert_equal 1, @customer.errors.count
     assert_equal [error_message_from_model(@customer, :kind, :inclusion)],
       @customer.errors[:kind]
-  end
-
-  test 'activate' do
-    customer = Customer.unscoped.find(ActiveRecord::FixtureSet.identify(:disabled_student))
-
-    assert !customer.enable
-    assert customer.activate!
-    assert customer.reload.enable
-  end
-
-  test 'reactivation' do
-    # Must sent the reactivation email if the address change
-    assert_difference 'Sidekiq::Extensions::DelayedMailer.jobs.size' do
-      assert @customer.update_attributes(email: 'new_email@new.com')
-    end
   end
 
   test 'deliver password reset instructions' do
@@ -458,32 +437,5 @@ class CustomerTest < ActiveSupport::TestCase
     assert Customer.find(customers(:student_without_bonus).id).bonuses.empty?
     assert student.bonuses.any? { |b| b.valid_until == valid_until }
     assert teacher.bonuses.any? { |b| b.valid_until == valid_until }
-  end
-
-  test 'destroy inactive accounts' do
-    assert_difference 'Customer.disable.count', -1 do
-      Customer.destroy_inactive_accounts
-    end
-  end
-
-  test 'no destroy inactive accounts if they have any order' do
-    Customer.disable.each do |c|
-      assert_difference 'c.orders.count' do
-        c.orders.build(
-          scheduled_at: 10.days.from_now,
-          order_lines_attributes: {
-            '1' => {
-              copies: 2,
-              print_job_type_id: print_job_types((:a4)).id,
-              document_id: documents(:math_book).id
-            }
-          }
-        ).save!
-      end
-    end
-
-    assert_no_difference 'Customer.disable.count' do
-      Customer.destroy_inactive_accounts
-    end
   end
 end

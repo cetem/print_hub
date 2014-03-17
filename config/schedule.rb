@@ -10,10 +10,6 @@ every 1.month, at: 'beginning of the month at 00:01' do
   runner 'Customer.create_monthly_bonuses'
 end
 
-every 1.day, at: '00:01' do
-  runner 'Customer.destroy_inactive_accounts'
-end
-
 every 1.day, at: '03:00' do
   rake 'tasks:clear_prints'
 end

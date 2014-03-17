@@ -115,7 +115,7 @@ class CustomersControllerTest < ActionController::TestCase
   test 'should create public customer and ignore bonuses' do
     @request.host = "#{APP_CONFIG['subdomains']['customers']}.printhub.local"
 
-    assert_difference 'Customer.disable.count' do
+    assert_difference 'Customer.count' do
       # Bonuses are silently ignored for customers
       assert_no_difference 'Bonus.count' do
         post :create, customer: {
@@ -268,18 +268,6 @@ class CustomersControllerTest < ActionController::TestCase
     assert_equal 'Updated name', logged_customer.reload.name
   end
 
-  test 'should activate customer' do
-    @request.host = "#{APP_CONFIG['subdomains']['customers']}.printhub.local"
-    customer = Customer.disable.find(
-      ActiveRecord::FixtureSet.identify(:disabled_student)
-    )
-
-    get :activate, token: customer.perishable_token
-    assert_redirected_to new_customer_session_url
-    assert I18n.t('view.customers.correctly_activated'), flash.notice
-    assert customer.reload.enable
-  end
-
   test 'should pay off customer debt' do
     UserSession.create(@operator)
 
@@ -303,19 +291,5 @@ class CustomersControllerTest < ActionController::TestCase
     assert_not_nil assigns(:customer)
     assert_select '#unexpected_error', false
     assert_template 'customers/_month_paid'
-  end
-
-  test 'should manual activate a disable customer' do
-    UserSession.create(@operator)
-
-    customer = customers(:disabled_student)
-
-    assert_difference 'Customer.disable.count', -1 do
-      assert_difference 'Customer.active.count' do
-        put :manual_activation, id: customer.id
-      end
-    end
-
-    assert_redirected_to customers_url
   end
 end

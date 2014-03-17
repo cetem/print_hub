@@ -1,12 +1,11 @@
 class CustomersController < ApplicationController
   customer_actions = [:edit_profile, :update_profile]
   before_action :require_user, except: [
-    :new, :create, :pay_off_debt, :pay_month_debt, :activate, customer_actions
+    :new, :create, :pay_off_debt, :pay_month_debt, customer_actions
   ].flatten
   before_action :require_admin_user, only: [:pay_off_debt, :pay_month_debt]
   before_action :require_customer, only: customer_actions
   before_action :require_no_customer_or_user, only: [:new, :create]
-  before_action :require_no_customer, only: [:activate]
 
   layout ->(controller) { controller.request.xhr? ? false : 'application' }
 
@@ -39,7 +38,7 @@ class CustomersController < ApplicationController
   # GET /customers/1.json
   def show
     @title = t('view.customers.show_title')
-    @customer = Customer.unscoped.find(params[:id])
+    @customer = Customer.find(params[:id])
 
     respond_to do |format|
       format.html # show.html.erb
@@ -62,7 +61,7 @@ class CustomersController < ApplicationController
   # GET /customers/1/edit
   def edit
     @title = t('view.customers.edit_title')
-    @customer = Customer.unscoped.find(params[:id])
+    @customer = Customer.find(params[:id])
   end
 
   # POST /customers
@@ -89,7 +88,7 @@ class CustomersController < ApplicationController
   # PUT /customers/1.json
   def update
     @title = t('view.customers.edit_title')
-    @customer = Customer.unscoped.find(params[:id])
+    @customer = Customer.find(params[:id])
 
     respond_to do |format|
       if @customer.update_attributes(customer_params_as_user)
@@ -154,24 +153,6 @@ class CustomersController < ApplicationController
     redirect_to edit_profile_customer_url(@customer)
   end
 
-  # GET /customers/activate/token
-  def activate
-    @title = t('view.customers.activation_title')
-    @customer = Customer.disable.find_using_perishable_token(
-      params[:token], TOKEN_VALIDITY
-    )
-
-    respond_to do |format|
-      if @customer.try(:activate!)
-        format.html { redirect_to(new_customer_session_url, notice: t('view.customers.correctly_activated')) }
-        format.json  { head :ok }
-      else
-        format.html { redirect_to(new_customer_session_url, notice: t('view.customers.can_not_be_activated')) }
-        format.json  { render json: [t('view.customers.can_not_be_activated')], status: :unprocessable_entity }
-      end
-    end
-  end
-
   # PUT /customers/1/pay_off_debt
   def pay_off_debt
     @customer = Customer.find(params[:id])
@@ -186,17 +167,6 @@ class CustomersController < ApplicationController
     @customer.pay_month_debt(params[:date])
 
     render partial: 'month_paid'
-  end
-
-  # PUT /customers/1/manual_activate
-  def manual_activation
-    @customer = Customer.disable.find(params[:id])
-
-    notice = @customer.activate! ?
-      t('view.customers.manual_activation_correct') :
-      t('view.customers.can_not_be_manually_activated')
-
-    redirect_to customers_url, notice: notice
   end
 
   private

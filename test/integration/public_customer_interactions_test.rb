@@ -6,7 +6,7 @@ class PublicCustomerInteractionsTest < ActionDispatch::IntegrationTest
     Capybara.app_host = "http://#{subdomain}.lvh.me:54163"
   end
 
-  test 'should register a new customer and should not login' do
+  test 'should register a new customer and should login' do
     visit new_customer_session_path
 
     assert_page_has_no_errors!
@@ -23,7 +23,7 @@ class PublicCustomerInteractionsTest < ActionDispatch::IntegrationTest
     fill_in Customer.human_attribute_name('password'), with: 'jj12'
     fill_in Customer.human_attribute_name('password_confirmation'), with: 'jj12'
 
-    ['Customer.disable.count', 'Sidekiq::Extensions::DelayedMailer.jobs.size'].tap do |c|
+    ['Customer.count', 'Sidekiq::Extensions::DelayedMailer.jobs.size'].tap do |c|
       assert_difference(c) { click_button I18n.t('view.customers.register') }
     end
 
@@ -38,63 +38,8 @@ class PublicCustomerInteractionsTest < ActionDispatch::IntegrationTest
 
     click_button I18n.t('view.customer_sessions.login')
 
-    # No puede ingresar hasta que no active la cuenta
-    assert_equal customer_sessions_path, current_path
+    assert_equal catalog_path, current_path
     assert_page_has_no_errors!
-
-    assert page.has_css?('.alert', text:
-      I18n.t('authlogic.attributes.customer_session.email') + ' ' +
-      I18n.t('authlogic.error_messages.login_not_found')
-    )
-  end
-
-  test 'should not login activate an account and should login' do
-    visit new_customer_session_path
-
-    assert_page_has_no_errors!
-
-    Customer.unscoped.find(
-      ActiveRecord::FixtureSet.identify(:disabled_student)).tap do |customer|
-      fill_in I18n.t('authlogic.attributes.customer_session.email'),
-        with: customer.email
-      fill_in I18n.t('authlogic.attributes.customer_session.password'),
-        with: 'disabled_student123'
-
-      click_button I18n.t('view.customer_sessions.login')
-
-      # No puede ingresar hasta que no active la cuenta
-      assert_equal customer_sessions_path, current_path
-
-      assert_page_has_no_errors!
-
-      assert page.has_css?('.alert', text:
-        I18n.t('authlogic.attributes.customer_session.email') + ' ' +
-        I18n.t('authlogic.error_messages.login_not_found')
-      )
-
-      visit activate_customer_path(token: customer.perishable_token)
-
-      assert_page_has_no_errors!
-
-      assert page.has_css?('.alert', text:
-          I18n.t('view.customers.correctly_activated')
-      )
-
-      fill_in I18n.t('authlogic.attributes.customer_session.email'),
-        with: customer.email
-      fill_in I18n.t('authlogic.attributes.customer_session.password'),
-        with: 'disabled_student123'
-
-      click_button I18n.t('view.customer_sessions.login')
-
-      assert_equal catalog_path, current_path
-
-      assert_page_has_no_errors!
-
-      assert page.has_css?('.alert',
-        text: I18n.t('view.customer_sessions.correctly_created')
-      )
-    end
   end
 
   test 'should reset password' do

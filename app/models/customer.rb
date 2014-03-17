@@ -28,7 +28,6 @@ class Customer < ApplicationModel
     :email.tap { |e| customer[e] = customer[e].try(:downcase) }
   end
   before_create :build_monthly_bonus, :send_welcome_email!
-  before_update :must_be_reactivate?
   before_destroy :has_no_orders?
 
   # Restricciones
@@ -81,16 +80,16 @@ class Customer < ApplicationModel
   end
 
   def self.find_by_activated_email(email)
-    Customer.active.where(email: email).first
+    Customer.where(email: email).first
+  end
+
+  def deactivate!
+    self.enable = false
+    self.save!
   end
 
   def reject_credits(attributes)
     attributes['amount'].to_f <= 0
-  end
-
-  def activate!
-    self.enable = true
-    self.save
   end
 
   def current_bonuses
@@ -118,13 +117,6 @@ class Customer < ApplicationModel
 
   def send_welcome_email!
     Notifications.delay.signup(self)
-  end
-
-  def must_be_reactivate?
-    if self.email_changed?
-      self.enable = false
-      Notifications.delay.reactivation(self)
-    end
   end
 
   def deliver_password_reset_instructions!
@@ -267,23 +259,6 @@ class Customer < ApplicationModel
         end
 
       rescue ActiveRecord::RecordInvalid
-        raise ActiveRecord::Rollback
-      end
-    end
-  end
-
-  def self.destroy_inactive_accounts
-    Customer.transaction do
-      begin
-        customers = Customer.disable.where('updated_at <= ?', 1.day.ago.to_date)
-
-        customers.find_each do |customer|
-          if customer.orders.count == 0
-            raise "#{customer} can not be destroyed" unless customer.destroy
-          end
-        end
-
-      rescue
         raise ActiveRecord::Rollback
       end
     end

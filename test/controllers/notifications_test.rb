@@ -16,35 +16,6 @@ class NotificationsTest < ActionMailer::TestCase
     end
   end
 
-  test 'signup with disabled customer' do
-    customer = customers(:disabled_student)
-    mail = Notifications.signup(customer)
-
-    assert_equal I18n.t('notifications.signup.subject'), mail.subject
-    assert_equal [customer.email], mail.to
-    assert_equal [APP_CONFIG['smtp']['user_name']], mail.from
-    assert_match 'Bienvenido', mail.body.encoded
-    assert_match 'activar', mail.body.encoded
-
-    assert_difference 'ActionMailer::Base.deliveries.size' do
-      mail.deliver
-    end
-  end
-
-  test 'reactivation' do
-    customer = customers(:disabled_student)
-    mail = Notifications.reactivation(customer)
-
-    assert_equal I18n.t('notifications.reactivation.subject'), mail.subject
-    assert_equal [customer.email], mail.to
-    assert_equal [APP_CONFIG['smtp']['user_name']], mail.from
-    assert_match 'Cambio de correo', mail.body.encoded
-
-    assert_difference 'ActionMailer::Base.deliveries.size' do
-      mail.deliver
-    end
-  end
-
   test 'forgot password' do
     customer = customers(:student)
     mail = Notifications.forgot_password(customer)

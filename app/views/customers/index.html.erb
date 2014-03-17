@@ -10,11 +10,10 @@
 
   <tbody>
     <% @customers.each do |customer| %>
-      <tr class="<%= 'disabled' unless customer.enable %>">
+      <tr>
         <td><%= customer.to_s %> (<%= show_link_to_customer_prints(customer) %>)</td>
         <td><%= customer.identification %></td>
         <td><%= number_to_currency(customer.free_credit || 0) %></td>
-        <td><%= link_to_activate_customer customer unless customer.enable %></td>
         <td><%= link_to_show customer %></td>
         <td><%= link_to_edit edit_customer_path(customer) %></td>
         <td><%= link_to_destroy customer if current_user.admin %></td>

@@ -1,24 +1,13 @@
-<% activation_url = activate_customer_url(token: @customer.perishable_token) %>
 <h2>Bienvenido a nuestro sistema de pedidos</h2>
 
 <p>Hola <strong><%= @customer.name %></strong>,</p>
 
 <p>Nos alegra tenerte con nosotros...</p>
 
-<% if @customer.enable %>
-  <p>
-    Tu cuenta ya está lista para usarse, entrá en
-    <%= link_to root_url, root_url %> y hacé tus pedidos.
-  </p>
-<% else %>
-  <p>
-    Para <strong>activar</strong> tu cuenta <strong>hacé clic</strong> en el
-    siguiente enlace:<br />
-    <%= link_to activation_url, activation_url %>
-  </p>
-
-  <%= render 'valid_until', date: TOKEN_VALIDITY.from_now %>
-<% end %>
+<p>
+  Tu cuenta ya está lista para usarse, entrá en
+  <%= link_to root_url, root_url %> y hacé tus pedidos.
+</p>
 
 <br />
 <br />

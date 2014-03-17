@@ -329,7 +329,7 @@
       edit_title: 'Modificar cliente'
       correctly_created: 'Cliente agregado correctamente.'
       correctly_updated: 'Cliente actualizado correctamente.'
-      correctly_registered: 'Te has registrado correctamente, te enviamos un correo para que actives tu cuenta.'
+      correctly_registered: 'Te has registrado correctamente, te enviamos un correo.'
       correctly_activated: 'Tu cuenta ahora está activa, ingresá y hacé tu pedido'
       can_not_be_activated: 'La cuenta no se puede activar, es posible que haya expirado, registrate nuevamente'
       stale_object_error: 'El cliente no pudo ser actualizado, intente nuevamente.'
