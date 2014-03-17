@@ -57,6 +57,7 @@ class Print < ApplicationModel
     record.errors.add attr, :blank if value.blank? && record.pay_later?
   end
   validate :must_have_one_item, :must_have_valid_payments
+  validate :need_credit_password?
 
   # Relaciones
   belongs_to :user
@@ -285,5 +286,11 @@ class Print < ApplicationModel
 
   def self.created_in_the_same_month(date)
     between(date.beginning_of_month, date.end_of_month.end_of_day)
+  end
+
+  def need_credit_password?
+    if self.pay_later? && self.customer_id && self.credit_password.blank?
+      self.errors.add :credit_password, :blank
+    end
   end
 end
