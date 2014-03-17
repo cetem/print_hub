@@ -289,7 +289,9 @@ class Print < ApplicationModel
   end
 
   def need_credit_password?
-    if self.pay_later? && self.customer_id && self.credit_password.blank?
+    if self.pay_later? && self.customer_id && self.credit_password.blank? &&
+      self.order.blank? && self.customer.group.present?
+
       self.errors.add :credit_password, :blank
     end
   end
