@@ -1,6 +1,12 @@
 <div class="readonly-data">
   <h2><%= @customer %></h2>
 
+  <% if @customer.group %>
+    <h4><%= [
+      Customer.human_attribute_name('group_id'), @customer.group
+    ].join(': ') %></h4>
+  <% end %>
+
   <p>
     <%= mail_to @customer.email %>
   </p>
