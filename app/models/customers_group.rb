@@ -27,6 +27,10 @@ class CustomersGroup < ApplicationModel
     ).order(options[:order])
   end
 
+  def self.settlement_as_csv
+    all.map { |cg| cg.settlement_as_csv }.join("\n\n")
+  end
+
   def settlement_as_csv
     require 'csv'
 
@@ -39,6 +43,8 @@ class CustomersGroup < ApplicationModel
 
     CSV.generate do |csv|
 
+      csv << [nil, self.name]
+      csv << []
 
       customers.each do |c|
         if (pay_later = c.print_jobs.pay_later).count > 0

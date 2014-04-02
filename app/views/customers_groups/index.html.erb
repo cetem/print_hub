@@ -26,6 +26,11 @@
 <%= pagination_links(@customers_group) %>
 
 <div class="form-actions">
+  <div class="pull-right">
+  <%= link_to t('view.customers_groups.global_settlement'),
+    global_settlement_customers_groups_path, target: '_blank',
+    class: 'btn btn-inverse' %>
+  </div>
   <%= link_to t('label.new'), new_customers_group_path,
     class: 'btn btn-primary' %>
 </div>

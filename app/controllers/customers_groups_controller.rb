@@ -106,6 +106,10 @@ class CustomersGroupsController < ApplicationController
     send_data @customers_group.settlement_as_csv, filename: "#{@customers_group}.csv", type: 'text/csv'
   end
 
+  def global_settlement
+    send_data CustomersGroup.settlement_as_csv, filename: "Global.csv", type: 'text/csv'
+  end
+
   private
 
     def customers_group_params

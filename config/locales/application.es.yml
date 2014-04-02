@@ -631,3 +631,4 @@
       subtotal_copies: 'Subtotal (copias)'
       debt: 'Deuda'
       settlement: 'Liquidación'
+      global_settlement: 'Liquidación Global'
