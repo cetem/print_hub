@@ -91,7 +91,7 @@ class CustomersController < ApplicationController
     @customer = Customer.find(params[:id])
 
     respond_to do |format|
-      if @customer.update_attributes(customer_params_as_user)
+      if @customer.update_attributes(customer_params)
         format.html { redirect_to(customer_url(@customer), notice: t('view.customers.correctly_updated')) }
         format.json  { head :ok }
       else
@@ -139,7 +139,7 @@ class CustomersController < ApplicationController
     @customer = current_customer
 
     respond_to do |format|
-      if @customer.update_attributes(customer_params_as_default)
+      if @customer.update_attributes(public_customer_params)
         format.html { redirect_to(edit_profile_customer_url(@customer), notice: t('view.customers.profile_correctly_updated')) }
         format.json  { head :ok }
       else
@@ -173,11 +173,14 @@ class CustomersController < ApplicationController
 
   # Atributos permitidos
   def customer_params
-    current_user.try(:admin) ?
-      customer_params_as_user : customer_params_as_default
+    if current_user
+      current_user.admin? ? customer_params_as_admin : common_customer_params
+    else
+      public_customer_params
+    end
   end
 
-  def customer_params_as_user
+  def customer_params_as_admin
     credit_attrs = [
       :amount, :remaining, :valid_until, :customer_id, :_destroy, :id
     ]
@@ -190,10 +193,19 @@ class CustomersController < ApplicationController
     )
   end
 
-  def customer_params_as_default
+  def common_customer_params
     params.require(:customer).permit(
       :name, :lastname, :identification, :email, :password,
-      :password_confirmation, :lock_version, :group_id
+      :password_confirmation, :lock_version, :enable, deposits_attributes: [
+        :amount, :remaining, :valid_until, :customer_id, :_destroy, :id
+      ]
+    )
+  end
+
+  def public_customer_params
+    params.require(:customer).permit(
+      :name, :lastname, :identification, :email, :password,
+      :password_confirmation, :lock_version
     )
   end
 end

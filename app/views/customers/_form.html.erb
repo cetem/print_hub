@@ -12,8 +12,10 @@
         <%= f.input :email %>
         <%= f.input :password %>
         <%= f.input :password_confirmation %>
-        <%= select_for_customer_kinds(f) %>
-        <%= autocomplete_for_customer_group(f) %>
+        <% if current_user.admin?  %>
+          <%= select_for_customer_kinds(f) %>
+          <%= autocomplete_for_customer_group(f) %>
+        <% end %>
       </div>
 
       <div class="span6">

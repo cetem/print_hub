@@ -96,7 +96,7 @@ class ShiftsController < ApplicationController
   end
 
   def json_paginate
-    shifts = shifts_scope.finished.order('created_at DESC').
+    shifts = shifts_scope.finished.order(start: :desc).
       limit(params[:limit].try(:to_i)).offset(params[:offset].to_i)
 
     respond_to do |format|
@@ -119,12 +119,12 @@ class ShiftsController < ApplicationController
     )
 
     permited_params[:user_id] = if @shift.try(:user_id)
-      @shift.user_id
-    elsif current_user.admin?
-      permited_params[:user_id] || current_user.id
-    else
-      current_user.id
-    end
+                                  @shift.user_id
+                                elsif current_user.admin?
+                                  permited_params[:user_id] || current_user.id
+                                else
+                                  current_user.id
+                                end
 
     permited_params
   end
