@@ -720,6 +720,16 @@ class PrintsControllerTest < ActionController::TestCase
     assert_template 'prints/show'
   end
 
+  test 'update print comment' do
+    assert_no_difference 'Print.count' do
+      put :update, id: @print.to_param, status: 'all',
+        print: { comment: 'The force be with you' }
+    end
+
+    assert_redirected_to @print
+    assert_equal 'The force be with you', @print.reload.comment
+  end
+
   def get_prints_with_customer(opts={})
     opts[:customer] ||= customers(:teacher)
 

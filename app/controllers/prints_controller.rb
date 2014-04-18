@@ -187,7 +187,24 @@ class PrintsController < ApplicationController
     redirect_to prints_scope.exists?(print) ? print : current_print
   end
 
+  # /prints/1/change_comment
+  def change_comment
+    print = Print.find(params[:id])
+
+    notice = if print.update(comment_param)
+               t('view.prints.comment_changed')
+             else
+               t('view.prints.comment_not_changed')
+             end
+
+    redirect_to print, notice: notice
+  end
+
   private
+
+  def comment_param
+    params.require(:print).permit(:comment)
+  end
 
   def load_customer
     id = current_customer.try(:id) || params[:customer_id]

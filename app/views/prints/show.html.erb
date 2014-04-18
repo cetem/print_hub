@@ -88,6 +88,8 @@
 <div class="form-actions">
   <% if current_user %>
     <%= link_to t('view.prints.new'), new_print_path, class: 'btn btn-primary' %>
+    <%= link_to t('view.prints.change_comment'),
+      '#', data: { target: '#comment', toggle: 'modal' } %>
     <div class="pull-right">
       <% if @print.pending_payment? %>
         <%= link_to t('label.edit'), edit_print_path(@print) %> |
@@ -98,4 +100,18 @@
       <% end %>
     </div>
   <% end %>
+</div>
+
+<div class="modal fade" id="comment">
+  <div class="modal-header">
+    <button class="close" data-dismiss="modal">&times;</button>
+    <h3><%= t('view.prints.change_comment') %></h3>
+  </div>
+
+  <div class="modal-body">
+    <%= simple_form_for @print, url: change_comment_print_path(@print), method: :patch do |f| %>
+      <%= f.input :comment, label: false, input_html: { rows: 5, class: 'span5' } %>
+      <%= f.button :submit, class: 'btn btn-primary' %>
+    <% end %>
+  </div>
 </div>

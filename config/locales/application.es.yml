@@ -559,6 +559,9 @@
         next: '*Próxima* impresión del cliente &raquo;'
         prev: '&laquo; Impresión *anterior* del cliente'
       upload_file: 'Subir archivo'
+      change_comment: "Cambiar comentario"
+      comment_changed: 'Comentario actualizado.'
+      comment_not_changed: 'No se pudo actualizar.'
     shifts:
       index_title: 'Listado de turnos'
       show_title: 'Detalle de turno'
