@@ -46,7 +46,7 @@
       <div id='file_lines'>
         <%= f.simple_fields_for :file_lines do |of| %>
           <% if of.object.file.present? || of.object.file_cache.present? %>
-            <%= render partial: 'file_line', locals: { file_line: of } %>
+            <%= render 'file_line', file_line: of %>
           <% end %>
         <% end %>
       </div>

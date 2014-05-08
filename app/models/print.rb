@@ -77,21 +77,23 @@ class Print < ApplicationModel
   def initialize(attributes = nil)
     super(attributes)
 
-    self.user = UserSession.find.try(:user) || self.user rescue self.user
-
-    self.pay_later! if self.pay_later == '1' || self.pay_later == true
+    self.user   = UserSession.find.try(:user) || self.user rescue self.user
     self.status ||= STATUS[:pending_payment]
+    self.pay_later! if self.pay_later == '1' || self.pay_later == true
+
     keys = ['copies', 'range', 'print_job_type_id']
 
     if self.order && self.print_jobs.empty?
       self.customer = self.order.customer
 
       self.order.file_lines.compact.each do |file_line|
-        self.print_jobs.build(file_line.attributes.slice(*['id', keys]))
+        self.print_jobs.build(file_line.attributes.slice(*['id'] + keys))
       end
 
       self.order.order_lines.each do |order_line|
-        self.print_jobs.build(order_line.attributes.slice(*['document_id', keys]))
+        self.print_jobs.build(
+          order_line.attributes.slice(*['document_id'] + keys)
+        )
       end
     elsif self.include_documents.present?
       self.include_documents.each do |document_id|

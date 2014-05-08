@@ -53,6 +53,7 @@ group :development do
   gem 'thin'
   gem 'railroady'
   gem 'awesome_print'
+  gem 'pry-nav'
 end
 
 group :test do
