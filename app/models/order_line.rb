@@ -14,6 +14,8 @@ class OrderLine < ApplicationModel
   belongs_to :print_job_type
   delegate :pages, to: :document
 
+  before_save :recalculate_price_per_copy
+
   def initialize(attributes = nil)
     super(attributes)
 
@@ -23,7 +25,14 @@ class OrderLine < ApplicationModel
   end
 
   def price
-    total_pages * job_price_per_copy
+    PriceCalculator.final_job_price(
+      (self.order.try(:pages_per_type) || {}).merge(
+        price_per_copy: job_price_per_copy,
+        type: self.print_job_type,
+        pages: self.pages,
+        copies: self.copies || 0
+      )
+    )
   end
 
   def total_pages
@@ -32,8 +41,12 @@ class OrderLine < ApplicationModel
 
   def job_price_per_copy
     PriceChooser.choose(
-      type: self.print_job_type,
+      type: self.print_job_type_id,
       copies: self.order.try(:total_pages_by_type, self.print_job_type)
     )
+  end
+
+  def recalculate_price_per_copy
+    self.price_per_copy = job_price_per_copy
   end
 end

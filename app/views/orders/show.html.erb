@@ -67,11 +67,8 @@
           </tr>
         </thead>
         <tbody>
-          <% @order.file_lines.each do |order_item| %>
-            <%= render 'order_item_show', oi: order_item, document: false %>
-          <% end %>
-          <% @order.order_lines.each do |order_item| %>
-            <%= render 'order_item_show', oi: order_item, document: true %>
+          <% @order.order_items.each do |oi| %>
+            <%= render 'order_item_show', oi: oi, document: oi.try(:file).nil? %>
           <% end %>
         </tbody>
       </table>

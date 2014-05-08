@@ -58,7 +58,7 @@ class Order < ApplicationModel
 
     order_items.each do |nm|
       nm.price_per_copy = nm.job_price_per_copy
-    end if order_items.present?
+    end if order_items.any?
   end
 
   def avoid_destruction
@@ -104,6 +104,15 @@ class Order < ApplicationModel
 
   def price
     self.completed? ? self.print.price : order_items.sum(&:price)
+  end
+
+  def pages_per_type
+    types = order_items.map(&:print_job_type).uniq
+    total = {}
+
+    types.each { |type| total[type.id] = total_pages_by_type(type) }
+
+    total
   end
 
   def total_pages_by_type(type)

@@ -196,10 +196,7 @@ class Print < ApplicationModel
     types = self.print_jobs.map(&:print_job_type).uniq
     total = {}
 
-    types.each do |t|
-      type = PrintJobType.find(t)
-      total[type.id] = total_pages_by_type(type)
-    end
+    types.each { |type| total[type.id] = total_pages_by_type(type) }
 
     total
   end
