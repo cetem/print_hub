@@ -2,14 +2,13 @@ class Shift < ActiveRecord::Base
   has_paper_trail
 
   # Scopes
-  scope :pending, -> { where(finish: nil) }
-  scope :finished, -> { where("finish IS NOT NULL") }
+  scope :pending,     -> { where(finish: nil) }
+  scope :finished,    -> { where.not(finish: nil) }
+  scope :pay_pending, -> { finished.where(paid: false) }
   scope :stale, -> {
     pending.where("#{table_name}.start < ?", 8.hours.ago)
   }
-  scope :pay_pending, -> { where(
-    "#{table_name}.finish IS NOT NULL AND #{table_name}.paid = false"
-  ) }
+  scope :between, -> (start, finish) { where(start: start..finish) }
 
   # Restricciones
   validates :start, :user_id, presence: true
@@ -61,9 +60,8 @@ class Shift < ActiveRecord::Base
   end
 
   def self.pending_between(start, finish)
-    pay_pending.where(
-      "#{table_name}.start BETWEEN :start AND :finish",
-       start: start.beginning_of_day, finish: finish.end_of_day
+    pay_pending.between(
+      start.beginning_of_day, finish.end_of_day
     ).order(start: :asc)
   end
 end

@@ -76,7 +76,7 @@ class User < ApplicationModel
   end
 
   def last_shift_open?
-    self.shifts.order('created_at DESC').first.pending?
+    self.shifts.order(created_at: :desc).first.pending?
   end
 
   def self.full_text(query_terms)
