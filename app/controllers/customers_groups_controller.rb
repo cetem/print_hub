@@ -107,7 +107,13 @@ class CustomersGroupsController < ApplicationController
   end
 
   def global_settlement
-    send_data CustomersGroup.settlement_as_csv, filename: "Global.csv", type: 'text/csv'
+    interval      = params.require(:interval).permit(:from, :to)
+    start, finish = *make_datetime_range(interval)
+    start         = start.beginning_of_day
+    finish        = finish.end_of_day
+
+    send_data CustomersGroup.settlement_as_csv(start, finish),
+      filename: "Global.csv", type: 'text/csv'
   end
 
   private

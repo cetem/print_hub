@@ -27,97 +27,50 @@ class CustomersGroup < ApplicationModel
     ).order(options[:order])
   end
 
-  def self.settlement_as_csv
-    all.map { |cg| cg.settlement_as_csv }.join("\n\n")
+  def self.settlement_as_csv(start, finish)
+    all.map { |cg| cg.settlement_as_csv(start, finish) }.join("\n\n")
   end
 
-  def settlement_as_csv
+  def settlement_as_csv(start, finish)
     require 'csv'
 
-    double_t          = I18n.t('view.customers_groups.double')
-    simple_t          = I18n.t('view.customers_groups.simple')
-    total_t           = I18n.t('view.customers_groups.total')
-    subtotal_copies_t = I18n.t('view.customers_groups.subtotal_copies')
-    global_simple     = 0
-    global_double      = 0
+    double_t    = I18n.t('view.customers_groups.double')
+    simple_t    = I18n.t('view.customers_groups.simple')
+    total_t     = I18n.t('view.customers_groups.total')
+    total_price = 0.0
+    range       = start..finish
 
     CSV.generate do |csv|
 
-      csv << [nil, self.name]
       csv << []
+      csv << [self.name, simple_t, double_t, total_t]
+
+      total_copies = { one: 0, two: 0 }
 
       customers.each do |c|
-        if (pay_later = c.print_jobs.pay_later).count > 0
-          total_simple = 0
-          total_double = 0
+        copies = { one: 0, two: 0 }
 
-          csv << [
-            self.name,
-            I18n.t('view.customers_groups.date'),
-            simple_t,
-            I18n.t('view.customers_groups.copies'),
-            I18n.t('view.customers_groups.pages'),
-            total_t,
-            double_t,
-            I18n.t('view.customers_groups.copies'),
-            I18n.t('view.customers_groups.pages'),
-            total_t
-          ]
+        c.prints.where(created_at: range).each do |p|
 
-          pay_later.order(:created_at).each do |pj|
-            new_row = [
-              "#{c.name} #{c.lastname}",
-              I18n.l(pj.created_at.to_date)
-            ]
+          copies[:one] += p.print_jobs.one_sided.sum(&:printed_pages) || 0
 
-            new_row << if pj.two_sided
-                         if (pj.pages % 2).zero?
-                           total = pj.copies * pj.pages
-                           total_double += total
-                           global_double += total
-
-                           [
-                             '', '', '', '',
-                             double_t, pj.copies, pj.pages, pj.copies * pj.pages
-                           ]
-                         else
-                           total = pj.copies * (pj.pages - 1)
-                           total_double += total
-                           total_simple += pj.copies
-                           global_double += total
-                           global_simple += pj.copies
-
-                           [
-                             simple_t, pj.copies, 1, pj.copies,
-                             double_t, pj.copies, pj.pages - 1, total
-                           ]
-                         end
-                       else
-                         total = pj.copies * pj.pages
-                         total_simple += total
-                         global_simple += total
-
-                         [simple_t, pj.copies, pj.pages, total]
-                       end
-
-            csv << new_row.flatten
+          p.print_jobs.two_sided.each do |ts|
+            if (ts.pages % 2) == 0
+              copies[:two] += ts.printed_pages
+            else
+              copies[:one] += ts.copies
+              copies[:two] += (ts.pages - 1) * ts.copies
+            end
           end
-
-          csv << [
-            '','',
-            subtotal_copies_t, '',
-            total_simple, '',
-            subtotal_copies_t, '',
-            total_double, ''
-          ]
-
-          csv << []
-          csv << ['', '', total_t]
-          csv << []
-          csv << []
         end
+
+        total_copies[:one] += copies[:one]
+        total_copies[:two] += copies[:two]
+
+        csv << [c.to_s, copies[:one], copies[:two]]
       end
-      csv << ['', simple_t, global_simple, '', double_t, global_double]
+
+      csv << [nil, total_copies[:one], total_copies[:two]] if customers.count > 1
     end
   end
 end

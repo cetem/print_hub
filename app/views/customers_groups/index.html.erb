@@ -1,3 +1,29 @@
+<div class="filter form-inputs">
+  <%= simple_form_for :interval, url: global_settlement_customers_groups_path, html: { method: :get } do |f| %>
+  <div class="row-fluid">
+    <div class="span1">
+      <%= t('view.stats.date_filter.start') %>
+    </div>
+    <div class="span3">
+      <%= f.input :from, as: :date_picker, label: false, input_html: {
+        value: l(Date.today)
+      } %>
+    </div>
+    <div class="span1">
+      <%= t('view.stats.date_filter.end') %>
+    </div>
+    <div class="span3">
+      <%= f.input :to, as: :date_picker, label: false, input_html: {
+        value: l(1.month.ago.to_date)
+      } %>
+    </div>
+    <div class="span4">
+      <%= f.button :submit, t('view.customers_groups.global_settlement'), class: 'btn btn-inverse' %>
+    </div>
+  </div>
+  <% end %>
+</div>
+
 <table class="table table-striped">
   <thead>
     <tr>
@@ -10,11 +36,6 @@
     <% @customers_groups.each do |customers_group| %>
       <tr>
         <td><%= customers_group.name %></td>
-        <td><%= link_to('&#xe042;'.html_safe,
-          settlement_customers_group_path(customers_group),
-          title: t('view.customers_groups.settlement'),
-          data: { show_tooltip: true }, target: '_blank', class: 'iconic') %>
-        </td>
         <td><%= link_to_show customers_group %></td>
         <td><%= link_to_edit edit_customers_group_path(customers_group) %></td>
         <td><%= link_to_destroy customers_group %></td>
@@ -26,11 +47,6 @@
 <%= pagination_links(@customers_group) %>
 
 <div class="form-actions">
-  <div class="pull-right">
-  <%= link_to t('view.customers_groups.global_settlement'),
-    global_settlement_customers_groups_path, target: '_blank',
-    class: 'btn btn-inverse' %>
-  </div>
   <%= link_to t('label.new'), new_customers_group_path,
     class: 'btn btn-primary' %>
 </div>
