@@ -148,7 +148,7 @@ class DocumentsController < ApplicationController
   def autocomplete_for_tag_name
     query = params[:q].sanitized_for_text_query
     query_terms = query.split(/\s+/).reject(&:blank?)
-    tags = Tag.all
+    tags = Tag.all.order(:id)
     tags = tags.full_text(query_terms) unless query_terms.empty?
     tags = tags.limit(10)
 

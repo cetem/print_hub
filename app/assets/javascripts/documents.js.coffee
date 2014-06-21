@@ -12,15 +12,15 @@ new Rule
       if !/^\s*$/.test($('#document_code').val() || '')
         newShowHref = $('a.show_barcode').attr('href')
         .replace(/[^/]*\/barcode/, "#{$('#document_code').val()}/barcode")
-        
+
         $('a.show_barcode').attr 'href', newShowHref
-        
+
         newDownloadHref = $('a.download_barcode').attr('href')
         .replace(
           /[^/]*\/download_barcode/,
           "#{$('#document_code').val()}/download_barcode"
         )
-        
+
         $('a.download_barcode').attr 'href', newDownloadHref
 
     # Oculta el código de barra
@@ -30,16 +30,16 @@ new Rule
     # Muestra el código de barra
     @map.showBarcodeContainer ||= (xhr, data)->
       $(this).next('.barcode_container').html(data).stop(true, true).slideDown()
-  
-    $(document).on 'change', '#document_code', -> @map.liveChangeBarcodeLink
-    $(document).on 'ajax:before', 'a.show_barcode', -> @map.hideBarcodeContainer
+
+    $(document).on 'change', '#document_code', @map.liveChangeBarcodeLink
+    $(document).on 'ajax:before', 'a.show_barcode',  @map.hideBarcodeContainer
     $(document).on 'ajax:success', 'a.show_barcode', @map.showBarcodeContainer
     $(document).on 'click', 'a.add_link, a.remove_link',
       @map.disableAddOrRemoveFromOrder
 
   unload: ->
-    $(document).off 'change', '#document_code', -> @map.liveChangeBarcodeLink
-    $(document).off 'ajax:before', 'a.show_barcode', -> @map.hideBarcodeContainer
+    $(document).off 'change', '#document_code', @map.liveChangeBarcodeLink
+    $(document).off 'ajax:before', 'a.show_barcode',  @map.hideBarcodeContainer
     $(document).off 'ajax:success', 'a.show_barcode', @map.showBarcodeContainer
     $(document).off 'click', 'a.add_link, a.remove_link',
       @map.disableAddOrRemoveFromOrder
