@@ -22,12 +22,11 @@ namespace :deploy do
     end
   end
 
-  desc 'Update crontab with whenever'
+  desc 'Temp Clear'
   after :finishing, 'deploy:cleanup' do
     on roles(:all) do
       within release_path do
         execute :rake, 'tmp:clear'
-        execute :bundle, :exec, "whenever --update-crontab #{fetch(:application)}"
       end
     end
   end

@@ -23,7 +23,8 @@ namespace :tasks do
   private
 
   def delete_files_older_than_7_days(directory)
-    puts %x{find #{directory} -type f -mtime +7 | xargs rm -rf}
+    output = %x{find #{directory} -type f -mtime +7 | xargs rm -rf}
+    %x{echo -en "#{output}" >> #{directory}/log/deleted_files.log}
   end
 
   def delete_empty_files_folder(directory)
