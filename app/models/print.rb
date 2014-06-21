@@ -86,8 +86,8 @@ class Print < ApplicationModel
     if self.order && self.print_jobs.empty?
       self.customer = self.order.customer
 
-      self.order.file_lines.compact.each do |file_line|
-        self.print_jobs.build(file_line.attributes.slice(*['id'] + keys))
+      self.order.file_lines.each do |file_line|
+        self.print_jobs.build(file_line.attributes.slice(*['id', keys]))
       end
 
       self.order.order_lines.each do |order_line|

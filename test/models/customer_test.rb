@@ -294,8 +294,8 @@ class CustomerTest < ActiveSupport::TestCase
     assert_equal '0',
       @customer.use_credit(200, 'student123').to_s
     assert_equal '1700.0', @customer.free_credit.to_s
-    assert_equal ['800.0', '400.0', '500.0'],
-      @customer.credits.valids.map(&:remaining).map(&:to_s)
+    assert_equal ['400.0', '500.0', '800.0'],
+      @customer.credits.valids.map(&:remaining).map(&:to_s).sort
     # Pagar más de lo que se puede con crédito
     assert_equal '300.0',
       @customer.use_credit(2000, 'student123').to_s

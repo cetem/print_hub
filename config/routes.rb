@@ -6,7 +6,7 @@ class ActionDispatch::Routing::Mapper
   end
 end
 
-PrintHubApp::Application.routes.draw do
+Rails.application.routes.draw do
 
   constraints(CustomerSubdomain) do
     draw :customer, :catalog

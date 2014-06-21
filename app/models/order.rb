@@ -144,6 +144,6 @@ class Order < ApplicationModel
 
     includes(:customer).where(
       conditions.map { |c| "(#{c})" }.join(' OR '), parameters
-    ).order(options[:order])
+    ).order(options[:order]).references(:customer)
   end
 end

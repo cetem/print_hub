@@ -125,7 +125,7 @@ class DocumentsController < ApplicationController
 
   # GET /document/1/barcode
   def barcode
-    @document = Document.find_or_initialize_by_code(params[:id])
+    @document = Document.where(code: params[:id]).first_or_initialize
   end
 
   # POST /documents/1/add_to_next_print

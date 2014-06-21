@@ -5,9 +5,9 @@ require 'capistrano/rails/assets'
 require 'capistrano/rails/migrations'
 require 'sidekiq/capistrano'
 
-namespace :deploy do
+namespace :load do
   task :defaults do
-    on stage(:staging) do
+    if fetch(:stage) == :staging
       require 'capistrano/rbenv'
     end
   end

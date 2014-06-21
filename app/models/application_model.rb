@@ -23,7 +23,7 @@ class ApplicationModel < ActiveRecord::Base
       order = "#{args.first} ASC"
     end
 
-    {query: query, order: order, parameters: parameters}
+    { query: query, order: order, parameters: parameters }
   end
 
   def self.pg_text_query(*args)
