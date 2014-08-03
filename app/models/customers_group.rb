@@ -45,12 +45,14 @@ class CustomersGroup < ApplicationModel
       csv << []
       csv << [self.name, simple_t, double_t, total_t]
 
-      total_copies = { one: 0, two: 0 }
+      totals = { one_side: 0, two_sides: 0, library: 0.0 }
 
       customers.each do |c|
         copies = { one: 0, two: 0 }
+        library = 0.0
 
         c.prints.where(created_at: range).each do |p|
+          library += p.article_lines.map{ |a_l| a_l.units * a_l.unit_price }.sum
 
           copies[:one] += p.print_jobs.one_sided.sum(:printed_pages) || 0
 
@@ -64,13 +66,14 @@ class CustomersGroup < ApplicationModel
           end
         end
 
-        total_copies[:one] += copies[:one]
-        total_copies[:two] += copies[:two]
+        totals[:one_side] += copies[:one]
+        totals[:two_sides] += copies[:two]
+        totals[:library] += library
 
-        csv << [c.to_s, copies[:one], copies[:two]]
+        csv << [c.to_s, copies[:one], copies[:two], library]
       end
 
-      csv << [nil, total_copies[:one], total_copies[:two]] if customers.count > 1
+      csv << [nil, totals[:one_side], totals[:two_sides], totals[:library]] if customers.count > 1
     end
   end
 end
