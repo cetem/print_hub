@@ -9,7 +9,7 @@
     <tbody>
       <% @customers.each do |customer| %>
         <tr>
-          <td><%= customer %></td>
+          <td><%= link_to customer, customer %></td>
           <td><%= number_to_currency customer.to_pay_amounts[:total_price] %></td>
         </tr>
       <% end %>

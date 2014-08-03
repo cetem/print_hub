@@ -4,7 +4,7 @@ gem 'rails', '4.1.1'
 
 gem 'pg'
 gem 'authlogic'
-gem 'validates_timeliness'
+gem 'jc-validates_timeliness'
 gem 'awesome_nested_set', "~> 3.0.0.rc.5"
 gem 'will_paginate'
 gem 'foreigner'
@@ -51,6 +51,9 @@ gem 'jquery-fileupload-rails'
 
 group :development do
   gem 'thin'
+end
+
+group :development, :test do
   gem 'awesome_print'
   gem 'pry-nav'
 end

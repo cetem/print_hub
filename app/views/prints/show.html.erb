@@ -10,8 +10,9 @@
   </p>
 
   <p>
-    <b><%= Print.human_attribute_name 'customer' %></b>:
-    <%= @print.customer || '-' %>
+  <b><%= Print.human_attribute_name 'customer' %></b>:
+    <% customer = @print.customer %>
+    <%= link_to customer, customer if customer  %>
   </p>
 
   <p>

@@ -128,7 +128,7 @@ class Customer < ApplicationModel
   end
 
   def free_credit
-    self.credits.valids.sum('remaining')
+    self.credits.valids.sum(:remaining)
   end
 
   def free_credit_minus_pendings

@@ -455,7 +455,7 @@ class PrintJobTest < ActiveSupport::TestCase
   end
 
   test 'completed' do
-    print_job = PrintJob.create(@print_job.attributes.except('id'))
+    print_job = PrintJob.create(@print_job.dup.attributes)
 
     assert !print_job.completed?
 

@@ -52,7 +52,7 @@ class CustomersGroup < ApplicationModel
 
         c.prints.where(created_at: range).each do |p|
 
-          copies[:one] += p.print_jobs.one_sided.sum(&:printed_pages) || 0
+          copies[:one] += p.print_jobs.one_sided.sum(:printed_pages) || 0
 
           p.print_jobs.two_sided.each do |ts|
             if (ts.pages % 2) == 0

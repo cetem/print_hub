@@ -17,8 +17,6 @@ class ActiveSupport::TestCase
 
   # Add more helper methods to be used by all tests here...
 
-  set_fixture_class bonuses: 'Bonus'
-
   def error_message_from_model(model, attribute, message, extra = {})
     ::ActiveModel::Errors.new(model).generate_message(attribute, message, extra)
   end

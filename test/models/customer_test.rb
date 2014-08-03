@@ -372,7 +372,7 @@ class CustomerTest < ActiveSupport::TestCase
   end
 
   test 'add bonus' do
-    initial_bonus_amount = @customer.bonuses.to_a.sum(&:amount)
+    initial_bonus_amount = @customer.bonuses.sum(:amount)
 
     assert_difference '@customer.bonuses.size', 2 do
       @customer.add_bonus(100)

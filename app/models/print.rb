@@ -166,7 +166,7 @@ class Print < ApplicationModel
       self.payments.each { |p| p.revoked = true }
 
       if self.customer && self.payments.any?(&:credit?)
-        self.customer.add_bonus self.payments.select(&:credit?).sum(&:paid)
+        self.customer.add_bonus self.payments.select(&:credit?).to_a.sum(&:paid)
       end
 
       self.save validate: false

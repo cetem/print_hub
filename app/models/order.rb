@@ -103,7 +103,7 @@ class Order < ApplicationModel
   end
 
   def price
-    self.completed? ? self.print.price : order_items.sum(&:price)
+    self.completed? ? self.print.price : order_items.map(&:price).sum
   end
 
   def pages_per_type
