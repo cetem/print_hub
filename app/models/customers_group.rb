@@ -36,6 +36,7 @@ class CustomersGroup < ApplicationModel
 
     double_t    = I18n.t('view.customers_groups.double')
     simple_t    = I18n.t('view.customers_groups.simple')
+    library_t   = I18n.t('view.customers_groups.library')
     total_t     = I18n.t('view.customers_groups.total')
     total_price = 0.0
     range       = start..finish
@@ -43,7 +44,7 @@ class CustomersGroup < ApplicationModel
     CSV.generate do |csv|
 
       csv << []
-      csv << [self.name, simple_t, double_t, total_t]
+      csv << [self.name, simple_t, double_t, library_t, total_t]
 
       totals = { one_side: 0, two_sides: 0, library: 0.0 }
 

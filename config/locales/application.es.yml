@@ -631,6 +631,7 @@
       pages: 'Paginas'
       copies: 'Copias'
       total: 'Total'
+      library: 'Librería'
       subtotal_copies: 'Subtotal (copias)'
       debt: 'Deuda'
       settlement: 'Liquidación'
