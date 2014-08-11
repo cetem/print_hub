@@ -1,6 +1,6 @@
-<% deposits_amount = @deposits.sum(:amount) %>
-<% payments_amount = @payments.sum(:amount) %>
-<% payments_paid = @payments.sum(:paid) %>
+<% deposits_amount = @deposits.to_a.sum(&:amount) %>
+<% payments_amount = @payments.to_a.sum(&:amount) %>
+<% payments_paid = @payments.to_a.sum(&:paid) %>
 
 <%= render 'shared/date_filter', from_date: @from_date, to_date: @to_date %>
 
@@ -43,7 +43,7 @@
     <br />
     <h3>(*) <%= t('view.payments.payment_details') %></h3>
     <ul>
-      <% @payments.group(:paid_with).sum(:paid).each do |paid_with, payments_amount| %>
+      <% @payments.group_by(&:paid_with).map {|with, col| [with, col.to_a.sum(&:paid)] }.each do |paid_with, payments_amount| %>
         <li><%= "#{show_paid_with_text(paid_with)}: #{number_to_currency(payments_amount)}" %></li>
       <% end %>
     </ul>

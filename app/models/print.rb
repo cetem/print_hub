@@ -10,8 +10,10 @@ class Print < ApplicationModel
 
   # Callbacks
   before_validation :remove_unnecessary_payments
-  before_save :mark_order_as_completed, :update_customer_credit, if: :new_record?
-  before_save :mark_as_pending, :print_all_jobs
+  before_save :mark_order_as_completed, if: -> (p) { p.order.present? }
+  before_create :update_customer_credit, if: -> (p) { p.customer.present? }
+  before_save :mark_as_pending
+  before_create :print_all_jobs
   before_destroy :can_be_destroyed?
 
   # Scopes
@@ -280,7 +282,7 @@ class Print < ApplicationModel
   end
 
   def self.stats_between(from, to)
-    between(from, to).not_revoked.group(:user_id).count
+    between(from, to).not_revoked.group_by(&:user_id).count
   end
 
   def self.created_in_the_same_month(date)

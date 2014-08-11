@@ -676,8 +676,8 @@ class PrintTest < ActiveSupport::TestCase
   test 'revoke a print paid with credit returns the value to the customer' do
     UserSession.create(@operator)
     print = prints(:math_print_with_credit)
-    initial_bonus = print.customer.bonuses.sum(:remaining)
-    payments_amount = print.payments.select(&:credit?).sum(&:paid)
+    initial_bonus = print.customer.bonuses.to_a.sum(&:remaining)
+    payments_amount = print.payments.select(&:credit?).to_a.sum(&:paid)
 
     assert_difference 'Bonus.count' do
       assert print.revoke!
@@ -687,7 +687,7 @@ class PrintTest < ActiveSupport::TestCase
     assert print.payments.reload.all?(&:revoked)
     assert_equal(
       (initial_bonus + payments_amount).to_s,
-      print.customer.bonuses.sum(:remaining).to_s
+      print.customer.bonuses.to_a.sum(&:remaining).to_s
     )
   end
 

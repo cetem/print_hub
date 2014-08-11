@@ -128,7 +128,7 @@ class Customer < ApplicationModel
   end
 
   def free_credit
-    self.credits.valids.sum(:remaining)
+    self.credits.valids.to_a.sum(&:remaining)
   end
 
   def free_credit_minus_pendings
@@ -142,7 +142,7 @@ class Customer < ApplicationModel
   def use_credit(amount, password = '', options = {})
     if self.valid_password?(password) || options[:avoid_password_check]
       to_pay = BigDecimal.new(amount.to_s)
-      available_credits = self.credits.valids.order('valid_until DESC').to_a
+      available_credits = self.credits.valids.order(valid_until: :desc).to_a
 
       while to_pay > 0 && available_credits.size > 0
         credit = available_credits.shift
@@ -159,7 +159,7 @@ class Customer < ApplicationModel
         credit.save!
       end
 
-      self.save!
+      #self.save!
 
       to_pay
     else

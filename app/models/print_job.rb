@@ -1,6 +1,7 @@
 class PrintJob < ApplicationModel
   has_paper_trail
 
+
   # Scopes
   scope :with_print_between, ->(_start, _end) {
     includes(:print).where(
@@ -56,6 +57,8 @@ class PrintJob < ApplicationModel
   belongs_to :document, autosave: true
   belongs_to :file_line, inverse_of: :print_jobs
   belongs_to :print_job_type
+
+  delegate :printer, to: :print
 
   def initialize(attributes = nil)
     super(attributes)
@@ -190,11 +193,15 @@ class PrintJob < ApplicationModel
   end
 
   def self.printer_stats_between(from, to)
-    with_print_between(from, to).not_revoked.group(:printer).sum(:printed_pages)
+    with_print_between(from, to).not_revoked.group_by do |e|
+      e.printer
+    end.map{ |printer, pjs| [printer, pjs.map(&:printed_pages).compact.sum] }
   end
 
   def self.user_stats_between(from, to)
-    with_print_between(from, to).not_revoked.group(:user_id).sum(:printed_pages)
+    with_print_between(from, to).not_revoked.group_by do |e|
+      e.print.user_id
+    end.map{ |user, pjs| [printer, pjs.map(&:printed_pages).compact.sum] }
   end
 
   def self.created_at_month(date)

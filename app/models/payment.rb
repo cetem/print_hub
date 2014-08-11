@@ -9,7 +9,7 @@ class Payment < ApplicationModel
 
   # Scopes
   scope :between, ->(_start, _end) {
-    where('created_at BETWEEN :start AND :end', start: _start, end: _end)
+    where("created_at BETWEEN :start AND :end", start: _start, end: _end)
   }
   scope :not_revoked, -> { where(revoked: false) }
 
