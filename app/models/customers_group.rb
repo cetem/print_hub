@@ -96,11 +96,11 @@ class CustomersGroup < ApplicationModel
         if (prints = c.prints.where(created_at: range)).any?
           csv << []
           csv << [c.to_s]
-          simple  = 0
-          double  = 0
-          library = 0.0
+          customer_totals = { simple: 0, double: 0, library: 0.0 }
 
           prints.each do |p|
+            simple = 0
+            double = 0
             p.print_jobs.each do |pj|
               s, d = if pj.two_sided?
                        if (pj.pages % 2) == 0
@@ -116,22 +116,26 @@ class CustomersGroup < ApplicationModel
               double += d
             end
 
-            lib_price = p.article_lines.to_s.sum(&:price)
-            library   += lib_price
+            library = (lines = p.article_lines).any? ? lines.to_a.sum(&:price) : 0.0
 
             csv << [
               I18n.l(p.created_at, format: :minimal),
               simple,
               double,
-              lib_price,
+              library,
               nil,
               p.comment
             ]
 
+            customer_totals[:simple] += simple
+            customer_totals[:double] += double
+            customer_totals[:library] += library
             totals[:simple] += simple
             totals[:double] += double
             totals[:library] += library
           end
+
+          csv << [nil, customer_totals[:simple], customer_totals[:double], customer_totals[:library]]
         end
       end
 
