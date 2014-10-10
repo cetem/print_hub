@@ -27,18 +27,17 @@ class CustomersGroup < ApplicationModel
     ).order(options[:order])
   end
 
-  def self.settlement_as_csv(start, finish)
+  def self.settlement_as_csv(start = 1.year.ago, finish = Time.now)
     all.map { |cg| cg.settlement_as_csv(start, finish) }.join("\n\n")
   end
 
-  def settlement_as_csv(start, finish)
+  def settlement_as_csv(start = 1.year.ago, finish = Time.now)
     require 'csv'
 
     double_t    = I18n.t('view.customers_groups.double')
     simple_t    = I18n.t('view.customers_groups.simple')
     library_t   = I18n.t('view.customers_groups.library')
     total_t     = I18n.t('view.customers_groups.total')
-    total_price = 0.0
     range       = start..finish
 
     CSV.generate do |csv|
@@ -75,6 +74,68 @@ class CustomersGroup < ApplicationModel
       end
 
       csv << [nil, totals[:one_side], totals[:two_sides], totals[:library]] if customers.count > 1
+    end
+  end
+
+  def detailed_settlement_as_csv(start = 1.year.ago, finish = Time.now)
+    require 'csv'
+
+    double_t  = I18n.t('view.customers_groups.double')
+    simple_t  = I18n.t('view.customers_groups.simple')
+    library_t = I18n.t('view.customers_groups.library')
+    total_t   = I18n.t('view.customers_groups.total')
+    comment_t = Print.human_attribute_name(:comment)
+    range     = start..finish
+
+    CSV.generate do |csv|
+      totals = { simple: 0, double: 0, library: 0.0 }
+      csv << []
+      csv << [self.name, simple_t, double_t, library_t, total_t, comment_t]
+
+      customers.each do |c|
+        if (prints = c.prints.where(created_at: range)).any?
+          csv << []
+          csv << [c.to_s]
+          simple  = 0
+          double  = 0
+          library = 0.0
+
+          prints.each do |p|
+            p.print_jobs.each do |pj|
+              s, d = if pj.two_sided?
+                       if (pj.pages % 2) == 0
+                         [0, pj.printed_pages]
+                       else
+                         [pj.copies, (pj.pages - 1) * pj.copies]
+                       end
+                     else
+                       [pj.printed_pages, 0]
+                     end
+
+              simple += s
+              double += d
+            end
+
+            lib_price = p.article_lines.to_s.sum(&:price)
+            library   += lib_price
+
+            csv << [
+              I18n.l(p.created_at, format: :minimal),
+              simple,
+              double,
+              lib_price,
+              nil,
+              p.comment
+            ]
+
+            totals[:simple] += simple
+            totals[:double] += double
+            totals[:library] += library
+          end
+        end
+      end
+
+      csv << [nil, totals[:simple], totals[:double], totals[:library]] if customers.count > 1
     end
   end
 end

@@ -250,8 +250,8 @@ class PrintsControllerTest < ActionController::TestCase
     customer = customers(:student)
 
     assert_difference counts_array do
-      assert_difference 'PaperTrail::Version.count', 5 do
-        # Customer.token, credit, payment, print, print_job
+      assert_difference 'PaperTrail::Version.count', 4 do
+        # credit, payment, print, print_job
         post :create, status: 'all', print: {
           printer: @printer,
           customer_id: customer.id,

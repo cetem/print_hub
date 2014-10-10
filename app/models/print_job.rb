@@ -85,6 +85,7 @@ class PrintJob < ApplicationModel
   def two_sided
     self.print_job_type.two_sided
   end
+  alias_method :two_sided?, :two_sided
 
   def options
     options = {
