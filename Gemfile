@@ -1,17 +1,18 @@
 source 'https://rubygems.org'
 
-gem 'rails', '4.1.4'
+gem 'rails', '4.1.6'
 
 gem 'pg'
 gem 'authlogic'
 gem 'jc-validates_timeliness'
-gem 'awesome_nested_set', "~> 3.0.0.rc.5"
+gem 'awesome_nested_set'
 gem 'will_paginate'
 gem 'foreigner'
 gem 'paper_trail'
 gem 'RedCloth'
 gem 'cups'
 gem 'simple_form'
+gem 'awesome_print'
 
 # Files Processors
 gem 'carrierwave'
@@ -54,7 +55,6 @@ group :development do
 end
 
 group :development, :test do
-  gem 'awesome_print'
   gem 'pry-nav'
 end
 

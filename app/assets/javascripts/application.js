@@ -5,7 +5,7 @@
 // the compiled file.
 //
 //= require jquery
-//= require jquery.ui.all
+//= require jquery-ui
 //= require jquery_ujs
 //= require jquery-customs/jquery-ui-timepicker-addon
 //= require jquery-customs/jquery.ui.datepicker-es
