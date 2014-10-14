@@ -81,7 +81,7 @@ class Print < ApplicationModel
 
     self.user   = UserSession.find.try(:user) || self.user rescue self.user
     self.status ||= STATUS[:pending_payment]
-    self.pay_later! if self.pay_later == '1' || self.pay_later == true
+    self.pay_later! if [1, '1', true].include?(self.pay_later)
 
     keys = ['copies', 'range', 'print_job_type_id']
 
@@ -100,7 +100,7 @@ class Print < ApplicationModel
     elsif self.include_documents.present?
       self.include_documents.each do |document_id|
         self.print_jobs.build(document_id: document_id)
-      end if self.include_documents
+      end
     end
 
     self.print_jobs.each do |pj|
