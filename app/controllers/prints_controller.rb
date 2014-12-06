@@ -191,7 +191,7 @@ class PrintsController < ApplicationController
   def change_comment
     print = Print.find(params[:id])
 
-    notice = if print.update(comment_param)
+    notice = if print.update_columns(comment_param)
                t('view.prints.comment_changed')
              else
                t('view.prints.comment_not_changed')

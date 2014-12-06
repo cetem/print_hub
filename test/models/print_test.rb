@@ -774,7 +774,7 @@ class PrintTest < ActiveSupport::TestCase
 
   def build_new_print_from(print)
     new_print = Print.create(
-      print.attributes.except('id')
+      print.attributes.except('id', 'customer_id')
     )
     new_print.print_jobs.clear
 

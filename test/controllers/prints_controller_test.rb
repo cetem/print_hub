@@ -160,6 +160,7 @@ class PrintsControllerTest < ActionController::TestCase
         post :create, status: 'all', print: {
           printer: @printer,
           customer_id: customer.id,
+          credit_password: 'student123',
           scheduled_at: '',
           avoid_printing: '0',
           print_jobs_attributes: {
@@ -298,6 +299,7 @@ class PrintsControllerTest < ActionController::TestCase
       post :create, status: 'all', print: {
         printer: @printer,
         customer_id: customer.id,
+        credit_password: 'student123',
         scheduled_at: '',
         avoid_printing: '0',
         print_jobs_attributes: {
@@ -345,6 +347,7 @@ class PrintsControllerTest < ActionController::TestCase
       post :create, status: 'all', print: {
         printer: @printer,
         customer_id: customer.id,
+        credit_password: 'student123',
         scheduled_at: '',
         avoid_printing: '0',
         print_jobs_attributes: {
@@ -428,7 +431,7 @@ class PrintsControllerTest < ActionController::TestCase
       assert_difference '@print.print_jobs.count' do
         put :update, id: @print.to_param, status: 'all', print: {
           printer: @printer,
-          customer_id: @operator.id,
+          customer_id: customer.id,
           scheduled_at: '',
           avoid_printing: '0',
           user_id: new_operator.id,

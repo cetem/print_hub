@@ -46,7 +46,7 @@
           </div>
           <div class="span6">
             <%= f.input :pay_later, as: :boolean, input_html: {
-              checked: @print.customer.try(:reliable?)
+              checked: @print.customer.try(:reliable?) || @print.pay_later?
             } if current_user.admin %>
           </div>
         </div>
