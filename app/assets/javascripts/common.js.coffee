@@ -22,7 +22,8 @@ new Rule
       $('#file_line_file').click()
 
     # Subir un archivo para agregarlo a la orden
-    fileInput = $('#upload-file .file')
+    error_div = document.querySelector('#file-upload-error')
+    progress_div = document.querySelector('.progress.hide')
     $('input:file').fileupload
       dataType: 'script'
       add: (e, data) ->
@@ -30,21 +31,19 @@ new Rule
         file = data.files[0]
 
         if type.test(file.type) || type.test(file.name)
-          $('#file-upload-error').hide()
-          $('.progress.hide').toggle('slow')
-          fileInput.toggle('slow') unless fileInput.data('invisible')
+          error_div.style.display = 'none'
           $('input:submit').attr('disabled', true)
+          progress_div.style.display = 'block'
           data.submit()
         else
-          $('#file-upload-error').show('slow')
-      
+          error_div.style.display = 'block'
+
       progressall: (e, data) ->
         progress = parseInt(data.loaded / data.total * 100, 10)
         $('.progress .bar').css('width', progress + '%')
 
       done: (e, data) ->
-        $('.progress.hide').toggle('slow')
-        fileInput.toggle('slow') unless fileInput.data('invisible')
+        progress_div.style.display = 'none'
         $('input:submit').attr('disabled', false)
         State.fileUploaded = true
         $('.file_line_item:last').change()

@@ -1,2 +1,3 @@
-$('#print_jobs').append('<%= j render('file_print_job') %>');
-$('#print_jobs .file_line:last').addClass('hide').show('slow');
+document.getElementById('print_jobs').insertAdjacentHTML(
+  'beforeend', '<%= j render('file_print_job') %>'
+);

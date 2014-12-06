@@ -246,7 +246,7 @@
   <%= simple_form_for :file_line, url: upload_file_prints_path,
     data: { 'form-data' => 'script=true' } do |of| %>
       <%= of.input :file, as: :file, label: false,
-         input_html: { data: { invisible: true } } %>
+         input_html: { multiple: true,data: { invisible: true } } %>
   <% end %>
 </div>
 

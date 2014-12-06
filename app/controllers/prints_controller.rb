@@ -247,6 +247,8 @@ class PrintsController < ApplicationController
   end
 
   def file_line_params
-    params.require(:file_line).permit(:file)
+    file = params.require(:file_line).permit(file: [])[:file]
+    file = file.first if file.is_a? Array
+    { file: file }
   end
 end
