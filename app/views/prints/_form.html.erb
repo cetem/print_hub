@@ -11,7 +11,13 @@
 
   <div class="form-inputs">
     <%= f.error_notification %>
-    <%= f.object.errors.full_messages.join(', ') %>
+    <% if (errors = f.object.errors.full_messages).any? %>
+      <div class="alert alert-error">
+        <% errors.each do |error| %>
+          - <%= error %><br />
+        <% end %>
+      </div>
+    <% end %>
     <div class="row-fluid">
       <div class="span6">
         <%= print_destinations_field(f) %>
