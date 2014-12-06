@@ -16,7 +16,7 @@ gem 'awesome_print'
 
 # Files Processors
 gem 'carrierwave'
-gem 'mini_magick'
+gem 'mini_magick', '3.8.1'
 gem 'rghost'
 gem 'pdf-reader'
 gem 'barby'
