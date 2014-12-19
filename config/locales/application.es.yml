@@ -1,638 +1,635 @@
-'es':
-  app_name: 'Impresiones'
-
-  attributes:
-    created_at: 'Creación'
-    updated_at: 'Actualización'
-
+---
+es:
   activerecord:
+    attributes:
+      article:
+        code: "Código"
+        description: "Descripción"
+        name: "Nombre"
+        price: "Precio"
+      article_line:
+        article_id: "Artículo"
+        unit_price: "Precio unitario"
+        units: "Cantidad"
+      bonus:
+        amount: "Monto"
+        remaining: "Restante"
+        valid_until: "Válido hasta"
+      credit:
+        amount: "Monto"
+        customer_id: "Cliente"
+        remaining: "Restante"
+        valid_until: "Válido hasta"
+      customer:
+        bonus_without_expiration: "Bonificación mensual sin caducidad"
+        email: "Correo electrónico"
+        enable: "Habilitado"
+        free_monthly_bonus: "Bonificación mensual"
+        group_id: "Grupo"
+        identification: "Identificación (DNI, CUIT, Legajo, etc.)"
+        kind: "Tipo de cliente"
+        lastname: "Apellido"
+        name: "Nombre"
+        password: "Contraseña"
+        password_confirmation: "Confirmación"
+      customer/bonuses:
+        amount: "Monto"
+        one: "Bonificación"
+        other: "Bonificaciones"
+        remaining: "Restante"
+        valid_until: "Válido hasta"
+      customer/deposits:
+        amount: "Monto"
+        one: "Depósito"
+        other: "Depósitos"
+        remaining: "Restante"
+        valid_until: "Válido hasta"
+      customers_group:
+        name: "Nombre"
+      deposit:
+        amount: "Monto"
+        remaining: "Restante"
+        valid_until: "Válido hasta"
+      document:
+        code:
+          one: "Código"
+          other: "Códigos"
+        description: "Descripción"
+        enable: "Habilitado"
+        file: "Archivo"
+        file_file_name: "Archivo"
+        media: "Tamaño de papel"
+        name: "Nombre"
+        pages: "Páginas"
+        private: "Privado"
+        stock: "Existencia"
+      feedback:
+        comment: "Comentario"
+        item: "Artículo"
+        positive: "Positivo"
+      order:
+        customer: "Cliente"
+        id: "Número"
+        notes: "Notas"
+        print_out: "Imprimir"
+        scheduled_at: "Programado para"
+        status: "Estado"
+      order/order_lines:
+        copies: "Copias"
+        document_id: "Documento"
+        one: "Línea de pedido"
+        other: "Líneas de pedido"
+        price_per_copy: "Precio por página"
+        print_job_type_id: "Tipo"
+      order_line:
+        copies: "Copias"
+        document_id: "Documento"
+        price_per_copy: "Precio por página"
+        print_job_type_id: "Tipo"
+      payment:
+        amount: "Monto"
+        paid: "Monto abonado"
+        paid_with: "Tipo de pago"
+      print:
+        avoid_printing: "No imprimir"
+        comment: "Comentario"
+        credit_password: "Contraseña"
+        customer: "Cliente"
+        customer_id: "Cliente"
+        id: "Número"
+        pay_later: "Cuenta corriente"
+        payments: "Pago"
+        printer: "Impresora"
+        scheduled_at: "Programado para"
+        status: "Estado"
+        user: "Usuario"
+        user_id: "Usuario"
+      print/article_lines:
+        article_id: "Artículo"
+        one: "Artículo"
+        other: "Artículos"
+        unit_price: "Precio unitario"
+        units: "Cantidad"
+      print/payments:
+        amount: "Monto"
+        one: "Pago"
+        other: "Pagos"
+        paid: "Monto abonado"
+        paid_with: "Tipo de pago"
+      print/print_jobs:
+        copies: "Copias"
+        document_id: "Documento"
+        one: "Trabajo de impresión"
+        other: "Trabajos de impresión"
+        pages: "Páginas"
+        price_per_copy: "Precio por hoja"
+        print_job_type_id: "Tipo"
+        printed_copies: "Copias impresas"
+        range: "Rango"
+      print_job:
+        copies: "Copias"
+        document_id: "Documento"
+        pages: "Páginas"
+        price_per_copy: "Precio por hoja"
+        print_job_type_id: "Tipo"
+        printed_copies: "Copias impresas"
+        range: "Rango"
+      print_job_type:
+        default: "Por defecto"
+        name: "Nombre"
+        price: "Precio"
+        two_sided: "Doble faz"
+      shift:
+        description: "Descripción"
+        finish: "Fin"
+        start: "Inicio"
+        user_id: "Usuario"
+      tag:
+        name: "Nombre"
+        parent_id: "Padre"
+        private: "Privada"
+      user:
+        admin: "Administrador"
+        avatar: "Imagen"
+        default_printer: "Impresora predeterminada"
+        email: "Correo electrónico"
+        enable: "Habilitado"
+        language: "Idioma"
+        last_name: "Apellido"
+        lines_per_page: "Máximo de filas por listado"
+        name: "Nombre"
+        not_shifted: "Sin control de turnos"
+        password: "Contraseña"
+        password_confirmation: "Confirmación"
+        username: "Usuario"
+      user_session:
+        password: "Contraseña"
+        username: "Usuario"
     errors:
       models:
         document:
           attributes:
             file:
-              without_extension: 'debe tener extensión'
+              without_extension: "debe tener extensión"
         order:
           attributes:
             base:
-              must_have_one_item: 'El pedido debe tener al menos un ítem'
+              must_have_one_item: "El pedido debe tener al menos un ítem"
         print:
           attributes:
             base:
-              must_have_one_item: 'La impresión debe tener al menos un trabajo o un artículo'
+              must_have_one_item: "La impresión debe tener al menos un trabajo o un artículo"
             credit_password:
-              invalid: 'no es correcta'
-            printer:
-              must_be_blank: 'no debe estar seleccionada'
+              invalid: "no es correcta"
             payments:
-              invalid: 'es inválido, el monto es de %{price} y el pago es de %{payment}'
+              invalid: "es inválido, el monto es de %{price} y el pago es de %{payment}"
             print_jobs:
-              blank: 'al menos debe haber uno'
+              blank: "al menos debe haber uno"
+            printer:
+              must_be_blank: "no debe estar seleccionada"
         print_job:
           attributes:
             range:
-              overlapped: 'no debe estar solapado'
-              too_long: 'excede la cantidad de páginas del documento (%{count})'
+              overlapped: "no debe estar solapado"
+              too_long: "excede la cantidad de páginas del documento (%{count})"
     models:
-      article: 'Artículo'
-      article_line: 'Línea de artículo'
-      bonus: 'Bonificación'
-      credit: 'Crédito'
-      customer: 'Cliente'
-      deposit: 'Depósito'
-      document: 'Documento'
-      feedback: 'Retroalimentación'
-      order: 'Pedido'
-      order_line: 'Línea de pedido'
-      payment: 'Pago'
-      print: 'Impresión'
-      print_job: 'Trabajo de impresión'
-      print_job_type: 'Tipo de impresión'
-      shift: 'Turno'
-      tag: 'Etiqueta'
-      user: 'Usuario'
-      user_session: 'Sesión'
-      customers_group: 'Grupo de usuarios'
-
-    attributes:
-      article:
-        code: 'Código'
-        name: 'Nombre'
-        price: 'Precio'
-        description: 'Descripción'
-      article_line:
-        article_id: 'Artículo'
-        units: 'Cantidad'
-        unit_price: 'Precio unitario'
-      bonus:
-        amount: 'Monto'
-        remaining: 'Restante'
-        valid_until: 'Válido hasta'
-      credit:
-        customer_id: 'Cliente'
-        amount: 'Monto'
-        remaining: 'Restante'
-        valid_until: 'Válido hasta'
-      customer:
-        name: 'Nombre'
-        lastname: 'Apellido'
-        identification: 'Identificación (DNI, CUIT, Legajo, etc.)'
-        email: 'Correo electrónico'
-        enable: 'Habilitado'
-        password: 'Contraseña'
-        password_confirmation: 'Confirmación'
-        free_monthly_bonus: 'Bonificación mensual'
-        bonus_without_expiration: 'Bonificación mensual sin caducidad'
-        kind: 'Tipo de cliente'
-        group_id: 'Grupo'
-      customer/bonuses:
-        one: 'Bonificación'
-        other: 'Bonificaciones'
-        amount: 'Monto'
-        remaining: 'Restante'
-        valid_until: 'Válido hasta'
-      customer/deposits:
-        one: 'Depósito'
-        other: 'Depósitos'
-        amount: 'Monto'
-        remaining: 'Restante'
-        valid_until: 'Válido hasta'
-      customers_group:
-        name: 'Nombre'
-      deposit:
-        amount: 'Monto'
-        remaining: 'Restante'
-        valid_until: 'Válido hasta'
-      document:
-        code:
-          one: 'Código'
-          other: 'Códigos'
-        name: 'Nombre'
-        enable: 'Habilitado'
-        stock: 'Existencia'
-        pages: 'Páginas'
-        media: 'Tamaño de papel'
-        description: 'Descripción'
-        private: 'Privado'
-        file: 'Archivo'
-        file_file_name: 'Archivo'
-      feedback:
-        item: 'Artículo'
-        positive: 'Positivo'
-        comment: 'Comentario'
-      order:
-        id: 'Número'
-        customer: 'Cliente'
-        scheduled_at: 'Programado para'
-        status: 'Estado'
-        notes: 'Notas'
-        print_out: 'Imprimir'
-      order/order_lines:
-        one: 'Línea de pedido'
-        other: 'Líneas de pedido'
-        copies: 'Copias'
-        price_per_copy: 'Precio por página'
-        document_id: 'Documento'
-        print_job_type_id: 'Tipo'
-      order_line:
-        copies: 'Copias'
-        price_per_copy: 'Precio por página'
-        print_job_type_id: 'Tipo'
-        document_id: 'Documento'
-      payment:
-        amount: 'Monto'
-        paid: 'Monto abonado'
-        paid_with: 'Tipo de pago'
-      print:
-        id: 'Número'
-        printer: 'Impresora'
-        scheduled_at: 'Programado para'
-        avoid_printing: 'No imprimir'
-        credit_password: 'Contraseña'
-        pay_later: 'Cuenta corriente'
-        status: 'Estado'
-        customer: 'Cliente'
-        customer_id: 'Cliente'
-        user: 'Usuario'
-        user_id: 'Usuario'
-        comment: 'Comentario'
-        payments: 'Pago'
-      print/article_lines:
-        one: 'Artículo'
-        other: 'Artículos'
-        article_id: 'Artículo'
-        units: 'Cantidad'
-        unit_price: 'Precio unitario'
-      print/payments:
-        one: 'Pago'
-        other: 'Pagos'
-        amount: 'Monto'
-        paid: 'Monto abonado'
-        paid_with: 'Tipo de pago'
-      print/print_jobs:
-        one: 'Trabajo de impresión'
-        other: 'Trabajos de impresión'
-        copies: 'Copias'
-        printed_copies: 'Copias impresas'
-        pages: 'Páginas'
-        price_per_copy: 'Precio por hoja'
-        range: 'Rango'
-        print_job_type_id: 'Tipo'
-        document_id: 'Documento'
-      print_job:
-        copies: 'Copias'
-        printed_copies: 'Copias impresas'
-        pages: 'Páginas'
-        price_per_copy: 'Precio por hoja'
-        range: 'Rango'
-        printed_copies: 'Copias impresas'
-        print_job_type_id: 'Tipo'
-        document_id: 'Documento'
-      print_job_type:
-        name: 'Nombre'
-        price: 'Precio'
-        two_sided: 'Doble faz'
-        default: 'Por defecto'
-      shift:
-       start: 'Inicio'
-       finish: 'Fin'
-       description: 'Descripción'
-       user_id: 'Usuario'
-      tag:
-        name: 'Nombre'
-        private: 'Privada'
-        parent_id: 'Padre'
-      user:
-        name: 'Nombre'
-        last_name: 'Apellido'
-        language: 'Idioma'
-        email: 'Correo electrónico'
-        default_printer: 'Impresora predeterminada'
-        lines_per_page: 'Máximo de filas por listado'
-        username: 'Usuario'
-        password: 'Contraseña'
-        password_confirmation: 'Confirmación'
-        admin: 'Administrador'
-        enable: 'Habilitado'
-        avatar: 'Imagen'
-        not_shifted: 'Sin control de turnos'
-      user_session:
-        username: 'Usuario'
-        password: 'Contraseña'
-
+      article: "Artículo"
+      article_line: "Línea de artículo"
+      bonus: "Bonificación"
+      credit: "Crédito"
+      customer: "Cliente"
+      customers_group: "Grupo de usuarios"
+      deposit: "Depósito"
+      document: "Documento"
+      feedback: "Retroalimentación"
+      order: "Pedido"
+      order_line: "Línea de pedido"
+      payment: "Pago"
+      print: "Impresión"
+      print_job: "Trabajo de impresión"
+      print_job_type: "Tipo de impresión"
+      shift: "Turno"
+      tag: "Etiqueta"
+      user: "Usuario"
+      user_session: "Sesión"
+  app_name: "Impresiones"
+  attributes:
+    created_at: "Creación"
+    updated_at: "Actualización"
   customer_menu:
-    catalog: 'Documentos'
-    orders: 'Pedidos'
-    profile: 'Mis datos'
-
+    catalog: "Documentos"
+    orders: "Pedidos"
+    profile: "Mis datos"
   errors:
-    title: 'Error'
-    header_message: 'Se ha encontrado un problema'
-    hide_details: 'Ocultar detalles'
-    show_details: 'Ver detalles'
-    apologies_for_the_inconvenience: 'Disculpe las molestias'
-    recreate_versions_error: 'Ha sucedido un error al procesar las miniaturas %{e}'
+    apologies_for_the_inconvenience: "Disculpe las molestias"
+    header_message: "Se ha encontrado un problema"
+    hide_details: "Ocultar detalles"
     messages:
-      extension_white_list_error: 'Solo se permiten archivos PDF'
-
+      extension_white_list_error: "Solo se permiten archivos PDF"
+    recreate_versions_error: "Ha sucedido un error al procesar las miniaturas %{e}"
+    show_details: "Ver detalles"
+    title: "Error"
   label:
-    'yes': 'Si'
-    'no': 'No'
-    and: 'y'
-    back: 'Volver'
-    cancel: 'Cancelar'
-    close: 'Cerrar'
-    delete: 'Eliminar'
-    download: 'Descargar'
-    edit: 'Modificar'
-    hide: 'Ocultar'
-    list: 'Listado'
-    new: 'Nuevo'
-    or: 'o'
-    others: 'Otros'
-    search: 'Buscar'
-    show: 'Ver'
-
+    and: "y"
+    back: "Volver"
+    cancel: "Cancelar"
+    close: "Cerrar"
+    delete: "Eliminar"
+    download: "Descargar"
+    edit: "Modificar"
+    hide: "Ocultar"
+    list: "Listado"
+    new: "Nuevo"
+    "no": "No"
+    or: "o"
+    others: "Otros"
+    search: "Buscar"
+    show: "Ver"
+    "yes": "Si"
   lang:
-    es: 'Español'
-
+    es: "Español"
   menu:
     actions:
-      hide: 'Ocultar'
-      logout: 'Salir'
-      show: 'Menú'
-    admin: 'Administración'
-    articles: 'Artículos'
-    bonuses: 'Bonificaciones'
-    customers: 'Clientes'
-    customers_groups: 'Grupos de Clientes'
-    documents: 'Documentos'
-    orders: 'Pedidos'
-    payments: 'Pagos'
-    prints: 'Impresiones'
-    print_job_types: 'Tipos de impresión'
-    shifts: 'Turnos'
-    stats: 'Estadísticas'
-    tags: 'Etiquetas'
-    users: 'Usuarios'
-
+      hide: "Ocultar"
+      logout: "Salir"
+      show: "Menú"
+    admin: "Administración"
+    articles: "Artículos"
+    bonuses: "Bonificaciones"
+    customers: "Clientes"
+    customers_groups: "Grupos de Clientes"
+    documents: "Documentos"
+    orders: "Pedidos"
+    payments: "Pagos"
+    print_job_types: "Tipos de impresión"
+    prints: "Impresiones"
+    shifts: "Turnos"
+    stats: "Estadísticas"
+    tags: "Etiquetas"
+    users: "Usuarios"
   messages:
-    confirmation: '¿Está seguro?'
-    loading: 'Cargando'
-    ajax_in_progress_warning: 'Algunos pedidos todavía se están procesando\nSi abandona esta página puede dejar operaciones inconclusas'
-    must_be_admin: 'Debe tener privilegios de administrador para poder ver el contenido requerido'
-    must_be_logged_in: 'Debe ingresar para poder ver el contenido requerido'
-    must_be_logged_out: 'Debe salir para poder ver el contenido requerido'
-    file_upload_warning: 'Si abandona esta pagina los archivos subidos se perderán'
-    only_pdf_permitted: "Solo se permiten subir pdf's"
-    customer_file_was_deleted: 'El archivo de cliente ya ha sido eliminado'
-
+    ajax_in_progress_warning: |-
+        Algunos pedidos todavía se están procesando
+        Si abandona esta página puede dejar operaciones inconclusas
+    confirmation: "¿Está seguro?"
+    customer_file_was_deleted: "El archivo de cliente ya ha sido eliminado"
+    file_upload_warning: "Si abandona esta pagina los archivos subidos se perderán"
+    loading: "Cargando"
+    must_be_admin: "Debe tener privilegios de administrador para poder ver el contenido requerido"
+    must_be_logged_in: "Debe ingresar para poder ver el contenido requerido"
+    must_be_logged_out: "Debe salir para poder ver el contenido requerido"
+    only_pdf_permitted: 'Solo se permiten subir pdf"s'
   notifications:
     forgot_password:
-      subject: 'Restablecer contraseña'
+      subject: "Restablecer contraseña"
     reactivation:
-      subject: 'Re-activar cuenta'
+      subject: "Re-activar cuenta"
     signup:
-      subject: 'Registro'
-
+      subject: "Registro"
   view:
     articles:
-      index_title: 'Listado de artículos'
-      show_title: 'Detalle de artículo'
-      new_title: 'Nuevo artículo'
-      edit_title: 'Modificar artículo'
-      correctly_created: 'Artículo agregado correctamente.'
-      correctly_updated: 'Artículo actualizado correctamente.'
-      stale_object_error: 'El artículo no pudo ser actualizado, intente nuevamente.'
+      correctly_created: "Artículo agregado correctamente."
+      correctly_updated: "Artículo actualizado correctamente."
+      edit_title: "Modificar artículo"
+      index_title: "Listado de artículos"
+      new_title: "Nuevo artículo"
+      show_title: "Detalle de artículo"
+      stale_object_error: "El artículo no pudo ser actualizado, intente nuevamente."
     bonuses:
-      index_title: 'Listado de bonificaciones'
-      bonuses_with_customer: 'Bonificaciones de %{customer}'
+      bonuses_with_customer: "Bonificaciones de %{customer}"
+      index_title: "Listado de bonificaciones"
     catalog:
-      index_title: 'Listado de documentos'
-      show_title: 'Detalle de documento'
-      show: 'Ver documento'
-      new_order: 'Revisar pedido'
       add_to_order:
-        title: 'Marca este documento para que sea INCLUIDO en el pedido'
+        title: "Marca este documento para que sea INCLUIDO en el pedido"
       images:
-        example_search: "Buscar, por ejemplo, 'física 2012'"
-        example_document_grid: 'Seleccionar documentos con el signo +'
+        example_document_grid: "Seleccionar documentos con el signo +"
+        example_search: 'Buscar, por ejemplo, "física 2012"'
+      index_title: "Listado de documentos"
       more_tags:
-        one: 'Y una etiqueta más...'
-        other: 'Y %{count} etiquetas más...'
+        one: "Y una etiqueta más..."
+        other: "Y %{count} etiquetas más..."
+      new_order: "Revisar pedido"
       remove_from_order:
-        title: 'Elimina la marca de este documento para que NO sea incluido en el pedido'
-    customers:
-      index_title: 'Listado de clientes'
-      show_title: 'Detalle de cliente'
-      new_title: 'Nuevo cliente'
-      edit_title: 'Modificar cliente'
-      correctly_created: 'Cliente agregado correctamente.'
-      correctly_updated: 'Cliente actualizado correctamente.'
-      correctly_registered: 'Te has registrado correctamente, te enviamos un correo.'
-      correctly_activated: 'Tu cuenta ahora está activa, ingresá y hacé tu pedido'
-      can_not_be_activated: 'La cuenta no se puede activar, es posible que haya expirado, registrate nuevamente'
-      stale_object_error: 'El cliente no pudo ser actualizado, intente nuevamente.'
-      profile_correctly_updated: 'Tus datos se actualizaron correctamente.'
-      show_bonuses: 'Ver bonificaciones'
-      add_bonus: 'Agregar bonificación'
-      add_bonus_title: 'Agregar bonificación (CTRL + ALT + B)'
-      add_deposit: 'Agregar depósito'
-      add_deposit_title: 'Agregar depósito (CTRL + ALT + D)'
-      update_profile: 'Actualizar datos'
-      register: 'Crear cuenta'
-      registration_text: '¿No tenés una cuenta?'
-      forgot_password: 'Olvidé mi contraseña'
-      current_bonuses:
-        one: 'Bonificación vigente'
-        other: 'Bonificaciones vigentes'
-      current_deposits:
-        one: 'Depósito vigente'
-        other: 'Depósitos vigentes'
-      without_bonuses: 'Sin bonificaciones'
-      without_deposits: 'Sin depósitos'
-      bonus_list:
-        one: 'Una bonificación'
-        other: '%{count} bonificaciones'
-      without_prints: 'Sin impresiones'
-      print_list:
-        one: 'Una impresión'
-        other: '%{count} impresiones'
-      without_non_payments: 'Sin impresiones impagas'
-      non_payments_list:
-        one: 'Una impresión sin pagar'
-        other: '%{count} impresiones sin pagar'
-      to_pay_prints:
-        month_to_pay: 'Pago por mes'
-        total_to_pay: 'Pago total'
-        one_month_only_debt: 'La deuda corresponde solo al mes de %{month} '
-        month_title: 'Saldo cuenta corriente a '
-        pay: 'Pagar %{date}'
-        paid: '%{date} pagado'
-        no_debt: 'Sin deuda'
-        with_debt: 'Con deuda'
-        title: 'Saldo total en cuenta corriente'
-        pay_off_debt: 'Pagar todo'
-        debt_cancelled: 'Deuda saldada'
-        total_debt: 'Deuda total'
-        columns:
-          type: 'Tipo de copia'
-          count: 'Cantidad'
-          unit_price: 'Precio por unidad'
-          total_price: 'Precio total'
-        rows:
-          one_sided: 'Simple faz'
-          two_sided: 'Doble faz'
-          total: 'Total'
-      kinds:
-        normal: 'Normal'
-        reliable: 'Con cuenta corriente'
-      total_free_credit: 'Credito total disponible: '
-      activate: 'Activar cuenta'
-      manual_activation_correct: 'La cuenta se activó correctamente'
-      can_not_be_manually_activated: 'La cuenta no se ha podido activar'
+        title: "Elimina la marca de este documento para que NO sea incluido en el pedido"
+      show: "Ver documento"
+      show_title: "Detalle de documento"
     customer_sessions:
-      login: 'Ingresar'
-      new_title: 'Iniciar sesión'
-      correctly_created: 'Bienvenido a Central de Impresión.'
-      correctly_destroyed: 'Sesión cerrada correctamente.'
+      correctly_created: "Bienvenido a Central de Impresión."
+      correctly_destroyed: "Sesión cerrada correctamente."
+      login: "Ingresar"
+      new_title: "Iniciar sesión"
+    customers:
+      activate: "Activar cuenta"
+      add_bonus: "Agregar bonificación"
+      add_bonus_title: "Agregar bonificación (CTRL + ALT + B)"
+      add_deposit: "Agregar depósito"
+      add_deposit_title: "Agregar depósito (CTRL + ALT + D)"
+      bonus_list:
+        one: "Una bonificación"
+        other: "%{count} bonificaciones"
+      can_not_be_activated: "La cuenta no se puede activar, es posible que haya expirado, registrate nuevamente"
+      can_not_be_manually_activated: "La cuenta no se ha podido activar"
+      correctly_activated: "Tu cuenta ahora está activa, ingresá y hacé tu pedido"
+      correctly_created: "Cliente agregado correctamente."
+      correctly_registered: "Te has registrado correctamente, te enviamos un correo."
+      correctly_updated: "Cliente actualizado correctamente."
+      current_bonuses:
+        one: "Bonificación vigente"
+        other: "Bonificaciones vigentes"
+      current_deposits:
+        one: "Depósito vigente"
+        other: "Depósitos vigentes"
+      edit_title: "Modificar cliente"
+      forgot_password: "Olvidé mi contraseña"
+      index_title: "Listado de clientes"
+      kinds:
+        normal: "Normal"
+        reliable: "Con cuenta corriente"
+      manual_activation_correct: "La cuenta se activó correctamente"
+      new_title: "Nuevo cliente"
+      non_payments_list:
+        one: "Una impresión sin pagar"
+        other: "%{count} impresiones sin pagar"
+      print_list:
+        one: "Una impresión"
+        other: "%{count} impresiones"
+      profile_correctly_updated: "Tus datos se actualizaron correctamente."
+      register: "Crear cuenta"
+      registration_text: "¿No tenés una cuenta?"
+      show_bonuses: "Ver bonificaciones"
+      show_title: "Detalle de cliente"
+      stale_object_error: "El cliente no pudo ser actualizado, intente nuevamente."
+      to_pay_prints:
+        columns:
+          count: "Cantidad"
+          total_price: "Precio total"
+          type: "Tipo de copia"
+          unit_price: "Precio por unidad"
+        debt_cancelled: "Deuda saldada"
+        month_title: "Saldo cuenta corriente a "
+        month_to_pay: "Pago por mes"
+        no_debt: "Sin deuda"
+        one_month_only_debt: "La deuda corresponde solo al mes de %{month} "
+        paid: "%{date} pagado"
+        pay: "Pagar %{date}"
+        pay_off_debt: "Pagar todo"
+        rows:
+          one_sided: "Simple faz"
+          total: "Total"
+          two_sided: "Doble faz"
+        title: "Saldo total en cuenta corriente"
+        total_debt: "Deuda total"
+        total_to_pay: "Pago total"
+        with_debt: "Con deuda"
+      total_free_credit: "Credito total disponible: "
+      update_profile: "Actualizar datos"
+      without_bonuses: "Sin bonificaciones"
+      without_deposits: "Sin depósitos"
+      without_non_payments: "Sin impresiones impagas"
+      without_prints: "Sin impresiones"
+    customers_groups:
+      copies: "Copias"
+      date: "Fecha"
+      debt: "Deuda"
+      double: "Doble"
+      global_settlement: "Liquidación Global"
+      library: "Anillados"
+      pages: "Paginas"
+      settlement: "Liquidación"
+      simple: "Simple"
+      spreadsheet_file_name: "Liquidación Convenio %{start}-%{finish}"
+      spreadsheet_uploaded: "Spreadsheat subido"
+      subtotal_copies: "Subtotal (copias)"
+      total: "Total"
     documents:
-      index_title: 'Listado de documentos'
-      show_title: 'Detalle de documento'
-      new_title: 'Nuevo documento'
-      edit_title: 'Modificar documento'
-      correctly_created: 'Documento agregado correctamente.'
-      correctly_updated: 'Documento actualizado correctamente.'
-      stale_object_error: 'El documento no pudo ser actualizado, intente nuevamente.'
-      add_tag_title: 'Agregar etiqueta (CTRL + ALT + E)'
-      non_existent: 'Archivo inexistente'
-      add_tag: 'Agregar etiqueta'
-      has_related_print_jobs: 'El documento no puede ser eliminado, tiene impresiones relacionadas'
-      documents_with_tag:
-        html: 'Documentos con la etiqueta <span class="label label-info">%{tag}</span>'
-      clear_documents_for_printing: 'Desmarcar todos los documentos a imprimir'
-      disabled_documents: 'Documentos desactivados'
-      processing_document: 'Procesando documento, espere...'
-      download: 'Descargar versión actual'
-      barcode: 'Código de barras'
+      add_tag: "Agregar etiqueta"
+      add_tag_title: "Agregar etiqueta (CTRL + ALT + E)"
       add_to_next_print:
-        link: 'Agregar a impresión'
-        title: 'Marca el documento para que sea INCLUIDO en la próxima impresión'
+        link: "Agregar a impresión"
+        title: "Marca el documento para que sea INCLUIDO en la próxima impresión"
+      barcode: "Código de barras"
+      clear_documents_for_printing: "Desmarcar todos los documentos a imprimir"
+      correctly_created: "Documento agregado correctamente."
+      correctly_updated: "Documento actualizado correctamente."
+      disabled_documents: "Documentos desactivados"
+      documents_with_tag:
+        html: "Documentos con la etiqueta <span class=\"label label-info\">%{tag}</span>"
+      download: "Descargar versión actual"
+      edit_title: "Modificar documento"
+      has_related_print_jobs: "El documento no puede ser eliminado, tiene impresiones relacionadas"
+      index_title: "Listado de documentos"
+      new_print: "Crear impresión"
+      new_title: "Nuevo documento"
+      non_existent: "Archivo inexistente"
+      processing_document: "Procesando documento, espere..."
       remove_from_next_print:
-        link: 'Quitar de impresión'
-        title: 'Elimina la marca del documento para que NO sea incluido en la próxima impresión'
-      new_print: 'Crear impresión'
+        link: "Quitar de impresión"
+        title: "Elimina la marca del documento para que NO sea incluido en la próxima impresión"
+      show_title: "Detalle de documento"
+      stale_object_error: "El documento no pudo ser actualizado, intente nuevamente."
     feedbacks:
-      submit: 'Enviar comentario'
-      positive_return: 'Nos alegra haberte ayudado. Gracias por la retroalimentación.'
-      negative_return: 'Lamentamos que no te haya servido. ¿Podrías decirnos cómo mejorar este artículo?'
-      negative_comment_return: 'Gracias por tus sugerencias, trabajaremos para mejorar este artículo.'
+      negative_comment_return: "Gracias por tus sugerencias, trabajaremos para mejorar este artículo."
+      negative_return: "Lamentamos que no te haya servido. ¿Podrías decirnos cómo mejorar este artículo?"
+      positive_return: "Nos alegra haberte ayudado. Gracias por la retroalimentación."
+      submit: "Enviar comentario"
     orders:
-      index_title: 'Listado de pedidos'
-      show_title: 'Detalle de pedido'
-      new_title: 'Nuevo pedido'
-      edit_title: 'Modificar pedido'
-      correctly_created: 'Pedido agregado correctamente.'
-      correctly_updated: 'Pedido actualizado correctamente.'
-      correctly_cancelled: 'Pedido cancelado correctamente.'
-      stale_object_error: 'El pedido no pudo ser actualizado, intente nuevamente.'
-      order_lines: 'Trabajos a encargar'
-      show_all: 'Ver *todos* los pedidos'
-      show_print: 'Ver pedidos para *imprimir*'
-      total: 'Total'
-      new_print: 'Crear impresión'
-      order_number: 'Pedido %{number} (%{status})'
-      cancel: 'Cancelar'
-      notes_link: '¿Necesitás aclarar algo sobre el pedido?'
-      print: 'Imprimir comprobante'
-      upload_file: 'Subir archivo'
+      cancel: "Cancelar"
+      catalog_order_cleared: "Listo, la orden ya no contiene archivos"
+      clear_catalog_order: "Vaciar pedido"
+      correctly_cancelled: "Pedido cancelado correctamente."
+      correctly_created: "Pedido agregado correctamente."
+      correctly_updated: "Pedido actualizado correctamente."
+      edit_title: "Modificar pedido"
+      index_title: "Listado de pedidos"
+      new_print: "Crear impresión"
+      new_title: "Nuevo pedido"
+      notes_link: "¿Necesitás aclarar algo sobre el pedido?"
+      order_lines: "Trabajos a encargar"
+      order_number: "Pedido %{number} (%{status})"
+      print: "Imprimir comprobante"
+      show_all: "Ver *todos* los pedidos"
+      show_print: "Ver pedidos para *imprimir*"
+      show_title: "Detalle de pedido"
+      stale_object_error: "El pedido no pudo ser actualizado, intente nuevamente."
       status:
-        pending: 'Pendiente'
-        completed: 'Impreso'
-        cancelled: 'Cancelado'
+        cancelled: "Cancelado"
+        completed: "Impreso"
+        pending: "Pendiente"
+      total: "Total"
       type:
-        print:
-          html: 'Pedidos para <strong>imprimir</strong>'
         all:
-          html: 'Pedidos'
-      catalog_order_cleared: 'Listo, la orden ya no contiene archivos'
-      clear_catalog_order: 'Vaciar pedido'
+          html: "Pedidos"
+        print:
+          html: "Pedidos para <strong>imprimir</strong>"
+      upload_file: "Subir archivo"
     password_resets:
-      new_title: 'Restaurar contraseña'
-      edit_title: 'Modificar contraseña'
-      correctly_updated: 'Contraseña actualizada correctamente'
-      customer_not_found: 'No pudimos encontrar tu cuenta, es posible que haya expirado, registrate nuevamente'
-      email_not_found: 'No encontramos ninguna cuenta con ese correo'
-      request_reset: 'Enviar'
-      reset_title: '¿Olvidaste tu contraseña?'
-      reset_subtitle: 'Ingresá tu dirección de correo y te enviamos un correo con instrucciones para reestablecerla'
-      update_password: 'Actualizar contraseña'
-      instructions_delivered: 'Te enviamos un correo con las instrucciones para restablecer tu contraseña'
+      correctly_updated: "Contraseña actualizada correctamente"
+      customer_not_found: "No pudimos encontrar tu cuenta, es posible que haya expirado, registrate nuevamente"
+      edit_title: "Modificar contraseña"
+      email_not_found: "No encontramos ninguna cuenta con ese correo"
+      instructions_delivered: "Te enviamos un correo con las instrucciones para restablecer tu contraseña"
+      new_title: "Restaurar contraseña"
+      request_reset: "Enviar"
+      reset_subtitle: "Ingresá tu dirección de correo y te enviamos un correo con instrucciones para reestablecerla"
+      reset_title: "¿Olvidaste tu contraseña?"
+      update_password: "Actualizar contraseña"
     payments:
       date_filter:
-        start: 'Inicio'
-        end: 'Fin'
-        apply: 'Aplicar'
+        apply: "Aplicar"
+        end: "Fin"
+        start: "Inicio"
       deposits_count:
         html:
-          one: '<strong>un</strong> depósito'
-          other: '<strong>%{count}</strong> depósitos'
+          one: "<strong>un</strong> depósito"
+          other: "<strong>%{count}</strong> depósitos"
+      index_title: "Listado de pagos"
       paid_with:
-        cash: 'Efectivo'
-        credit: 'Crédito'
+        cash: "Efectivo"
+        credit: "Crédito"
+      payment_details: "Formas de pago:"
       payments_count:
         html:
-          one: 'Suma de <strong>un</strong> pago'
-          other: 'Suma de <strong>%{count}</strong> pagos'
-      index_title: 'Listado de pagos'
-      payment_details: 'Formas de pago:'
-      total: 'Total'
+          one: "Suma de <strong>un</strong> pago"
+          other: "Suma de <strong>%{count}</strong> pagos"
+      total: "Total"
     print_job_types:
-      index_title: 'Listado de configuraciones'
-      show_title: 'Detalle de configuración'
-      edit_title: 'Modificar configuración'
-      correctly_updated: 'Configuración actualizada correctamente.'
-      stale_object_error: 'La configuración no pudo ser actualizada, intente nuevamente.'
-      price_per_copy: 'Precio por hoja %{name}'
-      price_per_side: 'Precio por carilla'
-      sided:
-        one: 'Simple faz'
-        two: 'Doble faz'
-        one_abbr: 'Simple'
-        two_abbr: 'Doble'
       conditions:
-        greater_than: 'si la cantidad de copias %{type} es mayor que *%{count}* el precio es *%{price}*'
-        greater_than_or_equal_to: 'si la cantidad de copias %{type} es mayor que o igual a *%{count}* el precio es *%{price}*'
-        equal_to: 'si la cantidad de copias %{type} es igual a *%{count}* el precio es *%{price}*'
-        less_than: 'si la cantidad de copias %{type} es menor que *%{count}* el precio es *%{price}*'
-        less_than_or_equal_to: 'si la cantidad de copias %{type} es menor que o igual a *%{count}* el precio es *%{price}*'
+        equal_to: "si la cantidad de copias %{type} es igual a *%{count}* el precio es *%{price}*"
+        greater_than: "si la cantidad de copias %{type} es mayor que *%{count}* el precio es *%{price}*"
+        greater_than_or_equal_to: "si la cantidad de copias %{type} es mayor que o igual a *%{count}* el precio es *%{price}*"
+        less_than: "si la cantidad de copias %{type} es menor que *%{count}* el precio es *%{price}*"
+        less_than_or_equal_to: "si la cantidad de copias %{type} es menor que o igual a *%{count}* el precio es *%{price}*"
+      correctly_updated: "Configuración actualizada correctamente."
+      edit_title: "Modificar configuración"
+      index_title: "Listado de configuraciones"
       media_type:
-        a3: 'A3'
-        a4: 'A4'
-        legal: 'Oficio'
-      syntax_explanation: "Precio-Global ; >= Cant-Hojas @ Precio; >= Cant-Hojas2 @ Precio2 \n \n 0.18; >= 200 @ 0.17; >= 500 @ 0.165 "
+        a3: "A3"
+        a4: "A4"
+        legal: "Oficio"
+      price_per_copy: "Precio por hoja %{name}"
+      price_per_side: "Precio por carilla"
+      show_title: "Detalle de configuración"
+      sided:
+        one: "Simple faz"
+        one_abbr: "Simple"
+        two: "Doble faz"
+        two_abbr: "Doble"
+      stale_object_error: "La configuración no pudo ser actualizada, intente nuevamente."
+      syntax_explanation: |-
+          Precio-Global ; >= Cant-Hojas @ Precio; >= Cant-Hojas2 @ Precio2
+
+           0.18; >= 200 @ 0.17; >= 500 @ 0.165
     prints:
-      index_title: 'Listado de impresiones'
-      show_title: 'Detalle de impresión'
-      new_title: 'Nueva impresión'
-      edit_title: 'Modificar impresión'
-      correctly_created: 'Impresión agregada correctamente.'
-      correctly_updated: 'Impresión actualizada correctamente.'
-      stale_object_error: 'La impresión no pudo ser actualizada, intente nuevamente.'
-      print_jobs: 'Trabajos de impresión'
-      add_print_job: 'Agregar trabajo de impresión'
-      add_print_job_title: 'Agregar trabajo de impresión (CTRL + ALT + I)'
-      article_lines: 'Artículos'
-      add_article_line: 'Agregar artículo'
-      add_article_line_title: 'Agregar artículo (CTRL + ALT + A)'
-      payment: 'Pago'
-      document_details: 'Ver detalles del documento'
-      document_stock: "# existencia disponible del documento\n! cantidad de copias a imprimir"
-      print: 'Imprimir'
-      print_title: 'Imprimir (CTRL + ALT + P)'
+      add_article_line: "Agregar artículo"
+      add_article_line_title: "Agregar artículo (CTRL + ALT + A)"
+      add_print_job: "Agregar trabajo de impresión"
+      add_print_job_title: "Agregar trabajo de impresión (CTRL + ALT + I)"
+      article_lines: "Artículos"
+      cancel_job: "Cancelar trabajo"
+      change_comment: "Cambiar comentario"
+      comment: "Comentario"
+      comment_changed: "Comentario actualizado."
+      comment_not_changed: "No se pudo actualizar."
+      correctly_created: "Impresión agregada correctamente."
+      correctly_revoked: "Impresión revocada correctamente"
+      correctly_updated: "Impresión actualizada correctamente."
+      customer_credit_detail:
+        link: "Ver crédito"
+        title: "Ver detalles del crédito vigente"
+      customer_credit_detail_header: "Detalles de crédito"
+      customer_links:
+        next: "*Próxima* impresión del cliente &raquo;"
+        prev: "&laquo; Impresión *anterior* del cliente"
+      disabled_cancel_job: "Cancelando ..."
+      document_details: "Ver detalles del documento"
+      document_stock: |-
+          # existencia disponible del documento
+          ! cantidad de copias a imprimir
+      edit_title: "Modificar impresión"
+      index_title: "Listado de impresiones"
+      job_canceled: "Cancelado"
+      job_not_canceled: "No se pudo cancelar"
+      new: "Nueva"
+      new_title: "Nueva impresión"
+      new_without_stored_documents: "Nueva impresión *sin* documentos"
+      payment: "Pago"
+      print: "Imprimir"
+      print_jobs: "Trabajos de impresión"
+      print_title: "Imprimir (CTRL + ALT + P)"
+      prints_with_customer: "Impresiones de %{customer}"
+      revoke: "Revocar"
+      show_all:
+        html: '<b>Ver todas</b> <span class="visible-desktop"> las impresiones</span>'
       show_pending:
         html: '<span class="visible-desktop">Ver impresiones con </span><b>pagos pendientes</b>'
       show_scheduled:
         html: '<span class="visible-desktop">Ver impresiones </span> <b>programadas</b>'
-      show_all:
-        html: '<b>Ver todas</b> <span class="visible-desktop"> las impresiones</span>'
-      cancel_job: 'Cancelar trabajo'
-      disabled_cancel_job: 'Cancelando ...'
-      job_canceled: 'Cancelado'
-      job_not_canceled: 'No se pudo cancelar'
-      prints_with_customer: 'Impresiones de %{customer}'
-      unlink_customer: 'Desasociar cliente'
-      customer_credit_detail_header: 'Detalles de crédito'
-      customer_credit_detail:
-        link: 'Ver crédito'
-        title: 'Ver detalles del crédito vigente'
+      show_title: "Detalle de impresión"
+      stale_object_error: "La impresión no pudo ser actualizada, intente nuevamente."
       status:
-        paid: 'Pagado'
-        pending_payment: 'Con pago pendiente'
-        pay_later: 'En cuenta corriente'
-      new: 'Nueva'
-      new_without_stored_documents: 'Nueva impresión *sin* documentos'
-      revoke: 'Revocar'
-      correctly_revoked: 'Impresión revocada correctamente'
-      comment: 'Comentario'
-      customer_links:
-        next: '*Próxima* impresión del cliente &raquo;'
-        prev: '&laquo; Impresión *anterior* del cliente'
-      upload_file: 'Subir archivo'
-      change_comment: "Cambiar comentario"
-      comment_changed: 'Comentario actualizado.'
-      comment_not_changed: 'No se pudo actualizar.'
+        paid: "Pagado"
+        pay_later: "En cuenta corriente"
+        pending_payment: "Con pago pendiente"
+      unlink_customer: "Desasociar cliente"
+      upload_file: "Subir archivo"
     shifts:
-      index_title: 'Listado de turnos'
-      show_title: 'Detalle de turno'
-      new_title: 'Nuevo turno'
-      edit_title: 'Modificar turno'
-      correctly_created: 'Turno agregado correctamente.'
-      correctly_updated: 'Turno actualizado correctamente.'
-      stale_object_error: 'El turno no pudo ser actualizado, intente nuevamente.'
-      edit_stale: 'Tenés un turno abierto demasiado viejo, decinos a que hora terminó...'
       close_session:
-        title: 'Cerrando sesión...'
         body:
-          html: '¿Salir y <strong>cerrar el turno</strong>?'
-        exit: 'No, solo salir'
-      pay_error: 'Ha ocurrido un error, no se pudieron pagar los turnos...'
-
+          html: "¿Salir y <strong>cerrar el turno</strong>?"
+        exit: "No, solo salir"
+        title: "Cerrando sesión..."
+      correctly_created: "Turno agregado correctamente."
+      correctly_updated: "Turno actualizado correctamente."
+      edit_stale: "Tenés un turno abierto demasiado viejo, decinos a que hora terminó..."
+      edit_title: "Modificar turno"
+      index_title: "Listado de turnos"
+      new_title: "Nuevo turno"
+      pay_error: "Ha ocurrido un error, no se pudieron pagar los turnos..."
+      show_title: "Detalle de turno"
+      stale_object_error: "El turno no pudo ser actualizado, intente nuevamente."
     stats:
       date_filter:
-        start: 'Inicio'
-        end: 'Fin'
-        apply: 'Aplicar'
-      empty_result: 'Sin resultados para el rango de fechas seleccionado'
-      printers_title: 'Estadísticas por impresora'
-      prints_title: 'Estadísticas por impresión'
-      scheduled_print: 'Impresiones programadas'
-      show_graph: 'Ver gráfico'
-      show_grid: 'Ver datos'
-      download_csv: 'Descargar en CSV'
+        apply: "Aplicar"
+        end: "Fin"
+        start: "Inicio"
+      download_csv: "Descargar en CSV"
+      empty_result: "Sin resultados para el rango de fechas seleccionado"
+      printers_title: "Estadísticas por impresora"
+      prints_title: "Estadísticas por impresión"
+      scheduled_print: "Impresiones programadas"
+      show_graph: "Ver gráfico"
+      show_grid: "Ver datos"
       total:
-        one: 'De un total de una copia hecha en %{distance_time}'
-        other: 'De un total de %{count} copias hechas en %{distance_time}'
+        one: "De un total de una copia hecha en %{distance_time}"
+        other: "De un total de %{count} copias hechas en %{distance_time}"
       total_prints:
-        one: 'De un total de una impresión hecha en %{distance_time}'
-        other: 'De un total de %{count} impresiones hechas en %{distance_time}'
-      users_title: 'Estadísticas por usuario'
+        one: "De un total de una impresión hecha en %{distance_time}"
+        other: "De un total de %{count} impresiones hechas en %{distance_time}"
+      users_title: "Estadísticas por usuario"
     tags:
-      index_title: 'Listado de etiquetas'
-      show_title: 'Detalle de etiqueta'
-      new_title: 'Nueva etiqueta'
-      edit_title: 'Modificar etiqueta'
-      correctly_created: 'Etiqueta agregada correctamente.'
-      correctly_updated: 'Etiqueta actualizada correctamente.'
-      stale_object_error: 'La etiqueta no pudo ser actualizada, intente nuevamente.'
-      root_tag: 'Raiz'
-      without_documents: 'Sin documentos'
+      correctly_created: "Etiqueta agregada correctamente."
+      correctly_updated: "Etiqueta actualizada correctamente."
       document_list:
-        one: 'Un documento'
-        other: '%{count} documentos'
-    users:
-      index_title: 'Listado de usuarios'
-      show_title: 'Detalle de usuario'
-      new_title: 'Nuevo usuario'
-      edit_title: 'Modificar usuario'
-      correctly_created: 'Usuario agregado correctamente.'
-      correctly_updated: 'Usuario actualizado correctamente.'
-      stale_object_error: 'El usuario no pudo ser actualizado, intente nuevamente.'
-      non_existent_avatar: 'Imagen inexistente'
+        one: "Un documento"
+        other: "%{count} documentos"
+      edit_title: "Modificar etiqueta"
+      index_title: "Listado de etiquetas"
+      new_title: "Nueva etiqueta"
+      root_tag: "Raiz"
+      show_title: "Detalle de etiqueta"
+      stale_object_error: "La etiqueta no pudo ser actualizada, intente nuevamente."
+      without_documents: "Sin documentos"
     user_sessions:
-      login: 'Ingresar'
-      new_title: 'Iniciar sesión'
-      correctly_created: 'Bienvenido a Central de Impresión.'
-      correctly_destroyed: 'Sesión cerrada correctamente.'
-    customers_groups:
-      date: 'Fecha'
-      simple: 'Simple'
-      double: 'Doble'
-      pages: 'Paginas'
-      copies: 'Copias'
-      total: 'Total'
-      library: 'Anillados'
-      subtotal_copies: 'Subtotal (copias)'
-      debt: 'Deuda'
-      settlement: 'Liquidación'
-      global_settlement: 'Liquidación Global'
+      correctly_created: "Bienvenido a Central de Impresión."
+      correctly_destroyed: "Sesión cerrada correctamente."
+      login: "Ingresar"
+      new_title: "Iniciar sesión"
+    users:
+      correctly_created: "Usuario agregado correctamente."
+      correctly_updated: "Usuario actualizado correctamente."
+      edit_title: "Modificar usuario"
+      index_title: "Listado de usuarios"
+      new_title: "Nuevo usuario"
+      non_existent_avatar: "Imagen inexistente"
+      show_title: "Detalle de usuario"
+      stale_object_error: "El usuario no pudo ser actualizado, intente nuevamente."

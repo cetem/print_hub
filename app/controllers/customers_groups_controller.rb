@@ -107,13 +107,23 @@ class CustomersGroupsController < ApplicationController
   end
 
   def global_settlement
+    require 'gdrive' #VillageCines
+
     interval      = params.require(:interval).permit(:from, :to)
     start, finish = *make_datetime_range(interval)
     start         = start.beginning_of_day
     finish        = finish.end_of_day
 
-    send_data CustomersGroup.settlement_as_csv(start, finish),
-      filename: "Global.csv", type: 'text/csv'
+    GDrive.upload_spreadsheat(
+      t('view.customers_groups.spreadsheet_file_name',
+        start: l(start.to_date, format: :related_month).camelize,
+        finish: l(finish.to_date, format: :related_month).camelize
+       ),
+      CustomersGroup.settlement_as_csv(start, finish)
+    )
+
+    redirect_to customers_groups_path,
+      notice: t('view.customers_groups.spreadsheat_uploaded')
   end
 
   private
