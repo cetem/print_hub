@@ -71,11 +71,13 @@ class CustomersGroup < ApplicationModel
         end
       end
 
-      totals[:one_side] += copies[:one]
-      totals[:two_sides] += copies[:two]
-      totals[:library] += library
+      if copies[:one] > 0 || copies[:two] > 0 || library > 0
+        totals[:one_side] += copies[:one]
+        totals[:two_sides] += copies[:two]
+        totals[:library] += library
 
-      csv << [c.to_s, copies[:one], copies[:two], library]
+        csv << [c.to_s, copies[:one], copies[:two], library]
+      end
     end
 
     csv << [nil, totals[:one_side], totals[:two_sides], totals[:library]] if customers.count > 1
