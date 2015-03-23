@@ -130,4 +130,34 @@ class ShiftTest < ActiveSupport::TestCase
 
     assert_no_difference('Shift.pay_pending.count') { assert @shift.pay! }
   end
+
+  test 'admin as_operator for operator' do
+    user = users(:operator)
+    user.update(admin: false)
+    shift = user.shifts.create(start: 10.minutes.ago)
+
+    assert_equal shift.as_admin, false
+    shift.close!
+    assert_equal shift.reload.as_admin, false
+  end
+
+  test 'admin as_admin for admin' do
+    user = users(:operator)
+    shift = user.shifts.create(start: 10.minutes.ago)
+
+    assert shift.as_admin
+    shift.close!
+    assert shift.reload.as_admin
+  end
+
+  test 'admin as_operator for admin' do
+    user = users(:operator)
+    user.close_pending_shifts!
+    shift = user.shifts.create(start: 10.minutes.ago)
+
+    assert shift.as_admin
+    user.last_open_shift_as_operator!
+    shift.reload.close!
+    assert_equal shift.reload.as_admin, false
+  end
 end

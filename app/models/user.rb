@@ -75,8 +75,16 @@ class User < ApplicationModel
     self.shifts.stale.first
   end
 
+  def last_open_shift
+    self.shifts.order(start: :desc).first
+  end
+
   def last_shift_open?
-    self.shifts.order(created_at: :desc).first.pending?
+    last_open_shift.pending?
+  end
+
+  def last_open_shift_as_operator!
+    last_open_shift.update(as_admin: false)
   end
 
   def self.full_text(query_terms)

@@ -30,13 +30,13 @@ ActiveRecord::Schema.define(version: 20150411204711) do
   add_index "article_lines", ["print_id"], name: "index_article_lines_on_print_id", using: :btree
 
   create_table "articles", force: true do |t|
-    t.integer  "code",                                              null: false
     t.string   "name",                                              null: false
     t.decimal  "price",        precision: 15, scale: 3,             null: false
     t.text     "description"
     t.integer  "lock_version",                          default: 0
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "code",                                              null: false
     t.integer  "stock",                                 default: 0
   end
 
@@ -52,10 +52,10 @@ ActiveRecord::Schema.define(version: 20150411204711) do
     t.string   "type",                                 default: "Bonus", null: false
   end
 
-  add_index "credits", ["created_at"], name: "index_credits_on_created_at", using: :btree
-  add_index "credits", ["customer_id"], name: "index_credits_on_customer_id", using: :btree
+  add_index "credits", ["created_at"], name: "index_bonuses_on_created_at", using: :btree
+  add_index "credits", ["customer_id"], name: "index_bonuses_on_customer_id", using: :btree
   add_index "credits", ["type"], name: "index_credits_on_type", using: :btree
-  add_index "credits", ["valid_until"], name: "index_credits_on_valid_until", using: :btree
+  add_index "credits", ["valid_until"], name: "index_bonuses_on_valid_until", using: :btree
 
   create_table "customers", force: true do |t|
     t.string   "name",                                                                        null: false
@@ -94,7 +94,7 @@ ActiveRecord::Schema.define(version: 20150411204711) do
     t.integer "tag_id",      null: false
   end
 
-  add_index "document_tag_relations", ["document_id", "tag_id"], name: "index_document_tag_relations_on_document_id_and_tag_id", unique: true, using: :btree
+  add_index "document_tag_relations", ["document_id", "tag_id"], name: "index_documents_tags_on_document_id_and_tag_id", unique: true, using: :btree
 
   create_table "documents", force: true do |t|
     t.integer  "code",                              null: false
@@ -137,8 +137,8 @@ ActiveRecord::Schema.define(version: 20150411204711) do
     t.integer  "copies",                                     null: false
     t.decimal  "price_per_copy",    precision: 15, scale: 3, null: false
     t.integer  "order_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                                 null: false
+    t.datetime "updated_at",                                 null: false
     t.integer  "print_job_type_id",                          null: false
     t.integer  "print_id"
   end
@@ -200,8 +200,8 @@ ActiveRecord::Schema.define(version: 20150411204711) do
     t.boolean  "two_sided",    default: false
     t.boolean  "default",      default: false
     t.integer  "lock_version", default: 0
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                   null: false
+    t.datetime "updated_at",                   null: false
     t.string   "media"
   end
 
@@ -267,9 +267,10 @@ ActiveRecord::Schema.define(version: 20150411204711) do
     t.text     "description"
     t.integer  "lock_version", default: 0,     null: false
     t.integer  "user_id",                      null: false
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                   null: false
+    t.datetime "updated_at",                   null: false
     t.boolean  "paid",         default: false
+    t.boolean  "as_admin"
   end
 
   add_index "shifts", ["created_at"], name: "index_shifts_on_created_at", using: :btree

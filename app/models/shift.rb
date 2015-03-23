@@ -25,6 +25,10 @@ class Shift < ActiveRecord::Base
     super(attributes)
 
     self.start ||= Time.now
+
+    if self.as_admin.nil?
+      self.as_admin = self.user.admin?
+    end
   end
 
   def as_json(options = nil)

@@ -198,4 +198,11 @@ module ApplicationHelper
   def explorer?
     request.env['HTTP_USER_AGENT'] =~ /msie/i
   end
+
+  def boolean_collection
+    [
+      [t('label.yes'), true],
+      [t('label.no'), false]
+    ]
+  end
 end

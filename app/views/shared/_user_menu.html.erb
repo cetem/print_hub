@@ -57,12 +57,26 @@
     <p><%= t('view.shifts.close_session.body.html') %></p>
   </div>
   <div class="modal-footer">
-    <div class="pull-left">
-      <%= link_to t('view.shifts.close_session.exit'), user_sessions_path,
-        class: 'btn', method: :delete %>
+    <div class="row-fluid">
+      <div class="span4">
+        <div class="pull-left">
+          <%= link_to t('view.shifts.close_session.exit'), user_sessions_path,
+            class: 'btn', method: :delete %>
+        </div>
+      </div>
+      <% if current_user.admin? %>
+        <div class="span4">
+          <%= link_to t('view.shifts.close_session.as_operator'),
+            user_sessions_path(close_shift: true, as_operator: true),
+            class: 'btn btn-primary', method: :delete %>
+        </div>
+      <% end %>
+      <div class="span4">
+        <div class="pull-right">
+          <%= link_to t('label.yes'), user_sessions_path(close_shift: true),
+            class: 'btn btn-primary', method: :delete %>
+        </div>
+      </div>
     </div>
-
-    <%= link_to t('label.yes'), user_sessions_path(close_shift: true),
-      class: 'btn btn-primary', method: :delete %>
   </div>
 </div>

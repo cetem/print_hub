@@ -140,6 +140,7 @@ es:
         price: "Precio"
         two_sided: "Doble faz"
       shift:
+        as_admin: "Encargado?"
         description: "Descripción"
         finish: "Fin"
         start: "Inicio"
@@ -574,6 +575,7 @@ es:
       upload_file: "Subir archivo"
     shifts:
       close_session:
+        as_operator: "Cerrar como Operario"
         body:
           html: "¿Salir y <strong>cerrar el turno</strong>?"
         exit: "No, solo salir"
@@ -631,5 +633,3 @@ es:
       index_title: "Listado de usuarios"
       new_title: "Nuevo usuario"
       non_existent_avatar: "Imagen inexistente"
-      show_title: "Detalle de usuario"
-      stale_object_error: "El usuario no pudo ser actualizado, intente nuevamente."

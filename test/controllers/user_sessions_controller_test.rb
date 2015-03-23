@@ -118,6 +118,26 @@ class UserSessionsControllerTest < ActionController::TestCase
     assert_redirected_to new_user_session_url
   end
 
+  test 'should destroy user session and close shift as operator' do
+    @operator.close_pending_shifts!
+
+    assert_difference '@operator.shifts.count' do
+      UserSession.create(@operator)
+    end
+
+    assert_not_nil UserSession.find
+    assert_equal 1, @operator.shifts.pending.size
+    assert @operator.last_open_shift.as_admin
+
+    delete :destroy, close_shift: true, as_operator: true
+
+    assert_equal false, @operator.shifts.order(id: :desc).first.reload.as_admin
+    assert_equal 0, @operator.shifts.pending.reload.size
+
+    assert_nil UserSession.find
+    assert_redirected_to new_user_session_url
+  end
+
   test 'should exit whitout close the shift' do
     @operator.close_pending_shifts!
 

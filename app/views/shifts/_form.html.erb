@@ -1,10 +1,15 @@
 <%= simple_form_for(@shift, defaults: { input_html: { class: 'span11' } }) do |f| %>
-  <div class="row-fluid">
-    <div class="span6">
-      <div class="form-inputs">
-          <%= f.input :start, as: :datetime_picker%>
-          <%= f.input :finish, as: :datetime_picker %>
-          <%= f.input :description, input_html: { rows: 5 } %>
+  <div class="form-inputs">
+    <div class="row-fluid">
+      <div class="span6">
+        <%= f.input :start, as: :datetime_picker%>
+        <%= f.input :finish, as: :datetime_picker %>
+        <%= f.input :description, input_html: { rows: 5 } %>
+        <div class="form-horizontal span7 <%= 'hide' unless @shift.user.admin? %>">
+          <%= f.input :as_admin, collection: boolean_collection,
+            prompt: false, include_blank: false, selected: @shift.as_admin
+          %>
+        </div>
       </div>
     </div>
   </div>

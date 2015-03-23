@@ -115,7 +115,7 @@ class ShiftsController < ApplicationController
 
   def shift_params
     permited_params = params.require(:shift).permit(
-      :user_id, :start, :finish, :description, :paid, :lock_version
+      :user_id, :start, :finish, :description, :paid, :lock_version, :as_admin
     )
 
     permited_params[:user_id] = if @shift.try(:user_id)
