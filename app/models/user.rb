@@ -89,8 +89,20 @@ class User < ApplicationModel
   end
 
   def pay_shifts_between(start, finish)
-    unless shifts.pending_between(start, finish).all?(&:pay!)
-      raise t('view.shifts.pay_error')
+    _shifts = shifts.pending_between(start, finish)
+
+    unless _shifts.all?(&:pay!)
+      Bugsnag.notify(RuntimeError.new( I18n.t('view.shifts.pay_error') ), {
+        user: {
+            id: self.id,
+            name: self.to_s
+          },
+        data: {
+            start: start,
+            finish: finish,
+            shifts_ids: _shifts.pluck(:id)
+          }
+      })
     end
   end
 
