@@ -40,8 +40,8 @@ class StatsController < ApplicationController
     @title = t('view.stats.prints_title')
     @user_prints_count = {}
 
-    Print.stats_between(@from_date, @to_date).each do |u_id, count|
-      @user_prints_count[User.find(u_id).to_s] = count
+    Print.stats_between(@from_date, @to_date).each do |u_id, prints|
+      @user_prints_count[User.find(u_id).to_s] = prints.count
     end
 
     respond_with @user_prints_count do |format|

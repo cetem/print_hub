@@ -202,7 +202,7 @@ class PrintJob < ApplicationModel
   def self.user_stats_between(from, to)
     with_print_between(from, to).not_revoked.group_by do |e|
       e.print.user_id
-    end.map{ |user, pjs| [printer, pjs.map(&:printed_pages).compact.sum] }
+    end.map{ |user, pjs| [user, pjs.map(&:printed_pages).compact.sum] }
   end
 
   def self.created_at_month(date)
