@@ -13,7 +13,8 @@ class Article < ApplicationModel
   validates :name, length: { maximum: 255 }, allow_nil: true, allow_blank: true
   validates :code, allow_nil: true, allow_blank: true,
     numericality: { greater_than: 0, less_than: 2147483648, only_integer: true }
-  validates :price, presence: true, numericality: {greater_than_or_equal_to: 0}
+  validates :price, :stock, presence: true,
+    numericality: { greater_than_or_equal_to: 0 }
 
   has_many :article_lines
 
@@ -51,5 +52,12 @@ class Article < ApplicationModel
     where(
       conditions.map { |c| "(#{c})" }.join(' OR '), parameters
     ).order(options[:order])
+  end
+
+  def stock_color
+    case stock
+      when 0..4 then 'error'
+      when 5..10 then 'warning'
+    end
   end
 end

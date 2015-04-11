@@ -3,9 +3,17 @@
 
   <p><%= number_to_currency @article.price %></p>
 
+  <p>
+    <strong><%= Article.human_attribute_name 'stock' %></strong>:
+    <%= @article.stock %>
+  </p>
+
   <br />
 
-  <p><%= @article.description %></p>
+  <p>
+    <strong><%= Article.human_attribute_name 'description' %></strong>:
+    <%= simple_format @article.description %>
+  </p>
 </div>
 
 <nav class="form-actions">

@@ -14,6 +14,8 @@ class ArticleLine < ApplicationModel
   validates :unit_price, numericality: {greater_than_or_equal_to: 0},
     allow_nil: true, allow_blank: true
 
+  after_create :discount_stock
+
   # Relaciones
   belongs_to :print
   belongs_to :article
@@ -27,5 +29,11 @@ class ArticleLine < ApplicationModel
 
   def price
     (self.units || 0) * (self.unit_price || 0)
+  end
+
+  def discount_stock
+    article.stock -= units
+    article.stock = 0 if article.stock < 0
+    article.save
   end
 end

@@ -103,4 +103,33 @@ class ArticleLineTest < ActiveSupport::TestCase
   test 'price' do
     assert_equal '3.58', @article_line.price.to_s
   end
+
+  test 'discount stock' do
+    article = articles(:binding)
+    article.stock = 124
+    article.save
+
+    print_id = prints(:math_print).id
+
+    article_line = ArticleLine.create(
+      article_id: article.id,
+      print_id: print_id,
+      units: 122,
+      unit_price: article.price
+    )
+
+    assert_equal 2, article.reload.stock
+
+    article.stock = 5
+    article.save
+
+    article_line = ArticleLine.create(
+      article_id: article.id,
+      print_id: print_id,
+      units: 123,
+      unit_price: article.price
+    )
+
+    assert_equal 0, article.reload.stock
+  end
 end
