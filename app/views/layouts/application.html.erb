@@ -15,7 +15,7 @@
     <%= favicon_link_tag %>
     <%= csrf_meta_tag %>
     <%= javascript_tag do %>
-      <%= raw "Messages.ajaxInProgressWarning = '#{t('messages.ajax_in_progress_warning')}';" %>
+      <%= raw "Messages.ajaxInProgressWarning = '#{j t('messages.ajax_in_progress_warning')}';" %>
     <% end %>
     <%= yield :head_extra %>
   </head>
