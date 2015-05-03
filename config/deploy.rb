@@ -7,12 +7,16 @@ set :deploy_to, '/var/rails/print_hub'
 set :deploy_via, :remote_cache
 
 set :format, :pretty
-set :log_level, :info
+set :log_level, ENV['log_level'] || :info
 
 set :linked_files, %w{config/app_config.yml}
 set :linked_dirs, %w{log private certs}
 
 set :keep_releases, 5
+
+set :sidekiq_pid,    File.join(current_path,'tmp','pids','sidekiq.pid')
+set :sidekiq_config, File.join(current_path,'config','sidekiq.yml')
+set :sidekiq_role,   Proc.new { :sidekiqers }
 
 namespace :deploy do
   desc 'Restart application'

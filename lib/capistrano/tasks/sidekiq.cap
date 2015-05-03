@@ -1,50 +1,50 @@
-namespace :sidekiq do
-  def for_each_process(&block)
-    fetch(:sidekiq_processes).times do |idx|
-      pid_file = fetch(:sidekiq_pid)
-      pid_file += "-#{idx}" unless idx == 0
-
-      yield(pid_file, idx)
-    end
-  end
-
-  desc '[Sidekiq] Stop'
-  task :stop do
-    on roles(:sidekiq) do
-      for_each_process do |pid_file, idx|
-        within current_path do
-          execute :echo, pid_file
-          if test("[ -f #{pid_file} ]") && test("kill -0 `cat #{pid_file}`")
-            execute :bundle, 'exec', :sidekiqctl, "stop #{pid_file} #{fetch(:sidekiq_timeout)}"
-          else
-            execute :echo, 'Sidekiq is not running'
-          end
-        end
-      end
-    end
-  end
-
-  desc '[Sidekiq] Start'
-  task :start do
-    on roles(:sidekiq) do
-      for_each_process do |pid_file, idx|
-        within current_path do
-          execute :bundle, 'exec', :sidekiq,
-            "-e #{fetch(:rails_env)}",
-            "-C #{current_path}/config/sidekiq.yml",
-            "-i #{idx} -P #{pid_file}",
-            "-l #{current_path}/log/sidekiq.log",
-            "--daemon"
-        end
-      end
-    end
-  end
-
-  desc '[Sidekiq] Restart'
-  task :restart do
-    on roles(:sidekiq) do
-      invoke 'sidekiq:stop'
-      invoke 'sidekiq:start'
-    end
-  end
-end
+#namespace :sidekiq do
+#  def for_each_process(&block)
+#    fetch(:sidekiq_processes).times do |idx|
+#      pid_file = fetch(:sidekiq_pid)
+#      pid_file += "-#{idx}" unless idx == 0
+#
+#      yield(pid_file, idx)
+#    end
+#  end
+#
+#  desc '[Sidekiq] Stop'
+#  task :stop do
+#    on roles(:sidekiq) do
+#      for_each_process do |pid_file, idx|
+#        within current_path do
+#          execute :echo, pid_file
+#          if test("[ -f #{pid_file} ]") && test("kill -0 `cat #{pid_file}`")
+#            execute :bundle, 'exec', :sidekiqctl, "stop #{pid_file} #{fetch(:sidekiq_timeout)}"
+#          else
+#            execute :echo, 'Sidekiq is not running'
+#          end
+#        end
+#      end
+#    end
+#  end
+#
+#  desc '[Sidekiq] Start'
+#  task :start do
+#    on roles(:sidekiq) do
+#      for_each_process do |pid_file, idx|
+#        within current_path do
+#          execute :bundle, 'exec', :sidekiq,
+#            "-e #{fetch(:rails_env)}",
+#            "-C #{current_path}/config/sidekiq.yml",
+#            "-i #{idx} -P #{pid_file}",
+#            "-l #{current_path}/log/sidekiq.log",
+#            "--daemon"
+#        end
+#      end
+#    end
+#  end
+#
+#  desc '[Sidekiq] Restart'
+#  task :restart do
+#    on roles(:sidekiq) do
+#      invoke 'sidekiq:stop'
+#      invoke 'sidekiq:start'
+#    end
+#  end
+#end

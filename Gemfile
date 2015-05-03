@@ -29,6 +29,8 @@ gem 'capistrano'
 gem 'capistrano-bundler'
 gem 'capistrano-rails'
 gem 'capistrano-rbenv'
+gem 'capistrano-sidekiq'
+gem 'unicorn'
 
 # Task Gems
 gem 'whenever', require: false
