@@ -82,7 +82,7 @@ setup () {
   return 0
 }
 
-for app in $APPS; do
+for app in ${APPS[*]}; do
   setup $app
   cmd $1
 done

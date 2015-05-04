@@ -19,10 +19,12 @@ set :sidekiq_config, File.join(current_path,'config','sidekiq.yml')
 set :sidekiq_role,   Proc.new { :sidekiqers }
 
 namespace :deploy do
+  after :finished, :restart
+
   desc 'Restart application'
   task :restart do
-    on roles(:app), in: :sequence, wait: 5 do
-      execute :touch, release_path.join('tmp/restart.txt')
+    on roles(:app) do
+      execute '/etc/init.d/unicorn', 'upgrade'
     end
   end
 
