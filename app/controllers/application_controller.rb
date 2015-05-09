@@ -20,6 +20,10 @@ class ApplicationController < ActionController::Base
 
       logger.error(error)
 
+      if current_user || current_customer
+        Bugsnag.notify(exception)
+      end
+
     # En caso que la presentación misma de la excepción no salga como se espera
     rescue => ex
       error = "#{ex.class}: #{ex.message}\n\n"

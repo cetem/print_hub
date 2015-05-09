@@ -28,14 +28,12 @@ class CustomersGroup < ApplicationModel
   end
 
   def self.settlement_as_csv(start = 1.year.ago, finish = Time.now)
-    _group = nil
+    _group = []
+
     all.each do |cg|
-      if _group
-        _group += cg.settlement_as_csv(start, finish)
-      else
-        _group = cg.settlement_as_csv(start, finish)
-      end
+      _group += cg.settlement_as_csv(start, finish)
     end
+
     _group
   end
 
@@ -52,7 +50,7 @@ class CustomersGroup < ApplicationModel
 
     totals = { one_side: 0, two_sides: 0, library: 0.0 }
 
-    customers.each do |c|
+    customers.includes(:prints, prints: :print_jobs).each do |c|
       copies = { one: 0, two: 0 }
       library = 0.0
 
