@@ -7,7 +7,6 @@ module GDrive
       ws.save
 
       change_permissions(s.key)
-      s.delete # Don't keep innecesary files
     end
 
     private
