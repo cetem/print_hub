@@ -32,7 +32,7 @@ class Document < ApplicationModel
     allow_nil: true, allow_blank: true
   validates :pages, :code, allow_nil: true, allow_blank: true,
     numericality: { only_integer: true, greater_than: 0, less_than: 2147483648 }
-  validates :stock, allow_nil: true, allow_blank: true, numericality: {
+  validates :stock, numericality: {
     only_integer: true, greater_than_or_equal_to: 0, less_than: 2147483648
   }
   validates_each :file do |record, attr, value|
@@ -50,6 +50,7 @@ class Document < ApplicationModel
     super(attributes)
 
     self.pages ||= 1
+    self.stock ||= 0
   end
 
   def to_s
