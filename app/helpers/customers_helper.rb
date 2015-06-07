@@ -39,7 +39,7 @@ module CustomersHelper
   def show_button_to_destroy(customer)
     if customer.has_no_orders?
       button_to t('label.delete'), customer, method: :delete,
-        data: { confirm: t('messages.confirmation') }
+                                             data: { confirm: t('messages.confirmation') }
     end
   end
 
@@ -71,7 +71,7 @@ module CustomersHelper
   def show_customer_select_with_debt_months(customer)
     customer.months_to_pay.inject([]) do |date, m_y|
       date + [[l(Date.new(m_y.last, m_y.first, 1), format: :month_and_year),
-        "#{m_y.last}-#{m_y.first}-1"]]
+               "#{m_y.last}-#{m_y.first}-1"]]
     end
   end
 
@@ -84,13 +84,13 @@ module CustomersHelper
     kinds = Customer::KINDS.map { |k, v| [t("view.customers.kinds.#{k}"), v] }
 
     form.input :kind, collection: kinds, prompt: false,
-      input_html: { class: 'span11' }
+                      input_html: { class: 'span11' }
   end
 
   def link_to_activate_customer(customer)
     link_to '&#xe014;'.html_safe, manual_activation_customer_path(customer),
-      class: 'iconic', method: :patch, title: t('view.customers.activate'),
-      data: { 'show-tooltip' => true }
+            class: 'iconic', method: :patch, title: t('view.customers.activate'),
+            data: { 'show-tooltip' => true }
   end
 
   def autocomplete_for_customer_group(form)

@@ -31,7 +31,7 @@ class CustomersTest < ActionDispatch::IntegrationTest
       fill_in Customer.human_attribute_name('email'), with: 'yoda@galactic.com'
       fill_in Customer.human_attribute_name('password'), with: 'lightsaber'
       fill_in Customer.human_attribute_name('password_confirmation'),
-        with: 'lightsaber'
+              with: 'lightsaber'
 
       assert_difference 'Customer.count' do
         click_button I18n.t(
@@ -78,7 +78,7 @@ class CustomersTest < ActionDispatch::IntegrationTest
       fill_in Customer.human_attribute_name('email'), with: 'yoda@galactic.com'
       fill_in Customer.human_attribute_name('password'), with: 'lightsaber'
       fill_in Customer.human_attribute_name('password_confirmation'),
-        with: 'lightsaber'
+              with: 'lightsaber'
       select(
         I18n.t('view.customers.kinds.reliable'), from: 'customer_kind'
       )
@@ -138,11 +138,11 @@ class CustomersTest < ActionDispatch::IntegrationTest
 
     deposit = "//input[starts-with(@id,'deposit_amount_')]"
 
-    assert_difference "all(:xpath, deposit).size" do
+    assert_difference 'all(:xpath, deposit).size' do
       click_link I18n.t('view.customers.add_deposit')
     end
 
-    assert_difference "all(:xpath, deposit).size", -1 do
+    assert_difference 'all(:xpath, deposit).size', -1 do
       first(:css, '[data-event=removeItem]').click
       sleep 0.5 # Sino, sigue siendo el mismo nº de antes
     end

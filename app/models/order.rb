@@ -27,10 +27,10 @@ class Order < ApplicationModel
   # Restricciones
   validates :scheduled_at, :customer, presence: true
   validates :status, inclusion: { in: STATUS.values }, allow_nil: true,
-    allow_blank: true
+                     allow_blank: true
   validates_datetime :scheduled_at, allow_nil: true, allow_blank: true
   validates_datetime :scheduled_at, allow_nil: true, allow_blank: true,
-    after: -> { 12.hours.from_now }, on: :create
+                                    after: -> { 12.hours.from_now }, on: :create
   validate :must_have_one_item
 
   # Relaciones
@@ -40,9 +40,9 @@ class Order < ApplicationModel
   has_many :file_lines, inverse_of: :order, dependent: :destroy
 
   accepts_nested_attributes_for :order_lines, allow_destroy: true,
-    reject_if: ->(attributes) { attributes['copies'].to_i <= 0 }
+                                              reject_if: ->(attributes) { attributes['copies'].to_i <= 0 }
   accepts_nested_attributes_for :file_lines, allow_destroy: true,
-   reject_if: :reject_file_lines_attributes?
+                                             reject_if: :reject_file_lines_attributes?
 
   def initialize(attributes = nil)
     super(attributes)
@@ -50,11 +50,11 @@ class Order < ApplicationModel
     self.scheduled_at ||= 1.day.from_now
     self.status ||= STATUS[:pending]
 
-    self.include_documents.each do |document_id|
-      self.order_lines.build(document_id: document_id)
-    end if self.include_documents.present?
+    include_documents.each do |document_id|
+      order_lines.build(document_id: document_id)
+    end if include_documents.present?
 
-    self.print_out = !!self.customer.try(:can_afford?, self.price)
+    self.print_out = !!customer.try(:can_afford?, price)
 
     order_items.each do |nm|
       nm.price_per_copy = nm.job_price_per_copy
@@ -66,7 +66,7 @@ class Order < ApplicationModel
   end
 
   def can_be_modified?
-    self.pending? || self.status_was == STATUS[:pending]
+    self.pending? || status_was == STATUS[:pending]
   end
 
   def reject_file_lines_attributes?(attributes)
@@ -75,12 +75,12 @@ class Order < ApplicationModel
   end
 
   def must_have_one_item
-    self.errors.add :base, :must_have_one_item if order_items.empty?
+    errors.add :base, :must_have_one_item if order_items.empty?
   end
 
   def order_items
     (
-      self.order_lines.to_a + self.file_lines.to_a
+      order_lines.to_a + file_lines.to_a
     ).compact.reject(&:marked_for_destruction?)
   end
 
@@ -95,15 +95,15 @@ class Order < ApplicationModel
 
   def allow_status?(status)
     case status
-      when STATUS[:cancelled] then self.pending?
-      when STATUS[:completed] then self.pending?
-      when STATUS[:pending]   then !self.completed? && !self.cancelled?
-      else false
+    when STATUS[:cancelled] then self.pending?
+    when STATUS[:completed] then self.pending?
+    when STATUS[:pending]   then !self.completed? && !self.cancelled?
+    else false
     end
   end
 
   def price
-    self.completed? ? self.print.price : order_items.map(&:price).sum
+    self.completed? ? print.price : order_items.map(&:price).sum
   end
 
   def pages_per_type
@@ -116,13 +116,13 @@ class Order < ApplicationModel
   end
 
   def total_pages_by_type(type)
-    self.order_items.inject(0) do |t, oi|
+    order_items.inject(0) do |t, oi|
       t + (oi.print_job_type == type ? (oi.pages || 0) : 0)
     end
   end
 
   def self.pending_for_print_count
-    self.pending.for_print.scheduled_soon.count
+    pending.for_print.scheduled_soon.count
   end
 
   def self.full_text(query_terms)

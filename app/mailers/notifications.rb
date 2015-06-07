@@ -1,7 +1,7 @@
 class Notifications < ActionMailer::Base
   layout 'notifications_mailer'
   default from: "\"#{I18n.t('app_name')}\" <#{APP_CONFIG['smtp']['user_name']}>",
-    charset: 'UTF-8'
+          charset: 'UTF-8'
 
   def signup(customer)
     @customer = customer

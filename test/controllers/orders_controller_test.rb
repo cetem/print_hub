@@ -30,7 +30,7 @@ class OrdersControllerTest < ActionController::TestCase
     get :index, type: 'print'
     assert_response :success
     assert_not_nil assigns(:orders)
-    assert assigns(:orders).all? { |o| o.print_out }
+    assert assigns(:orders).all?(&:print_out)
     assert_select '#unexpected_error', false
     assert_template 'orders/index'
   end
@@ -179,11 +179,9 @@ class OrdersControllerTest < ActionController::TestCase
   test 'should upload file' do
     CustomerSession.create(customers(:student_without_bonus))
 
-    file = ActionDispatch::Http::UploadedFile.new({
-      filename: 'test.pdf',
-      content_type: 'application/pdf',
-      tempfile: File.new(File.join(Rails.root, 'test', 'fixtures', 'files', 'test.pdf'))
-    })
+    file = ActionDispatch::Http::UploadedFile.new(filename: 'test.pdf',
+                                                  content_type: 'application/pdf',
+                                                  tempfile: File.new(File.join(Rails.root, 'test', 'fixtures', 'files', 'test.pdf')))
 
     post :upload_file, file_line: { file: file }
 

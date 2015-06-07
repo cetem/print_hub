@@ -5,7 +5,7 @@ class Credit < ApplicationModel
   attr_readonly :amount
 
   # Named scopes
-  scope :valids, -> {
+  scope :valids, lambda {
     where(
       [
         'remaining > :zero',
@@ -14,7 +14,7 @@ class Credit < ApplicationModel
       today: Date.today, zero: 0
     )
   }
-  scope :between, ->(_start, _end) {
+  scope :between, lambda { |_start, _end|
     where('created_at BETWEEN :start AND :end', start: _start, end: _end)
   }
 
@@ -24,7 +24,7 @@ class Credit < ApplicationModel
     less_than_or_equal_to: :amount, greater_than_or_equal_to: 0
   }
   validates_date :valid_until, on_or_after: :today, allow_nil: true,
-    allow_blank: true
+                               allow_blank: true
 
   # Relaciones
   belongs_to :customer
@@ -37,6 +37,6 @@ class Credit < ApplicationModel
   end
 
   def still_valid?
-    self.valid_until.nil? || self.valid_until >= Date.today
+    valid_until.nil? || valid_until >= Date.today
   end
 end

@@ -33,7 +33,6 @@ class PrivateCustomerInteractionsTest < ActionDispatch::IntegrationTest
       assert page.has_css?('a.remove_from_order')
     end
 
-
     within '.nav-collapse' do
       click_link I18n.t('view.catalog.new_order')
     end
@@ -239,9 +238,9 @@ class PrivateCustomerInteractionsTest < ActionDispatch::IntegrationTest
 
     customers(options[:customer_id]).tap do |customer|
       fill_in I18n.t('authlogic.attributes.customer_session.email'),
-        with: customer.email
+              with: customer.email
       fill_in I18n.t('authlogic.attributes.customer_session.password'),
-        with: "#{options[:customer_id]}123"
+              with: "#{options[:customer_id]}123"
     end
 
     click_button I18n.t('view.customer_sessions.login')

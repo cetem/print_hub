@@ -32,7 +32,7 @@ class ArticleTest < ActiveSupport::TestCase
   test 'update' do
     assert_no_difference 'Article.count' do
       assert @article.update_attributes(name: 'Updated name'),
-        @article.errors.full_messages.join('; ')
+             @article.errors.full_messages.join('; ')
     end
 
     assert_equal 'Updated name', @article.reload.name
@@ -57,9 +57,9 @@ class ArticleTest < ActiveSupport::TestCase
     assert @article.invalid?
     assert_equal 4, @article.errors.count
     assert_equal [error_message_from_model(@article, :code, :blank)],
-      @article.errors[:code]
+                 @article.errors[:code]
     assert_equal [error_message_from_model(@article, :name, :blank)],
-      @article.errors[:name]
+                 @article.errors[:name]
     assert_equal [
       error_message_from_model(@article, :price, :blank),
       error_message_from_model(@article, :price, :not_a_number)
@@ -72,7 +72,7 @@ class ArticleTest < ActiveSupport::TestCase
     assert @article.invalid?
     assert_equal 1, @article.errors.count
     assert_equal [error_message_from_model(@article, :code, :taken)],
-      @article.errors[:code]
+                 @article.errors[:code]
   end
 
   # Prueba que las validaciones del modelo se cumplan como es esperado
@@ -92,25 +92,25 @@ class ArticleTest < ActiveSupport::TestCase
     assert @article.invalid?
     assert_equal 2, @article.errors.count
     assert_equal [error_message_from_model(@article, :price, :not_a_number)],
-      @article.errors[:price]
+                 @article.errors[:price]
     assert_equal [error_message_from_model(@article, :code, :not_a_number)],
-      @article.errors[:code]
+                 @article.errors[:code]
 
     @article.price = '-0.01'
     @article.code = '-1'
     assert @article.invalid?
     assert_equal 2, @article.errors.count
     assert_equal [error_message_from_model(@article, :price,
-        :greater_than_or_equal_to, count: 0)], @article.errors[:price]
+                                           :greater_than_or_equal_to, count: 0)], @article.errors[:price]
     assert_equal [error_message_from_model(@article, :code, :greater_than,
-        count: 0)], @article.errors[:code]
+                                           count: 0)], @article.errors[:code]
 
     @article.reload
     @article.code = '2147483648'
     assert @article.invalid?
     assert_equal 1, @article.errors.count
     assert_equal [
-      error_message_from_model(@article, :code, :less_than, count: 2147483648)
+      error_message_from_model(@article, :code, :less_than, count: 2_147_483_648)
     ], @article.errors[:code]
 
     @article.reload
@@ -118,7 +118,7 @@ class ArticleTest < ActiveSupport::TestCase
     assert @article.invalid?
     assert_equal 1, @article.errors.count
     assert_equal [error_message_from_model(@article, :code, :not_an_integer)],
-      @article.errors[:code]
+                 @article.errors[:code]
   end
 
   test 'full text search' do

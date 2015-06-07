@@ -9,11 +9,11 @@ class PrintJobTypeTest < ActiveSupport::TestCase
     assert_kind_of PrintJobType, @print_job_type
     assert_equal print_job_types(:a4).name, @print_job_type.name
     assert_equal print_job_types(:a4).price,
-      @print_job_type.price
+                 @print_job_type.price
     assert_equal print_job_types(:a4).two_sided,
-      @print_job_type.two_sided
+                 @print_job_type.two_sided
     assert_equal print_job_types(:a4).default,
-      @print_job_type.default
+                 @print_job_type.default
   end
 
   test 'create' do
@@ -30,7 +30,7 @@ class PrintJobTypeTest < ActiveSupport::TestCase
   test 'update' do
     assert_no_difference 'PrintJobType.count' do
       assert @print_job_type.update(name: 'Updated name'),
-        @print_job_type.errors.full_messages.join('; ')
+             @print_job_type.errors.full_messages.join('; ')
     end
 
     assert_equal 'Updated name', @print_job_type.reload.name
@@ -49,12 +49,12 @@ class PrintJobTypeTest < ActiveSupport::TestCase
     assert @print_job_type.invalid?
     assert_equal 3, @print_job_type.errors.count
     assert_equal [error_message_from_model(@print_job_type, :name, :blank)],
-      @print_job_type.errors[:name]
+                 @print_job_type.errors[:name]
     assert_equal [
-      error_message_from_model(@print_job_type, :price, :blank),
+      error_message_from_model(@print_job_type, :price, :blank)
     ], @print_job_type.errors[:price]
     assert_equal [
-      error_message_from_model(@print_job_type, :media, :blank),
+      error_message_from_model(@print_job_type, :media, :blank)
     ], @print_job_type.errors[:media]
   end
 
@@ -68,7 +68,7 @@ class PrintJobTypeTest < ActiveSupport::TestCase
     assert @print_job_type.invalid?
     assert_equal 1, @print_job_type.errors.count
     assert_equal [error_message_from_model(@print_job_type, :name, :taken)],
-      @print_job_type.errors[:name]
+                 @print_job_type.errors[:name]
   end
 
   test 'probe update default' do

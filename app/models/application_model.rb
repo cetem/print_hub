@@ -1,8 +1,8 @@
 class ApplicationModel < ActiveRecord::Base
   self.abstract_class = true
 
-  def self.full_text(query_terms)
-    raise 'Must be implemented in the subclasses!'
+  def self.full_text(_query_terms)
+    fail 'Must be implemented in the subclasses!'
   end
 
   private
@@ -15,7 +15,8 @@ class ApplicationModel < ActiveRecord::Base
 
     if DB_ADAPTER == 'PostgreSQL'
       pg_query = pg_text_query(*args)
-      query, order = pg_query[:query], pg_query[:order]
+      query = pg_query[:query]
+      order = pg_query[:order]
 
       order = sanitize_sql([order, parameters])
     else
@@ -35,13 +36,13 @@ class ApplicationModel < ActiveRecord::Base
     query << " @@ to_tsquery(#{lang}, :#{term_name})"
     order = "ts_rank_cd(#{query.sub(' @@', ',')})"
 
-    {query: query, order: order}
+    { query: query, order: order }
   end
 
   def self.simple_text_query(*args)
     options = args.extract_options!
     term_name = options[:term_name] || 'wilcard_term'
 
-    args.map{ |a| "LOWER(#{a}) LIKE :#{term_name}" }.join(' OR ')
+    args.map { |a| "LOWER(#{a}) LIKE :#{term_name}" }.join(' OR ')
   end
 end

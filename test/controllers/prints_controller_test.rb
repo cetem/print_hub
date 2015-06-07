@@ -3,12 +3,12 @@ require 'test_helper'
 class PrintsControllerTest < ActionController::TestCase
   setup do
     @print = prints(:math_print)
-    @printer = Cups.show_destinations.select {|p| p =~ /pdf/i}.first
+    @printer = Cups.show_destinations.find { |p| p =~ /pdf/i }
     @operator = users(:operator)
 
     UserSession.create(@operator)
 
-    raise "Can't find a PDF printer to run tests with." unless @printer
+    fail "Can't find a PDF printer to run tests with." unless @printer
 
     prepare_document_files
   end
@@ -151,8 +151,8 @@ class PrintsControllerTest < ActionController::TestCase
   test 'should create print' do
     document = documents(:math_book)
     counts_array = ['Print.count', 'PrintJob.count', 'Payment.count',
-      'customer.prints.count', 'ArticleLine.count',
-      'Cups.all_jobs(@printer).keys.sort.last']
+                    'customer.prints.count', 'ArticleLine.count',
+                    'Cups.all_jobs(@printer).keys.sort.last']
     customer = customers(:student)
 
     assert_difference counts_array do
@@ -247,7 +247,7 @@ class PrintsControllerTest < ActionController::TestCase
 
     document = documents(:math_book)
     counts_array = ['Print.count', 'PrintJob.count', 'Payment.count',
-      'customer.prints.count', 'Cups.all_jobs(@printer).keys.sort.last']
+                    'customer.prints.count', 'Cups.all_jobs(@printer).keys.sort.last']
     customer = customers(:student)
 
     assert_difference counts_array do
@@ -292,7 +292,7 @@ class PrintsControllerTest < ActionController::TestCase
     @operator.update(admin: false)
 
     counts_array = ['Print.count', 'PrintJob.count', 'Payment.count',
-      'customer.prints.count', 'ArticleLine.count']
+                    'customer.prints.count', 'ArticleLine.count']
     customer = customers(:student)
 
     assert_difference counts_array do
@@ -338,7 +338,7 @@ class PrintsControllerTest < ActionController::TestCase
     @operator.update(admin: false)
 
     counts_array = ['Print.count', 'PrintJob.count', 'Payment.count',
-      'customer.prints.count', 'ArticleLine.count']
+                    'customer.prints.count', 'ArticleLine.count']
     customer = customers(:student)
     print_job_type = print_job_types(:a4)
     assert print_job_type.update_attributes(price: '0.125')
@@ -420,12 +420,10 @@ class PrintsControllerTest < ActionController::TestCase
     math_notes = documents(:math_notes)
     math_book = documents(:math_book)
     immutable_counts = ['new_operator.prints.count', 'Payment.count',
-      'customer.prints.count']
-
+                        'customer.prints.count']
 
     assert_not_equal customer.id, @print.customer_id
     print_job_type_id = print_job_types(:a4).id
-
 
     assert_no_difference immutable_counts do
       assert_difference '@print.print_jobs.count' do
@@ -488,7 +486,7 @@ class PrintsControllerTest < ActionController::TestCase
     # No se puede cambiar ningún trabajo de impresión
     assert_not_equal(
       123, @print.print_jobs.find_by_document_id(
-      documents(:math_notes).id).copies
+        documents(:math_notes).id).copies
     )
     assert_equal math_book.pages, @print.print_jobs.order('id ASC').last.pages
     assert @print.pending_payment?
@@ -503,9 +501,9 @@ class PrintsControllerTest < ActionController::TestCase
   test 'should cancel job' do
     @operator.update(admin: false)
 
-    canceled_count = Cups.all_jobs(@printer).select do |_, j|
+    canceled_count = Cups.all_jobs(@printer).count do |_, j|
       j[:state] == :cancelled
-    end.size
+    end
 
     document = documents(:math_book)
 
@@ -537,14 +535,14 @@ class PrintsControllerTest < ActionController::TestCase
     xhr :put, :cancel_job, id: print_job.to_param, status: 'all'
 
     assert_response :success
-    assert_match %r{#{I18n.t(:job_canceled, scope: [:view, :prints])}},
-      @response.body
+    assert_match /#{I18n.t(:job_canceled, scope: [:view, :prints])}/,
+                 @response.body
 
     sleep 0.5
 
-    new_canceled_count = Cups.all_jobs(@printer).select do |_, j|
+    new_canceled_count = Cups.all_jobs(@printer).count do |_, j|
       j[:state] == :cancelled
-    end.size
+    end
 
     assert_equal canceled_count, new_canceled_count - 1
   end
@@ -557,8 +555,8 @@ class PrintsControllerTest < ActionController::TestCase
     xhr :put, :cancel_job, id: print_job.to_param, status: 'all'
 
     assert_response :success
-    assert_match %r{#{I18n.t(:job_not_canceled, scope: [:view, :prints])}},
-      @response.body
+    assert_match /#{I18n.t(:job_not_canceled, scope: [:view, :prints])}/,
+                 @response.body
   end
 
   test 'should get autocomplete document list' do
@@ -587,7 +585,7 @@ class PrintsControllerTest < ActionController::TestCase
     assert documents.all? { |d| (d['label'] + d['informal']).match /1/i }
 
     get :autocomplete_for_document_name, format: :json, q: 'physics',
-      status: 'all'
+                                         status: 'all'
     assert_response :success
 
     documents = ActiveSupport::JSON.decode(@response.body)
@@ -596,7 +594,7 @@ class PrintsControllerTest < ActionController::TestCase
     assert documents.all? { |d| (d['label'] + d['informal']).match /physics/i }
 
     get :autocomplete_for_document_name, format: :json, q: 'phyxyz',
-      status: 'all'
+                                         status: 'all'
     assert_response :success
 
     documents = ActiveSupport::JSON.decode(@response.body)
@@ -614,7 +612,7 @@ class PrintsControllerTest < ActionController::TestCase
     assert articles.all? { |a| a['label'].match /111/i }
 
     get :autocomplete_for_article_name, format: :json, q: 'binding',
-      status: 'all'
+                                        status: 'all'
     assert_response :success
 
     articles = ActiveSupport::JSON.decode(@response.body)
@@ -642,7 +640,7 @@ class PrintsControllerTest < ActionController::TestCase
     @operator.update(admin: false)
 
     get :autocomplete_for_customer_name, format: :json, q: 'anakin',
-      status: 'all'
+                                         status: 'all'
     assert_response :success
 
     customers = ActiveSupport::JSON.decode(@response.body)
@@ -659,7 +657,7 @@ class PrintsControllerTest < ActionController::TestCase
     assert customers.all? { |c| (c['label'] + c['informal']).match /obi/i }
 
     get :autocomplete_for_customer_name, format: :json, q: 'phyxyz',
-      status: 'all'
+                                         status: 'all'
     assert_response :success
 
     customers = ActiveSupport::JSON.decode(@response.body)
@@ -726,14 +724,14 @@ class PrintsControllerTest < ActionController::TestCase
   test 'update print comment' do
     assert_no_difference 'Print.count' do
       put :update, id: @print.to_param, status: 'all',
-        print: { comment: 'The force be with you' }
+                   print: { comment: 'The force be with you' }
     end
 
     assert_redirected_to @print
     assert_equal 'The force be with you', @print.reload.comment
   end
 
-  def get_prints_with_customer(opts={})
+  def get_prints_with_customer(opts = {})
     opts[:customer] ||= customers(:teacher)
 
     Print.where(customer_id: opts[:customer]).order(created_at: :asc)

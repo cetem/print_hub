@@ -23,7 +23,6 @@ class ApplicationController < ActionController::Base
 
       logger.error(error)
 
-
       Bugsnag.notify(exception) if current_user || current_customer
 
     # En caso que la presentación misma de la excepción no salga como se espera
@@ -42,9 +41,7 @@ class ApplicationController < ActionController::Base
   end
 
   def current_customer
-    @current_customer ||= (
-      current_customer_session && current_customer_session.record
-    )
+    @current_customer ||= current_customer_session && current_customer_session.record
   end
 
   def current_user_session
@@ -145,19 +142,19 @@ class ApplicationController < ActionController::Base
   end
 
   def run_shift_tasks
-    if current_user.not_shifted
-        true
-    else
+    unless current_user.not_shifted
       if session[:has_an_open_shift]
         if current_user.stale_shift && controller_name != 'shifts'
 
           redirect_to edit_shift_url(current_user.stale_shift),
-            notice: t('view.shifts.edit_stale')
+                      notice: t('view.shifts.edit_stale')
         end
 
       else
         current_user_session.create_shift unless current_user.last_shift_open?
       end
+
+      true
     end
   end
 

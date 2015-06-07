@@ -19,7 +19,7 @@ class CustomersGroupTest < ActiveSupport::TestCase
   test 'update' do
     assert_no_difference 'CustomersGroup.count' do
       assert @customers_group.update(name: 'Updated name'),
-        @customers_group.errors.full_messages.join('; ')
+             @customers_group.errors.full_messages.join('; ')
     end
 
     assert_equal 'Updated name', @customers_group.reload.name
@@ -34,7 +34,7 @@ class CustomersGroupTest < ActiveSupport::TestCase
     assert @customers_group.invalid?
     assert_equal 1, @customers_group.errors.count
     assert_equal [error_message_from_model(@customers_group, :name, :blank)],
-      @customers_group.errors[:name]
+                 @customers_group.errors[:name]
   end
 
   test 'validates duplicated attributes' do
@@ -42,6 +42,6 @@ class CustomersGroupTest < ActiveSupport::TestCase
     assert @customers_group.invalid?
     assert_equal 1, @customers_group.errors.count
     assert_equal [error_message_from_model(@customers_group, :name, :taken)],
-      @customers_group.errors[:name]
+                 @customers_group.errors[:name]
   end
 end

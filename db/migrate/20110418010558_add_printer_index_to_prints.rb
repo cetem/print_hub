@@ -4,6 +4,6 @@ class AddPrinterIndexToPrints < ActiveRecord::Migration
   end
 
   def self.down
-    remove_index :prints, :column => :printer
+    remove_index :prints, column: :printer
   end
 end

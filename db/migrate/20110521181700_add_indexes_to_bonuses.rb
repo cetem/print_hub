@@ -5,7 +5,7 @@ class AddIndexesToBonuses < ActiveRecord::Migration
   end
 
   def self.down
-    remove_index :bonuses, :column => :created_at
-    remove_index :bonuses, :column => :valid_until
+    remove_index :bonuses, column: :created_at
+    remove_index :bonuses, column: :valid_until
   end
 end

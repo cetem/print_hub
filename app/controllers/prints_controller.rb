@@ -60,7 +60,7 @@ class PrintsController < ApplicationController
     @print = prints_scope.find(params[:id])
 
     if !@print.pending_payment? && !@print.scheduled?
-      raise 'This print is readonly!'
+      fail 'This print is readonly!'
     end
   end
 
@@ -89,7 +89,7 @@ class PrintsController < ApplicationController
     @print = prints_scope.find(params[:id])
 
     if !@print.pending_payment? && !@print.scheduled?
-      raise 'This print is readonly!'
+      fail 'This print is readonly!'
     end
 
     respond_to do |format|

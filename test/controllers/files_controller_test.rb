@@ -36,14 +36,13 @@ class FilesControllerTest < ActionController::TestCase
 
     file = @document.file.path
 
-    FileUtils.rm file if File.exists?(file)
+    FileUtils.rm file if File.exist?(file)
 
-    assert !File.exists?(file)
+    assert !File.exist?(file)
     get :download, path: drop_private_dir(file)
     assert_redirected_to prints_url
     assert_equal I18n.t('view.documents.non_existent'), flash.notice
   end
-
 
   test 'should download barcode' do
     UserSession.create(@operator)
@@ -66,7 +65,7 @@ class FilesControllerTest < ActionController::TestCase
   test 'should not download original document' do
     CustomerSession.create(customers(:student))
 
-    assert File.exists?(@document.file.path)
+    assert File.exist?(@document.file.path)
     get :download, path: drop_private_dir(@document.file.path)
     assert_redirected_to catalog_url
     assert_equal I18n.t('view.documents.non_existent'), flash.notice
@@ -76,9 +75,9 @@ class FilesControllerTest < ActionController::TestCase
     CustomerSession.create(customers(:student))
 
     file = @document.file.pdf_thumb.path
-    FileUtils.rm file if File.exists?(file)
+    FileUtils.rm file if File.exist?(file)
 
-    assert !File.exists?(file)
+    assert !File.exist?(file)
     get :download, path: drop_private_dir(file)
     assert_redirected_to catalog_url
     assert_equal I18n.t('view.documents.non_existent'), flash.notice
@@ -89,9 +88,9 @@ class FilesControllerTest < ActionController::TestCase
 
     file = @operator.avatar.path
 
-    FileUtils.rm file if File.exists?(file)
+    FileUtils.rm file if File.exist?(file)
 
-    assert !File.exists?(file)
+    assert !File.exist?(file)
     get :download, path: drop_private_dir(file)
     assert_redirected_to users_url
     assert_equal I18n.t('view.users.non_existent_avatar'), flash.notice

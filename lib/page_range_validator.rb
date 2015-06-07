@@ -1,6 +1,8 @@
 class PageRangeValidator < ActiveModel::EachValidator
   def validate_each(record, attr, value)
-    valid_ranges, ranges_overlapped, max_page = true, false, nil
+    valid_ranges = true
+    ranges_overlapped = false
+    max_page = nil
     ranges = (value || '').strip.split(/\s*,\s*/).sort do |r1, r2|
       r1.match(/^\d+/).to_s.to_i <=> r2.match(/^\d+/).to_s.to_i
     end
@@ -8,8 +10,8 @@ class PageRangeValidator < ActiveModel::EachValidator
     record.send(:"#{attr}=", ranges.join(','))
 
     record.extract_ranges.each do |r|
-      n1 = r.kind_of?(Array) ? r[0] : r
-      n2 = r[1] if r.kind_of?(Array)
+      n1 = r.is_a?(Array) ? r[0] : r
+      n2 = r[1] if r.is_a?(Array)
 
       valid_ranges &&= n1 && n1 > 0 && (n2.blank? || n1 < n2)
       ranges_overlapped ||= max_page && valid_ranges && max_page >= n1

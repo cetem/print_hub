@@ -6,9 +6,9 @@ class PrintJobTest < ActiveSupport::TestCase
   def setup
     @print_job = print_jobs(:math_job_1)
 
-    @printer = Cups.show_destinations.select {|p| p =~ /pdf/i}.first
+    @printer = Cups.show_destinations.find { |p| p =~ /pdf/i }
 
-    raise "Can't find a PDF printer to run tests with." unless @printer
+    fail "Can't find a PDF printer to run tests with." unless @printer
 
     prepare_document_files
   end
@@ -20,7 +20,7 @@ class PrintJobTest < ActiveSupport::TestCase
     assert_equal print_jobs(:math_job_1).copies, @print_job.copies
     assert_equal print_jobs(:math_job_1).pages, @print_job.pages
     assert_equal print_jobs(:math_job_1).price_per_copy,
-      @print_job.price_per_copy
+                 @print_job.price_per_copy
     assert_equal print_jobs(:math_job_1).range, @print_job.range
     assert_equal print_jobs(:math_job_1).two_sided, @print_job.two_sided
     assert_equal print_jobs(:math_job_1).document_id, @print_job.document_id
@@ -29,72 +29,66 @@ class PrintJobTest < ActiveSupport::TestCase
 
   # Prueba la creación de un trabajo de impresión
   test 'create with document' do
-    document = Document.find(documents(:math_book).id);
+    document = Document.find(documents(:math_book).id)
 
     assert_difference 'PrintJob.count' do
-      @print_job = PrintJob.create({
-        copies: 2,
-        pages: document.pages,
-        price_per_copy: 0.10,
-        range: nil,
-        print_job_type_id: print_job_types(:color).id,
-        job_id: 1,
-        print_id: prints(:math_print).id,
-        document_id: document.id
-      })
+      @print_job = PrintJob.create(copies: 2,
+                                   pages: document.pages,
+                                   price_per_copy: 0.10,
+                                   range: nil,
+                                   print_job_type_id: print_job_types(:color).id,
+                                   job_id: 1,
+                                   print_id: prints(:math_print).id,
+                                   document_id: document.id)
     end
 
     assert @print_job.reload.two_sided == false
     assert_equal document.pages * 2, @print_job.printed_pages
     # El precio por copia no se puede alterar
     assert_equal '%.2f' % @print_job.print_job_type.price,
-      '%.2f' % @print_job.price_per_copy
+                 '%.2f' % @print_job.price_per_copy
   end
 
   # Prueba la creación de un trabajo de impresión
   test 'create with file' do
     assert_difference 'PrintJob.count' do
-      @print_job = PrintJob.create({
-        copies: 2,
-        pages: 1,
-        price_per_copy: 0.10,
-        range: nil,
-        print_job_type_id: print_job_types(:color).id,
-        file_line_id: file_lines(:for_tomorrow_cv_file).id
-      })
+      @print_job = PrintJob.create(copies: 2,
+                                   pages: 1,
+                                   price_per_copy: 0.10,
+                                   range: nil,
+                                   print_job_type_id: print_job_types(:color).id,
+                                   file_line_id: file_lines(:for_tomorrow_cv_file).id)
     end
 
     assert @print_job.reload.two_sided == false
     assert_equal 2, @print_job.printed_pages
     assert_equal '%.2f' % @print_job.print_job_type.price,
-      '%.2f' % @print_job.price_per_copy
+                 '%.2f' % @print_job.price_per_copy
   end
   # Prueba la creación de un trabajo de impresión
   test 'create without document' do
     assert_difference 'PrintJob.count' do
-      @print_job = PrintJob.create({
-        copies: 1,
-        pages: 50,
-        price_per_copy: 1111,
-        range: nil,
-        print_job_type_id: print_job_types(:a4).id,
-        job_id: 1,
-        print_id: prints(:math_print).id
-      })
+      @print_job = PrintJob.create(copies: 1,
+                                   pages: 50,
+                                   price_per_copy: 1111,
+                                   range: nil,
+                                   print_job_type_id: print_job_types(:a4).id,
+                                   job_id: 1,
+                                   print_id: prints(:math_print).id)
     end
 
     assert_equal '5.0', @print_job.price.to_s
     assert_equal 50, @print_job.printed_pages
     # El precio por copia no se puede alterar
     assert_equal '%.2f' % @print_job.print_job_type.price,
-      '%.2f' % @print_job.price_per_copy
+                 '%.2f' % @print_job.price_per_copy
   end
 
   # Prueba de actualización de un trabajo de impresión
   test 'update' do
     assert_no_difference 'PrintJob.count' do
       assert @print_job.update(copies: 20),
-        @print_job.errors.full_messages.join('; ')
+             @print_job.errors.full_messages.join('; ')
     end
 
     # No se puede modificar ningún atributo
@@ -115,9 +109,9 @@ class PrintJobTest < ActiveSupport::TestCase
     assert @print_job.invalid?
     assert_equal 4, @print_job.errors.count
     assert_equal [error_message_from_model(@print_job, :copies, :blank)],
-      @print_job.errors[:copies]
+                 @print_job.errors[:copies]
     assert_equal [error_message_from_model(@print_job, :pages, :blank)],
-      @print_job.errors[:pages]
+                 @print_job.errors[:pages]
     assert_equal [
       error_message_from_model(@print_job, :printed_copies, :blank)
     ], @print_job.errors[:printed_copies]
@@ -175,10 +169,10 @@ class PrintJobTest < ActiveSupport::TestCase
     assert @print_job.invalid?
     assert_equal 3, @print_job.errors.count
     assert_equal [error_message_from_model(@print_job, :range, :too_long,
-        count: 255), error_message_from_model(@print_job, :range,
-        :invalid)].sort, @print_job.errors[:range].sort
+                                           count: 255), error_message_from_model(@print_job, :range,
+                                                                                 :invalid)].sort, @print_job.errors[:range].sort
     assert_equal [error_message_from_model(@print_job, :job_id, :too_long,
-        count: 255)], @print_job.errors[:job_id]
+                                           count: 255)], @print_job.errors[:job_id]
   end
 
   test 'validates correct range of attributes' do
@@ -189,15 +183,15 @@ class PrintJobTest < ActiveSupport::TestCase
     assert @print_job.invalid?
     assert_equal 4, @print_job.errors.count
     assert_equal [error_message_from_model(@print_job, :copies, :greater_than,
-        count: 0)], @print_job.errors[:copies]
+                                           count: 0)], @print_job.errors[:copies]
     assert_equal [error_message_from_model(@print_job, :pages, :greater_than,
-        count: 0)], @print_job.errors[:pages]
+                                           count: 0)], @print_job.errors[:pages]
     assert_equal [error_message_from_model(@print_job, :printed_copies,
-        :greater_than_or_equal_to, count: 0)
-    ], @print_job.errors[:printed_copies]
+                                           :greater_than_or_equal_to, count: 0)
+                 ], @print_job.errors[:printed_copies]
     assert_equal [error_message_from_model(@print_job, :price_per_copy,
-        :greater_than_or_equal_to, count: 0)
-    ], @print_job.errors[:price_per_copy]
+                                           :greater_than_or_equal_to, count: 0)
+                 ], @print_job.errors[:price_per_copy]
 
     @print_job.reload
     @print_job.copies = '2147483648'
@@ -207,17 +201,17 @@ class PrintJobTest < ActiveSupport::TestCase
     assert_equal 3, @print_job.errors.count
     assert_equal [
       error_message_from_model(
-        @print_job, :copies, :less_than, count: 2147483648
+        @print_job, :copies, :less_than, count: 2_147_483_648
       )
     ], @print_job.errors[:copies]
     assert_equal [
       error_message_from_model(
-        @print_job, :pages, :less_than, count: 2147483648
+        @print_job, :pages, :less_than, count: 2_147_483_648
       )
     ], @print_job.errors[:pages]
     assert_equal [
       error_message_from_model(
-        @print_job, :printed_copies, :less_than, count: 2147483648
+        @print_job, :printed_copies, :less_than, count: 2_147_483_648
       )
     ], @print_job.errors[:printed_copies]
   end
@@ -228,31 +222,31 @@ class PrintJobTest < ActiveSupport::TestCase
     assert @print_job.invalid?
     assert_equal 1, @print_job.errors.count
     assert_equal [error_message_from_model(@print_job, :range, :invalid)],
-      @print_job.errors[:range]
+                 @print_job.errors[:range]
 
     @print_job.range = '0'
     assert @print_job.invalid?
     assert_equal 1, @print_job.errors.count
     assert_equal [error_message_from_model(@print_job, :range, :invalid)],
-      @print_job.errors[:range]
+                 @print_job.errors[:range]
 
     @print_job.range = '1-'
     assert @print_job.invalid?
     assert_equal 1, @print_job.errors.count
     assert_equal [error_message_from_model(@print_job, :range, :invalid)],
-      @print_job.errors[:range]
+                 @print_job.errors[:range]
 
     @print_job.range = '1, 2-'
     assert @print_job.invalid?
     assert_equal 1, @print_job.errors.count
     assert_equal [error_message_from_model(@print_job, :range, :invalid)],
-      @print_job.errors[:range]
+                 @print_job.errors[:range]
 
     @print_job.range = '2x, 10'
     assert @print_job.invalid?
     assert_equal 1, @print_job.errors.count
     assert_equal [error_message_from_model(@print_job, :range, :invalid)],
-      @print_job.errors[:range]
+                 @print_job.errors[:range]
   end
 
   # Prueba que las validaciones del modelo se cumplan como es esperado
@@ -261,7 +255,7 @@ class PrintJobTest < ActiveSupport::TestCase
     assert @print_job.invalid?
     assert_equal 1, @print_job.errors.count
     assert_equal [error_message_from_model(@print_job, :range, :overlapped)],
-      @print_job.errors[:range]
+                 @print_job.errors[:range]
   end
 
   # Prueba que las validaciones del modelo se cumplan como es esperado
@@ -270,7 +264,7 @@ class PrintJobTest < ActiveSupport::TestCase
     assert @print_job.invalid?
     assert_equal 1, @print_job.errors.count
     assert_equal [error_message_from_model(@print_job, :range, :too_long,
-        count: @print_job.pages)], @print_job.errors[:range]
+                                           count: @print_job.pages)], @print_job.errors[:range]
   end
 
   test 'options' do
@@ -414,9 +408,9 @@ class PrintJobTest < ActiveSupport::TestCase
   end
 
   test 'cancel print' do
-    canceled_count = Cups.all_jobs(@printer).select do |_, j|
+    canceled_count = Cups.all_jobs(@printer).count do |_, j|
       j[:state] == :cancelled
-    end.size
+    end
 
     assert_difference 'Cups.all_jobs(@printer).keys.sort.last || 0' do
       @print_job.job_hold_until = 'indefinite'
@@ -426,18 +420,18 @@ class PrintJobTest < ActiveSupport::TestCase
 
     assert @print_job.cancel
 
-    new_canceled_count = Cups.all_jobs(@printer).select do |_, j|
+    new_canceled_count = Cups.all_jobs(@printer).count do |_, j|
       j[:state] == :cancelled
-    end.size
+    end
 
     assert_equal canceled_count, new_canceled_count - 1
 
     # Se rotorna false cuando no se puede cancelar el trabajo por algún error
     assert !@print_job.cancel
 
-    new_canceled_count = Cups.all_jobs(@printer).select do |_, j|
+    new_canceled_count = Cups.all_jobs(@printer).count do |_, j|
       j[:state] == :cancelled
-    end.size
+    end
 
     assert_equal canceled_count, new_canceled_count - 1
   end

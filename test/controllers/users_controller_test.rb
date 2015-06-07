@@ -81,7 +81,6 @@ class UsersControllerTest < ActionController::TestCase
     assert_equal 'Updated name', @operator.reload.name
   end
 
-
   test 'should get autocomplete user list' do
     get :autocomplete_for_user_name, format: :json, q: 'operator'
     assert_response :success
@@ -116,7 +115,7 @@ class UsersControllerTest < ActionController::TestCase
 
     assert_difference 'pending_shifts.count', -pending_shifts.count do
       put :pay_shifts_between, format: :json,
-        id: user.to_param, start: start.to_s(:db), finish: finish.to_s(:db)
+                               id: user.to_param, start: start.to_s(:db), finish: finish.to_s(:db)
       assert_response :success
     end
   end
@@ -139,7 +138,7 @@ class UsersControllerTest < ActionController::TestCase
     users_shifts = User.pay_pending_shifts_for_active_users_between(from, to).first
 
     get :pay_pending_shifts_for_active_users_between, format: :json,
-      start: from.to_s(:db), finish: to.to_s(:db)
+                                                      start: from.to_s(:db), finish: to.to_s(:db)
 
     assert_response :success
 

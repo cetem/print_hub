@@ -17,7 +17,7 @@ class DocumentsTest < ActionDispatch::IntegrationTest
       fill_in Document.human_attribute_name('name'), with: 'Test'
       select('A4', from: Document.human_attribute_name('media'))
       fill_in Document.human_attribute_name('description'),
-        with: 'Testing upload a pdf'
+              with: 'Testing upload a pdf'
       file = File.join(Rails.root, 'test', 'fixtures', 'files', 'test.pdf')
       attach_file(Document.human_attribute_name('file'), file)
       fill_in 'autocomplete_tag_tag_NEW_RECORD', with: draft_tag.name
@@ -52,7 +52,7 @@ class DocumentsTest < ActionDispatch::IntegrationTest
     tag = unused_book.tags.first
 
     within 'table tbody' do
-      assert_difference ["Document.count", 'tag.reload.documents_count'], -1 do
+      assert_difference ['Document.count', 'tag.reload.documents_count'], -1 do
         find("a[href*=\"/#{unused_book.id}\"][data-method='delete']").click
         sleep(1)
         page.driver.browser.switch_to.alert.accept
@@ -77,7 +77,7 @@ class DocumentsTest < ActionDispatch::IntegrationTest
     first_tag = math_book.tags.first
 
     within 'form' do
-      assert_difference "Document.find(math_book).tags.count", -1 do
+      assert_difference 'Document.find(math_book).tags.count', -1 do
         assert_difference 'first_tag.reload.documents_count', -1 do
           within "div#tag_#{first_tag.id}" do
             first(:css, '[data-event=removeItem]').click

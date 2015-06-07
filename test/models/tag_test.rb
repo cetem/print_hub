@@ -25,7 +25,7 @@ class TagTest < ActiveSupport::TestCase
   test 'update' do
     assert_no_difference 'Tag.count' do
       assert @tag.update(name: 'Updated name'),
-        @tag.errors.full_messages.join('; ')
+             @tag.errors.full_messages.join('; ')
     end
 
     assert_equal 'Updated name', @tag.reload.name
@@ -51,7 +51,7 @@ class TagTest < ActiveSupport::TestCase
     assert @tag.invalid?
     assert_equal 1, @tag.errors.count
     assert_equal [error_message_from_model(@tag, :name, :blank)],
-      @tag.errors[:name]
+                 @tag.errors[:name]
   end
 
   # Prueba que las validaciones del modelo se cumplan como es esperado
@@ -60,7 +60,7 @@ class TagTest < ActiveSupport::TestCase
     assert @tag.invalid?
     assert_equal 1, @tag.errors.count
     assert_equal [error_message_from_model(@tag, :name, :taken)],
-      @tag.errors[:name]
+                 @tag.errors[:name]
   end
 
   # Prueba que las validaciones del modelo se cumplan como es esperado
@@ -69,7 +69,7 @@ class TagTest < ActiveSupport::TestCase
     assert @tag.invalid?
     assert_equal 1, @tag.errors.count
     assert_equal [error_message_from_model(@tag, :name, :too_long,
-      count: 255)], @tag.errors[:name]
+                                           count: 255)], @tag.errors[:name]
   end
 
   test 'update name in related documents' do

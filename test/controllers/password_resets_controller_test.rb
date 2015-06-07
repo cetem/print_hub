@@ -1,7 +1,6 @@
 require 'test_helper'
 
 class PasswordResetsControllerTest < ActionController::TestCase
-
   def setup
     @customer = customers(:student)
     @request.host = "#{APP_CONFIG['subdomains']['customers']}.printhub.local"
@@ -19,7 +18,7 @@ class PasswordResetsControllerTest < ActionController::TestCase
       post :create, email: @customer.email
       assert_redirected_to new_customer_session_url
       assert_equal I18n.t('view.password_resets.instructions_delivered'),
-        flash.notice
+                   flash.notice
     end
   end
 
@@ -40,7 +39,6 @@ class PasswordResetsControllerTest < ActionController::TestCase
     assert_select '#unexpected_error', false
     assert_template 'password_resets/edit'
   end
-
 
   test 'should get edit with wrong token' do
     get :edit, token: 'wrong_token'

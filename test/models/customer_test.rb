@@ -16,9 +16,9 @@ class CustomerTest < ActiveSupport::TestCase
     assert_equal customers(:student).lastname, @customer.lastname
     assert_equal customers(:student).identification, @customer.identification
     assert_equal customers(:student).free_monthly_bonus,
-      @customer.free_monthly_bonus
+                 @customer.free_monthly_bonus
     assert_equal customers(:student).bonus_without_expiration,
-      @customer.bonus_without_expiration
+                 @customer.bonus_without_expiration
   end
 
   # Prueba la creación de un cliente
@@ -28,16 +28,14 @@ class CustomerTest < ActiveSupport::TestCase
       assert_difference 'Customer.count' do
         assert_no_difference 'Bonus.count' do
           @customer = Customer.create(
-            {
-              name: 'Jar Jar',
-              lastname: 'Binks',
-              identification: '111',
-              email: 'jar_jar@printhub.com',
-              password: 'jarjar123',
-              password_confirmation: 'jarjar123',
-              free_monthly_bonus: nil,
-              bonus_without_expiration: false
-            }
+            name: 'Jar Jar',
+            lastname: 'Binks',
+            identification: '111',
+            email: 'jar_jar@printhub.com',
+            password: 'jarjar123',
+            password_confirmation: 'jarjar123',
+            free_monthly_bonus: nil,
+            bonus_without_expiration: false
           )
         end
       end
@@ -49,16 +47,14 @@ class CustomerTest < ActiveSupport::TestCase
     assert_difference 'Sidekiq::Extensions::DelayedMailer.jobs.size' do
       assert_difference ['Customer.count', 'Bonus.count'] do
         @customer = Customer.create(
-          {
-            name: 'Jar Jar',
-            lastname: 'Binks',
-            identification: '111',
-            email: 'jar_jar@printhub.com',
-            password: 'jarjar123',
-            password_confirmation: 'jarjar123',
-            free_monthly_bonus: 10.0,
-            bonus_without_expiration: false
-          }
+          name: 'Jar Jar',
+          lastname: 'Binks',
+          identification: '111',
+          email: 'jar_jar@printhub.com',
+          password: 'jarjar123',
+          password_confirmation: 'jarjar123',
+          free_monthly_bonus: 10.0,
+          bonus_without_expiration: false
         )
       end
     end
@@ -75,15 +71,13 @@ class CustomerTest < ActiveSupport::TestCase
         ['Customer.count', 'Customer.reliables.count']
       ) do
         @customer = Customer.create(
-          {
-            name: 'Jar Jar',
-            lastname: 'Binks',
-            identification: '111',
-            email: 'jar_jar@printhub.com',
-            password: 'jarjar123',
-            password_confirmation: 'jarjar123',
-            kind: Customer::KINDS[:reliable]
-          }
+          name: 'Jar Jar',
+          lastname: 'Binks',
+          identification: '111',
+          email: 'jar_jar@printhub.com',
+          password: 'jarjar123',
+          password_confirmation: 'jarjar123',
+          kind: Customer::KINDS[:reliable]
         )
       end
     end
@@ -94,15 +88,13 @@ class CustomerTest < ActiveSupport::TestCase
   test 'no create bonus without admin role' do
     assert_difference 'Customer.count' do
       assert_no_difference 'Bonus.count' do
-        @customer = Customer.create({
-          name: 'Jar Jar',
-          lastname: 'Binks',
-          identification: '111',
-          email: 'jar_jar@printhub.com',
-          password: 'jarjar123',
-          password_confirmation: 'jarjar123',
-          bonus_without_expiration: false
-        })
+        @customer = Customer.create(name: 'Jar Jar',
+                                    lastname: 'Binks',
+                                    identification: '111',
+                                    email: 'jar_jar@printhub.com',
+                                    password: 'jarjar123',
+                                    password_confirmation: 'jarjar123',
+                                    bonus_without_expiration: false)
       end
     end
   end
@@ -137,11 +129,11 @@ class CustomerTest < ActiveSupport::TestCase
     assert @customer.invalid?
     assert_equal 3, @customer.errors.count
     assert_equal [error_message_from_model(@customer, :name, :blank)],
-      @customer.errors[:name]
+                 @customer.errors[:name]
     assert_equal [error_message_from_model(@customer, :identification, :blank)],
-      @customer.errors[:identification]
+                 @customer.errors[:identification]
     assert_equal [I18n.t('authlogic.error_messages.email_invalid')],
-      @customer.errors[:email]
+                 @customer.errors[:email]
   end
 
   # Prueba que las validaciones del modelo se cumplan como es esperado
@@ -153,11 +145,11 @@ class CustomerTest < ActiveSupport::TestCase
     assert @customer.invalid?
     assert_equal 3, @customer.errors.count
     assert_equal [error_message_from_model(@customer, :identification, :taken)],
-      @customer.errors[:identification]
+                 @customer.errors[:identification]
     assert_equal [error_message_from_model(@customer, :name, :taken)],
-      @customer.errors[:name]
+                 @customer.errors[:name]
     assert_equal [error_message_from_model(@customer, :email, :taken)],
-      @customer.errors[:email]
+                 @customer.errors[:email]
   end
 
   # Prueba que las validaciones del modelo se cumplan como es esperado
@@ -169,13 +161,13 @@ class CustomerTest < ActiveSupport::TestCase
     assert @customer.invalid?
     assert_equal 4, @customer.errors.count
     assert_equal [error_message_from_model(@customer, :name, :too_long,
-        count: 255)], @customer.errors[:name]
+                                           count: 255)], @customer.errors[:name]
     assert_equal [error_message_from_model(@customer, :lastname, :too_long,
-        count: 255)], @customer.errors[:lastname]
+                                           count: 255)], @customer.errors[:lastname]
     assert_equal [error_message_from_model(@customer, :identification,
-        :too_long, count: 255)], @customer.errors[:identification]
+                                           :too_long, count: 255)], @customer.errors[:identification]
     assert_equal [error_message_from_model(@customer, :email, :too_long,
-        count: 255)], @customer.errors[:email]
+                                           count: 255)], @customer.errors[:email]
   end
 
   # Prueba que las validaciones del modelo se cumplan como es esperado
@@ -188,7 +180,7 @@ class CustomerTest < ActiveSupport::TestCase
       error_message_from_model(@customer, :free_monthly_bonus, :not_a_number)
     ], @customer.errors[:free_monthly_bonus]
     assert_equal [I18n.t('authlogic.error_messages.email_invalid')],
-      @customer.errors[:email]
+                 @customer.errors[:email]
   end
 
   # Prueba que las validaciones del modelo se cumplan como es esperado
@@ -209,13 +201,13 @@ class CustomerTest < ActiveSupport::TestCase
     assert @customer.invalid?
     assert_equal 1, @customer.errors.count
     assert_equal [error_message_from_model(@customer, :kind, :inclusion)],
-      @customer.errors[:kind]
+                 @customer.errors[:kind]
 
     @customer.kind = Customer::KINDS.values.sort.last.next
     assert @customer.invalid?
     assert_equal 1, @customer.errors.count
     assert_equal [error_message_from_model(@customer, :kind, :inclusion)],
-      @customer.errors[:kind]
+                 @customer.errors[:kind]
   end
 
   test 'deliver password reset instructions' do
@@ -278,7 +270,7 @@ class CustomerTest < ActiveSupport::TestCase
   test 'use credit' do
     # Usa el crédito que tiene disponible (comienza con [500.0, 500.0])
     assert_equal '0',
-      @customer.use_credit(100, 'student123').to_s
+                 @customer.use_credit(100, 'student123').to_s
     assert_equal '900.0', @customer.reload.free_credit.to_s
     # Crédito [400, 500]
 
@@ -292,22 +284,22 @@ class CustomerTest < ActiveSupport::TestCase
     # Crédito [1000, 400, 500]
     # Usa primero el crédito más próximo a vencer
     assert_equal '0',
-      @customer.use_credit(200, 'student123').to_s
+                 @customer.use_credit(200, 'student123').to_s
     assert_equal '1700.0', @customer.free_credit.to_s
     assert_equal ['400.0', '500.0', '800.0'],
-      @customer.credits.valids.map(&:remaining).map(&:to_s).sort
+                 @customer.credits.valids.map(&:remaining).map(&:to_s).sort
     # Pagar más de lo que se puede con crédito
     assert_equal '300.0',
-      @customer.use_credit(2000, 'student123').to_s
+                 @customer.use_credit(2000, 'student123').to_s
     assert_equal '0.0', @customer.free_credit.to_s
     # Intentar pagar sin crédito
     assert_equal '100.0',
-      @customer.use_credit(100, 'student123').to_s
+                 @customer.use_credit(100, 'student123').to_s
   end
 
   test 'can not use credit with wrong password' do
     assert_equal false,
-      @customer.use_credit(100, 'wrong_password')
+                 @customer.use_credit(100, 'wrong_password')
     assert_equal '1000.0', @customer.free_credit.to_s
   end
 
@@ -351,7 +343,7 @@ class CustomerTest < ActiveSupport::TestCase
 
     assert_difference '@customer.months_to_pay.size', -1 do
       assert @customer.pay_month_debt(date),
-        @customer.errors.full_messages.join(', ')
+             @customer.errors.full_messages.join(', ')
     end
 
     current_date = [[Date.today.month, Date.today.year]]

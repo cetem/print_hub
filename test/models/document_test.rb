@@ -30,17 +30,15 @@ class DocumentTest < ActiveSupport::TestCase
         'application/pdf'
       )
 
-      @document = Document.new({
-        code: '00001234',
-        name: 'New name',
-        stock: 1,
-        pages: 5,
-        media: PrintJobType::MEDIA_TYPES.values.first,
-        description: 'New description',
-        enable: true,
-        tag_ids: [tags(:books).id, tags(:notes).id],
-        file: file
-      })
+      @document = Document.new(code: '00001234',
+                               name: 'New name',
+                               stock: 1,
+                               pages: 5,
+                               media: PrintJobType::MEDIA_TYPES.values.first,
+                               description: 'New description',
+                               enable: true,
+                               tag_ids: [tags(:books).id, tags(:notes).id],
+                               file: file)
 
       assert @document.save
     end
@@ -53,7 +51,7 @@ class DocumentTest < ActiveSupport::TestCase
     assert_equal 3, thumbs_dir.entries.reject(&:directory?).size
     # Asegurar que las 2 miniaturas son imágenes y no están vacías
     assert_equal 2,
-      thumbs_dir.entries.select { |f| f.extname == '.png' && !f.zero? }.size
+                 thumbs_dir.entries.count { |f| f.extname == '.png' && !f.zero? }
 
     # Asegurar la "limpieza" del directorio
     Pathname.new(@document.file.path).dirname.rmtree
@@ -62,16 +60,14 @@ class DocumentTest < ActiveSupport::TestCase
   # Prueba la creación de un documento con múltiples páginas
   test 'create a multipage document' do
     assert_difference 'Document.count' do
-      @document = Document.new({
-        code: '00001234',
-        name: 'New name',
-        stock: 1,
-        pages: 1,
-        media: PrintJobType::MEDIA_TYPES.values.first,
-        enable: true,
-        description: 'New description',
-        tag_ids: [tags(:books).id, tags(:notes).id]
-      })
+      @document = Document.new(code: '00001234',
+                               name: 'New name',
+                               stock: 1,
+                               pages: 1,
+                               media: PrintJobType::MEDIA_TYPES.values.first,
+                               enable: true,
+                               description: 'New description',
+                               tag_ids: [tags(:books).id, tags(:notes).id])
 
       @document.file = Rack::Test::UploadedFile.new(
         File.join(Rails.root, 'test', 'fixtures', 'files', 'multipage_test.pdf'),
@@ -88,7 +84,7 @@ class DocumentTest < ActiveSupport::TestCase
     assert_equal 7, thumbs_dir.entries.reject(&:directory?).size
     # Asegurar que las 6 miniaturas son imágenes y no están vacías
     assert_equal 6,
-      thumbs_dir.entries.select { |f| f.extname == '.png' && !f.zero? }.size
+                 thumbs_dir.entries.count { |f| f.extname == '.png' && !f.zero? }
 
     # Asegurar la "limpieza" del directorio
     Pathname.new(@document.file.path).dirname.rmtree
@@ -98,7 +94,7 @@ class DocumentTest < ActiveSupport::TestCase
   test 'update' do
     assert_no_difference 'Document.count' do
       assert @document.update(name: 'Updated name'),
-        @document.errors.full_messages.join('; ')
+             @document.errors.full_messages.join('; ')
     end
 
     assert_equal 'Updated name', @document.reload.name
@@ -115,7 +111,7 @@ class DocumentTest < ActiveSupport::TestCase
 
     assert_no_difference 'Document.count' do
       assert @document.update(file: file),
-        @document.errors.full_messages.join('; ')
+             @document.errors.full_messages.join('; ')
     end
 
     assert_equal 3, @document.reload.pages
@@ -130,7 +126,7 @@ class DocumentTest < ActiveSupport::TestCase
 
     assert_no_difference 'Document.count' do
       assert @document.update(file: file),
-        @document.errors.full_messages.join('; ')
+             @document.errors.full_messages.join('; ')
     end
 
     assert_equal 1, @document.reload.pages
@@ -166,31 +162,29 @@ class DocumentTest < ActiveSupport::TestCase
     assert @document.invalid?
     assert_equal 4, @document.errors.count
     assert_equal [error_message_from_model(@document, :code, :blank)],
-      @document.errors[:code]
+                 @document.errors[:code]
     assert_equal [error_message_from_model(@document, :name, :blank)],
-      @document.errors[:name]
+                 @document.errors[:name]
     assert_equal [error_message_from_model(@document, :media, :blank)],
-      @document.errors[:media]
+                 @document.errors[:media]
     assert_equal [error_message_from_model(@document, :pages, :blank)],
-      @document.errors[:pages]
+                 @document.errors[:pages]
   end
 
   test 'validate not blank file' do
-    @document = Document.new({
-        code: '00001234',
-        name: 'New name',
-        stock: 1,
-        pages: 5,
-        media: PrintJobType::MEDIA_TYPES.values.first,
-        description: 'New description',
-        enable: true,
-        tag_ids: [tags(:books).id, tags(:notes).id],
-      })
+    @document = Document.new(code: '00001234',
+                             name: 'New name',
+                             stock: 1,
+                             pages: 5,
+                             media: PrintJobType::MEDIA_TYPES.values.first,
+                             description: 'New description',
+                             enable: true,
+                             tag_ids: [tags(:books).id, tags(:notes).id])
 
     assert @document.invalid?
     assert_equal 1, @document.errors.size
     assert_equal [error_message_from_model(@document, :file, :blank)],
-      @document.errors[:file]
+                 @document.errors[:file]
   end
 
   # Prueba que las validaciones del modelo se cumplan como es esperado
@@ -199,7 +193,7 @@ class DocumentTest < ActiveSupport::TestCase
     assert @document.invalid?
     assert_equal 1, @document.errors.count
     assert_equal [error_message_from_model(@document, :code, :taken)],
-      @document.errors[:code]
+                 @document.errors[:code]
 
     @document.enable = false
     assert @document.valid?
@@ -212,10 +206,10 @@ class DocumentTest < ActiveSupport::TestCase
     assert @document.invalid?
     assert_equal 3, @document.errors.count
     assert_equal [error_message_from_model(@document, :name, :too_long,
-      count: 255)], @document.errors[:name]
+                                           count: 255)], @document.errors[:name]
     assert_equal [error_message_from_model(@document, :media, :too_long,
-      count: 255), error_message_from_model(@document, :media,
-      :inclusion)].sort, @document.errors[:media].sort
+                                           count: 255), error_message_from_model(@document, :media,
+                                                                                 :inclusion)].sort, @document.errors[:media].sort
   end
 
   # Prueba que las validaciones del modelo se cumplan como es esperado
@@ -224,7 +218,7 @@ class DocumentTest < ActiveSupport::TestCase
     assert @document.invalid?
     assert_equal 1, @document.errors.count
     assert_equal [error_message_from_model(@document, :media, :inclusion)],
-      @document.errors[:media]
+                 @document.errors[:media]
   end
 
   # Prueba que las validaciones del modelo se cumplan como es esperado
@@ -235,11 +229,11 @@ class DocumentTest < ActiveSupport::TestCase
     assert @document.invalid?
     assert_equal 3, @document.errors.count
     assert_equal [error_message_from_model(@document, :pages, :not_a_number)],
-      @document.errors[:pages]
+                 @document.errors[:pages]
     assert_equal [error_message_from_model(@document, :code, :not_a_number)],
-      @document.errors[:code]
+                 @document.errors[:code]
     assert_equal [error_message_from_model(@document, :stock, :not_a_number)],
-      @document.errors[:stock]
+                 @document.errors[:stock]
 
     @document.pages = '41.23'
     @document.code = '41.23'
@@ -247,11 +241,11 @@ class DocumentTest < ActiveSupport::TestCase
     assert @document.invalid?
     assert_equal 3, @document.errors.count
     assert_equal [error_message_from_model(@document, :pages, :not_an_integer)],
-      @document.errors[:pages]
+                 @document.errors[:pages]
     assert_equal [error_message_from_model(@document, :code, :not_an_integer)],
-      @document.errors[:code]
+                 @document.errors[:code]
     assert_equal [error_message_from_model(@document, :stock, :not_an_integer)],
-      @document.errors[:stock]
+                 @document.errors[:stock]
 
     @document.pages = '0'
     @document.code = '0'
@@ -259,9 +253,9 @@ class DocumentTest < ActiveSupport::TestCase
     assert @document.invalid?
     assert_equal 3, @document.errors.count
     assert_equal [error_message_from_model(@document, :pages, :greater_than,
-        count: 0)], @document.errors[:pages]
+                                           count: 0)], @document.errors[:pages]
     assert_equal [error_message_from_model(@document, :code, :greater_than,
-        count: 0)], @document.errors[:code]
+                                           count: 0)], @document.errors[:code]
     assert_equal [
       error_message_from_model(
         @document, :stock, :greater_than_or_equal_to, count: 0
@@ -274,13 +268,13 @@ class DocumentTest < ActiveSupport::TestCase
     assert @document.invalid?
     assert_equal 3, @document.errors.count
     assert_equal [
-      error_message_from_model(@document, :pages, :less_than, count: 2147483648)
+      error_message_from_model(@document, :pages, :less_than, count: 2_147_483_648)
     ], @document.errors[:pages]
     assert_equal [
-      error_message_from_model(@document, :code, :less_than, count: 2147483648)
+      error_message_from_model(@document, :code, :less_than, count: 2_147_483_648)
     ], @document.errors[:code]
     assert_equal [
-      error_message_from_model(@document, :stock, :less_than, count: 2147483648)
+      error_message_from_model(@document, :stock, :less_than, count: 2_147_483_648)
     ], @document.errors[:stock]
   end
 

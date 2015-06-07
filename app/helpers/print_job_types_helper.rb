@@ -4,16 +4,16 @@ module PrintJobTypesHelper
     custom_name = name ? { name: "#{name}[print_job_type_id]" } : {}
 
     form.input :print_job_type_id, collection: collection, prompt: false,
-      selected: form.object.print_job_type_id || PrintJobType.default.try(:id),
-      label: false, input_html: {
-        class: 'span10 page-modifier price-modifier',
-      }.merge(custom_name)
+                                   selected: form.object.print_job_type_id || PrintJobType.default.try(:id),
+                                   label: false, input_html: {
+                                     class: 'span10 page-modifier price-modifier'
+                                   }.merge(custom_name)
   end
 
   def print_job_types_with_price_for_data
     type_with_price = {}
     PrintJobType.all.each do |pjt|
-      type_with_price.merge!({ pjt.id => pjt.price })
+      type_with_price.merge!(pjt.id => pjt.price)
     end
 
     type_with_price.to_json
@@ -22,7 +22,7 @@ module PrintJobTypesHelper
   def print_job_types_for_data_pages
     types = {}
 
-    PrintJobType.all.each { |pjt| types.merge!({ pjt.id => 0 }) }
+    PrintJobType.all.each { |pjt| types.merge!(pjt.id => 0) }
 
     types.to_json
   end

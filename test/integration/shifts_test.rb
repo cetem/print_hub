@@ -43,9 +43,7 @@ class ShiftsTest < ActionDispatch::IntegrationTest
     assert_equal edit_shift_path(@shift), current_path
     assert page.has_css?('.alert', text: I18n.t('view.shifts.edit_stale'))
 
-    ['articles', 'bonuses', 'customers', 'documents', 'orders', 'payments',
-      'print_job_types', 'tags', 'users'].each do |controller|
-
+    %w(articles bonuses customers documents orders payments print_job_types tags users).each do |controller|
       host = Capybara.app_host.gsub('http://', '')
       visit url_for controller: controller, action: :index, host: host
 
@@ -106,7 +104,7 @@ class ShiftsTest < ActionDispatch::IntegrationTest
     assert_page_has_no_errors!
     assert_equal new_user_session_path, current_path
     assert page.has_css?('.alert',
-      text: I18n.t('view.user_sessions.correctly_destroyed'))
+                         text: I18n.t('view.user_sessions.correctly_destroyed'))
   end
 
   test 'should close the shift' do
@@ -132,7 +130,7 @@ class ShiftsTest < ActionDispatch::IntegrationTest
     assert_page_has_no_errors!
     assert_equal new_user_session_path, current_path
     assert page.has_css?('.alert',
-      text: I18n.t('view.user_sessions.correctly_destroyed'))
+                         text: I18n.t('view.user_sessions.correctly_destroyed'))
   end
 
   test 'should close the shift for not shifted user' do
@@ -153,6 +151,6 @@ class ShiftsTest < ActionDispatch::IntegrationTest
     assert_page_has_no_errors!
     assert_equal new_user_session_path, current_path
     assert page.has_css?('.alert',
-      text: I18n.t('view.user_sessions.correctly_destroyed'))
+                         text: I18n.t('view.user_sessions.correctly_destroyed'))
   end
 end

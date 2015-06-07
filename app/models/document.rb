@@ -3,8 +3,8 @@ class Document < ApplicationModel
   mount_uploader :file, DocumentsUploader, mount_on: :file_file_name
 
   # Scopes
-  default_scope -> { where(enable: true ) }
-  scope :with_tag, ->(tag_id) {
+  default_scope -> { where(enable: true) }
+  scope :with_tag, lambda { |tag_id|
     includes(:tags).where("#{Tag.table_name}.id" => tag_id)
   }
   scope :publicly_visible, -> { where(private: false) }
@@ -17,7 +17,7 @@ class Document < ApplicationModel
 
   # Callbacks
   before_save :update_tag_path, :update_privacy, :extract_page_count,
-    :update_file_attributes
+              :update_file_attributes
   after_save :update_tags_documents_count, :recreate_versions
   before_destroy :can_be_destroyed?
   after_destroy :update_tags_documents_count
@@ -25,17 +25,17 @@ class Document < ApplicationModel
   # Restricciones
   validates :name, :code, :pages, :media, :file, presence: true
   validates :code, uniqueness: true, if: :enable, allow_nil: true,
-    allow_blank: true
+                   allow_blank: true
   validates :name, :media, length: { maximum: 255 }, allow_nil: true,
-    allow_blank: true
+                           allow_blank: true
   validates :media, inclusion: { in: PrintJobType::MEDIA_TYPES.values },
-    allow_nil: true, allow_blank: true
+                    allow_nil: true, allow_blank: true
   validates :pages, :code, allow_nil: true, allow_blank: true,
-    numericality: { only_integer: true, greater_than: 0, less_than: 2147483648 }
+                           numericality: { only_integer: true, greater_than: 0, less_than: 2_147_483_648 }
   validates :stock, numericality: {
-    only_integer: true, greater_than_or_equal_to: 0, less_than: 2147483648
+    only_integer: true, greater_than_or_equal_to: 0, less_than: 2_147_483_648
   }
-  validates_each :file do |record, attr, value|
+  validates_each :file do |record, attr, _value|
     if record.identifier && File.extname(record.identifier).blank?
       record.errors.add attr, :without_extension
     end
@@ -54,7 +54,7 @@ class Document < ApplicationModel
   end
 
   def to_s
-    "[#{self.code}] #{self.name}"
+    "[#{code}] #{name}"
   end
 
   alias_method :label, :to_s
@@ -68,9 +68,9 @@ class Document < ApplicationModel
     super(default_options.merge(options || {}))
   end
 
-  # TODO Mejorar método, se hizo en el apuro =)
+  # TODO: Mejorar método, se hizo en el apuro =)
   def print_job_type
-    print_job_types = PrintJobType.where(media: self.media)
+    print_job_types = PrintJobType.where(media: media)
 
     if (two_sided = print_job_types.where(two_sided: true)).size > 0
       two_sided.first.try(:id)
@@ -104,7 +104,7 @@ class Document < ApplicationModel
   alias_method :old_tag_ids=, :tag_ids=
 
   def tag_ids=(ids)
-    @_old_tag_ids = self.tag_ids
+    @_old_tag_ids = tag_ids
 
     self.old_tag_ids = ids
   end
@@ -112,18 +112,18 @@ class Document < ApplicationModel
   def update_tags_documents_count
     tags = (
       @_old_tag_ids.present? && @_old_tag_ids.size > 0 &&
-      self.tag_ids.try(:sort) != @_old_tag_ids.try(:sort)
+      tag_ids.try(:sort) != @_old_tag_ids.try(:sort)
     ) ? Tag.find(@_old_tag_ids) : self.tags
 
-    tags.each { |d_t| d_t.update_documents_count }
+    tags.each(&:update_documents_count)
   end
 
   def can_be_destroyed?
-    if self.print_jobs.empty?
+    if print_jobs.empty?
       true
     else
-      self.errors.add :base,
-        I18n.t('view.documents.has_related_print_jobs')
+      errors.add :base,
+                 I18n.t('view.documents.has_related_print_jobs')
 
       false
     end
@@ -142,7 +142,7 @@ class Document < ApplicationModel
   end
 
   def extract_page_count
-    PDF::Reader.new(self.file.path).tap do |pdf|
+    PDF::Reader.new(file.path).tap do |pdf|
       self.pages = pdf.page_count
     end if file_file_name_changed?
 
@@ -168,13 +168,13 @@ class Document < ApplicationModel
   end
 
   def identifier
-    self.file.identifier || self.file_identifier
+    file.identifier || file_identifier
   end
 
   private
 
   def conditional_tags(new_tag = nil, excluded_tag = nil)
-    self.tags.reject do |t|
+    tags.reject do |t|
       t.id == new_tag.try(:id) || t.id == excluded_tag.try(:id)
     end | [new_tag]
   end
@@ -190,7 +190,7 @@ class Document < ApplicationModel
   def recreate_versions
     if file_file_name_changed?
       begin
-        self.file.recreate_versions! unless @versions_ready
+        file.recreate_versions! unless @versions_ready
       rescue => e
         puts I18n.t('errors.recreate_versions_error')
       end

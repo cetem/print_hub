@@ -10,7 +10,7 @@ class PrintJobType < ActiveRecord::Base
   validates :name, :price, :media, presence: true
   validates :name, uniqueness: true
   validates :media, inclusion: { in: MEDIA_TYPES.values },
-    allow_nil: true, allow_blank: true
+                    allow_nil: true, allow_blank: true
 
   has_many :print_jobs
   has_many :file_lines
@@ -19,7 +19,7 @@ class PrintJobType < ActiveRecord::Base
   before_save :keep_only_one_default
 
   def to_s
-    self.name
+    name
   end
 
   def self.names
@@ -33,12 +33,12 @@ class PrintJobType < ActiveRecord::Base
   def keep_only_one_default
     current_default = PrintJobType.default
 
-    if self.default && current_default && (current_default.id != self.try(:id))
+    if default && current_default && (current_default.id != try(:id))
       current_default.update_attributes(default: false)
     end
   end
 
   def one_sided_for
-    PrintJobType.one_sided.where(media: self.media).first if self.two_sided
+    PrintJobType.one_sided.where(media: media).first if two_sided
   end
 end

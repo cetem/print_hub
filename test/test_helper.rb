@@ -37,20 +37,20 @@ class ActiveSupport::TestCase
     process_with_action_dispatch('test.gif', 'image/gif')
   end
 
-  def new_generic_operator(atributes={})
-    atributes[:name]                  ||= 'generic name'
-    atributes[:last_name]             ||= 'generic last name'
-    atributes[:email]                 ||= 'generic_user@printhub.com'
-    atributes[:default_printer]       ||= ''
-    atributes[:lines_per_page]        ||= 12
-    atributes[:language]              ||= LANGUAGES.first.to_s
-    atributes[:username]              ||= 'generic_user'
-    atributes[:password]              ||= 'generic_user123'
+  def new_generic_operator(atributes = {})
+    atributes[:name] ||= 'generic name'
+    atributes[:last_name] ||= 'generic last name'
+    atributes[:email] ||= 'generic_user@printhub.com'
+    atributes[:default_printer] ||= ''
+    atributes[:lines_per_page] ||= 12
+    atributes[:language] ||= LANGUAGES.first.to_s
+    atributes[:username] ||= 'generic_user'
+    atributes[:password] ||= 'generic_user123'
     atributes[:password_confirmation] ||= 'generic_user123'
-    atributes[:admin]                 ||= 'false'
-    atributes[:enable]                ||= true
-    atributes[:avatar]                ||= 'sample.png'
-    atributes[:not_shifted]           ||= false
+    atributes[:admin] ||= 'false'
+    atributes[:enable] ||= true
+    atributes[:avatar] ||= 'sample.png'
+    atributes[:not_shifted] ||= false
 
     User.create! atributes
   end
@@ -63,17 +63,17 @@ class ActiveSupport::TestCase
 
   def process_with_action_dispatch(filename, content_type)
     ActionDispatch::Http::UploadedFile.new({
-      filename: filename,
-      content_type: content_type,
-      tempfile:
+                                             filename: filename,
+                                             content_type: content_type,
+                                             tempfile:
       File.open( # Need File.open for path-method
         Rails.root.join('test', 'fixtures', 'files', filename)
       )
-    })
+                                           })
   end
 
   def link_file(destiny_file, link_from)
-    unless File.exists?(destiny_file)
+    unless File.exist?(destiny_file)
       FileUtils.mkdir_p File.dirname(destiny_file)
       FileUtils.ln_s(
         Rails.root.join('test', 'fixtures', 'files', link_from),
@@ -93,7 +93,6 @@ class ActiveSupport::TestCase
   setup :activate_authlogic
 end
 
-
 class ActionDispatch::IntegrationTest
   # Make the Capybara DSL available in all integration tests
   include Capybara::DSL
@@ -108,7 +107,7 @@ class ActionDispatch::IntegrationTest
   setup do
     Capybara.current_driver = Capybara.javascript_driver # :selenium by default
     Capybara.server_port = '54163'
-    Capybara.app_host = "http://localhost:54163"
+    Capybara.app_host = 'http://localhost:54163'
     Capybara.reset!    # Forget the (simulated) browser state
     Capybara.default_wait_time = 4
   end
@@ -126,9 +125,9 @@ class ActionDispatch::IntegrationTest
   def login(*args)
     options = args.extract_options!
 
-    options[:user_id] ||= args.shift #if args.first.kind_of?(Symbol)
+    options[:user_id] ||= args.shift # if args.first.kind_of?(Symbol)
     options[:user_id] ||= users(:operator).id
-    options[:expected_path] ||= args.shift if args.first.kind_of?(String)
+    options[:expected_path] ||= args.shift if args.first.is_a?(String)
     options[:expected_path] ||= prints_path
 
     visit new_user_session_path
@@ -137,9 +136,9 @@ class ActionDispatch::IntegrationTest
 
     User.find(options[:user_id]).tap do |user|
       fill_in I18n.t('authlogic.attributes.user_session.username'),
-        with: user.email
+              with: user.email
       fill_in I18n.t('authlogic.attributes.user_session.password'),
-        with: "#{user.username}123"
+              with: "#{user.username}123"
     end
 
     click_button I18n.t('view.user_sessions.login')

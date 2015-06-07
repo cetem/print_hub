@@ -144,14 +144,14 @@ class OrdersController < ApplicationController
 
   def load_scope
     @order_scope = if current_customer
-      current_customer.orders
-    else
-      order_type == 'print' ? Order.pending.for_print : Order.all
+                     current_customer.orders
+                   else
+                     order_type == 'print' ? Order.pending.for_print : Order.all
     end
   end
 
   def order_type
-    %w[print all].include?(params[:type]) ? params[:type] : 'print'
+    %w(print all).include?(params[:type]) ? params[:type] : 'print'
   end
 
   def order_params
@@ -159,14 +159,12 @@ class OrdersController < ApplicationController
 
     params.require(:order).permit(
       :scheduled_at, :notes, :lock_version, :include_documents,
-      {
-        file_lines_attributes: [
-          :file, :pages, :file_cache, *order_items_shared_attrs
-        ],
-        order_lines_attributes: [
-          :document_id, :lock_version, *order_items_shared_attrs
-        ]
-      }
+      file_lines_attributes: [
+        :file, :pages, :file_cache, *order_items_shared_attrs
+      ],
+      order_lines_attributes: [
+        :document_id, :lock_version, *order_items_shared_attrs
+      ]
     )
   end
 

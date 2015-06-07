@@ -144,9 +144,9 @@ class OrderTest < ActiveSupport::TestCase
     assert @order.invalid?
     assert_equal 2, @order.errors.count
     assert_equal [error_message_from_model(@order, :scheduled_at, :blank)],
-      @order.errors[:scheduled_at]
+                 @order.errors[:scheduled_at]
     assert_equal [error_message_from_model(@order, :customer, :blank)],
-      @order.errors[:customer]
+                 @order.errors[:customer]
   end
 
   # Prueba que las validaciones del modelo se cumplan como es esperado
@@ -166,7 +166,7 @@ class OrderTest < ActiveSupport::TestCase
     assert @order.invalid?
     assert_equal 1, @order.errors.count
     assert_equal [error_message_from_model(@order, :status, :inclusion)],
-      @order.errors[:status]
+                 @order.errors[:status]
   end
 
   # Prueba que las validaciones del modelo se cumplan como es esperado
@@ -176,7 +176,7 @@ class OrderTest < ActiveSupport::TestCase
     assert @order.invalid?
     assert_equal 1, @order.errors.count
     assert_equal [error_message_from_model(@order, :base, :must_have_one_item)],
-      @order.errors[:base]
+                 @order.errors[:base]
   end
 
   test 'price' do

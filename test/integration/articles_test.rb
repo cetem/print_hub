@@ -16,7 +16,7 @@ class ArticlesTest < ActionDispatch::IntegrationTest
       fill_in Article.human_attribute_name('name'), with: 'Laminate'
       fill_in Article.human_attribute_name('price'), with: '1.50'
       fill_in Article.human_attribute_name('description'),
-        with: 'Laminate a carnet or anything'
+              with: 'Laminate a carnet or anything'
 
       assert_difference 'Article.count' do
         click_button I18n.t(
@@ -38,7 +38,7 @@ class ArticlesTest < ActionDispatch::IntegrationTest
 
     within 'table tbody' do
       assert_difference 'Article.count', -1 do
-        all("a[data-method='delete']")[1].click #El 1ro esta usado
+        all("a[data-method='delete']")[1].click # El 1ro esta usado
         sleep(1)
         page.driver.browser.switch_to.alert.accept
         sleep(1)

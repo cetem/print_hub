@@ -4,7 +4,7 @@ class CustomersGroup < ApplicationModel
   validates :name, uniqueness: true, presence: true
 
   def to_s
-    self.name
+    name
   end
 
   alias_method :label, :to_s
@@ -46,7 +46,7 @@ class CustomersGroup < ApplicationModel
 
     csv = []
     csv << []
-    csv << [self.name, simple_t, double_t, library_t, total_t]
+    csv << [name, simple_t, double_t, library_t, total_t]
 
     totals = { one_side: 0, two_sides: 0, library: 0.0 }
 
@@ -55,12 +55,12 @@ class CustomersGroup < ApplicationModel
       library = 0.0
 
       c.prints.where(created_at: range).each do |p|
-        library += p.article_lines.map{ |a_l| a_l.units * a_l.unit_price }.sum
+        library += p.article_lines.map { |a_l| a_l.units * a_l.unit_price }.sum
 
         copies[:one] += p.print_jobs.one_sided.sum(:printed_pages) || 0
 
         p.print_jobs.two_sided.each do |ts|
-          if (ts.pages % 2) == 0
+          if ts.pages.even?
             copies[:two] += ts.printed_pages
           else
             copies[:one] += ts.copies
@@ -95,7 +95,7 @@ class CustomersGroup < ApplicationModel
     CSV.generate do |csv|
       totals = { simple: 0, double: 0, library: 0.0 }
       csv << []
-      csv << [self.name, simple_t, double_t, library_t, total_t, comment_t]
+      csv << [name, simple_t, double_t, library_t, total_t, comment_t]
 
       customers.each do |c|
         if (prints = c.prints.where(created_at: range)).any?
@@ -108,7 +108,7 @@ class CustomersGroup < ApplicationModel
             double = 0
             p.print_jobs.each do |pj|
               s, d = if pj.two_sided?
-                       if (pj.pages % 2) == 0
+                       if pj.pages.even?
                          [0, pj.printed_pages]
                        else
                          [pj.copies, (pj.pages - 1) * pj.copies]

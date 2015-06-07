@@ -10,8 +10,8 @@ module PrintsHelper
     end
 
     form.input :printer, collection: printers_collection,
-      selected: selected_printer, include_blank: true, autofocus: true,
-      input_html: { class: 'span11' }
+                         selected: selected_printer, include_blank: true, autofocus: true,
+                         input_html: { class: 'span11' }
   end
 
   def link_to_cancel_print_job(print_job)
@@ -32,31 +32,31 @@ module PrintsHelper
 
   def link_to_customer_credit_detail(customer)
     link_to t('view.prints.customer_credit_detail.link'),
-      credit_detail_customer_path(customer || {id: 0}),
-      id: 'link_to_customer_credit_detail',
-      title: t('view.prints.customer_credit_detail.title'),
-      class: 'btn btn-mini',
-      style: ('display: none;' unless customer),
-      data: { toggle: 'modal', target: '#customer_credit_details' }
+            credit_detail_customer_path(customer || { id: 0 }),
+            id: 'link_to_customer_credit_detail',
+            title: t('view.prints.customer_credit_detail.title'),
+            class: 'btn btn-mini',
+            style: ('display: none;' unless customer),
+            data: { toggle: 'modal', target: '#customer_credit_details' }
   end
 
   def link_to_document_details(document)
     link_to '&#xe054;'.html_safe, document || document_path(id: 0),
-      class: 'details-link iconic', remote: true,
-      title: t('view.prints.document_details'),
-      style: ('display: none;' unless document)
+            class: 'details-link iconic', remote: true,
+            title: t('view.prints.document_details'),
+            style: ('display: none;' unless document)
   end
 
   def show_document_stock(print_job)
     stock = print_job.document.try(:stock) || 0
     copies = print_job.copies
-    printed_copies = stock > copies ? 0 : copies - stock;
+    printed_copies = stock > copies ? 0 : copies - stock
 
     content_tag :span, "##{stock}!#{printed_copies}",
-      class: 'document_stock label label-important',
-      title: t('view.prints.document_stock'),
-      style: ('display: none;' if stock == 0 || !print_job.full_document?),
-      'data-stock' => stock
+                class: 'document_stock label label-important',
+                title: t('view.prints.document_stock'),
+                style: ('display: none;' if stock == 0 || !print_job.full_document?),
+                'data-stock' => stock
   end
 
   def show_print_status(print)
@@ -76,7 +76,7 @@ module PrintsHelper
       code = truncate(code.to_s, length: 15, omission: '...')
 
       content_tag(
-        :span, code, title: name, class: 'label', data: {'show-tooltip' => true}
+        :span, code, title: name, class: 'label', data: { 'show-tooltip' => true }
       )
     end.join(' ')
 
@@ -86,7 +86,7 @@ module PrintsHelper
       out << ' '
       out << content_tag(
         :span, raw('&hellip;'), title: title, class: 'label',
-        data: {'show-tooltip' => true}
+                                data: { 'show-tooltip' => true }
       )
     end
 
@@ -132,9 +132,9 @@ module PrintsHelper
   def show_related_by_customer_links
     output = []
 
-    ['prev', 'next'].each do |operator|
+    %w(prev next).each do |operator|
       output << link_to(
-        textilize_without_paragraph( t("view.prints.customer_links.#{operator}") ),
+        textilize_without_paragraph(t("view.prints.customer_links.#{operator}")),
         related_by_customer_print_path(type: operator)
       )
     end
@@ -143,7 +143,6 @@ module PrintsHelper
   end
 
   def show_document_name_in_print_job(print_job)
-
     if print_job.document_id
       print_job.document
     elsif print_job.file_line_id

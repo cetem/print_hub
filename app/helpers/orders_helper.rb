@@ -9,17 +9,17 @@ module OrdersHelper
     if current_customer
       out << link_to_if(order.pending?, t('label.edit'), edit_order_path(order))
       out << link_to_if(order.pending?, t('view.orders.cancel'), order,
-        method: :delete, data: { confirm: t('messages.confirmation') }
-      )
-      out <<  link_to(t('label.back'), catalog_path)
+                        method: :delete, data: { confirm: t('messages.confirmation') }
+                       )
+      out << link_to(t('label.back'), catalog_path)
     else
       out << link_to_if(order.pending?, t('view.orders.new_print'),
-        new_print_path(order_id: order.id)
-      )
+                        new_print_path(order_id: order.id)
+                       )
       out << link_to_if(order.pending?, t('view.orders.cancel'),
-        order_path(order, type: 'all'),
-        method: :delete, data: { confirm: t('messages.confirmation') }
-      )
+                        order_path(order, type: 'all'),
+                        method: :delete, data: { confirm: t('messages.confirmation') }
+                       )
       out << link_to(t('label.list'), orders_path(type: order_type))
     end
 
@@ -29,8 +29,8 @@ module OrdersHelper
   def show_orders_table_caption
     unless current_customer
       content_tag(:caption,
-        content_tag(:p, t("view.orders.type.#{order_type}.html"), class: 'lead')
-      )
+                  content_tag(:p, t("view.orders.type.#{order_type}.html"), class: 'lead')
+                 )
     end
   end
 

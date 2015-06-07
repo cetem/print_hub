@@ -6,7 +6,7 @@ class AddScheduleToPrints < ActiveRecord::Migration
   end
 
   def self.down
-    remove_index :prints, :column => :scheduled_at
+    remove_index :prints, column: :scheduled_at
 
     remove_column :prints, :scheduled_at
   end

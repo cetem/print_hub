@@ -33,7 +33,7 @@ class PaymentTest < ActiveSupport::TestCase
   test 'update' do
     assert_no_difference 'Payment.count' do
       assert @payment.update(paid: '38.00'),
-        @payment.errors.full_messages.join('; ')
+             @payment.errors.full_messages.join('; ')
     end
 
     assert_equal BigDecimal.new('38.00'), @payment.reload.paid
@@ -52,14 +52,14 @@ class PaymentTest < ActiveSupport::TestCase
     assert @payment.invalid?
     assert_equal 6, @payment.errors.count
     assert_equal [error_message_from_model(@payment, :amount, :blank),
-      error_message_from_model(@payment, :amount, :not_a_number)].sort,
-      @payment.errors[:amount].sort
+                  error_message_from_model(@payment, :amount, :not_a_number)].sort,
+                 @payment.errors[:amount].sort
     assert_equal [error_message_from_model(@payment, :paid, :blank),
-      error_message_from_model(@payment, :paid, :not_a_number)].sort,
-      @payment.errors[:paid].sort
+                  error_message_from_model(@payment, :paid, :not_a_number)].sort,
+                 @payment.errors[:paid].sort
     assert_equal [error_message_from_model(@payment, :paid_with, :blank),
-      error_message_from_model(@payment, :paid_with, :inclusion)].sort,
-      @payment.errors[:paid_with].sort
+                  error_message_from_model(@payment, :paid_with, :inclusion)].sort,
+                 @payment.errors[:paid_with].sort
   end
 
   # Prueba que las validaciones del modelo se cumplan como es esperado
@@ -69,9 +69,9 @@ class PaymentTest < ActiveSupport::TestCase
     assert @payment.invalid?
     assert_equal 2, @payment.errors.count
     assert_equal [error_message_from_model(@payment, :amount, :not_a_number)],
-      @payment.errors[:amount]
+                 @payment.errors[:amount]
     assert_equal [error_message_from_model(@payment, :paid, :not_a_number)],
-      @payment.errors[:paid]
+                 @payment.errors[:paid]
   end
 
   # Prueba que las validaciones del modelo se cumplan como es esperado
@@ -80,8 +80,8 @@ class PaymentTest < ActiveSupport::TestCase
     assert @payment.invalid?
     assert_equal 2, @payment.errors.count
     assert_equal [error_message_from_model(@payment, :paid_with, :inclusion),
-      error_message_from_model(@payment, :paid_with, :too_long,
-        count: 1)].sort, @payment.errors[:paid_with].sort
+                  error_message_from_model(@payment, :paid_with, :too_long,
+                                           count: 1)].sort, @payment.errors[:paid_with].sort
   end
 
   # Prueba que las validaciones del modelo se cumplan como es esperado
@@ -90,7 +90,7 @@ class PaymentTest < ActiveSupport::TestCase
     assert @payment.invalid?
     assert_equal 1, @payment.errors.count
     assert_equal [error_message_from_model(@payment, :paid_with, :inclusion)],
-      @payment.errors[:paid_with].sort
+                 @payment.errors[:paid_with].sort
   end
 
   # Prueba que las validaciones del modelo se cumplan como es esperado
@@ -100,17 +100,17 @@ class PaymentTest < ActiveSupport::TestCase
     assert @payment.invalid?
     assert_equal 2, @payment.errors.count
     assert_equal [error_message_from_model(@payment, :amount,
-        :greater_than, count: 0)], @payment.errors[:amount]
+                                           :greater_than, count: 0)], @payment.errors[:amount]
     assert_equal [error_message_from_model(@payment, :paid,
-        :greater_than_or_equal_to, count: 0)], @payment.errors[:paid]
+                                           :greater_than_or_equal_to, count: 0)], @payment.errors[:paid]
 
     @payment.reload
     @payment.paid = @payment.amount + 0.01
     assert @payment.invalid?
     assert_equal 1, @payment.errors.count
     assert_equal [error_message_from_model(@payment, :paid,
-        :less_than_or_equal_to, count: @payment.amount)],
-      @payment.errors[:paid]
+                                           :less_than_or_equal_to, count: @payment.amount)],
+                 @payment.errors[:paid]
   end
 
   test 'dynamic paid with functions' do

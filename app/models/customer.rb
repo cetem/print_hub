@@ -33,13 +33,13 @@ class Customer < ApplicationModel
   # Restricciones
   validates :name, :identification, presence: true
   validates :identification, uniqueness: true, allow_nil: true,
-    allow_blank: true
+                             allow_blank: true
   validates :name, uniqueness: { scope: :lastname }, allow_nil: true,
-    allow_blank: true
-  validates :name, :lastname, :identification, length: {maximum: 255},
-    allow_nil: true, allow_blank: true
+                   allow_blank: true
+  validates :name, :lastname, :identification, length: { maximum: 255 },
+                                               allow_nil: true, allow_blank: true
   validates :free_monthly_bonus, allow_nil: true, allow_blank: true,
-    numericality: {greater_than_or_equal_to: 0}
+                                 numericality: { greater_than_or_equal_to: 0 }
   validates :kind, inclusion: { in: KINDS.values }
 
   # Relaciones
@@ -47,16 +47,16 @@ class Customer < ApplicationModel
   has_many :prints, inverse_of: :customer, dependent: :nullify
   has_many :credits, inverse_of: :customer
   has_many :bonuses, inverse_of: :customer, dependent: :destroy,
-    autosave: true, class_name: 'Bonus'
+                     autosave: true, class_name: 'Bonus'
   has_many :deposits, inverse_of: :customer, dependent: :destroy,
-    autosave: true
+                      autosave: true
   has_many :print_jobs, through: :prints
   belongs_to :group, class_name: CustomersGroup
 
   accepts_nested_attributes_for :bonuses, allow_destroy: true,
-    reject_if: :reject_credits
+                                          reject_if: :reject_credits
   accepts_nested_attributes_for :deposits, allow_destroy: true,
-    reject_if: :reject_credits
+                                           reject_if: :reject_credits
 
   def initialize(attributes = nil)
     super(attributes)
@@ -65,7 +65,7 @@ class Customer < ApplicationModel
   end
 
   def to_s
-    [self.name, self.lastname].compact.join(' ')
+    [name, lastname].compact.join(' ')
   end
 
   alias_method :label, :to_s
@@ -93,24 +93,24 @@ class Customer < ApplicationModel
   end
 
   def current_bonuses
-    self.bonuses.select { |b| b.new_record? || b.marked_for_destruction? } |
-      self.bonuses.valids
+    bonuses.select { |b| b.new_record? || b.marked_for_destruction? } |
+      bonuses.valids
   end
 
   def current_deposits
-    self.deposits.select { |d| d.new_record? || d.marked_for_destruction? } |
-      self.deposits.valids
+    deposits.select { |d| d.new_record? || d.marked_for_destruction? } |
+      deposits.valids
   end
 
   def add_bonus(amount, valid_until = nil)
-    self.bonuses.build(amount: amount, valid_until: valid_until)
+    bonuses.build(amount: amount, valid_until: valid_until)
   end
 
   def build_monthly_bonus
-    if self.free_monthly_bonus.to_i > 0
-      self.add_bonus(
-        self.free_monthly_bonus,
-        (Date.today.at_end_of_month unless self.bonus_without_expiration)
+    if free_monthly_bonus.to_i > 0
+      add_bonus(
+        free_monthly_bonus,
+        (Date.today.at_end_of_month unless bonus_without_expiration)
       )
     end
   end
@@ -124,25 +124,25 @@ class Customer < ApplicationModel
   end
 
   def has_no_orders?
-    self.orders.empty?
+    orders.empty?
   end
 
   def free_credit
-    self.credits.valids.to_a.sum(&:remaining)
+    credits.valids.to_a.sum(&:remaining)
   end
 
   def free_credit_minus_pendings
-    self.free_credit - self.orders.pending.to_a.sum(&:price)
+    free_credit - orders.pending.to_a.sum(&:price)
   end
 
   def can_afford?(price)
-    self.free_credit_minus_pendings >= (price * CREDIT_THRESHOLD)
+    free_credit_minus_pendings >= (price * CREDIT_THRESHOLD)
   end
 
   def use_credit(amount, password = '', options = {})
     if self.valid_password?(password) || options[:avoid_password_check]
       to_pay = BigDecimal.new(amount.to_s)
-      available_credits = self.credits.valids.order(valid_until: :desc).to_a
+      available_credits = credits.valids.order(valid_until: :desc).to_a
 
       while to_pay > 0 && available_credits.size > 0
         credit = available_credits.shift
@@ -159,7 +159,7 @@ class Customer < ApplicationModel
         credit.save!
       end
 
-      #self.save!
+      # self.save!
 
       to_pay
     else
@@ -171,12 +171,12 @@ class Customer < ApplicationModel
     date = Date.parse(date) unless date.is_a? Date
 
     print_jobs_current_total_prices(
-      self.print_jobs.pay_later.created_at_month(date)
+      print_jobs.pay_later.created_at_month(date)
     )
   end
 
   def months_to_pay
-    self.print_jobs.pay_later.order('created_at ASC').inject([]) do |date, p|
+    print_jobs.pay_later.order('created_at ASC').inject([]) do |date, p|
       month_year = [p.created_at.month, p.created_at.year]
       date.include?(month_year) ? date : date + [month_year]
     end
@@ -206,7 +206,7 @@ class Customer < ApplicationModel
   end
 
   def to_pay_amounts
-    print_jobs_current_total_prices(self.print_jobs.pay_later)
+    print_jobs_current_total_prices(print_jobs.pay_later)
   end
 
   def pay_month_debt(date)
@@ -214,9 +214,7 @@ class Customer < ApplicationModel
 
     Print.transaction do
       begin
-        self.prints.pay_later.created_in_the_same_month(date).each do |p|
-          p.pay_print
-        end
+        prints.pay_later.created_in_the_same_month(date).each(&:pay_print)
       rescue
         raise ActiveRecord::Rollback
       end
@@ -226,15 +224,13 @@ class Customer < ApplicationModel
   def pay_off_debt
     Print.transaction do
       begin
-        self.prints.pay_later.each do |p|
-          p.pay_print
-        end
+        prints.pay_later.each(&:pay_print)
       rescue
         raise ActiveRecord::Rollback
       end
     end
 
-    self.to_pay_amounts
+    to_pay_amounts
   end
 
   KINDS.each do |kind, value|

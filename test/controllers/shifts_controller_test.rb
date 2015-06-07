@@ -120,7 +120,7 @@ class ShiftsControllerTest < ActionController::TestCase
     assert shifts.all? { |s| s['user_id'] == operator.id }
 
     get :json_paginate, format: :json, user_id: operator.id, offset: 1,
-      limit: 3
+                        limit: 3
     assert_response :success
 
     shifts = ActiveSupport::JSON.decode(@response.body)

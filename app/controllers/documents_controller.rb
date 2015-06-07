@@ -18,9 +18,7 @@ class DocumentsController < ApplicationController
       redirect_to request.parameters.except(:clear_documents_for_printing)
     end
 
-    if params[:disabled_documents]
-      @documents = Document.unscoped.disable
-    end
+    @documents = Document.unscoped.disable if params[:disabled_documents]
 
     if params[:q].present?
       query = params[:q].sanitized_for_text_query
@@ -164,11 +162,11 @@ class DocumentsController < ApplicationController
   end
 
   def sort_column
-    %w[code name].include?(params[:sort]) ? params[:sort] : 'code'
+    %w(code name).include?(params[:sort]) ? params[:sort] : 'code'
   end
 
   def sort_direction
-    %w[asc desc].include?(params[:direction]) ? params[:direction] : default_direction
+    %w(asc desc).include?(params[:direction]) ? params[:direction] : default_direction
   end
 
   def default_direction

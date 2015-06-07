@@ -6,12 +6,14 @@ class Tag < ApplicationModel
 
   # Scopes
   scope :publicly_visible, -> { where(private: false) }
-  scope :with_documents_or_children,  -> { where(
-    [
-      "#{Tag.table_name}.documents_count > :zero",
-      "#{Tag.table_name}.children_count > :zero"
-    ].join(' OR '), zero: 0
-  ) }
+  scope :with_documents_or_children,  lambda {
+    where(
+      [
+        "#{Tag.table_name}.documents_count > :zero",
+        "#{Tag.table_name}.children_count > :zero"
+      ].join(' OR '), zero: 0
+    )
+  }
 
   # Callbacks
   before_save :update_related_documents
@@ -21,7 +23,7 @@ class Tag < ApplicationModel
   # Restricciones
   validates :name, presence: true
   validates :name, uniqueness: { scope: :parent_id }, allow_nil: true,
-    allow_blank: true
+                   allow_blank: true
   validates :name, length: { maximum: 255 }, allow_nil: true, allow_blank: true
 
   # Relaciones
@@ -29,7 +31,7 @@ class Tag < ApplicationModel
   has_many :documents, through: :document_tag_relation, autosave: true
 
   def to_s
-    ([self] + self.ancestors.reverse).map(&:name).reverse.join(' | ')
+    ([self] + ancestors.reverse).map(&:name).reverse.join(' | ')
   end
 
   alias_method :label, :to_s
@@ -44,31 +46,29 @@ class Tag < ApplicationModel
   end
 
   def <=>(other)
-    other.kind_of?(Tag) ? self.id <=> other.id : -1
+    other.is_a?(Tag) ? id <=> other.id : -1
   end
 
   def update_related_documents
-    self.documents.each { |d| d.update_tag_path self } if self.name_changed?
+    documents.each { |d| d.update_tag_path self } if self.name_changed?
 
-    if self.private_changed?
-      self.documents.each { |d| d.update_privacy self }
-    end
+    documents.each { |d| d.update_privacy self } if self.private_changed?
 
     true
   end
 
   def update_documents_count
-    self.update_attributes(documents_count: self.reload.documents.count)
+    update_attributes(documents_count: reload.documents.count)
   end
 
   def update_children_count
-    if self.parent_id
-      self.parent.update_attributes!(children_count: self.parent.children.count)
+    if parent_id
+      parent.update_attributes!(children_count: parent.children.count)
     end
   end
 
   def remove_from_related_documents
-    self.documents.each do |d|
+    documents.each do |d|
       d.update_tag_path nil, self
       d.update_privacy nil, self
       d.save # Guardar porque se llama desde before_destroy y no "autoguarda"

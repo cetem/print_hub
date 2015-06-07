@@ -12,14 +12,14 @@ class Article < ApplicationModel
   validates :code, uniqueness: true, allow_nil: true, allow_blank: true
   validates :name, length: { maximum: 255 }, allow_nil: true, allow_blank: true
   validates :code, allow_nil: true, allow_blank: true,
-    numericality: { greater_than: 0, less_than: 2147483648, only_integer: true }
+                   numericality: { greater_than: 0, less_than: 2_147_483_648, only_integer: true }
   validates :price, :stock, presence: true,
-    numericality: { greater_than_or_equal_to: 0 }
+                            numericality: { greater_than_or_equal_to: 0 }
 
   has_many :article_lines
 
   def to_s
-    "[#{self.code}] #{self.name}"
+    "[#{code}] #{name}"
   end
 
   alias_method :label, :to_s
@@ -34,7 +34,7 @@ class Article < ApplicationModel
   end
 
   def can_be_destroyed?
-    self.article_lines.empty?
+    article_lines.empty?
   end
 
   def self.full_text(query_terms)
@@ -56,8 +56,8 @@ class Article < ApplicationModel
 
   def stock_color
     case stock
-      when 0..4 then 'error'
-      when 5..10 then 'warning'
+    when 0..4 then 'error'
+    when 5..10 then 'warning'
     end
   end
 end

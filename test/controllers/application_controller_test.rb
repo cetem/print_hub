@@ -48,7 +48,7 @@ class ApplicationControllerTest < ActionController::TestCase
     assert_equal false, @controller.send(:require_customer)
     assert_redirected_to new_customer_session_url
     assert_equal I18n.t('messages.must_be_logged_in'),
-      @controller.send(:flash)[:notice]
+                 @controller.send(:flash)[:notice]
 
     CustomerSession.create(customers(:student))
 
@@ -65,14 +65,14 @@ class ApplicationControllerTest < ActionController::TestCase
     assert !@controller.send(:require_no_customer)
     assert_redirected_to catalog_url
     assert_equal I18n.t('messages.must_be_logged_out'),
-      @controller.send(:flash)[:notice]
+                 @controller.send(:flash)[:notice]
   end
 
   test 'require user' do
     assert_equal false, @controller.send(:require_user)
     assert_redirected_to new_user_session_url
     assert_equal I18n.t('messages.must_be_logged_in'),
-      @controller.send(:flash)[:notice]
+                 @controller.send(:flash)[:notice]
 
     UserSession.create(@operator)
 
@@ -87,14 +87,14 @@ class ApplicationControllerTest < ActionController::TestCase
     assert !@controller.send(:require_no_user)
     assert_redirected_to prints_url
     assert_equal I18n.t('messages.must_be_logged_out'),
-      @controller.send(:flash)[:notice]
+                 @controller.send(:flash)[:notice]
   end
 
   test 'require customer or user with user' do
     assert_equal false, @controller.send(:require_customer_or_user)
     assert_redirected_to new_user_session_url
     assert_equal I18n.t('messages.must_be_logged_in'),
-      @controller.send(:flash)[:notice]
+                 @controller.send(:flash)[:notice]
 
     UserSession.create(@operator)
 
@@ -131,7 +131,7 @@ class ApplicationControllerTest < ActionController::TestCase
     assert_equal false, @controller.send(:require_customer_or_user)
     assert_redirected_to new_customer_session_url
     assert_equal I18n.t('messages.must_be_logged_in'),
-      @controller.send(:flash)[:notice]
+                 @controller.send(:flash)[:notice]
 
     CustomerSession.create(customers(:student))
     assert_not_equal false, @controller.send(:require_customer_or_user)
@@ -143,7 +143,7 @@ class ApplicationControllerTest < ActionController::TestCase
     assert_equal false, @controller.send(:require_no_customer_or_user)
     assert_redirected_to new_user_session_url
     assert_equal I18n.t('messages.must_be_logged_in'),
-      @controller.send(:flash)[:notice]
+                 @controller.send(:flash)[:notice]
 
     UserSession.create(@operator)
     assert_not_equal false, @controller.send(:require_no_customer_or_user)
@@ -157,7 +157,7 @@ class ApplicationControllerTest < ActionController::TestCase
     assert !@controller.send(:require_no_customer_or_user)
     assert_redirected_to catalog_url
     assert_equal I18n.t('messages.must_be_logged_out'),
-      @controller.send(:flash)[:notice]
+                 @controller.send(:flash)[:notice]
   end
 
   test 'require no customer or admin with user' do
@@ -183,14 +183,14 @@ class ApplicationControllerTest < ActionController::TestCase
     assert_equal false, @controller.send(:require_admin_user)
     assert_redirected_to prints_url
     assert_equal I18n.t('messages.must_be_admin'),
-      @controller.send(:flash)[:alert]
+                 @controller.send(:flash)[:alert]
   end
 
   test 'require admin user without user' do
     assert_equal false, @controller.send(:require_admin_user)
     assert_redirected_to new_user_session_url
     assert_equal I18n.t('messages.must_be_admin'),
-      @controller.send(:flash)[:alert]
+                 @controller.send(:flash)[:alert]
   end
 
   test 'store location' do
@@ -239,28 +239,26 @@ class ApplicationControllerTest < ActionController::TestCase
   end
 
   test 'make date range' do
-    from_datetime = Time.zone.now.at_beginning_of_day
-    to_datetime = Time.zone.now
+    from_datetime = Time.zone.now.at_beginning_of_day.to_datetime
+    to_datetime = Time.zone.now.to_datetime
 
     assert_equal [from_datetime.to_s(:db), to_datetime.to_s(:db)],
-      @controller.send(:make_datetime_range).map { |d| d.to_s(:db) }
+                 @controller.send(:make_datetime_range).map { |d| d.to_s(:db) }
 
     # Fechas inválidas
     assert_equal [from_datetime.to_s(:db), to_datetime.to_s(:db)],
-      @controller.send(
-        :make_datetime_range,
-        {from: 'wrong date', to: 'another wrong date'}
-      ).map { |d| d.to_s(:db) }
+                 @controller.send(
+                   :make_datetime_range,
+                   from: 'wrong date', to: 'another wrong date'
+                 ).map { |d| d.to_s(:db) }
 
     from_datetime = Time.parse '2011-10-09 10:00'
     to_datetime = Time.parse '2000-10-09 11:50'
 
-    generated_range = @controller.send(:make_datetime_range, {
-        from: '2011-10-09 10:00', to: '2000-10-09 11:50'
-      }).map { |d| d.to_s(:db) }
+    generated_range = @controller.send(:make_datetime_range,         from: '2011-10-09 10:00', to: '2000-10-09 11:50').map { |d| d.to_s(:db) }
 
     # Fechas válidas con el orden invertido
     assert_equal [to_datetime.to_s(:db), from_datetime.to_s(:db)],
-      generated_range
+                 generated_range
   end
 end

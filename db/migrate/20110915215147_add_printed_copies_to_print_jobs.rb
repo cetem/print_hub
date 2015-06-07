@@ -8,7 +8,7 @@ class AddPrintedCopiesToPrintJobs < ActiveRecord::Migration
       pj.update_attribute :printed_copies, pj.copies
     end
 
-    raise 'Not all print jobs where updated' unless all_updated
+    fail 'Not all print jobs where updated' unless all_updated
 
     change_column :print_jobs, :printed_copies, :integer, null: false
   end

@@ -59,11 +59,11 @@ class BonusTest < ActiveSupport::TestCase
     assert @bonus.invalid?
     assert_equal 4, @bonus.errors.count
     assert_equal [error_message_from_model(@bonus, :amount, :blank),
-      error_message_from_model(@bonus, :amount, :not_a_number)].sort,
-      @bonus.errors[:amount].sort
+                  error_message_from_model(@bonus, :amount, :not_a_number)].sort,
+                 @bonus.errors[:amount].sort
     assert_equal [error_message_from_model(@bonus, :remaining, :blank),
-      error_message_from_model(@bonus, :remaining, :not_a_number)].sort,
-      @bonus.errors[:remaining].sort
+                  error_message_from_model(@bonus, :remaining, :not_a_number)].sort,
+                 @bonus.errors[:remaining].sort
   end
 
   # Prueba que las validaciones del modelo se cumplan como es esperado
@@ -75,11 +75,11 @@ class BonusTest < ActiveSupport::TestCase
     assert @bonus.invalid?
     assert_equal 2, @bonus.errors.count
     assert_equal [error_message_from_model(@bonus, :amount, :not_a_number)],
-      @bonus.errors[:amount]
+                 @bonus.errors[:amount]
     assert_equal [error_message_from_model(@bonus, :remaining, :not_a_number)],
-      @bonus.errors[:remaining]
-#    assert_equal [error_message_from_model(@bonus, :valid_until,
-#        :invalid_date)], @bonus.errors[:valid_until]
+                 @bonus.errors[:remaining]
+    #    assert_equal [error_message_from_model(@bonus, :valid_until,
+    #        :invalid_date)], @bonus.errors[:valid_until]
   end
 
   # Prueba que las validaciones del modelo se cumplan como es esperado
@@ -90,18 +90,18 @@ class BonusTest < ActiveSupport::TestCase
     assert @bonus.invalid?
     assert_equal 3, @bonus.errors.count
     assert_equal [error_message_from_model(@bonus, :amount, :greater_than,
-        count: 0)], @bonus.errors[:amount]
+                                           count: 0)], @bonus.errors[:amount]
     assert_equal [error_message_from_model(@bonus, :remaining,
-        :greater_than_or_equal_to, count: 0)], @bonus.errors[:remaining]
+                                           :greater_than_or_equal_to, count: 0)], @bonus.errors[:remaining]
     assert_equal [error_message_from_model(@bonus, :valid_until, :on_or_after,
-        restriction: I18n.l(Time.zone.today))], @bonus.errors[:valid_until]
+                                           restriction: I18n.l(Time.zone.today))], @bonus.errors[:valid_until]
 
     @bonus.reload
     @bonus.remaining = @bonus.amount + 1
     assert @bonus.invalid?
     assert_equal 1, @bonus.errors.count
     assert_equal [error_message_from_model(@bonus, :remaining,
-        :less_than_or_equal_to, count: @bonus.amount)],
-      @bonus.errors[:remaining]
+                                           :less_than_or_equal_to, count: @bonus.amount)],
+                 @bonus.errors[:remaining]
   end
 end

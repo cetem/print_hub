@@ -4,12 +4,13 @@ class PriceChooser
   attr_accessor :copies
 
   def initialize(raw_setting, copies = 0)
-    @raw_setting, @copies = raw_setting, copies
+    @raw_setting = raw_setting
+    @copies = copies
   end
 
   def price
     BigDecimal.new(
-      parse.select { |cond, price| eval(cond % { c: @copies }) }.last[1]
+      parse.reverse.find { |cond, _price| eval(cond % { c: @copies }) }[1]
     )
   end
 
@@ -18,7 +19,7 @@ class PriceChooser
     total_copies = options[:copies] || 0
     price = PrintJobType.find(options[:type]).price
 
-    self.new(price, total_copies).price
+    new(price, total_copies).price
   end
 
   def parse
@@ -35,16 +36,16 @@ class PriceChooser
 
   def self.humanize
     PrintJobType.all.map do |print_job_type|
-      type_price = self.new(print_job_type.price)
+      type_price = new(print_job_type.price)
       rules = type_price.parse.map do |cond, price|
         if cond.match(/[><=]+\s*\.?\d+/)
           copies = cond.match(/\d+/)[0]
           rule_in_words = case cond.match(/[><=]+/)[0]
-            when '>' then 'greater_than'
-            when '>=' then 'greater_than_or_equal_to'
-            when '=' then 'equal_to'
-            when '<' then 'less_than'
-            when '<=' then 'less_than_or_equal_to'
+                          when '>' then 'greater_than'
+                          when '>=' then 'greater_than_or_equal_to'
+                          when '=' then 'equal_to'
+                          when '<' then 'less_than'
+                          when '<=' then 'less_than_or_equal_to'
           end
 
           I18n.t(
@@ -58,7 +59,7 @@ class PriceChooser
       end
 
       [
-        I18n.t("view.print_job_types.price_per_copy", name: print_job_type),
+        I18n.t('view.print_job_types.price_per_copy', name: print_job_type),
         rules
       ]
     end

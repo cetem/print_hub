@@ -6,13 +6,13 @@ module DocumentsHelper
 
     styles.each_with_index.map do |style, i|
       file = document.file.send(style.to_sym)
-      if document.file && File.exists?(file.path)
+      if document.file && File.exist?(file.path)
         thumb_image_tag = image_tag(
           file.url, alt: document.name
         )
         image_link = content_tag(
           :a, thumb_image_tag.html_safe, href: '#document_thumbs_modal',
-          data: { toggle: 'modal' }
+                                         data: { toggle: 'modal' }
         )
 
         content_tag :div, image_link.html_safe, class: (i == 0 ? 'item active' : 'item')
@@ -76,7 +76,7 @@ module DocumentsHelper
     end
 
     content_tag :span, raw(content),
-      id: "document_for_use_in_next_print_#{document.id}"
+                id: "document_for_use_in_next_print_#{document.id}"
   end
 
   def get_barcode_for(document)

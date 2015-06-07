@@ -1,7 +1,7 @@
 root = '/var/rails/print_hub/current'
 working_directory root
 
-pid "/tmp/pids.print_hub.unicorn.pid"
+pid '/tmp/pids.print_hub.unicorn.pid'
 stderr_path "#{root}/log/unicorn.log"
 stdout_path "#{root}/log/unicorn.log"
 
@@ -14,9 +14,8 @@ preload_app true
 GC.respond_to?(:copy_on_write_friendly=) && GC.copy_on_write_friendly = true
 
 before_exec do |_|
-  ENV["BUNDLE_GEMFILE"] = File.join(root, 'Gemfile')
+  ENV['BUNDLE_GEMFILE'] = File.join(root, 'Gemfile')
 end
-
 
 before_fork do |server, worker|
   defined?(ActiveRecord::Base) && ActiveRecord::Base.connection.disconnect!
@@ -31,6 +30,6 @@ before_fork do |server, worker|
   end
 end
 
-after_fork do |server, worker|
+after_fork do |_server, _worker|
   defined?(ActiveRecord::Base) && ActiveRecord::Base.establish_connection
 end

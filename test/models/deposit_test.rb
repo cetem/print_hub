@@ -59,11 +59,11 @@ class DepositTest < ActiveSupport::TestCase
     assert @deposit.invalid?
     assert_equal 4, @deposit.errors.count
     assert_equal [error_message_from_model(@deposit, :amount, :blank),
-      error_message_from_model(@deposit, :amount, :not_a_number)].sort,
-      @deposit.errors[:amount].sort
+                  error_message_from_model(@deposit, :amount, :not_a_number)].sort,
+                 @deposit.errors[:amount].sort
     assert_equal [error_message_from_model(@deposit, :remaining, :blank),
-      error_message_from_model(@deposit, :remaining, :not_a_number)].sort,
-      @deposit.errors[:remaining].sort
+                  error_message_from_model(@deposit, :remaining, :not_a_number)].sort,
+                 @deposit.errors[:remaining].sort
   end
 
   # Prueba que las validaciones del modelo se cumplan como es esperado
@@ -75,9 +75,9 @@ class DepositTest < ActiveSupport::TestCase
     assert @deposit.invalid?
     assert_equal 2, @deposit.errors.count
     assert_equal [error_message_from_model(@deposit, :amount, :not_a_number)],
-      @deposit.errors[:amount]
+                 @deposit.errors[:amount]
     assert_equal [error_message_from_model(@deposit, :remaining, :not_a_number)],
-      @deposit.errors[:remaining]
+                 @deposit.errors[:remaining]
   end
 
   # Prueba que las validaciones del modelo se cumplan como es esperado
@@ -88,9 +88,9 @@ class DepositTest < ActiveSupport::TestCase
     assert @deposit.invalid?
     assert_equal 3, @deposit.errors.count
     assert_equal [error_message_from_model(@deposit, :amount, :greater_than,
-        count: 0)], @deposit.errors[:amount]
+                                           count: 0)], @deposit.errors[:amount]
     assert_equal [error_message_from_model(@deposit, :remaining,
-        :greater_than_or_equal_to, count: 0)], @deposit.errors[:remaining]
+                                           :greater_than_or_equal_to, count: 0)], @deposit.errors[:remaining]
     assert_equal [
       error_message_from_model(
         @deposit, :valid_until, :on_or_after,

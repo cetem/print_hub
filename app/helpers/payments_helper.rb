@@ -4,7 +4,7 @@ module PaymentsHelper
   end
 
   def show_payments_resume(deposits_amount)
-    scope = ['view', 'payments']
+    scope = %w(view payments)
     resume = [t('payments_count.html', scope: scope, count: @payments.count)]
 
     if deposits_amount > 0

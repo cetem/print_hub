@@ -13,7 +13,7 @@ class DocumentsUploader < CarrierWave::Uploader::Base
   # Create 1, 2 or 3 first pages thumbs from PDF
   # pdf_thumb and pdf_mini_thumb versions
   # pdf_thumb pdf_thumb_2 pdf_thumb_3
-  ['pdf_thumb', 'pdf_mini_thumb'].each do |thumb|
+  %w(pdf_thumb pdf_mini_thumb).each do |thumb|
     resolution = thumb.match(/mini/) ? 24 : 48
 
     version thumb.to_sym, if: :have_at_least_1_page? do
@@ -42,9 +42,9 @@ class DocumentsUploader < CarrierWave::Uploader::Base
     %w(pdf)
   end
 
-  def method_missing method_name, *args
+  def method_missing(method_name, *args)
     if method_name =~ /^have_at_least_(\d)_page/
-      model.pages.to_i >= $1.to_i
+      model.pages.to_i >= Regexp.last_match(1).to_i
     else
       super
     end

@@ -25,7 +25,6 @@ class UserTest < ActiveSupport::TestCase
   # Prueba la creación de un usuario
   test 'create' do
     assert_difference 'User.count' do
-
       @operator = new_generic_operator_with_avatar
 
       thumbs_dir = Pathname.new(@operator.reload.avatar.path).dirname
@@ -33,7 +32,7 @@ class UserTest < ActiveSupport::TestCase
       assert_equal 3, thumbs_dir.entries.reject(&:directory?).size
       # Asegurar que los archivos son imágenes y no esten vacíos
       assert_equal 3,
-        thumbs_dir.entries.select { |f| f.extname == '.png' && !f.zero? }.size
+                   thumbs_dir.entries.count { |f| f.extname == '.png' && !f.zero? }
     end
   end
 
@@ -41,7 +40,7 @@ class UserTest < ActiveSupport::TestCase
   test 'update' do
     assert_no_difference 'User.count' do
       assert @operator.update(name: 'Updated name'),
-        @operator.errors.full_messages.join('; ')
+             @operator.errors.full_messages.join('; ')
     end
 
     assert_equal 'Updated name', @operator.reload.name
@@ -63,13 +62,13 @@ class UserTest < ActiveSupport::TestCase
     assert @operator.invalid?
     assert_equal 4, @operator.errors.count
     assert_equal [error_message_from_model(@operator, :name, :blank)],
-      @operator.errors[:name]
+                 @operator.errors[:name]
     assert_equal [error_message_from_model(@operator, :last_name, :blank)],
-      @operator.errors[:last_name]
+                 @operator.errors[:last_name]
     assert_equal [error_message_from_model(@operator, :language, :blank)],
-      @operator.errors[:language]
+                 @operator.errors[:language]
     assert_equal [I18n.t('authlogic.error_messages.email_invalid')],
-      @operator.errors[:email]
+                 @operator.errors[:email]
   end
 
   # Prueba que las validaciones del modelo se cumplan como es esperado
@@ -80,9 +79,9 @@ class UserTest < ActiveSupport::TestCase
     assert @operator.invalid?
     assert_equal 3, @operator.errors.count
     assert_equal [I18n.t(:login_invalid, scope: [:authlogic, :error_messages])],
-      @operator.errors[:username]
+                 @operator.errors[:username]
     assert_equal [I18n.t(:email_invalid, scope: [:authlogic, :error_messages])],
-      @operator.errors[:email]
+                 @operator.errors[:email]
     assert_equal [
       error_message_from_model(@operator, :lines_per_page, :not_a_number)
     ], @operator.errors[:lines_per_page]
@@ -93,15 +92,15 @@ class UserTest < ActiveSupport::TestCase
     user = User.new(name: 'sample', last_name: 'user',
                     language: LANGUAGES.sample.to_s, email: @operator.email,
                     username: @operator.username, password: 'sample123',
-                    password_confirmation:'sample123')
+                    password_confirmation: 'sample123')
     user.username = users(:operator).username
     user.email = users(:operator).email
     assert user.invalid?
     assert_equal 2, user.errors.count
     assert_equal [error_message_from_model(user, :username, :taken)],
-      user.errors[:username]
+                 user.errors[:username]
     assert_equal [error_message_from_model(user, :email, :taken)],
-      user.errors[:email]
+                 user.errors[:email]
   end
 
   # Prueba que las validaciones del modelo se cumplan como es esperado
@@ -111,7 +110,7 @@ class UserTest < ActiveSupport::TestCase
     assert @operator.invalid?
     assert_equal 1, @operator.errors.count
     assert_equal [error_message_from_model(@operator, :password, :confirmation)],
-      @operator.errors[:password_confirmation]
+                 @operator.errors[:password_confirmation]
   end
 
   # Prueba que las validaciones del modelo se cumplan como es esperado
@@ -122,11 +121,11 @@ class UserTest < ActiveSupport::TestCase
     assert @operator.invalid?
     assert_equal 3, @operator.errors.count
     assert_equal [error_message_from_model(@operator, :username, :too_short,
-      count: 3)], @operator.errors[:username]
+                                           count: 3)], @operator.errors[:username]
     assert_equal [error_message_from_model(@operator, :password, :too_short,
-      count: 4)], @operator.errors[:password]
+                                           count: 4)], @operator.errors[:password]
     assert_equal [error_message_from_model(@operator, :password_confirmation,
-        :too_short, count: 4)], @operator.errors[:password_confirmation]
+                                           :too_short, count: 4)], @operator.errors[:password_confirmation]
 
     @operator.reload
 
@@ -138,16 +137,16 @@ class UserTest < ActiveSupport::TestCase
     assert @operator.invalid?
     assert_equal 8, @operator.errors.count
     assert_equal [error_message_from_model(@operator, :username, :too_long,
-      count: 100)], @operator.errors[:username]
+                                           count: 100)], @operator.errors[:username]
     assert_equal [error_message_from_model(@operator, :name, :too_long,
-      count: 100)], @operator.errors[:name]
+                                           count: 100)], @operator.errors[:name]
     assert_equal [error_message_from_model(@operator, :last_name, :too_long,
-      count: 100)], @operator.errors[:last_name]
+                                           count: 100)], @operator.errors[:last_name]
     assert_equal [error_message_from_model(@operator, :email, :too_long,
-      count: 100)], @operator.errors[:email]
+                                           count: 100)], @operator.errors[:email]
     assert_equal [error_message_from_model(@operator, :language, :inclusion),
-      error_message_from_model(@operator, :language, :too_long, count: 10)].sort,
-      @operator.errors[:language].sort
+                  error_message_from_model(@operator, :language, :too_long, count: 10)].sort,
+                 @operator.errors[:language].sort
   end
 
   # Prueba que las validaciones del modelo se cumplan como es esperado
@@ -156,7 +155,7 @@ class UserTest < ActiveSupport::TestCase
     assert @operator.invalid?
     assert_equal 1, @operator.errors.count
     assert_equal [error_message_from_model(@operator, :language, :inclusion)],
-      @operator.errors[:language]
+                 @operator.errors[:language]
   end
 
   # Prueba que las validaciones del modelo se cumplan como es esperado

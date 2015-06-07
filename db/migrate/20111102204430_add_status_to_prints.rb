@@ -1,7 +1,7 @@
 class AddStatusToPrints < ActiveRecord::Migration
   def change
     add_column :prints, :status, :string, limit: 1, null: false,
-      default: Print::STATUS[:paid]
+                                          default: Print::STATUS[:paid]
 
     add_index :prints, :status
 

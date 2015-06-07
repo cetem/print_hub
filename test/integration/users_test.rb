@@ -14,16 +14,16 @@ class UsersTest < ActionDispatch::IntegrationTest
     within 'form' do
       fill_in User.human_attribute_name('name'), with: 'Mace'
       fill_in User.human_attribute_name('last_name'), with: 'Windu'
-      select( I18n.t('lang.es'), from: 'user_language')
+      select(I18n.t('lang.es'), from: 'user_language')
       fill_in User.human_attribute_name('email'), with: 'mace@galactic.com'
       select(
         Cups.show_destinations.detect { |p| p =~ /pdf/i },
-          from: 'user_default_printer'
+        from: 'user_default_printer'
       )
       fill_in User.human_attribute_name('username'), with: 'MaceWindu'
       fill_in User.human_attribute_name('password'), with: 'KillSith'
       fill_in User.human_attribute_name('password_confirmation'),
-        with: 'KillSith'
+              with: 'KillSith'
       check 'user_enable'
 
       assert_difference 'User.count' do

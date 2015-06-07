@@ -1,6 +1,6 @@
 module BootstrapPaginationHelper
-	class LinkRenderer < WillPaginate::ActionView::LinkRenderer
-		protected
+  class LinkRenderer < WillPaginate::ActionView::LinkRenderer
+    protected
 
     def page_number(page)
       unless page == current_page
@@ -24,7 +24,7 @@ module BootstrapPaginationHelper
       if page
         link(text, page, class: classname)
       else
-        link(text, "#", class: classname + ' disabled')
+        link(text, '#', class: classname + ' disabled')
       end
     end
 
@@ -40,13 +40,11 @@ module BootstrapPaginationHelper
         target = url(target)
       end
 
-      unless target == "#"
-        attributes[:href] = target
-      end
+      attributes[:href] = target unless target == '#'
 
       classname = attributes[:class]
       attributes.delete(:classname)
       tag(:li, tag(:a, text, attributes), class: classname)
     end
-	end
+  end
 end

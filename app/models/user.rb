@@ -18,38 +18,38 @@ class User < ApplicationModel
   # Restricciones
   validates :name, :last_name, :language, presence: true
   validates :name, :last_name, length: { maximum: 100 },
-    allow_nil: true, allow_blank: true
+                               allow_nil: true, allow_blank: true
   validates :language, length: { maximum: 10 }, allow_nil: true,
-    allow_blank: true
+                       allow_blank: true
   validates :default_printer, length: { maximum: 255 },
-    allow_nil: true, allow_blank: true
+                              allow_nil: true, allow_blank: true
   validates :lines_per_page,
-    numericality: { only_integer: true, greater_than: 0, less_than: 100 },
-    allow_nil: true, allow_blank: true
+            numericality: { only_integer: true, greater_than: 0, less_than: 100 },
+            allow_nil: true, allow_blank: true
   validates :language, inclusion: { in: LANGUAGES.map(&:to_s) },
-    allow_nil: true, allow_blank: true
+                       allow_nil: true, allow_blank: true
 
   # Relaciones
   has_many :prints
   has_many :shifts
 
   def to_s
-    [self.name, self.last_name].join(' ')
+    [name, last_name].join(' ')
   end
 
   alias_method :label, :to_s
 
   def as_json(options = nil)
-   default_options = {
-     only: [:id],
-     methods: [:label, :informal, :admin]
-   }
+    default_options = {
+      only: [:id],
+      methods: [:label, :informal, :admin]
+    }
 
-   super(default_options.merge(options || {}))
+    super(default_options.merge(options || {}))
   end
 
   def active?
-    self.enable
+    enable
   end
 
   def self.find_by_username_or_email(login)
@@ -57,27 +57,27 @@ class User < ApplicationModel
   end
 
   def start_shift!(start = Time.zone.now)
-    self.shifts.create!(start: start)
+    shifts.create!(start: start)
   end
 
   def has_pending_shift?
-    self.shifts.pending.present?
+    shifts.pending.present?
   end
 
   def close_pending_shifts!
-    self.shifts.pending.all?(&:close!)
+    shifts.pending.all?(&:close!)
   end
 
   def has_stale_shift?
-    self.shifts.stale.present?
+    shifts.stale.present?
   end
 
   def stale_shift
-    self.shifts.stale.first
+    shifts.stale.first
   end
 
   def last_open_shift
-    self.shifts.order(start: :desc).first
+    shifts.order(start: :desc).first
   end
 
   def last_shift_open?
@@ -102,19 +102,17 @@ class User < ApplicationModel
       _shifts = shifts.pay_pending_between(start, finish)
 
       unless _shifts.all?(&:pay!)
-        Bugsnag.notify(RuntimeError.new( I18n.t('view.shifts.pay_error') ), {
-          user: {
-              id: self.id,
-              name: self.to_s
-            },
-          data: {
-              start: start,
-              finish: finish,
-              shifts_ids: _shifts.pluck(:id)
-            }
-        })
+        Bugsnag.notify(RuntimeError.new(I18n.t('view.shifts.pay_error')),           user: {
+                         id: id,
+                         name: to_s
+                       },
+                                                                                    data: {
+                                                                                      start: start,
+                                                                                      finish: finish,
+                                                                                      shifts_ids: _shifts.pluck(:id)
+                                                                                    })
 
-        raise ActiveRecord::Rollback
+        fail ActiveRecord::Rollback
       end
 
       true
@@ -123,10 +121,10 @@ class User < ApplicationModel
 
   def image_geometry(style_name = :original)
     @_image_dimensions ||= {}
-    file = style_name == :original ? self.avatar : self.avatar.send(style_name)
+    file = style_name == :original ? avatar : avatar.send(style_name)
 
-    if File.exists?(file.path)
-      MiniMagick::Image::open(file.path).tap do |img|
+    if File.exist?(file.path)
+      MiniMagick::Image.open(file.path).tap do |img|
         @_image_dimensions[style_name] ||= [
           [img[:width], img[:height]].join('x')
         ]

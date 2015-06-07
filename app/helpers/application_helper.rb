@@ -12,8 +12,8 @@ module ApplicationHelper
   def textilize_without_paragraph(text)
     textiled = textilize(text)
 
-    if textiled[0..2] == '<p>' then textiled = textiled[3..-1] end
-    if textiled[-4..-1] == '</p>' then textiled = textiled[0..-5] end
+    textiled = textiled[3..-1] if textiled[0..2] == '<p>'
+    textiled = textiled[0..-5] if textiled[-4..-1] == '</p>'
 
     textiled.html_safe
   end
@@ -95,9 +95,9 @@ module ApplicationHelper
 
     form_builder.fields_for(method, options[:object], child_index: options[:child_index]) do |f|
       render(options[:partial], {
-          options[:form_builder_local] => f, is_dynamic: options[:is_dynamic]
-        }.merge(options[:locals])
-      )
+        options[:form_builder_local] => f, is_dynamic: options[:is_dynamic]
+      }.merge(options[:locals])
+            )
     end
   end
 
@@ -112,13 +112,13 @@ module ApplicationHelper
   # * _fields_:: El objeto form para el que se va a generar el link
   def link_to_remove_nested_item(fields = nil, class_for_remove = nil)
     new_record = fields.nil? || fields.object.new_record?
-    out = String.new
+    out = ''
     out << fields.hidden_field(:_destroy, class: :destroy,
-      value: fields.object.marked_for_destruction? ? 1 : 0) unless new_record
+                                          value: fields.object.marked_for_destruction? ? 1 : 0) unless new_record
     out << link_to(
       '&#x2718;'.html_safe, '#', title: t('label.delete'), class: 'iconic',
-      'data-target' => ".#{class_for_remove || fields.object.class.name.underscore}",
-      'data-event' => (new_record ? 'removeItem' : 'hideItem')
+                                 'data-target' => ".#{class_for_remove || fields.object.class.name.underscore}",
+                                 'data-event' => (new_record ? 'removeItem' : 'hideItem')
     )
 
     raw out
@@ -129,9 +129,9 @@ module ApplicationHelper
   # * _objects_:: Objetos con los que se genera la lista paginada
   def pagination_links(objects, params = nil)
     result = will_paginate objects,
-      inner_window: 1, outer_window: 1, params: params,
-      renderer: BootstrapPaginationHelper::LinkRenderer,
-      class: 'pagination pagination-right'
+                           inner_window: 1, outer_window: 1, params: params,
+                           renderer: BootstrapPaginationHelper::LinkRenderer,
+                           class: 'pagination pagination-right'
     page_entries = content_tag(
       :blockquote,
       content_tag(
@@ -176,9 +176,9 @@ module ApplicationHelper
 
   def image_sprite(image, options = {})
     sprites = {
-      copyleft: {w: 70, h: 40, x: 0, y: 0},
-      solidarity: {w: 70, h: 40, x: 0, y: 50},
-      transformation: {w: 70, h: 40, x: 0, y: 110}
+      copyleft: { w: 70, h: 40, x: 0, y: 0 },
+      solidarity: { w: 70, h: 40, x: 0, y: 50 },
+      transformation: { w: 70, h: 40, x: 0, y: 110 }
     }
     style = <<-CSS
       background: url(#{image_path('welcome/sprites.gif')})
@@ -189,10 +189,10 @@ module ApplicationHelper
     CSS
 
     content_tag('span', options[:title],
-      class: "sprite #{options[:class]}",
-      style: style,
-      title: "#{options[:title]}"
-    )
+                class: "sprite #{options[:class]}",
+                style: style,
+                title: "#{options[:title]}"
+               )
   end
 
   def explorer?

@@ -1,13 +1,12 @@
 module UsersHelper
-
   def user_language_field(form)
     form.input :language,
-      collection: LANGUAGES.map { |l| [t("lang.#{l}"), l.to_s] }, prompt: true
+               collection: LANGUAGES.map { |l| [t("lang.#{l}"), l.to_s] }, prompt: true
   end
 
   def user_default_printer_field(form)
     form.input :default_printer,
-      collection: Cups.show_destinations.map { |d| [d, d] }, include_blank: true
+               collection: Cups.show_destinations.map { |d| [d, d] }, include_blank: true
   end
 
   def show_avatar(user, options = {})
@@ -17,7 +16,7 @@ module UsersHelper
     if user.avatar.file && File.exist?(file.path)
       thumb_dimensions = user.image_geometry(:mini)
       thumb_image_tag = image_tag file.url,
-        alt: user.to_s, size: thumb_dimensions
+                                  alt: user.to_s, size: thumb_dimensions
 
       content_tag :div, thumb_image_tag
     elsif options[:show_default]

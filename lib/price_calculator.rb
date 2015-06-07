@@ -15,9 +15,9 @@ class PriceCalculator
     one_sided_price ||= 0.00
 
     partial_price = if one_sided_price.zero?
-      options[:pages] * options[:price_per_copy]
-    else
-      even_pages * options[:price_per_copy] + one_sided_price
+                      options[:pages] * options[:price_per_copy]
+                    else
+                      even_pages * options[:price_per_copy] + one_sided_price
     end
 
     options[:copies] * partial_price

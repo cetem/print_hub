@@ -87,8 +87,8 @@ class ShiftsController < ApplicationController
   end
 
   def json_paginate
-    shifts = shifts_scope.finished.order(start: :desc).
-      limit(params[:limit].try(:to_i)).offset(params[:offset].to_i)
+    shifts = shifts_scope.finished.order(start: :desc)
+             .limit(params[:limit].try(:to_i)).offset(params[:offset].to_i)
 
     respond_to do |format|
       format.json { render json: shifts }

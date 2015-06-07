@@ -47,7 +47,6 @@ class CatalogControllerTest < ActionController::TestCase
     assert_template 'catalog/show'
   end
 
-
   test 'should add document to order' do
     assert session[:documents_to_order].blank?
 
@@ -55,7 +54,7 @@ class CatalogControllerTest < ActionController::TestCase
 
     xhr :post, :add_to_order, id: @document.to_param
     assert_response :success
-    assert_match %r{#{I18n.t(:title, scope: i18n_scope)}}, @response.body
+    assert_match /#{I18n.t(:title, scope: i18n_scope)}/, @response.body
     assert session[:documents_to_order].include?(@document.id)
   end
 
@@ -67,8 +66,8 @@ class CatalogControllerTest < ActionController::TestCase
 
     xhr :delete, :remove_from_order, id: @document.to_param
     assert_response :success
-    assert_match %r{#{I18n.t(:title, scope: i18n_scope)}},
-      @response.body
+    assert_match /#{I18n.t(:title, scope: i18n_scope)}/,
+                 @response.body
     assert !session[:documents_to_order].include?(@document.id)
 
     assert session[:documents_to_order].blank?

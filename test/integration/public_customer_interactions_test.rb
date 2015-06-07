@@ -32,9 +32,9 @@ class PublicCustomerInteractionsTest < ActionDispatch::IntegrationTest
     assert page.has_content?(I18n.t('view.customers.correctly_registered'))
 
     fill_in I18n.t('authlogic.attributes.customer_session.email'),
-      with: 'jar_jar@printhub.com'
+            with: 'jar_jar@printhub.com'
     fill_in I18n.t('authlogic.attributes.customer_session.password'),
-      with: 'jj12'
+            with: 'jj12'
 
     click_button I18n.t('view.customer_sessions.login')
 
@@ -64,7 +64,7 @@ class PublicCustomerInteractionsTest < ActionDispatch::IntegrationTest
 
       assert page.has_css?('.alert', text:
         I18n.t('view.password_resets.instructions_delivered')
-      )
+                          )
     end
   end
 
@@ -81,7 +81,7 @@ class PublicCustomerInteractionsTest < ActionDispatch::IntegrationTest
       end
 
       assert_equal 'new_customer',
-        Feedback.positive.order('created_at').last.item
+                   Feedback.positive.order('created_at').last.item
     end
   end
 
@@ -108,7 +108,7 @@ class PublicCustomerInteractionsTest < ActionDispatch::IntegrationTest
       assert page.has_content?(I18n.t('view.feedbacks.negative_comment_return'))
 
       assert_equal 'No me sirve',
-        Feedback.negative.order('created_at').last.comments
+                   Feedback.negative.order('created_at').last.comments
     end
   end
 end

@@ -40,11 +40,10 @@ class PrintsTest < ActionDispatch::IntegrationTest
     assert_equal new_print_path, current_path
     assert page.has_css?('.print_job', count: 1)
 
-    barcode = find(:css, "input[id^='#@ac_field']").value
+    barcode = find(:css, "input[id^='#{@ac_field}']").value
 
     assert_equal Document.order('code DESC').first.code.to_i,
-      barcode.match(/\[(\d+)/)[1].to_i
-
+                 barcode.match(/\[(\d+)/)[1].to_i
   end
 
   test 'should print' do
@@ -70,13 +69,13 @@ class PrintsTest < ActionDispatch::IntegrationTest
     )
 
     within '.print_job' do
-      find(:css, "input[id^='#@ac_field']").set('Math Book')
+      find(:css, "input[id^='#{@ac_field}']").set('Math Book')
       sleep 1
       assert page.has_xpath?("//li[@class='ui-menu-item']", visible: true)
-      find(:css, "input[id^='#@ac_field']").native.send_keys :arrow_down, :tab
+      find(:css, "input[id^='#{@ac_field}']").native.send_keys :arrow_down, :tab
 
       assert_equal find('select[name$="[print_job_type_id]"]').value,
-        print_job_types(:color).id.to_s
+                   print_job_types(:color).id.to_s
     end
 
     within 'form.new_print' do
@@ -109,7 +108,7 @@ class PrintsTest < ActionDispatch::IntegrationTest
     assert page.has_css?('form.new_print')
 
     within 'form.new_print' do
-      select(nil, from: 'print_printer' ) # the :blank option deprecated...
+      select(nil, from: 'print_printer') # the :blank option deprecated...
       fill_in 'print_scheduled_at', with: ''
       assert page.has_css?('div.datetime_picker')
 
@@ -129,10 +128,10 @@ class PrintsTest < ActionDispatch::IntegrationTest
     end
 
     within '.print_job' do
-      find(:css, "input[id^='#@ac_field']").set('Math')
+      find(:css, "input[id^='#{@ac_field}']").set('Math')
       sleep 1
       assert page.has_xpath?("//li[@class='ui-menu-item']", visible: true)
-      find(:css, "input[id^='#@ac_field']").native.send_keys :arrow_down, :tab
+      find(:css, "input[id^='#{@ac_field}']").native.send_keys :arrow_down, :tab
     end
 
     assert_difference 'Print.count' do
@@ -164,10 +163,10 @@ class PrintsTest < ActionDispatch::IntegrationTest
     end
 
     within '.print_job' do
-      find(:css, "input[id^='#@ac_field']").set('Math')
+      find(:css, "input[id^='#{@ac_field}']").set('Math')
       sleep 1
       assert page.has_xpath?("//li[@class='ui-menu-item']", visible: true)
-      find(:css, "input[id^='#@ac_field']").native.send_keys :arrow_down, :tab
+      find(:css, "input[id^='#{@ac_field}']").native.send_keys :arrow_down, :tab
     end
 
     print_job_price = first(
@@ -184,7 +183,6 @@ class PrintsTest < ActionDispatch::IntegrationTest
         assert page.has_xpath?("//li[@class='ui-menu-item']", visible: true)
         find(:css, "input[id^='#{art_id}']").native.send_keys :arrow_down, :tab
       end
-
     end
 
     article_price = first(:css, '#articles_container .money').text.gsub('$', '')
@@ -230,11 +228,11 @@ class PrintsTest < ActionDispatch::IntegrationTest
       "$('div.print_job .row-fluid .span2').append($('#{retard_input}'));"
     )
 
-    within '.print_job' do |ac|
-      find(:css, "input[id^='#@ac_field']").set('Math')
+    within '.print_job' do |_ac|
+      find(:css, "input[id^='#{@ac_field}']").set('Math')
       sleep 1
       assert page.has_xpath?("//li[@class='ui-menu-item']", visible: true)
-      find(:css, "input[id^='#@ac_field']").native.send_keys :arrow_down, :tab
+      find(:css, "input[id^='#{@ac_field}']").native.send_keys :arrow_down, :tab
     end
 
     assert_difference 'Print.count' do
@@ -286,11 +284,11 @@ class PrintsTest < ActionDispatch::IntegrationTest
       fill_in 'print_credit_password', with: 'student123'
     end
 
-    within '.print_job' do |ac|
-      find(:css, "input[id^='#@ac_field']").set('Math')
+    within '.print_job' do |_ac|
+      find(:css, "input[id^='#{@ac_field}']").set('Math')
       sleep 1
       assert page.has_xpath?("//li[@class='ui-menu-item']", visible: true)
-      find(:css, "input[id^='#@ac_field']").native.send_keys :arrow_down, :tab
+      find(:css, "input[id^='#{@ac_field}']").native.send_keys :arrow_down, :tab
     end
 
     assert_difference ['Print.count', 'customer.prints.count'] do
@@ -307,9 +305,9 @@ class PrintsTest < ActionDispatch::IntegrationTest
     login
 
     customer = customers(:student)
-    customer.prints.each { |pr| pr.pay_print }
+    customer.prints.each(&:pay_print)
 
-    customer.prints.each { |pr| pr.pay_print }
+    customer.prints.each(&:pay_print)
 
     assert_page_has_no_errors!
     assert_equal prints_path, current_path
@@ -337,11 +335,11 @@ class PrintsTest < ActionDispatch::IntegrationTest
 
     assert find('#print_pay_later').checked?
 
-    within '.print_job' do |ac|
-      find(:css, "input[id^='#@ac_field']").set('Math')
+    within '.print_job' do |_ac|
+      find(:css, "input[id^='#{@ac_field}']").set('Math')
       sleep 1
       assert page.has_xpath?("//li[@class='ui-menu-item']", visible: true)
-      find(:css, "input[id^='#@ac_field']").native.send_keys :arrow_down, :tab
+      find(:css, "input[id^='#{@ac_field}']").native.send_keys :arrow_down, :tab
     end
 
     assert_difference(

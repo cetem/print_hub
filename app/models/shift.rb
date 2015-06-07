@@ -5,11 +5,11 @@ class Shift < ActiveRecord::Base
   scope :pending,     -> { where(finish: nil) }
   scope :finished,    -> { where.not(finish: nil) }
   scope :pay_pending, -> { finished.where(paid: false) }
-  scope :stale, -> {
+  scope :stale, lambda {
     pending.where("#{table_name}.start < ?", 8.hours.ago)
   }
   scope :between, -> (start, finish) { where(start: start..finish) }
-  scope :pay_pending_between, -> (start, finish) {
+  scope :pay_pending_between, lambda  { |start, finish|
     pay_pending.between(
       start.beginning_of_day, finish.end_of_day
     ).order(start: :asc)
@@ -21,9 +21,9 @@ class Shift < ActiveRecord::Base
   validates :start, :user_id, presence: true
   validates_datetime :start, allow_nil: true, allow_blank: true
   validates_datetime :start, after: :start_limit, before: :finish,
-    allow_nil: true, allow_blank: true, if: :finish_present?
+                             allow_nil: true, allow_blank: true, if: :finish_present?
   validates_datetime :finish, after: :start, before: :finish_limit,
-    allow_nil: true, allow_blank: true
+                              allow_nil: true, allow_blank: true
 
   # Relaciones
   belongs_to :user
@@ -33,33 +33,29 @@ class Shift < ActiveRecord::Base
 
     self.start ||= Time.zone.now
 
-    if self.as_admin.nil?
-      self.as_admin = self.user.admin?
-    end
+    self.as_admin = user.admin? if as_admin.nil?
   end
 
   def as_json(options = nil)
-   default_options = {
-     only: [:id, :user_id, :start, :finish, :paid, :created_at]
-   }
+    default_options = {
+      only: [:id, :user_id, :start, :finish, :paid, :created_at]
+    }
 
-   super(default_options.merge(options || {}))
+    super(default_options.merge(options || {}))
   end
 
-  def finish_present?
-    self.finish.present?
-  end
+  delegate :present?, to: :finish, prefix: true
 
   def pending?
-    self.finish.blank?
+    finish.blank?
   end
 
   def close!
-    self.update_attributes(finish: Time.zone.now)
+    update_attributes(finish: Time.zone.now)
   end
 
   def start_limit
-    (self.finish - SHIFT_MAX_RANGE) if self.finish
+    (finish - SHIFT_MAX_RANGE) if finish
   end
 
   def finish_limit
@@ -67,16 +63,14 @@ class Shift < ActiveRecord::Base
   end
 
   def pay!
-    self.update_attributes(paid: true)
+    update_attributes(paid: true)
 
-    if self.errors.any?
+    if errors.any?
       Bugsnag.notify(
-        RuntimeError.new( I18n.t('view.shifts.pay_error') + '- ShiftModel' ), {
-          shift: {
-            id: self.id,
-            user: self.user.to_s,
-            errors: self.errors
-          }
+        RuntimeError.new(I18n.t('view.shifts.pay_error') + '- ShiftModel'),           shift: {
+          id: id,
+          user: user.to_s,
+          errors: errors
         }
       )
     else

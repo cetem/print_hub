@@ -107,7 +107,7 @@ class CustomersGroupsController < ApplicationController
   end
 
   def global_settlement
-    require 'gdrive' #VillageCines
+    require 'gdrive' # VillageCines
 
     interval      = params.require(:interval).permit(:from, :to)
     start, finish = *make_datetime_range(interval)
@@ -123,16 +123,16 @@ class CustomersGroupsController < ApplicationController
     )
 
     redirect_to customers_groups_path,
-      notice: t('view.customers_groups.spreadsheat_uploaded')
+                notice: t('view.customers_groups.spreadsheat_uploaded')
   end
 
   private
 
-    def customers_group_params
-      params.require(:customers_group).permit(:id, :name)
-    end
+  def customers_group_params
+    params.require(:customers_group).permit(:id, :name)
+  end
 
-    def load_group
-      @customers_group = CustomersGroup.find(params[:id])
-    end
+  def load_group
+    @customers_group = CustomersGroup.find(params[:id])
+  end
 end

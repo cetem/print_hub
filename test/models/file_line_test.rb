@@ -10,38 +10,36 @@ class FileLineTest < ActiveSupport::TestCase
   test 'find' do
     assert_kind_of FileLine, @file_line
     assert_equal file_lines(:from_yesterday_cv_file).copies,
-      @file_line.copies
+                 @file_line.copies
     assert_equal file_lines(:from_yesterday_cv_file).price_per_copy,
-      @file_line.price_per_copy
+                 @file_line.price_per_copy
     assert_equal file_lines(:from_yesterday_cv_file).print_job_type_id,
-      @file_line.print_job_type_id
+                 @file_line.print_job_type_id
     assert_equal file_lines(:from_yesterday_cv_file).order_id,
-      @file_line.order_id
+                 @file_line.order_id
   end
 
   # Prueba la creación de un ítem de una orden
   test 'create' do
     assert_difference 'FileLine.count' do
-      @file_line = FileLine.create({
-        copies: 2,
-        print_job_type_id: print_job_types(:color).id,
-        file: Rack::Test::UploadedFile.new(
-          File.join(Rails.root, 'test', 'fixtures', 'files', 'test.pdf')
-        )
-      })
+      @file_line = FileLine.create(copies: 2,
+                                   print_job_type_id: print_job_types(:color).id,
+                                   file: Rack::Test::UploadedFile.new(
+                                     File.join(Rails.root, 'test', 'fixtures', 'files', 'test.pdf')
+                                   ))
     end
 
     # El precio por copia no se puede alterar
     price = PriceChooser.choose(type: print_job_types(:color).id, copies: 2)
     assert_equal '%.2f' % price,
-      '%.2f' % @file_line.reload.price_per_copy
+                 '%.2f' % @file_line.reload.price_per_copy
   end
 
   # Prueba de actualización de un ítem de una orden
   test 'update' do
     assert_no_difference 'FileLine.count' do
       assert @file_line.update_attributes(pages: 20),
-        @file_line.errors.full_messages.join('; ')
+             @file_line.errors.full_messages.join('; ')
     end
 
     assert_equal 20, @file_line.reload.pages
@@ -59,9 +57,9 @@ class FileLineTest < ActiveSupport::TestCase
     assert @file_line.invalid?
     assert_equal 2, @file_line.errors.count
     assert_equal [error_message_from_model(@file_line, :copies, :blank)],
-      @file_line.errors[:copies]
+                 @file_line.errors[:copies]
     assert_equal [error_message_from_model(@file_line, :price_per_copy,
-      :blank)], @file_line.errors[:price_per_copy]
+                                           :blank)], @file_line.errors[:price_per_copy]
   end
 
   # Prueba que las validaciones del modelo se cumplan como es esperado
@@ -71,9 +69,9 @@ class FileLineTest < ActiveSupport::TestCase
     assert @file_line.invalid?
     assert_equal 2, @file_line.errors.count
     assert_equal [error_message_from_model(@file_line, :copies, :not_a_number)],
-      @file_line.errors[:copies]
+                 @file_line.errors[:copies]
     assert_equal [error_message_from_model(@file_line, :price_per_copy,
-        :not_a_number)], @file_line.errors[:price_per_copy]
+                                           :not_a_number)], @file_line.errors[:price_per_copy]
   end
 
   test 'validates integer attributes' do
@@ -82,7 +80,7 @@ class FileLineTest < ActiveSupport::TestCase
     assert @file_line.invalid?
     assert_equal 1, @file_line.errors.count
     assert_equal [error_message_from_model(@file_line, :copies, :not_an_integer)],
-      @file_line.errors[:copies]
+                 @file_line.errors[:copies]
   end
 
   test 'validates correct range of attributes' do
@@ -105,7 +103,7 @@ class FileLineTest < ActiveSupport::TestCase
     assert_equal 1, @file_line.errors.count
     assert_equal [
       error_message_from_model(
-        @file_line, :copies, :less_than, count: 2147483648
+        @file_line, :copies, :less_than, count: 2_147_483_648
       )
     ], @file_line.errors[:copies]
   end

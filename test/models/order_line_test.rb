@@ -13,26 +13,24 @@ class OrderLineTest < ActiveSupport::TestCase
   test 'find' do
     assert_kind_of OrderLine, @order_line
     assert_equal order_lines(:from_yesterday_math_notes).copies,
-      @order_line.copies
+                 @order_line.copies
     assert_equal order_lines(:from_yesterday_math_notes).price_per_copy,
-      @order_line.price_per_copy
+                 @order_line.price_per_copy
     assert_equal order_lines(:from_yesterday_math_notes).print_job_type_id,
-      @order_line.print_job_type_id
+                 @order_line.print_job_type_id
     assert_equal order_lines(:from_yesterday_math_notes).document_id,
-      @order_line.document_id
+                 @order_line.document_id
     assert_equal order_lines(:from_yesterday_math_notes).order_id,
-      @order_line.order_id
+                 @order_line.order_id
   end
 
   # Prueba la creación de un ítem de una orden
   test 'create with document' do
     assert_difference 'OrderLine.count' do
-      @order_line = OrderLine.create({
-        copies: 2,
-        price_per_copy: 1.10,
-        print_job_type_id: print_job_types(:color).id,
-        document_id: documents(:math_book).id
-      })
+      @order_line = OrderLine.create(copies: 2,
+                                     price_per_copy: 1.10,
+                                     print_job_type_id: print_job_types(:color).id,
+                                     document_id: documents(:math_book).id)
     end
 
     # El precio por copia no se puede alterar
@@ -41,14 +39,14 @@ class OrderLineTest < ActiveSupport::TestCase
       copies: documents(:math_book).pages * 2
     )
     assert_equal '%.2f' % price,
-      '%.2f' % @order_line.reload.price_per_copy
+                 '%.2f' % @order_line.reload.price_per_copy
   end
 
   # Prueba de actualización de un ítem de una orden
   test 'update' do
     assert_no_difference 'OrderLine.count' do
       assert @order_line.update(copies: 20),
-        @order_line.errors.full_messages.join('; ')
+             @order_line.errors.full_messages.join('; ')
     end
 
     assert_equal 20, @order_line.reload.copies
@@ -66,9 +64,9 @@ class OrderLineTest < ActiveSupport::TestCase
     assert @order_line.invalid?
     assert_equal 2, @order_line.errors.count
     assert_equal [error_message_from_model(@order_line, :copies, :blank)],
-      @order_line.errors[:copies]
+                 @order_line.errors[:copies]
     assert_equal [error_message_from_model(@order_line, :price_per_copy,
-        :blank)], @order_line.errors[:price_per_copy]
+                                           :blank)], @order_line.errors[:price_per_copy]
   end
 
   # Prueba que las validaciones del modelo se cumplan como es esperado
@@ -78,9 +76,9 @@ class OrderLineTest < ActiveSupport::TestCase
     assert @order_line.invalid?
     assert_equal 2, @order_line.errors.count
     assert_equal [error_message_from_model(@order_line, :copies, :not_a_number)],
-      @order_line.errors[:copies]
+                 @order_line.errors[:copies]
     assert_equal [error_message_from_model(@order_line, :price_per_copy,
-      :not_a_number)], @order_line.errors[:price_per_copy]
+                                           :not_a_number)], @order_line.errors[:price_per_copy]
   end
 
   test 'validates integer attributes' do
@@ -89,7 +87,7 @@ class OrderLineTest < ActiveSupport::TestCase
     assert @order_line.invalid?
     assert_equal 1, @order_line.errors.count
     assert_equal [error_message_from_model(@order_line, :copies, :not_an_integer)],
-      @order_line.errors[:copies]
+                 @order_line.errors[:copies]
   end
 
   test 'validates correct range of attributes' do
@@ -112,7 +110,7 @@ class OrderLineTest < ActiveSupport::TestCase
     assert_equal 1, @order_line.errors.count
     assert_equal [
       error_message_from_model(
-        @order_line, :copies, :less_than, count: 2147483648
+        @order_line, :copies, :less_than, count: 2_147_483_648
       )
     ], @order_line.errors[:copies]
   end

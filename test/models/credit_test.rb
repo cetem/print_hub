@@ -58,11 +58,11 @@ class CreditTest < ActiveSupport::TestCase
     assert @credit.invalid?
     assert_equal 4, @credit.errors.count
     assert_equal [error_message_from_model(@credit, :amount, :blank),
-      error_message_from_model(@credit, :amount, :not_a_number)].sort,
-      @credit.errors[:amount].sort
+                  error_message_from_model(@credit, :amount, :not_a_number)].sort,
+                 @credit.errors[:amount].sort
     assert_equal [error_message_from_model(@credit, :remaining, :blank),
-      error_message_from_model(@credit, :remaining, :not_a_number)].sort,
-      @credit.errors[:remaining].sort
+                  error_message_from_model(@credit, :remaining, :not_a_number)].sort,
+                 @credit.errors[:remaining].sort
   end
 
   # Prueba que las validaciones del modelo se cumplan como es esperado
@@ -74,11 +74,11 @@ class CreditTest < ActiveSupport::TestCase
     assert @credit.invalid?
     assert_equal 2, @credit.errors.count
     assert_equal [error_message_from_model(@credit, :amount, :not_a_number)],
-      @credit.errors[:amount]
+                 @credit.errors[:amount]
     assert_equal [error_message_from_model(@credit, :remaining, :not_a_number)],
-      @credit.errors[:remaining]
-#    assert_equal [error_message_from_model(@credit, :valid_until,
-#        :invalid_date)], @credit.errors[:valid_until]
+                 @credit.errors[:remaining]
+    #    assert_equal [error_message_from_model(@credit, :valid_until,
+    #        :invalid_date)], @credit.errors[:valid_until]
   end
 
   # Prueba que las validaciones del modelo se cumplan como es esperado
@@ -89,19 +89,19 @@ class CreditTest < ActiveSupport::TestCase
     assert @credit.invalid?
     assert_equal 3, @credit.errors.count
     assert_equal [error_message_from_model(@credit, :amount, :greater_than,
-        count: 0)], @credit.errors[:amount]
+                                           count: 0)], @credit.errors[:amount]
     assert_equal [error_message_from_model(@credit, :remaining,
-        :greater_than_or_equal_to, count: 0)], @credit.errors[:remaining]
+                                           :greater_than_or_equal_to, count: 0)], @credit.errors[:remaining]
     assert_equal [error_message_from_model(@credit, :valid_until, :on_or_after,
-        restriction: I18n.l(Time.zone.today))], @credit.errors[:valid_until]
+                                           restriction: I18n.l(Time.zone.today))], @credit.errors[:valid_until]
 
     @credit.reload
     @credit.remaining = @credit.amount + 1
     assert @credit.invalid?
     assert_equal 1, @credit.errors.count
     assert_equal [error_message_from_model(@credit, :remaining,
-        :less_than_or_equal_to, count: @credit.amount)],
-      @credit.errors[:remaining]
+                                           :less_than_or_equal_to, count: @credit.amount)],
+                 @credit.errors[:remaining]
   end
 
   test 'still valid' do

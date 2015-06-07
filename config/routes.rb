@@ -7,7 +7,6 @@ class ActionDispatch::Routing::Mapper
 end
 
 Rails.application.routes.draw do
-
   constraints(CustomerSubdomain) do
     draw :customer, :catalog
     draw :customer, :customer

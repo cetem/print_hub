@@ -107,11 +107,11 @@ class CatalogController < ApplicationController
   end
 
   def sort_column
-    %w[code name].include?(params[:sort]) ? params[:sort] : 'code'
+    %w(code name).include?(params[:sort]) ? params[:sort] : 'code'
   end
 
   def sort_direction
-    %w[asc desc].include?(params[:direction]) ?
+    %w(asc desc).include?(params[:direction]) ?
       params[:direction] : default_direction
   end
 

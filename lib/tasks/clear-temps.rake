@@ -23,13 +23,13 @@ namespace :tasks do
   private
 
   def delete_files_older_than_7_days(directory)
-    output = %x{find #{directory} -type f -mtime +7 | xargs rm -rf}
-    %x{echo -en "#{output}" >> #{directory}/log/deleted_files.log}
+    output = `find #{directory} -type f -mtime +7 | xargs rm -rf`
+    `echo -en "#{output}" >> #{directory}/log/deleted_files.log`
   end
 
   def delete_empty_files_folder(directory)
-    dirs = %x{find #{directory} -type d}.split("\n").reverse
+    dirs = `find #{directory} -type d`.split("\n").reverse
 
-    dirs.each { |d| Dir.rmdir(d) if (Dir.entries(d) - %w[. ..]).empty? }
+    dirs.each { |d| Dir.rmdir(d) if (Dir.entries(d) - %w(. ..)).empty? }
   end
 end

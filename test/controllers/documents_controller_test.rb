@@ -11,7 +11,6 @@ class DocumentsControllerTest < ActionController::TestCase
   end
 
   test 'should get index' do
-
     get :index
     assert_response :success
     assert_not_nil assigns(:documents)
@@ -157,7 +156,7 @@ class DocumentsControllerTest < ActionController::TestCase
 
     xhr :post, :add_to_next_print, id: @document.to_param
     assert_response :success
-    assert_match %r{#{I18n.t(:title, scope: i18n_scope)}}, @response.body
+    assert_match /#{I18n.t(:title, scope: i18n_scope)}/, @response.body
     assert session[:documents_for_printing].include?(@document.id)
   end
 
@@ -169,8 +168,8 @@ class DocumentsControllerTest < ActionController::TestCase
 
     xhr :delete, :remove_from_next_print, id: @document.to_param
     assert_response :success
-    assert_match %r{#{I18n.t(:title, scope: i18n_scope)}},
-      @response.body
+    assert_match /#{I18n.t(:title, scope: i18n_scope)}/,
+                 @response.body
     assert !session[:documents_for_printing].include?(@document.id)
 
     assert session[:documents_for_printing].blank?

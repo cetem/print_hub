@@ -35,7 +35,7 @@ class ShiftTest < ActiveSupport::TestCase
       1.minute.ago.to_datetime.tap do |finish|
         assert_no_difference 'Shift.count' do
           assert @shift.update(start: start, finish: finish),
-            @shift.errors.full_messages.join('; ')
+                 @shift.errors.full_messages.join('; ')
         end
 
         assert_equal start.to_i, @shift.reload.start.to_i
@@ -56,9 +56,9 @@ class ShiftTest < ActiveSupport::TestCase
     assert @shift.invalid?
     assert_equal 2, @shift.errors.count
     assert_equal [error_message_from_model(@shift, :start, :blank)],
-      @shift.errors[:start]
+                 @shift.errors[:start]
     assert_equal [error_message_from_model(@shift, :user_id, :blank)],
-      @shift.errors[:user_id]
+                 @shift.errors[:user_id]
   end
 
   # Prueba que las validaciones del modelo se cumplan como es esperado
@@ -72,7 +72,7 @@ class ShiftTest < ActiveSupport::TestCase
       error_message_from_model(@shift, :start, :blank)
     ].sort, @shift.errors[:start].sort
     assert_equal [error_message_from_model(@shift, :finish, :invalid_date)],
-      @shift.errors[:finish]
+                 @shift.errors[:finish]
   end
 
   # Prueba que las validaciones del modelo se cumplan como es esperado

@@ -6,7 +6,7 @@ class AddPrintedPagesToPrintJobs < ActiveRecord::Migration
       pj.update_attribute(:printed_pages, pj.range_pages * pj.copies)
     end
 
-    change_column :print_jobs, :printed_pages, :integer, :null => false
+    change_column :print_jobs, :printed_pages, :integer, null: false
   end
 
   def self.down

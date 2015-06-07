@@ -13,8 +13,8 @@ class AddIndexesToCustomers < ActiveRecord::Migration
     if DB_ADAPTER == 'PostgreSQL'
       execute 'DROP INDEX index_customers_on_identification_name_and_lastname_ts'
     else
-      remove_index :customers, :column => :name
-      remove_index :customers, :column => :lastname
+      remove_index :customers, column: :name
+      remove_index :customers, column: :lastname
     end
   end
 end
