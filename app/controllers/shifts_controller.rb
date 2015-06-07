@@ -7,18 +7,9 @@ class ShiftsController < ApplicationController
   def index
     @title = t('view.shifts.index_title')
 
-    @shifts = if params[:pay_pending_shifts_for_user_between]
-      param = params[:pay_pending_shifts_for_user_between]
-      start, finish = make_datetime_range(
-        from: param[:start], to: param[:finish]
-      ).map(&:to_date)
-
-      shifts_scope.pending_between(start, finish)
-    else
-      shifts_scope.order('start DESC').paginate(
-        page: params[:page], per_page: lines_per_page
-      )
-    end
+    @shifts = shifts_scope.order(start: :desc).paginate(
+      page: params[:page], per_page: lines_per_page
+    )
 
     respond_to do |format|
       format.html # index.html.erb

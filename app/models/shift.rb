@@ -9,6 +9,13 @@ class Shift < ActiveRecord::Base
     pending.where("#{table_name}.start < ?", 8.hours.ago)
   }
   scope :between, -> (start, finish) { where(start: start..finish) }
+  scope :pay_pending_between, -> (start, finish) {
+    pay_pending.between(
+      start.beginning_of_day, finish.end_of_day
+    ).order(start: :asc)
+  }
+  scope :as_admin, -> { where(as_admin: true) }
+  scope :as_operator, -> { where(as_admin: false) }
 
   # Restricciones
   validates :start, :user_id, presence: true
@@ -61,11 +68,42 @@ class Shift < ActiveRecord::Base
 
   def pay!
     self.update_attributes(paid: true)
+
+    if self.errors.any?
+      Bugsnag.notify(
+        RuntimeError.new( I18n.t('view.shifts.pay_error') + '- ShiftModel' ), {
+          shift: {
+            id: self.id,
+            user: self.user.to_s,
+            errors: self.errors
+          }
+        }
+      )
+    else
+      true
+    end
   end
 
-  def self.pending_between(start, finish)
-    pay_pending.between(
-      start.beginning_of_day, finish.end_of_day
-    ).order(start: :asc)
+  def self.as_operator_between(start, finish)
+    as_operator.pay_pending_between(start, finish).to_stats_format
+  end
+
+  def self.as_admin_between(start, finish)
+    as_admin.pay_pending_between(start, finish).to_stats_format
+  end
+
+  def self.to_stats_format
+    if (_count = all.count) > 0
+      {
+        hours: all.worked_hours,
+        count: _count
+      }
+    end
+  end
+
+  def self.worked_hours
+    (
+      all.to_a.sum { |s| s.finish - s.start } / 3600.0
+    ).round(2)
   end
 end

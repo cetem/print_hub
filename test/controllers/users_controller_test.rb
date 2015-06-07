@@ -129,4 +129,29 @@ class UsersControllerTest < ActionController::TestCase
 
     assert_equal 1, users.size
   end
+
+  test 'should get pay pending for user between dates' do
+    Shift.all.update_all(paid: false)
+    finished_shifts = Shift.finished.count
+
+    from = 1.month.ago.to_date
+    to = Time.zone.today
+    users_shifts = User.pay_pending_shifts_for_active_users_between(from, to).first
+
+    get :pay_pending_shifts_for_active_users_between, format: :json,
+      start: from.to_s(:db), finish: to.to_s(:db)
+
+    assert_response :success
+
+    response_users_shifts = ActiveSupport::JSON.decode(@response.body).first.deep_symbolize_keys
+    response_shifts = response_users_shifts[:shifts]
+    response_shifts_count = (
+      response_shifts[:operator][:count] +
+      response_shifts[:admin][:count]
+    )
+
+    assert_equal users_shifts, response_users_shifts
+    assert finished_shifts > 0
+    assert_equal finished_shifts, response_shifts_count
+  end
 end

@@ -49,10 +49,14 @@ class ActiveSupport::TestCase
     atributes[:password_confirmation] ||= 'generic_user123'
     atributes[:admin]                 ||= 'false'
     atributes[:enable]                ||= true
-    atributes[:avatar]                ||= avatar_test_file
+    atributes[:avatar]                ||= 'sample.png'
     atributes[:not_shifted]           ||= false
 
     User.create! atributes
+  end
+
+  def new_generic_operator_with_avatar
+    new_generic_operator(avatar: avatar_test_file)
   end
 
   private

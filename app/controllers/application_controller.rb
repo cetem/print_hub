@@ -15,7 +15,10 @@ class ApplicationController < ActionController::Base
       exception.backtrace.each { |l| error << "#{l}\n" }
 
       unless response.redirect_url
-        render template: 'shared/show_error', locals: { error: exception }
+        begin
+          render template: 'shared/show_error', locals: { error: exception }
+        rescue
+        end
       end
 
       logger.error(error)

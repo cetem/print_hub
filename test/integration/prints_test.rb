@@ -11,6 +11,7 @@ class PrintsTest < ActionDispatch::IntegrationTest
 
     assert_page_has_no_errors!
     assert_equal prints_path, current_path
+    sleep 1
     assert page.has_css?('.nav-collapse')
 
     within '.nav-collapse' do
@@ -70,6 +71,7 @@ class PrintsTest < ActionDispatch::IntegrationTest
 
     within '.print_job' do
       find(:css, "input[id^='#@ac_field']").set('Math Book')
+      sleep 1
       assert page.has_xpath?("//li[@class='ui-menu-item']", visible: true)
       find(:css, "input[id^='#@ac_field']").native.send_keys :arrow_down, :tab
 
@@ -128,6 +130,7 @@ class PrintsTest < ActionDispatch::IntegrationTest
 
     within '.print_job' do
       find(:css, "input[id^='#@ac_field']").set('Math')
+      sleep 1
       assert page.has_xpath?("//li[@class='ui-menu-item']", visible: true)
       find(:css, "input[id^='#@ac_field']").native.send_keys :arrow_down, :tab
     end
@@ -162,6 +165,7 @@ class PrintsTest < ActionDispatch::IntegrationTest
 
     within '.print_job' do
       find(:css, "input[id^='#@ac_field']").set('Math')
+      sleep 1
       assert page.has_xpath?("//li[@class='ui-menu-item']", visible: true)
       find(:css, "input[id^='#@ac_field']").native.send_keys :arrow_down, :tab
     end
@@ -176,6 +180,7 @@ class PrintsTest < ActionDispatch::IntegrationTest
 
       within '#articles_container' do
         find(:css, "input[id^='#{art_id}']").set('ringed')
+        sleep 1
         assert page.has_xpath?("//li[@class='ui-menu-item']", visible: true)
         find(:css, "input[id^='#{art_id}']").native.send_keys :arrow_down, :tab
       end
@@ -227,6 +232,7 @@ class PrintsTest < ActionDispatch::IntegrationTest
 
     within '.print_job' do |ac|
       find(:css, "input[id^='#@ac_field']").set('Math')
+      sleep 1
       assert page.has_xpath?("//li[@class='ui-menu-item']", visible: true)
       find(:css, "input[id^='#@ac_field']").native.send_keys :arrow_down, :tab
     end
@@ -273,6 +279,7 @@ class PrintsTest < ActionDispatch::IntegrationTest
       select @pdf_printer, from: 'print_printer'
 
       fill_in 'print_auto_customer_name', with: customer.identification
+      sleep 1
       assert page.has_xpath?("//li[@class='ui-menu-item']", visible: true)
       find('#print_auto_customer_name').native.send_keys :arrow_down, :tab
 
@@ -281,6 +288,7 @@ class PrintsTest < ActionDispatch::IntegrationTest
 
     within '.print_job' do |ac|
       find(:css, "input[id^='#@ac_field']").set('Math')
+      sleep 1
       assert page.has_xpath?("//li[@class='ui-menu-item']", visible: true)
       find(:css, "input[id^='#@ac_field']").native.send_keys :arrow_down, :tab
     end
@@ -320,6 +328,7 @@ class PrintsTest < ActionDispatch::IntegrationTest
       assert customer.reliable?
 
       fill_in 'print_auto_customer_name', with: customer.identification
+      sleep 1
       assert page.has_xpath?("//li[@class='ui-menu-item']", visible: true)
       find('#print_auto_customer_name').native.send_keys :arrow_down, :tab
 
@@ -330,6 +339,7 @@ class PrintsTest < ActionDispatch::IntegrationTest
 
     within '.print_job' do |ac|
       find(:css, "input[id^='#@ac_field']").set('Math')
+      sleep 1
       assert page.has_xpath?("//li[@class='ui-menu-item']", visible: true)
       find(:css, "input[id^='#@ac_field']").native.send_keys :arrow_down, :tab
     end

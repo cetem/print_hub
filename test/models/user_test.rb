@@ -26,7 +26,7 @@ class UserTest < ActiveSupport::TestCase
   test 'create' do
     assert_difference 'User.count' do
 
-      @operator = new_generic_operator
+      @operator = new_generic_operator_with_avatar
 
       thumbs_dir = Pathname.new(@operator.reload.avatar.path).dirname
       # Original y 2 miñaturas
@@ -229,7 +229,7 @@ class UserTest < ActiveSupport::TestCase
     @operator = users(:operator)
     from = 3.weeks.ago.to_date
     to = Time.zone.today
-    pending_shifts = @operator.shifts.pending_between(from, to)
+    pending_shifts = @operator.shifts.pay_pending_between(from, to)
 
     assert pending_shifts.size > 0
 

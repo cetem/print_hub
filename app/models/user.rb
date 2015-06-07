@@ -10,6 +10,7 @@ class User < ApplicationModel
   # Scopes
   scope :actives, -> { where(enable: true) }
   scope :with_shifts_control, -> { where(not_shifted: false) }
+  scope :order_by_name, -> { order(name: :asc) }
 
   # Alias de atributos
   alias_attribute :informal, :username
@@ -97,20 +98,26 @@ class User < ApplicationModel
   end
 
   def pay_shifts_between(start, finish)
-    _shifts = shifts.pending_between(start, finish)
+    User.transaction do
+      _shifts = shifts.pay_pending_between(start, finish)
 
-    unless _shifts.all?(&:pay!)
-      Bugsnag.notify(RuntimeError.new( I18n.t('view.shifts.pay_error') ), {
-        user: {
-            id: self.id,
-            name: self.to_s
-          },
-        data: {
-            start: start,
-            finish: finish,
-            shifts_ids: _shifts.pluck(:id)
-          }
-      })
+      unless _shifts.all?(&:pay!)
+        Bugsnag.notify(RuntimeError.new( I18n.t('view.shifts.pay_error') ), {
+          user: {
+              id: self.id,
+              name: self.to_s
+            },
+          data: {
+              start: start,
+              finish: finish,
+              shifts_ids: _shifts.pluck(:id)
+            }
+        })
+
+        raise ActiveRecord::Rollback
+      end
+
+      true
     end
   end
 
@@ -127,5 +134,25 @@ class User < ApplicationModel
     end
 
     @_image_dimensions[style_name] || {}
+  end
+
+  def self.pay_pending_shifts_for_active_users_between(start, finish)
+    actives.with_shifts_control.order_by_name.map do |u|
+      as_operator_shifts = u.shifts.as_operator_between(start, finish)
+      as_admin_shifts = u.shifts.as_admin_between(start, finish)
+
+      if as_operator_shifts || as_admin_shifts
+        {
+          user: {
+            id: u.id,
+            label: u.label
+          },
+          shifts: {
+            operator: as_operator_shifts,
+            admin: as_admin_shifts
+          }
+        }
+      end
+    end.compact
   end
 end
