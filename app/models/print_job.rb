@@ -165,7 +165,7 @@ class PrintJob < ApplicationModel
           self.document ? self.document.file.path : self.file_line.file.path
         )
 
-        timestamp = Time.now.utc.strftime('%Y%m%d%H%M%S')
+        timestamp = Time.zone.now.utc.strftime('%Y%m%d%H%M%S')
         user = user.try(:username)
         options = "-d #{printer} -n #{self.printed_copies} -o fit-to-page "
         options += "-t #{user || 'ph'}-#{timestamp} "

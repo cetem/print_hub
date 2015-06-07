@@ -56,7 +56,7 @@ class User < ApplicationModel
     User.find_by_username(login) || User.find_by_email(login)
   end
 
-  def start_shift!(start = Time.now)
+  def start_shift!(start = Time.zone.now)
     self.shifts.create!(start: start)
   end
 

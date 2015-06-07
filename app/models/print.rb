@@ -43,7 +43,7 @@ class Print < ApplicationModel
     allow_blank: true
   validates_datetime :scheduled_at, allow_nil: true, allow_blank: true
   validates_datetime :scheduled_at, allow_nil: true, allow_blank: true,
-    after: -> { Time.now }, on: :create
+    after: -> { Time.zone.now }, on: :create
   validates :status, inclusion: { in: STATUS.values }, allow_nil: true,
     allow_blank: true
   validates_each :printer do |record, attr, value|

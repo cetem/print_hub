@@ -239,8 +239,8 @@ class ApplicationControllerTest < ActionController::TestCase
   end
 
   test 'make date range' do
-    from_datetime = Time.now.at_beginning_of_day
-    to_datetime = Time.now
+    from_datetime = Time.zone.now.at_beginning_of_day
+    to_datetime = Time.zone.now
 
     assert_equal [from_datetime.to_s(:db), to_datetime.to_s(:db)],
       @controller.send(:make_datetime_range).map { |d| d.to_s(:db) }

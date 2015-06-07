@@ -31,7 +31,7 @@ class Shift < ActiveRecord::Base
   def initialize(attributes = nil)
     super(attributes)
 
-    self.start ||= Time.now
+    self.start ||= Time.zone.now
 
     if self.as_admin.nil?
       self.as_admin = self.user.admin?
@@ -55,7 +55,7 @@ class Shift < ActiveRecord::Base
   end
 
   def close!
-    self.update_attributes(finish: Time.now)
+    self.update_attributes(finish: Time.zone.now)
   end
 
   def start_limit

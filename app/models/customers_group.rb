@@ -27,7 +27,7 @@ class CustomersGroup < ApplicationModel
     ).order(options[:order])
   end
 
-  def self.settlement_as_csv(start = 1.year.ago, finish = Time.now)
+  def self.settlement_as_csv(start = 1.year.ago, finish = Time.zone.now)
     _group = []
 
     all.each do |cg|
@@ -37,7 +37,7 @@ class CustomersGroup < ApplicationModel
     _group
   end
 
-  def settlement_as_csv(start = 1.year.ago, finish = Time.now)
+  def settlement_as_csv(start = 1.year.ago, finish = Time.zone.now)
     double_t    = I18n.t('view.customers_groups.double')
     simple_t    = I18n.t('view.customers_groups.simple')
     library_t   = I18n.t('view.customers_groups.library')
@@ -82,7 +82,7 @@ class CustomersGroup < ApplicationModel
     csv
   end
 
-  def detailed_settlement_as_csv(start = 1.year.ago, finish = Time.now)
+  def detailed_settlement_as_csv(start = 1.year.ago, finish = Time.zone.now)
     require 'csv'
 
     double_t  = I18n.t('view.customers_groups.double')

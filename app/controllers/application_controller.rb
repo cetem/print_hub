@@ -23,9 +23,8 @@ class ApplicationController < ActionController::Base
 
       logger.error(error)
 
-      if current_user || current_customer
-        Bugsnag.notify(exception)
-      end
+
+      Bugsnag.notify(exception) if current_user || current_customer
 
     # En caso que la presentación misma de la excepción no salga como se espera
     rescue => ex
@@ -43,7 +42,9 @@ class ApplicationController < ActionController::Base
   end
 
   def current_customer
-    @current_customer ||= current_customer_session && current_customer_session.record
+    @current_customer ||= (
+      current_customer_session && current_customer_session.record
+    )
   end
 
   def current_user_session
@@ -108,14 +109,16 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  def customer_subdomain?
+    request.subdomains.first == APP_CONFIG['subdomains']['customers']
+  end
+
   def require_customer_or_user
-    request.subdomains.first == APP_CONFIG['subdomains']['customers'] ?
-      require_customer : require_user
+    customer_subdomain? ? require_customer : require_user
   end
 
   def require_no_customer_or_user
-    request.subdomains.first == APP_CONFIG['subdomains']['customers'] ?
-      require_no_customer : require_user
+    customer_subdomain? ? require_no_customer : require_user
   end
 
   def require_admin_user
@@ -142,14 +145,18 @@ class ApplicationController < ActionController::Base
   end
 
   def run_shift_tasks
-    unless current_user.not_shifted
-      if session[:has_an_open_shift] && controller_name != 'shifts'
-        redirect_to edit_shift_url(current_user.stale_shift),
-          notice: t('view.shifts.edit_stale') if current_user.stale_shift
-      elsif !session[:has_an_open_shift] && !current_user.last_shift_open?
-        current_user_session.create_shift
-      else
+    if current_user.not_shifted
         true
+    else
+      if session[:has_an_open_shift]
+        if current_user.stale_shift && controller_name != 'shifts'
+
+          redirect_to edit_shift_url(current_user.stale_shift),
+            notice: t('view.shifts.edit_stale')
+        end
+
+      else
+        current_user_session.create_shift unless current_user.last_shift_open?
       end
     end
   end
@@ -168,8 +175,8 @@ class ApplicationController < ActionController::Base
       )
     end
 
-    from_datetime ||= Time.now.at_beginning_of_day
-    to_datetime ||= Time.now
+    from_datetime ||= Time.zone.now.at_beginning_of_day
+    to_datetime ||= Time.zone.now
 
     [from_datetime.to_datetime, to_datetime.to_datetime].sort
   end

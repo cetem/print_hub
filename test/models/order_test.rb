@@ -85,7 +85,7 @@ class OrderTest < ActiveSupport::TestCase
     assert_no_difference ['Order.count', 'OrderLine.count'] do
       customer = customers(:student_without_bonus)
       @order = customer.orders.create(
-        scheduled_at: Time.now,
+        scheduled_at: Time.zone.now,
         order_lines_attributes: {
           '1' => {
             copies: 2,

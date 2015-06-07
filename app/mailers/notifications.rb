@@ -6,18 +6,18 @@ class Notifications < ActionMailer::Base
   def signup(customer)
     @customer = customer
 
-    mail to: customer.email, date: -> { Time.now }
+    mail to: customer.email, date: -> { Time.zone.now }
   end
 
   def reactivation(customer)
     @customer = customer
 
-    mail to: customer.email, date: -> { Time.now }
+    mail to: customer.email, date: -> { Time.zone.now }
   end
 
   def forgot_password(customer)
     @customer = customer
 
-    mail to: customer.email, date: -> { Time.now }
+    mail to: customer.email, date: -> { Time.zone.now }
   end
 end
