@@ -41,6 +41,7 @@ class Customer < ApplicationModel
   validates :free_monthly_bonus, allow_nil: true, allow_blank: true,
                                  numericality: { greater_than_or_equal_to: 0 }
   validates :kind, inclusion: { in: KINDS.values }
+  validate :email_against_mailgun
 
   # Relaciones
   has_many :orders, inverse_of: :customer, dependent: :destroy
@@ -257,6 +258,25 @@ class Customer < ApplicationModel
       rescue ActiveRecord::RecordInvalid
         raise ActiveRecord::Rollback
       end
+    end
+  end
+
+  def email_against_mailgun
+    begin
+      if $mailgun && self.email.present?
+        verification = $mailgun.validate_address(self.email)
+
+        unless verification['is_valid']
+          msg = if (suggest = verification['did_you_mean']).present?
+                  [:invalid_with_msg, {suggest: suggest}]
+                else
+                  [:invalid]
+                end
+
+          self.errors.add(:email, *msg)
+        end
+      end
+    rescue
     end
   end
 end

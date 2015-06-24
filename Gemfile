@@ -13,6 +13,7 @@ gem 'RedCloth'
 gem 'cups'
 gem 'simple_form'
 gem 'awesome_print'
+gem 'mailgunner'
 
 # Files Processors
 gem 'carrierwave'
@@ -52,6 +53,8 @@ gem 'jquery-rails'
 gem 'jquery-ui-rails'
 gem 'turbolinks'
 gem 'jquery-fileupload-rails'
+
+gem 'interactive_editor'
 
 group :development do
   gem 'thin'

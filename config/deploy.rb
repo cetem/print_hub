@@ -19,6 +19,7 @@ set :sidekiq_config, File.join(current_path, 'config', 'sidekiq.yml')
 set :sidekiq_role,   proc { :sidekiqers }
 
 namespace :deploy do
+  after :finished, 'deploy:cleanup'
   after :finished, :restart
 
   desc 'Restart application'
@@ -29,7 +30,7 @@ namespace :deploy do
   end
 
   desc 'Temp Clear'
-  after :finishing, 'deploy:cleanup' do
+  task 'deploy:cleanup' do
     on roles(:all) do
       within release_path do
         execute :rake, 'tmp:clear'

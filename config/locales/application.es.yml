@@ -168,6 +168,10 @@ es:
         username: "Usuario"
     errors:
       models:
+        customer:
+          attributes:
+            email:
+              invalid_with_msg: "invalido, quizás quiso decir %{suggest}"
         document:
           attributes:
             file:

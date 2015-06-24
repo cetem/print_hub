@@ -6,9 +6,20 @@ class UsersController < ApplicationController
   # GET /users.json
   def index
     @title = t 'view.users.index_title'
-    @users = User.order("#{User.table_name}.username ASC").paginate(
+    @searchable = true
+    @users = User.order(name: :asc)
+
+
+    if params[:q].present?
+      query = params[:q].sanitized_for_text_query
+      @query_terms = query.split(/\s+/).reject(&:blank?)
+      @users = @users.full_text(@query_terms) unless @query_terms.empty?
+    end
+
+    @users = @users.paginate(
       page: params[:page], per_page: (lines_per_page / 2.5).round
     )
+
 
     respond_to do |format|
       format.html # index.html.erb

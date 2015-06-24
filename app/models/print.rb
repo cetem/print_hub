@@ -20,9 +20,7 @@ class Print < ApplicationModel
   scope :pending, -> { where(status: STATUS[:pending_payment]) }
   scope :pay_later, -> { where(status: STATUS[:pay_later]) }
   scope :not_revoked, -> { where(revoked: false) }
-  scope :between, lambda { |_start, _end|
-    where('created_at BETWEEN :start AND :end', start: _start, end: _end)
-  }
+  scope :between, -> (_start, _end) { where(created_at: _start.._end) }
   scope :scheduled, lambda {
     where(
       '(printer = :blank OR printer IS NULL) AND scheduled_at IS NOT NULL',
@@ -39,7 +37,7 @@ class Print < ApplicationModel
 
   # Restricciones
   validates :printer, presence: true, if: ->(p) do
-    p.scheduled_at.blank? && !p.print_jobs.reject(&:marked_for_destruction?).empty?
+    p.scheduled_at.blank? && p.print_jobs.reject(&:marked_for_destruction?).any?
   end
   validates :printer, length: { maximum: 255 }, allow_nil: true,
                       allow_blank: true

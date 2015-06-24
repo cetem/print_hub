@@ -21,3 +21,6 @@ private_printers: 'printer_1|printer_2'
 subdomains:
   users: 'prints'
   customers: 'fotocopia'
+
+# Mailgun Api key to validate emails
+mailgun_api_key: 'pubkey-11111111111111111111111111111111'

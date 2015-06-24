@@ -194,7 +194,9 @@ class PrintJob < ApplicationModel
   end
 
   def self.printer_stats_between(from, to)
-    with_print_between(from, to).not_revoked.group_by(&:printer).map { |printer, pjs| [printer, pjs.map(&:printed_pages).compact.sum] }
+    with_print_between(from, to).not_revoked.group_by(&:printer).map do |printer, pjs|
+      [printer, pjs.map(&:printed_pages).compact.sum]
+    end
   end
 
   def self.user_stats_between(from, to)
