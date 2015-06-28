@@ -6,6 +6,11 @@
     <meta charset="utf-8" />
     <title><%= [t('app_name'), @title].compact.join(' | ') %></title>
     <meta name="viewport" content="width=device-width" />
+    <meta property="og:title" content="<%= t('presentation.title') %>" />
+    <meta property="og:url" content="<%= PUBLIC_HOST %>" />
+    <meta property="og:image" content="<%= asset_path('cca.png') %>" />
+    <meta property="og:description" content="<%= t('presentation.description') %>" />
+
     <%= stylesheet_link_tag 'application', data: { 'turbolinks-track' => true } %>
     <%= stylesheet_link_tag 'print', media: 'print', data: { 'turbolinks-track' => true } if @can_print %>
     <%= javascript_include_tag 'application', data: { 'turbolinks-track' => true } %>

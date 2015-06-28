@@ -12,6 +12,8 @@ PUBLIC_DOMAIN = APP_CONFIG['public_host'].split(':').first
 PUBLIC_PORT = APP_CONFIG['public_host'].split(':')[1]
 # Protocolo público
 PUBLIC_PROTOCOL = 'https'
+# Host público
+PUBLIC_HOST = PUBLIC_PROTOCOL + '://' + PUBLIC_DOMAIN
 # Directorio temporal para imágenes de códigos de barra
 TMP_BARCODE_IMAGES = File.join(Rails.root, 'tmp', 'codes')
 # Validez de los tokens para cambiar contraseña y activar cuenta

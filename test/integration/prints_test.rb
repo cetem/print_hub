@@ -37,6 +37,7 @@ class PrintsTest < ActionDispatch::IntegrationTest
     end
 
     assert_page_has_no_errors!
+    sleep 0.5
     assert_equal new_print_path, current_path
     assert page.has_css?('.print_job', count: 1)
 

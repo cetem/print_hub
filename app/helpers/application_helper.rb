@@ -176,13 +176,13 @@ module ApplicationHelper
 
   def image_sprite(image, options = {})
     sprites = {
-      copyleft: { w: 70, h: 40, x: 0, y: 0 },
-      solidarity: { w: 70, h: 40, x: 0, y: 50 },
-      transformation: { w: 70, h: 40, x: 0, y: 110 }
+      copyleft: { w: 70, h: 40, x: 0, y: 10 },
+      solidarity: { w: 70, h: 40, x: 0, y: -50 },
+      transformation: { w: 70, h: 40, x: 0, y: -100 }
     }
     style = <<-CSS
       background: url(#{image_path('welcome/sprites.gif')})
-        no-repeat -#{sprites[image][:x]}px -#{sprites[image][:y]}px;
+        no-repeat -#{sprites[image][:x]}px #{sprites[image][:y]}px;
       width: #{sprites[image][:w]}px;
       padding-top: #{sprites[image][:h]}px;
       #{options[:style]}
