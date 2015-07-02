@@ -294,6 +294,8 @@ GEM
       kgio (~> 2.6)
       rack
       raindrops (~> 0.7)
+    unicorn-worker-killer (0.4.2)
+      unicorn (~> 4)
     websocket (1.2.2)
     whenever (0.9.4)
       chronic (>= 0.6.3)
@@ -349,5 +351,6 @@ DEPENDENCIES
   turbolinks
   uglifier
   unicorn
+  unicorn-worker-killer
   whenever
   will_paginate

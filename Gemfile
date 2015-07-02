@@ -32,6 +32,7 @@ gem 'capistrano-rails'
 gem 'capistrano-rbenv'
 gem 'capistrano-sidekiq'
 gem 'unicorn'
+gem 'unicorn-worker-killer'
 
 # Task Gems
 gem 'whenever', require: false
