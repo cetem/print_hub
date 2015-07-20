@@ -291,6 +291,10 @@ es:
       subject: "Re-activar cuenta"
     signup:
       subject: "Registro"
+  document_mailer:
+    barcodes_pdf:
+      subject: 'Códigos QRs %{from}-%{to}'
+      body: "Los códigos que solicitaste ya están listos. Gracias por tu paciencia"
   view:
     articles:
       correctly_created: "Artículo agregado correctamente."
@@ -432,6 +436,14 @@ es:
         title: "Elimina la marca del documento para que NO sea incluido en la próxima impresión"
       show_title: "Detalle de documento"
       stale_object_error: "El documento no pudo ser actualizado, intente nuevamente."
+      barcodes_range:
+        description: "Generar rango de códigos QR, se generará y enviará al email especificado."
+        to: "Hasta"
+        from: "Desde"
+        email: "Email para enviar el archivo"
+        submit: "Generar"
+        working: "Procesaremos los códigos y te lo enviaremos en breve..."
+        link: "Generar rango de códigos"
     feedbacks:
       negative_comment_return: "Gracias por tus sugerencias, trabajaremos para mejorar este artículo."
       negative_return: "Lamentamos que no te haya servido. ¿Podrías decirnos cómo mejorar este artículo?"

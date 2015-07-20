@@ -69,4 +69,5 @@ group :test do
   gem 'capybara', require: false
   gem 'selenium-webdriver'
   gem 'database_cleaner', require: false # For Capybara
+  gem 'minitest-reporters'
 end

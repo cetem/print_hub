@@ -155,6 +155,16 @@ class DocumentsController < ApplicationController
     end
   end
 
+  def generate_barcodes_range
+    if params[:barcodes]
+      Document.generate_barcodes_range(barcodes_params)
+
+      redirect_to generate_barcodes_range_documents_path, notice: t('view.documents.barcodes_range.working')
+    else
+      render 'generate_barcodes_range'
+    end
+  end
+
   private
 
   def load_documents_for_printing
@@ -179,5 +189,9 @@ class DocumentsController < ApplicationController
       :code, :name, :description, :media, :enable, :stock, :file_cache,
       :pages, :auto_tag_name, :lock_version, :file, tag_ids: []
     )
+  end
+
+  def barcodes_params
+    params.require(:barcodes).permit(:from, :to, :email)
   end
 end

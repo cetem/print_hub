@@ -1,5 +1,9 @@
 resources :documents do
-  get :autocomplete_for_tag_name, on: :collection
+  collection do
+    get :autocomplete_for_tag_name
+    get :generate_barcodes_range
+    post :generate_barcodes_range
+  end
 
   member do
     get :barcode

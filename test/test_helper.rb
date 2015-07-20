@@ -5,6 +5,9 @@ require 'authlogic/test_case'
 require 'capybara/rails'
 require 'sidekiq/testing'
 require 'database_cleaner'
+require "minitest/reporters"
+
+Minitest::Reporters.use! Minitest::Reporters::ProgressReporter.new
 
 class ActiveSupport::TestCase
   ActiveRecord::Migration.maintain_test_schema!

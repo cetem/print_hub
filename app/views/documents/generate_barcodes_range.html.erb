@@ -1,0 +1,25 @@
+<% i18n_path = 'view.documents.barcodes_range' %>
+<h3><%= t(i18n_path + '.description') %></h3>
+
+<%= simple_form_for :barcodes do |f| %>
+  <div class="form-inputs">
+    <div class="row-fluid">
+      <div class="span4">
+        <%= f.input :from, label: t(i18n_path + '.from') %>
+      </div>
+      <div class="span4">
+        <%= f.input :to, label: t(i18n_path + '.to') %>
+      </div>
+      <div class="span4">
+        <%= f.input :email, label: t(i18n_path + '.email') %>
+      </div>
+    </div>
+  </div>
+  <div class="form-actions">
+    <div class="row-fluid">
+      <div class="span4">
+        <%= f.submit t(i18n_path + '.submit'), class: 'btn btn-primary' %>
+      </div>
+    </div>
+  </div>
+<% end %>

@@ -46,6 +46,9 @@ class Document < ApplicationModel
   has_many :document_tag_relation
   has_many :tags, through: :document_tag_relation, autosave: true
 
+  # Url helpers
+  delegate :url_helpers, to: 'Rails.application.routes'
+
   def initialize(attributes = nil)
     super(attributes)
 
@@ -169,6 +172,54 @@ class Document < ApplicationModel
 
   def identifier
     file.identifier || file_identifier
+  end
+
+  def self.generate_barcodes_range(params = {})
+    from = params[:from]
+    to = params[:to]
+    email = params[:email]
+
+    BarcodesGeneratorWorker.perform_async([from, to].sort, email)
+  end
+
+  def self.generate_barcodes_range!(range = [])
+    from, to = range.map(&:to_i).sort
+    timestamp = Time.now.to_i.to_s
+    barcode_file_paths = {}
+
+    (from..to).each do |i|
+      document = Document.where(code: i).first_or_initialize
+
+      barcode =  document.get_barcode
+      name = "#{timestamp}-#{document.code}.png"
+      png_path = File.join(TMP_BARCODE_IMAGES, name)
+      barcode_file_paths[name] = png_path
+
+      File.open(png_path, 'wb') { |f| f << barcode.to_png(xdim: 30, ydim: 30) }
+    end
+
+    barcodes = `ls #{TMP_BARCODE_IMAGES} |grep #{timestamp}`.split("\n")
+    barcodes.each do |name|
+      title = name.delete('.png').delete(timestamp)
+      file_path = barcode_file_paths[name]
+      `montage #{file_path} -label #{title} -pointsize 200 -geometry 2000x2000+20+20 #{file_path}`
+    end
+
+    destination_file = File.join(TMP_BARCODE_IMAGES, "barcodes-range-#{from}-#{to}-#{timestamp}.pdf")
+    files_to_convert = barcodes.map {|name| barcode_file_paths[name] }.join(' ')
+
+    `convert #{files_to_convert} #{destination_file}`
+
+    destination_file
+  end
+
+  def get_barcode
+    Barby::QrCode.new(
+      url_helpers.add_to_order_by_code_catalog_url(
+        self.code,
+        host: PUBLIC_DOMAIN, port: PUBLIC_PORT, protocol: PUBLIC_PROTOCOL
+      ), level: :h
+    )
   end
 
   private
