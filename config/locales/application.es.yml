@@ -293,7 +293,7 @@ es:
       subject: "Registro"
   document_mailer:
     barcodes_pdf:
-      subject: 'Códigos QRs %{from}-%{to}'
+      subject: 'Los códigos QRs que pediste ya están listos.'
       body: "Los códigos que solicitaste ya están listos. Gracias por tu paciencia"
   view:
     articles:
