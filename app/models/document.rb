@@ -200,9 +200,9 @@ class Document < ApplicationModel
 
     barcodes = `ls #{TMP_BARCODE_IMAGES} |grep #{timestamp}`.split("\n")
     barcodes.each do |name|
-      title = name.delete('.png').delete(timestamp)
+      title = name.gsub('.png', '').gsub("#{timestamp}-", '')
       file_path = barcode_file_paths[name]
-      `montage #{file_path} -title #{title} -pointsize 50 -geometry 2000x2000+20+20 #{file_path}`
+      `montage #{file_path} -title #{title} -pointsize 60 -geometry 2000x2000+20+20 #{file_path}`
     end
 
     destination_file = File.join(TMP_BARCODE_IMAGES, "barcodes-range-#{from}-#{to}-#{timestamp}.pdf")
