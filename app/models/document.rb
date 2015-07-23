@@ -227,8 +227,8 @@ class Document < ApplicationModel
 
     documents = {}
 
-    includes(:print_jobs).where(print_jobs: { created_at: from..to }).each do |d|
-      copies = d.print_jobs.sum(:copies)
+    includes(:print_jobs).each do |d|
+      copies = d.print_jobs.where(created_at: from..to).sum(:copies)
       documents[d.to_s] = copies if copies > 20
     end
 

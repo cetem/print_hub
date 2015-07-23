@@ -4,7 +4,7 @@
   <% if @documents.try(:any?) %>
     <h3><%= t( 'view.documents.copies_stats') %></h3>
 
-    <table class="table">
+    <table class="table table-bordered table-striped">
       <thead>
         <tr>
           <th><%= Document.human_attribute_name 'name' %></th>
