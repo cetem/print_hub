@@ -1,0 +1,28 @@
+<div class="readonly-data">
+  <%= render 'shared/date_filter', from_date: @from_date, to_date: @to_date %>
+
+  <% if @documents.try(:any?) %>
+    <h3><%= t( 'view.documents.copies_stats') %></h3>
+
+    <table class="table">
+      <thead>
+        <tr>
+          <th><%= Document.human_attribute_name 'name' %></th>
+          <th><%= PrintJob.human_attribute_name 'copies' %></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @documents.each do |name, copies| %>
+          <tr>
+            <td><%= name %></td>
+            <td><%= copies %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  <% end %>
+</div>
+
+<div class="form-actions">
+  <%= link_to t('label.list'), documents_path %>
+</div>

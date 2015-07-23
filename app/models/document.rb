@@ -222,6 +222,20 @@ class Document < ApplicationModel
     )
   end
 
+  def self.copies_for_stock_between(dates)
+    from, to = dates.sort
+
+    documents = {}
+
+    includes(:print_jobs).where(print_jobs: { created_at: from..to }).each do |d|
+      copies = d.print_jobs.sum(:copies)
+      documents[d.to_s] = copies if copies > 20
+    end
+
+    # Sort by value
+    documents.sort_by(&:last).reverse
+  end
+
   private
 
   def conditional_tags(new_tag = nil, excluded_tag = nil)

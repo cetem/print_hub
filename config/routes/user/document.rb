@@ -3,6 +3,7 @@ resources :documents do
     get :autocomplete_for_tag_name
     get :generate_barcodes_range
     post :generate_barcodes_range
+    get :copies_between_for
   end
 
   member do

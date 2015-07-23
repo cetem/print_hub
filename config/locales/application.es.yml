@@ -225,6 +225,10 @@ es:
     catalog: "Documentos"
     orders: "Pedidos"
     profile: "Mis datos"
+  document_mailer:
+    barcodes_pdf:
+      body: "Los códigos que solicitaste ya están listos. Gracias por tu paciencia"
+      subject: "Los códigos QRs que pediste ya están listos."
   errors:
     apologies_for_the_inconvenience: "Disculpe las molestias"
     header_message: "Se ha encontrado un problema"
@@ -291,10 +295,6 @@ es:
       subject: "Re-activar cuenta"
     signup:
       subject: "Registro"
-  document_mailer:
-    barcodes_pdf:
-      subject: 'Los códigos QRs que pediste ya están listos.'
-      body: "Los códigos que solicitaste ya están listos. Gracias por tu paciencia"
   view:
     articles:
       correctly_created: "Artículo agregado correctamente."
@@ -322,6 +322,11 @@ es:
         title: "Elimina la marca de este documento para que NO sea incluido en el pedido"
       show: "Ver documento"
       show_title: "Detalle de documento"
+    commons:
+      date_filter:
+        apply: "Aplicar"
+        end: "Fin"
+        start: "Inicio"
     customer_sessions:
       correctly_created: "Bienvenido a Central de Impresión."
       correctly_destroyed: "Sesión cerrada correctamente."
@@ -417,7 +422,16 @@ es:
         link: "Agregar a impresión"
         title: "Marca el documento para que sea INCLUIDO en la próxima impresión"
       barcode: "Código de barras"
+      barcodes_range:
+        description: "Generar rango de códigos QR, se generará y enviará al email especificado."
+        email: "Email para enviar el archivo"
+        from: "Desde"
+        link: "Generar rango de códigos"
+        submit: "Generar"
+        to: "Hasta"
+        working: "Procesaremos los códigos y te lo enviaremos en breve..."
       clear_documents_for_printing: "Desmarcar todos los documentos a imprimir"
+      copies_stats: "Documentos con más de 20 copias en el período seleccionado."
       correctly_created: "Documento agregado correctamente."
       correctly_updated: "Documento actualizado correctamente."
       disabled_documents: "Documentos desactivados"
@@ -436,14 +450,6 @@ es:
         title: "Elimina la marca del documento para que NO sea incluido en la próxima impresión"
       show_title: "Detalle de documento"
       stale_object_error: "El documento no pudo ser actualizado, intente nuevamente."
-      barcodes_range:
-        description: "Generar rango de códigos QR, se generará y enviará al email especificado."
-        to: "Hasta"
-        from: "Desde"
-        email: "Email para enviar el archivo"
-        submit: "Generar"
-        working: "Procesaremos los códigos y te lo enviaremos en breve..."
-        link: "Generar rango de códigos"
     feedbacks:
       negative_comment_return: "Gracias por tus sugerencias, trabajaremos para mejorar este artículo."
       negative_return: "Lamentamos que no te haya servido. ¿Podrías decirnos cómo mejorar este artículo?"
@@ -491,10 +497,6 @@ es:
       reset_title: "¿Olvidaste tu contraseña?"
       update_password: "Actualizar contraseña"
     payments:
-      date_filter:
-        apply: "Aplicar"
-        end: "Fin"
-        start: "Inicio"
       deposits_count:
         html:
           one: "<strong>un</strong> depósito"
@@ -606,10 +608,6 @@ es:
       show_title: "Detalle de turno"
       stale_object_error: "El turno no pudo ser actualizado, intente nuevamente."
     stats:
-      date_filter:
-        apply: "Aplicar"
-        end: "Fin"
-        start: "Inicio"
       download_csv: "Descargar en CSV"
       empty_result: "Sin resultados para el rango de fechas seleccionado"
       printers_title: "Estadísticas por impresora"

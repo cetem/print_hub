@@ -5,7 +5,7 @@ class ArticlesController < ApplicationController
   # GET /articles.json
   def index
     @title = t('view.articles.index_title')
-    @articles = Article.order("#{Article.table_name}.name ASC").paginate(
+    @articles = Article.order(code: :desc).paginate(
       page: params[:page], per_page: lines_per_page
     )
 

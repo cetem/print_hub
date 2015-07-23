@@ -56,8 +56,8 @@ class Article < ApplicationModel
 
   def stock_color
     case stock
-    when 0..4 then 'error'
-    when 5..10 then 'warning'
+      when 0..4 then 'error'
+      when 5..10 then 'warning'
     end
   end
 end

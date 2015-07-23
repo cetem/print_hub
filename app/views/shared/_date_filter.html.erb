@@ -1,24 +1,24 @@
-<div class="filter form-inputs">
+<div class='well form-inputs'>
   <%= simple_form_for :interval, html: { method: :get } do |f| %>
-  <div class="row-fluid">
-    <div class="span1">
-      <%= t("view.#{controller_name}.date_filter.start") %>
+  <div class='row-fluid'>
+    <div class='span1'>
+      <%= t('view.commons.date_filter.start') %>
     </div>
-    <div class="span3">
+    <div class='span3'>
       <%= f.input :from, as: :datetime_picker, label: false, input_html: {
         value: (l(from_date, format: :minimal) if from_date)
       } %>
     </div>
-    <div class="span1">
-      <%= t("view.#{controller_name}.date_filter.end") %>
+    <div class='span1'>
+      <%= t('view.commons.date_filter.end') %>
     </div>
-    <div class="span3">
+    <div class='span3'>
       <%= f.input :to, as: :datetime_picker, label: false, input_html: {
         value: (l(to_date, format: :minimal) if to_date)
       } %>
     </div>
-    <div class="span4">
-      <%= f.button :submit, t("view.#{controller_name}.date_filter.apply") %>
+    <div class='span4'>
+      <%= f.button :submit, t('view.commons.date_filter.apply'), class: 'btn btn-inverse' %>
     </div>
   </div>
   <% end %>
