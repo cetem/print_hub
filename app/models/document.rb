@@ -225,15 +225,17 @@ class Document < ApplicationModel
   def self.copies_for_stock_between(dates)
     from, to = dates.sort
 
-    documents = {}
+    print_jobs = PrintJob.arel_table
+    mega_scope = PrintJob.where(created_at: from..to)
+      .select(
+        print_jobs[:copies].sum.as('total_copies'), print_jobs[:document_id]
+      )
+      .having('(SUM(print_jobs.copies) > 20)').order('total_copies DESC')
+      .group(:document_id)
 
-    includes(:print_jobs).each do |d|
-      copies = d.print_jobs.where(created_at: from..to).sum(:copies)
-      documents[d.to_s] = copies if copies > 20
-    end
-
-    # Sort by value
-    documents.sort_by(&:last).reverse
+    mega_scope.map do |summary|
+      [summary.document.to_s, summary.total_copies] if summary.document_id
+    end.compact
   end
 
   private
