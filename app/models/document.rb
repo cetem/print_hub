@@ -234,7 +234,9 @@ class Document < ApplicationModel
       .group(:document_id)
 
     mega_scope.map do |summary|
-      [summary.document.to_s, summary.total_copies] if summary.document_id
+      if summary.try(:document)
+        [summary.document.to_s, summary.total_copies]
+      end
     end.compact
   end
 

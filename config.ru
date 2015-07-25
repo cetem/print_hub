@@ -9,7 +9,7 @@ if defined?(Unicorn)
   oom_max = (320) * (1024**2)
 
   # Max memory size (RSS) per worker
-  use Unicorn::WorkerKiller::Oom, oom_min, oom_max, 10, true
+  use Unicorn::WorkerKiller::Oom, oom_min, oom_max, 5, true
 end
 
 require ::File.expand_path('../config/environment',  __FILE__)
