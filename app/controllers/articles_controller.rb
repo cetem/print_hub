@@ -5,7 +5,22 @@ class ArticlesController < ApplicationController
   # GET /articles.json
   def index
     @title = t('view.articles.index_title')
-    @articles = Article.order(code: :desc).paginate(
+    @searchable = true
+    @articles = Article.all
+
+    if params[:q].present?
+      query = params[:q].sanitized_for_text_query
+      query_terms = query.split(/\s+/).reject(&:blank?)
+      @articles = @articles.full_text(query_terms) unless query_terms.empty?
+    end
+
+    _order = if (_order = params[:order]).present?
+               _order.map {|k, v| "#{k} #{v}"}.join(',')
+             else
+               { code: :desc }
+             end
+
+    @articles = @articles.order(_order).paginate(
       page: params[:page], per_page: lines_per_page
     )
 

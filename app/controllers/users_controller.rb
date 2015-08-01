@@ -9,11 +9,10 @@ class UsersController < ApplicationController
     @searchable = true
     @users = User.order(name: :asc)
 
-
     if params[:q].present?
       query = params[:q].sanitized_for_text_query
-      @query_terms = query.split(/\s+/).reject(&:blank?)
-      @users = @users.full_text(@query_terms) unless @query_terms.empty?
+      query_terms = query.split(/\s+/).reject(&:blank?)
+      @users = @users.full_text(query_terms) unless query_terms.empty?
     end
 
     @users = @users.paginate(
