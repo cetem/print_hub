@@ -31,17 +31,18 @@ class ShiftTest < ActiveSupport::TestCase
 
   # Prueba actualizar final de un turno
   test 'update ' do
-    10.minute.ago.to_datetime.tap do |start|
-      1.minute.ago.to_datetime.tap do |finish|
-        assert_no_difference 'Shift.count' do
-          assert @shift.update(start: start, finish: finish),
-                 @shift.errors.full_messages.join('; ')
-        end
+    start = 10.minute.ago.to_datetime
+    finish = 1.minute.ago.to_datetime
+    old_start = @shift.start.to_i
 
-        assert_equal start.to_i, @shift.reload.start.to_i
-        assert_equal finish.to_i, @shift.finish.to_i
-      end
+    assert_no_difference 'Shift.count' do
+      assert @shift.update(start: start, finish: finish),
+             @shift.errors.full_messages.join('; ')
     end
+
+    assert_not_equal start.to_i, @shift.reload.start.to_i
+    assert_equal old_start, @shift.reload.start.to_i
+    assert_equal finish.to_i, @shift.finish.to_i
   end
 
   # Prueba de eliminación de turnos

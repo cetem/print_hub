@@ -2,7 +2,7 @@
   <div class="form-inputs">
     <div class="row-fluid">
       <div class="span6">
-        <%= f.input :start, as: :datetime_picker%>
+        <%= f.input :start, as: :datetime_picker, input_html: { disabled: true } %>
         <%= f.input :finish, as: :datetime_picker %>
         <%= f.input :description, input_html: { rows: 5 } %>
         <div class="form-horizontal span7 <%= 'hide' unless @shift.user.admin? %>">
