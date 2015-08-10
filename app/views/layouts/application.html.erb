@@ -19,6 +19,7 @@
       <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
     <%= favicon_link_tag %>
+    <%= favicon_link_tag(rel: 'apple-touch-icon') %>
     <%= csrf_meta_tag %>
     <%= javascript_tag do %>
       <%= raw "Messages.ajaxInProgressWarning = '#{j t('messages.ajax_in_progress_warning')}';" %>

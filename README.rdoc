@@ -10,19 +10,19 @@ Previously run:
 - sudo apt-get install libxslt1-dev # Nokogiri gem dependency
 - sudo apt-get install cups-pdf # Virtual PDF printer
 - sudo apt-get install postgresql # Core database
-- sudo apt-get install libmagickwand-dev # Rmagick gem dependency
+- sudo apt-get install imagemagick libmagickwand-dev # Rmagick gem dependency
 - cd projects/print_hub
 - bundle install
 
 Install a virtual pdf printer via /system/printers or http://localhost:631/
 
 === Build Status {<img src="https://secure.travis-ci.org/cetem/print_hub.png"/>}[http://travis-ci.org/cetem/print_hub]
-  
+
 === Dependency Status {<img src="https://gemnasium.com/cetem/print_hub.png?travis"/>}[https://gemnasium.com/cetem/print_hub]
 
 == (The MIT License)
 
-Copyright (c) 2008-2013 Cirope S.A.
+Copyright (c) 2008-2015 Cirope S.A. - Néstor Coppi - C.E.T.E.M.
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
