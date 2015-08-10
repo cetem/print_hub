@@ -1,7 +1,7 @@
 class Shift < ActiveRecord::Base
   has_paper_trail
 
-  attr_readonly :start
+  #attr_readonly :start
 
   # Scopes
   scope :pending,     -> { where(finish: nil) }

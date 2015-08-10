@@ -30,7 +30,7 @@ class ShiftTest < ActiveSupport::TestCase
   end
 
   # Prueba actualizar final de un turno
-  test 'update ' do
+  test 'update' do
     start = 10.minute.ago.to_datetime
     finish = 1.minute.ago.to_datetime
     old_start = @shift.start.to_i
@@ -40,7 +40,7 @@ class ShiftTest < ActiveSupport::TestCase
              @shift.errors.full_messages.join('; ')
     end
 
-    assert_not_equal start.to_i, @shift.reload.start.to_i
+    assert_equal start.to_i, @shift.reload.start.to_i
     assert_equal old_start, @shift.reload.start.to_i
     assert_equal finish.to_i, @shift.finish.to_i
   end

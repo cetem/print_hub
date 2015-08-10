@@ -2,7 +2,7 @@
   <%= simple_form_for :interval, url: global_settlement_customers_groups_path, html: { method: :get } do |f| %>
   <div class="row-fluid">
     <div class="span1">
-      <%= t('view.stats.date_filter.start') %>
+      <%= t('view.commons.date_filter.start') %>
     </div>
     <div class="span3">
       <%= f.input :from, as: :date_picker, label: false, input_html: {
@@ -10,7 +10,7 @@
       } %>
     </div>
     <div class="span1">
-      <%= t('view.stats.date_filter.end') %>
+      <%= t('view.commons.date_filter.end') %>
     </div>
     <div class="span3">
       <%= f.input :to, as: :date_picker, label: false, input_html: {
