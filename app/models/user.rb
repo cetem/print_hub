@@ -102,15 +102,20 @@ class User < ApplicationModel
       _shifts = shifts.pay_pending_between(start, finish)
 
       unless _shifts.all?(&:pay!)
-        Bugsnag.notify(RuntimeError.new(I18n.t('view.shifts.pay_error')),           user: {
-                         id: id,
-                         name: to_s
-                       },
-                                                                                    data: {
-                                                                                      start: start,
-                                                                                      finish: finish,
-                                                                                      shifts_ids: _shifts.pluck(:id)
-                                                                                    })
+        Bugsnag.notify(
+          RuntimeError.new(
+            I18n.t('view.shifts.pay_error')
+          ),
+          user: {
+            id: id,
+            name: to_s
+          },
+          data: {
+            start: start,
+            finish: finish,
+            shifts_ids: _shifts.pluck(:id)
+          }
+        )
 
         fail ActiveRecord::Rollback
       end

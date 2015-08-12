@@ -4,6 +4,7 @@ class ApplicationController < ActionController::Base
   protect_from_forgery with: :null_session
 
   before_action :set_js_format_in_iframe_request
+  before_bugsnag_notify :add_user_info_to_bugsnag
   after_action -> { expires_now if current_user || current_customer }
 
   # Cualquier excepción no contemplada es capturada por esta función. Se utiliza
@@ -35,6 +36,16 @@ class ApplicationController < ActionController::Base
   end
 
   private
+
+  def add_user_info_to_bugsnag(notif)
+    if (_current = current_user || current_customer)
+      notif.user = {
+        klass: _current.class,
+        name: _current.to_s,
+        id: _current.id
+      }
+    end
+  end
 
   def current_customer_session
     @current_customer_session ||= CustomerSession.find
