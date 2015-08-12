@@ -196,4 +196,16 @@ class ApplicationController < ActionController::Base
   def check_logged_in
     redirect_to root_url if current_user.blank? && current_customer.blank?
   end
+
+  def report_validation_error(obj)
+    Bugsnag.notify(
+      RuntimeError.new('Validation error on ' + obj.class.to_s),
+      user: {
+        id: current_user.id,
+        name: current_user.to_s
+      },
+      errors: obj.errors.messages
+    )
+  rescue
+  end
 end
