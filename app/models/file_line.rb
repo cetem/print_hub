@@ -32,7 +32,9 @@ class FileLine < ActiveRecord::Base
       end
     end
 
-  rescue PDF::Reader::MalformedPDFError
+  rescue => e
+    Bugsnag.notify(e)
+
     false
   end
 
