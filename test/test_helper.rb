@@ -108,7 +108,16 @@ class ActionDispatch::IntegrationTest
   self.use_transactional_fixtures = false
 
   setup do
-    Capybara.current_driver = Capybara.javascript_driver # :selenium by default
+    if ENV['travis']
+      Capybara.register_driver(:selenium)do |app|
+        profile = Selenium::WebDriver::Firefox::Profile.new
+        profile["network.http.prompt-temp-redirect"] = false
+
+        Capybara::Selenium::Driver.new(app, browser: :firefox, profile: profile)
+      end
+    else
+      Capybara.current_driver = Capybara.javascript_driver # :selenium by default
+    end
     Capybara.server_port = '54163'
     Capybara.app_host = 'http://localhost:54163'
     Capybara.reset!    # Forget the (simulated) browser state
