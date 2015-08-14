@@ -52,10 +52,9 @@ class DocumentsUploader < CarrierWave::Uploader::Base
 
   private
 
-  def delete_empty_upstream_dirs
-    Dir.delete ::File.expand_path(store_dir, root)
-    Dir.delete ::File.expand_path(base_store_dir, root)
-  rescue SystemCallError
-    true
-  end
+    def delete_empty_upstream_dirs
+      Dir.delete ::File.expand_path(store_dir, root)
+    rescue
+      true
+    end
 end

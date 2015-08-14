@@ -262,21 +262,23 @@ class Customer < ApplicationModel
   end
 
   def email_against_mailgun
-    begin
-      if $mailgun && self.email.present?
-        verification = $mailgun.validate_address(self.email)
+    if self.email_changed?
+      begin
+        if $mailgun && self.email.present?
+          verification = $mailgun.validate_address(self.email)
 
-        unless verification['is_valid']
-          msg = if (suggest = verification['did_you_mean']).present?
-                  [:invalid_with_msg, {suggest: suggest}]
-                else
-                  [:invalid]
-                end
+          unless verification['is_valid']
+            msg = if (suggest = verification['did_you_mean']).present?
+                    [:invalid_with_msg, { suggest: suggest }]
+                  else
+                    [:invalid]
+                  end
 
-          self.errors.add(:email, *msg)
+            self.errors.add(:email, *msg)
+          end
         end
+      rescue
       end
-    rescue
     end
   end
 end

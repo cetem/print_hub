@@ -1,9 +1,18 @@
-Bugsnag.configure do |config|
-  config.api_key = 'ff325a8d687627e4ae21fb04abea064d'
-  config.notify_release_stages = %w(production staging)
-  begin
-    config.app_version = `git rev-parse --short HEAD`.strip
-  rescue
+if (key = Rails.application.secrets.bugsnag_api_key)
+  Bugsnag.configure do |config|
+    config.api_key = key
+    config.notify_release_stages = %w(production staging)
+    config.ignore_classes = []
+
+    begin
+      revision = if Rails.env.production?
+                   File.read(Rails.root.join('REVISION')) # Capistrano Revision
+                 else
+                   `git rev-parse --short HEAD`
+                 end
+
+      config.app_version = revision.strip
+    rescue
+    end
   end
-  config.ignore_classes = []
 end

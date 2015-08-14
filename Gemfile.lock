@@ -94,7 +94,6 @@ GEM
     connection_pool (2.2.0)
     cups (0.1.10)
     daemons (1.2.2)
-    dalli (2.7.4)
     database_cleaner (1.4.1)
     erubis (2.7.0)
     eventmachine (1.0.7)
@@ -159,7 +158,6 @@ GEM
     mail (2.6.3)
       mime-types (>= 1.16, < 3)
     mailgunner (2.2.1)
-    memcache-client (1.8.5)
     memoist (0.12.0)
     method_source (0.8.2)
     mime-types (2.6.1)
@@ -330,7 +328,6 @@ DEPENDENCIES
   chunky_png
   coffee-rails
   cups
-  dalli
   database_cleaner
   foreigner
   google_drive
@@ -340,7 +337,6 @@ DEPENDENCIES
   jquery-rails
   jquery-ui-rails
   mailgunner
-  memcache-client
   mini_magick (= 3.8.1)
   minitest-reporters
   newrelic_rpm
