@@ -53,7 +53,7 @@ class Shift < ActiveRecord::Base
   end
 
   def close!
-    update_attributes(finish: Time.zone.now)
+    update_column(:finish, Time.zone.now)
   end
 
   def start_limit

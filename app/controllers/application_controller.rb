@@ -130,7 +130,7 @@ class ApplicationController < ActionController::Base
   end
 
   def require_admin_user
-    if current_user.try(:admin) == true
+    if current_user.try(:admin)
       run_shift_tasks
     else
       flash.alert = t('messages.must_be_admin')
@@ -153,16 +153,15 @@ class ApplicationController < ActionController::Base
   end
 
   def run_shift_tasks
-    unless current_user.not_shifted
-      if session[:has_an_open_shift]
-        if current_user.stale_shift && controller_name != 'shifts'
+    if current_user.shifted?
+      if session[:has_an_open_shift] && current_user.stale_shift &&
+        !['shifts', 'user_sessions'].include?(controller_name)
 
           redirect_to edit_shift_url(current_user.stale_shift),
-                      notice: t('view.shifts.edit_stale')
-        end
+                      notice: t('view.shifts.edit_stale') && return
 
-      else
-        current_user_session.create_shift unless current_user.last_shift_open?
+      elsif !current_user.last_shift_open? && controller_name != 'user_sessions'
+        current_user_session.create_shift
       end
 
       true

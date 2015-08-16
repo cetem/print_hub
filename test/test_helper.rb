@@ -108,16 +108,7 @@ class ActionDispatch::IntegrationTest
   self.use_transactional_fixtures = false
 
   setup do
-    if ENV['travis']
-      Capybara.register_driver(:selenium)do |app|
-        profile = Selenium::WebDriver::Firefox::Profile.new
-        profile["network.http.prompt-temp-redirect"] = false
-
-        Capybara::Selenium::Driver.new(app, browser: :firefox, profile: profile)
-      end
-    else
-      Capybara.current_driver = Capybara.javascript_driver # :selenium by default
-    end
+    Capybara.current_driver = Capybara.javascript_driver # :selenium by default
     Capybara.server_port = '54163'
     Capybara.app_host = 'http://localhost:54163'
     Capybara.reset!    # Forget the (simulated) browser state
@@ -157,5 +148,14 @@ class ActionDispatch::IntegrationTest
 
     assert_page_has_no_errors!
     assert_equal options[:expected_path], current_path
+    show_collapse_menu_if_needed
+  end
+
+  def show_collapse_menu_if_needed
+    collapse_css = 'a[data-toggle="collapse"]'
+
+    if page.has_css?(collapse_css) && find(collapse_css).visible?
+      find(collapse_css).click
+    end
   end
 end

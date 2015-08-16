@@ -28,9 +28,13 @@ class UserSessionsController < ApplicationController
 
   def destroy
     if params[:close_shift]
-      current_user.last_open_shift_as_operator! if params[:as_operator]
-      current_user_session.close_shift
+      if params[:as_operator]
+        current_user.last_open_shift_as_operator!
+      end
+
+      current_user_session.close_shift!
     end
+
     current_user_session.destroy
 
     respond_to do |format|

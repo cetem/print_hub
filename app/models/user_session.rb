@@ -7,7 +7,7 @@ class UserSession < Authlogic::Session::Base
     record.start_shift! unless record.has_pending_shift? || record.not_shifted
   end
 
-  def close_shift
+  def close_shift!
     fail 'Unclosed shifts!' unless record.close_pending_shifts!
   end
 end

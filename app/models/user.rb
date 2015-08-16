@@ -61,7 +61,7 @@ class User < ApplicationModel
   end
 
   def has_pending_shift?
-    shifts.pending.present?
+    shifts.pending.any?
   end
 
   def close_pending_shifts!
@@ -69,7 +69,7 @@ class User < ApplicationModel
   end
 
   def has_stale_shift?
-    shifts.stale.present?
+    shifts.stale.any?
   end
 
   def stale_shift
@@ -86,6 +86,10 @@ class User < ApplicationModel
 
   def last_open_shift_as_operator!
     last_open_shift.update(as_admin: false)
+  end
+
+  def shifted?
+    !not_shifted
   end
 
   def self.full_text(query_terms)
