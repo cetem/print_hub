@@ -4,7 +4,7 @@ set :rails_env, 'production'
 set :app_servers, %w(192.168.0.103)
 
 set :sidekiq_servers, fetch(:app_servers)
-set :sidekiq_processes, 2
+set :sidekiq_processes, 1
 
 set :chruby_ruby, '2.1.3'
 

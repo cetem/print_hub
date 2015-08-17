@@ -12,7 +12,7 @@ set :log_level, ENV['log_level'] || :info
 set :linked_files, %w(config/app_config.yml config/secrets.yml)
 set :linked_dirs, %w(log private certs)
 
-set :keep_releases, 5
+set :keep_releases, 2
 
 set :sidekiq_pid,    File.join(current_path, 'tmp', 'pids', 'sidekiq.pid')
 set :sidekiq_config, File.join(current_path, 'config', 'sidekiq.yml')

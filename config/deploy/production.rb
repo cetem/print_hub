@@ -4,7 +4,9 @@ set :rails_env, 'production'
 set :app_servers, %w(fotocopia.frm.utn.edu.ar)
 
 set :sidekiq_servers, fetch(:app_servers)
-set :sidekiq_processes, 2
+set :sidekiq_processes, 1
+
+set :chruby_ruby, '2.1.3'
 
 role :sidekiqers, fetch(:sidekiq_servers)
 role :web, fetch(:app_servers)
