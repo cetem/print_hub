@@ -9,7 +9,7 @@ set :deploy_via, :remote_cache
 set :format, :pretty
 set :log_level, ENV['log_level'] || :info
 
-set :linked_files, %w(config/app_config.yml)
+set :linked_files, %w(config/app_config.yml config/secrets.yml)
 set :linked_dirs, %w(log private certs)
 
 set :keep_releases, 5
