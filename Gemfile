@@ -1,13 +1,13 @@
 source 'https://rubygems.org'
 
-gem 'rails', '4.1.6'
+gem 'rails', '4.2.4'
 
 gem 'pg'
 gem 'authlogic'
 gem 'jc-validates_timeliness'
 gem 'awesome_nested_set'
 gem 'will_paginate'
-gem 'foreigner' #Will die in rails 4.2
+#gem 'foreigner' #Will die in rails 4.2
 gem 'paper_trail'
 gem 'RedCloth'
 gem 'cups'

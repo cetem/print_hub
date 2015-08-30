@@ -41,7 +41,7 @@ class ShiftTest < ActiveSupport::TestCase
     end
 
     assert_equal start.to_i, @shift.reload.start.to_i
-    assert_equal old_start, @shift.reload.start.to_i
+    assert_not_equal old_start, @shift.reload.start.to_i
     assert_equal finish.to_i, @shift.finish.to_i
   end
 

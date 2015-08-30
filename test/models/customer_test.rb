@@ -175,7 +175,7 @@ class CustomerTest < ActiveSupport::TestCase
     @customer.free_monthly_bonus = '1.2x'
     @customer.email = 'incorrect@format'
     assert @customer.invalid?
-    assert_equal 2, @customer.errors.count
+    assert_equal 2, @customer.errors.count, @customer.errors.full_messages
     assert_equal [
       error_message_from_model(@customer, :free_monthly_bonus, :not_a_number)
     ], @customer.errors[:free_monthly_bonus]

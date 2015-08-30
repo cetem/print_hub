@@ -158,7 +158,8 @@ class ApplicationController < ActionController::Base
         !['shifts', 'user_sessions'].include?(controller_name)
 
           redirect_to edit_shift_url(current_user.stale_shift),
-                      notice: t('view.shifts.edit_stale') && return
+                      notice: t('view.shifts.edit_stale')
+          return
 
       elsif !current_user.last_shift_open? && controller_name != 'user_sessions'
         current_user_session.create_shift

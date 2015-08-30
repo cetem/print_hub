@@ -54,7 +54,7 @@ class DocumentTest < ActiveSupport::TestCase
                  thumbs_dir.entries.count { |f| f.extname == '.png' && !f.zero? }
 
     # Asegurar la "limpieza" del directorio
-    Pathname.new(@document.file.path).dirname.rmtree
+    thumbs_dir.rmtree
   end
 
   # Prueba la creación de un documento con múltiples páginas
@@ -87,7 +87,7 @@ class DocumentTest < ActiveSupport::TestCase
                  thumbs_dir.entries.count { |f| f.extname == '.png' && !f.zero? }
 
     # Asegurar la "limpieza" del directorio
-    Pathname.new(@document.file.path).dirname.rmtree
+    thumbs_dir.rmtree
   end
 
   # Prueba de actualización de un documento
@@ -100,7 +100,7 @@ class DocumentTest < ActiveSupport::TestCase
     assert_equal 'Updated name', @document.reload.name
   end
 
-  test 'can update with diferent pdfs' do
+  test 'can update with different pdfs' do
     file = Rack::Test::UploadedFile.new(
       File.join(Rails.root, 'test', 'fixtures', 'files', 'multipage_test.pdf'),
       'application/pdf'

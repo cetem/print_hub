@@ -187,7 +187,7 @@ class PrintsController < ApplicationController
     current_print = prints_scope.find(params[:id])
     print = current_print.related_by_customer(params[:type])
 
-    redirect_to prints_scope.exists?(print) ? print : current_print
+    redirect_to prints_scope.exists?(print.try(:id)) ? print : current_print
   end
 
   # /prints/1/change_comment

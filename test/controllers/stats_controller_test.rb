@@ -2,6 +2,7 @@ require 'test_helper'
 
 class StatsControllerTest < ActionController::TestCase
   def setup
+    @controller = StatsController.new
     UserSession.create(users(:operator))
   end
 

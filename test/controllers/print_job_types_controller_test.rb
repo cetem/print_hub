@@ -2,7 +2,7 @@ require 'test_helper'
 
 class PrintJobTypesControllerTest < ActionController::TestCase
   setup do
-    @print_job_type = PrintJobType.find print_job_types(:a4)
+    @print_job_type = PrintJobType.find print_job_types(:a4).id
 
     UserSession.create(users(:operator))
   end

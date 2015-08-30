@@ -77,7 +77,7 @@ class DocumentsTest < ActionDispatch::IntegrationTest
     first_tag = math_book.tags.first
 
     within 'form' do
-      assert_difference 'Document.find(math_book).tags.count', -1 do
+      assert_difference 'Document.find(math_book.id).tags.count', -1 do
         assert_difference 'first_tag.reload.documents_count', -1 do
           within "div#tag_#{first_tag.id}" do
             first(:css, '[data-event=removeItem]').click

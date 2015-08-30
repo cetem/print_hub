@@ -34,7 +34,7 @@
           <%= link_to t('view.stats.show_grid'), '#', class: 'show_grid btn' %>
           <%= link_to t('view.stats.show_graph'), '#', class: 'show_graph btn' %>
           <%= link_to t('view.stats.download_csv'),
-            printer_stats_path(params.merge(format: :csv)), class: 'btn' %>
+            printer_stats_path(params.merge(format: :csv).symbolize_keys), class: 'btn' %>
         </div>
       </div>
     </div>

@@ -37,7 +37,7 @@ class PrintJobTypeTest < ActiveSupport::TestCase
   end
 
   test 'destroy' do
-    print_job_type = PrintJobType.find(print_job_types(:color))
+    print_job_type = PrintJobType.find(print_job_types(:color).id)
 
     assert_difference('PrintJobType.count', -1) { print_job_type.destroy }
   end

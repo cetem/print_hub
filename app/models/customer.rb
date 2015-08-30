@@ -262,7 +262,7 @@ class Customer < ApplicationModel
   end
 
   def email_against_mailgun
-    if self.email_changed?
+    if self.email_changed? && self.errors[:email].empty?
       begin
         if $mailgun && self.email.present?
           verification = $mailgun.validate_address(self.email)

@@ -205,8 +205,8 @@ class ApplicationControllerTest < ActionController::TestCase
     assert_redirected_to new_user_session_url
   end
 
-  test 'not leave open shift' do
-    @operator.update(admin: false)
+  test 'not leave open shift rock' do
+    @operator.update(admin: false, not_shifted: false)
     @operator.close_pending_shifts!
 
     UserSession.create(@operator)
@@ -215,7 +215,7 @@ class ApplicationControllerTest < ActionController::TestCase
 
     @shift = Shift.create!(user_id: @operator.id, start: 9.hours.ago)
 
-    assert_not_nil @controller.send(:run_shift_tasks)
+    assert_nil @controller.send(:run_shift_tasks)
     assert_redirected_to edit_shift_url(@shift)
 
     assert @operator.close_pending_shifts!

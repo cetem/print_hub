@@ -1,6 +1,6 @@
 class StatsController < ApplicationController
   before_action :require_admin_user, :load_date_range
-  respond_to :html, :json, :csv
+  #respond_to :html, :json, :csv
 
   # GET /printer_stats
   # GET /printer_stats.json
@@ -14,7 +14,8 @@ class StatsController < ApplicationController
       @printers_count[printer] = count
     end
 
-    respond_with @printers_count do |format|
+    respond_to do |format|
+      format.html
       format.csv { render csv: @printers_count, filename: @title }
     end
   end
@@ -29,7 +30,8 @@ class StatsController < ApplicationController
       @users_count[User.find(u_id).to_s] = count
     end
 
-    respond_with @users_count do |format|
+    respond_to do |format|
+      format.html
       format.csv { render csv: @users_count, filename: @title }
     end
   end
@@ -44,7 +46,8 @@ class StatsController < ApplicationController
       @user_prints_count[User.find(u_id).to_s] = prints.count
     end
 
-    respond_with @user_prints_count do |format|
+    respond_to do |format|
+      format.html
       format.csv { render csv: @user_prints_count, filename: @title }
     end
   end

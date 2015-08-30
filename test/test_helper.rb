@@ -11,11 +11,8 @@ Minitest::Reporters.use! Minitest::Reporters::ProgressReporter.new
 
 class ActiveSupport::TestCase
   ActiveRecord::Migration.maintain_test_schema!
+  set_fixture_class versions: PaperTrail::Version
 
-  # Setup all fixtures in test/fixtures/*.(yml|csv) for all tests in alphabetical order.
-  #
-  # Note: You'll currently still have to declare fixtures explicitly in integration tests
-  # -- they do not yet inherit this setting
   fixtures :all
 
   # Add more helper methods to be used by all tests here...
@@ -112,7 +109,7 @@ class ActionDispatch::IntegrationTest
     Capybara.server_port = '54163'
     Capybara.app_host = 'http://localhost:54163'
     Capybara.reset!    # Forget the (simulated) browser state
-    Capybara.default_wait_time = 4
+    Capybara.default_max_wait_time = 4
   end
 
   teardown do

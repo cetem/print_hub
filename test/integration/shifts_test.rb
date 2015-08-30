@@ -56,7 +56,7 @@ class ShiftsTest < ActionDispatch::IntegrationTest
   test 'should view the own shifts' do
     new_operator = new_generic_operator
 
-    login(new_operator)
+    login(new_operator.id)
 
     assert page.has_css?('.navbar')
     within '.navbar' do
@@ -136,7 +136,7 @@ class ShiftsTest < ActionDispatch::IntegrationTest
   test 'should close the shift for not shifted user' do
     @operator.update(not_shifted: true)
 
-    login(@operator)
+    login(@operator.id)
 
     assert page.has_css?('.navbar')
 
