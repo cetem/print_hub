@@ -117,11 +117,11 @@ class Customer < ApplicationModel
   end
 
   def send_welcome_email!
-    Notifications.delay.signup(self)
+    Notifications.delay.signup(self.id)
   end
 
   def deliver_password_reset_instructions!
-    Notifications.delay.forgot_password(self)
+    Notifications.delay.forgot_password(self.id)
   end
 
   def has_no_orders?
