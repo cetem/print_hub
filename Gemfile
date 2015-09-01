@@ -29,6 +29,7 @@ gem 'unicorn'
 gem 'unicorn-worker-killer'
 gem 'whenever', require: false
 gem 'sidekiq'
+gem 'sinatra', require: nil
 
 # Code stats/notifier
 gem 'newrelic_rpm'

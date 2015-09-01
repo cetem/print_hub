@@ -239,7 +239,7 @@ class Customer < ApplicationModel
   end
 
   def self.full_text(query_terms)
-    options = text_query(query_terms, 'identification', 'name', 'lastname')
+    options = text_query(query_terms, 'identification', 'name', 'lastname', 'email')
     conditions = [options[:query]]
 
     where(

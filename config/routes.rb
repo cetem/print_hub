@@ -19,6 +19,9 @@ Rails.application.routes.draw do
   end
 
   constraints(UserSubdomain) do
+    require 'sidekiq/web'
+    mount Sidekiq::Web => '/sidekiq', constraints: AdminConstraint.new
+
     draw :user, :stat
     draw :user, :bonus
     draw :user, :article

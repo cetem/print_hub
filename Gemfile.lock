@@ -217,6 +217,8 @@ GEM
     pry-nav (0.2.4)
       pry (>= 0.9.10, < 0.11.0)
     rack (1.6.4)
+    rack-protection (1.5.3)
+      rack
     rack-test (0.6.3)
       rack (>= 1.0)
     rails (4.2.4)
@@ -286,6 +288,10 @@ GEM
     simple_form (3.1.0)
       actionpack (~> 4.0)
       activemodel (~> 4.0)
+    sinatra (1.4.6)
+      rack (~> 1.4)
+      rack-protection (~> 1.4)
+      tilt (>= 1.3, < 3)
     slop (3.6.0)
     spoon (0.0.4)
       ffi
@@ -374,6 +380,7 @@ DEPENDENCIES
   selenium-webdriver
   sidekiq
   simple_form
+  sinatra
   thin
   turbolinks
   uglifier
