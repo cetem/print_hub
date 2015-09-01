@@ -27,7 +27,7 @@ class Customer < ApplicationModel
   before_validation do |customer|
     :email.tap { |e| customer[e] = customer[e].try(:downcase) }
   end
-  before_create :build_monthly_bonus, :send_welcome_email!
+  after_create :build_monthly_bonus, :send_welcome_email!
   before_destroy :has_no_orders?
 
   # Restricciones
