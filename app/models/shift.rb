@@ -67,12 +67,12 @@ class Shift < ActiveRecord::Base
   def pay!
     update_attributes(paid: true)
 
-    if errors.any?
+    if errors.messages.any?
       Bugsnag.notify(
         RuntimeError.new(I18n.t('view.shifts.pay_error') + '- ShiftModel'),           shift: {
           id: id,
           user: user.to_s,
-          errors: errors
+          errors: errors.messages
         }
       )
     else
