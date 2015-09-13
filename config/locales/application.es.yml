@@ -289,12 +289,16 @@ es:
     must_be_logged_out: "Debe salir para poder ver el contenido requerido"
     only_pdf_permitted: 'Solo se permiten subir pdf"s'
   notifications:
+    feedback_incoming:
+      subject: "Recibimos Feedback!"
     forgot_password:
       subject: "Restablecer contraseña"
     reactivation:
       subject: "Re-activar cuenta"
     signup:
       subject: "Registro"
+    thanks_for_feedback:
+      subject: "Muchas gracias por el feedback"
   view:
     articles:
       correctly_created: "Artículo agregado correctamente."
@@ -451,8 +455,10 @@ es:
       show_title: "Detalle de documento"
       stale_object_error: "El documento no pudo ser actualizado, intente nuevamente."
     feedbacks:
+      negative: "negativo"
       negative_comment_return: "Gracias por tus sugerencias, trabajaremos para mejorar este artículo."
       negative_return: "Lamentamos que no te haya servido. ¿Podrías decirnos cómo mejorar este artículo?"
+      positive: "positiva"
       positive_return: "Nos alegra haberte ayudado. Gracias por la retroalimentación."
       submit: "Enviar comentario"
     orders:

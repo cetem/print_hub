@@ -1,0 +1,11 @@
+<% item ||= [action_name, controller_name].join('_') %>
+<hr />
+<footer class="feedback">
+  <p>
+    <em>Ayudanos a mejorar :</em> ¿Te sirve la página?
+    <%= link_to 'Si', new_feedback_path(item: item, score: :positive),
+      data: { method: :post, remote: true } %> o
+    <%= link_to 'No', new_feedback_path(item: item, score: :negative),
+      data: { method: :post, remote: true } %>
+  </p>
+</footer>

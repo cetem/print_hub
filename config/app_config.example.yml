@@ -22,5 +22,6 @@ subdomains:
   users: 'prints'
   customers: 'fotocopia'
 
-# Mailgun Api key to validate emails
-mailgun_api_key: 'pubkey-11111111111111111111111111111111'
+feedback_interesteds:
+  - 'mail1@example.com'
+  - 'mail2@example.com'

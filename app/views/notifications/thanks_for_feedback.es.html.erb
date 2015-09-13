@@ -1,0 +1,17 @@
+<h2>Muchas gracias por el feedback!</h2>
+
+<p>Hola, <%= @customer %></p>
+
+<p>
+Estaremos analizando tu feedback para poder mejorar en todo lo que podamos. Muchas gracias!
+</p>
+
+Tu calificación fue <%= @feedback.qualification %>.
+<% if @feedback.comments.present? %>
+  <p>
+    <%= simple_format @feedback.comments %>
+  </p>
+<% end %>
+
+<br />
+<br />

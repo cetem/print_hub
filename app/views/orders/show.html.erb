@@ -79,6 +79,7 @@
 
 <br />
 <%= render 'printed_footer' if current_customer %>
+<%= render 'shared/feedback_footer' if current_customer %>
 
 <nav class="form-actions">
   <%= nav_links_in_show_order(@order) %>

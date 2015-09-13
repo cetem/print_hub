@@ -28,8 +28,9 @@ class FeedbacksController < ApplicationController
   # Attributos permitidos
   def create_feedback_params
     params[:positive] = params[:score] == 'positive'
+    params[:customer_id] = current_customer.try(:id)
 
-    params.permit(:item, :positive)
+    params.permit(:item, :positive, :customer_id)
   end
 
   def update_feedback_params

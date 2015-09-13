@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150913003735) do
+ActiveRecord::Schema.define(version: 20150913034056) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -121,13 +121,15 @@ ActiveRecord::Schema.define(version: 20150913003735) do
   add_index "documents", ["private"], name: "index_documents_on_private", using: :btree
 
   create_table "feedbacks", force: :cascade do |t|
-    t.string   "item",       limit: 255,                 null: false
-    t.boolean  "positive",               default: false, null: false
+    t.string   "item",        limit: 255,                 null: false
+    t.boolean  "positive",                default: false, null: false
     t.text     "comments"
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.integer  "customer_id"
   end
 
+  add_index "feedbacks", ["customer_id"], name: "index_feedbacks_on_customer_id", using: :btree
   add_index "feedbacks", ["item"], name: "index_feedbacks_on_item", using: :btree
   add_index "feedbacks", ["positive"], name: "index_feedbacks_on_positive", using: :btree
 

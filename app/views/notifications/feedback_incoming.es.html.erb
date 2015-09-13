@@ -1,0 +1,16 @@
+<h2>Recibimos feedback!</h2>
+
+<p>Hola,</p>
+
+<p>
+  <%= @feedback.customer || 'Alguien' %> dejó una calificación <%= @feedback.qualification %> en la sección <i><%= @feedback.item %></i>.
+</p>
+
+<% if @feedback.comments.present? %>
+  <p>
+    <%= simple_format @feedback.comments %>
+  </p>
+<% end %>
+
+<br />
+<br />

@@ -33,13 +33,33 @@ class Notifications < ActionMailer::Base
     end
   end
 
+  def feedback_incoming(feedback_id)
+    @feedback = Feedback.find(feedback_id)
+
+    if @feedback && @feedback.emails
+      mail to: @feedback.emails, reply_to: @feedback.customer.try(:email)
+    else
+      notify_exception(feedback_id, 'feedback_incoming')
+    end
+  end
+
+  def thanks_for_feedback(feedback_id)
+    @feedback = Feedback.find(feedback_id)
+
+    if @feedback
+      mail to: @feedback.customer.email
+    else
+      notify_exception(feedback_id, 'thanks_for_feedback')
+    end
+  end
+
 private
 
   def notify_exception(email, mailer_name)
     Bugsnag.notify(
       RuntimeError.new('Mailer error ' + mailer_name),
       user: {
-        email: email
+        param: email
       }
     )
   end
