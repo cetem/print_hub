@@ -1,0 +1,4 @@
+
+
+0 7 * * 0 root scripts/zip_and_delete_cups_logs.sh >/dev/null2>&1
+1 10 * * * COMMON_USER scripts/upload_last_backup_to_xxxx.sh >/dev/null2>&1
