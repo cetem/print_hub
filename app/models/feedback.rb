@@ -25,6 +25,12 @@ class Feedback < ApplicationModel
     Notifications.delay.feedback_incoming(self.id) if self.comments.present?
   end
 
+  def customer_email
+    if customer
+      "#{customer.to_s} <#{customer.email}>"
+    end
+  end
+
   def qualification
     I18n.t('view.feedbacks.' + (positive? ? 'positive' : 'negative') )
   end

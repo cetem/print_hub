@@ -37,7 +37,7 @@ class Notifications < ActionMailer::Base
     @feedback = Feedback.find(feedback_id)
 
     if @feedback && @feedback.emails
-      mail to: @feedback.emails, reply_to: @feedback.customer.try(:email)
+      mail to: @feedback.emails, reply_to: @feedback.customer_email
     else
       notify_exception(feedback_id, 'feedback_incoming')
     end
