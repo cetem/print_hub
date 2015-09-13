@@ -17,3 +17,7 @@ end
 every 7.days, at: '01:00' do
   rake 'tasks:clean_temp_files'
 end
+
+every :sunday, at: '05:00' do
+  rake 'tasks:analyze_cups_logs'
+end
