@@ -1,8 +1,7 @@
 class Feedback < ApplicationModel
   # Callbacks
   before_destroy :avoid_destruction
-  after_commit :notify_customer, on: :create
-  after_commit :notify_interesteds
+  after_commit :notify_customer, :notify_interesteds
 
   belongs_to :customer
 
@@ -26,9 +25,7 @@ class Feedback < ApplicationModel
   end
 
   def customer_email
-    if customer
-      "#{customer.to_s} <#{customer.email}>"
-    end
+    "#{customer.to_s} <#{customer.email}>" if customer
   end
 
   def qualification
