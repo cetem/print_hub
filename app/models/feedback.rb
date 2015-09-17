@@ -1,7 +1,7 @@
 class Feedback < ApplicationModel
   # Callbacks
   before_destroy :avoid_destruction
-  after_create :notify_customer
+  after_commit :notify_customer, on: :create
   after_commit :notify_interesteds
 
   belongs_to :customer
