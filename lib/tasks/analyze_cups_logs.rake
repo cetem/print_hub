@@ -60,7 +60,7 @@ namespace :tasks do
     logger.info 'Second phase done. Updating PrintJobs....'
 
     jobs_with_score.each do |job_id, score|
-      if (pj = PrintJob.find_by(job_id: job_id))
+      if (pj = PrintJob.order(:id).where(job_id: job_id).try(:last))
         if pj.time_remained.nil?
           pj.update_column(:time_remained, score)
           logger.info "PrintJobID-#{pj.id} time_remained updated to #{score}"
