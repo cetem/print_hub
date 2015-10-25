@@ -42,7 +42,7 @@ class CustomerTest < ActiveSupport::TestCase
     end
   end
 
-  test 'create with bonus' do
+  test 'create with bonus NESTOR' do
     # Send welcome email
     assert_difference 'Sidekiq::Extensions::DelayedMailer.jobs.size' do
       assert_difference ['Customer.count', 'Bonus.count'] do

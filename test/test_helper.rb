@@ -12,6 +12,7 @@ Minitest::Reporters.use! Minitest::Reporters::ProgressReporter.new
 class ActiveSupport::TestCase
   ActiveRecord::Migration.maintain_test_schema!
   set_fixture_class versions: PaperTrail::Version
+  self.use_transactional_fixtures = true
 
   fixtures :all
 

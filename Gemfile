@@ -7,7 +7,6 @@ gem 'authlogic'
 gem 'jc-validates_timeliness'
 gem 'awesome_nested_set'
 gem 'will_paginate'
-#gem 'foreigner' #Will die in rails 4.2
 gem 'paper_trail'
 gem 'RedCloth'
 gem 'cups'
@@ -66,4 +65,5 @@ group :test do
   gem 'selenium-webdriver'
   gem 'database_cleaner', require: false # For Capybara
   gem 'minitest-reporters'
+  gem 'test_after_commit'
 end

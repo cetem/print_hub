@@ -132,6 +132,9 @@ class DocumentTest < ActiveSupport::TestCase
     assert_equal 1, @document.reload.pages
     # PDF original y 2 miniaturas
     assert_equal 3, thumbs_dir.entries.reject(&:directory?).size
+
+    # Asegurar la "limpieza" del directorio
+    thumbs_dir.rmtree
   end
 
   # Prueba de eliminación de documentos

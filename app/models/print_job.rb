@@ -170,6 +170,12 @@ class PrintJob < ApplicationModel
         options = "-d #{printer} -n #{self.printed_copies} -o fit-to-page "
         options += "-t #{user || 'ph'}-#{timestamp} "
         options += self.options.map { |o, v| "-o #{o}=#{v}" }.join(' ')
+
+        if self.range.present?
+          CupsLogger.info('Printing with range:')
+          CupsLogger.info("lp #{options} #{file_path}")
+        end
+
         out = `lp #{options} "#{file_path}" 2>&1`
 
         self.job_id = out.match(/#{Regexp.escape(printer)}-\d+/)[0] || '-'

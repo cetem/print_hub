@@ -76,7 +76,7 @@ class PrintsController < ApplicationController
         format.html { redirect_to(@print, notice: t('view.prints.correctly_created')) }
         format.json  { render json: @print, status: :created, location: @print }
       else
-        report_validation_error(@print)
+        report_validation_error(@print) unless @print.errors[:credit_password].present?
         format.html { render action: 'new' }
         format.json  { render json: @print.errors, status: :unprocessable_entity }
       end
@@ -98,7 +98,7 @@ class PrintsController < ApplicationController
         format.html { redirect_to(@print, notice: t('view.prints.correctly_updated')) }
         format.json  { head :ok }
       else
-        report_validation_error(@print)
+        report_validation_error(@print) unless @print.errors[:credit_password].present?
         format.html { render action: 'edit' }
         format.json  { render json: @print.errors, status: :unprocessable_entity }
       end
