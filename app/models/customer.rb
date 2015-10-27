@@ -249,11 +249,16 @@ class Customer < ApplicationModel
   end
 
   def self.create_monthly_bonuses
+    _logger = TasksLogger
+    _logger.progname = 'create_monthly_bonuses'
+
     Customer.transaction do
       begin
         Customer.with_monthly_bonus.each do |customer|
+          _logger.info("Creating bonus for [#{customer.id}]#{customer.to_s}")
           customer.build_monthly_bonus
           customer.save! validate: false
+          _logger.info("Created")
         end
 
       rescue ActiveRecord::RecordInvalid
