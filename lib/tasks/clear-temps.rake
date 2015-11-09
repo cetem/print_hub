@@ -27,12 +27,16 @@ namespace :tasks do
     output.each do |file|
       logger.info "Cleanned: #{file}"
     end
+  rescue => ex
+    log_error(ex)
   end
 
   def delete_empty_files_folder(directory)
     dirs = `find #{directory} -type d`.split("\n").reverse
 
     dirs.each { |d| Dir.rmdir(d) if (Dir.entries(d) - %w(. ..)).empty? }
+  rescue => ex
+    log_error(ex)
   end
 
   def logger
@@ -40,5 +44,11 @@ namespace :tasks do
     @_logger = TasksLogger
     @_logger.progname = 'Clean_temp_files'
     @_logger
+  end
+
+  def log_error(ex)
+    error = "#{ex.class}: #{ex.message}\n"
+    ex.backtrace.each { |l| error << "#{l}\n" }
+    logger.error(error)
   end
 end

@@ -8,6 +8,8 @@ namespace :tasks do
 
       logger.info("#{id} cancelled") if system("lprm #{id}")
     end
+  rescue => ex
+    log_error(ex)
   end
 
   private
@@ -16,5 +18,11 @@ namespace :tasks do
       @_logger = TasksLogger
       @_logger.progname = 'Clean_prints'
       @_logger
+    end
+
+    def log_error(ex)
+      error = "#{ex.class}: #{ex.message}\n"
+      ex.backtrace.each { |l| error << "#{l}\n" }
+      logger.error(error)
     end
 end
