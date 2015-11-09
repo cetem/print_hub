@@ -1,15 +1,17 @@
 namespace :tasks do
   desc 'Cleaning not completed prints'
   task clean_prints: :environment do
-    jobs = `lpstat -Wnot-completed -o | awk '{print $1}'`
+    begin
+      jobs = `lpstat -Wnot-completed -o | awk '{print $1}'`
 
-    jobs.split("\n").each do |j|
-      id = j.match(/(\d+)$/)[1]
+      jobs.split("\n").each do |j|
+        id = j.match(/(\d+)$/)[1]
 
-      logger.info("#{id} cancelled") if system("lprm #{id}")
+        logger.info("#{id} cancelled") if system("lprm #{id}")
+      end
+    rescue => ex
+      log_error(ex)
     end
-  rescue => ex
-    log_error(ex)
   end
 
   private
