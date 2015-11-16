@@ -18,7 +18,7 @@
         <tr>
           <td><%= link_to order.id, custom_order_path(order) %></td>
           <td class="hidden-phone"><%= order.customer %></td>
-          <td><%= l order.scheduled_at, format: :short if order.scheduled_at %></td>
+          <td><%= l order.scheduled_at, format: :minimal if order.scheduled_at %></td>
           <td><%= order.status_text %></td>
           <td><%= link_to_show custom_order_path(order) %></td>
         </tr>

@@ -206,6 +206,5 @@ class ApplicationController < ActionController::Base
       },
       errors: obj.errors.messages
     )
-  rescue
   end
 end

@@ -20,8 +20,8 @@
         <td><%= bonus.customer %></td>
         <td><%= number_to_currency bonus.amount %></td>
         <td><%= number_to_currency bonus.remaining %></td>
-        <td><%= l bonus.valid_until, format: :short if bonus.valid_until %></td>
-        <td><%= l bonus.created_at, format: :short if bonus.created_at %></td>
+        <td><%= l bonus.valid_until, format: :minimal if bonus.valid_until %></td>
+        <td><%= l bonus.created_at, format: :minimal if bonus.created_at %></td>
       </tr>
     <% end %>
   </tbody>

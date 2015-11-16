@@ -43,7 +43,7 @@
       <% @prints.each do |print| %>
         <tr class="<%= print.revoked ? 'revoked ' : '' %>">
           <td><%= print.id %></td>
-          <td><%= l print.created_at, format: :short if print.created_at %></td>
+          <td><%= l print.created_at, format: :minimal if print.created_at %></td>
           <td>
             <span class="visible-desktop">
               <%= display_print_jobs_codes(print) %>
@@ -54,7 +54,7 @@
           </td>
           <td>
             <span class="visible-desktop">
-              <%= l print.scheduled_at, format: :short if print.scheduled_at %>
+              <%= l print.scheduled_at, format: :minimal if print.scheduled_at %>
             </span>
           </td>
           <td><span class="visible-desktop"><%= print.user %></span></td>
