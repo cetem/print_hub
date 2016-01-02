@@ -149,7 +149,9 @@ class CustomersTest < ActionDispatch::IntegrationTest
   end
 
   test 'should show the bonuses' do
-    login
+    user = users(:operator)
+    user.update(not_shifted: true)
+    login user.id
 
     assert_page_has_no_errors!
     assert_equal prints_path, current_path
