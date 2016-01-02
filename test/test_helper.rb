@@ -123,6 +123,14 @@ class ActionDispatch::IntegrationTest
     assert page.has_no_css?('#unexpected_error')
   end
 
+  def show_collapse_menu_if_needed
+    collapse_css = 'a[data-toggle="collapse"]'
+
+    if page.has_css?(collapse_css) && find(collapse_css).visible?
+      find(collapse_css).click
+    end
+  end
+
   def login(*args)
     options = args.extract_options!
 
@@ -146,14 +154,7 @@ class ActionDispatch::IntegrationTest
 
     assert_page_has_no_errors!
     assert_equal options[:expected_path], current_path
+
     show_collapse_menu_if_needed
-  end
-
-  def show_collapse_menu_if_needed
-    collapse_css = 'a[data-toggle="collapse"]'
-
-    if page.has_css?(collapse_css) && find(collapse_css).visible?
-      find(collapse_css).click
-    end
   end
 end
