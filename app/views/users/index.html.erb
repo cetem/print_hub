@@ -64,5 +64,20 @@
 <%= pagination_links(@users) %>
 
 <nav class="form-actions">
-  <%= link_to t('label.new'), new_user_path, class: 'btn btn-primary' %>
+  <div class="btn-group">
+    <%= link_to t('label.new'), new_user_path, class: 'btn btn-primary' %>
+    <button class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+      <span class="caret"></span>
+    </button>
+    <ul class="dropdown-menu">
+      <li>
+        <% if params[:disabled] %>
+          <%= link_to t('view.users.actives'), users_path %>
+        <% else %>
+          <%= link_to t('view.users.disabled'), users_path(disabled: true)%>
+        <% end %>
+      </li>
+    </ul>
+  </div>
+
 </nav>

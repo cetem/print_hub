@@ -122,8 +122,10 @@
               <div class='hide progress progress-success progress-striped active'>
                 <div class='bar' style='width: 0%;'></div>
               </div>
-              <div id='file-upload-error' class="alert alert-error hide fade in">
-                <%= t('messages.only_pdf_permitted') %>
+              <div id='file-upload-error' class="alert alert-error hide fade in"
+                data-wrong-format="<%= t('messages.only_pdf_permitted') %>"
+                data-broken-pdf="<%= t('messages.broken_pdf') %>"
+              >
               </div>
             </div>
             <div class="span2 pull-right">

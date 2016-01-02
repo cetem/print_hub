@@ -36,6 +36,7 @@ new Rule
           progress_div.style.display = 'block'
           data.submit()
         else
+          error_div.innerHTML = error_div.getAttribute('data-wrong-format')
           error_div.style.display = 'block'
 
       progressall: (e, data) ->
@@ -47,6 +48,10 @@ new Rule
         $('input:submit').attr('disabled', false)
         State.fileUploaded = true
         $('.file_line_item:last').change()
+      error: (e) ->
+        progress_div.style.display = 'none'
+        error_div.innerHTML = error_div.getAttribute('data-broken-pdf')
+        error_div.style.display = 'block'
 
     $(document).on 'click', '#upload_file_buttom', @map.addUploadFileEventToButtom
 

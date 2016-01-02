@@ -9,6 +9,7 @@ class User < ApplicationModel
 
   # Scopes
   scope :actives, -> { where(enable: true) }
+  scope :disabled, -> { where(enable: false) }
   scope :with_shifts_control, -> { where(not_shifted: false) }
   scope :order_by_name, -> { order(name: :asc) }
 

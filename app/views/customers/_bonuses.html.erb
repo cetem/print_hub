@@ -1,0 +1,36 @@
+<h3>
+  <%= t(
+    'view.customers.current_bonuses',
+    count: customer.current_bonuses.size
+  ) %>
+</h3>
+
+<table id="bonuses_headers" class="table">
+  <thead>
+    <th>
+      <%= Bonus.human_attribute_name 'amount' %>
+    </th>
+    <th>
+      <%= Bonus.human_attribute_name 'remaining' %>
+    </th>
+    <th>
+      <%= Bonus.human_attribute_name 'valid_until' %>
+    </th>
+  </thead>
+
+  <tbody>
+    <% customer.bonuses.each do |bonus| %>
+      <tr>
+        <td>
+          <%= number_to_currency bonus.amount %>
+        </td>
+        <td>
+          <%= number_to_currency bonus.remaining %>
+        </td>
+        <td>
+          <%= l(bonus.valid_until) if bonus.valid_until %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

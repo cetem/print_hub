@@ -123,12 +123,12 @@ class PrintsController < ApplicationController
 
   # POST /prints/upload_file
   def upload_file
-    @print = Print.new
     file_line = FileLine.create(file_line_params)
-    @print.print_jobs.build(file_line.attributes.slice('id'))
 
     respond_to do |format|
-      if file_line
+      if file_line && file_line.persisted?
+        @print = Print.new
+        @print.print_jobs.build(file_line.attributes.slice('id'))
         format.html { render partial: 'file_print_job' }
         format.js
       else

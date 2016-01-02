@@ -15,10 +15,15 @@ class UsersController < ApplicationController
       @users = @users.full_text(query_terms) unless query_terms.empty?
     end
 
+    @users = if params[:disabled]
+               @users.disabled
+             else
+               @users.actives
+             end
+
     @users = @users.paginate(
       page: params[:page], per_page: (lines_per_page / 2.5).round
     )
-
 
     respond_to do |format|
       format.html # index.html.erb

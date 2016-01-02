@@ -192,11 +192,11 @@ class PrintJob < ApplicationModel
   end
 
   def pending?
-    `lpstat -W not-completed | grep "^#{job_id} "`.present?
+    job_id.present? && `lpstat -W not-completed | grep "^#{job_id} "`.present?
   end
 
   def completed?
-    `lpstat -W completed | grep "^#{job_id} "`.present?
+    job_id.present? && `lpstat -W completed | grep "^#{job_id} "`.present?
   end
 
   def self.printer_stats_between(from, to)

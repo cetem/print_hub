@@ -690,7 +690,7 @@ class PrintsControllerTest < ActionController::TestCase
   end
 
   test 'should upload a file' do
-    post :upload_file, file_line: { file: pdf_test_file }, status: 'all'
+    post :upload_file, file_line: { file: [pdf_test_file] }, status: 'all'
     assert_response :success
     assert_template 'prints/_file_print_job'
   end

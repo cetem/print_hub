@@ -8,11 +8,12 @@ class NotificationsTest < ActionMailer::TestCase
     assert_equal I18n.t('notifications.signup.subject'), mail.subject
     assert_equal [customer.email], mail.to
     assert_equal [APP_CONFIG['smtp']['user_name']], mail.from
-    #assert_match 'Bienvenido', mail.body.encoded
-    #assert_match 'lista para usarse', mail.body.encoded
+    body = mail.body.encoded
+    assert_match 'Bienvenido', body
+    assert_match 'lista para usarse', body
 
-    assert_difference 'ActionMailer::Base.deliveries.count' do
-      mail.deliver_now
+    assert_difference 'ActionMailer::Base.deliveries.size' do
+      mail.deliver!
     end
   end
 
@@ -23,10 +24,10 @@ class NotificationsTest < ActionMailer::TestCase
     assert_equal I18n.t('notifications.forgot_password.subject'), mail.subject
     assert_equal [customer.email], mail.to
     assert_equal [APP_CONFIG['smtp']['user_name']], mail.from
-    #assert_match 'Cambio', mail.body.encoded
+    assert_match 'Cambio', mail.body.encoded
 
-    assert_difference 'ActionMailer::Base.deliveries.count' do
-      mail.deliver_now
+    assert_difference 'ActionMailer::Base.deliveries.size' do
+      mail.deliver!
     end
   end
 end

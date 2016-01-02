@@ -280,6 +280,7 @@ es:
     ajax_in_progress_warning: |-
         Algunos pedidos todavía se están procesando
         Si abandona esta página puede dejar operaciones inconclusas
+    broken_pdf: "El archivo de PDF tiene errores. Intente con otro por favor."
     confirmation: "¿Está seguro?"
     customer_file_was_deleted: "El archivo de cliente ya ha sido eliminado"
     file_upload_warning: "Si abandona esta pagina los archivos subidos se perderán"
@@ -653,3 +654,5 @@ es:
       index_title: "Listado de usuarios"
       new_title: "Nuevo usuario"
       non_existent_avatar: "Imagen inexistente"
+      actives: 'Activos'
+      disabled: 'Desactivados'

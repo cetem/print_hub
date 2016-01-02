@@ -28,35 +28,11 @@
     <%= t(@customer.bonus_without_expiration ? :yes : :no, scope: :label) %>
   </p>
 
-  <% unless @customer.current_bonuses.empty? %>
-    <h3>
-      <%= t(
-        'view.customers.current_bonuses',
-        count: @customer.current_bonuses.size
-      ) %>
-    </h3>
-
-    <table class="table table-striped">
-      <thead>
-        <tr>
-          <th><%= Bonus.human_attribute_name 'amount' %></th>
-          <th><%= Bonus.human_attribute_name 'remaining' %></th>
-          <th><%= Bonus.human_attribute_name 'valid_until' %></th>
-        </tr>
-      </thead>
-      <tbody>
-        <% @customer.current_bonuses.each do |bonus| %>
-          <tr>
-            <td><%= number_to_currency bonus.amount %></td>
-            <td><%= number_to_currency bonus.remaining %></td>
-            <td><%= l bonus.valid_until if bonus.valid_until %></td>
-          </tr>
-        <% end %>
-      </tbody>
-    </table>
+  <% if @customer.current_bonuses.any? %>
+    <%= render "bonuses", customer: @customer %>
   <% end %>
 
-  <% unless @customer.current_deposits.empty? %>
+  <% if @customer.current_deposits.any? %>
     <h3>
       <%= t(
         'view.customers.current_deposits',

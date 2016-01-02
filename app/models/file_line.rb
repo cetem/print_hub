@@ -33,7 +33,12 @@ class FileLine < ActiveRecord::Base
     end
 
   rescue => e
-    Bugsnag.notify(e)
+    new_file_name = [SecureRandom.uuid, self.file_name].join('_')
+    notify = Bugsnag.notify(e)
+    notify.add_tab('file', {
+      name: new_file_name,
+    })
+    `cp #{self.file.path} #{Rails.root.join('uploads', 'wrong_files', new_file_name)}&`
 
     false
   end

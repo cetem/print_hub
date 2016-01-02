@@ -24,6 +24,8 @@ class DocumentTest < ActiveSupport::TestCase
 
   # Prueba la creación de un documento
   test 'create' do
+    # Asegurar la "limpieza" del directorio
+    remove_all_upload_files!
     assert_difference 'Document.count' do
       file = Rack::Test::UploadedFile.new(
         File.join(Rails.root, 'test', 'fixtures', 'files', 'test.pdf'),
@@ -54,11 +56,13 @@ class DocumentTest < ActiveSupport::TestCase
                  thumbs_dir.entries.count { |f| f.extname == '.png' && !f.zero? }
 
     # Asegurar la "limpieza" del directorio
-    thumbs_dir.rmtree
+    remove_all_upload_files!
   end
 
   # Prueba la creación de un documento con múltiples páginas
   test 'create a multipage document' do
+    # Asegurar la "limpieza" del directorio
+    remove_all_upload_files!
     assert_difference 'Document.count' do
       @document = Document.new(code: '00001234',
                                name: 'New name',
@@ -87,7 +91,7 @@ class DocumentTest < ActiveSupport::TestCase
                  thumbs_dir.entries.count { |f| f.extname == '.png' && !f.zero? }
 
     # Asegurar la "limpieza" del directorio
-    thumbs_dir.rmtree
+    remove_all_upload_files!
   end
 
   # Prueba de actualización de un documento
@@ -107,7 +111,7 @@ class DocumentTest < ActiveSupport::TestCase
     )
 
     # Asegurar la "limpieza" del directorio
-    thumbs_dir = Pathname.new(@document.file.path).dirname.rmtree
+    remove_all_upload_files!
 
     assert_no_difference 'Document.count' do
       assert @document.update(file: file),
@@ -116,6 +120,7 @@ class DocumentTest < ActiveSupport::TestCase
 
     assert_equal 3, @document.reload.pages
     thumbs_dir = Pathname.new(@document.file.path).dirname
+
     # PDF original y 6 miniaturas
     assert_equal 7, thumbs_dir.entries.reject(&:directory?).size
 
@@ -134,7 +139,7 @@ class DocumentTest < ActiveSupport::TestCase
     assert_equal 3, thumbs_dir.entries.reject(&:directory?).size
 
     # Asegurar la "limpieza" del directorio
-    thumbs_dir.rmtree
+    remove_all_upload_files!
   end
 
   # Prueba de eliminación de documentos
@@ -337,5 +342,11 @@ class DocumentTest < ActiveSupport::TestCase
 
     assert_equal 1, documents.size
     assert_equal 2, documents.first.code
+  end
+
+  def remove_all_upload_files!
+    privates = Pathname.new(Rails.root.join('private'))
+
+    privates.rmtree if privates.exist?
   end
 end
