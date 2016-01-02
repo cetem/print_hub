@@ -247,5 +247,7 @@ class PrivateCustomerInteractionsTest < ActionDispatch::IntegrationTest
 
     assert_page_has_no_errors!
     assert_equal options[:expected_path], current_path
+
+    show_collapse_menu_if_needed
   end
 end
