@@ -7,6 +7,7 @@ class ActionDispatch::Routing::Mapper
 end
 
 Rails.application.routes.draw do
+  resources :shift_closures
   constraints(CustomerSubdomain) do
     draw :customer, :catalog
     draw :customer, :customer

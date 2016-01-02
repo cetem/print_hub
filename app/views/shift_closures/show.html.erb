@@ -1,0 +1,49 @@
+<div class="readonly-data">
+  <h2><%= @shift_closure %></h2>
+
+    <p>
+      <b><%= ShiftClosure.human_attribute_name 'start_at' %></b>:
+      <%= @shift_closure.start_at %>
+    </p>
+    <p>
+      <b><%= ShiftClosure.human_attribute_name 'finish_at' %></b>:
+      <%= @shift_closure.finish_at %>
+    </p>
+    <p>
+      <b><%= ShiftClosure.human_attribute_name 'system_amount' %></b>:
+      <%= @shift_closure.system_amount %>
+    </p>
+    <p>
+      <b><%= ShiftClosure.human_attribute_name 'cashbox_amount' %></b>:
+      <%= @shift_closure.cashbox_amount %>
+    </p>
+    <p>
+      <b><%= ShiftClosure.human_attribute_name 'failed_copies' %></b>:
+      <%= @shift_closure.failed_copies %>
+    </p>
+    <p>
+      <b><%= ShiftClosure.human_attribute_name 'user_id' %></b>:
+      <%= @shift_closure.user_id %>
+    </p>
+    <p>
+      <b><%= ShiftClosure.human_attribute_name 'helper_user_id' %></b>:
+      <%= @shift_closure.helper_user_id %>
+    </p>
+    <p>
+      <b><%= ShiftClosure.human_attribute_name 'printers_stats' %></b>:
+      <%= @shift_closure.printers_stats %>
+    </p>
+    <p>
+      <b><%= ShiftClosure.human_attribute_name 'withdraws' %></b>:
+      <%= @shift_closure.withdraws %>
+    </p>
+    <p>
+      <b><%= ShiftClosure.human_attribute_name 'comments' %></b>:
+      <%= @shift_closure.comments %>
+    </p>
+
+</div>
+<div class="form-actions">
+  <%= link_to t('label.edit'), edit_shift_closure_path(@shift_closure) %> |
+  <%= link_to t('label.list'), shift_closures_path %>
+</div>

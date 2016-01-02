@@ -1,0 +1,11 @@
+first:
+  start_at: <%= 1.hour.ago %>
+  finish_at:
+  system_amount: <%= rand(100.00) %>
+  cashbox_amount: <%= rand(100.0) %>
+  failed_copies: <%= rand(100) %>
+  user: operator
+  helper_user_id:
+  printers_stats: <%= { printer_1: 321 }.to_json %>
+  withdraws: '-'
+  comments: really quite

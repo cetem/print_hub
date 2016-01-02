@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20150913034056) do
+ActiveRecord::Schema.define(version: 20160102162229) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -264,6 +264,23 @@ ActiveRecord::Schema.define(version: 20150913034056) do
   add_index "sessions", ["session_id"], name: "index_sessions_on_session_id", using: :btree
   add_index "sessions", ["updated_at"], name: "index_sessions_on_updated_at", using: :btree
 
+  create_table "shift_closures", force: :cascade do |t|
+    t.datetime "start_at",                     null: false
+    t.datetime "finish_at"
+    t.decimal  "system_amount",  default: 0.0, null: false
+    t.decimal  "cashbox_amount", default: 0.0, null: false
+    t.integer  "failed_copies",  default: 0
+    t.integer  "user_id",                      null: false
+    t.integer  "helper_user_id"
+    t.json     "printers_stats",               null: false
+    t.text     "withdraws"
+    t.text     "comments"
+    t.datetime "created_at",                   null: false
+    t.datetime "updated_at",                   null: false
+  end
+
+  add_index "shift_closures", ["user_id"], name: "index_shift_closures_on_user_id", using: :btree
+
   create_table "shifts", force: :cascade do |t|
     t.datetime "start",                        null: false
     t.datetime "finish"
@@ -338,11 +355,13 @@ ActiveRecord::Schema.define(version: 20150913034056) do
   add_index "versions", ["whodunnit"], name: "index_versions_on_whodunnit", using: :btree
 
   add_foreign_key "article_lines", "articles", name: "article_lines_article_id_fk", on_delete: :restrict
+  add_foreign_key "article_lines", "prints", name: "article_lines_print_id_fk", on_delete: :restrict
   add_foreign_key "credits", "customers", name: "credits_customer_id_fk", on_delete: :restrict
   add_foreign_key "order_lines", "documents", name: "order_lines_document_id_fk", on_delete: :restrict
   add_foreign_key "order_lines", "orders", name: "order_lines_order_id_fk", on_delete: :restrict
   add_foreign_key "orders", "customers", name: "orders_customer_id_fk", on_delete: :restrict
   add_foreign_key "print_jobs", "documents", name: "print_jobs_document_id_fk", on_delete: :restrict
+  add_foreign_key "print_jobs", "prints", name: "print_jobs_print_id_fk", on_delete: :restrict
   add_foreign_key "prints", "customers", name: "prints_customer_id_fk", on_delete: :restrict
   add_foreign_key "prints", "orders", name: "prints_order_id_fk", on_delete: :restrict
   add_foreign_key "prints", "users", name: "prints_user_id_fk", on_delete: :restrict
