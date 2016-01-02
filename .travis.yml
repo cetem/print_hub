@@ -12,8 +12,5 @@ before_script:
   - 'psql -c "create database print_hub_test;" -U postgres'
   - 'bundle exec rake db:migrate'
   - 'export DISPLAY=:99.0'
+  - "/usr/bin/Xvfb -- :99 -ac -screen 0 1280x1024x16 &"
   - "ps aux |grep -i xvfb"
-  - "ps aux |grep -i xvfb |awk '{ print $2 }'"
-  - "ps aux |grep -i xvfb |awk '{ print $2 }' | xargs kill 2>&1"
-  - "/sbin/start-stop-daemon --start --quiet --pidfile /tmp/cucumber_xvfb_99.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :99 -ac -screen 0 1280x1024x16"
-  - "ps aux |grep -i xvfb |awk '{ print $2 }'"
