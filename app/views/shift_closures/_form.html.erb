@@ -1,15 +1,71 @@
 <%= simple_form_for @shift_closure do |f| %>
+  <%= f.error_notification %>
+  <% if (errors = f.object.errors).any? && errors[:base].present? %>
+    <div class="alert alert-error">
+      <% errors[:base].each do |error| %>
+        - <%= error %><br />
+      <% end %>
+    </div>
+  <% end %>
+
   <div class="form-inputs">
-    <%= f.input :start_at %>
-    <%= f.input :finish_at %>
-    <%= f.input :system_amount %>
-    <%= f.input :cashbox_amount %>
-    <%= f.input :failed_copies %>
-    <%= f.input :user_id %>
-    <%= f.input :helper_user_id %>
-    <%= f.input :printers_stats %>
-    <%= f.input :withdraws %>
-    <%= f.input :comments %>
+    <div class="row-fluid">
+      <div class="span4">
+        <%= f.input :start_at, as: :datetime_picker %>
+      </div>
+      <div class="span4">
+        <%= f.input :finish_at, as: :datetime_picker %>
+      </div>
+      <div class="span4">
+        <%= f.input :helper_user_id %>
+      </div>
+    </div>
+    <div class="row-fluid">
+      <div class="span4">
+        <%= f.input :cashbox_amount %>
+      </div>
+      <div class="span4">
+        <%= f.input :failed_copies %>
+      </div>
+    </div>
+    <div class="row-fluid">
+      <div class="span6">
+        <table class="table">
+          <thead>
+            <tr>
+              <th><%= ShiftClosure.human_attribute_name 'printer' %></th>
+              <th colspan="2"><%= ShiftClosure.human_attribute_name 'counter' %></th>
+            </tr>
+          </thead>
+          <tbody>
+            <%= f.fields_for :printers_stats do |ff| %>
+              <% @shift_closure.printers_with_counters.each do |printer, counter| %>
+                <tr>
+                  <td>
+                    <%= ff.label printer, printer %>
+                  </td>
+                  <td>
+                    <%= ff.input printer, as: :string, label: false,
+                      input_html: { value: f.object.printers_stats[printer] || counter } %>
+                  </td>
+                  <td><a href="#" class="btn"><%= t('view.shift_closures.ask_for') %></a></td>
+                </tr>
+              <% end %>
+            <% end %>
+          </tbody>
+        </table>
+      </div>
+      <div class="span6">
+        <div class="row-fluid">
+          <%= f.input :withdraws, as: :text,
+            input_html: { class: 'span11' } %>
+        </div>
+      </div>
+    </div>
+    <div class="row-fluid">
+      <%= f.input :comments,
+        input_html: { class: 'span12' } %>
+    </div>
   </div>
 
   <div class="form-actions">

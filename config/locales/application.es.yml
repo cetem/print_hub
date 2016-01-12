@@ -145,6 +145,18 @@ es:
         finish: "Fin"
         start: "Inicio"
         user_id: "Usuario"
+      shift_closure:
+        start_at: 'Apertura'
+        finish_at: 'Cierre'
+        helper_user_id: 'Ayudante de caja'
+        user_id: 'Encargado'
+        cashbox_amount: 'Efectivo en caja'
+        system_amount: 'Recaudación teórica'
+        failed_copies: 'Falladas'
+        printers_stats: 'Contadores'
+        withdraws: 'Retiros'
+        comments: 'Comentarios del turno'
+        counter: 'Contador'
       tag:
         name: "Nombre"
         parent_id: "Padre"
@@ -214,6 +226,7 @@ es:
       print_job: "Trabajo de impresión"
       print_job_type: "Tipo de impresión"
       shift: "Turno"
+      shift_closure: 'Cierre de caja'
       tag: "Etiqueta"
       user: "Usuario"
       user_session: "Sesión"
@@ -221,6 +234,7 @@ es:
   attributes:
     created_at: "Creación"
     updated_at: "Actualización"
+    printer: 'Impresora'
   customer_menu:
     catalog: "Documentos"
     orders: "Pedidos"
@@ -273,6 +287,7 @@ es:
     print_job_types: "Tipos de impresión"
     prints: "Impresiones"
     shifts: "Turnos"
+    shift_closures: "Cierres de caja"
     stats: "Estadísticas"
     tags: "Etiquetas"
     users: "Usuarios"
@@ -614,6 +629,8 @@ es:
       pay_error: "Ha ocurrido un error, no se pudieron pagar los turnos..."
       show_title: "Detalle de turno"
       stale_object_error: "El turno no pudo ser actualizado, intente nuevamente."
+    shift_closures:
+      ask_for: 'Pedir'
     stats:
       download_csv: "Descargar en CSV"
       empty_result: "Sin resultados para el rango de fechas seleccionado"

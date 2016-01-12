@@ -7,7 +7,6 @@ class ActionDispatch::Routing::Mapper
 end
 
 Rails.application.routes.draw do
-  resources :shift_closures
   constraints(CustomerSubdomain) do
     draw :customer, :catalog
     draw :customer, :customer
@@ -38,6 +37,7 @@ Rails.application.routes.draw do
     draw :user, :files
     draw :user, :print_job_types
     draw :user, :customers_groups
+    draw :user, :shift_closures
   end
 
   root to: 'subdomains#redirection' # Momentary solution for double root-to

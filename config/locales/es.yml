@@ -192,7 +192,8 @@ es:
   time:
     am: "am"
     formats:
-      default: "%A, %d de %B de %Y %H:%M:%S %z"
+      default: "%d/%m/%Y %H:%M:%S"
+      related: "%A, %d/%m/%Y %H:%M"
       long: "%d de %B de %Y %H:%M"
       minimal: "%d/%m/%Y %H:%M"
     pm: "pm"

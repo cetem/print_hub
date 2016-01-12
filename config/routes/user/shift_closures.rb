@@ -1,0 +1,1 @@
+resources :shift_closures

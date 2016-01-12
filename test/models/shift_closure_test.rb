@@ -45,8 +45,8 @@ class ShiftClosureTest < ActiveSupport::TestCase
     @shift_closure.printers_stats = '  '
 
     assert @shift_closure.invalid?
-    assert_equal 4, @shift_closure.errors.count
-    %w(start_at system_amount cashbox_amount printers_stats).each do |attr|
+    assert_equal 3, @shift_closure.errors.count
+    %w(start_at system_amount cashbox_amount).each do |attr|
       assert_equal [error_message_from_model(@shift_closure, attr, :blank)],
                    @shift_closure.errors[attr]
     end

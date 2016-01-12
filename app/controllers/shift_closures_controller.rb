@@ -3,7 +3,7 @@ class ShiftClosuresController < ApplicationController
 
   # GET /shift_closures
   def index
-    @shift_closures = ShiftClosure.all
+    @shift_closures = ShiftClosure.order(id: :desc).paginate(page: params[:page])
   end
 
   # GET /shift_closures/1
@@ -53,6 +53,15 @@ class ShiftClosuresController < ApplicationController
 
     # Only allow a trusted parameter "white list" through.
     def shift_closure_params
-      params.require(:shift_closure).permit(:start_at, :finish_at, :system_amount, :cashbox_amount, :failed_copies, :user_id, :helper_user_id, :printers_stats, :withdraws, :comments)
+      printers_keys = params[:shift_closure][:printers_stats].keys
+
+      permitted_params = params.require(:shift_closure).permit(
+        :start_at, :finish_at, :cashbox_amount, :failed_copies,
+        :helper_user_id, :comments,
+        printers_stats: printers_keys,
+        withdraws: [:amount, :collected_at]
+      )
+      permitted_params[:user_id] = current_user.id
+      permitted_params
     end
 end

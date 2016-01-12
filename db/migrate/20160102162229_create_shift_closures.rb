@@ -9,7 +9,7 @@ class CreateShiftClosures < ActiveRecord::Migration
       t.integer :user_id, null: false
       t.integer :helper_user_id
       t.json :printers_stats, null: false
-      t.text :withdraws
+      t.json :withdraws
       t.text :comments
 
       t.timestamps null: false

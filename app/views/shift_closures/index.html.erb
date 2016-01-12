@@ -3,14 +3,10 @@
     <tr>
       <th><%= ShiftClosure.human_attribute_name 'start_at' %></th>
       <th><%= ShiftClosure.human_attribute_name 'finish_at' %></th>
-      <th><%= ShiftClosure.human_attribute_name 'system_amount' %></th>
       <th><%= ShiftClosure.human_attribute_name 'cashbox_amount' %></th>
       <th><%= ShiftClosure.human_attribute_name 'failed_copies' %></th>
       <th><%= ShiftClosure.human_attribute_name 'user_id' %></th>
-      <th><%= ShiftClosure.human_attribute_name 'helper_user_id' %></th>
-      <th><%= ShiftClosure.human_attribute_name 'printers_stats' %></th>
       <th><%= ShiftClosure.human_attribute_name 'withdraws' %></th>
-      <th><%= ShiftClosure.human_attribute_name 'comments' %></th>
       <th colspan="3"></th>
     </tr>
   </thead>
@@ -18,16 +14,12 @@
   <tbody>
     <% @shift_closures.each do |shift_closure| %>
       <tr>
-        <td><%= shift_closure.start_at %></td>
-        <td><%= shift_closure.finish_at %></td>
-        <td><%= shift_closure.system_amount %></td>
-        <td><%= shift_closure.cashbox_amount %></td>
+        <td><%= l(shift_closure.start_at) %></td>
+        <td><%= l(shift_closure.finish_at) if shift_closure.finish_at %></td>
+        <td><%= number_to_currency shift_closure.cashbox_amount %></td>
         <td><%= shift_closure.failed_copies %></td>
-        <td><%= shift_closure.user_id %></td>
-        <td><%= shift_closure.helper_user_id %></td>
-        <td><%= shift_closure.printers_stats %></td>
-        <td><%= shift_closure.withdraws %></td>
-        <td><%= shift_closure.comments %></td>
+        <td><%= shift_closure.user %></td>
+        <td><%= number_to_currency shift_closure.total_withdraws %></td>
         <td><%= link_to_show shift_closure %></td>
         <td><%= link_to_edit edit_shift_closure_path(shift_closure) %></td>
         <td><%= link_to_destroy shift_closure %></td>

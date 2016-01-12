@@ -273,7 +273,7 @@ ActiveRecord::Schema.define(version: 20160102162229) do
     t.integer  "user_id",                      null: false
     t.integer  "helper_user_id"
     t.json     "printers_stats",               null: false
-    t.text     "withdraws"
+    t.json     "withdraws"
     t.text     "comments"
     t.datetime "created_at",                   null: false
     t.datetime "updated_at",                   null: false

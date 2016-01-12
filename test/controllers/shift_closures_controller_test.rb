@@ -2,7 +2,10 @@ require 'test_helper'
 
 class ShiftClosuresControllerTest < ActionController::TestCase
   setup do
-    @shift_closure = shift_closures(:one)
+    @shift_closure = shift_closures(:first)
+    @operator = users(:operator)
+
+    UserSession.create(@operator)
   end
 
   test "should get index" do
@@ -26,9 +29,7 @@ class ShiftClosuresControllerTest < ActionController::TestCase
         helper_user_id: @shift_closure.helper_user_id,
         printers_stats: @shift_closure.printers_stats,
         start_at:       @shift_closure.start_at,
-        system_amount:  @shift_closure.system_amount,
-        user_id:        @shift_closure.user_id,
-        withdraws:       @shift_closure.withdraws
+        withdraws:      @shift_closure.withdraws
       }
     end
 
