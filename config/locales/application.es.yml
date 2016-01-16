@@ -226,7 +226,7 @@ es:
       print_job: "Trabajo de impresión"
       print_job_type: "Tipo de impresión"
       shift: "Turno"
-      shift_closure: 'Cierre de caja'
+      shift_closure: 'Cierre de turno'
       tag: "Etiqueta"
       user: "Usuario"
       user_session: "Sesión"
@@ -631,6 +631,11 @@ es:
       stale_object_error: "El turno no pudo ser actualizado, intente nuevamente."
     shift_closures:
       ask_for: 'Pedir'
+      add_withdraw: 'Agregar retiro'
+      add_withdraw_title: 'Agregar nuevo retiro'
+      title: 'Cierre de turno'
+      without_withdraws: 'Sin retiros'
+      one_still_open: 'No se puede crear, ya hay otro abierto.'
     stats:
       download_csv: "Descargar en CSV"
       empty_result: "Sin resultados para el rango de fechas seleccionado"

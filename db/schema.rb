@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160102162229) do
+ActiveRecord::Schema.define(version: 20160116171344) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -273,7 +273,6 @@ ActiveRecord::Schema.define(version: 20160102162229) do
     t.integer  "user_id",                      null: false
     t.integer  "helper_user_id"
     t.json     "printers_stats",               null: false
-    t.json     "withdraws"
     t.text     "comments"
     t.datetime "created_at",                   null: false
     t.datetime "updated_at",                   null: false
@@ -353,6 +352,12 @@ ActiveRecord::Schema.define(version: 20160102162229) do
   add_index "versions", ["created_at"], name: "index_versions_on_created_at", using: :btree
   add_index "versions", ["item_type", "item_id"], name: "index_versions_on_item_type_and_item_id", using: :btree
   add_index "versions", ["whodunnit"], name: "index_versions_on_whodunnit", using: :btree
+
+  create_table "withdraws", force: :cascade do |t|
+    t.integer  "shift_closure_id", null: false
+    t.decimal  "amount",           null: false
+    t.datetime "collected_at",     null: false
+  end
 
   add_foreign_key "article_lines", "articles", name: "article_lines_article_id_fk", on_delete: :restrict
   add_foreign_key "article_lines", "prints", name: "article_lines_print_id_fk", on_delete: :restrict

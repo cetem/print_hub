@@ -1,6 +1,6 @@
 first:
   start_at: <%= 1.hour.ago %>
-  finish_at:
+  finish_at: <%= 1.minute.ago %>
   system_amount: <%= rand(100.00) %>
   cashbox_amount: <%= rand(100.0) %>
   failed_copies: <%= rand(100) %>

@@ -51,4 +51,39 @@ class ShiftClosureTest < ActiveSupport::TestCase
                    @shift_closure.errors[attr]
     end
   end
+
+  test 'validate not create when other is open' do
+    @shift_closure.finish_at = nil
+    @shift_closure.save!
+
+    new_shift_closure = ShiftClosure.new(@shift_closure.dup.attributes)
+
+    assert new_shift_closure.invalid?
+    assert_equal 1, new_shift_closure.errors.count
+    assert_equal(
+      [I18n.t('view.shift_closures.one_still_open')],
+      new_shift_closure.errors[:base]
+    )
+  end
+
+  test 'validate printer counter greater than last' do
+    virtual_pdf_printer = 'Virtual_PDF_Printer'
+    @shift_closure.printers_stats[virtual_pdf_printer] = 123
+    @shift_closure.save!
+
+    new_shift_closure = ShiftClosure.new(@shift_closure.dup.attributes)
+    new_shift_closure.printers_stats[virtual_pdf_printer] = 122
+    assert new_shift_closure.invalid?
+    assert_equal 1, new_shift_closure.errors.count
+    assert_equal(
+      [
+        I18n.t(
+          'view.shift_closures.invalid_printer_counter',
+          printer: virtual_pdf_printer,
+          counter: 123
+        )
+      ],
+      new_shift_closure.errors[:base]
+    )
+  end
 end

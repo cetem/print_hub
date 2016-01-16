@@ -1,0 +1,11 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  amount: <%= rand * 100 %>
+  collected_at: <%= rand(9).days.ago %>
+  shift_closure: first
+
+two:
+  amount: <%= rand * 100 %>
+  collected_at: <%= rand(9).days.ago %>
+  shift_closure: first

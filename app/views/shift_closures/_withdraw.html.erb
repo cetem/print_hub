@@ -1,0 +1,10 @@
+<tr>
+  <td>
+    <%= f.input :amount, label: false %>
+  </td>
+  <td>
+    <%= f.input :collected_at, as: :datetime_picker, label: false, input_html: {
+      value: l(f.object.try(:collected_at) || Time.zone.now, format: :minimal)
+    } %>
+  </td>
+</tr>

@@ -26,7 +26,6 @@ class Shift < ActiveRecord::Base
                              allow_nil: true, allow_blank: true, if: :finish_present?
   validates_datetime :finish, after: :start, before: :finish_limit,
                               allow_nil: true, allow_blank: true
-
   # Relaciones
   belongs_to :user
 

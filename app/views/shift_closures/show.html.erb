@@ -1,21 +1,21 @@
 <div class="readonly-data">
-  <h2><%= @shift_closure %></h2>
+  <h2><%= t('view.shift_closures.title') %></h2>
 
     <p>
       <b><%= ShiftClosure.human_attribute_name 'start_at' %></b>:
-      <%= @shift_closure.start_at %>
+      <%= l @shift_closure.start_at %>
     </p>
     <p>
       <b><%= ShiftClosure.human_attribute_name 'finish_at' %></b>:
-      <%= @shift_closure.finish_at %>
+      <%= l(@shift_closure.finish_at) if @shift_closure.finish_at%>
     </p>
     <p>
       <b><%= ShiftClosure.human_attribute_name 'system_amount' %></b>:
-      <%= @shift_closure.system_amount %>
+      <%= number_to_currency @shift_closure.system_amount %>
     </p>
     <p>
       <b><%= ShiftClosure.human_attribute_name 'cashbox_amount' %></b>:
-      <%= @shift_closure.cashbox_amount %>
+      <%= number_to_currency @shift_closure.cashbox_amount %>
     </p>
     <p>
       <b><%= ShiftClosure.human_attribute_name 'failed_copies' %></b>:
@@ -23,23 +23,64 @@
     </p>
     <p>
       <b><%= ShiftClosure.human_attribute_name 'user_id' %></b>:
-      <%= @shift_closure.user_id %>
+      <%= @shift_closure.user %>
     </p>
     <p>
       <b><%= ShiftClosure.human_attribute_name 'helper_user_id' %></b>:
-      <%= @shift_closure.helper_user_id %>
+      <%= @shift_closure.helper_user %>
     </p>
     <p>
-      <b><%= ShiftClosure.human_attribute_name 'printers_stats' %></b>:
-      <%= @shift_closure.printers_stats %>
-    </p>
-    <p>
-      <b><%= ShiftClosure.human_attribute_name 'withdraws' %></b>:
-      <%= @shift_closure.withdraws %>
+      <div class="row-fluid">
+        <div class="span6">
+
+          <b><%= ShiftClosure.human_attribute_name 'printers_stats' %></b>:
+          <table class="table table-condensed">
+            <thead>
+              <tr>
+                <th><%= ShiftClosure.human_attribute_name 'printer' %></th>
+                <th><%= ShiftClosure.human_attribute_name 'counter' %></th>
+              </tr>
+            </thead>
+            <tbody>
+              <% @shift_closure.printers_stats.each do |printer, counter| %>
+                <tr>
+                  <td><%= printer %></td>
+                  <td><%= counter %></td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        </div>
+        <div class="span6">
+          <b><%= ShiftClosure.human_attribute_name 'withdraws' %></b>:
+          <% if @shift_closure.withdraws.any? %>
+            <table class="table table-condensed">
+              <thead>
+                <tr>
+                  <th><%= Withdraw.human_attribute_name 'amount' %></th>
+                  <th><%= Withdraw.human_attribute_name 'collected_at' %></th>
+                </tr>
+              </thead>
+              <tbody>
+                <% @shift_closure.withdraws.each do |withdraw| %>
+                  <tr>
+                    <td><%= number_to_currency withdraw.amount %></td>
+                    <td><%= l(withdraw.collected_at) %></td>
+                  </tr>
+                <% end %>
+              </tbody>
+            </table>
+          <% else %>
+            <%= t('view.shift_closures.without_withdraws') %>
+          <% end %>
+        </div>
+      </div>
     </p>
     <p>
       <b><%= ShiftClosure.human_attribute_name 'comments' %></b>:
-      <%= @shift_closure.comments %>
+      <div class="well">
+        <%= simple_format @shift_closure.comments %>
+      </div>
     </p>
 
 </div>

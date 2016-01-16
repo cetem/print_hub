@@ -1,11 +1,16 @@
 class ShiftClosure < ActiveRecord::Base
-  serialize :printers_stats, JSON
+  serialize :printers_stats, JsonField
+
+  scope :unfinished, -> { where(finish_at: nil) }
 
   validates :start_at, :system_amount, :cashbox_amount, :user_id, presence: true
   validate :printers_counters_greater_than_last
+  validate :not_create_when_one_is_open
 
   belongs_to :user
   belongs_to :helper_user, class_name: User, foreign_key: :helper_user_id
+  has_many :withdraws
+  accepts_nested_attributes_for :withdraws
 
   def initialize(attributes={})
     super(attributes)
@@ -57,11 +62,16 @@ class ShiftClosure < ActiveRecord::Base
     end
   end
 
-  def withdraws
-    []
-  end
-
   def total_withdraws
     0
+  end
+
+  def not_create_when_one_is_open
+    if ShiftClosure.unfinished.any?
+      self.errors.add :base, I18n.t('view.shift_closures.one_still_open')
+      false
+    else
+      true
+    end
   end
 end
