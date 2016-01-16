@@ -1,6 +1,5 @@
 class ShiftClosure < ActiveRecord::Base
-  serialize :printers_stats, JsonField
-  serialize :withdraws, JsonField
+  serialize :printers_stats, JSON
 
   validates :start_at, :system_amount, :cashbox_amount, :user_id, presence: true
   validate :printers_counters_greater_than_last
@@ -13,7 +12,6 @@ class ShiftClosure < ActiveRecord::Base
 
     self.start_at ||= self.last_closure_or_first_in_day
     self.printers_stats ||= {}
-    self.withdraws ||= []
   end
 
   def last_closure_or_first_in_day
@@ -57,6 +55,10 @@ class ShiftClosure < ActiveRecord::Base
           )
       end
     end
+  end
+
+  def withdraws
+    []
   end
 
   def total_withdraws

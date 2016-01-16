@@ -7,5 +7,4 @@ first:
   user: operator
   helper_user_id:
   printers_stats: '<%= { printer_1: 321 }.to_json %>'
-  withdraws:
   comments: really quite

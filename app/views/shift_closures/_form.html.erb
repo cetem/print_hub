@@ -1,4 +1,9 @@
 <%= simple_form_for @shift_closure do |f| %>
+    <%= content_for :js_extra do %>
+      <%= raw "var withdraw='#{generate_template(f, :withdraws)}';" %>
+    <% end %>
+
+
   <%= f.error_notification %>
   <% if (errors = f.object.errors).any? && errors[:base].present? %>
     <div class="alert alert-error">
@@ -57,8 +62,20 @@
       </div>
       <div class="span6">
         <div class="row-fluid">
-          <%= f.input :withdraws, as: :text,
-            input_html: { class: 'span11' } %>
+          <%= f.simple_fields_for :withdraws do |pj_f| %>
+              <%= render partial: 'withdraw', locals: { f: pj_f } %>
+          <% end %>
+
+            <%= link_to t('view.prints.add_print_job'), '#',
+                id: 'add_print_job_link', class: 'btn btn-mini',
+                title: t('view.prints.add_print_job_title'),
+                data: {
+                  template: 'withdraw',
+                  container: '#withdraws',
+                  event: 'addNestedItem'
+                }
+              %>
+
         </div>
       </div>
     </div>

@@ -29,7 +29,6 @@ class ShiftClosuresControllerTest < ActionController::TestCase
         helper_user_id: @shift_closure.helper_user_id,
         printers_stats: @shift_closure.printers_stats,
         start_at:       @shift_closure.start_at,
-        withdraws:      @shift_closure.withdraws
       }
     end
 
@@ -57,7 +56,6 @@ class ShiftClosuresControllerTest < ActionController::TestCase
       start_at:       @shift_closure.start_at,
       system_amount:  @shift_closure.system_amount,
       user_id:        @shift_closure.user_id,
-      withdraws:       @shift_closure.withdraws
     }
     assert_redirected_to shift_closure_path(assigns(:shift_closure))
   end
