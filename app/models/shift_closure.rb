@@ -1,6 +1,8 @@
 class ShiftClosure < ActiveRecord::Base
   serialize :printers_stats, JsonField
 
+  attr_accessor :auto_helper_user_name
+
   scope :unfinished, -> { where(finish_at: nil) }
 
   validates :start_at, :system_amount, :cashbox_amount, :user_id, presence: true

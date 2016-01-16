@@ -24,7 +24,15 @@
         <%= f.input :finish_at, as: :datetime_picker %>
       </div>
       <div class="span4">
-        <%= f.input :helper_user_id %>
+        <%= f.label :helper_user_id, nil, for: :shift_closure_auto_helper_user_name %>
+        <%= f.input :auto_helper_user_name, label: false, input_html: {
+          value: @shift_closure.helper_user, class: 'autocomplete-field',
+          data: {
+            'autocomplete-id-target' => '#shift_closure_helper_user_id',
+            'autocomplete-url' => autocomplete_for_user_name_users_path(format: :json)
+          }
+        } %>
+        <%= f.input :helper_user_id, as: :hidden %>
       </div>
     </div>
     <div class="row-fluid">
