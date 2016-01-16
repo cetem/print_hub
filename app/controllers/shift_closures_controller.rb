@@ -45,6 +45,18 @@ class ShiftClosuresController < ApplicationController
     redirect_to shift_closures_url, notice: 'Shift closure was successfully destroyed.'
   end
 
+  def printer_counter
+    printer_name = params[:printer_name]
+
+    _response = {}
+    counter = PrintersApi.get_counter_for(printer_name)
+    _response['counter'] = counter if counter
+
+    respond_to do |format|
+      format.json { render json: _response.to_json }
+    end
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_shift_closure

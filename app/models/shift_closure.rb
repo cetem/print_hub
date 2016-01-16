@@ -65,15 +65,12 @@ class ShiftClosure < ActiveRecord::Base
   end
 
   def total_withdraws
-    0
+    withdraws.sum(:amount)
   end
 
   def not_create_when_one_is_open
     if ShiftClosure.unfinished.any?
       self.errors.add :base, I18n.t('view.shift_closures.one_still_open')
-      false
-    else
-      true
     end
   end
 end

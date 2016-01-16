@@ -26,6 +26,7 @@
 //= require price-chooser
 //= require prints
 //= require jquery-fileupload/basic
+//= require shift_closures
 //
 // Mobile js
 //= require mobile

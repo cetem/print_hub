@@ -15,7 +15,7 @@
     </div>
   <% end %>
 
-  <div class="form-inputs">
+  <div class="form-inputs" id="shift_closure_form">
     <div class="row-fluid">
       <div class="span4">
         <%= f.input :start_at, as: :datetime_picker %>
@@ -63,9 +63,20 @@
                   </td>
                   <td>
                     <%= ff.input printer, as: :string, label: false,
-                      input_html: { value: f.object.printers_stats[printer] || counter } %>
+                      input_html: {
+                        value: f.object.printers_stats[printer] || counter,
+                        data: { printer_name: printer }
+                    } %>
                   </td>
-                  <td><a href="#" class="btn btn-mini btn-success"><%= t('view.shift_closures.ask_for') %></a></td>
+                  <td>
+                    <a href="#"
+                      data-action="ask_for_counters"
+                      data-printer="<%= printer %>"
+                      data-action-url="<%= printer_counter_shift_closures_path %>"
+                      class="btn btn-mini btn-success">
+                      <%= t('view.shift_closures.ask_for') %>
+                    </a>
+                  </td>
                 </tr>
               <% end %>
             <% end %>
@@ -80,8 +91,8 @@
           <table class="table table-condensed">
             <thead>
               <tr>
-                <th>Monto</th>
-                <th>hora</th>
+                <th><%= Withdraw.human_attribute_name 'amount' %></th>
+                <th><%= Withdraw.human_attribute_name 'collected_at' %></th>
               </tr>
             </thead>
             <tbody id="withdraws_container">
