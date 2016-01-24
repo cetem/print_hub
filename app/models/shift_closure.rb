@@ -1,4 +1,6 @@
 class ShiftClosure < ActiveRecord::Base
+  has_paper_trail
+
   serialize :printers_stats, JsonField
 
   attr_accessor :auto_helper_user_name
@@ -79,7 +81,10 @@ class ShiftClosure < ActiveRecord::Base
   end
 
   def not_create_when_one_is_open
-    if (_last = ShiftClosure.unfinished.last).present? && _last.id != self.id
+    if !self.persisted? &&
+      (_last = ShiftClosure.unfinished.last).present? &&
+      _last.id != self.id
+
       self.errors.add :base, I18n.t('view.shift_closures.one_still_open')
     end
   end
@@ -87,10 +92,18 @@ class ShiftClosure < ActiveRecord::Base
   def calc_system_amount
     self.system_amount = Print.between(
       self.start_at, self.finish_at
-    ).to_a.sum(&:price)
+    ).to_a.sum(&:price) if self.system_amount.zero?
   end
 
   def start_before
     self.finish_at.present? ? self.finish_at : Time.zone.now
+  end
+
+  def last_cashbox_amount
+    if self.cashbox_amount.zero?
+      ShiftClosure.last.try(:cashbox_amount) || 0.0
+    else
+      self.cashbox_amount
+    end
   end
 end

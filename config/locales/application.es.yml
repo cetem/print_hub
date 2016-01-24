@@ -639,6 +639,8 @@ es:
       title: 'Cierre de turno'
       without_withdraws: 'Sin retiros'
       one_still_open: 'No se puede crear, ya hay otro abierto.'
+      cannot_edit_when_finished: 'No puede editar cuando ya está finalizado.'
+      edit_comment: 'Editar comentario'
     stats:
       download_csv: "Descargar en CSV"
       empty_result: "Sin resultados para el rango de fechas seleccionado"

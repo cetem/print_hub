@@ -1,5 +1,6 @@
 class ShiftClosuresController < ApplicationController
-  before_action :set_shift_closure, only: [:show, :edit, :update, :destroy]
+  before_action :set_shift_closure, only: [:show, :edit, :update, :destroy, :update_comment]
+  before_action :check_if_not_finished, only: [:edit, :update]
 
   # GET /shift_closures
   def index
@@ -57,6 +58,12 @@ class ShiftClosuresController < ApplicationController
     end
   end
 
+  def update_comment
+    @shift_closure.update(comments: params[:shift_closure][:comments])
+
+    render :show
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_shift_closure
@@ -75,5 +82,12 @@ class ShiftClosuresController < ApplicationController
       )
       permitted_params[:user_id] = current_user.id
       permitted_params
+    end
+
+    def check_if_not_finished
+      if @shift_closure.finish_at.present?
+        redirect_to shift_closure_path(@shift_closure.id),
+          alert: t('view.shift_closures.cannot_edit_when_finished')
+      end
     end
 end
