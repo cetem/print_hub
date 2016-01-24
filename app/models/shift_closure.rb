@@ -14,10 +14,12 @@ class ShiftClosure < ActiveRecord::Base
   validate :not_create_when_one_is_open
 
   validates_datetime :start_at, allow_nil: true, allow_blank: true
-  validates_datetime :start_at, before: :start_before,
-                     allow_nil: true, allow_blank: true
-  validates_datetime :finish_at, after: :start_at, before: -> { Time.zone.now },
-                     allow_nil: true, allow_blank: true
+  validates_datetime :start_at, allow_nil: true, allow_blank: true,
+    before: :start_before
+  validates_datetime :finish_at, allow_nil: true, allow_blank: true,
+    after: :start_at, before: -> { Time.zone.now },
+    if: -> { self.finish_at.present? }
+
 
   belongs_to :user
   belongs_to :helper_user, class_name: User, foreign_key: :helper_user_id
@@ -30,6 +32,7 @@ class ShiftClosure < ActiveRecord::Base
     super(attributes)
 
     self.start_at ||= self.last_closure_or_first_in_day
+    self.initial_amount = self.last_cashbox_amount
     self.printers_stats ||= {}
   end
 
@@ -65,7 +68,7 @@ class ShiftClosure < ActiveRecord::Base
   def printers_counters_greater_than_last
     printers_with_counters.each do |printer, counter|
       sent_counter = self.printers_stats[printer]
-      if sent_counter && sent_counter < counter
+      if sent_counter && sent_counter.to_i < counter.to_i
         self.errors.add :base,
           I18n.t(
             'view.shift_closures.invalid_printer_counter',
@@ -100,10 +103,10 @@ class ShiftClosure < ActiveRecord::Base
   end
 
   def last_cashbox_amount
-    if self.cashbox_amount.zero?
+    if self.initial_amount.zero?
       ShiftClosure.last.try(:cashbox_amount) || 0.0
     else
-      self.cashbox_amount
+      self.initial_amount
     end
   end
 end

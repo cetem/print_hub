@@ -76,7 +76,7 @@ class ShiftClosuresController < ApplicationController
 
       permitted_params = params.require(:shift_closure).permit(
         :start_at, :finish_at, :cashbox_amount, :failed_copies,
-        :helper_user_id, :comments,
+        :helper_user_id, :comments, :initial_amount, :administration_copies,
         printers_stats: printers_keys,
         withdraws_attributes: [:amount, :collected_at]
       )

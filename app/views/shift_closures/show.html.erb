@@ -8,35 +8,42 @@
         <%= l @shift_closure.start_at %>
       </p>
       <p>
+        <b><%= ShiftClosure.human_attribute_name 'initial_amount' %></b>:
+        <%= number_to_currency @shift_closure.initial_amount %>
+      </p>
+      <p>
+        <b><%= ShiftClosure.human_attribute_name 'cashbox_amount' %></b>:
+        <%= number_to_currency @shift_closure.cashbox_amount %>
+      </p>
+      <p>
+        <b><%= ShiftClosure.human_attribute_name 'system_amount' %></b>:
+        <%= number_to_currency @shift_closure.system_amount %>
+      </p>
+    </div>
+    <div class="span6">
+      <p>
         <b><%= ShiftClosure.human_attribute_name 'finish_at' %></b>:
         <%= l(@shift_closure.finish_at) if @shift_closure.finish_at%>
       </p>
-       <p>
-        <b><%= ShiftClosure.human_attribute_name 'cashbox_amount' %></b>:
-        <%= number_to_currency @shift_closure.cashbox_amount %>
+      <p>
+        <b><%= ShiftClosure.human_attribute_name 'administration_copies' %></b>:
+        <%= @shift_closure.administration_copies %>
       </p>
       <p>
         <b><%= ShiftClosure.human_attribute_name 'failed_copies' %></b>:
         <%= @shift_closure.failed_copies %>
       </p>
-
+      <p>
+        <b><%= ShiftClosure.human_attribute_name 'user_id' %></b>:
+        <%= @shift_closure.user %>
+      </p>
       <p>
         <b><%= ShiftClosure.human_attribute_name 'helper_user_id' %></b>:
         <%= @shift_closure.helper_user %>
       </p>
     </div>
-    <div class="span6">
-      <p>
-        <b><%= ShiftClosure.human_attribute_name 'system_amount' %></b>:
-        <%= number_to_currency @shift_closure.system_amount %>
-      </p>
-       <p>
-        <b><%= ShiftClosure.human_attribute_name 'user_id' %></b>:
-        <%= @shift_closure.user %>
-      </p>
-    </div>
   </div>
-
+  <hr />
   <p>
     <div class="row-fluid">
       <div class="span6">

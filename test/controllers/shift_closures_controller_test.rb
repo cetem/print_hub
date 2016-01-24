@@ -21,15 +21,7 @@ class ShiftClosuresControllerTest < ActionController::TestCase
 
   test "should create shift_closure" do
     assert_difference('ShiftClosure.count') do
-      post :create, shift_closure: {
-        cashbox_amount: @shift_closure.cashbox_amount,
-        comments:       @shift_closure.comments,
-        failed_copies:  @shift_closure.failed_copies,
-        finish_at:      @shift_closure.finish_at,
-        helper_user_id: @shift_closure.helper_user_id,
-        printers_stats: @shift_closure.printers_stats,
-        start_at:       @shift_closure.start_at,
-      }
+      post :create, shift_closure: @shift_closure.dup.attributes
     end
 
     assert_redirected_to shift_closure_path(assigns(:shift_closure))
@@ -41,19 +33,22 @@ class ShiftClosuresControllerTest < ActionController::TestCase
   end
 
   test "should get edit" do
+    @shift_closure.update_column(:finish_at, nil)
+
     get :edit, id: @shift_closure
     assert_response :success
   end
 
   test "should update shift_closure" do
+    @shift_closure.update_column(:finish_at, nil)
+
     patch :update, id: @shift_closure, shift_closure: {
       cashbox_amount: @shift_closure.cashbox_amount,
       comments:       @shift_closure.comments,
       failed_copies:  @shift_closure.failed_copies,
-      finish_at:      @shift_closure.finish_at,
       helper_user_id: @shift_closure.helper_user_id,
       printers_stats: @shift_closure.printers_stats,
-      start_at:       @shift_closure.start_at,
+      start_at:       3.days.ago.to_s(:db),
       system_amount:  @shift_closure.system_amount,
       user_id:        @shift_closure.user_id,
     }
