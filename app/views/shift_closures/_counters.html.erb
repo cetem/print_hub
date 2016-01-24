@@ -1,0 +1,27 @@
+<% @shift_closure.printers_with_counters.each do |printer, counter| %>
+  <tr>
+    <td>
+      <%= f.label printer, printer %>
+    </td>
+    <td>
+      <%= f.input printer, as: :string, label: false,
+        input_html: {
+          value: @shift_closure.printers_stats[printer] || counter,
+          data: { printer_name: printer }
+      } %>
+    </td>
+    <td>
+      <% if printer_has_counter_script?(printer) %>
+        <a href="#"
+          data-action="ask_for_counters"
+          data-printer="<%= printer %>"
+          data-action-url="<%= printer_counter_shift_closures_path %>"
+          class="btn btn-mini btn-success">
+          <%= t('view.shift_closures.ask_for') %>
+        </a>
+      <% else %>
+        &nbsp;
+      <% end %>
+    </td>
+  </tr>
+<% end %>

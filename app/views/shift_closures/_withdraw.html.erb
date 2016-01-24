@@ -1,10 +1,11 @@
 <tr>
   <td>
-    <%= f.input :amount, label: false %>
+    <% input_html = f.object.try(:persisted?) ? { disabled: 'disabled' } : {} %>
+    <%= f.input :amount, label: false, input_html: input_html %>
   </td>
   <td>
     <%= f.input :collected_at, as: :datetime_picker, label: false, input_html: {
       value: l(f.object.try(:collected_at) || Time.zone.now, format: :minimal)
-    } %>
+    }.merge(input_html) %>
   </td>
 </tr>

@@ -178,6 +178,9 @@ es:
       user_session:
         password: "Contraseña"
         username: "Usuario"
+      withdraw:
+        amount: 'Monto'
+        collected_at: 'Armado a las'
     errors:
       models:
         customer:

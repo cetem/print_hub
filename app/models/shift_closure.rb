@@ -5,14 +5,24 @@ class ShiftClosure < ActiveRecord::Base
 
   scope :unfinished, -> { where(finish_at: nil) }
 
+  before_save :calc_system_amount, if: -> { self.finish_at.present? }
+
   validates :start_at, :system_amount, :cashbox_amount, :user_id, presence: true
   validate :printers_counters_greater_than_last
   validate :not_create_when_one_is_open
 
+  validates_datetime :start_at, allow_nil: true, allow_blank: true
+  validates_datetime :start_at, before: :start_before,
+                     allow_nil: true, allow_blank: true
+  validates_datetime :finish_at, after: :start_at, before: -> { Time.zone.now },
+                     allow_nil: true, allow_blank: true
+
   belongs_to :user
   belongs_to :helper_user, class_name: User, foreign_key: :helper_user_id
   has_many :withdraws
-  accepts_nested_attributes_for :withdraws
+
+  accepts_nested_attributes_for :withdraws,
+    reject_if: -> (attrs) { attrs['amount'].to_f <= 0.0 }
 
   def initialize(attributes={})
     super(attributes)
@@ -69,8 +79,18 @@ class ShiftClosure < ActiveRecord::Base
   end
 
   def not_create_when_one_is_open
-    if ShiftClosure.unfinished.any?
+    if (_last = ShiftClosure.unfinished.last).present? && _last.id != self.id
       self.errors.add :base, I18n.t('view.shift_closures.one_still_open')
     end
+  end
+
+  def calc_system_amount
+    self.system_amount = Print.between(
+      self.start_at, self.finish_at
+    ).to_a.sum(&:price)
+  end
+
+  def start_before
+    self.finish_at.present? ? self.finish_at : Time.zone.now
   end
 end

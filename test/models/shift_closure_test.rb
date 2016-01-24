@@ -86,4 +86,51 @@ class ShiftClosureTest < ActiveSupport::TestCase
       new_shift_closure.errors[:base]
     )
   end
+
+  test 'validate timelines' do
+    @shift_closure.start_at = 1.minute.from_now
+
+    assert @shift_closure.invalid?
+    assert_equal 2, @shift_closure.errors.count
+    assert_equal(
+      [error_message_from_model(
+        @shift_closure, :start_at, :before, restriction: I18n.l(
+          @shift_closure.start_before
+        )
+      )],
+      @shift_closure.errors[:start_at]
+    )
+    assert_equal(
+      [error_message_from_model(
+        @shift_closure, :finish_at, :after, restriction: I18n.l(
+          @shift_closure.start_at
+        )
+      )],
+      @shift_closure.errors[:finish_at]
+    )
+
+    @shift_closure.reload
+
+    @shift_closure.start_at = 1.hour.ago
+    @shift_closure.finish_at = 2.hour.ago
+
+    assert @shift_closure.invalid?
+    assert_equal 2, @shift_closure.errors.count
+    assert_equal(
+      [error_message_from_model(
+        @shift_closure, :start_at, :before, restriction: I18n.l(
+          @shift_closure.start_before
+        )
+      )],
+      @shift_closure.errors[:start_at]
+    )
+    assert_equal(
+      [error_message_from_model(
+        @shift_closure, :finish_at, :after, restriction: I18n.l(
+          @shift_closure.start_at
+        )
+      )],
+      @shift_closure.errors[:finish_at]
+    )
+  end
 end
