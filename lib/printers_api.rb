@@ -16,7 +16,7 @@ module PrintersApi
       return unless has_counter_script?(printer_name)
 
       case
-        when printer_name.match(/ricoh/)
+        when printer_name.match(/ricoh/i)
           ricoh_web_monitor_for_ip(
             get_printer_ip(printer_name)
           )
