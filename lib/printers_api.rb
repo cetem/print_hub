@@ -15,12 +15,22 @@ module PrintersApi
     def get_counter_for(printer_name)
       return unless has_counter_script?(printer_name)
 
-      case
-        when printer_name.match(/ricoh/i)
-          ricoh_web_monitor_for_ip(
-            get_printer_ip(printer_name)
-          )
+      # Force the timeout here because of open(read_timeout) always
+      # put double (real) timeout.
+      # open(url, read_timeout: 10) => always waits 20seg,
+      # so we don't trust in that
+      timeout(10) do
+        case
+          when printer_name.match(/ricoh/i)
+            ricoh_web_monitor_for_ip(
+              get_printer_ip(printer_name)
+            )
+          when printer_name.match(/samsung/i)
+            rock
+        end
       end
+    rescue
+      nil
     end
 
     def get_printer_ip(printer)
@@ -31,7 +41,11 @@ module PrintersApi
 
     def ricoh_web_monitor_for_ip(ip)
       return if ip.blank?
-      page = open("http://#{ip}/web/guest/es/websys/status/getUnificationCounter.cgi")
+
+      page = open(
+        "http://#{ip}/web/guest/es/websys/status/getUnificationCounter.cgi",
+        open_timeout: 10
+      )
       parsed = Nokogiri::HTML(page)
       parsed.css('tr.staticProp:contains("Total"):first').children[3].text.to_i
     rescue
