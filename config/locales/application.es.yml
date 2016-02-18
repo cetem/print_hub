@@ -634,6 +634,7 @@ es:
       one_still_open: "No se puede crear, ya hay otro abierto."
       title: "Cierre de turno"
       without_withdraws: "Sin retiros"
+      created_by_operator: "Creado por encargado/a %{name}"
     shifts:
       close_session:
         as_operator: "Cerrar como Operario"
