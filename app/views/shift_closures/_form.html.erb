@@ -3,6 +3,7 @@
 <%= simple_form_for @shift_closure do |f| %>
     <%= content_for :js_extra do %>
       <%= raw "var withdraw='#{generate_template(f, :withdraws)}';" %>
+      <%= raw "var upfront='#{generate_template(f, :upfronts)}';" %>
     <% end %>
 
 
@@ -93,6 +94,32 @@
             data: {
               template: 'withdraw',
               container: '#withdraws_container',
+              event: 'addNestedItem'
+            } %>
+        </div>
+        <div class="row-fluid">
+          <h4><%= ShiftClosure.human_attribute_name 'upfronts' %></h4>
+        </div>
+        <div class="row-fluid">
+          <table class="table table-condensed">
+            <thead>
+              <tr>
+                <th><%= Upfront.human_attribute_name 'amount' %></th>
+                <th><%= Upfront.human_attribute_name 'operator_id' %></th>
+              </tr>
+            </thead>
+            <tbody id="upfronts_container">
+              <%= f.simple_fields_for :upfronts do |pj_f| %>
+                  <%= render partial: 'upfront', locals: { f: pj_f } %>
+              <% end %>
+            </tbody>
+          </table>
+          <%= link_to t('view.shift_closures.add_upfront'), '#',
+            class: 'btn btn-mini',
+            title: t('view.shift_closures.add_upfront_title'),
+            data: {
+              template: 'upfront',
+              container: '#upfronts_container',
               event: 'addNestedItem'
             } %>
         </div>

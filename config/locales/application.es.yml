@@ -157,12 +157,16 @@ es:
         administration_copies: 'Copias CETEM'
         printers_stats: 'Contadores'
         withdraws: 'Retiros'
+        upfronts: 'Adelantos'
         comments: 'Comentarios del turno'
         counter: 'Contador'
       tag:
         name: "Nombre"
         parent_id: "Padre"
         private: "Privada"
+      upfront:
+        amount: 'Monto'
+        operator_id: 'Usuario'
       user:
         admin: "Administrador"
         avatar: "Imagen"
@@ -643,6 +647,8 @@ es:
       one_still_open: 'No se puede crear, ya hay otro abierto.'
       cannot_edit_when_finished: 'No puede editar cuando ya está finalizado.'
       edit_comment: 'Editar comentario'
+      add_upfront: 'Agregar Adelanto'
+      add_upfront_title: 'Agregar nuevo Adelanto'
     stats:
       download_csv: "Descargar en CSV"
       empty_result: "Sin resultados para el rango de fechas seleccionado"

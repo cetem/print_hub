@@ -1,0 +1,23 @@
+<% id = dynamic_object_id('upfront', f) %>
+<tr>
+  <td>
+    <% input_html = f.object.try(:persisted?) ? { disabled: 'disabled' } : {} %>
+    <%= f.input :amount, label: false, input_html: input_html %>
+  </td>
+  <td>
+    <% field_classes = ['autocomplete-field'] %>
+    <% field_classes << 'error' unless f.object.errors[:operator_id].blank? %>
+    <%= f.input :auto_operator_name, label: false,
+      input_html: {
+        class: field_classes.join(' '), value: f.object.try(:operator),
+        data: {
+          'autocomplete-id-target' => "#auto_operator_name_#{id}",
+          'autocomplete-url' => autocomplete_for_user_name_users_path(format: :json)
+        }
+      }.merge(input_html) %>
+    <%= f.input :operator_id, as: :hidden,
+      input_html: { class: 'autocomplete-id', id: "auto_operator_name_#{id}" } %>
+    <%= f.input :user_id, as: :hidden,
+      input_html: { value: f.object.operator_id || current_user.id } %>
+  </td>
+</tr>

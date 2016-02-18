@@ -24,8 +24,11 @@ class ShiftClosure < ActiveRecord::Base
   belongs_to :user
   belongs_to :helper_user, class_name: User, foreign_key: :helper_user_id
   has_many :withdraws
+  has_many :upfronts
 
   accepts_nested_attributes_for :withdraws,
+    reject_if: -> (attrs) { attrs['amount'].to_f <= 0.0 }
+  accepts_nested_attributes_for :upfronts,
     reject_if: -> (attrs) { attrs['amount'].to_f <= 0.0 }
 
   def initialize(attributes={})
@@ -108,5 +111,19 @@ class ShiftClosure < ActiveRecord::Base
     else
       self.initial_amount
     end
+  end
+
+  def total_amount
+    positive = (
+      self.withdraws.sum(:amount) +
+      self.upfronts.sum(:amount) +
+      self.cashbox_amount
+    )
+
+    negative = (
+      self.initial_amount
+    )
+
+    positive - negative
   end
 end

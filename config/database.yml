@@ -25,3 +25,22 @@ staging:
   <<: *defaults
   database: print_hub_staging
 
+#Abaco conn
+abaco_defaults: &abaco_defaults
+  adapter: postgresql
+  encoding: utf8
+  pool: 5
+  username: abaco
+  password: abaco
+
+abaco_development:
+  <<: *abaco_defaults
+  database: abaco_development
+
+abaco_production:
+  <<: *abaco_defaults
+  database: abaco_production
+
+abaco_test:
+  <<: *abaco_defaults
+  database: abaco_test

@@ -78,7 +78,8 @@ class ShiftClosuresController < ApplicationController
         :start_at, :finish_at, :cashbox_amount, :failed_copies,
         :helper_user_id, :comments, :initial_amount, :administration_copies,
         printers_stats: printers_keys,
-        withdraws_attributes: [:amount, :collected_at]
+        withdraws_attributes: [:amount, :collected_at, :user_id],
+        upfronts_attributes: [:amount, :operator_id, :user_id]
       )
       permitted_params[:user_id] = current_user.id
       permitted_params

@@ -19,6 +19,10 @@
         <b><%= ShiftClosure.human_attribute_name 'system_amount' %></b>:
         <%= number_to_currency @shift_closure.system_amount %>
       </p>
+      <p>
+        <b><%= ShiftClosure.human_attribute_name 'total_amount' %></b>:
+        <%= number_to_currency @shift_closure.total_amount %>
+      </p>
     </div>
     <div class="span6">
       <p>
@@ -60,7 +64,7 @@
             <% @shift_closure.printers_stats.each do |printer, counter| %>
               <tr>
                 <td><%= printer %></td>
-                <td><%= counter %></td>
+                <td><%= number_to_delimited(counter) %></td>
               </tr>
             <% end %>
           </tbody>
@@ -74,6 +78,7 @@
               <tr>
                 <th><%= Withdraw.human_attribute_name 'amount' %></th>
                 <th><%= Withdraw.human_attribute_name 'collected_at' %></th>
+                <th></th>
               </tr>
             </thead>
             <tbody>
@@ -81,12 +86,34 @@
                 <tr>
                   <td><%= number_to_currency withdraw.amount %></td>
                   <td><%= l(withdraw.collected_at) %></td>
+                  <td><%= withdraw.user %></td>
                 </tr>
               <% end %>
             </tbody>
           </table>
         <% else %>
           <%= t('view.shift_closures.without_withdraws') %>
+        <% end %>
+        <br />
+
+        <b><%= ShiftClosure.human_attribute_name 'upfronts' %></b>:
+        <% if @shift_closure.upfronts.any? %>
+          <table class="table table-condensed">
+            <thead>
+              <tr>
+                <th><%= Upfront.human_attribute_name 'amount' %></th>
+                <th><%= Upfront.human_attribute_name 'operator_id' %></th>
+              </tr>
+            </thead>
+            <tbody>
+              <% @shift_closure.upfronts.each do |upfront| %>
+                <tr>
+                  <td><%= number_to_currency upfront.amount %></td>
+                  <td><%= upfront.operator %></td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
         <% end %>
       </div>
     </div>
