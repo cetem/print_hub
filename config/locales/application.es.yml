@@ -146,27 +146,28 @@ es:
         start: "Inicio"
         user_id: "Usuario"
       shift_closure:
-        start_at: 'Apertura'
-        finish_at: 'Cierre'
-        helper_user_id: 'Ayudante de caja'
-        user_id: 'Encargado'
-        initial_amount: 'Efectivo inicial'
-        cashbox_amount: 'Efectivo en caja'
-        system_amount: 'Recaudación teórica'
-        failed_copies: 'Falladas'
-        administration_copies: 'Copias CETEM'
-        printers_stats: 'Contadores'
-        withdraws: 'Retiros'
-        upfronts: 'Adelantos'
-        comments: 'Comentarios del turno'
-        counter: 'Contador'
+        administration_copies: "Copias CETEM"
+        cashbox_amount: "Efectivo en caja"
+        comments: "Comentarios del turno"
+        counter: "Contador"
+        failed_copies: "Falladas"
+        finish_at: "Cierre"
+        helper_user_id: "Ayudante de caja"
+        initial_amount: "Efectivo inicial"
+        printers_stats: "Contadores"
+        start_at: "Apertura"
+        system_amount: "Recaudación teórica"
+        total_amount: "Total del día"
+        upfronts: "Adelantos"
+        user_id: "Encargado"
+        withdraws: "Retiros"
       tag:
         name: "Nombre"
         parent_id: "Padre"
         private: "Privada"
       upfront:
-        amount: 'Monto'
-        operator_id: 'Usuario'
+        amount: "Monto"
+        operator_id: "Usuario"
       user:
         admin: "Administrador"
         avatar: "Imagen"
@@ -185,8 +186,8 @@ es:
         password: "Contraseña"
         username: "Usuario"
       withdraw:
-        amount: 'Monto'
-        collected_at: 'Armado a las'
+        amount: "Monto"
+        collected_at: "Armado a las"
     errors:
       models:
         customer:
@@ -235,15 +236,15 @@ es:
       print_job: "Trabajo de impresión"
       print_job_type: "Tipo de impresión"
       shift: "Turno"
-      shift_closure: 'Cierre de turno'
+      shift_closure: "Cierre de turno"
       tag: "Etiqueta"
       user: "Usuario"
       user_session: "Sesión"
   app_name: "Impresiones"
   attributes:
     created_at: "Creación"
+    printer: "Impresora"
     updated_at: "Actualización"
-    printer: 'Impresora'
   customer_menu:
     catalog: "Documentos"
     orders: "Pedidos"
@@ -295,8 +296,8 @@ es:
     payments: "Pagos"
     print_job_types: "Tipos de impresión"
     prints: "Impresiones"
-    shifts: "Turnos"
     shift_closures: "Cierres de caja"
+    shifts: "Turnos"
     stats: "Estadísticas"
     tags: "Etiquetas"
     users: "Usuarios"
@@ -622,6 +623,17 @@ es:
         pending_payment: "Con pago pendiente"
       unlink_customer: "Desasociar cliente"
       upload_file: "Subir archivo"
+    shift_closures:
+      add_upfront: "Agregar Adelanto"
+      add_upfront_title: "Agregar nuevo Adelanto"
+      add_withdraw: "Agregar retiro"
+      add_withdraw_title: "Agregar nuevo retiro"
+      ask_for: "Pedir"
+      cannot_edit_when_finished: "No puede editar cuando ya está finalizado."
+      edit_comment: "Editar comentario"
+      one_still_open: "No se puede crear, ya hay otro abierto."
+      title: "Cierre de turno"
+      without_withdraws: "Sin retiros"
     shifts:
       close_session:
         as_operator: "Cerrar como Operario"
@@ -638,17 +650,6 @@ es:
       pay_error: "Ha ocurrido un error, no se pudieron pagar los turnos..."
       show_title: "Detalle de turno"
       stale_object_error: "El turno no pudo ser actualizado, intente nuevamente."
-    shift_closures:
-      ask_for: 'Pedir'
-      add_withdraw: 'Agregar retiro'
-      add_withdraw_title: 'Agregar nuevo retiro'
-      title: 'Cierre de turno'
-      without_withdraws: 'Sin retiros'
-      one_still_open: 'No se puede crear, ya hay otro abierto.'
-      cannot_edit_when_finished: 'No puede editar cuando ya está finalizado.'
-      edit_comment: 'Editar comentario'
-      add_upfront: 'Agregar Adelanto'
-      add_upfront_title: 'Agregar nuevo Adelanto'
     stats:
       download_csv: "Descargar en CSV"
       empty_result: "Sin resultados para el rango de fechas seleccionado"
@@ -683,11 +684,11 @@ es:
       login: "Ingresar"
       new_title: "Iniciar sesión"
     users:
+      actives: "Activos"
       correctly_created: "Usuario agregado correctamente."
       correctly_updated: "Usuario actualizado correctamente."
+      disabled: "Desactivados"
       edit_title: "Modificar usuario"
       index_title: "Listado de usuarios"
       new_title: "Nuevo usuario"
       non_existent_avatar: "Imagen inexistente"
-      actives: 'Activos'
-      disabled: 'Desactivados'
