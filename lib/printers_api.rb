@@ -26,16 +26,20 @@ module PrintersApi
               get_printer_ip(printer_name)
             )
           when printer_name.match(/samsung/i)
-            rock
+            42
         end
       end
-    rescue
+    rescue Timeout::Error
+      nil
+    rescue => e
+      Bugsnag.notify(e)
       nil
     end
 
     def get_printer_ip(printer)
       Cups.options_for(printer)['device-uri'].match(/(\d{,3}\.\d{,3}\.\d{,3}\.\d{,3})/)[1]
-    rescue
+    rescue => e
+      Bugsnag.notify(e)
       nil
     end
 
@@ -43,12 +47,12 @@ module PrintersApi
       return if ip.blank?
 
       page = open(
-        "http://#{ip}/web/guest/es/websys/status/getUnificationCounter.cgi",
-        open_timeout: 10
+        "http://#{ip}/web/guest/es/websys/status/getUnificationCounter.cgi"
       )
       parsed = Nokogiri::HTML(page)
       parsed.css('tr.staticProp:contains("Total"):first').children[3].text.to_i
-    rescue
+    rescue => e
+      Bugsnag.notify(e)
       nil
     end
   end
