@@ -632,7 +632,7 @@ es:
       cannot_edit_when_finished: "No puede editar cuando ya está finalizado."
       created_by_operator: "Creado por encargado/a %{name}"
       edit_comment: "Editar comentario"
-      invalid_printer_counter: "Contador incorrecto para %{printer} debe ser mayor a %{counter:w}"
+      invalid_printer_counter: "Contador incorrecto para %{printer} debe ser mayor a %{counter}"
       one_still_open: "No se puede crear, ya hay otro abierto."
       title: "Cierre de turno"
       without_withdraws: "Sin retiros"
