@@ -71,7 +71,7 @@ class ShiftClosure < ActiveRecord::Base
   def printers_counters_greater_than_last
     printers_with_counters.each do |printer, counter|
       sent_counter = self.printers_stats[printer]
-      if sent_counter && sent_counter.to_i <= counter.to_i
+      if sent_counter && sent_counter.to_i < counter.to_i
         self.errors.add :base,
           I18n.t(
             'view.shift_closures.invalid_printer_counter',
