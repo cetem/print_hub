@@ -7,7 +7,7 @@ namespace :tasks do
       jobs.split("\n").each do |j|
         id = j.match(/(\d+)$/)[1]
 
-        logger.info("#{id} cancelled") if system("lprm #{id}")
+        logger.info("#{id} cancelled") if system("cancel #{id}")
       end
     rescue => ex
       log_error(ex)

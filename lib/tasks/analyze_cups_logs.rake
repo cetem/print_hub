@@ -33,12 +33,14 @@ namespace :tasks do
     end
 
     logger.info 'First phase done, calculating time diff...'
+    logger.info "#{bulk_jobs.size} jobs will be processed..."
     jobs_with_score = {}
 
     bulk_jobs.each do |job_id, obj|
       begin
         times = obj['times'].uniq.compact.sort
-        if times.size > 2
+
+        if times.size > 1
           start_date, *start_time = times.first.split(':')
           end_date, *end_time = times.last.split(':')
 
@@ -49,8 +51,12 @@ namespace :tasks do
             [end_date, end_time.join(':')].join(' ')
           ).to_time
 
-          jobs_with_score[job_id] = (b_time - a_time).to_i
+          time_diff = (b_time - a_time).to_i
+        else
+          time_diff = 1
         end
+
+        jobs_with_score[job_id] = time_diff > 0 ? time_diff : 1
       rescue => e
         logger.error("Can't parse time for JobID:#{job_id} obj: #{obj}")
         logger.error(e)
@@ -58,6 +64,7 @@ namespace :tasks do
     end
 
     logger.info 'Second phase done. Updating PrintJobs....'
+    logger.info "#{jobs_with_score.size} jobscores..."
 
     jobs_with_score.each do |job_id, score|
       if (pj = PrintJob.order(:id).where(job_id: job_id).try(:last))

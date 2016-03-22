@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160218005910) do
+ActiveRecord::Schema.define(version: 20160322023517) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -228,6 +228,7 @@ ActiveRecord::Schema.define(version: 20160218005910) do
   end
 
   add_index "print_jobs", ["document_id"], name: "index_print_jobs_on_document_id", using: :btree
+  add_index "print_jobs", ["job_id"], name: "index_print_jobs_on_job_id", using: :btree
   add_index "print_jobs", ["print_id"], name: "index_print_jobs_on_print_id", using: :btree
   add_index "print_jobs", ["print_job_type_id"], name: "index_print_jobs_on_print_job_type_id", using: :btree
 
