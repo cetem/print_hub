@@ -166,9 +166,9 @@ class PrintJob < ApplicationModel
         )
 
         timestamp = Time.zone.now.utc.strftime('%Y%m%d%H%M%S')
-        user = user.try(:username)
+        user = (user.try(:username) || 'ph').gsub(/\s*/, '_')
         options = "-d #{printer} -n #{self.printed_copies} -o fit-to-page "
-        options += "-t #{user || 'ph'}-#{timestamp} "
+        options += "-t #{user}-#{timestamp} "
         options += self.options.map { |o, v| "-o #{o}=#{v}" }.join(' ')
 
         if self.range.present?
