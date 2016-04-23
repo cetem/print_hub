@@ -86,7 +86,7 @@ class ShiftClosuresController < ApplicationController
     end
 
     def check_if_not_finished
-      if @shift_closure.finish_at.present?
+      if !current_user.not_shifted? && @shift_closure.finish_at.present?
         redirect_to shift_closure_path(@shift_closure.id),
           alert: t('view.shift_closures.cannot_edit_when_finished')
       end

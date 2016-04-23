@@ -630,6 +630,8 @@ es:
       add_withdraw_title: "Agregar nuevo retiro"
       ask_for: "Pedir"
       cannot_edit_when_finished: "No puede editar cuando ya está finalizado."
+      correctly_created: "Cierre agregado correctamente."
+      correctly_updated: "Cierre actualizado correctamente."
       created_by_operator: "Creado por encargado/a %{name}"
       edit_comment: "Editar comentario"
       invalid_printer_counter: "Contador incorrecto para %{printer} debe ser mayor a %{counter}"

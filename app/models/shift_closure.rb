@@ -69,6 +69,8 @@ class ShiftClosure < ActiveRecord::Base
   end
 
   def printers_counters_greater_than_last
+    return if self.user.not_shifted?
+
     printers_with_counters.each do |printer, counter|
       sent_counter = self.printers_stats[printer]
       if sent_counter && sent_counter.to_i < counter.to_i
