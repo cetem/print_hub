@@ -584,6 +584,7 @@ es:
       correctly_created: "Impresión agregada correctamente."
       correctly_revoked: "Impresión revocada correctamente"
       correctly_updated: "Impresión actualizada correctamente."
+      current_deposits_note: "Monto actual, este monto no se guarda al momento de la impresión."
       customer_credit_detail:
         link: "Ver crédito"
         title: "Ver detalles del crédito vigente"

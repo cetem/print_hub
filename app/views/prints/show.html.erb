@@ -10,9 +10,12 @@
   </p>
 
   <p>
-  <b><%= Print.human_attribute_name 'customer' %></b>:
-    <% customer = @print.customer %>
-    <%= link_to customer, customer if customer  %>
+    <b><%= Print.human_attribute_name 'customer' %></b>:
+    <% if(customer = @print.customer) %>
+      <%= link_to customer, customer  %><br>
+      <b><%= t('view.customers.current_deposits.other') %></b> (<small><%= t('view.prints.current_deposits_note') %></small>):
+      <%= number_to_currency customer.free_credit %><br>
+    <% end %>
   </p>
 
   <p>
