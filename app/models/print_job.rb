@@ -166,12 +166,12 @@ class PrintJob < ApplicationModel
         )
 
         timestamp = Time.zone.now.utc.strftime('%Y%m%d%H%M%S')
-        user = (user.try(:username) || 'ph').gsub(/\s*/, '_')
+        user = (user.try(:username) || 'ph').gsub(/\s+/, '_')
         options = "-d #{printer} -n #{self.printed_copies} -o fit-to-page "
         options += "-t #{user}-#{timestamp} "
         options += self.options.map { |o, v| "-o #{o}=#{v}" }.join(' ')
 
-        if self.range.present?
+        if self.range.present? && self.printed_copies > 1
           CupsLogger.info('Printing with range:')
           CupsLogger.info("lp #{options} #{file_path}")
         end
@@ -186,7 +186,7 @@ class PrintJob < ApplicationModel
   def cancel
     job = job_id ? job_id.match(/\d+$/)[0] : nil
 
-    out = job ? `lprm #{job} 2>&1` : 'Error'
+    out = job ? `cancel #{job} 2>&1` : 'Error'
 
     out.blank?
   end
