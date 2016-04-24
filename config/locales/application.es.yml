@@ -347,7 +347,7 @@ es:
       more_tags:
         one: "Y una etiqueta más..."
         other: "Y %{count} etiquetas más..."
-      new_order: "Revisar pedido"
+      new_order: "Armar pedido"
       remove_from_order:
         title: "Elimina la marca de este documento para que NO sea incluido en el pedido"
       show: "Ver documento"
