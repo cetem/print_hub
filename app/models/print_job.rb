@@ -164,21 +164,28 @@ class PrintJob < ApplicationModel
         file_path = (
           document ? document.file.path : file_line.file.path
         )
-
-        timestamp = Time.zone.now.utc.strftime('%Y%m%d%H%M%S')
         user = (user.try(:username) || 'ph').gsub(/\s+/, '_')
-        options = "-d #{printer} -n #{self.printed_copies} -o fit-to-page "
-        options += "-t #{user}-#{timestamp} "
-        options += self.options.map { |o, v| "-o #{o}=#{v}" }.join(' ')
 
-        if self.range.present? && self.printed_copies > 1
-          CupsLogger.info('Printing with range:')
-          CupsLogger.info("lp #{options} #{file_path}")
+        # Little fix for guttenprint issue
+        self.printed_copies.times do |i|
+          timestamp = (Time.zone.now.utc + i.seconds).strftime('%Y%m%d%H%M%S')
+          options = "-d #{printer} -n #{1} -o fit-to-page "
+          options += "-t #{user}-#{timestamp} "
+          options += self.options.map { |o, v| "-o #{o}=#{v}" }.join(' ')
+
+          if self.range.present? && i > 0
+            CupsLogger.info('Printing with range:')
+            CupsLogger.info("lp #{options} #{file_path}")
+          end
+
+          if i.zero?
+            out = `lp #{options} "#{file_path}" 2>&1`
+
+            self.job_id = out.match(/#{Regexp.escape(printer)}-\d+/)[0] || '-'
+          else
+            `lp #{options} "#{file_path}" 2>&1`
+          end
         end
-
-        out = `lp #{options} "#{file_path}" 2>&1`
-
-        self.job_id = out.match(/#{Regexp.escape(printer)}-\d+/)[0] || '-'
       end
     end
   end
