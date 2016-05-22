@@ -101,4 +101,32 @@ class Shift < ActiveRecord::Base
       all.to_a.sum { |s| s.finish - s.start } / 3600.0
     ).round(2)
   end
+
+  def self.to_csv
+    title = [
+      human_attribute_name('id'),
+      human_attribute_name('start'),
+      human_attribute_name('finish'),
+      human_attribute_name('as_admin')
+    ]
+    _yes = I18n.t('label.yes')
+    _no = I18n.t('label.no')
+    csv = []
+
+    all.order(created_at: :asc).group_by(&:user_id).each do |user_id, _scope|
+      csv << [User.find(user_id).to_s]
+      csv << title
+      _scope.each do |shift|
+        csv << [
+          shift.id,
+          I18n.l(shift.start),
+          I18n.l(shift.finish),
+          shift.as_admin? ? _yes : _no
+        ]
+      end
+
+      csv << []
+    end
+    csv
+  end
 end

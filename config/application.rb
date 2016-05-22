@@ -11,6 +11,7 @@ module PrintHubApp
     config.i18n.default_locale = :es
 
     config.autoload_paths += %W(#{config.root}/lib)
+    config.autoload_paths += %W(#{config.root}/app/workers)
 
     config.active_record.raise_in_transactional_callbacks = true
   end

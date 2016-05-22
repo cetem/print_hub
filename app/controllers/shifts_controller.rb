@@ -95,6 +95,18 @@ class ShiftsController < ApplicationController
     end
   end
 
+  def export_to_drive
+    if params[:interval]
+      interval      = params.require(:interval).permit(:from, :to)
+      start, finish = *make_datetime_range(interval)
+      @start        = start.beginning_of_day
+      @finish       = finish.end_of_day
+
+      DriveWorker.perform_async(DriveWorker::SHIFTS, @start, @finish)
+      flash.notice = t('view.shifts.exporting_shifts')
+    end
+  end
+
   private
 
   def shifts_scope

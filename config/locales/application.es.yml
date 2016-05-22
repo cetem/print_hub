@@ -655,6 +655,9 @@ es:
       pay_error: "Ha ocurrido un error, no se pudieron pagar los turnos..."
       show_title: "Detalle de turno"
       stale_object_error: "El turno no pudo ser actualizado, intente nuevamente."
+      exporting_shifts: "Exportando turnos a GDrive."
+      export_shifts: "Exportar turnos a GDrive."
+      exported_shifts: "Turnos entre %{range}"
     stats:
       download_csv: "Descargar en CSV"
       empty_result: "Sin resultados para el rango de fechas seleccionado"

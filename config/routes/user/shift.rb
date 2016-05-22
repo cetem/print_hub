@@ -1,3 +1,6 @@
 resources :shifts, except: :new do
-  get :json_paginate, on: :collection
+  collection do
+    get :json_paginate
+    get :export_to_drive
+  end
 end
