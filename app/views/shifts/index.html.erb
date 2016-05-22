@@ -25,4 +25,5 @@
 <%= pagination_links @shifts %>
 
 <nav class="form-actions">
+  <%= link_to t('view.shifts.export_shifts'), export_to_drive_shifts_path if current_user.not_shifted? %>
 </nav>
