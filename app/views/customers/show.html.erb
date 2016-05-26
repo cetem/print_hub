@@ -37,7 +37,7 @@
       <%= t(
         'view.customers.current_deposits',
         count: @customer.current_deposits.size
-      ) %>
+      ) %>: <%= number_to_currency @customer.free_credit %>
     </h3>
 
     <table class="table table-striped">
