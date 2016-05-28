@@ -467,35 +467,37 @@ class PrintTest < ActiveSupport::TestCase
                        'Cups.all_jobs(@printer).keys.sort.last'] do
       assert_difference 'PrintJob.count', 2 do
         assert_no_difference 'Payment.count' do
-          @print = Print.create(printer: @printer,
-                                user_id: nil,
-                                customer_id: customers(:student_without_bonus).id,
-                                scheduled_at: '',
-                                avoid_printing: false,
-                                pay_later: true,
-                                print_jobs_attributes: {
-                                  '1' => {
-                                    copies: 1,
-                                    # No importa el precio, se establece desde la configuración
-                                    price_per_copy: 1000,
-                                    # No importan las páginas, se establecen desde el documento
-                                    pages: 1,
-                                    print_job_type_id: print_job_types((:a4)).id,
-                                    document_id: documents(:math_book).id
-                                  },
-                                  '2' => {
-                                    copies: 1,
-                                    price_per_copy: 1000,
-                                    print_job_type_id: print_job_types(:a4).id,
-                                    file_line_id: file_lines(:from_yesterday_cv_file).id
-                                  }
-                                },
-                                payments_attributes: {
-                                  '1' => {
-                                    amount: 35.00,
-                                    paid: 35.00
-                                  }
-                                })
+          @print = Print.create(
+            printer: @printer,
+            user_id: nil,
+            customer_id: customers(:student_without_bonus).id,
+            scheduled_at: '',
+            avoid_printing: false,
+            pay_later: true,
+            print_jobs_attributes: {
+              '1' => {
+                copies: 1,
+                # No importa el precio, se establece desde la configuración
+                price_per_copy: 1000,
+                # No importan las páginas, se establecen desde el documento
+                pages: 1,
+                print_job_type_id: print_job_types((:a4)).id,
+                document_id: documents(:math_book).id
+              },
+              '2' => {
+                copies: 1,
+                price_per_copy: 1000,
+                print_job_type_id: print_job_types(:a4).id,
+                file_line_id: file_lines(:from_yesterday_cv_file).id
+              }
+            },
+            payments_attributes: {
+              '1' => {
+                amount: 35.00,
+                paid: 35.00
+              }
+            }
+          )
         end
       end
     end

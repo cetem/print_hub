@@ -1,6 +1,7 @@
 require 'test_helper'
 
 class OrdersTest < ActionDispatch::IntegrationTest
+
   test 'should print an order' do
     login
 

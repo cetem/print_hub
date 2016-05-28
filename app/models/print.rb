@@ -11,9 +11,7 @@ class Print < ApplicationModel
   # Callbacks
   before_validation :remove_unnecessary_payments
   before_save :mark_order_as_completed, if: -> (p) { p.order.present? }
-  before_create :update_customer_credit, if: -> (p) { p.customer.present? }
   before_save :mark_as_pending
-  before_validation :assign_surplus_to_customer, if: ->(p) { p.customer.present? }
   before_create :print_all_jobs
   before_destroy :can_be_destroyed?
 
@@ -33,9 +31,6 @@ class Print < ApplicationModel
   attr_accessor :auto_customer_name, :avoid_printing, :include_documents,
                 :credit_password, :pay_later
 
-  # Restricciones en los atributos
-  attr_readonly :customer_id
-
   # Restricciones
   validates :printer, presence: true, if: ->(p) do
     p.scheduled_at.blank? && p.print_jobs.reject(&:marked_for_destruction?).any?
@@ -50,21 +45,16 @@ class Print < ApplicationModel
   validates_each :printer do |record, attr, value|
     printer_changed = !record.printer_was.blank? && record.printer_was != value
     print_and_schedule_new_record = record.new_record? &&
-                                    !record.printer.blank? && !record.scheduled_at.blank?
+      !record.printer.blank? && !record.scheduled_at.blank?
 
     if printer_changed || print_and_schedule_new_record
       record.errors.add attr, :must_be_blank
     end
   end
-  validates_each :customer_id do |record, attr, value|
-    record.errors.add attr, :blank if value.blank? && record.pay_later?
-  end
   validate :must_have_one_item, :must_have_valid_payments
-  validate :need_credit_password?
 
   # Relaciones
   belongs_to :user
-  belongs_to :customer, autosave: true
   belongs_to :order, autosave: true
   has_many :payments, as: :payable
   has_many :print_jobs, inverse_of: :print
@@ -72,10 +62,12 @@ class Print < ApplicationModel
   has_many :file_lines
 
   accepts_nested_attributes_for :print_jobs, allow_destroy: false,
-                                             reject_if: :reject_print_job_attributes?
+    reject_if: :reject_print_job_attributes?
   accepts_nested_attributes_for :article_lines, allow_destroy: false,
-                                                reject_if: ->(attributes) { attributes['article_id'].blank? }
+    reject_if: ->(attributes) { attributes['article_id'].blank? }
   accepts_nested_attributes_for :payments, allow_destroy: false
+
+  include Prints::Customers
 
   def initialize(attributes = nil)
     super(attributes)
@@ -136,7 +128,7 @@ class Print < ApplicationModel
   end
 
   def avoid_printing?
-    avoid_printing == true || avoid_printing == '1'
+    [true, 1, '1'].include?(avoid_printing)
   end
 
   def print_all_jobs
@@ -150,8 +142,8 @@ class Print < ApplicationModel
   def mark_as_pending
     if self.has_pending_payment?
       self.pending_payment!
-    else
-      self.paid! if self.pending_payment?
+    elsif self.pending_payment?
+      self.paid!
     end
 
     true
@@ -185,8 +177,7 @@ class Print < ApplicationModel
   end
 
   def price
-    current_print_jobs.to_a.sum(&:price) +
-      current_article_lines.to_a.sum(&:price)
+    (current_print_jobs.to_a + current_article_lines.to_a).sum(&:price)
   end
 
   def total_pages_by_type(type)
@@ -236,38 +227,8 @@ class Print < ApplicationModel
     payments.each { |p| p.destroy if p.amount.to_f <= 0 }
   end
 
-  def update_customer_credit
-    if (credit = payments.detect(&:credit?)) && credit.amount > 0
-      remaining = customer.use_credit(
-        credit.amount,
-        credit_password,
-        avoid_password_check: order.present?
-      )
-
-      if remaining == false
-        errors.add :credit_password, :invalid
-
-        false
-      elsif remaining > 0
-        expected_remaining = payments.detect(&:cash?).try(:amount) || 0
-
-        fail 'Invalid payment' if remaining != expected_remaining
-      end
-    end
-  end
-
   def has_pending_payment?
     payments.inject(0.0) { |t, p| t + p.amount - p.paid } > 0
-  end
-
-  def related_by_customer(type)
-    Print.where(
-      [
-        "#{Print.table_name}.customer_id = :customer_id",
-        "#{Print.table_name}.created_at #{type == 'next' ? '>' : '<'} :date"
-      ].join(' AND '),
-      customer_id: customer_id, date: created_at
-    ).order(created_at: :asc).first
   end
 
   def scheduled?
@@ -289,28 +250,5 @@ class Print < ApplicationModel
 
   def self.created_in_the_same_month(date)
     between(date.beginning_of_month, date.end_of_month.end_of_day)
-  end
-
-  def need_credit_password?
-    _error = case
-             when credit_password.blank? && customer_id? && order.blank? && customer.free_credit > 0
-               :blank
-             when credit_password.present? && customer_id? && !customer.valid_password?(credit_password)
-               :invalid
-             end
-
-    errors.add(:credit_password, _error) if !persisted? && _error
-  end
-
-  def assign_surplus_to_customer
-    payments.each do |payment|
-      surplus = 0.0
-      diff = payment.paid - payment.amount
-
-      if diff > 0
-        customer.deposits.create(amount: diff)
-        payment.paid = payment.amount
-      end
-    end
   end
 end
