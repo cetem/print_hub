@@ -13,6 +13,7 @@ class Print < ApplicationModel
   before_save :mark_order_as_completed, if: -> (p) { p.order.present? }
   before_create :update_customer_credit, if: -> (p) { p.customer.present? }
   before_save :mark_as_pending
+  before_validation :assign_surplus_to_customer, if: ->(p) { p.customer.present? }
   before_create :print_all_jobs
   before_destroy :can_be_destroyed?
 
@@ -21,7 +22,7 @@ class Print < ApplicationModel
   scope :pay_later, -> { where(status: STATUS[:pay_later]) }
   scope :not_revoked, -> { where(revoked: false) }
   scope :between, -> (_start, _end) { where(created_at: _start.._end) }
-  scope :scheduled, lambda {
+  scope :scheduled, -> {
     where(
       '(printer = :blank OR printer IS NULL) AND scheduled_at IS NOT NULL',
       blank: ''
@@ -223,6 +224,7 @@ class Print < ApplicationModel
 
   def must_have_valid_payments
     if self.pending_payment? || (self.paid? && self.new_record?)
+
       unless (payment = payments.to_a.sum(&:amount)) == price
         errors.add :payments, :invalid, price: '%.3f' % price,
                                         payment: '%.3f' % payment
@@ -298,5 +300,17 @@ class Print < ApplicationModel
              end
 
     errors.add(:credit_password, _error) if !persisted? && _error
+  end
+
+  def assign_surplus_to_customer
+    payments.each do |payment|
+      surplus = 0.0
+      diff = payment.paid - payment.amount
+
+      if diff > 0
+        customer.deposits.create(amount: diff)
+        payment.paid = payment.amount
+      end
+    end
   end
 end

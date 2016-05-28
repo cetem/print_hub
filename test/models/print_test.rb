@@ -10,6 +10,10 @@ class PrintTest < ActiveSupport::TestCase
     prepare_document_files
   end
 
+  def teardown
+    drop_all_prints
+  end
+
   # Prueba que se realicen las búsquedas como se espera
   test 'find' do
     assert_kind_of Print, @print
@@ -326,8 +330,12 @@ class PrintTest < ActiveSupport::TestCase
   end
 
   test 'create with free credit and cash' do
+    file_line = FileLine.create(
+      file: process_with_action_dispatch('test.pdf', 'application/pdf')
+    )
+
     assert_difference ['Print.count', 'ArticleLine.count'] do
-      assert_difference 'Cups.all_jobs(@printer).keys.sort.last' do
+      assert_difference 'Cups.all_jobs(@printer).keys.sort.last', 110 do
         assert_difference ['PrintJob.count', 'Payment.count'], 2 do
           @print = Print.create(printer: @printer,
                                 user_id: @operator.id,
@@ -336,18 +344,18 @@ class PrintTest < ActiveSupport::TestCase
                                 credit_password: 'student123',
                                 print_jobs_attributes: {
                                   '1' => {
-                                    copies: 100,
+                                    copies: 10,
                                     price_per_copy: 0.10,
                                     print_job_type_id: print_job_types((:a4)).id,
                                     document_id: documents(:math_book).id
                                   },
                                   '2' => {
-                                    copies: 1000,
+                                    copies: 100,
                                     price_per_copy: 0.10,
                                     print_job_type_id: print_job_types(:a4).id,
-                                    file_line_id: file_lines(:from_yesterday_cv_file).id
+                                    file_line_id: file_line.id
                                   }
-                                  # 36000 páginas = $3600.00
+                                  # 3600 páginas = $360.00
                                 },
                                 article_lines_attributes: {
                                   '1' => {
@@ -359,12 +367,12 @@ class PrintTest < ActiveSupport::TestCase
                                 },
                                 payments_attributes: {
                                   '1' => {
-                                    amount: 3101.79,
-                                    paid: 3101.79
+                                    amount: 311.79,
+                                    paid: 311.79
                                   },
                                   '2' => {
-                                    amount: 500.00,
-                                    paid: 500.00,
+                                    amount: 50.00,
+                                    paid: 50.00,
                                     paid_with: Payment::PAID_WITH[:credit]
                                   }
                                 })
@@ -376,13 +384,13 @@ class PrintTest < ActiveSupport::TestCase
 
     credit_payment = @print.payments.detect(&:credit?)
 
-    assert_equal '500.0', credit_payment.amount.to_s
-    assert_equal '500.0', credit_payment.paid.to_s
+    assert_equal '50.0', credit_payment.amount.to_s
+    assert_equal '50.0', credit_payment.paid.to_s
 
     cash_payment = @print.payments.detect(&:cash?)
 
-    assert_equal '3101.79', cash_payment.amount.to_s
-    assert_equal '3101.79', cash_payment.paid.to_s
+    assert_equal '311.79', cash_payment.amount.to_s
+    assert_equal '311.79', cash_payment.paid.to_s
   end
 
   # Prueba la creación de una impresión con documentos incluidos
@@ -701,7 +709,7 @@ class PrintTest < ActiveSupport::TestCase
     cups_count = 'Cups.all_jobs(@printer).keys.sort.last'
     new_print = build_new_print_from(@print)
 
-    assert_difference cups_count, @print.print_jobs.count.to_i do
+    assert_difference cups_count, job_count(@print.print_jobs) do
       new_print.print_all_jobs
     end
   end
@@ -749,6 +757,32 @@ class PrintTest < ActiveSupport::TestCase
     assert_nil first_print.related_by_customer('prev')
   end
 
+  test 'assign surplus to customer' do
+    customer = @print.customer
+    customer.credits.destroy_all
+    customer.deposits.create(amount: 20)
+
+    assert_equal(20.0, customer.free_credit.to_f)
+
+    print = build_new_print_from(@print)
+    print.customer_id = customer.id
+    print.credit_password = 'student123'
+
+    print.payments.destroy_all
+    print.payments.new(
+      amount:    20,
+      paid:      20,
+      paid_with: Payment::PAID_WITH[:credit]
+    )
+    print.payments.new(
+      amount: 22.18,
+      paid:   22.20
+    )
+    print.save
+
+    assert_equal(0.02, customer.free_credit.to_f)
+  end
+
   def build_new_print_from(print)
     new_print = Print.create(
       print.attributes.except('id', 'customer_id')
@@ -757,12 +791,12 @@ class PrintTest < ActiveSupport::TestCase
 
     print.print_jobs.each do |pj|
       new_print.print_jobs.build(
-        pj.attributes
+        pj.attributes.except('id')
       )
     end
     print.article_lines.each do |al|
       new_print.article_lines.build(
-        al.attributes
+        al.attributes.except('id')
       )
     end
 

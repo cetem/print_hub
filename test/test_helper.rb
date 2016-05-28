@@ -82,6 +82,14 @@ class ActiveSupport::TestCase
       )
     end
   end
+
+  def job_count(print_jobs)
+    print_jobs.map(&:copies).sum
+  end
+
+  def drop_all_prints
+    `lpstat -Wnot-completed -o | grep -i "virtual" | awk '{print $1}' | xargs cancel`
+  end
 end
 
 class ActionController::TestCase

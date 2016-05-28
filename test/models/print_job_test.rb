@@ -13,6 +13,10 @@ class PrintJobTest < ActiveSupport::TestCase
     prepare_document_files
   end
 
+  def teardown
+    drop_all_prints
+  end
+
   # Prueba que se realicen las búsquedas como se espera
   test 'find' do
     assert_kind_of PrintJob, @print_job
@@ -363,7 +367,7 @@ class PrintJobTest < ActiveSupport::TestCase
   end
 
   test 'print' do
-    assert_difference 'Cups.all_jobs(@printer).keys.sort.last' do
+    assert_difference 'Cups.all_jobs(@printer).keys.sort.last', job_count([@print_job]) do
       @print_job.send_to_print(@printer)
     end
 
@@ -397,7 +401,7 @@ class PrintJobTest < ActiveSupport::TestCase
     @print_job.document.stock = @print_job.copies
     @print_job.range = '1,2'
 
-    assert_difference 'Cups.all_jobs(@printer).keys.sort.last' do
+    assert_difference 'Cups.all_jobs(@printer).keys.sort.last', job_count([@print_job]) do
       assert_no_difference '@print_job.document.stock' do
         @print_job.send_to_print(@printer)
       end
@@ -408,32 +412,23 @@ class PrintJobTest < ActiveSupport::TestCase
   end
 
   test 'cancel print' do
-    canceled_count = Cups.all_jobs(@printer).count do |_, j|
-      j[:state] == :cancelled
-    end
+    @print_job.copies = 1
+    @print_job.job_hold_until = 'indefinite'
 
-    assert_difference 'Cups.all_jobs(@printer).keys.sort.last || 0' do
-      @print_job.job_hold_until = 'indefinite'
-
+    assert_difference 'Cups.all_jobs(@printer).keys.sort.last', job_count([@print_job]) do
       @print_job.send_to_print(@printer)
     end
 
+    print_job_job_id = @print_job.job_id.match(/(\d+)/)[1].to_i
+
+    assert_not_equal :cancelled, Cups.all_jobs(@printer)[print_job_job_id][:state]
+
     assert @print_job.cancel
 
-    new_canceled_count = Cups.all_jobs(@printer).count do |_, j|
-      j[:state] == :cancelled
-    end
-
-    assert_equal canceled_count, new_canceled_count - 1
+    assert_equal :cancelled, Cups.all_jobs(@printer)[print_job_job_id][:state]
 
     # Se rotorna false cuando no se puede cancelar el trabajo por algún error
     assert !@print_job.cancel
-
-    new_canceled_count = Cups.all_jobs(@printer).count do |_, j|
-      j[:state] == :cancelled
-    end
-
-    assert_equal canceled_count, new_canceled_count - 1
   end
 
   test 'pending' do

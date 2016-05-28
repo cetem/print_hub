@@ -501,10 +501,6 @@ class PrintsControllerTest < ActionController::TestCase
   test 'should cancel job' do
     @operator.update(admin: false)
 
-    canceled_count = Cups.all_jobs(@printer).count do |_, j|
-      j[:state] == :cancelled
-    end
-
     document = documents(:math_book)
 
     assert_difference 'Cups.all_jobs(@printer).keys.sort.last' do
@@ -531,6 +527,9 @@ class PrintsControllerTest < ActionController::TestCase
     end
 
     print_job = assigns(:print).print_jobs.first
+    print_job_job_id = print_job.job_id.match(/(\d+)/)[1].to_i
+
+    assert_not_equal :cancelled, Cups.all_jobs(@printer)[print_job_job_id][:state]
 
     xhr :put, :cancel_job, id: print_job.to_param, status: 'all'
 
@@ -539,12 +538,7 @@ class PrintsControllerTest < ActionController::TestCase
                  @response.body
 
     sleep 0.5
-
-    new_canceled_count = Cups.all_jobs(@printer).count do |_, j|
-      j[:state] == :cancelled
-    end
-
-    assert_equal canceled_count, new_canceled_count - 1
+    assert_equal :cancelled, Cups.all_jobs(@printer)[print_job_job_id][:state]
   end
 
   test 'can not cancel a completed job' do
