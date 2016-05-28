@@ -3,7 +3,7 @@ class ApplicationController < ActionController::Base
 
   protect_from_forgery with: :null_session
 
-  before_action :set_js_format_in_iframe_request
+  before_action :set_js_format_in_iframe_request, :set_paper_trail_whodunnit
   before_bugsnag_notify :add_user_info_to_bugsnag
   after_action -> { expires_now if current_user || current_customer }
 

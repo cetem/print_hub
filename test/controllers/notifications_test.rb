@@ -13,7 +13,7 @@ class NotificationsTest < ActionMailer::TestCase
     assert_match 'lista para usarse', body
 
     assert_difference 'ActionMailer::Base.deliveries.size' do
-      mail.deliver!
+      mail.deliver_now!
     end
   end
 
@@ -27,7 +27,7 @@ class NotificationsTest < ActionMailer::TestCase
     assert_match 'Cambio', mail.body.encoded
 
     assert_difference 'ActionMailer::Base.deliveries.size' do
-      mail.deliver!
+      mail.deliver_now!
     end
   end
 end
