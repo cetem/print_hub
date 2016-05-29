@@ -5,7 +5,8 @@ require 'authlogic/test_case'
 require 'capybara/rails'
 require 'sidekiq/testing'
 require 'database_cleaner'
-require "minitest/reporters"
+require 'minitest/reporters'
+require 'capybara-screenshot/minitest'
 
 Minitest::Reporters.use! Minitest::Reporters::ProgressReporter.new
 
@@ -105,6 +106,7 @@ end
 class ActionDispatch::IntegrationTest
   # Make the Capybara DSL available in all integration tests
   include Capybara::DSL
+  include Capybara::Screenshot::MiniTestPlugin
 
   # Transactional fixtures do not work with Selenium tests, because Capybara
   # uses a separate server thread, which the transactions would be hidden
@@ -116,6 +118,13 @@ class ActionDispatch::IntegrationTest
   Capybara.register_driver :chrome do |app|
     Capybara::Selenium::Driver.new(app, :browser => :chrome)
   end
+
+  Capybara::Screenshot.webkit_options = { width: 1024, height: 768 }
+	Capybara::Screenshot.class_eval do
+		register_driver(:chrome) do |driver, path|
+			driver.browser.save_screenshot(path)
+		end
+	end
 
   setup do
     Capybara.javascript_driver = ENV['USE_CHROME'] ? :chrome : :selenium

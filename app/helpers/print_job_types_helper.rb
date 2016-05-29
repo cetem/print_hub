@@ -3,11 +3,12 @@ module PrintJobTypesHelper
     collection = PrintJobType.all.map { |pjt| [pjt.name, pjt.id] }
     custom_name = name ? { name: "#{name}[print_job_type_id]" } : {}
 
-    form.input :print_job_type_id, collection: collection, prompt: false,
-                                   selected: form.object.print_job_type_id || PrintJobType.default.try(:id),
-                                   label: false, input_html: {
-                                     class: 'span10 page-modifier price-modifier'
-                                   }.merge(custom_name)
+    form.input :print_job_type_id,
+      collection: collection, prompt: false,
+      selected: form.object.print_job_type_id || PrintJobType.default.try(:id),
+      label: false, input_html: {
+        class: 'span10 page-modifier price-modifier js-print_job_type-selector'
+      }.merge(custom_name)
   end
 
   def print_job_types_with_price_for_data

@@ -13,6 +13,8 @@
 //= require inspector
 //= require turboevents
 //= require turbolinks
+//= require underscore
+//
 //= require helpers
 //= require common
 //= require autocomplete

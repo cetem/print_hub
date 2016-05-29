@@ -47,7 +47,7 @@ new Rule
         progress_div.style.display = 'none'
         $('input:submit').attr('disabled', false)
         State.fileUploaded = true
-        $('.file_line_item:last').change()
+        $('.file_line_item:last').find('.price-modifier').change()
       error: (e) ->
         progress_div.style.display = 'none'
         error_div.innerHTML = error_div.getAttribute('data-broken-pdf')

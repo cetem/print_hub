@@ -109,7 +109,7 @@ class PrintsTest < ActionDispatch::IntegrationTest
     assert page.has_css?('form.new_print')
 
     within 'form.new_print' do
-      select(nil, from: 'print_printer') # the :blank option deprecated...
+      select '', from: 'print_printer'
       fill_in 'print_scheduled_at', with: ''
       assert page.has_css?('div.datetime_picker')
 
@@ -306,8 +306,6 @@ class PrintsTest < ActionDispatch::IntegrationTest
     login
 
     customer = customers(:student)
-    customer.prints.each(&:pay_print)
-
     customer.prints.each(&:pay_print)
 
     assert_page_has_no_errors!

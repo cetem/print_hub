@@ -54,4 +54,16 @@
   replaceIds: (s, regex)->
     s.replace(regex, new Date().getTime() + State.newIdCounter++)
 
+  # Reemplaza el texto recibido (value) dependiendo la regEx con newValue
+  replaceWithRegEx: (value, regEx, newValue)->
+    value.replace(regEx, newValue)
 
+  # Debounce es usado para no triggerear 10mil veces el mismo evento
+  debounce: (fn) ->
+    _.debounce(fn, 500, true)
+
+  # Combina replaceWithRegEx con el valor del mismo elemento
+  replaceOwnAttrWithRegEx: (element, attr, regEx, newValue)->
+    value = Util.replaceWithRegEx(element.getAttribute(attr), regEx, newValue)
+
+    element.setAttribute(attr, value)

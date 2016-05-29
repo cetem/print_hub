@@ -1,9 +1,8 @@
 <% f ||= build_print_file_line_form %>
 <% id = dynamic_object_id('print_job', f) %>
 <% name = dynamic_object_name(f) %>
-<div class="print_job file_line_item page-modifier price-modifier"
-  id="<%= id %>" data-price="<%= f.object.price %>"
-  data-price-per-copy="<%= f.object.price_per_copy %>">
+<div class="print_job file_line_item js-printable-job"
+  id="<%= id %>">
   <div class="row-fluid">
     <div class="span5">
       <%= f.object.file_name %>
@@ -11,18 +10,18 @@
     <div class="span1">
       <%= f.input :copies, label: false, input_html: {
         maxlength: 5, value: f.object.copies, name: "#{name}[copies]",
-        class: 'price-modifier page-modifier span11', autocomplete: 'off'
+        class: 'price-modifier span11 js-job-copies', autocomplete: 'off'
       } %>
     </div>
     <div class="span1">
       <%= f.input :pages, label: false,
         input_html: { maxlength: 5, value: f.object.pages,
-        class: 'price-modifier page-modifier span11', autocomplete: 'off',
+        class: 'price-modifier span11 js-job-pages', autocomplete: 'off',
         disabled: true } %>
     </div>
     <div class="span1">
       <%= f.input :range, label: false, input_html: {
-        class: 'price-modifier page-modifier span11', name: "#{name}[range]",
+        class: 'price-modifier span11 js-page-range', name: "#{name}[range]",
         autocomplete: 'off',  'data-range-pages' => f.object.range_pages
       } %>
     </div>

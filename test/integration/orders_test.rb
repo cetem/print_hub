@@ -95,7 +95,7 @@ class OrdersTest < ActionDispatch::IntegrationTest
     order.customer_id = customer.id
     order.save
 
-    link = "a[href='/orders/#{order.id}?type=all']"
+    link = "a[href^='/orders/#{order.id}']"
 
     within 'table tbody' do
       first(:css, link).click

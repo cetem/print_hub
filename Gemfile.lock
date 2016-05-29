@@ -87,6 +87,9 @@ GEM
       rack (>= 1.0.0)
       rack-test (>= 0.5.4)
       xpath (~> 2.0)
+    capybara-screenshot (1.0.13)
+      capybara (>= 1.0, < 3)
+      launchy
     carrierwave (0.11.2)
       activemodel (>= 3.2.0)
       activesupport (>= 3.2.0)
@@ -333,6 +336,7 @@ GEM
       thread_safe (~> 0.1)
     uglifier (3.0.0)
       execjs (>= 0.3.0, < 3)
+    underscore-rails (1.8.3)
     unicorn (5.1.0)
       kgio (~> 2.6)
       raindrops (~> 0.7)
@@ -362,6 +366,7 @@ DEPENDENCIES
   capistrano-rails
   capistrano-sidekiq
   capybara
+  capybara-screenshot
   carrierwave
   chromedriver-helper
   chunky_png
@@ -394,6 +399,7 @@ DEPENDENCIES
   thin
   turbolinks
   uglifier
+  underscore-rails
   unicorn
   unicorn-worker-killer
   whenever

@@ -12,12 +12,12 @@
     <div class="span1">
       <%= f.input :copies, label: false,
       input_html: { maxlength: 5, autocomplete: 'off',
-      class: 'price-modifier page-modifier span12'} %>
+      class: 'price-modifier page-modifier js-job-copies span12'} %>
     </div>
     <div class="span1 hidden-phone">
       <%= f.input :pages, label: false, input_html: {
           value: f.object.document.try(:pages),
-          class: 'price-modifier page-modifier span12', disabled: true
+          class: 'price-modifier page-modifier js-job-pages span12', disabled: true
       } %>
     </div>
     <div class="span2">
