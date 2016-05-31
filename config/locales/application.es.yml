@@ -7,6 +7,7 @@ es:
         description: "Descripción"
         name: "Nombre"
         price: "Precio"
+        notification_stock: "Notificar al llegar al sgte stock"
       article_line:
         article_id: "Artículo"
         unit_price: "Precio unitario"
@@ -334,6 +335,9 @@ es:
       new_title: "Nuevo artículo"
       show_title: "Detalle de artículo"
       stale_object_error: "El artículo no pudo ser actualizado, intente nuevamente."
+      only_notify_when_its_greater_than: "Solo notifica si es mayor a 0"
+      notification_message: "- (%{article}) quedan solo %{stock} unidades"
+      notification_body: "Deberíamos ir pensando en comprar:\n%{body}\n Saludos desde el server."
     bonuses:
       bonuses_with_customer: "Bonificaciones de %{customer}"
       index_title: "Listado de bonificaciones"

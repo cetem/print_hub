@@ -6,6 +6,9 @@
         <%= f.input :name %>
         <%= f.input :price, input_html: { maxlength: 15 } %>
         <%= f.input :stock %>
+        <%= f.label :notification_stock %>
+        <small>(<%= t('view.articles.only_notify_when_its_greater_than') %>)</small>
+        <%= f.input :notification_stock, label: false %>
         <%= f.input :description, input_html: { rows: 4 } %>
       </div>
     </div>

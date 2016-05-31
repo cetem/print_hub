@@ -7,6 +7,8 @@ class Article < ApplicationModel
   # Callbacks
   before_destroy :can_be_destroyed?
 
+  scope :to_notify, -> { where('notification_stock > 0') }
+
   # Restricciones
   validates :name, :code, presence: true
   validates :code, uniqueness: true, allow_nil: true, allow_blank: true
@@ -59,5 +61,13 @@ class Article < ApplicationModel
       when 0..4 then 'error'
       when 5..10 then 'warning'
     end
+  end
+
+  def notification_message
+    I18n.t(
+      'view.articles.notification_message',
+      article: self.to_s,
+      stock: self.stock
+    )
   end
 end

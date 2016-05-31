@@ -115,7 +115,8 @@ class ArticlesController < ApplicationController
   # Atributos permitidos
   def article_params
     params.require(:article).permit(
-      :name, :code, :price, :description, :lock_version, :stock
+      :name, :code, :price, :description, :lock_version, :stock,
+      :notification_stock
     )
   end
 end
