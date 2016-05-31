@@ -18,10 +18,10 @@ namespace :tasks do
 
   private
     def logger
-      return @_logger if @_logger
-      @_logger = TasksLogger
-      @_logger.progname = 'NotifyLowStock'
-      @_logger
+      return @_notify_low_stock_logger if @_notify_low_stock_logger
+      @_notify_low_stock_logger = TasksLogger
+      @_notify_low_stock_logger.progname = 'NotifyLowStock'
+      @_notify_low_stock_logger
     end
 
     def log_error(ex)
@@ -37,7 +37,7 @@ namespace :tasks do
 			params = { chat_id: chat_id, text: text }.to_param
 
 			if open(url + '?' + params).status.include?('200')
-        logger.info 'Notificación enviada'
+        logger.info 'Notification sent'
       end
     rescue => e
       log_error(e)

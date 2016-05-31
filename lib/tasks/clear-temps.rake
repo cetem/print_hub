@@ -24,8 +24,10 @@ namespace :tasks do
 
   def delete_files_older_than_7_days(directory)
     output = `find #{directory} -type f -mtime +7 | xargs rm -rf`
-    output.each do |file|
-      logger.info "Cleanned: #{file}"
+    if output
+      output.each do |file|
+        logger.info "Cleanned: #{file}"
+      end
     end
   rescue => ex
     log_error(ex)
@@ -40,10 +42,10 @@ namespace :tasks do
   end
 
   def logger
-    return @_logger if @_logger
-    @_logger = TasksLogger
-    @_logger.progname = 'Clean_temp_files'
-    @_logger
+    return @_clean_temp_files_logger if @_clean_temp_files_logger
+    @_clean_temp_files_logger = TasksLogger
+    @_clean_temp_files_logger.progname = 'Clean_temp_files'
+    @_clean_temp_files_logger
   end
 
   def log_error(ex)

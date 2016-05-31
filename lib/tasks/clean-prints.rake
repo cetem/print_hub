@@ -18,10 +18,10 @@ namespace :tasks do
 
   private
     def logger
-      return @_logger if @_logger
-      @_logger = TasksLogger
-      @_logger.progname = 'Clean_prints'
-      @_logger
+      return @_clean_prints_logger if @_clean_prints_logger
+      @_clean_prints_logger = TasksLogger
+      @_clean_prints_logger.progname = 'Clean_prints'
+      @_clean_prints_logger
     end
 
     def log_error(ex)
