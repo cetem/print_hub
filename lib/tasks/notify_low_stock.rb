@@ -1,14 +1,18 @@
 namespace :tasks do
   desc 'Notify low articles stock'
   task notify_low_stock: :environment do
+    logger.info 'Starting'
     articles = Article.to_notify
 
     if articles.count > 0
+      logger.info "Notifying for #{articles.count}"
       text = I18n.t(
 				'view.articles.notification_body',
 				body: articles.map(&:notification_message).join("\n")
       )
       send_notification(text)
+    else
+      logger.info "Nothing to notify"
     end
   end
 
