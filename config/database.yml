@@ -44,3 +44,5 @@ abaco_production:
 abaco_test:
   <<: *abaco_defaults
   database: abaco_test
+  username: <%= ENV['TRAVIS'] ? 'postgres' : 'print_hub' %>
+  password: <%= ENV['TRAVIS'] ? '' : 'print_hub' %>

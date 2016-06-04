@@ -13,5 +13,6 @@ before_script:
   - 'cp config/app_config.example.yml config/app_config.yml'
   - 'cp config/secrets.example.yml config/secrets.yml'
   - 'psql -c "create database print_hub_test;" -U postgres'
+  - 'psql -c "create database abaco_test;" -U postgres'
   - 'bundle exec rake db:migrate'
   - 'export DISPLAY=:99.0'
