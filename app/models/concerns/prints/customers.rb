@@ -59,12 +59,11 @@ module Prints::Customers
 
   def assign_surplus_to_customer
     payments.each do |payment|
-      surplus = 0.0
-      diff = payment.paid - payment.amount
+      return if payment.destroyed?
 
-      if diff > 0
+      if (diff = payment.paid.to_f - payment.amount.to_f) > 0
         customer.deposits.new(amount: diff)
-        payment.paid = payment.amount
+        payment.paid = payment.amount.to_f
       end
     end
   end
