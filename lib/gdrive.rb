@@ -12,11 +12,11 @@ module GDrive
     private
 
     def gdrive
-      @gdrive ||= SECRETS[:gdrive]
+      @_gdrive ||= SECRETS[:gdrive]
     end
 
     def client
-      unless @client
+      unless @_gclient
         key = Google::APIClient::KeyUtils.load_from_pkcs12(
           gdrive[:cert], gdrive[:secret]
         )
@@ -29,8 +29,8 @@ module GDrive
         Google::APIClient.logger ||= Rails.logger
         ####
 
-        @client               = Google::APIClient.new
-        @client.authorization = Signet::OAuth2::Client.new(
+        @_gclient               = Google::APIClient.new
+        @_gclient.authorization = Signet::OAuth2::Client.new(
           token_credential_uri: token_url,
           audience:             token_url,
           scope:                scopes,
@@ -38,10 +38,10 @@ module GDrive
           signing_key:        key
         )
 
-        @client.authorization.fetch_access_token!
+        @_gclient.authorization.fetch_access_token!
       end
 
-      @client
+      @_gclient
     end
 
     def gdrive_session
