@@ -19,8 +19,7 @@ test:
 
 production:
   <<: *defaults
-  #database: print_hub_production
-  database: print_hub_development
+  database: print_hub_production
 
 staging:
   <<: *defaults
@@ -40,8 +39,7 @@ abaco_development:
 
 abaco_production:
   <<: *abaco_defaults
-  #database: abaco_production
-  database: abaco_development
+  database: abaco_production
 
 abaco_test:
   <<: *abaco_defaults
