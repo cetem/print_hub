@@ -107,8 +107,7 @@ class OrdersController < ApplicationController
 
     respond_to do |format|
       if @order.cancelled! && @order.save
-        path = current_customer ? @order : order_path(@order, type: order_type)
-        format.html { redirect_to path, notice: t('view.orders.correctly_cancelled') }
+        format.html { redirect_to @order, notice: t('view.orders.correctly_cancelled') }
         format.json  { head :ok }
       else
         format.html { render action: 'show' }
@@ -147,11 +146,11 @@ class OrdersController < ApplicationController
                      current_customer.orders
                    else
                      order_type == 'print' ? Order.pending.for_print : Order.all
-    end
+                   end
   end
 
   def order_type
-    %w(print all).include?(params[:type]) ? params[:type] : 'print'
+    params[:type]
   end
 
   def order_params

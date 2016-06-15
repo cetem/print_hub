@@ -80,11 +80,13 @@ es:
         document_id: "Documento"
         one: "Línea de pedido"
         other: "Líneas de pedido"
+        price: "Precio"
         price_per_copy: "Precio por página"
         print_job_type_id: "Tipo"
       order_line:
         copies: "Copias"
         document_id: "Documento"
+        price: "Precio"
         price_per_copy: "Precio por página"
         print_job_type_id: "Tipo"
       payment:

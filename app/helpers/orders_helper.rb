@@ -1,8 +1,4 @@
 module OrdersHelper
-  def custom_order_path(order)
-    current_customer ? order : order_path(order, type: order_type)
-  end
-
   def nav_links_in_show_order(order)
     out = []
 
@@ -20,7 +16,7 @@ module OrdersHelper
                         order_path(order, type: 'all'),
                         method: :delete, data: { confirm: t('messages.confirmation') }
                        )
-      out << link_to(t('label.list'), orders_path(type: order_type))
+      out << link_to(t('label.list'), orders_path(type: 'print'))
     end
 
     raw out.join(' | ')
@@ -28,9 +24,12 @@ module OrdersHelper
 
   def show_orders_table_caption
     unless current_customer
-      content_tag(:caption,
-                  content_tag(:p, t("view.orders.type.#{order_type}.html"), class: 'lead')
-                 )
+      content_tag(
+        :caption,
+        content_tag(
+          :p, t("view.orders.type.#{order_type || 'all'}.html"), class: 'lead'
+        )
+      )
     end
   end
 

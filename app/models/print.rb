@@ -82,12 +82,12 @@ class Print < ApplicationModel
       self.customer = order.customer
 
       order.file_lines.order(:created_at).each do |file_line|
-        print_jobs.build(file_line.attributes.slice(*['id', keys]))
+        print_jobs.build(file_line.attributes.slice(*['id', keys].flatten))
       end
 
       order.order_lines.order(:created_at).each do |order_line|
         print_jobs.build(
-          order_line.attributes.slice(*['document_id'] + keys)
+          order_line.attributes.slice(*['document_id', keys].flatten)
         )
       end
     elsif include_documents.present?

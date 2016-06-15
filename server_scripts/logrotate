@@ -1,0 +1,9 @@
+/var/rails/*/current/log/*.log {
+	su deployer deployer
+	weekly
+	missingok
+	compress
+	delaycompress
+	notifempty
+	copytruncate
+}

@@ -172,7 +172,7 @@ class OrdersControllerTest < ActionController::TestCase
       delete :destroy, id: @order.to_param, type: 'all'
     end
 
-    assert_redirected_to order_url(assigns(:order), type: 'all')
+    assert_redirected_to order_url(assigns(:order))
     assert @order.reload.cancelled?
   end
 

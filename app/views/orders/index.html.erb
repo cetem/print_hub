@@ -16,11 +16,11 @@
     <tbody>
       <% @orders.each do |order| %>
         <tr>
-          <td><%= link_to order.id, custom_order_path(order) %></td>
+          <td><%= link_to order.id, order %></td>
           <td class="hidden-phone"><%= order.customer %></td>
           <td><%= l order.scheduled_at, format: :minimal if order.scheduled_at %></td>
           <td><%= order.status_text %></td>
-          <td><%= link_to_show custom_order_path(order) %></td>
+          <td><%= link_to_show order %></td>
         </tr>
       <% end %>
     </tbody>
@@ -33,7 +33,7 @@
       <% if order_type == 'print' %>
         <%= link_to(
           textilize_without_paragraph(t('view.orders.show_all')),
-          orders_path(type: 'all'), class: 'btn btn-primary'
+          orders_path, class: 'btn btn-primary'
         ) %>
       <% else %>
         <%= link_to(
