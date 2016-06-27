@@ -201,8 +201,8 @@ class ApplicationController < ActionController::Base
     Bugsnag.notify(
       RuntimeError.new('Validation error on ' + obj.class.to_s),
       user: {
-        id: current_user.id,
-        name: current_user.to_s
+        id: current_user.try(:id),
+        name: current_user.try(:to_s) || 'Anom'
       },
       errors: obj.errors.messages
     )

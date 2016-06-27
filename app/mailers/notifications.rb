@@ -7,7 +7,7 @@ class Notifications < ActionMailer::Base
     @customer = Customer.find_by(email: customer_email)
 
     if @customer
-      mail to: @customer.email, date: -> { Time.zone.now }
+      mail to: @customer.email
     else
       notify_exception(customer_email, 'welcome')
     end
@@ -17,7 +17,7 @@ class Notifications < ActionMailer::Base
     @customer = Customer.find_by(email: customer_email)
 
     if @customer
-      mail to: @customer.email, date: -> { Time.zone.now }
+      mail to: @customer.email
     else
       notify_exception(customer_email, 'reactivation')
     end
@@ -27,7 +27,7 @@ class Notifications < ActionMailer::Base
     @customer = Customer.find_by(email: customer_email)
 
     if @customer
-      mail to: @customer.email, date: -> { Time.zone.now }
+      mail to: @customer.email
     else
       notify_exception(customer_email, 'forgot')
     end
