@@ -60,6 +60,7 @@ end
 group :test do
   gem 'capybara', require: false
   gem 'selenium-webdriver'
+  gem 'chromedriver-helper'
   gem 'database_cleaner', require: false # For Capybara
   gem 'minitest-reporters'
   gem 'test_after_commit'

@@ -113,7 +113,12 @@ class ActionDispatch::IntegrationTest
   # Stop ActiveRecord from wrapping tests in transactions
   self.use_transactional_fixtures = false
 
+  Capybara.register_driver :chrome do |app|
+    Capybara::Selenium::Driver.new(app, :browser => :chrome)
+  end
+
   setup do
+    Capybara.javascript_driver = ENV['USE_CHROME'] ? :chrome : :selenium
     Capybara.current_driver = Capybara.javascript_driver # :selenium by default
     Capybara.server_port = '54163'
     Capybara.app_host = 'http://localhost:54163'
