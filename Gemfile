@@ -12,7 +12,6 @@ gem 'RedCloth'
 gem 'cups'
 gem 'simple_form'
 gem 'mailgunner'
-gem 'mail', '2.6.3'
 
 # Files Processors
 gem 'carrierwave'
@@ -28,7 +27,7 @@ gem 'google_drive', '1.0.6'
 gem 'unicorn'
 gem 'unicorn-worker-killer'
 gem 'whenever', require: false
-gem 'sidekiq'
+gem 'sidekiq', '< 4'
 gem 'sinatra', require: nil
 
 # Code stats/notifier
