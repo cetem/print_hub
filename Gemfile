@@ -12,6 +12,7 @@ gem 'RedCloth'
 gem 'cups'
 gem 'simple_form'
 gem 'mailgunner'
+gem 'mail', '2.6.3'
 
 # Files Processors
 gem 'carrierwave'
@@ -56,9 +57,8 @@ group :development do
   gem 'capistrano-sidekiq'
 end
 
-group :development, :test do
-  gem 'pry-nav'
-end
+# temporal
+gem 'pry-nav'
 
 group :test do
   gem 'capybara', require: false
