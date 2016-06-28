@@ -142,12 +142,11 @@ class CustomerTest < ActiveSupport::TestCase
     @customer.name = customers(:teacher).name
     @customer.lastname = customers(:teacher).lastname
     @customer.email = customers(:teacher).email
+
     assert @customer.invalid?
-    assert_equal 3, @customer.errors.count
+    assert_equal 2, @customer.errors.count
     assert_equal [error_message_from_model(@customer, :identification, :taken)],
                  @customer.errors[:identification]
-    assert_equal [error_message_from_model(@customer, :name, :taken)],
-                 @customer.errors[:name]
     assert_equal [error_message_from_model(@customer, :email, :taken)],
                  @customer.errors[:email]
   end

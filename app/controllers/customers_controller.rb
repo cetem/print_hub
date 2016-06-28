@@ -78,7 +78,9 @@ class CustomersController < ApplicationController
         format.html { redirect_to(url, notice: notice) }
         format.json  { render json: @customer, status: :created, location: @customer }
       else
-        report_validation_error(@customer)
+        if @customer.errors && ([:password, :password_confirmation] - @customer.errors.keys).empty?
+          report_validation_error(@customer)
+        end
         format.html { render action: current_user ? 'new' : 'new_public' }
         format.json  { render json: @customer.errors, status: :unprocessable_entity }
       end
@@ -96,7 +98,9 @@ class CustomersController < ApplicationController
         format.html { redirect_to(customer_url(@customer), notice: t('view.customers.correctly_updated')) }
         format.json  { head :ok }
       else
-        report_validation_error(@customer)
+        if @customer.errors && ([:password, :password_confirmation] - @customer.errors.keys).empty?
+          report_validation_error(@customer)
+        end
         format.html { render action: 'edit' }
         format.json  { render json: @customer.errors, status: :unprocessable_entity }
       end

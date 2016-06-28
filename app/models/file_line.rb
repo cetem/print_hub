@@ -38,7 +38,7 @@ class FileLine < ActiveRecord::Base
     notify.add_tab('file', {
       name: new_file_name,
     })
-    `cp #{self.file.path} #{Rails.root.join('uploads', 'wrong_files', new_file_name)}&`
+    `cp #{self.file.path} #{Rails.root.join('private', 'wrong_files', new_file_name)}&`
 
     false
   end

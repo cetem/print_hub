@@ -35,8 +35,6 @@ class Customer < ApplicationModel
   validates :name, :identification, presence: true
   validates :identification, uniqueness: true, allow_nil: true,
                              allow_blank: true
-  validates :name, uniqueness: { scope: :lastname }, allow_nil: true,
-                   allow_blank: true
   validates :name, :lastname, :identification, length: { maximum: 255 },
                                                allow_nil: true, allow_blank: true
   validates :free_monthly_bonus, allow_nil: true, allow_blank: true,

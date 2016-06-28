@@ -8,10 +8,10 @@ namespace :tasks do
     delete_files_older_than_7_days(dir)
     delete_empty_files_folder(dir)
 
-    logger.info 'Cleaning private/customers_files'
-    dir = "#{Rails.root}/private/customers_files/"
-    delete_files_older_than_7_days(dir)
-    delete_empty_files_folder(dir)
+    #logger.info 'Cleaning private/customers_files'
+    #dir = "#{Rails.root}/private/customers_files/"
+    #delete_files_older_than_7_days(dir)
+    #delete_empty_files_folder(dir)
 
     logger.info 'Cleaning tmp/codes'
     dir = "#{Rails.root}/tmp/codes/"

@@ -36,7 +36,7 @@ module PrintersApi
             42
         end
       end
-    rescue Timeout::Error
+    rescue Timeout::Error, Errno::EHOSTUNREACH
       nil
     rescue => e
       Bugsnag.notify(e)
