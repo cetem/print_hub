@@ -27,7 +27,7 @@ gem 'google_drive', '1.0.6'
 gem 'unicorn'
 gem 'unicorn-worker-killer'
 gem 'whenever', require: false
-gem 'sidekiq', '< 4'
+gem 'sidekiq'
 gem 'sinatra', require: nil
 
 # Code stats/notifier
@@ -46,6 +46,7 @@ gem 'jquery-fileupload-rails'
 # Helpers (at console)
 gem 'interactive_editor'
 gem 'awesome_print'
+gem 'pry-nav'
 
 group :development do
   gem 'thin'
@@ -55,9 +56,6 @@ group :development do
   gem 'capistrano-chruby'
   gem 'capistrano-sidekiq'
 end
-
-# temporal
-gem 'pry-nav'
 
 group :test do
   gem 'capybara', require: false
