@@ -35,9 +35,10 @@
   listenRangeChanges: ->
     $(document).on 'change blur', '.js-page-range', ->
       $element = $(this)
+      parentElement = $element.parents('.js-printable-job')[0]
       elementValue = this.value
       [validRanges, maxPage, rangePages] = [true, null, 0]
-      pages = parseInt($element.parents('.js-printable-job').find('.js-job-pages').val(), 10)
+      pages = parseInt(parentElement.querySelector('.js-job-pages').value || 0, 10)
       ranges = elementValue.trim().split(/\s*,\s*/).sort (r1, r2)->
         r1Value = parseInt(r1.match(/^\d+/), 10) || 0
         r2Value = parseInt(r2.match(/^\d+/), 10) || 0
@@ -58,14 +59,14 @@
 
       if (/^\s*$/.test(elementValue) || validRanges) && (!pages || !maxPage || pages >= maxPage)
         controlGroup.removeClass('error')
-        jobStorage = Jobs.assignDefaultOrGetJob(this)
+        jobStorage = Jobs.assignDefaultOrGetJob(parentElement)
 
         if /^\s*$/.test(elementValue) && pages
           jobStorage.rangePages = pages
-          Jobs.reCalcPages(this)
+          Jobs.reCalcPages(parentElement)
         else if !/^\s*$/.test(elementValue) && validRanges
           jobStorage.rangePages = rangePages
-          Jobs.reCalcPages(this)
+          Jobs.reCalcPages(parentElement)
       else
         controlGroup.addClass('error')
 
@@ -80,13 +81,15 @@
       )
 
   changeMoneyTitleAndBadge: (job)->
-    jobPrice = Jobs.assignDefaultOrGetJob(job).price.toFixed(3)
+    jobStorage = Jobs.assignDefaultOrGetJob(job)
+    jobPrice = (jobStorage.price || 0.0).toFixed(3)
+    jobPricePerCopy = (jobStorage.pricePerCopy || 0.0).toFixed(3)
     money = job.querySelector('span.money')
     regEx = /(\d+\.\d+|NaN)$/
 
     money.setAttribute(
       'title',
-      Util.replaceWithRegEx(money.getAttribute('title'), regEx, jobPrice)
+      Util.replaceWithRegEx(money.getAttribute('title'), regEx, jobPricePerCopy)
     )
     money.innerHTML = Util.replaceWithRegEx(money.innerHTML.trim(), regEx, jobPrice)
 

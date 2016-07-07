@@ -312,6 +312,7 @@ new Rule
 
    Jobs.loadPricesData()
    Jobs.reCalcEverything()
+   Jobs.listenRangeChanges()
 
    if /^\s*$/.test($('#print_customer_id').val())
      $('#print_pay_later').parents('div.field').hide()
