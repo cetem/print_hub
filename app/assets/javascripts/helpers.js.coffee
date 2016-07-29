@@ -60,7 +60,7 @@
 
   # Debounce es usado para no triggerear 10mil veces el mismo evento
   debounce: (fn) ->
-    _.debounce(fn, 500, true)
+    _.debounce(fn, 100, true)
 
   # Combina replaceWithRegEx con el valor del mismo elemento
   replaceOwnAttrWithRegEx: (element, attr, regEx, newValue)->
