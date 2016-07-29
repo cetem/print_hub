@@ -9,9 +9,11 @@ if (key = Rails.application.secrets.bugsnag_api_key)
                    File.read(Rails.root.join('REVISION')) # Capistrano Revision
                  else
                    `git rev-parse --short HEAD`
-                 end
+                 end.strip[0..6]
 
-      config.app_version = revision.strip
+      version = "Ruby#{RUBY_VERSION}---#{revision}"
+
+      config.app_version = version
     rescue
     end
   end
