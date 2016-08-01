@@ -283,6 +283,14 @@ new Rule
        $('#print_submit').click()
        e.preventDefault()
 
+   @map.beforeSubmit ||= (e) ->
+     # La dejamos por las dudas pero no deberíamos usarla
+     e.preventDefault()
+
+     Jobs.reCalcEverything()
+
+     e.currentTarget.form.submit()
+
 
    $(document).on 'item.removed', @map.removeItem
    $(document).on 'autocomplete:update', 'input.autocomplete-field',
@@ -308,6 +316,7 @@ new Rule
      @map.showCustomerCredit
    $(document).on 'click', 'a[data-action="clear-customer"]', @map.clearCustomer
    $(document).on 'keydown', @map.setShortCuts
+   #$(document).on 'click', '.js-submit-print', @map.beforeSubmit
 
 
    Jobs.loadPricesData()
