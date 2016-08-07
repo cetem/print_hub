@@ -77,7 +77,7 @@
       jobStorage.printJobType = jobType
       jobStorage.pricePerCopy = PriceChooser.choose(
         Jobs.pricesList[jobType],
-        Jobs.pagesList[jobType] || 0
+        Jobs.pagesList[jobType] || 1
       )
 
   changeMoneyTitleAndBadge: (job)->
@@ -133,8 +133,8 @@
     evenPages = jobStorage.evenPages
 
     oddPagesPrice = PriceChooser.choose(
-      Jobs.pricesList[oddPagesType],
-      Jobs.pagesList[oddPagesType] || 0
+      parseFloat(Jobs.pricesList[oddPagesType]),
+      Jobs.pagesList[oddPagesType] || 1
     )
 
     jobStorage.price = (
@@ -162,11 +162,15 @@
     Print.updateTotalPrice()
 
   reCalcEverything: ->
+    _.each Print.getPayableArticles(), (articleLine) ->
+      Print.updateArticleLinePrice(articleLine)
+
     _.each Jobs.getPrintableJobs(), (job) ->
       Jobs.updateCopiesForJob(job)
 
     Jobs.updateGlobalCopies()
     Jobs.reCalcPrices()
+    Print.updateTotalPrice()
 
   reCalcPages: (job)->
     oldPageList = _.clone(Jobs.pagesList)
