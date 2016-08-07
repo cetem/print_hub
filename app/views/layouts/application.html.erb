@@ -14,10 +14,10 @@
     <meta name="viewport" content="width=device-width" />
     <%= stylesheet_link_tag 'application', data: { 'turbolinks-track' => true } %>
     <%= stylesheet_link_tag 'print', media: 'print', data: { 'turbolinks-track' => true } if @can_print %>
-    <%= javascript_include_tag 'application', data: { 'turbolinks-track' => true } %>
     <!--[if lt IE 9]>
       <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
+    <%= javascript_include_tag 'application', data: { 'turbolinks-track' => true } %>
     <%= favicon_link_tag %>
     <%= favicon_link_tag(nil, rel: 'apple-touch-icon') %>
     <%= csrf_meta_tag %>

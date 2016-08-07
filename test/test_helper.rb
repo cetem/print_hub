@@ -127,7 +127,7 @@ class ActionDispatch::IntegrationTest
 	end
 
   setup do
-    Capybara.javascript_driver = ENV['USE_CHROME'] ? :chrome : :selenium
+    Capybara.javascript_driver = ENV['USE_FIREFOX'] ? :selenium : :chrome
     Capybara.current_driver = Capybara.javascript_driver # :selenium by default
     Capybara.server_port = '54163'
     Capybara.app_host = 'http://localhost:54163'

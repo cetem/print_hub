@@ -30,6 +30,7 @@
       badge = title.querySelector('.badge')
 
     badge.innerHTML = articleCount
+
     Print.updateTotalPrice()
 
   updateStock: (printJob)->
@@ -110,12 +111,12 @@ new Rule
    @map.removeItem ||= (event, element)->
      if $(element).hasClass('print_job')
        Print.excludeElementFromTotal(element)
-       Jobs.reCalcEverything()
 
      else if $(element).hasClass('article_line')
        Print.excludeElementFromTotal(element)
        Print.updateArticlesCount()
 
+     Jobs.reCalcEverything()
      Print.updateTotalPrice()
 
    # Después del autocomplete, completa con todos los datos
@@ -168,7 +169,8 @@ new Rule
          'href', customerDetailsLink.attr('href').replace(/\d+/, item.id)
        ).show()
 
-       Print.updateTotalPrice()
+     Jobs.reCalcEverything()
+     Print.updateTotalPrice()
 
    # Si el cliente es 'confiable' autoselecciona Cuenta corriente
    @map.autoSelectCustomerKind ||= ->
@@ -248,6 +250,7 @@ new Rule
        $('input[name^="print[payments_attributes]"]').each (i, e)->
          $(e).val('0.000') if parseInt($(e).val()) > 0
      else
+       Jobs.reCalcEverything()
        Print.updateTotalPrice()
 
    # Muestra los detalles del documento
