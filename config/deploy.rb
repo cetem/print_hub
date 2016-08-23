@@ -14,18 +14,16 @@ set :linked_dirs, %w(log private certs)
 
 set :keep_releases, 2
 
-set :sidekiq_pid,    File.join(current_path, 'tmp', 'pids', 'sidekiq.pid')
-set :sidekiq_config, File.join(current_path, 'config', 'sidekiq.yml')
-set :sidekiq_role,   proc { :sidekiqers }
-
 namespace :deploy do
   after :finished, 'deploy:cleanup'
   after :finished, :restart
+  before 'sidekiq:restart', 'chruby:release'
+  after :finished, 'sidekiq:restart'
 
   desc 'Restart application'
   task :restart do
     on roles(:app) do
-      execute '/etc/init.d/unicorn', 'upgrade'
+      execute :service, :unicorn, :upgrade
     end
   end
 

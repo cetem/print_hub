@@ -55,7 +55,6 @@ group :development do
   gem 'capistrano-bundler'
   gem 'capistrano-rails'
   gem 'capistrano-chruby'
-  gem 'capistrano-sidekiq'
 end
 
 group :test do

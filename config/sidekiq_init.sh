@@ -20,22 +20,28 @@ PID_FILE="$APP_DIR/tmp/sidekiq.pid"
 GEMFILE="$APP_DIR/Gemfile"
 SIDEKIQ="sidekiq"
 APP_ENV="production"
-BUNDLE="bundle"
+CHRUBY_VERSION=$(cat $APP_DIR/chruby_version)
+BUNDLE="/usr/local/bin/chruby-exec $CHRUBY_VERSION -- bundle"
+APP_USER="deployer"
+CURRENT_USER=$(whoami)
 
-START_CMD="$BUNDLE exec $SIDEKIQ -C $APP_CONFIG -e $APP_ENV -d"
+START_CMD="cd $APP_DIR && $BUNDLE exec $SIDEKIQ -C $APP_CONFIG -e $APP_ENV -d"
 RETVAL=0
-
 
 start() {
 
   status
   if [ $? -eq 1 ]; then
 
-    [ `id -u` == '0' ] || (echo "$SIDEKIQ runs as root only .."; exit 5)
     [ -d $APP_DIR ] || (echo "$APP_DIR not found!.. Exiting"; exit 6)
-    cd $APP_DIR
     echo "Starting $SIDEKIQ message processor .. "
-    $START_CMD >> $LOG_FILE 2>&1 &
+    if [ "$CURRENT_USER" = "root" ]; then
+      eval "su - $APP_USER -c 'echo \"$START_CMD\" >> $LOG_FILE'"
+      eval "su - $APP_USER -c '$START_CMD >> $LOG_FILE 2>&1 &'"
+    else
+      echo "$START_CMD" >> $LOG_FILE
+      eval "$START_CMD >> $LOG_FILE 2>&1 &"
+    fi
     RETVAL=$?
     #Sleeping for 8 seconds for process to be precisely visible in process table - See status ()
     sleep 8
@@ -97,4 +103,3 @@ case "$1" in
         ;;
 esac
 exit $RETVAL
-
