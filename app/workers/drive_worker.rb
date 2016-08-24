@@ -1,9 +1,10 @@
 class DriveWorker
+  SHIFTS = 'shifts'
   require 'gdrive'
 
   include Sidekiq::Worker
+  sidekiq_options queue: :low
 
-  SHIFTS = 'shifts'
 
   def perform(task_name, start, finish)
     case task_name

@@ -33,7 +33,7 @@ module DocumentsHelper
   end
 
   def show_document_barcode(document)
-    barcode = get_barcode_for document
+    barcode = Document.get_barcode_for_code(document.code)
     outputter = barcode.outputter_for(:to_svg)
 
     outputter.title = document.to_s
@@ -77,15 +77,6 @@ module DocumentsHelper
 
     content_tag :span, raw(content),
                 id: "document_for_use_in_next_print_#{document.id}"
-  end
-
-  def get_barcode_for(document)
-    Barby::QrCode.new(
-      add_to_order_by_code_catalog_url(
-        document.code,
-        host: PUBLIC_DOMAIN, port: PUBLIC_PORT, protocol: PUBLIC_PROTOCOL
-      ), level: :h
-    )
   end
 
   def document_file_identifier(document)

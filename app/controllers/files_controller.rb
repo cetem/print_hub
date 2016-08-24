@@ -29,10 +29,9 @@ class FilesController < ApplicationController
   end
 
   def download_barcode
-    document = Document.where(code: params[:code]).first_or_initialize
-
-    barcode = view_context.get_barcode_for document
-    png_path = "#{TMP_BARCODE_IMAGES}/#{document.code}.png"
+    code = params[:code]
+    barcode = Document.get_barcode_for_code(code)
+    png_path = "#{TMP_BARCODE_IMAGES}/#{code}.png"
 
     File.open(png_path, 'wb') { |f| f << barcode.to_png(xdim: 2, ydim: 2) }
 
