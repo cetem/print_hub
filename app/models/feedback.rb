@@ -16,6 +16,10 @@ class Feedback < ApplicationModel
     false
   end
 
+  def negative?
+    !self.positive
+  end
+
   def notify_customer
     Notifications.delay.thanks_for_feedback(self.id) if self.customer
   end
