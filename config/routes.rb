@@ -20,6 +20,9 @@ Rails.application.routes.draw do
 
   constraints(UserSubdomain) do
     require 'sidekiq/web'
+
+    Sidekiq::Web.set :session_secret, Rails.application.secrets[:secret_token]
+    Sidekiq::Web.set :sessions, Rails.application.config.session_options
     mount Sidekiq::Web => '/sidekiq', constraints: AdminConstraint.new
 
     draw :user, :stat
