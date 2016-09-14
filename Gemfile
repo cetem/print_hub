@@ -47,7 +47,7 @@ gem 'underscore-rails'
 # Helpers (at console)
 gem 'interactive_editor'
 gem 'awesome_print'
-gem 'pry-nav'
+gem 'byebug'
 
 group :development do
   gem 'thin'

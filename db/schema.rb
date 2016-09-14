@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160531014903) do
+ActiveRecord::Schema.define(version: 20160913232713) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -40,6 +40,8 @@ ActiveRecord::Schema.define(version: 20160531014903) do
     t.integer  "stock",                                                   default: 0
     t.integer  "notification_stock",                                      default: 0
   end
+
+  add_index "articles", ["code"], name: "index_articles_on_code", unique: true, using: :btree
 
   create_table "credits", force: :cascade do |t|
     t.decimal  "amount",                  precision: 15, scale: 3,                   null: false
@@ -113,6 +115,7 @@ ActiveRecord::Schema.define(version: 20160531014903) do
     t.string   "file_fingerprint",  limit: 255
     t.boolean  "private",                       default: false
     t.integer  "stock",                         default: 0,     null: false
+    t.string   "original_file"
   end
 
   add_index "documents", ["code"], name: "index_documents_on_code", using: :btree
@@ -201,8 +204,8 @@ ActiveRecord::Schema.define(version: 20160531014903) do
     t.boolean  "two_sided",                default: false
     t.boolean  "default",                  default: false
     t.integer  "lock_version",             default: 0
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                               null: false
+    t.datetime "updated_at",                               null: false
     t.string   "media",        limit: 255
   end
 

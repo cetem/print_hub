@@ -12,16 +12,19 @@
         <%= f.input :stock, input_html: { maxlength: 5 } %>
         <%= show_document_media_field(f) %>
         <%= f.input :description, input_html: { rows: 4 } %>
+      </div>
+
+      <div class="span6">
+        <div class="form-horizontal">
+          <%= f.input :enable, input_html: { class: '' } %>
+        </div>
         <%= f.input :file, hint: document_file_identifier(f.object), input_html: {
             class: ('error' unless @document.errors[:file_file_name].blank?)
         } %>
         <%= f.input :file_cache, as: :hidden %>
-        <%= f.input :enable, input_html: { class: '' } %>
-      </div>
 
-      <div class="span6">
-        <strong><%= t('view.documents.barcode') %></strong>:
-        <%= document_link_to_barcode(@document.code.blank? ? 0 : @document.code) %>
+        <%= f.input :original_file %>
+        <%= f.input :original_file_cache, as: :hidden %>
       </div>
     </div>
 

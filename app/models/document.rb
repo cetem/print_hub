@@ -1,6 +1,7 @@
 class Document < ApplicationModel
   has_paper_trail
   mount_uploader :file, DocumentsUploader, mount_on: :file_file_name
+  mount_uploader :original_file, SimpleDocumentsUploader
 
   # Scopes
   default_scope -> { where(enable: true) }

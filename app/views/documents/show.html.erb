@@ -22,7 +22,12 @@
         <dt><%= Document.human_attribute_name 'file' %>:</dt>
         <dd><%= link_to(
           t('label.download'), @document.file.url
-        ) if @document.file? %></dd>
+        ) if @document.file? %>&nbsp;</dd>
+
+        <dt><%= Document.human_attribute_name 'original_file' %>:</dt>
+        <dd><%= link_to(
+          t('label.download'), @document.original_file.url
+        ) if @document.original_file? %>&nbsp;</dd>
 
         <dt><%= t('view.documents.barcode') %>:</dt>
         <dd><%= document_link_to_barcode @document.code %></dd>
