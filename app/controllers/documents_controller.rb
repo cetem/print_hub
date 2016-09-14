@@ -195,7 +195,7 @@ class DocumentsController < ApplicationController
     params.require(:document).permit(
       :code, :name, :description, :media, :enable, :stock, :file_cache,
       :pages, :auto_tag_name, :lock_version, :file, :original_file,
-      :original_file_cache, tag_ids: []
+      :original_file_cache, :is_public, tag_ids: []
     )
   end
 

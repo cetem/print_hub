@@ -9,8 +9,8 @@ class FilesController < ApplicationController
 
     if path.start_with? 'files'
 
-      if path.match(/.png/) || (path.match(/.pdf/) && current_user)
-        send_file_with_headers(file)
+      if path.match(/.png/) || (path.match(/.pdf/) && (current_user || document_is_public?(path)))
+          send_file_with_headers(file)
       else
         redirect_to @redirect_path, notice: t('view.documents.non_existent')
       end
@@ -51,10 +51,19 @@ class FilesController < ApplicationController
 
       response.headers['Last-Modified'] = File.mtime(file).httpdate
       response.headers['Cache-Control'] = 'private, no-store'
+      response.headers['Content-Length'] = file.size.to_s
 
       send_file file, type: (mime_type || 'application/octet-stream')
     else
       redirect_to not_file_redirect_to, notice: not_file_notice
+    end
+  end
+
+  def document_is_public?(path)
+    id_match = path.match(/(\/\d+\/\d+\/\d+)\/.*\.pdf$/)
+    if id_match
+      document = Document.find(id_match[1].split('/').compact.join.to_i)
+      document && document.is_public?
     end
   end
 end

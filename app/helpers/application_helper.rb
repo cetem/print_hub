@@ -205,4 +205,8 @@ module ApplicationHelper
       [t('label.no'), false]
     ]
   end
+
+  def translate_boolean(value)
+    value ? t('label.yes') : t('label.no')
+  end
 end

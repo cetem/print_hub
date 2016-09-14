@@ -1,7 +1,10 @@
 <% id = "document_details_#{@document.id}_#{rand(10000)}" %>
 <div id="<%= id %>" class="document_details readonly-data clearfix">
   <div class="page-header">
-    <h2><%= @document %></h2>
+    <h2>
+      <%= image_tag('/cc.png', size: '40') if @document.is_public? %>
+      <%= content_tag(@document.enable? ? 'span' : 's' , @document) %>
+    </h2>
   </div>
 
   <div class="row-fluid">
@@ -28,6 +31,11 @@
         <dd><%= link_to(
           t('label.download'), @document.original_file.url
         ) if @document.original_file? %>&nbsp;</dd>
+
+        <dt><%= Document.human_attribute_name 'is_public' %>:</dt>
+        <dd>
+          <%= translate_boolean(@document.is_public?) %>
+        </dd>
 
         <dt><%= t('view.documents.barcode') %>:</dt>
         <dd><%= document_link_to_barcode @document.code %></dd>

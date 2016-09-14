@@ -57,6 +57,7 @@ es:
           other: "Códigos"
         description: "Descripción"
         enable: "Habilitado"
+        is_public: 'Es público (CC)'
         file: "Archivo imprimible"
         file_file_name: "Archivo"
         original_file: "Archivo original"
@@ -359,6 +360,7 @@ es:
         title: "Elimina la marca de este documento para que NO sea incluido en el pedido"
       show: "Ver documento"
       show_title: "Detalle de documento"
+      file_label: 'Archivo'
     commons:
       date_filter:
         apply: "Aplicar"

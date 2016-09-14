@@ -17,6 +17,7 @@
       <div class="span6">
         <div class="form-horizontal">
           <%= f.input :enable, input_html: { class: '' } %>
+          <%= f.input :is_public, input_html: { class: '' } %>
         </div>
         <%= f.input :file, hint: document_file_identifier(f.object), input_html: {
             class: ('error' unless @document.errors[:file_file_name].blank?)

@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160913232713) do
+ActiveRecord::Schema.define(version: 20160914003737) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -116,6 +116,7 @@ ActiveRecord::Schema.define(version: 20160913232713) do
     t.boolean  "private",                       default: false
     t.integer  "stock",                         default: 0,     null: false
     t.string   "original_file"
+    t.boolean  "is_public",                     default: false
   end
 
   add_index "documents", ["code"], name: "index_documents_on_code", using: :btree
