@@ -29,6 +29,7 @@
 //= require prints
 //= require jquery-fileupload/basic
 //= require shift_closures
+//= require analytics
 //
 // Mobile js
 //= require mobile

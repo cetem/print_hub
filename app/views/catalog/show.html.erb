@@ -21,8 +21,10 @@
 
         <% if @document.is_public? && (@document.file? || @document.original_file?) %>
           <dt><%= t('view.catalog.file_label') %>:</dt>
-          <% file_url = (@document.original_file || @document.file).try(:url) %>
-          <dd><%= link_to t('label.download'), file_url  if file_url %>&nbsp;</dd>
+          <% file = @document.original_file if @document.original_file? %>
+          <% file ||= @document.file %>
+          <dd><%= link_to t('label.download'), file.url, class: 'js-track-click',
+            data: { document: @document.to_s }%>&nbsp;</dd>
         <% end %>
 
       </dl>
