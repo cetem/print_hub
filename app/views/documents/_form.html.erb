@@ -23,6 +23,8 @@
             class: ('error' unless @document.errors[:file_file_name].blank?)
         } %>
         <%= f.input :file_cache, as: :hidden %>
+        <hr />
+        <p class="alert alert-info"> <%= t('view.documents.original_file_description') %> </p>
 
         <%= f.input :original_file %>
         <%= f.input :original_file_cache, as: :hidden %>

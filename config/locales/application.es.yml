@@ -60,7 +60,7 @@ es:
         is_public: 'Es público (CC)'
         file: "Archivo imprimible"
         file_file_name: "Archivo"
-        original_file: "Archivo original"
+        original_file: "Archivo público"
         media: "Tamaño de papel"
         name: "Nombre"
         pages: "Páginas"
@@ -489,6 +489,7 @@ es:
         title: "Elimina la marca del documento para que NO sea incluido en la próxima impresión"
       show_title: "Detalle de documento"
       stale_object_error: "El documento no pudo ser actualizado, intente nuevamente."
+      original_file_description: "Archivo mejorado con código QR pero sin orientaciones para poder descargar y leer:"
     feedbacks:
       negative: "negativo"
       negative_comment_return: "Gracias por tus sugerencias, trabajaremos para mejorar este artículo."
