@@ -6,4 +6,8 @@ module ShiftClosuresHelper
   def number_to_delimited(number)
     number_to_currency(number, unit: '', precision: 0, delimiter: '.')
   end
+
+  def show_who_changed_version(version)
+    User.find(version.whodunnit)
+  end
 end

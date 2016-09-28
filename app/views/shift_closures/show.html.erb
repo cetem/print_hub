@@ -115,6 +115,23 @@
             </tbody>
           </table>
         <% end %>
+        <br />
+
+        <b><%= t('view.shift_closures.edited_by') %></b>:
+        <table class="table table-condensed">
+          <thead>
+            <th><%= ShiftClosure.human_attribute_name 'user_id' %></th>
+            <th><%= ShiftClosure.human_attribute_name 'updated_at' %></th>
+          </thead>
+          <tbody>
+            <% @shift_closure.versions.reverse.each do |version| %>
+              <tr>
+                <td><%= show_who_changed_version(version) %></td>
+                <td><%= l(version.created_at, format: :minimal) %></td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
       </div>
     </div>
   </p>

@@ -6,8 +6,8 @@ es:
         code: "Código"
         description: "Descripción"
         name: "Nombre"
-        price: "Precio"
         notification_stock: "Notificar al llegar al sgte stock"
+        price: "Precio"
       article_line:
         article_id: "Artículo"
         unit_price: "Precio unitario"
@@ -57,12 +57,12 @@ es:
           other: "Códigos"
         description: "Descripción"
         enable: "Habilitado"
-        is_public: 'Es público (CC)'
         file: "Archivo imprimible"
         file_file_name: "Archivo"
-        original_file: "Archivo público"
+        is_public: "Es público (CC)"
         media: "Tamaño de papel"
         name: "Nombre"
+        original_file: "Archivo público"
         pages: "Páginas"
         private: "Privado"
         stock: "Existencia"
@@ -337,17 +337,21 @@ es:
       edit_title: "Modificar artículo"
       index_title: "Listado de artículos"
       new_title: "Nuevo artículo"
+      notification_body: |-
+          Deberíamos ir pensando en comprar:
+          %{body}
+           Saludos desde el server.
+      notification_message: "- (%{article}) quedan solo %{stock} unidades"
+      only_notify_when_its_greater_than: "Solo notifica si es mayor a 0"
       show_title: "Detalle de artículo"
       stale_object_error: "El artículo no pudo ser actualizado, intente nuevamente."
-      only_notify_when_its_greater_than: "Solo notifica si es mayor a 0"
-      notification_message: "- (%{article}) quedan solo %{stock} unidades"
-      notification_body: "Deberíamos ir pensando en comprar:\n%{body}\n Saludos desde el server."
     bonuses:
       bonuses_with_customer: "Bonificaciones de %{customer}"
       index_title: "Listado de bonificaciones"
     catalog:
       add_to_order:
         title: "Marca este documento para que sea INCLUIDO en el pedido"
+      file_label: "Archivo"
       images:
         example_document_grid: "Seleccionar documentos con el signo +"
         example_search: 'Buscar, por ejemplo, "física 2012"'
@@ -360,7 +364,6 @@ es:
         title: "Elimina la marca de este documento para que NO sea incluido en el pedido"
       show: "Ver documento"
       show_title: "Detalle de documento"
-      file_label: 'Archivo'
     commons:
       date_filter:
         apply: "Aplicar"
@@ -483,13 +486,13 @@ es:
       new_print: "Crear impresión"
       new_title: "Nuevo documento"
       non_existent: "Archivo inexistente"
+      original_file_description: "Archivo mejorado con código QR pero sin orientaciones para poder descargar y leer:"
       processing_document: "Procesando documento, espere..."
       remove_from_next_print:
         link: "Quitar de impresión"
         title: "Elimina la marca del documento para que NO sea incluido en la próxima impresión"
       show_title: "Detalle de documento"
       stale_object_error: "El documento no pudo ser actualizado, intente nuevamente."
-      original_file_description: "Archivo mejorado con código QR pero sin orientaciones para poder descargar y leer:"
     feedbacks:
       negative: "negativo"
       negative_comment_return: "Gracias por tus sugerencias, trabajaremos para mejorar este artículo."
@@ -649,6 +652,7 @@ es:
       one_still_open: "No se puede crear, ya hay otro abierto."
       title: "Cierre de turno"
       without_withdraws: "Sin retiros"
+      edited_by: 'Editado por'
     shifts:
       close_session:
         as_operator: "Cerrar como Operario"
@@ -660,14 +664,14 @@ es:
       correctly_updated: "Turno actualizado correctamente."
       edit_stale: "Tenés un turno abierto demasiado viejo, decinos a que hora terminó..."
       edit_title: "Modificar turno"
+      export_shifts: "Exportar turnos a GDrive."
+      exported_shifts: "Turnos entre %{range}"
+      exporting_shifts: "Exportando turnos a GDrive."
       index_title: "Listado de turnos"
       new_title: "Nuevo turno"
       pay_error: "Ha ocurrido un error, no se pudieron pagar los turnos..."
       show_title: "Detalle de turno"
       stale_object_error: "El turno no pudo ser actualizado, intente nuevamente."
-      exporting_shifts: "Exportando turnos a GDrive."
-      export_shifts: "Exportar turnos a GDrive."
-      exported_shifts: "Turnos entre %{range}"
     stats:
       download_csv: "Descargar en CSV"
       empty_result: "Sin resultados para el rango de fechas seleccionado"
