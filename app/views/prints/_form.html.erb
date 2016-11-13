@@ -122,7 +122,7 @@
               <div class='hide progress progress-success progress-striped active'>
                 <div class='bar' style='width: 0%;'></div>
               </div>
-              <div id='file-upload-error' class="alert alert-error hide fade in"
+              <div class="alert alert-error hide fade in js-file-upload-error"
                 data-wrong-format="<%= t('messages.only_pdf_permitted') %>"
                 data-broken-pdf="<%= t('messages.broken_pdf') %>"
               >
@@ -131,7 +131,7 @@
             <div class="span2 pull-right">
               <%= link_to '&#xe045;'.html_safe, '#',
                 title: t('view.prints.upload_file'),
-                id: 'upload_file_buttom', class: 'btn btn-success iconic' %>
+                class: 'btn btn-success iconic js-upload-file' %>
             </div>
           </div>
         <% end %>
@@ -248,7 +248,10 @@
   <%= simple_form_for :file_line, url: upload_file_prints_path,
     data: { 'form-data' => 'script=true' } do |of| %>
       <%= of.input :file, as: :file, label: false,
-         input_html: { multiple: true,data: { invisible: true } } %>
+        input_html: {
+          multiple: true, data: { invisible: true },
+          class: 'js-uploader-input'
+      } %>
   <% end %>
 </div>
 
