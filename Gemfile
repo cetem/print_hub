@@ -63,6 +63,7 @@ group :test do
   gem 'selenium-webdriver'
   gem 'capybara-screenshot'
   gem 'chromedriver-helper'
+  gem 'poltergeist'
   gem 'database_cleaner', require: false # For Capybara
 
   gem 'minitest-reporters'
