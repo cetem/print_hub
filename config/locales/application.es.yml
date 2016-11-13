@@ -298,6 +298,7 @@ es:
     customers: "Clientes"
     customers_groups: "Grupos de Clientes"
     documents: "Documentos"
+    notebooks: 'Libretas'
     orders: "Pedidos"
     payments: "Pagos"
     print_job_types: "Tipos de impresión"
