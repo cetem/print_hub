@@ -13,7 +13,7 @@
 
   <tbody>
     <% @shift_closures.each do |shift_closure| %>
-      <tr>
+      <tr class="<%= 'error' if shift_closure.comments? %>">
         <td><%= l(shift_closure.start_at) %></td>
         <td><%= l(shift_closure.finish_at) if shift_closure.finish_at %></td>
         <td><%= number_to_currency shift_closure.cashbox_amount %></td>
