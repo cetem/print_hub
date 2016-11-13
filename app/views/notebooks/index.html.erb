@@ -1,0 +1,51 @@
+<div class="readonly-data">
+  <% if @files.any? %>
+    <table class="table">
+      <thead>
+        <th colspan="3"></th>
+      </thead>
+      <tbody>
+        <% @files.each do |name| %>
+          <tr>
+            <td><%= name %></td>
+            <td><%= link_to_show notebook_path(name), target: '_blank' %></td>
+            <td><%= link_to_destroy notebook_path(name) %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  <% else %>
+    <div class="alert alert-info">
+      <%= t 'errors.empty_results' %>
+    </div>
+  <% end %>
+
+  <div class="upload-progress">
+    <div class='hide progress progress-success progress-striped active'>
+      <div class='bar' style='width: 0%;'></div>
+    </div>
+    <div class="alert alert-error hide fade in js-file-upload-error"
+      data-wrong-format="<%= t('messages.only_pdf_permitted') %>"
+      data-broken-pdf="<%= t('messages.broken_pdf') %>"
+      >
+    </div>
+  </div>
+
+
+  <div class="hidden">
+    <%= simple_form_for :notebooks do |f| %>
+      <%= f.input :file, as: :file, label: false,
+        input_html: {
+          class: 'js-uploader-input',
+          multiple: true, data: { invisible: true }
+      } %>
+      <%= f.submit %>
+    <% end %>
+  </div>
+</div>
+
+<div class="form-actions">
+  <%= link_to '&#xe045;'.html_safe, '#',
+    title: t('view.prints.upload_file'),
+    class: 'btn btn-success iconic js-upload-file' %>
+</div>

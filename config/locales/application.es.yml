@@ -267,6 +267,7 @@ es:
     recreate_versions_error: "Ha sucedido un error al procesar las miniaturas %{e}"
     show_details: "Ver detalles"
     title: "Error"
+    empty_results: "Sin resultados"
   label:
     and: "y"
     back: "Volver"

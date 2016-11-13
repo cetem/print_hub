@@ -25,22 +25,23 @@ Rails.application.routes.draw do
     Sidekiq::Web.set :sessions, Rails.application.config.session_options
     mount Sidekiq::Web => '/sidekiq', constraints: AdminConstraint.new
 
-    draw :user, :stat
-    draw :user, :bonus
     draw :user, :article
-    draw :user, :payment
-    draw :user, :shift
+    draw :user, :bonus
     draw :user, :customer
-    draw :user, :order
-    draw :user, :print
-    draw :user, :document
-    draw :user, :tag
-    draw :user, :user_session
-    draw :user, :user
-    draw :user, :files
-    draw :user, :print_job_types
     draw :user, :customers_groups
+    draw :user, :document
+    draw :user, :files
+    draw :user, :notebooks
+    draw :user, :order
+    draw :user, :payment
+    draw :user, :print
+    draw :user, :print_job_types
+    draw :user, :shift
     draw :user, :shift_closures
+    draw :user, :stat
+    draw :user, :tag
+    draw :user, :user
+    draw :user, :user_session
   end
 
   root to: 'subdomains#redirection' # Momentary solution for double root-to

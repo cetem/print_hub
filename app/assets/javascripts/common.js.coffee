@@ -13,26 +13,26 @@ new Rule
     clearTimeout timer for i, timer of @map.timers
 
 new Rule
-  condition: -> $('#file_line_file').length
+  condition: -> $('.js-upload-file').length
   load: ->
     @map.addUploadFileEventToButtom ||= (e)->
       e.preventDefault()
       e.stopPropagation()
 
-      $('#file_line_file').click()
+      $('.js-uploader-input').click()
 
-    # Subir un archivo para agregarlo a la orden
-    error_div = document.querySelector('#file-upload-error')
+    # Subir un archivo
+    error_div = document.querySelector('.js-file-upload-error')
     progress_div = document.querySelector('.progress.hide')
-    $('input:file').fileupload
+    $('.js-uploader-input').fileupload
       dataType: 'script'
       add: (e, data) ->
         type = /(pdf)$/i
         file = data.files[0]
 
         if type.test(file.type) || type.test(file.name)
-          error_div.style.display = 'none'
           $('input:submit').attr('disabled', true)
+          error_div.style.display = 'none'
           progress_div.style.display = 'block'
           data.submit()
         else
@@ -40,6 +40,8 @@ new Rule
           error_div.style.display = 'block'
 
       progressall: (e, data) ->
+        error_div.style.display = 'none'
+        progress_div.style.display = 'block'
         progress = parseInt(data.loaded / data.total * 100, 10)
         $('.progress .bar').css('width', progress + '%')
 
@@ -47,16 +49,19 @@ new Rule
         progress_div.style.display = 'none'
         $('input:submit').attr('disabled', false)
         State.fileUploaded = true
-        $('.file_line_item:last').find('.price-modifier').change()
+        # File line for prints
+        file_line = $('.file_line_item:last')
+        if file_line
+          file_line.find('.price-modifier').change()
       error: (e) ->
         progress_div.style.display = 'none'
         error_div.innerHTML = error_div.getAttribute('data-broken-pdf')
         error_div.style.display = 'block'
 
-    $(document).on 'click', '#upload_file_buttom', @map.addUploadFileEventToButtom
+    $(document).on 'click', '.js-upload-file', @map.addUploadFileEventToButtom
 
   unload: ->
-    $(document).off 'click', '#upload_file_buttom', @map.addUploadFileEventToButtom
+    $(document).off 'click', '.js-upload-file', @map.addUploadFileEventToButtom
 
 
 jQuery ($)->
