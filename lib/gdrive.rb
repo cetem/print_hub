@@ -1,10 +1,10 @@
 module GDrive
   class << self
     def upload_spreadsheet(title, array, kwargs={})
+      return if array.blank?
+
       s = gdrive_session.spreadsheet_by_title(title)
       s ||= gdrive_session.create_spreadsheet(title)
-
-
 
       if (month = kwargs[:month]).present?
         page_title = I18n.t('date.month_names')[month]

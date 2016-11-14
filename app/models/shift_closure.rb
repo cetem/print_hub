@@ -131,6 +131,8 @@ class ShiftClosure < ActiveRecord::Base
   end
 
   def self.to_csv
+    return if all.empty?
+
     printer_index_to_cols_init = ('B'..'Z').map {|l| l if l.ord.even?}.compact.sort
     printer_index_to_cols_final = ('B'..'Z').map {|l| l if l.ord.odd?}.compact.sort
     alphabet = ('A'..'Z').to_a
