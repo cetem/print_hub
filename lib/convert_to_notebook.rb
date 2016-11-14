@@ -11,7 +11,10 @@ module ConvertToNotebook
 
     title = ['notebooks', Time.now.to_i.to_s].join('-')
 
-    `pdftops -level3 #{abs_path} - | ps2ps - - | psbook | ps2pdf - - | lp -o media=a5 -o number-up=2 -o fit-to-page -t "#{title}" -o ppi=1200 -d Virtual_PDF_Printer`
+    book_name = abs_path + '-book'
+    `pdftops -level3 #{abs_path} - | ps2ps - - | psbook | ps2pdf - #{book_name}`
+    `lp -d 'Virtual_PDF_Printer' -o media=a5 -o number-up=2 -o fit-to-page -t "#{title}" -o ppi=1200 #{book_name}`
+
 
     printed_file = Dir.home + '/PDF/' + title + '.pdf'
     loop do
@@ -21,6 +24,7 @@ module ConvertToNotebook
     end
     `mv #{printed_file} #{PRIVATE_PATH.to_s + '/notebooks/' + filename}`
 
-    `rm #{Shellwords.escape(Rails.root.join('tmp', 'notebooks', filename).to_s)}`
+    `rm #{abs_path}`
+    `rm #{book_name}`
   end
 end
