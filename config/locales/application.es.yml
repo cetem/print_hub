@@ -655,6 +655,10 @@ es:
       title: "Cierre de turno"
       without_withdraws: "Sin retiros"
       edited_by: 'Editado por'
+      dailies_for_year: 'Cajas diarias %{year}'
+      printer_start: "%{printer}_inicial"
+      printer_end: "%{printer}_final"
+      total: 'Totales:'
     shifts:
       close_session:
         as_operator: "Cerrar como Operario"

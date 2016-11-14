@@ -1,12 +1,27 @@
 module GDrive
   class << self
-    def upload_spreadsheat(title, array)
-      s = gdrive_session.create_spreadsheet(title)
-      ws = s.worksheets[0]
+    def upload_spreadsheet(title, array, kwargs={})
+      s = gdrive_session.spreadsheet_by_title(title)
+      s ||= gdrive_session.create_spreadsheet(title)
+
+
+
+      if (month = kwargs[:month]).present?
+        page_title = I18n.t('date.month_names')[month]
+
+        ws = s.worksheet_by_title(page_title)
+        unless ws
+          ws = s.add_worksheet(page_title, array.size, array[0].size)
+        end
+      else
+        ws = s.worksheets[0]
+      end
       ws.update_cells(1, 1, array)
       ws.save
 
       change_permissions(s.key)
+
+      puts "https://docs.google.com/spreadsheets/d/#{s.key}/edit#gid=#{ws.gid}"
     end
 
     private

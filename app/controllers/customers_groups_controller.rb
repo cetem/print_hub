@@ -114,7 +114,7 @@ class CustomersGroupsController < ApplicationController
     start         = start.beginning_of_day
     finish        = finish.end_of_day
 
-    GDrive.upload_spreadsheat(
+    GDrive.upload_spreadsheet(
       t('view.customers_groups.spreadsheet_file_name',
         start: l(start.to_date, format: :related_month).camelize,
         finish: l(finish.to_date, format: :related_month).camelize
