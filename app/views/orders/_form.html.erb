@@ -1,13 +1,20 @@
 <div id='upload-file' class='pull-right'>
   <%= simple_form_for :file_line, url: upload_file_orders_path, data: { 'form-data' => 'script=true' } do |of| %>
     <%= t('view.orders.upload_file') %>
-    <%= of.input :file, as: :file, label: false, data: { 'form-data' => '{"script": "true"}' } %>
+    <%= of.input :file, as: :file, label: false, input_html: {
+        class: 'js-uploader-input',
+        multiple: true,
+        data: { invisible: true }
+        #data: { 'form-data' => '{"script": "true"}' }
+      } %>
   <% end %>
   <div class='hide progress progress-success progress-striped active'>
     <div class='bar' style='width: 0%;'></div>
   </div>
-  <div id='file-upload-error' class="alert alert-error hide fade in">
-    <%= t('messages.only_pdf_permitted') %>
+  <div class="alert alert-error hide fade in js-file-upload-error"
+    data-wrong-format="<%= t('messages.only_pdf_permitted') %>"
+    data-broken-pdf="<%= t('messages.broken_pdf') %>"
+  >
   </div>
 </div>
 
@@ -22,7 +29,8 @@
     <h3><%= t 'view.orders.order_lines' %></h3>
     <br />
 
-    <div data-jobs-container
+    <div class="jobs-container"
+      data-jobs-container="true"
       data-prices-list="<%= print_job_types_with_price_for_data %>"
       data-odd-pages-types="<%= one_sided_print_job_types_for_data %>"
       data-pages-list="<%= print_job_types_for_data_pages %>">

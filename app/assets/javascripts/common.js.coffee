@@ -13,7 +13,7 @@ new Rule
     clearTimeout timer for i, timer of @map.timers
 
 new Rule
-  condition: -> $('.js-upload-file').length
+  condition: -> $('.js-uploader-input').length
   load: ->
     @map.addUploadFileEventToButtom ||= (e)->
       e.preventDefault()

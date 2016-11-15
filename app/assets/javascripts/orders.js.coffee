@@ -3,7 +3,7 @@
     totalPrice = 0.0
     credit = parseFloat($('#user').data('credit')) || 0
 
-    Order.updateTotalPages()
+    #Order.updateTotalPages()
 
     $('.order_line:not(.exclude-from-total)').each ->
       totalPrice += parseFloat($(this).data('price')) || 0
@@ -20,7 +20,7 @@
     money.html(money.html().replace(/(\d+.)+\d+/, totalPrice.toFixed(3)))
 
   updateOrderLinePrice: (orderLine)->
-    Order.updateTotalPages()
+    #Order.updateTotalPages()
     Jobs.reCalcPages(orderLine[0])
 
     orderLinesContainer = $('div[data-jobs-container]')
@@ -84,17 +84,23 @@
 
   updateAllOrderLines: ->
     $('.order_line:not(.exclude-from-total)').each ->
-      Order.updateTotalPages()
+      #Order.updateTotalPages()
       Order.updateOrderLinePrice $(this)
 
 
 new Rule
   condition: -> $('#ph_orders').length
   load: ->
+    Jobs.loadPricesData()
+    Jobs.reCalcEverything()
+
     # Actualizar precios
     Order.updateAllOrderLines()
+
     $(document).on 'change keyup',  '.price-modifier', ->
-      Util.debounce(Jobs.reCalcPages)
+      Util.debounce(
+        Jobs.reCalcPages($(this).parents('.order_line:first')[0])
+      )
 
     # Mostrar detalles del documento
     @map.showDocumentDetails ||= (event, data)->

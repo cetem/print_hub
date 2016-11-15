@@ -2,7 +2,7 @@
 <% id = "file_line_file_line_lines_attributes_#{file_line.object_id}_" %>
 <% #TODO arreglar id como se debe %>
 <% name = dynamic_object_name(file_line) %>
-<div class="order_line file_line_item" id="<%= "#{id}" %>"
+<div class="js-printable-job order_line file_line_item" id="<%= "#{id}" %>"
   data-price="<%= file_line.object.price %>"
   data-odd-pages=""
   data-price-per-copy="<%= file_line.object.price_per_copy %>">
@@ -17,11 +17,11 @@
       <%= file_line.input :copies, label: false,
         input_html: { value: 1, maxlength: 5, autocomplete: 'off',
         name: "#{name}[copies]", id: "#{id}copies",
-        class: 'price-modifier page-modifier span12' } %>
+        class: 'price-modifier js-job-copies span12' } %>
     </div>
     <div class="span1">
       <%= file_line.input :pages, label: false,
-        input_html: { maxlength: 5, class: 'price-modifier page-modifier span11',
+        input_html: { maxlength: 5, class: 'price-modifier span11 js-job-pages',
         autocomplete: 'off', disabled: true } %>
     </div>
     <div class="span2">

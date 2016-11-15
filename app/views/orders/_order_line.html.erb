@@ -1,6 +1,6 @@
 <% id = dynamic_object_id('order_line', f) %>
 <% name = dynamic_object_name(f) %>
-<div class="order_line" id="<%= id %>"
+<div class="js-printable-job order_line" id="<%= id %>"
   data-price="<%= f.object.price %>"
   data-odd-pages=""
   data-price-per-copy="<%= f.object.price_per_copy %>">

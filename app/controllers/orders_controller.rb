@@ -123,7 +123,7 @@ class OrdersController < ApplicationController
     file_line.extract_page_count if file_line
 
     respond_to do |format|
-      if file_line
+      if file_line.pages.to_i > 0
         format.html { render partial: 'file_line' }
         format.js
       else
@@ -168,6 +168,8 @@ class OrdersController < ApplicationController
   end
 
   def file_line_params
-    params.require(:file_line).permit(:file)
+    file = params.require(:file_line).permit(file: [])[:file]
+    file = file.first if file.is_a? Array
+    { file: file }
   end
 end

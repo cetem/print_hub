@@ -44,7 +44,7 @@ class FileLine < ActiveRecord::Base
   end
 
   def file_name
-    file ? File.basename(file.url) : '---'
+    file.try(:url) ? File.basename(file.url) : '---'
   end
 
   def file_presence
