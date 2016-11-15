@@ -111,7 +111,7 @@ new Rule
     # Eliminar item de la orden
     @map.removeItem ||= (event, element)->
       if $(element).hasClass('order_line')
-        $(element).classList.add('exclude-from-total')
+        element.classList.add('exclude-from-total')
         Order.updateTotalPrice()
 
     # Al hacer click en botón imprimir -> Imprimir =)
