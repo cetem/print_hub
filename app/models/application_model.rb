@@ -29,7 +29,7 @@ class ApplicationModel < ActiveRecord::Base
 
   def self.pg_text_query(*args)
     options = args.extract_options!
-    lang = "'spanish'" # TODO: implementar con I18n
+    lang = "'english'" # TODO: implementar con I18n
     vector_args = args.map { |a| "coalesce(#{a},'')" }.join(" || ' ' || ")
     term_name = options[:term_name] || 'and_term'
     query = "to_tsvector(#{lang}, #{vector_args})"
