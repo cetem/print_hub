@@ -40,7 +40,6 @@ gem 'coffee-rails'
 gem 'uglifier'
 gem 'jquery-rails'
 gem 'jquery-ui-rails'
-gem 'turbolinks'
 gem 'jquery-fileupload-rails'
 gem 'underscore-rails'
 

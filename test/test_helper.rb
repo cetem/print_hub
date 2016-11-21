@@ -134,9 +134,16 @@ class ActionDispatch::IntegrationTest
     Capybara.app_host = 'http://localhost:54163'
     Capybara.reset!    # Forget the (simulated) browser state
     Capybara.default_max_wait_time = 4
+    Capybara.page.current_window.resize_to(1200, 800)
   end
 
   teardown do
+    #errors = Capybara.page.driver.browser.manage.logs.get(:browser)
+    #if errors.present?
+    #  message = errors.map(&:message).join("\n")
+    #  puts message
+    #end
+
     DatabaseCleaner.clean       # Truncate the database
     Capybara.reset!             # Forget the (simulated) browser state
   end

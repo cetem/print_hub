@@ -175,7 +175,7 @@ class OrdersTest < ActionDispatch::IntegrationTest
       assert_difference 'Order.cancelled.count' do
         click_link I18n.t('view.orders.cancel')
         sleep(1)
-        page.driver.browser.switch_to.alert.accept
+        page.driver.browser.accept_js_confirms
         sleep(1)
       end
     end

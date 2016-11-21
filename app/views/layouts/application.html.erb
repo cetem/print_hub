@@ -12,18 +12,14 @@
     <meta charset="utf-8" />
     <title><%= [t('app_name'), @title].compact.join(' | ') %></title>
     <meta name="viewport" content="width=device-width" />
-    <%= stylesheet_link_tag 'application', data: { 'turbolinks-track' => true } %>
-    <%= stylesheet_link_tag 'print', media: 'print', data: { 'turbolinks-track' => true } if @can_print %>
+    <%= stylesheet_link_tag 'application' %>
+    <%= stylesheet_link_tag 'print', media: 'print' if @can_print %>
     <!--[if lt IE 9]>
       <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
-    <%= javascript_include_tag 'application', data: { 'turbolinks-track' => true } %>
     <%= favicon_link_tag %>
     <%= favicon_link_tag(nil, rel: 'apple-touch-icon') %>
     <%= csrf_meta_tag %>
-    <%= javascript_tag do %>
-      <%= raw "Messages.ajaxInProgressWarning = '#{j t('messages.ajax_in_progress_warning')}';" %>
-    <% end %>
     <%= yield :head_extra %>
   </head>
   <body id="<%= "ph_#{controller_name}" %>" class="<%= main_class %>"
@@ -41,6 +37,18 @@
 
     <%= render 'shared/notice' if flash.notice %>
     <%= render 'shared/alert' if flash.alert %>
-    <%= javascript_tag(yield :js_extra) %>
+
+
+    <div class="js-content">
+      <%= render 'shared/bugsnag' %>
+      <%= javascript_include_tag 'application' %>
+      <%= content_for :js_extra do %>
+        <%= raw "Messages.ajaxInProgressWarning = '#{j t('messages.ajax_in_progress_warning')}';" %>
+      <% end %>
+
+      <script type="text/javascript" charset="utf-8">
+        <%= yield :js_extra %>
+      </script>
+    </div>
   </body>
 </html>

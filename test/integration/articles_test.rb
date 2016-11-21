@@ -40,7 +40,7 @@ class ArticlesTest < ActionDispatch::IntegrationTest
       assert_difference 'Article.count', -1 do
         all("a[data-method='delete']")[1].click # El 1ro esta usado
         sleep(1)
-        page.driver.browser.switch_to.alert.accept
+        page.driver.browser.accept_js_confirms
         sleep(1)
       end
     end

@@ -23,8 +23,8 @@ class PublicCustomerInteractionsTest < ActionDispatch::IntegrationTest
     fill_in Customer.human_attribute_name('password'), with: 'jj12'
     fill_in Customer.human_attribute_name('password_confirmation'), with: 'jj12'
 
-    ['Customer.count', 'Sidekiq::Extensions::DelayedMailer.jobs.size'].tap do |c|
-      assert_difference(c) { click_button I18n.t('view.customers.register') }
+    assert_difference ['Customer.count', 'Sidekiq::Extensions::DelayedMailer.jobs.size'] do
+      click_button I18n.t('view.customers.register')
     end
 
     assert_equal new_customer_session_path, current_path

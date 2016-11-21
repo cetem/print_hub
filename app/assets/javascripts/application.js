@@ -11,8 +11,6 @@
 //= require jquery-customs/jquery.ui.datepicker-es
 //= require twitter/bootstrap
 //= require inspector
-//= require turboevents
-//= require turbolinks
 //= require underscore
 //
 //= require helpers

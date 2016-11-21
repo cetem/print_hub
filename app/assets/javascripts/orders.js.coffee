@@ -89,7 +89,7 @@
 
 
 new Rule
-  condition: -> $('#ph_orders').length
+  condition: -> $('#ph_orders #check_order').length
   load: ->
     Jobs.loadPricesData()
     Jobs.reCalcEverything()

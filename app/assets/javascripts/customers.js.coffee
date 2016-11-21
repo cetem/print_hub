@@ -8,7 +8,7 @@ new Rule
       if (key == 66 || key == 98) && e.ctrlKey && e.altKey
         # Mostrar si está oculto
         Helper.show $('#bonuses_section:hidden')
-          
+
         $('#add_bonus_link').click()
         e.preventDefault()
         e.stopPropagation()
@@ -28,11 +28,11 @@ new Rule
   condition: -> $('#ph_customers[data-action="show"]').length
   load: ->
     $('#month_select_to_pay').on 'change', ->
-      Turbolinks.visit window.location.href.replace(
+      window.location.href = window.location.href.replace(
         /date=([^&])+/, "date=#{$(this).val()}"
       )
       $(this).attr 'disabled', true
-    
+
     $(document).on 'ajax:success', 'a[data-event="pay-debt"]', (xhr, data)->
       $(this).parents('section.nested_items').replaceWith(data)
 

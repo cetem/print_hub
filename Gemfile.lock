@@ -324,8 +324,6 @@ GEM
     tilt (2.0.5)
     timeliness (0.3.8)
     ttfunk (1.4.0)
-    turbolinks (2.5.3)
-      coffee-rails
     tzinfo (1.2.2)
       thread_safe (~> 0.1)
     uglifier (3.0.0)
@@ -394,7 +392,6 @@ DEPENDENCIES
   sinatra
   test_after_commit
   thin
-  turbolinks
   uglifier
   underscore-rails
   unicorn
