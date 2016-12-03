@@ -120,7 +120,7 @@ class Shift < ActiveRecord::Base
         csv << [
           shift.id,
           I18n.l(shift.start),
-          I18n.l(shift.finish),
+          shift.finish ? I18n.l(shift.finish) : '----',
           shift.as_admin? ? _yes : _no
         ]
       end
