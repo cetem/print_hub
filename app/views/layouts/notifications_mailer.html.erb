@@ -43,6 +43,12 @@
 <body>
   <div id="ph_mail_content">
     <%= yield %>
+
+    <footer>
+      <%= yield :footer %>
+      <br />
+      <%= t('mailer.layout.please_not_reply') %>
+    </footer>
   </div>
 </body>
 </html>
