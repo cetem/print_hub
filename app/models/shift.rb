@@ -89,17 +89,27 @@ class Shift < ActiveRecord::Base
 
   def self.to_stats_format
     if (_count = all.count) > 0
+      worked_data = all.worked_hours_with_data
       {
-        hours: all.worked_hours,
+        hours: worked_data[:total_hours],
+        suspicious_shifts: worked_data[:suspicious_shifts],
         count: _count
       }
     end
   end
 
-  def self.worked_hours
-    (
-      all.to_a.sum { |s| s.finish - s.start } / 3600.0
-    ).round(2)
+  def self.worked_hours_with_data
+    suspicious_shifts = false
+    total_hours = all.to_a.sum do |s|
+      diff = s.finish - s.start
+      suspicious_shifts = true if diff >= 8.hours
+      diff
+    end
+
+    {
+      total_hours: (total_hours / 3600.0).round(2),
+      suspicious_shifts: suspicious_shifts
+    }
   end
 
   def self.to_csv
