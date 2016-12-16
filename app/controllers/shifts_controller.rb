@@ -107,6 +107,18 @@ class ShiftsController < ApplicationController
     end
   end
 
+  def best_fortnights_between
+    if (from = params[:from]).present? && (to = params[:to]).present?
+      start, finish = *make_datetime_range({from: from, to: to})
+      shifts = shifts_scope.best_fortnights_between(start, finish)
+
+      respond_to do |format|
+        format.json { render json: shifts }
+      end
+    end
+  end
+
+
   private
 
   def shifts_scope

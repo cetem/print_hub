@@ -7,8 +7,8 @@ class ApplicationModelTest < ActiveSupport::TestCase
     ::DB_ADAPTER = 'PostgreSQL'
 
     computed = ApplicationModel.send(:text_query, [''], 'a', 'b')
-    expected = "to_tsvector('spanish', coalesce(a,'') || ' ' || coalesce(b,''))"
-    expected << " @@ to_tsquery('spanish', :and_term)"
+    expected = "to_tsvector('english', coalesce(a,'') || ' ' || coalesce(b,''))"
+    expected << " @@ to_tsquery('english', :and_term)"
 
     assert_equal expected, computed[:query]
 
@@ -32,8 +32,8 @@ class ApplicationModelTest < ActiveSupport::TestCase
 
   test 'pg text query' do
     computed = ApplicationModel.send(:pg_text_query, 'a', 'b')
-    expected = "to_tsvector('spanish', coalesce(a,'') || ' ' || coalesce(b,''))"
-    expected << " @@ to_tsquery('spanish', :and_term)"
+    expected = "to_tsvector('english', coalesce(a,'') || ' ' || coalesce(b,''))"
+    expected << " @@ to_tsquery('english', :and_term)"
 
     assert_equal expected, computed[:query]
 

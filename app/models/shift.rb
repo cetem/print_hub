@@ -139,4 +139,55 @@ class Shift < ActiveRecord::Base
     end
     csv
   end
+
+  def self.best_fortnights_between(start, finish)
+    start = start.beginning_of_month
+    finish = finish.end_of_month
+    times_to_loop = ((finish.to_i - start.to_i) / 1.month).round
+
+    users_shifts = []
+
+    User.actives.with_shifts_control.each do |u|
+      fortnights = {}
+      shifts = u.shifts.finished
+      biggest = 0
+
+      times_to_loop.times do |i|
+        mid_date = start.change(day: 16).advance(months: i)
+        dates = [
+          [mid_date.beginning_of_month, mid_date],
+          [mid_date, mid_date.end_of_month]
+        ]
+
+        dates.each do |range|
+          worked_data = shifts.hours_between(*range)
+          worked_hours = worked_data.values.sum.round(2)
+
+          if biggest < worked_hours
+            fortnights = {
+              user: {
+                id: u.id,
+                label: u.label
+              },
+              between: range,
+              total_hours: worked_hours,
+              worked_data: worked_data
+            }
+            biggest = worked_hours
+          end
+        end
+      end
+
+      users_shifts << fortnights if fortnights.present?
+    end
+
+    users_shifts
+  end
+
+  def self.hours_between(start, finish)
+    admin = (as_admin.between(start, finish).to_a.sum { |s| s.finish - s.start } / 3600.0).round(2)
+    operator = (as_operator.between(start, finish).to_a.sum { |s| s.finish - s.start } / 3600.0).round(2)
+
+    { admin: admin, operator: operator }
+  end
 end
