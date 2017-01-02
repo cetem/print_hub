@@ -4,7 +4,7 @@ module GDrive
       return if array.blank?
 
       s = gdrive_session.spreadsheet_by_title(title)
-      assign_permissions = !!s
+      not_assign_permissions = !!s
       s ||= gdrive_session.create_spreadsheet(title)
 
       if (month = kwargs[:month]).present?
@@ -20,7 +20,7 @@ module GDrive
       ws.update_cells(1, 1, array)
       ws.save
 
-      change_permissions(s.key) if assign_permissions
+      change_permissions(s.key) unless not_assign_permissions
 
       puts "https://docs.google.com/spreadsheets/d/#{s.key}/edit#gid=#{ws.gid}"
     end
