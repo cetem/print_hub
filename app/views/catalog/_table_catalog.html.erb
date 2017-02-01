@@ -12,7 +12,10 @@
   <tbody>
     <% @documents.each do |document| %>
       <tr>
-        <td><%= document.code %></td>
+        <td>
+          <%= document.code %>
+          <%= image_tag('/cc.png', size: '15') if document.is_public? %>
+        </td>
         <td><%= catalog_document_link_with_name(document) %></td>
         <td class="hidden-phone"><%= display_document_short_tags(document) %></td>
         <td class="hidden-phone"><%= document.pages %></td>
