@@ -20,11 +20,11 @@
   <tbody>
     <% @documents.each do |document| %>
       <tr class="<%= document.private ? 'private' : 'public' %>">
+        <td> <%= document.code %> </td>
         <td>
-          <%= document.code %>
-          <%= image_tag('/cc.png', size: '15') if document.is_public? %>
+          <%= image_tag('/cc.png', size: '20') if document.is_public? %>
+          <%= document.name %>
         </td>
-        <td><%= document.name %></td>
         <td><%= document.stock %></td>
         <td><%= document.pages %></td>
         <td><%= document_link_for_use_in_next_print document %></td>

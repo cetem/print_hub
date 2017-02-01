@@ -164,7 +164,7 @@ class ShiftClosure < ActiveRecord::Base
     full_month = (
       month.beginning_of_month.to_date..month.end_of_month.to_date
     ).sort.map do |date|
-      filter = all.where('DATE(created_at) = :date', date: date)
+      filter = all.where(created_at: date.beginning_of_day..date.end_of_day)
       if filter.any?
         filter.first
       else
@@ -207,11 +207,11 @@ class ShiftClosure < ActiveRecord::Base
       row << daily.administration_copies
       row << 0 # place copies
 
-      sold_copies = (alphabet[row.size-4]..alphabet[row.size-1]).to_a.reverse.map do |c|
+      sold_copies = (alphabet[row.size-4]..alphabet[row.size-1]).to_a.map do |c|
         [c, row_number].join
       end.join('-')
 
-      row << '=' + sold_copies
+      row << "=IF((#{sold_copies})>0, #{sold_copies}, 0)"
       row << daily.total_amount.to_s
       row << daily.system_amount.to_s
 
