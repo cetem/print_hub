@@ -240,7 +240,7 @@ class ApplicationControllerTest < ActionController::TestCase
 
   test 'make date range' do
     from_datetime = Time.zone.now.at_beginning_of_day.to_datetime
-    to_datetime = Time.zone.now.to_datetime
+    to_datetime = Time.zone.now.to_datetime.to_datetime
 
     assert_equal [from_datetime.to_s(:db), to_datetime.to_s(:db)],
                  @controller.send(:make_datetime_range).map { |d| d.to_s(:db) }
@@ -255,7 +255,11 @@ class ApplicationControllerTest < ActionController::TestCase
     from_datetime = Time.parse '2011-10-09 10:00'
     to_datetime = Time.parse '2000-10-09 11:50'
 
-    generated_range = @controller.send(:make_datetime_range,         from: '2011-10-09 10:00', to: '2000-10-09 11:50').map { |d| d.to_s(:db) }
+    generated_range = @controller.send(
+      :make_datetime_range,
+      from: '2011-10-09 10:00',
+      to: '2000-10-09 11:50'
+    ).map { |d| d.to_s(:db) }
 
     # Fechas válidas con el orden invertido
     assert_equal [to_datetime.to_s(:db), from_datetime.to_s(:db)],

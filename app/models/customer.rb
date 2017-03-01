@@ -128,11 +128,11 @@ class Customer < ApplicationModel
   end
 
   def free_credit
-    credits.valids.to_a.sum(&:remaining)
+    credits.valids.to_a.sum(&:remaining).round(3)
   end
 
   def free_credit_minus_pendings
-    free_credit - orders.pending.to_a.sum(&:price)
+    free_credit - orders.pending.to_a.sum(&:price).round(3)
   end
 
   def can_afford?(price)
@@ -168,7 +168,7 @@ class Customer < ApplicationModel
   end
 
   def to_pay_amounts_by_month(date)
-    date = Date.parse(date) unless date.is_a? Date
+    date = Time.zone.parse(date) unless date.is_a? Time
 
     print_jobs_current_total_prices(
       print_jobs.pay_later.created_at_month(date)
@@ -210,11 +210,11 @@ class Customer < ApplicationModel
   end
 
   def pay_month_debt(date)
-    date = Date.parse(date) unless date.is_a? Date
+    date = Time.zone.parse(date) unless date.is_a? Time
 
     Print.transaction do
       begin
-        prints.pay_later.created_in_the_same_month(date).each(&:pay_print)
+        prints.pay_later.between(date.beginning_of_month, date.end_of_month).each(&:pay_print)
       rescue
         raise ActiveRecord::Rollback
       end

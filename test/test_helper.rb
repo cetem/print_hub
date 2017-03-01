@@ -128,8 +128,8 @@ class ActionDispatch::IntegrationTest
 	end
 
   setup do
-    Capybara.javascript_driver = :chrome #:poltergeist #ENV['USE_FIREFOX'] ? :selenium : :chrome
-    Capybara.current_driver = Capybara.javascript_driver # :selenium by default
+    Capybara.javascript_driver = :selenium #: :chrome
+    Capybara.current_driver = Capybara.javascript_driver
     Capybara.server_port = '54163'
     Capybara.app_host = 'http://localhost:54163'
     Capybara.reset!    # Forget the (simulated) browser state

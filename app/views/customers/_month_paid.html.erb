@@ -1,6 +1,6 @@
 <br />
   <% if params[:date] %>
-    <% date = l(Date.parse(params[:date]), format: :month_and_year) %>
+    <% date = l(Time.zone.parse(params[:date]), format: :month_and_year) %>
     <h2>  <%= t('view.customers.to_pay_prints.paid', date: date) %>  </h2>
   <% end %>
 <br />

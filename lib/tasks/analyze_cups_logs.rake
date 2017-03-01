@@ -44,12 +44,12 @@ namespace :tasks do
           start_date, *start_time = times.first.split(':')
           end_date, *end_time = times.last.split(':')
 
-          a_time = DateTime.parse(
+          a_time = Time.zone.parse(
             [start_date, start_time.join(':')].join(' ')
-          ).to_time
-          b_time = DateTime.parse(
+          )
+          b_time = Time.zone.parse(
             [end_date, end_time.join(':')].join(' ')
-          ).to_time
+          )
 
           time_diff = (b_time - a_time).to_i
         else

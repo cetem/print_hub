@@ -53,7 +53,7 @@ module CustomersHelper
   end
 
   def show_button_to_pay_month_debt(customer, date)
-    date_s = l(Date.parse(date), format: :month_and_year).camelize
+    date_s = l(Time.zone.parse(date), format: :month_and_year).camelize
 
     link_to(
       t('view.customers.to_pay_prints.pay', date: date_s),

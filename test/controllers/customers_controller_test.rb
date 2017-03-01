@@ -283,9 +283,8 @@ class CustomersControllerTest < ActionController::TestCase
     UserSession.create(@operator)
 
     month = @customer.months_to_pay.last
-    date = Date.new(month.last, month.first, 1)
 
-    xhr :put, :pay_month_debt, id: @customer.to_param, date: date
+    xhr :put, :pay_month_debt, id: @customer.to_param, date: "#{month.last}-#{month.first}-1"
 
     assert_response :success
     assert_not_nil assigns(:customer)

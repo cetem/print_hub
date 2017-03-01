@@ -247,8 +247,4 @@ class Print < ApplicationModel
   def self.stats_between(from, to)
     between(from, to).not_revoked.group_by(&:user_id)
   end
-
-  def self.created_in_the_same_month(date)
-    between(date.beginning_of_month, date.end_of_month.end_of_day)
-  end
 end

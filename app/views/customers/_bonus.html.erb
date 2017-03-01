@@ -22,9 +22,9 @@
   <div class="dynamic_details"></div>
 </div>
 <% if is_dynamic %>
-  <%= content_for :js_extra do %>
+  <script type="text/javascript">
     Helper.show('#<%= id %>', function() {
       $('#<%= "bonus_amount_#{id}" %>').focus();
     });
-  <% end %>
+  </script>
 <% end %>

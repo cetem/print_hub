@@ -196,4 +196,5 @@ es:
       related: "%A, %d/%m/%Y %H:%M"
       long: "%d de %B de %Y %H:%M"
       minimal: "%d/%m/%Y %H:%M"
+      month_and_year: "%B de %Y"
     pm: "pm"

@@ -256,7 +256,7 @@
 </div>
 
 <%= content_for :js_extra do %>
-  <%= raw '$(function() { Print.updateTotalPrice(); });' if @print.new_record? %>
+  <%= raw "$(function() { Print.updateTotalPrice(); });" if @print.new_record? %>
   Print.cashPrefix = '#payment_<%= Payment::PAID_WITH[:cash] %>';
   Print.creditPrefix = '#payment_<%= Payment::PAID_WITH[:credit] %>';
   Print.printMessage = '<%= t('view.prints.print') %>';

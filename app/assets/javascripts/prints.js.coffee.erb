@@ -49,7 +49,7 @@
     freeCredit = parseFloat($('#customer_free_credit').val()) || 0.0
     [payWithCash, payWithBonus, totalPrice] = [0.0, 0.0, 0.0]
 
-    if !$('#print_pay_later').is(':checked')
+    if !document.querySelector('#print_pay_later').checked
       _.each Jobs.getPrintableJobs(), (printJob)->
         job = Jobs.assignDefaultOrGetJob(printJob)
         totalPrice += if job then job.price else 0.0
@@ -99,7 +99,7 @@
     $('#print_customer_id').val('')
     $('#customer_free_credit').val('')
     $('#link_to_customer_credit_detail').hide()
-    $('#print_pay_later').attr('checked', false).parents('div.field').hide()
+    document.querySelector('#print_pay_later').checked = false
 
     Print.updateTotalPrice()
 
@@ -180,7 +180,7 @@ new Rule
      element = $(this).data('item')
      checked = element.kind == '<%= Customer::KINDS[:reliable] %>'
 
-     $('#print_pay_later').attr('checked', checked)
+     document.querySelector('#print_pay_later').checked = checked
 
    # Elimina el cliente del trabajo de impresión
    @map.removeCustomer ||= ->
