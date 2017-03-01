@@ -183,7 +183,7 @@ class OrdersControllerTest < ActionController::TestCase
                                                   content_type: 'application/pdf',
                                                   tempfile: File.new(File.join(Rails.root, 'test', 'fixtures', 'files', 'test.pdf')))
 
-    post :upload_file, file_line: { file: file }
+    post :upload_file, file_line: { file: [file] }
 
     assert_response :success
     assert_select '#unexpected_error', false

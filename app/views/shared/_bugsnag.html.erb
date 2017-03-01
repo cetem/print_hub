@@ -1,18 +1,15 @@
-<% bugsnag = Bugsnag.configuration %>
-<% if (api_key = bugsnag.try(:api_key)) && true #bugsnag.notify_release_stages.include?(Rails.env) %>
-  <script src="//d2wy8f7a9ursnm.cloudfront.net/bugsnag-3.min.js"></script>
-  <script type="text/javascript" charset="utf-8">
+<script src="https://d2wy8f7a9ursnm.cloudfront.net/bugsnag-3.min.js"></script>
+<%= content_for :js_extra do %>
 
-    Bugsnag.apiKey = '<%= api_key %>';
+  Bugsnag.apiKey = '<%= Bugsnag.configuration.api_key %>';
 
-    <% if (user = current_user || current_customer) %>
-      Bugsnag.user = {
-        id: "<%= user.id %>",
-        to_s: "<%= user.to_s %>",
-        klass: "<%= user.class %>",
-        revision: "<%= Bugsnag.configuration.try(:app_version) %>",
-        environment: "<%= Rails.env %>"
-      };
-    <% end %>
-  </script>
+  <% if (user = current_user || current_customer) %>
+    Bugsnag.user = {
+      id: "<%= user.id %>",
+      to_s: "<%= user.to_s %>",
+      klass: "<%= user.class %>",
+      revision: "<%= Bugsnag.configuration.try(:app_version) %>",
+      environment: "<%= Rails.env %>"
+    };
+  <% end %>
 <% end %>

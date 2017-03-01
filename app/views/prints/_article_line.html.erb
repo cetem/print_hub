@@ -33,9 +33,9 @@
   </div>
 </div>
 <% if is_dynamic %>
-  <script type="text/javascript">
+  <%= content_for :js_extra do %>
     Helper.show('#<%= id %>', function() {
       $('<%= "#auto_article_line_#{id}" %>').focus();
     });
-  </script>
+  <% end %>
 <% end %>

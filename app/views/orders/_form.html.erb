@@ -96,6 +96,6 @@
   <%= raw "Messages.fileUploadWarning = '#{t('messages.file_upload_warning')}';" %>
 <% end %>
 
-<script type="text/javascript">
+<%= content_for :js_extra do %>
   Order.threshold = <%= CREDIT_THRESHOLD %>;
-</script>
+<% end %>

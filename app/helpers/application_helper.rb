@@ -209,4 +209,12 @@ module ApplicationHelper
   def translate_boolean(value)
     value ? t('label.yes') : t('label.no')
   end
+
+  def render_bugsnag_helpers
+    bugsnag = Bugsnag.configuration
+
+    bugsnag.try(:api_key) &&
+      bugsnag.notify_release_stages.include?(Rails.env) &&
+      request.domain == APP_CONFIG['public_host']
+  end
 end

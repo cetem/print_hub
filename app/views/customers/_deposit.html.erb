@@ -23,9 +23,9 @@
   <div class="dynamic_details"></div>
 </div>
 <% if is_dynamic %>
-  <script type="text/javascript">
+  <%= content_for :js_extra do %>
     Helper.show('#<%= id %>', function() {
       $('#<%= "deposit_amount_#{id}" %>').focus();
     });
-  </script>
+  <% end %>
 <% end %>

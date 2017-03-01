@@ -23,9 +23,9 @@
   </div>
 </div>
 <% if is_dynamic %>
-  <script type="text/javascript">
+  <%= content_for :js_extra do %>
     Helper.show('#<%= id %>', function() {
       $('#<%= "autocomplete_tag_#{id}" %>').focus();
     });
-  </script>
+  <% end %>
 <% end %>
