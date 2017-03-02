@@ -8,12 +8,13 @@
     $('.order_line:not(.exclude-from-total)').each ->
       totalPrice += parseFloat($(this).data('price')) || 0
 
-    if totalPrice > 0 && (credit >= (totalPrice * Order.threshold))
-      $('#not_printed').hide()
-      $('#printed').show()
-    else if totalPrice > 0
-      $('#printed').hide()
-      $('#not_printed').show()
+    #if totalPrice > 0 && (credit >= (totalPrice * Order.threshold))
+    #  $('#not_printed').hide()
+    #  $('#printed').show()
+    #else if totalPrice > 0
+    # TODO: DEFINE WHATEVER WE WANT (temporal fix)
+    $('#printed').hide()
+    $('#not_printed').show()
 
     money = $('#total span.money')
 
