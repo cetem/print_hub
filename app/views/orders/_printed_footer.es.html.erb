@@ -1,12 +1,12 @@
 <footer id="order_meta" class="not-printable readonly-data">
   <% if @order.pending? %>
     <% if @order.new_record? %>
-      <div id="printed" class="alert alert-success" <%= raw 'style="display: none"' unless @order.print_out %>>
-        <p>
-          Presioná <strong>Crear Pedido</strong> y tus documentos estarán
-          <strong>impresos</strong> y listo para la fecha programada
-        </p>
-      </div>
+      <%# <div id="printed" class="alert alert-success" <%= raw 'style="display: none"' unless @order.print_out %1>> %>
+      <%#   <p> %>
+      <%#     Presioná <strong>Crear Pedido</strong> y tus documentos estarán %>
+      <%#     <strong>impresos</strong> y listo para la fecha programada %>
+      <%#   </p> %>
+      <%# </div> %>
 
       <div id="not_printed" class="alert alert-warning" <%= raw 'style="display: none"' if @order.print_out %>>
         <p>
@@ -15,12 +15,12 @@
         </p>
       </div>
     <% else %>
-      <div id="printed" class="alert alert-success" <%= raw 'style="display: none"' unless @order.print_out %>>
-        <p>
-          El pedido estará <strong>impreso</strong> y listo para la fecha
-          programada
-        </p>
-      </div>
+      <%# <div id="printed" class="alert alert-success" <%= raw 'style="display: none"' unless @order.print_out %1>> %>
+      <%#   <p> %>
+      <%#     El pedido estará <strong>impreso</strong> y listo para la fecha %>
+      <%#     programada %>
+      <%#   </p> %>
+      <%# </div> %>
 
       <div id="not_printed" class="alert alert-warning" <%= raw 'style="display: none"' if @order.print_out %>>
         <p>
