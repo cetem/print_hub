@@ -104,6 +104,33 @@ class ActiveSupport::TestCase
   setup :activate_authlogic
 end
 
+SELENIUM_SERVER = "192.168.33.10"
+SELENIUM_APP_HOST = "192.168.33.1"
+Capybara.javascript_driver = :selenium_remote_firefox
+
+# CapybaraDriverRegistrar is a helper class that enables you to easily register
+# Capybara drivers
+class CapybaraDriverRegistrar
+
+  # register a Selenium driver for the given browser to run on the localhost
+  def self.register_selenium_local_driver(browser)
+    Capybara.register_driver "selenium_#{browser}".to_sym do |app|
+      Capybara::Selenium::Driver.new(app, browser: browser)
+    end
+  end
+
+  # register a Selenium driver for the given browser to run with a Selenium
+  # Server on another host
+  def self.register_selenium_remote_driver(browser)
+    Capybara.register_driver "selenium_remote_#{browser}".to_sym do |app|
+      Capybara::Selenium::Driver.new(app, browser: :remote, url: "http://#{SELENIUM_SERVER}:4444/wd/hub", desired_capabilities: browser)
+    end
+  end
+end
+
+# Register various Selenium drivers
+CapybaraDriverRegistrar.register_selenium_remote_driver(:firefox)
+
 class ActionDispatch::IntegrationTest
   # Make the Capybara DSL available in all integration tests
   include Capybara::DSL
@@ -116,25 +143,33 @@ class ActionDispatch::IntegrationTest
   # Stop ActiveRecord from wrapping tests in transactions
   self.use_transactional_fixtures = false
 
-  Capybara.register_driver :chrome do |app|
-    Capybara::Selenium::Driver.new(app, :browser => :chrome)
-  end
+  #Capybara.register_driver :chrome do |app|
+  #  Capybara::Selenium::Driver.new(app, :browser => :chrome)
+  #end
 
-  Capybara::Screenshot.webkit_options = { width: 1024, height: 768 }
-	Capybara::Screenshot.class_eval do
-		register_driver(:chrome) do |driver, path|
-			driver.browser.save_screenshot(path)
-		end
-	end
+  #Capybara::Screenshot.webkit_options = { width: 1024, height: 768 }
+	#Capybara::Screenshot.class_eval do
+	#	register_driver(:chrome) do |driver, path|
+	#		driver.browser.save_screenshot(path)
+	#	end
+	#end
+
+  #Capybara.register_driver :selenium_remote_firefox do |app|
+  #  Capybara::Selenium::Driver.new(
+  #    app, browser: :remote, url: 'http://localhost:4444/wd/hub', desired_capabilities: :firefox
+  #  )
+  #end
 
   setup do
-    Capybara.javascript_driver = :selenium #: :chrome
+    Capybara.javascript_driver = :selenium_remote_firefox #:selenium #: :chrome
     Capybara.current_driver = Capybara.javascript_driver
+    #Capybara.run_server = false
     Capybara.server_port = '54163'
-    Capybara.app_host = 'http://localhost:54163'
+    Capybara.server_host = '192.168.33.1'
+    Capybara.app_host = "http://#{SELENIUM_APP_HOST}:#{Capybara.server_port}"
     Capybara.reset!    # Forget the (simulated) browser state
     Capybara.default_max_wait_time = 4
-    Capybara.page.current_window.resize_to(1200, 800)
+    #Capybara.page.current_window.resize_to(1200, 800)
   end
 
   teardown do

@@ -1,7 +1,7 @@
 # Cantidad de líneas por página
 APP_LINES_PER_PAGE = 16
 # Umbral crédito / precio para determinar si se imprime o no un pedido
-CREDIT_THRESHOLD = 0.7
+CREDIT_THRESHOLD = APP_CONFIG['credit_threshold']
 # Adaptador de base de datos
 DB_ADAPTER = ActiveRecord::Base.connection.adapter_name
 # Idiomas disponibles

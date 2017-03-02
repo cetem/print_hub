@@ -173,10 +173,9 @@ class OrdersTest < ActionDispatch::IntegrationTest
 
     within '.form-actions' do
       assert_difference 'Order.cancelled.count' do
-        click_link I18n.t('view.orders.cancel')
-        sleep(1)
-        page.driver.browser.accept_js_confirms
-        sleep(1)
+        accept_confirm do
+          click_link I18n.t('view.orders.cancel')
+        end
       end
     end
 

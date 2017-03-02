@@ -22,7 +22,7 @@ class ShiftsTest < ActionDispatch::IntegrationTest
       assert page.has_css?('div#ui-datepicker-div')
 
       within 'div#ui-datepicker-div' do
-        first(:css, '.ui-datepicker-current').trigger('click')
+        first(:css, '.ui-datepicker-current').click
       end
 
       assert_difference 'Shift.stale.count', -1 do
