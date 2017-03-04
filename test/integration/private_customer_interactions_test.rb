@@ -210,15 +210,12 @@ class PrivateCustomerInteractionsTest < ActionDispatch::IntegrationTest
       assert page.has_no_css?('a.add_from_order')
     end
 
-    sleep 2
-
     within '.nav-collapse' do
       click_link I18n.t('view.catalog.new_order')
-    end
 
-    sleep 2
-    assert_equal new_order_path, current_path
-    assert_page_has_no_errors!
+      assert_page_has_no_errors!
+      assert_equal new_order_path, current_path
+    end
 
     page.all 'div.order_line', count: tag.reload.documents_count
   end
@@ -233,8 +230,6 @@ class PrivateCustomerInteractionsTest < ActionDispatch::IntegrationTest
 
     visit new_customer_session_path
 
-    assert_page_has_no_errors!
-
     customers(options[:customer_id]).tap do |customer|
       fill_in I18n.t('authlogic.attributes.customer_session.email'),
               with: customer.email
@@ -246,7 +241,5 @@ class PrivateCustomerInteractionsTest < ActionDispatch::IntegrationTest
 
     assert_page_has_no_errors!
     assert_equal options[:expected_path], current_path
-
-    show_collapse_menu_if_needed
   end
 end

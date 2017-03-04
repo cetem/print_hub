@@ -7,7 +7,7 @@ require 'sidekiq/testing'
 require 'database_cleaner'
 require 'minitest/reporters'
 require 'capybara-screenshot/minitest'
-require 'capybara/poltergeist'
+# require 'capybara/poltergeist'
 
 Minitest::Reporters.use! Minitest::Reporters::ProgressReporter.new
 
@@ -104,32 +104,17 @@ class ActiveSupport::TestCase
   setup :activate_authlogic
 end
 
-SELENIUM_SERVER = "192.168.33.10"
-SELENIUM_APP_HOST = "192.168.33.1"
-Capybara.javascript_driver = :selenium_remote_firefox
+class JSException < Exception
+  attr_reader :msgs
 
-# CapybaraDriverRegistrar is a helper class that enables you to easily register
-# Capybara drivers
-class CapybaraDriverRegistrar
-
-  # register a Selenium driver for the given browser to run on the localhost
-  def self.register_selenium_local_driver(browser)
-    Capybara.register_driver "selenium_#{browser}".to_sym do |app|
-      Capybara::Selenium::Driver.new(app, browser: browser)
-    end
+  def initialize(msgs)
+    @msgs = msgs
   end
 
-  # register a Selenium driver for the given browser to run with a Selenium
-  # Server on another host
-  def self.register_selenium_remote_driver(browser)
-    Capybara.register_driver "selenium_remote_#{browser}".to_sym do |app|
-      Capybara::Selenium::Driver.new(app, browser: :remote, url: "http://#{SELENIUM_SERVER}:4444/wd/hub", desired_capabilities: browser)
-    end
+  def to_s
+    "Js issue: \n #{msgs.join("\n")}"
   end
 end
-
-# Register various Selenium drivers
-CapybaraDriverRegistrar.register_selenium_remote_driver(:firefox)
 
 class ActionDispatch::IntegrationTest
   # Make the Capybara DSL available in all integration tests
@@ -143,41 +128,44 @@ class ActionDispatch::IntegrationTest
   # Stop ActiveRecord from wrapping tests in transactions
   self.use_transactional_fixtures = false
 
-  #Capybara.register_driver :chrome do |app|
-  #  Capybara::Selenium::Driver.new(app, :browser => :chrome)
-  #end
 
-  #Capybara::Screenshot.webkit_options = { width: 1024, height: 768 }
-	#Capybara::Screenshot.class_eval do
-	#	register_driver(:chrome) do |driver, path|
-	#		driver.browser.save_screenshot(path)
-	#	end
-	#end
+  # Vagrant config
+  SELENIUM_SERVER = "192.168.33.10"
+  SELENIUM_APP_HOST = "192.168.33.1"
 
-  #Capybara.register_driver :selenium_remote_firefox do |app|
-  #  Capybara::Selenium::Driver.new(
-  #    app, browser: :remote, url: 'http://localhost:4444/wd/hub', desired_capabilities: :firefox
-  #  )
-  #end
+  Capybara.register_driver :selenium_remote_firefox do |app|
+    Capybara::Selenium::Driver.new(
+      app,
+      browser: :remote,
+      url: "http://#{SELENIUM_SERVER}:4444/wd/hub",
+      desired_capabilities: :firefox
+    )
+  end
+
+  _running_local = ENV['local']
+  Capybara.javascript_driver = _running_local ? :selenium : :selenium_remote_firefox #:selenium #: :chrome
+  Capybara.current_driver = Capybara.javascript_driver
+  Capybara.server_port = '54163'
+  Capybara.server_host = _running_local ? 'localhost' : '192.168.33.1'
+  Capybara.app_host = "http://#{SELENIUM_APP_HOST}:#{Capybara.server_port}"
+  Capybara.default_max_wait_time = 1
+
+  if _running_local
+    Selenium::WebDriver::Firefox::Binary.path = '/opt/firefox42/firefox'
+  end
 
   setup do
-    Capybara.javascript_driver = :selenium_remote_firefox #:selenium #: :chrome
-    Capybara.current_driver = Capybara.javascript_driver
-    #Capybara.run_server = false
-    Capybara.server_port = '54163'
-    Capybara.server_host = '192.168.33.1'
-    Capybara.app_host = "http://#{SELENIUM_APP_HOST}:#{Capybara.server_port}"
     Capybara.reset!    # Forget the (simulated) browser state
-    Capybara.default_max_wait_time = 4
-    #Capybara.page.current_window.resize_to(1200, 800)
+    Capybara.page.driver.browser.manage.window.maximize
   end
 
   teardown do
-    #errors = Capybara.page.driver.browser.manage.logs.get(:browser)
-    #if errors.present?
-    #  message = errors.map(&:message).join("\n")
-    #  puts message
-    #end
+    errors = Capybara.page.driver.browser.manage.logs.get(:browser)
+
+    if errors
+      parsed_errors = errors.map { |e| e if e.level == 'SEVERE' && message.present? }.compact
+      raise JSException.new(parsed_errors) if parsed_errors.size > 0
+    end
 
     DatabaseCleaner.clean       # Truncate the database
     Capybara.reset!             # Forget the (simulated) browser state
@@ -206,8 +194,6 @@ class ActionDispatch::IntegrationTest
 
     visit new_user_session_path
 
-    assert_page_has_no_errors!
-
     User.find(options[:user_id]).tap do |user|
       fill_in I18n.t('authlogic.attributes.user_session.username'),
               with: user.email
@@ -219,7 +205,13 @@ class ActionDispatch::IntegrationTest
 
     assert_page_has_no_errors!
     assert_equal options[:expected_path], current_path
+  end
 
-    show_collapse_menu_if_needed
+  def log_js_errors
+    errors = page.driver.browser.manage.logs.get(:browser)
+    return unless errors
+
+    parsed_errors = errors.map { |e| e if e.level == 'SEVERE' && message.present? }.compact
+    raise JSException.new(parsed_errors) if parsed_errors
   end
 end

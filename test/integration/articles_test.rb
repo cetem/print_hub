@@ -3,9 +3,6 @@ require 'test_helper'
 class ArticlesTest < ActionDispatch::IntegrationTest
   test 'should create an article' do
     login
-
-    assert_page_has_no_errors!
-    assert_equal prints_path, current_path
     visit new_article_path
 
     assert_page_has_no_errors!
@@ -28,9 +25,6 @@ class ArticlesTest < ActionDispatch::IntegrationTest
 
   test 'should delete an article' do
     login
-
-    assert_page_has_no_errors!
-    assert_equal prints_path, current_path
     visit articles_path
 
     assert_page_has_no_errors!

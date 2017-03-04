@@ -127,7 +127,7 @@ new Rule
       State.fileUploaded = false
       $(this).preventDefault()
 
-    $(document).on 'click', '.skip-file-warning', @map.skipFileWarning
+    #$(document).on 'click', '.skip-file-warning', @map.skipFileWarning
     $(document).on 'ajax:success', 'a.details-link', @map.showDocumentDetails
     $(document).on 'item.removed', @map.removeItem
     $(document).on 'change keyup', '.price-modifier, .page-modifier, .file_line_item',
@@ -135,7 +135,7 @@ new Rule
     $(document).on 'click', 'a[data-action="print"]', @map.print
 
   unload: ->
-    $(document).off 'click', '.skip-file-warning', @map.skipFileWarning
+    #$(document).off 'click', '.skip-file-warning', @map.skipFileWarning
     $(document).off 'ajax:success', 'a.details-link', @map.showDocumentDetails
     $(document).off 'item.removed', @map.removeItem
     $(document).off 'change keyup', '.price-modifier, .page-modifier, .file_line',
