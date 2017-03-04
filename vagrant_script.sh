@@ -96,6 +96,14 @@ echo "192.168.33.1 host" >> /etc/hosts
 echo "ok"
 
 #=========================================================
+echo -n "Making rotsen & Cloning printHub"
+#=========================================================
+sudo mkdir -p /home/rotsen/rails/
+sudo chown vagrant -R /home/rotsen/
+cd /home/rotsen/rails
+git clone --depth 1 https://github.com/Shelvak/print_hub
+
+#=========================================================
 echo "Reboot the VM"
 #=========================================================
 sudo reboot
