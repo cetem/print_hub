@@ -47,22 +47,6 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  def current_customer_session
-    @current_customer_session ||= CustomerSession.find
-  end
-
-  def current_customer
-    @current_customer ||= current_customer_session && current_customer_session.record
-  end
-
-  def current_user_session
-    @current_user_session ||= UserSession.find
-  end
-
-  def current_user
-    @current_user ||= current_user_session && current_user_session.record
-  end
-
   def user_for_paper_trail
     current_user.try(:id)
   end
