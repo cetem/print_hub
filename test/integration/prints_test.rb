@@ -392,11 +392,11 @@ class PrintsTest < ActionDispatch::IntegrationTest
 
     assert_difference 'Print.count' do
       click_button I18n.t('view.prints.print_title')
-    end
 
-    assert_page_has_no_errors!
-    assert page.has_css?(
-      '.alert', text: I18n.t('view.prints.correctly_created')
-    )
+      assert_page_has_no_errors!
+      assert page.has_css?(
+        '.alert', text: I18n.t('view.prints.correctly_created')
+      )
+    end
   end
 end

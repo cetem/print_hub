@@ -126,8 +126,7 @@ class PrivateCustomerInteractionsTest < ActionDispatch::IntegrationTest
       assert page.has_no_css?('.document_details')
       first(:link, I18n.t('view.prints.document_details')).click
       assert page.has_css?('.document_details')
-      original_price =
-        first(:css, '.order_line .money').text.match(/\d+\.\d+/)[0].to_f
+      original_price = first(:css, '.order_line .money').text.match(/\d+\.\d+/)[0].to_f
 
       assert_equal 2, page.all('.order_line').size
       first(:css, 'a[data-event="removeItem"]').click

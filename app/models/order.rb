@@ -54,7 +54,7 @@ class Order < ApplicationModel
       order_lines.build(document_id: document_id)
     end if include_documents.present?
 
-    self.print_out = !!customer.try(:can_afford?, price)
+    self.print_out = !!customer.try(:can_afford?, self.price)
 
     order_items.each do |nm|
       nm.price_per_copy = nm.job_price_per_copy

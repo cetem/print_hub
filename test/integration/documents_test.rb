@@ -51,16 +51,15 @@ class DocumentsTest < ActionDispatch::IntegrationTest
     unused_book = documents(:unused_book)
     tag = unused_book.tags.first
 
-    within 'table tbody' do
-      assert_difference ['Document.count', 'tag.reload.documents_count'], -1 do
+    assert_difference ['Document.count', 'tag.reload.documents_count'], -1 do
+      within 'table tbody' do
         accept_confirm do
           find("a[href*=\"/#{unused_book.id}\"][data-method='delete']").click
         end
       end
+      assert_page_has_no_errors!
+      assert_equal documents_path, current_path
     end
-
-    assert_page_has_no_errors!
-    assert_equal documents_path, current_path
   end
 
   test 'should delete a tag' do

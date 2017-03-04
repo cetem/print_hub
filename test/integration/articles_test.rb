@@ -36,15 +36,15 @@ class ArticlesTest < ActionDispatch::IntegrationTest
     assert_page_has_no_errors!
     assert_equal articles_path, current_path
 
-    within 'table tbody' do
-      assert_difference 'Article.count', -1 do
+    assert_difference 'Article.count', -1 do
+      within 'table tbody' do
         accept_alert do
           all("a[data-method='delete']")[1].click # El 1ro esta usado
         end
+
+        assert_page_has_no_errors!
+        assert_equal articles_path, current_path
       end
     end
-
-    assert_page_has_no_errors!
-    assert_equal articles_path, current_path
   end
 end

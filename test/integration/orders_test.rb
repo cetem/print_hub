@@ -30,7 +30,7 @@ class OrdersTest < ActionDispatch::IntegrationTest
       first(:css, link_with_show_title).click
     end
 
-    id = show_href.match(/\/(\d+)/)[1]
+    id = show_href.match(/orders\/(\d+)/)[1]
     order = Order.find(id.to_i)
     assert order.pending?
 
@@ -164,25 +164,24 @@ class OrdersTest < ActionDispatch::IntegrationTest
       first(:css, link_with_show_title).click
     end
 
-    id = show_href.match(/\/(\d+)/)[1]
+    id = show_href.match(/orders\/(\d+)/)[1]
     order = Order.find(id.to_i)
     assert order.pending?
 
     assert_page_has_no_errors!
     assert_equal order_path(id), current_path
 
-    within '.form-actions' do
-      assert_difference 'Order.cancelled.count' do
+    assert_difference 'Order.cancelled.count' do
+      within '.form-actions' do
         accept_confirm do
           click_link I18n.t('view.orders.cancel')
         end
       end
+      assert_page_has_no_errors!
+      assert_equal order_path(id), current_path
+      assert page.has_css?(
+        '.alert', text: I18n.t('view.orders.correctly_cancelled')
+      )
     end
-
-    assert_page_has_no_errors!
-    assert_equal order_path(id), current_path
-    assert page.has_css?(
-      '.alert', text: I18n.t('view.orders.correctly_cancelled')
-    )
   end
 end
