@@ -254,6 +254,7 @@ es:
     catalog: "Documentos"
     orders: "Pedidos"
     profile: "Mis datos"
+    credits: "Créditos"
   document_mailer:
     barcodes_pdf:
       body: "Los códigos que solicitaste ya están listos. Gracias por tu paciencia"
@@ -448,6 +449,17 @@ es:
       without_deposits: "Sin depósitos"
       without_non_payments: "Sin impresiones impagas"
       without_prints: "Sin impresiones"
+      created_by: "Agregado por"
+      credits: "Créditos"
+      historical_credit: "Historial"
+      updated_by: 'Actualizado por'
+      event: 'Evento'
+      historical: "Histórico"
+    versions:
+      events:
+        update: 'Actualización'
+        create: 'Creación'
+        destroy: 'Borrado'
     customers_groups:
       copies: "Copias"
       date: "Fecha"

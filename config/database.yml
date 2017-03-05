@@ -7,7 +7,7 @@ defaults: &defaults
 
 development:
   <<: *defaults
-  database: print_hub_production
+  database: print_hub_development
 
 test:
   adapter: postgresql

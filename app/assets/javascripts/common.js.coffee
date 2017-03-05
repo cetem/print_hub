@@ -9,6 +9,10 @@ new Rule
     $('.alert[data-close-after]').each (i, a)->
       timers.push setTimeout((-> $(a).alert('close')), $(a).data('close-after'))
 
+    # For Remote modals we ask each time for new content
+    $('.remote-modal').on 'hidden', ->
+      $(this).data('modal').$element.removeData()
+
   unload: ->
     clearTimeout timer for i, timer of @map.timers
 

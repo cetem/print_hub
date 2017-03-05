@@ -1,5 +1,5 @@
 class CustomersController < ApplicationController
-  customer_actions = [:edit_profile, :update_profile]
+  customer_actions = [:edit_profile, :update_profile, :credits, :historical_credit]
   before_action :require_user, except: [
     :new, :create, :pay_off_debt, :pay_month_debt, customer_actions
   ].flatten
@@ -175,11 +175,46 @@ class CustomersController < ApplicationController
     render partial: 'month_paid'
   end
 
+  def credits
+    @credits = current_customer.credits.paginate(
+      page: params[:page], per_page: lines_per_page
+    )
+
+    respond_to do |format|
+      format.html # index.html.erb
+      format.json  { render json: @credits }
+    end
+  end
+
+  def historical_credit
+    @credit = current_customer.credits.find(params[:id])
+    historical = @credit.versions.to_a
+    @historical = []
+
+    historical.each_with_index do |h, i|
+      next if i.zero?
+      old = h.reify.attributes.slice('amount', 'remaining')
+      previous = historical[i-1]
+      old[:user] = User.find(previous.whodunnit)
+      old[:updated_at] = previous.created_at
+      old[:event] = previous.event
+      @historical << OpenStruct.new(old)
+    end
+    @last = OpenStruct.new(@credit.attributes)
+    @last.user = User.find(historical.last.whodunnit)
+    @last.event = @last.amount == @last.remaining ? 'create' : 'update'
+
+    respond_to do |format|
+      format.html # index.html.erb
+    end
+  end
+
+
   private
 
   # Atributos permitidos
   def customer_params
-    if current_user
+    if current_use
       current_user.admin? ? customer_params_as_admin : common_customer_params
     else
       public_customer_params

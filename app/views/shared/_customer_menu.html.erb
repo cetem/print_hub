@@ -19,6 +19,8 @@
             :li, link_to(t('menu.prints'), prints_path),
             class: "strong #{'active' if controller_name == 'prints'}"
           ) if current_customer.group_id? %>
+          <%= content_tag(:li, link_to(t('customer_menu.credits'), credits_customer_path(current_customer)),
+            class: "strong #{('active' if controller_name == 'customers' && action_name == 'credits')}") %>
         </ul>
         <%= render partial: 'shared/nav_search' if @searchable %>
         <ul class="nav pull-right">

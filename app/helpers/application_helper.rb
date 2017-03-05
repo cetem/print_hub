@@ -67,6 +67,19 @@ module ApplicationHelper
     link_to '&#xe05a;'.html_safe, *args, options
   end
 
+  def link_to_remote_modal(path, modal_selector, *args)
+    options = args.extract_options!
+
+    options['class'] ||= 'iconic'
+    options['title'] ||= t('label.show')
+    options['data-show-tooltip'] = true
+    options['data-target'] = modal_selector
+    options['data-toggle'] = 'modal'
+
+    link_to '&#xe074;'.html_safe, path, *args, options
+  end
+
+
   # Devuelve el HTML necesario para insertar un nuevo ítem en un nested form
   #
   # * _form_builder_::  Formulario "Padre" de la relación anidada
