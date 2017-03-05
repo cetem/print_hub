@@ -35,6 +35,10 @@ class ApplicationController < ActionController::Base
     end
   end
 
+  def info_for_paper_trail
+    { correlation_id: request.uuid }
+  end
+
   private
 
   def add_user_info_to_bugsnag(notif)
@@ -88,6 +92,12 @@ class ApplicationController < ActionController::Base
       false
     else
       true
+    end
+  end
+
+  def require_not_shifted
+    unless current_user.not_shifted?
+      redirect_to :back, notice: t('errors.unpermitted_action')
     end
   end
 

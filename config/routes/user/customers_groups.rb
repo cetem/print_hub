@@ -4,5 +4,8 @@ resources :customers_groups do
     get :global_settlement
   end
 
-  get :settlement, on: :member
+  member do
+    get :settlement
+    put :pay_between
+  end
 end

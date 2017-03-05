@@ -1,7 +1,8 @@
 class CustomersGroupsController < ApplicationController
   before_filter :require_admin_user, except: :autocomplete_for_name
   before_filter :require_user, only: :autocomplete_for_name
-  before_filter :load_group, only: [:show, :edit, :update, :destroy, :settlement]
+  before_filter :require_not_shifted, only: :pay_between
+  before_filter :load_group, only: [:show, :edit, :update, :destroy, :settlement, :pay_between]
 
   # GET /customers_groups
   # GET /customers_groups.json
@@ -109,10 +110,7 @@ class CustomersGroupsController < ApplicationController
   def global_settlement
     require 'gdrive' # VillageCines
 
-    interval      = params.require(:interval).permit(:from, :to)
-    start, finish = *make_datetime_range(interval)
-    start         = start.beginning_of_day
-    finish        = finish.end_of_day
+    start, finish = parsed_start_and_finish
 
     GDrive.upload_spreadsheet(
       t('view.customers_groups.spreadsheet_file_name',
@@ -126,7 +124,21 @@ class CustomersGroupsController < ApplicationController
                 notice: t('view.customers_groups.spreadsheat_uploaded')
   end
 
+  def pay_between
+    start, finish = parsed_start_and_finish
+
+    @customers_group.pay_between(start, finish)
+
+    redirect_to @customers_group
+  end
+
   private
+
+  def parsed_start_and_finish
+    interval      = params.require(:interval).permit(:from, :to)
+    start, finish = *make_datetime_range(interval)
+    [start.beginning_of_day, finish.end_of_day]
+  end
 
   def customers_group_params
     params.require(:customers_group).permit(:id, :name)

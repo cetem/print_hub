@@ -16,7 +16,40 @@
     </tbody>
   </table>
 
+  <p>
+    <strong><%= t('view.customers_groups.total_debt') %></strong>:
+    <%= number_to_currency @customers_group.total_debt %>
+  </p>
+
   <%= pagination_links(@customers) %>
+
+  <% if current_user.not_shifted? && current_user.admin? %>
+    <div class='well form-inputs'>
+      <%= simple_form_for :interval, url: pay_between_customers_group_path(@customers_group), method: :put do |f| %>
+      <div class='row-fluid'>
+        <div class='span1'>
+          <%= t('view.commons.date_filter.start') %>
+        </div>
+        <div class='span3'>
+          <%= f.input :from, as: :datetime_picker, label: false, input_html: {
+            value: (l(@from_date, format: :minimal) if @from_date)
+          } %>
+        </div>
+        <div class='span1'>
+          <%= t('view.commons.date_filter.end') %>
+        </div>
+        <div class='span3'>
+          <%= f.input :to, as: :datetime_picker, label: false, input_html: {
+            value: (l(@to_date, format: :minimal) if @to_date)
+          } %>
+        </div>
+        <div class='span4'>
+          <%= f.button :submit, t('view.customers_groups.pay'), class: 'btn btn-inverse' %>
+        </div>
+      </div>
+      <% end %>
+    </div>
+  <% end %>
 </div>
 
 <div class="form-actions">

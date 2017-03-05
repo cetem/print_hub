@@ -269,6 +269,7 @@ es:
     show_details: "Ver detalles"
     title: "Error"
     empty_results: "Sin resultados"
+    unpermitted_action: "Acción no permitida"
   label:
     and: "y"
     back: "Volver"
@@ -476,6 +477,8 @@ es:
       spreadsheet_uploaded: "Spreadsheat subido"
       subtotal_copies: "Subtotal (copias)"
       total: "Total"
+      pay: "Pagar!"
+      total_debt: "Total adeudado"
     documents:
       add_tag: "Agregar etiqueta"
       add_tag_title: "Agregar etiqueta (CTRL + ALT + E)"

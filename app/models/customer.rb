@@ -289,4 +289,8 @@ class Customer < ApplicationModel
       end
     end
   end
+
+  def prints_with_debt
+    self.prints.pay_later
+  end
 end

@@ -147,4 +147,18 @@ class CustomersGroup < ApplicationModel
       csv << [nil, totals[:simple], totals[:double], totals[:library]] if customers.count > 1
     end
   end
+
+  def pay_between(start, finish)
+    Print.transaction do
+      begin
+        Print.where(customer_id: self.customer_ids, created_at: start..finish).each(&:pay_print)
+      rescue
+        raise ActiveRecord::Rollback
+      end
+    end
+  end
+
+  def total_debt
+    self.customers.map {|c| c.prints_with_debt.to_a.sum(&:price)}.sum
+  end
 end
