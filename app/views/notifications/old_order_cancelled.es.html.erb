@@ -1,0 +1,20 @@
+<% url = order_url(@order_id) %>
+<h2>Orden antigua cancelada</h2>
+
+<p>Hola <strong><%= @customer.name %></strong>,</p>
+
+<p>Hemos cancelado una orden vieja. <%= link_to url, url %></p>
+
+<p>
+  Si necesitas volver a crear la orden y/o subir más archivos solo ingresa a <%= link_to catalog_url, catalog_url %> y pide lo que necesites.
+</p>
+
+<br />
+<br />
+
+<%= content_for :footer do %>
+  <p>
+    Si tenés problemas con el enlace anterior probá copiándolo en la barra de
+    direcciones de tu navegador.
+  </p>
+<% end %>

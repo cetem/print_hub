@@ -146,4 +146,14 @@ class Order < ApplicationModel
       conditions.map { |c| "(#{c})" }.join(' OR '), parameters
     ).order(options[:order]).references(:customer)
   end
+
+  def cancel!
+    self.delete_files!
+    self.update_column(:status, STATUS[:cancelled])
+    self.customer.deliver_old_order_cancelled!(self.id)
+  end
+
+  def delete_files!
+    self.file_lines.map(&:remove_file!)
+  end
 end

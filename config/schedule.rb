@@ -20,6 +20,7 @@ end
 
 every 7.days, at: '01:00' do
   rake 'tasks:clean_temp_files'
+  rake 'tasks:clean_orders'
 end
 
 every :sunday, at: '05:00' do

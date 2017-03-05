@@ -53,6 +53,17 @@ class Notifications < ActionMailer::Base
     end
   end
 
+  def old_order_cancelled(customer_email, order_id)
+    @customer = Customer.find_by(email: customer_email)
+    @order_id = order_id
+
+    if @customer
+      mail to: @customer.email, date: Time.zone.now
+    else
+      notify_exception(customer_email, 'forgot')
+    end
+  end
+
 private
 
   def notify_exception(email, mailer_name)

@@ -333,6 +333,8 @@ es:
       subject: "Registro"
     thanks_for_feedback:
       subject: "Muchas gracias por el feedback"
+    old_order_cancelled:
+      subject: "Orden antigua cancelada"
   mailer:
     layout:
       please_not_reply: "Por favor no responda este email, si tiene algún problema acérquese y lo ayudaremos. Gracias."

@@ -123,6 +123,10 @@ class Customer < ApplicationModel
     Notifications.delay.forgot_password(self.email)
   end
 
+  def deliver_old_order_cancelled!(order_id)
+    Notifications.delay.old_order_cancelled(self.email, order_id)
+  end
+
   def has_no_orders?
     orders.empty?
   end

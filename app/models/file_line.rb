@@ -65,4 +65,10 @@ class FileLine < ActiveRecord::Base
       copies: order.try(:total_pages_by_type, self.print_job_type)
     )
   end
+
+  def delete_file
+    self.remove_file!
+  rescue
+    nil
+  end
 end
