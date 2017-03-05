@@ -214,7 +214,7 @@ class CustomersController < ApplicationController
 
   # Atributos permitidos
   def customer_params
-    if current_user
+    if current_use
       current_user.admin? ? customer_params_as_admin : common_customer_params
     else
       public_customer_params
