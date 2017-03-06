@@ -51,7 +51,7 @@
 
     payLater = document.querySelector('#print_pay_later')
 
-    if payLater && !payLater.checked
+    if (payLater && !payLater.checked) || document.querySelector('#print_jobs_container')
       _.each Jobs.getPrintableJobs(), (printJob)->
         job = Jobs.assignDefaultOrGetJob(printJob)
         totalPrice += if job then job.price else 0.0
