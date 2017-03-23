@@ -9,6 +9,7 @@
         <%= f.label :notification_stock %>
         <small>(<%= t('view.articles.only_notify_when_its_greater_than') %>)</small>
         <%= f.input :notification_stock, label: false %>
+        <%= f.input :enabled, as: :boolean %>
         <%= f.input :description, input_html: { rows: 4 } %>
       </div>
     </div>

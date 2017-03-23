@@ -8,6 +8,7 @@ es:
         name: "Nombre"
         notification_stock: "Notificar al llegar al sgte stock"
         price: "Precio"
+        enabled: "Habilitado"
       article_line:
         article_id: "Artículo"
         unit_price: "Precio unitario"

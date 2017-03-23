@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170305235249) do
+ActiveRecord::Schema.define(version: 20170323031436) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -30,15 +30,16 @@ ActiveRecord::Schema.define(version: 20170305235249) do
   add_index "article_lines", ["print_id"], name: "index_article_lines_on_print_id", using: :btree
 
   create_table "articles", force: :cascade do |t|
-    t.string   "name",               limit: 255,                                      null: false
-    t.decimal  "price",                          precision: 15, scale: 3,             null: false
+    t.string   "name",               limit: 255,                                         null: false
+    t.decimal  "price",                          precision: 15, scale: 3,                null: false
     t.text     "description"
     t.integer  "lock_version",                                            default: 0
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "code",                                                                null: false
+    t.integer  "code",                                                                   null: false
     t.integer  "stock",                                                   default: 0
     t.integer  "notification_stock",                                      default: 0
+    t.boolean  "enabled",                                                 default: true
   end
 
   add_index "articles", ["code"], name: "index_articles_on_code", unique: true, using: :btree
@@ -70,20 +71,17 @@ ActiveRecord::Schema.define(version: 20170305235249) do
     t.string   "email",                    limit: 255
     t.string   "crypted_password",         limit: 255
     t.string   "password_salt",            limit: 255
+    t.string   "persistence_token",        limit: 255
+    t.string   "perishable_token",         limit: 255
     t.boolean  "enable",                                                        default: true
     t.string   "kind",                     limit: 1,                            default: "n",   null: false
     t.integer  "group_id"
-    t.string   "confirmation_token",       limit: 255
-    t.integer  "login_count"
-    t.string   "persistence_token"
-    t.string   "perishable_token"
-    t.string   "single_access_token"
   end
 
-  add_index "customers", ["confirmation_token"], name: "index_customers_on_confirmation_token", unique: true, using: :btree
   add_index "customers", ["email"], name: "index_customers_on_email", unique: true, using: :btree
   add_index "customers", ["enable"], name: "index_customers_on_enable", using: :btree
   add_index "customers", ["identification"], name: "index_customers_on_identification", unique: true, using: :btree
+  add_index "customers", ["perishable_token"], name: "index_customers_on_perishable_token", using: :btree
 
   create_table "customers_groups", force: :cascade do |t|
     t.string   "name",       limit: 255, null: false
@@ -324,42 +322,29 @@ ActiveRecord::Schema.define(version: 20170305235249) do
   add_index "tags", ["private"], name: "index_tags_on_private", using: :btree
 
   create_table "users", force: :cascade do |t|
-    t.string   "name",                   limit: 255,                 null: false
-    t.string   "last_name",              limit: 255,                 null: false
-    t.string   "language",               limit: 255,                 null: false
-    t.string   "email",                  limit: 255,                 null: false
-    t.string   "username",               limit: 255,                 null: false
-    t.string   "encrypted_password",     limit: 255,                 null: false
-    t.string   "password_salt",          limit: 255,                 null: false
-    t.boolean  "admin",                              default: false, null: false
+    t.string   "name",                limit: 255,                 null: false
+    t.string   "last_name",           limit: 255,                 null: false
+    t.string   "language",            limit: 255,                 null: false
+    t.string   "email",               limit: 255,                 null: false
+    t.string   "username",            limit: 255,                 null: false
+    t.string   "crypted_password",    limit: 255,                 null: false
+    t.string   "password_salt",       limit: 255,                 null: false
+    t.string   "persistence_token",   limit: 255,                 null: false
+    t.boolean  "admin",                           default: false, null: false
     t.boolean  "enable"
-    t.integer  "lock_version",                       default: 0
+    t.integer  "lock_version",                    default: 0
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "default_printer",        limit: 255
-    t.string   "avatar_file_name",       limit: 255
-    t.string   "avatar_content_type",    limit: 255
+    t.string   "default_printer",     limit: 255
+    t.string   "avatar_file_name",    limit: 255
+    t.string   "avatar_content_type", limit: 255
     t.integer  "avatar_file_size"
     t.datetime "avatar_updated_at"
     t.integer  "lines_per_page"
-    t.boolean  "not_shifted",                        default: false
-    t.string   "confirmation_token",     limit: 255
-    t.datetime "confirmed_at"
-    t.datetime "confirmation_sent_at"
-    t.string   "unconfirmed_email"
-    t.string   "reset_password_token",   limit: 255
-    t.datetime "reset_password_sent_at"
-    t.string   "remember_token",         limit: 255
-    t.datetime "remember_created_at"
-    t.string   "unlock_token",           limit: 255
-    t.datetime "locked_at"
-    t.integer  "sign_in_count"
+    t.boolean  "not_shifted",                     default: false
   end
 
-  add_index "users", ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true, using: :btree
   add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree
-  add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
-  add_index "users", ["unlock_token"], name: "index_users_on_unlock_token", unique: true, using: :btree
   add_index "users", ["username"], name: "index_users_on_username", unique: true, using: :btree
 
   create_table "versions", force: :cascade do |t|
