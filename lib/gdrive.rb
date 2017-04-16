@@ -37,10 +37,10 @@ module GDrive
           gdrive[:cert], gdrive[:secret]
         )
         scopes = %w(
-          https://www.googleapis.com/auth/drive https://docs.google.com/feeds/
-          https://docs.googleusercontent.com/ https://spreadsheets.google.com/feeds/
+          https://www.googleapis.com/auth/drive
+          https://spreadsheets.google.com/feeds/
         ).join(' ')
-        token_url             = 'https://accounts.google.com/o/oauth2/token'
+        token_url = 'https://accounts.google.com/o/oauth2/token'
         # Path (?)
         Google::APIClient.logger ||= Rails.logger
         ####
@@ -51,7 +51,7 @@ module GDrive
           audience:             token_url,
           scope:                scopes,
           issuer:               gdrive[:issuer],
-          signing_key:        key
+          signing_key:          key
         )
 
         @_gclient.authorization.fetch_access_token!
