@@ -475,7 +475,7 @@ es:
       settlement: "Liquidación"
       simple: "Simple"
       spreadsheet_file_name: "Liquidación Convenio %{start}-%{finish}"
-      spreadsheet_uploaded: "Spreadsheat subido"
+      spreadsheet_uploaded: "Spreadsheet subido"
       subtotal_copies: "Subtotal (copias)"
       total: "Total"
       pay: "Pagar!"

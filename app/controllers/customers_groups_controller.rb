@@ -121,7 +121,7 @@ class CustomersGroupsController < ApplicationController
     )
 
     redirect_to customers_groups_path,
-                notice: t('view.customers_groups.spreadsheat_uploaded')
+                notice: t('view.customers_groups.spreadsheet_uploaded')
   end
 
   def pay_between
