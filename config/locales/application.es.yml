@@ -288,6 +288,7 @@ es:
     search: "Buscar"
     show: "Ver"
     "yes": "Si"
+    disabled: "Deactivados"
   lang:
     es: "Español"
   menu:

@@ -6,7 +6,7 @@ class ArticlesController < ApplicationController
   def index
     @title = t('view.articles.index_title')
     @searchable = true
-    @articles = Article.all
+    @articles = params[:disabled] ? Article.disabled : Article.enabled
 
     if params[:q].present?
       query = params[:q].sanitized_for_text_query

@@ -159,7 +159,7 @@ class PrintsController < ApplicationController
   def autocomplete_for_article_name
     query = params[:q].sanitized_for_text_query
     query_terms = query.split(/\s+/).reject(&:blank?)
-    articles = Article.all
+    articles = Article.enabled
     articles = articles.full_text(query_terms) unless query_terms.empty?
     articles = articles.limit(10)
 

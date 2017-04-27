@@ -26,5 +26,10 @@
 
 <%= pagination_links(@articles) %>
 <nav class="form-actions">
-  <%= link_to t('label.new'), new_article_path, class: 'btn btn-primary' %>
+  <%= link_to t('label.new'), new_article_path, class: 'btn btn-primary' %> |
+  <% if params[:disabled] %>
+    <%= link_to t('label.list'), articles_path, class: 'btn' %>
+  <% else %>
+    <%= link_to t('label.disabled'), articles_path(disabled: true), class: 'btn' %>
+  <% end %>
 </nav>
