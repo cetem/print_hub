@@ -162,6 +162,8 @@ new Rule
        articleLine = $(this).parents('.article_line:first')
 
        articleLine.find('input[name$="[unit_price]"]').val(unitPrice)
+       action = if item.stock == 0 then 'show' else 'hide'
+       Helper[action](articleLine.find('span.overselling-stock'))
 
        Print.updateArticleLinePrice(articleLine[0])
      else if item.free_credit

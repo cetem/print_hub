@@ -30,7 +30,7 @@ class Article < ApplicationModel
 
   def as_json(options = nil)
     default_options = {
-      only: [:id],
+      only: [:id, :stock],
       methods: [:label, :unit_price]
     }
 

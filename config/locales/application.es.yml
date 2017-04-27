@@ -356,6 +356,7 @@ es:
       only_notify_when_its_greater_than: "Solo notifica si es mayor a 0"
       show_title: "Detalle de artículo"
       stale_object_error: "El artículo no pudo ser actualizado, intente nuevamente."
+      no_stock: "Sin stock"
     bonuses:
       bonuses_with_customer: "Bonificaciones de %{customer}"
       index_title: "Listado de bonificaciones"
