@@ -39,7 +39,7 @@ class Shift < ActiveRecord::Base
 
   def as_json(options = nil)
     default_options = {
-      only: [:id, :user_id, :start, :finish, :paid, :created_at]
+      only: [:id, :user_id, :start, :finish, :as_admin, :paid, :created_at]
     }
 
     super(default_options.merge(options || {}))
