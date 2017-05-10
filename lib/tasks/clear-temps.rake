@@ -5,10 +5,10 @@ namespace :tasks do
 
     @logger.info 'Cleaning'
 
-    @logger.info 'Cleaning public/uploads'
-    dir = "#{Rails.root}/uploads/tmp/"
-    delete_files_older_than_7_days(dir)
-    delete_empty_files_folder(dir)
+    # @logger.info 'Cleaning public/uploads'
+    # dir = "#{Rails.root}/uploads/tmp/"
+    # delete_files_older_than_7_days(dir)
+    # delete_empty_files_folder(dir)
 
     @logger.info 'Cleaning tmp/codes'
     dir = "#{Rails.root}/tmp/codes/"
@@ -21,7 +21,7 @@ namespace :tasks do
 
   def delete_files_older_than_7_days(directory)
     output = `find #{directory} -type f -mtime +7 | xargs rm -rf`
-    if output
+    if output.present?
       output.each do |file|
         @logger.info "Cleanned: #{file}"
       end

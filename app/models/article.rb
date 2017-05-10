@@ -7,9 +7,9 @@ class Article < ApplicationModel
   # Callbacks
   before_destroy :can_be_destroyed?
 
-  scope :to_notify, -> { where('notification_stock > 0 AND notification_stock >= stock' ) }
   scope :enabled, -> { where(enabled: true) }
   scope :disabled, -> { where(enabled: false) }
+  scope :to_notify, -> { enabled.where('notification_stock > 0 AND notification_stock >= stock' ) }
 
   # Restricciones
   validates :name, :code, presence: true
