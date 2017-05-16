@@ -148,6 +148,22 @@ class UsersController < ApplicationController
     end
   end
 
+  def shifts_between
+    start, finish = make_datetime_range(
+      from: params[:start], to: params[:finish]
+    )
+    users_data = []
+
+    if start.present? && finish.present?
+      users_data = User.shifts_between(start, finish)
+    end
+
+    respond_to do |format|
+      format.json { render json: users_data }
+    end
+  end
+
+
   private
 
   def user_params

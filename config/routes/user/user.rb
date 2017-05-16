@@ -5,6 +5,7 @@ resources :users, except: [:destroy] do
     get :autocomplete_for_user_name
     get :current_workers
     get :pay_pending_shifts_for_active_users_between
+    get :shifts_between
   end
 
   member do

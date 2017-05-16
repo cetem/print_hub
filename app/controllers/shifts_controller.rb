@@ -118,7 +118,6 @@ class ShiftsController < ApplicationController
     end
   end
 
-
   private
 
   def shifts_scope

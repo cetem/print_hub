@@ -146,8 +146,29 @@ class User < ApplicationModel
 
   def self.pay_pending_shifts_for_active_users_between(start, finish)
     actives.with_shifts_control.order_by_name.map do |u|
-      as_operator_shifts = u.shifts.as_operator_between(start, finish)
-      as_admin_shifts = u.shifts.as_admin_between(start, finish)
+      pay_pending_shifts = u.shifts.pay_pending
+      as_operator_shifts = pay_pending_shifts.as_operator_between(start, finish)
+      as_admin_shifts = pay_pending_shifts.as_admin_between(start, finish)
+
+      if as_operator_shifts || as_admin_shifts
+        {
+          user: {
+            id: u.id,
+            label: u.label
+          },
+          shifts: {
+            operator: as_operator_shifts,
+            admin: as_admin_shifts
+          }
+        }
+      end
+    end.compact
+  end
+
+  def self.shifts_between(start, finish)
+    with_shifts_control.order_by_name.map do |u|
+      as_operator_shifts = u.shifts.finished.as_operator_between(start, finish)
+      as_admin_shifts = u.shifts.finished.as_admin_between(start, finish)
 
       if as_operator_shifts || as_admin_shifts
         {

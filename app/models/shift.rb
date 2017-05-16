@@ -80,11 +80,11 @@ class Shift < ActiveRecord::Base
   end
 
   def self.as_operator_between(start, finish)
-    as_operator.pay_pending_between(start, finish).to_stats_format
+    as_operator.between(start, finish).to_stats_format
   end
 
   def self.as_admin_between(start, finish)
-    as_admin.pay_pending_between(start, finish).to_stats_format
+    as_admin.between(start, finish).to_stats_format
   end
 
   def self.to_stats_format
