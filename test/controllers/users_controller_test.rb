@@ -133,8 +133,8 @@ class UsersControllerTest < ActionController::TestCase
     Shift.all.update_all(paid: false)
     finished_shifts = Shift.finished.count
 
-    from = 1.month.ago.to_date
-    to = Time.zone.today
+    from = 2.month.ago.to_date
+    to = 1.day.from_now.to_date
     users_shifts = User.pay_pending_shifts_for_active_users_between(from, to).first
 
     get :pay_pending_shifts_for_active_users_between, format: :json,

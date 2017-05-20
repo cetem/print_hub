@@ -2,16 +2,46 @@
   <h2><%= @shift.user %></h2>
 
   <dl class="dl-horizontal">
-    <dt><%= Shift.human_attribute_name 'start' %></dt>
+    <dt><%= Shift.human_attribute_name 'start' %>:</dt>
     <dd><%= l @shift.start, format: :long %></dd>
 
-    <dt><%= Shift.human_attribute_name 'finish' %></dt>
+    <dt><%= Shift.human_attribute_name 'finish' %>:</dt>
     <dd><%= @shift.finish ? l(@shift.finish, format: :long) : '-' %></dd>
 
-    <dt><%= Shift.human_attribute_name 'description' %></dt>
+    <dt><%= Shift.human_attribute_name 'as_admin' %>:</dt>
+    <dd><%= translate_boolean @shift.as_admin %></dd>
+
+    <dt><%= Shift.human_attribute_name 'paid' %>:</dt>
+    <dd><%= translate_boolean @shift.paid %></dd>
+
+    <dt><%= Shift.human_attribute_name 'description' %>:</dt>
     <dd><%= simple_format @shift.description %></dd>
   </dl>
 </div>
+
+<% if @historical.any? && @last %>
+  <hr />
+  <table class="table table-striped">
+    <thead>
+      <th><%= t('view.versions.updated_by') %></th>
+      <th><%= Shift.human_attribute_name 'start' %></th>
+      <th><%= Shift.human_attribute_name 'finish' %></th>
+      <th><%= Shift.human_attribute_name 'updated_at' %></th>
+      <th><%= Shift.human_attribute_name 'paid' %></th>
+      <th><%= t('view.versions.event') %></th>
+    </thead>
+    <tbody>
+      <% @historical.each do |h| %>
+        <tr>
+          <%= render partial: "versioned_shift", locals: { h: h } %>
+        </tr>
+      <% end %>
+      <tr class="info">
+        <%= render partial: "versioned_shift", locals: { h: @last } %>
+      </tr>
+    </tbody>
+  </table>
+<% end %>
 
 <div class="form-actions">
   <% if current_user.admin? %>

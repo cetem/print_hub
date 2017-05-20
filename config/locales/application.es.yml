@@ -151,6 +151,7 @@ es:
         finish: "Fin"
         start: "Inicio"
         user_id: "Usuario"
+        paid: "Pagado"
       shift_closure:
         administration_copies: "Copias CETEM"
         cashbox_amount: "Efectivo en caja"
@@ -462,6 +463,8 @@ es:
       event: 'Evento'
       historical: "Histórico"
     versions:
+      updated_by: "Modificó"
+      event: 'Evento'
       events:
         update: 'Actualización'
         create: 'Creación'

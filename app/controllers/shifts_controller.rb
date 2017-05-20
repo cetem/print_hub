@@ -23,6 +23,24 @@ class ShiftsController < ApplicationController
     @title = t('view.shifts.show_title')
     @shift = shifts_scope.find(params[:id])
 
+    historical = @shift.versions.to_a
+    @historical = []
+
+    if historical.any?
+      historical.each_with_index do |h, i|
+        next if i.zero?
+        old = h.reify.attributes.slice('start', 'finish', 'paid')
+        previous = historical[i-1]
+        old[:user] = User.where(id: previous.whodunnit).try(:first) || '---'
+        old[:updated_at] = previous.created_at
+        old[:event] = previous.event
+        @historical << OpenStruct.new(old)
+      end
+      @last = OpenStruct.new(@shift.attributes)
+      @last.user = User.where(id: historical.last.whodunnit).try(:first) || '---'
+      @last.event = historical.size == 1 ? 'create' : 'update'
+    end
+
     respond_to do |format|
       format.html # show.html.erb
       format.json { render json: @shift }
