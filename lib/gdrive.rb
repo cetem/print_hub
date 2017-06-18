@@ -12,7 +12,7 @@ module GDrive
 
         ws = s.worksheet_by_title(page_title)
         unless ws
-          ws = s.add_worksheet(page_title, array.size, array[0].size)
+          ws = s.add_worksheet(page_title, array.size + 5, array[0].size)
         end
       else
         ws = s.worksheets[0]

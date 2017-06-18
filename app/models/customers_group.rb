@@ -28,10 +28,15 @@ class CustomersGroup < ApplicationModel
   end
 
   def self.settlement_as_csv(start = 1.year.ago, finish = Time.zone.now)
-    _group = []
+    _group = [
+      # A    B    C    D    E    F    G
+      [nil, nil, nil, nil, nil, 0.5, 0.6]
+    ]
 
-    all.each do |cg|
-      _group += cg.settlement_as_csv(start, finish)
+
+    all.map do |cg|
+      csv = cg.settlement_as_csv(start, finish)
+      _group += csv if csv
     end
 
     _group
@@ -74,12 +79,18 @@ class CustomersGroup < ApplicationModel
         totals[:two_sides] += copies[:two]
         totals[:library] += library
 
-        csv << [c.to_s, copies[:one], copies[:two], library]
+        csv << [c.to_s, copies[:one], copies[:two], library, "=#{copies[:one]}*F1+#{copies[:two]}*G1+#{library}"]
       end
     end
 
-    csv << [nil, totals[:one_side], totals[:two_sides], totals[:library]] if customers.count > 1
-    csv
+    if csv.size > 3  # one empty line + headers + at least 1 detail
+      csv << [
+        nil, totals[:one_side], totals[:two_sides], totals[:library],
+        "=#{totals[:one_side]}*F1+#{totals[:two_sides]}*G1+#{totals[:library]}"
+      ]
+
+    end
+    csv if csv.size > 2
   end
 
   def detailed_settlement_as_csv(start = 1.year.ago, finish = Time.zone.now)
@@ -160,5 +171,19 @@ class CustomersGroup < ApplicationModel
 
   def total_debt
     self.customers.map {|c| c.prints_with_debt.to_a.sum(&:price)}.sum
+  end
+
+  def self.upload_settlements(start, finish=nil)
+    require 'gdrive'
+    finish ||= start.end_of_month
+    GDrive.upload_spreadsheet(
+      I18n.t('view.customers_groups.spreadsheet_file_name',
+        start: I18n.l(start.to_date, format: :related_month).camelize,
+        finish: I18n.l(finish.to_date, format: :related_month).camelize,
+        year:  start.year
+       ),
+      CustomersGroup.settlement_as_csv(start, finish),
+      month:  (start.month == finish.month) ? start.month : nil
+    )
   end
 end

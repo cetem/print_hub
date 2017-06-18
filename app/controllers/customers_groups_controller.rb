@@ -108,20 +108,12 @@ class CustomersGroupsController < ApplicationController
   end
 
   def global_settlement
-    require 'gdrive' # VillageCines
-
     start, finish = parsed_start_and_finish
 
-    GDrive.upload_spreadsheet(
-      t('view.customers_groups.spreadsheet_file_name',
-        start: l(start.to_date, format: :related_month).camelize,
-        finish: l(finish.to_date, format: :related_month).camelize
-       ),
-      CustomersGroup.settlement_as_csv(start, finish)
-    )
+    DriveWorker.perform_async(DriveWorker::CUSTOMERS_GROUPS, start, finish)
 
     redirect_to customers_groups_path,
-                notice: t('view.customers_groups.spreadsheet_uploaded')
+                notice: t('view.customers_groups.spreadsheet_uploading')
   end
 
   def pay_between

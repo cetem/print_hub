@@ -1,4 +1,5 @@
 class DriveWorker
+  CUSTOMERS_GROUPS = 'customers_groups'
   SHIFTS = 'shifts'
   require 'gdrive'
 
@@ -16,6 +17,10 @@ class DriveWorker
           ),
           Shift.between(start, finish).to_csv
         )
+      when CUSTOMERS_GROUPS
+        _start = Time.parse(start)
+        _finish = Time.parse(finish)
+        CustomersGroup.upload_settlements(_start, _finish)
     end
   end
 end
