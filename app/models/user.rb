@@ -103,9 +103,10 @@ class User < ApplicationModel
   end
 
   def pay_shifts_between(start, finish)
-    User.transaction do
-      _shifts = shifts.pay_pending_between(start, finish)
+    _shifts = shifts.pay_pending_between(start, finish)
+    ids = _shifts.pluck(:id)
 
+    User.transaction do
       unless _shifts.all?(&:pay!)
         Bugsnag.notify(
           RuntimeError.new(
@@ -124,6 +125,15 @@ class User < ApplicationModel
 
         fail ActiveRecord::Rollback
       end
+      DriveWorker.perform_async(
+        DriveWorker::PAID_SHIFTS,
+        {
+          start: start,
+          finish: finish,
+          ids: ids,
+          label: shifts.first.user.to_s
+        }
+      )
 
       true
     end

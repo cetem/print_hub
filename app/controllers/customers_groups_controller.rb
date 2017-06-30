@@ -110,7 +110,7 @@ class CustomersGroupsController < ApplicationController
   def global_settlement
     start, finish = parsed_start_and_finish
 
-    DriveWorker.perform_async(DriveWorker::CUSTOMERS_GROUPS, start, finish)
+    DriveWorker.perform_async(DriveWorker::CUSTOMERS_GROUPS, { start: start, finish: finish })
 
     redirect_to customers_groups_path,
                 notice: t('view.customers_groups.spreadsheet_uploading')

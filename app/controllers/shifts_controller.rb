@@ -120,7 +120,7 @@ class ShiftsController < ApplicationController
       @start        = start.beginning_of_day
       @finish       = finish.end_of_day
 
-      DriveWorker.perform_async(DriveWorker::SHIFTS, @start, @finish)
+      DriveWorker.perform_async(DriveWorker::SHIFTS, { start: @start, finish: @finish })
       flash.notice = t('view.shifts.exporting_shifts')
     end
   end

@@ -7,8 +7,10 @@ module GDrive
       not_assign_permissions = !!s
       s ||= gdrive_session.create_spreadsheet(title)
 
-      if (month = kwargs[:month]).present?
-        page_title = I18n.t('date.month_names')[month]
+      month = kwargs[:month]
+      label = kwargs[:label]
+      if (month || label).present?
+        page_title = label || I18n.t('date.month_names')[month]
 
         ws = s.worksheet_by_title(page_title)
         unless ws

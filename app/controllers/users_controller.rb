@@ -140,7 +140,9 @@ class UsersController < ApplicationController
     users_data = []
 
     if start.present? && finish.present?
-      users_data = User.pay_pending_shifts_for_active_users_between(start, finish)
+      users_data = User.pay_pending_shifts_for_active_users_between(
+        start, finish
+      )
     end
 
     respond_to do |format|

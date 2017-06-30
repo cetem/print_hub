@@ -112,13 +112,16 @@ class Shift < ActiveRecord::Base
     }
   end
 
-  def self.to_csv
+  def self.to_csv(detailled=false, observation=nil)
     title = [
       human_attribute_name('id'),
       human_attribute_name('start'),
       human_attribute_name('finish'),
       human_attribute_name('as_admin')
     ]
+    if detailled
+      title << human_attribute_name('worked_hours')
+    end
     _yes = I18n.t('label.yes')
     _no = I18n.t('label.no')
     csv = []
@@ -127,15 +130,24 @@ class Shift < ActiveRecord::Base
       csv << [User.find(user_id).to_s]
       csv << title
       _scope.each do |shift|
-        csv << [
+        row = [
           shift.id,
           I18n.l(shift.start),
           shift.finish ? I18n.l(shift.finish) : '----',
           shift.as_admin? ? _yes : _no
         ]
+        if detailled && shift.finish
+          row << ((shift.finish - shift.start) / 3600.0).round(2)
+        end
+
+        csv << row
       end
 
       csv << []
+      if observation
+        csv << [observation]
+        csv << []
+      end
     end
     csv
   end
