@@ -104,7 +104,7 @@ class User < ApplicationModel
 
   def pay_shifts_between(start, finish)
     _shifts = shifts.pay_pending_between(start, finish)
-    ids = _shifts.pluck(:id)
+    json = _shifts.as_json
 
     User.transaction do
       unless _shifts.all?(&:pay!)
@@ -125,17 +125,17 @@ class User < ApplicationModel
 
         fail ActiveRecord::Rollback
       end
-      DriveWorker.perform_async(
-        DriveWorker::PAID_SHIFTS,
-        {
-          start: start,
-          finish: finish,
-          ids: ids,
-          label: shifts.first.user.to_s
-        }
-      )
+      # DriveWorker.perform_async(
+      #   DriveWorker::PAID_SHIFTS,
+      #   {
+      #     start: start,
+      #     finish: finish,
+      #     ids: ids,
+      #     label: shifts.first.user.to_s
+      #   }
+      # )
 
-      true
+      json
     end
   end
 

@@ -117,10 +117,10 @@ class UsersController < ApplicationController
     start, finish = make_datetime_range(
       from: params[:start], to: params[:finish]
     )
-    payed = User.find(params[:id]).pay_shifts_between(start, finish)
+    paid = User.find(params[:id]).pay_shifts_between(start, finish)
 
     respond_to do |format|
-      format.json { head (payed ? :ok : :conflict) }
+      format.json { render json: paid }
     end
   end
 
