@@ -34,32 +34,34 @@ module GDrive
     end
 
     def client
-      unless @_gclient
-        key = Google::APIClient::KeyUtils.load_from_pkcs12(
-          gdrive[:cert], gdrive[:secret]
-        )
-        scopes = %w(
-          https://www.googleapis.com/auth/drive
-          https://spreadsheets.google.com/feeds/
-        ).join(' ')
-        token_url = 'https://accounts.google.com/o/oauth2/token'
-        # Path (?)
-        Google::APIClient.logger ||= Rails.logger
-        ####
+      return @_gclient if @_gclient
+      key = Google::APIClient::KeyUtils.load_from_pkcs12(
+        gdrive[:cert], gdrive[:secret]
+      )
+      scopes = %w(
+        https://www.googleapis.com/auth/drive
+        https://spreadsheets.google.com/feeds/
+      ).join(' ')
+      token_url = 'https://accounts.google.com/o/oauth2/token'
+      # Path (?)
+      Google::APIClient.logger ||= Rails.logger
+      ####
 
-        @_gclient               = Google::APIClient.new
-        @_gclient.authorization = Signet::OAuth2::Client.new(
-          token_credential_uri: token_url,
-          audience:             token_url,
-          scope:                scopes,
-          issuer:               gdrive[:issuer],
-          signing_key:          key
-        )
+      @_gclient               = Google::APIClient.new
+      @_gclient.authorization = Signet::OAuth2::Client.new(
+        token_credential_uri: token_url,
+        audience:             token_url,
+        scope:                scopes,
+        issuer:               gdrive[:issuer],
+        signing_key:          key
+      )
 
-        @_gclient.authorization.fetch_access_token!
-      end
+      @_gclient.authorization.fetch_access_token!
 
       @_gclient
+    rescue => e
+      @_gclient = nil
+      raise
     end
 
     def gdrive_session
