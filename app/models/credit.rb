@@ -50,6 +50,8 @@ class Credit < ApplicationModel
 
   def creator
     v = self.versions.first
-    v ? User.find(v.whodunnit) : ''
+    (v && v.whodunnit.present?) ? User.find(v.whodunnit) : ''
+  rescue
+    ''
   end
 end
