@@ -35,6 +35,7 @@ module GDrive
 
     def client
       return @_gclient if @_gclient
+
       key = Google::APIClient::KeyUtils.load_from_pkcs12(
         gdrive[:cert], gdrive[:secret]
       )
@@ -57,6 +58,7 @@ module GDrive
       )
 
       @_gclient.authorization.fetch_access_token!
+      @_client_initialized_at = Time.now
 
       @_gclient
     rescue => e
@@ -65,6 +67,9 @@ module GDrive
     end
 
     def gdrive_session
+      if @_gclient && (@_client_initialized_at || Time.now - Time.now) > 50.minutes
+        @_gclient = nil
+      end
       GoogleDrive.login_with_oauth(client.authorization.access_token)
     end
 
