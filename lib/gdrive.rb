@@ -67,7 +67,7 @@ module GDrive
     end
 
     def gdrive_session
-      if @_gclient && (@_client_initialized_at || Time.now - Time.now) > 50.minutes
+      if @_gclient && (@_client_initialized_at || Time.now - Time.now) > 50.minutes.to_i
         @_gclient = nil
       end
       GoogleDrive.login_with_oauth(client.authorization.access_token)
