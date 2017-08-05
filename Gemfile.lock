@@ -94,6 +94,8 @@ GEM
       json (>= 1.7)
       mime-types (>= 1.16)
       mimemagic (>= 0.3.0)
+    carrierwave_backgrounder (0.4.2)
+      carrierwave (~> 0.5)
     childprocess (0.5.9)
       ffi (~> 1.0, >= 1.0.11)
     chromedriver-helper (1.0.0)
@@ -365,6 +367,7 @@ DEPENDENCIES
   capybara
   capybara-screenshot
   carrierwave
+  carrierwave_backgrounder
   chromedriver-helper
   chunky_png
   coffee-rails

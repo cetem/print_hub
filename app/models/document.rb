@@ -1,6 +1,7 @@
 class Document < ApplicationModel
   has_paper_trail
   mount_uploader :file, DocumentsUploader, mount_on: :file_file_name
+  process_in_background :file
   mount_uploader :original_file, SimpleDocumentsUploader
 
   # Scopes

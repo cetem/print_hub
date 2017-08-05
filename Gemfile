@@ -15,6 +15,7 @@ gem 'mailgunner'
 
 # Files Processors
 gem 'carrierwave'
+gem 'carrierwave_backgrounder'
 gem 'mini_magick', '3.8.1'
 gem 'rghost' #Could make it happen only with carrierwave
 gem 'pdf-reader'

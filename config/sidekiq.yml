@@ -5,3 +5,4 @@
 :queues:
   - [default, 2]
   - low
+  - carrierwave
