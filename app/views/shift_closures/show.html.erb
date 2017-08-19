@@ -147,7 +147,8 @@
   <% if @shift_closure.finish_at.present? %>
     <%= link_to t('view.shift_closures.edit_comment'),
       '#', data: { target: '#comment', toggle: 'modal' } %> |
-  <% else %>
+  <% end %>
+  <% if @shift_closure.finish_at.blank? || current_user.not_shifted? %>
     <%= link_to t('label.edit'), edit_shift_closure_path(@shift_closure) %> |
   <% end %>
   <%= link_to t('label.list'), shift_closures_path %>

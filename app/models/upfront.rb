@@ -9,6 +9,7 @@ class Upfront < ActiveRecord::Base
   self.table_name = 'outflows'
 
   attr_accessor :auto_operator_name
+  default_scope -> { kind: KIND[:upfront] }
 
   belongs_to :user
   belongs_to :operator, foreign_key: :operator_id, class_name: User

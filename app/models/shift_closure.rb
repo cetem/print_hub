@@ -62,11 +62,9 @@ class ShiftClosure < ActiveRecord::Base
   end
 
   def counter_for_printer(printer_name)
-    counter = if (_last = ShiftClosure.last).present?
-                _last.printers_stats[printer_name]
-              end
-
-    counter || 0
+    if (_last = ShiftClosure.last).present?
+      _last.printers_stats[printer_name]
+    end || 0
   end
 
   def printers_counters_greater_than_last
