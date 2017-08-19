@@ -96,10 +96,10 @@ class ShiftClosure < ActiveRecord::Base
     end
   end
 
-  def calc_system_amount
+  def calc_system_amount(partial=false)
     self.system_amount = Print.between(
-      self.start_at, self.finish_at
-    ).to_a.sum(&:price) if self.system_amount.zero?
+      self.start_at, (self.finish_at || Time.now)
+    ).to_a.sum(&:price) if self.system_amount.zero? || partial
   end
 
   def start_before

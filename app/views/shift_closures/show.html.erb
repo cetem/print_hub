@@ -17,7 +17,11 @@
       </p>
       <p>
         <b><%= ShiftClosure.human_attribute_name 'system_amount' %></b>:
-        <%= number_to_currency @shift_closure.system_amount %>
+        <% if @shift_closure.system_amount.zero? && current_user.not_shifted %>
+          <%= number_to_currency @shift_closure.calc_system_amount(partial=true) %> (parcial)
+        <% else %>
+          <%= number_to_currency @shift_closure.system_amount %>
+        <% end %>
       </p>
       <p>
         <b><%= ShiftClosure.human_attribute_name 'total_amount' %></b>:
