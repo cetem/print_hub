@@ -202,4 +202,32 @@ class Shift < ActiveRecord::Base
 
     { admin: admin, operator: operator }
   end
+
+  def self.delayed_shifts
+    hours = [
+    # [hour, minutes]
+      [ 8, 0 ],
+      [11, 30],
+      [15, 0 ],
+      [19, 0 ]
+    ]
+    min = 20.minutes
+    max = 1.hour
+
+    shifts_to_report = {}
+    Shift.between(1.day.ago, Time.now).each do |shift|
+      hours.each do |hour, minutes|
+        expected = shift.start.change(hour: hour, min: minutes)
+        d = (shift.start - expected).to_i
+        if (d > min && d < max)
+          shifts_to_report[shift.user.to_s] ||= []
+          shifts_to_report[shift.user.to_s] << {
+            delay: d.to_i,
+            start: expected
+          }
+        end
+      end
+    end
+    shifts_to_report
+  end
 end

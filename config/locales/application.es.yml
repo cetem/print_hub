@@ -687,6 +687,12 @@ es:
       printer_end: "%{printer}_final"
       total: 'Totales:'
     shifts:
+      shifts_cop:
+        shift_text: "- llego %{delay} tarde al turno de %{start}"
+        notification_body: |-
+            Milicobani en acción...
+            %{body}
+             Saludos desde el server.
       close_session:
         as_operator: "Cerrar como Operario"
         body:
