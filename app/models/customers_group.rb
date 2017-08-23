@@ -30,9 +30,8 @@ class CustomersGroup < ApplicationModel
   def self.settlement_as_csv(start = 1.year.ago, finish = Time.zone.now)
     _group = [
       # A    B    C    D    E    F    G
-      [nil, nil, nil, nil, nil, 0.5, 0.6]
+      [nil, nil, nil, nil, nil, 0.6, 0.5]
     ]
-
 
     all.map do |cg|
       csv = cg.settlement_as_csv(start, finish)
@@ -43,11 +42,11 @@ class CustomersGroup < ApplicationModel
   end
 
   def settlement_as_csv(start = 1.year.ago, finish = Time.zone.now)
-    double_t    = I18n.t('view.customers_groups.double')
-    simple_t    = I18n.t('view.customers_groups.simple')
-    library_t   = I18n.t('view.customers_groups.library')
-    total_t     = I18n.t('view.customers_groups.total')
-    range       = start..finish
+    double_t  = I18n.t('view.customers_groups.double')
+    simple_t  = I18n.t('view.customers_groups.simple')
+    library_t = I18n.t('view.customers_groups.library')
+    total_t   = I18n.t('view.customers_groups.total')
+    range     = start..finish
 
     csv = []
     csv << []
