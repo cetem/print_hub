@@ -70,7 +70,7 @@ class Order < ApplicationModel
   end
 
   def reject_file_lines_attributes?(attributes)
-    (attributes['file'].blank? && attributes['file_cache'].blank?) ||
+    (attributes['id'].blank? && attributes['file'].blank? && attributes['file_cache'].blank?) ||
       attributes['copies'].to_i <= 0
   end
 

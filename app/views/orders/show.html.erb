@@ -8,9 +8,11 @@
           status: @order.status_text
         ) %>
       </h2>
-      <h3>
-        <%= l @order.scheduled_at, format: :long if @order.scheduled_at %>
-      </h3>
+      <% if current_user %>
+        <h3>
+          <%= l @order.scheduled_at, format: :long if @order.scheduled_at %>
+        </h3>
+      <% end %>
     </div>
     <% if current_customer %>
       <div class="span6">

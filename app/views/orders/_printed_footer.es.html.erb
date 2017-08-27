@@ -23,11 +23,11 @@
       <%# </div> %>
 
       <div id="not_printed" class="alert alert-warning" <%= raw 'style="display: none"' if @order.print_out %>>
-        <p>
+        <h3>
           Para imprimir los documentos <strong>acercate</strong> personalmente
           hasta el centro de copiado y consultá por el pedido
-          <strong><%= @order.id %></strong>
-        </p>
+          <strong>==>>> <%= @order.id %></strong>
+        </h3>
       </div>
     <% end %>
   <% end %>
