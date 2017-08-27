@@ -14,6 +14,7 @@
     #else if totalPrice > 0
     # TODO: DEFINE WHATEVER WE WANT (temporal fix)
     $('#printed').hide()
+    $('.js-scheduled-at').hide()
     $('#not_printed').show()
 
     money = $('#total span.money')
@@ -115,12 +116,6 @@ new Rule
         element.classList.add('exclude-from-total')
         Order.updateTotalPrice()
 
-    # Al hacer click en botón imprimir -> Imprimir =)
-    @map.print ||= (event)->
-      window.print()
-
-      event.preventDefault()
-      event.stopPropagation()
 
     # TODO Rectificar ya que no funciona el beforeunload para uploads
     @map.skipFileWarning ||= (e)->
@@ -132,7 +127,6 @@ new Rule
     $(document).on 'item.removed', @map.removeItem
     $(document).on 'change keyup', '.price-modifier, .page-modifier, .file_line_item',
       Order.updateAllOrderLines
-    $(document).on 'click', 'a[data-action="print"]', @map.print
 
   unload: ->
     #$(document).off 'click', '.skip-file-warning', @map.skipFileWarning
@@ -140,5 +134,4 @@ new Rule
     $(document).off 'item.removed', @map.removeItem
     $(document).off 'change keyup', '.price-modifier, .page-modifier, .file_line',
       Order.updateAllOrderLines
-    $(document).off 'click', 'a[data-action="print"]', @map.print
 

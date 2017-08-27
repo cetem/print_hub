@@ -13,8 +13,18 @@ new Rule
     $('.remote-modal').on 'hidden', ->
       $(this).data('modal').$element.removeData()
 
+    # Al hacer click en botón imprimir -> Imprimir =)
+    @map.print ||= (event)->
+      window.print()
+
+      event.preventDefault()
+      event.stopPropagation()
+
+    $(document).on 'click', 'a[data-action="print"]', @map.print
+
   unload: ->
     clearTimeout timer for i, timer of @map.timers
+    $(document).off 'click', 'a[data-action="print"]', @map.print
 
 new Rule
   condition: -> $('.js-uploader-input').length

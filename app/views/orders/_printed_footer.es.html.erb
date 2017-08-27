@@ -8,11 +8,11 @@
       <%#   </p> %>
       <%# </div> %>
 
-      <div id="not_printed" class="alert alert-warning" <%= raw 'style="display: none"' if @order.print_out %>>
-        <p>
-          Presioná <strong>Guardar Pedido</strong> y <strong>acercate</strong>
-          personalmente hasta el centro de copiado para imprimir los documentos
-        </p>
+      <div id="not_printed" class="alert alert-info" <%= raw 'style="display: none"' if @order.print_out %> role="alert">
+        <h3>
+          Presioná `Crear Pedido` y acercate
+          personalmente hasta el centro de copiado para imprimir los documentos.
+        </h3>
       </div>
     <% else %>
       <%# <div id="printed" class="alert alert-success" <%= raw 'style="display: none"' unless @order.print_out %1>> %>
