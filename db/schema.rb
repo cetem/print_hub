@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170323031436) do
+ActiveRecord::Schema.define(version: 20170907213428) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -41,6 +41,8 @@ ActiveRecord::Schema.define(version: 20170323031436) do
     t.integer  "notification_stock",                                      default: 0
     t.boolean  "enabled",                                                 default: true
   end
+
+  add_index "articles", ["code"], name: "index_articles_on_code", unique: true, using: :btree
 
   create_table "credits", force: :cascade do |t|
     t.decimal  "amount",                  precision: 15, scale: 3,                   null: false
@@ -74,6 +76,7 @@ ActiveRecord::Schema.define(version: 20170323031436) do
     t.boolean  "enable",                                                        default: true
     t.string   "kind",                     limit: 1,                            default: "n",   null: false
     t.integer  "group_id"
+    t.string   "rfid"
   end
 
   add_index "customers", ["email"], name: "index_customers_on_email", unique: true, using: :btree
@@ -204,8 +207,8 @@ ActiveRecord::Schema.define(version: 20170323031436) do
     t.boolean  "two_sided",                default: false
     t.boolean  "default",                  default: false
     t.integer  "lock_version",             default: 0
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.datetime "created_at",                               null: false
+    t.datetime "updated_at",                               null: false
     t.string   "media",        limit: 255
   end
 

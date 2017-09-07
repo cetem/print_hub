@@ -227,7 +227,7 @@ class CustomersController < ApplicationController
     ]
 
     params.require(:customer).permit(
-      :name, :lastname, :identification, :email, :password,
+      :name, :lastname, :identification, :email, :password, :rfid,
       :password_confirmation, :lock_version, :free_monthly_bonus,
       :bonus_without_expiration, :enable, :kind, :group_id,
       bonuses_attributes: credit_attrs, deposits_attributes: credit_attrs
@@ -236,7 +236,7 @@ class CustomersController < ApplicationController
 
   def common_customer_params
     params.require(:customer).permit(
-      :name, :lastname, :identification, :email, :password,
+      :name, :lastname, :identification, :email, :password, :rfid,
       :password_confirmation, :lock_version, :enable, deposits_attributes: [
         :amount, :remaining, :valid_until, :customer_id, :_destroy, :id
       ]

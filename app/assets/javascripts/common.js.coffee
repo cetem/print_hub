@@ -20,11 +20,20 @@ new Rule
       event.preventDefault()
       event.stopPropagation()
 
+    @map.skipEnter ||= (e)->
+      key = e.which
+
+      if key == 13
+        e.preventDefault()
+        e.stopPropagation()
+
     $(document).on 'click', 'a[data-action="print"]', @map.print
+    $(document).on 'keyup keydown keypress', '.js-skip-enter', @map.skipEnter
 
   unload: ->
     clearTimeout timer for i, timer of @map.timers
     $(document).off 'click', 'a[data-action="print"]', @map.print
+    $(document).off 'keyup keydown keypress', '.js-skip-enter', @map.skipEnter
 
 new Rule
   condition: -> $('.js-uploader-input').length

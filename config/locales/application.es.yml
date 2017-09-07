@@ -34,6 +34,7 @@ es:
         name: "Nombre"
         password: "Contraseña"
         password_confirmation: "Confirmación"
+        rfid: "Redbus / Rfid / Ntag"
       customer/bonuses:
         amount: "Monto"
         one: "Bonificación"
