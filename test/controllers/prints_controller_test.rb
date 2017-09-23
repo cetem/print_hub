@@ -200,6 +200,59 @@ class PrintsControllerTest < ActionController::TestCase
     assert_equal @operator.id, PaperTrail::Version.last.whodunnit
   end
 
+  test 'should create print with rfid' do
+    document = documents(:math_book)
+    counts_array = ['Print.count', 'PrintJob.count', 'Payment.count',
+                    'customer.prints.count', 'ArticleLine.count',
+                    'Cups.all_jobs(@printer).keys.sort.last']
+    customer = customers(:student)
+    customer.update(rfid: '123123')
+
+    assert_difference counts_array do
+      assert_difference 'PaperTrail::Version.count', 4 do
+        post :create, status: 'all', print: {
+          printer: @printer,
+          customer_id: customer.id,
+          customer_rfid: '123123',
+          scheduled_at: '',
+          avoid_printing: '0',
+          print_jobs_attributes: {
+            '1' => {
+              copies: '1',
+              pages: document.pages.to_s,
+              # No importa el precio, se establece desde la configuración
+              price_per_copy: '12.0',
+              range: '',
+              auto_document_name: 'Some name given in autocomplete',
+              print_job_type_id: print_job_types(:a4),
+              document_id: document.id.to_s
+            }
+          },
+          article_lines_attributes: {
+            '1' => {
+              article_id: articles(:binding).id.to_s,
+              units: '1',
+              # No importa el precio, se establece desde el artículo
+              unit_price: '12.0'
+            }
+          },
+          payments_attributes: {
+            '1' => {
+              amount: '36.79',
+              paid: '36.79'
+            }
+          }
+        }
+      end
+    end
+
+    assert_redirected_to print_path(assigns(:print))
+    # Debe asignar el usuario autenticado como el creador de la impresión
+    assert_equal @operator.id, assigns(:print).user.id
+    # Prueba básica para "asegurar" el funcionamiento del versionado
+    assert_equal @operator.id, PaperTrail::Version.last.whodunnit
+  end
+
   test 'should create print and avoid printing' do
     document = documents(:math_book)
     counts_array = ['Print.count', 'PrintJob.count', 'Payment.count']

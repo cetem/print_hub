@@ -90,7 +90,7 @@ class ActiveSupport::TestCase
   end
 
   def drop_all_prints
-    `lpstat -Wnot-completed -o | grep -i "virtual" | awk '{print $1}' | xargs cancel`
+    Thread.new { `lpstat -Wnot-completed -o | grep -i "virtual" | awk '{print $1}' | xargs cancel &>1`}
   end
 end
 

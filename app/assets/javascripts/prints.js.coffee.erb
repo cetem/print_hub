@@ -1,4 +1,6 @@
 @Print =
+  extras: {},
+
   articles: {},
 
   assignDefaultOrGetArticle: (article)->
@@ -97,17 +99,34 @@
     Print.updateTotalPrice()
 
   clearCustomer: ->
+    $('.js-rfid-checker').val('')
+    $('.js-rfid-assiger').val('')
+    $('.js-rfid-button').hide()
+    $('.js-rfid-msg').hide()
+    $('.error-msg').hide()
+    $('#print_customer_rfid').val('')
+    $('#print_credit_password').show().val('')
     $('#print_auto_customer_name').val('')
     $('#print_customer_id').val('')
     $('#customer_free_credit').val('')
     $('#link_to_customer_credit_detail').hide()
     document.querySelector('#print_pay_later').checked = false
+    Print.extras.rfid = undefined
 
     Print.updateTotalPrice()
 
   excludeElementFromTotal: (element) ->
     element.classList.add('exclude-from-total')
 
+  assignRfid: (value) ->
+    $('.modal.in').find('.close').click()
+    $('#print_customer_rfid').val(value)
+    $('.js-rfid-msg.success').show()
+    $('.js-rfid-button').hide()
+    $('#print_credit_password').hide()
+
+  showInputError: (input) ->
+    $(input).closest('div').find('.error-msg').show()
 
 new Rule
   condition: -> $('form.new_print').length
@@ -166,7 +185,8 @@ new Rule
        Helper[action](articleLine.find('span.overselling-stock'))
 
        Print.updateArticleLinePrice(articleLine[0])
-     else if item.free_credit
+     else if _.has(item, 'free_credit')
+       Jobs.customer_id = item.id
        customerDetailsLink = $('#link_to_customer_credit_detail')
 
        $('#customer_free_credit').val(item.free_credit)
@@ -176,8 +196,70 @@ new Rule
          'href', customerDetailsLink.attr('href').replace(/\d+/, item.id)
        ).show()
 
+       if item.free_credit > 0
+         if item.rfid
+           Print.extras.rfid = item.rfid
+           $('#link_to_add_rfid').hide()
+           $('#link_to_pay_with_rfid').show()
+         else
+           $('#link_to_pay_with_rfid').hide()
+           $('#link_to_add_rfid').show()
+
      Jobs.reCalcEverything()
      Print.updateTotalPrice()
+
+
+   @map.useRfid ||= (e)->
+     key = e.which
+     target = e.currentTarget
+     value = target.value
+
+     if key == 13 && value && value.length > 3
+       if target.value == Print.extras.rfid
+         Print.assignRfid(target.value)
+         return
+
+       url = target.dataset['href'].replace(/0/, Jobs.customer_id)
+
+       $.ajax
+         url: url,
+         dataType: 'json',
+         method: 'PUT',
+         data: {
+           rfid: value
+         },
+         success: (resp)->
+           if resp.can_use
+             Print.assignRfid(value)
+           else
+             Print.showInputError(target)
+         fail: (a,b,c)->
+           Print.showInputError(target)
+         error: (a,b,c)->
+           Print.showInputError(target)
+
+   @map.assignRfid ||= (e)->
+     key = e.which
+     target = e.currentTarget
+     value = target.value
+
+     if key == 13 && value && value.length > 3
+       url = target.dataset['href'].replace(/0/, Jobs.customer_id)
+
+       $.ajax
+         url: url,
+         dataType: 'json',
+         method: 'POST',
+         data: {
+           rfid: value
+         },
+         success: (resp)->
+           Print.assignRfid(value)
+         fail: (a,b,c)->
+           Print.showInputError(target)
+         error: (a,b,c)->
+           Print.showInputError(target)
+
 
    # Si el cliente es 'confiable' autoselecciona Cuenta corriente
    @map.autoSelectCustomerKind ||= ->
@@ -326,6 +408,8 @@ new Rule
    $(document).on 'click', 'a[data-action="clear-customer"]', @map.clearCustomer
    $(document).on 'keydown', @map.setShortCuts
    #$(document).on 'click', '.js-submit-print', @map.beforeSubmit
+   $(document).on 'keydown', '.js-rfid-checker', @map.useRfid
+   $(document).on 'keydown', '.js-rfid-assigner', @map.assignRfid
 
 
    Jobs.loadPricesData()
@@ -355,3 +439,5 @@ new Rule
    $(document).off 'click', '#link_to_customer_credit_detail', @map.showCustomerCredit
    $(document).off 'click', 'a[data-action="clear-customer"]', @map.clearCustomer
    $(document).off 'keydown', @map.setShortCuts
+   $(document).off 'keydown', '.js-rfid-checker', @map.useRfid
+   $(document).off 'keydown', '.js-rfid-assigner', @map.assignRfid

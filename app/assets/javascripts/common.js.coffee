@@ -3,6 +3,8 @@ new Rule
     # For browsers with no autofocus support
     $('[autofocus]:not([readonly]):not([disabled]):visible:first').focus()
     $('[data-show-tooltip]').tooltip()
+    $(document).on 'shown', '.modal', ->
+      $('input:text:visible:first', this).focus()
 
     timers = @map.timers = []
 

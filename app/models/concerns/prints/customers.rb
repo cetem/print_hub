@@ -19,14 +19,21 @@ module Prints::Customers
 
   def update_customer_credit
     if (credit = payments.detect(&:credit?)) && credit.amount > 0
+      avoid_pass_check = order.present? || (
+        customer_rfid.present? && customer.rfid == customer_rfid
+      )
       remaining = customer.use_credit(
         credit.amount,
         credit_password,
-        avoid_password_check: order.present?
+        avoid_password_check: avoid_pass_check
       )
 
       if remaining == false
-        errors.add :credit_password, :invalid
+        if customer_rfid.present?
+          errors.add :base, 'Tarjeta invalida'
+        else
+          errors.add :credit_password, :invalid
+        end
 
         false
       elsif remaining > 0
@@ -45,21 +52,24 @@ module Prints::Customers
   end
 
   def need_credit_password?
-    return unless customer_id
-    return if order.present? || persisted?
+    return if customer_id.blank? || order.present? || persisted?
 
-    _error = if credit_password.blank? && customer.free_credit > 0
-                 :blank
-             elsif credit_password && !customer.valid_password?(credit_password)
-                 :invalid
-             end
+    if customer_rfid.present?
+      errors.add(:base, 'Tarjeta invalida') if customer.free_credit > 0 && customer_rfid != customer.rfid
+    else
+      _error = if credit_password.blank? && customer.free_credit > 0
+                   :blank
+               elsif credit_password && !customer.valid_password?(credit_password)
+                   :invalid
+               end
 
-    errors.add(:credit_password, _error) if _error
+      errors.add(:credit_password, _error) if _error
+    end
   end
 
   def assign_surplus_to_customer
     payments.each do |payment|
-      return if payment.destroyed?
+      next if payment.destroyed?
 
       if (diff = payment.paid.to_f - payment.amount.to_f) > 0
         customer.deposits.new(amount: diff)

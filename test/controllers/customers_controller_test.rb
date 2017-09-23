@@ -291,4 +291,36 @@ class CustomersControllerTest < ActionController::TestCase
     assert_select '#unexpected_error', false
     assert_template 'customers/_month_paid'
   end
+
+  test 'should be able to use customer rfid' do
+    UserSession.create(@operator)
+    @customer.update(rfid: '123123')
+
+    xhr :put, :use_rfid, id: @customer.to_param, rfid: '123123'
+
+    assert_response :success
+    assert_not_nil assigns(:customer)
+    resp = JSON.parse(@response.body)
+    assert resp['can_use']
+  end
+
+  test 'should not be able to use customer rfid' do
+    UserSession.create(@operator)
+    @customer.update(rfid: '123123')
+
+    xhr :put, :use_rfid, id: @customer.to_param, rfid: '111111'
+
+    assert_response :success
+    resp = JSON.parse(@response.body)
+    assert_not resp['can_use']
+  end
+
+  test 'should assign customer rfid' do
+    UserSession.create(@operator)
+    assert_nil @customer.rfid
+
+    xhr :post, :assign_rfid, id: @customer.to_param, rfid: '123123'
+
+    assert_response :success
+  end
 end

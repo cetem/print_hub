@@ -72,7 +72,7 @@ class Customer < ApplicationModel
 
   def as_json(options = nil)
     default_options = {
-      only: [:id],
+      only: [:id, :rfid],
       methods: [:label, :informal, :free_credit, :kind]
     }
 

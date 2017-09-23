@@ -209,6 +209,27 @@ class CustomersController < ApplicationController
     end
   end
 
+  def use_rfid
+    @customer = Customer.find(params[:id])
+
+    respond_to do |format|
+      format.json  { render json: {
+        can_use: @customer.rfid == params[:rfid]
+      } }
+    end
+  end
+
+  def assign_rfid
+    @customer = Customer.find(params[:id])
+
+    success = (params[:rfid] && @customer.update(rfid: params[:rfid]))
+
+    respond_to do |format|
+      format.json {
+        render json: {}, status: (success ? :ok : :unprocessable_entity )
+      }
+    end
+  end
 
   private
 

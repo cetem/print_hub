@@ -222,7 +222,20 @@
                 placeholder: Print.human_attribute_name('credit_password'),
                 input_html: { value: '', size: nil } %>
             <% else %>
-              &nbsp;
+              <%= f.input :customer_rfid, as: :hidden %>
+              <%= link_to 'Usar tarjeta', '#',
+                id: 'link_to_pay_with_rfid',
+                title: 'Paga',
+                class: 'btn js-rfid-button',
+                style: 'display: none;',
+                data: {toggle: 'modal', target: '#customer_pay_with_rfid'}%>
+              <%= link_to 'Agregar tarjeta', '#',
+                id: 'link_to_add_rfid',
+                title: 'Paga',
+                class: 'btn js-rfid-button',
+                style: 'display: none;',
+                data: {toggle: 'modal', target: '#customer_assign_rfid'}%>
+              <span class="alert alert-info js-rfid-msg success" style="display: none;">Tarjeta aceptada</span>
             <% end %>
           </div>
           <div class="span3">
@@ -269,4 +282,26 @@
     <h3><%= t('view.prints.customer_credit_detail_header') %></h3>
   </div>
   <div class="modal-body"><%= t('messages.loading') %></div>
+</div>
+
+<div class="modal fade" id="customer_pay_with_rfid">
+ <div class="modal-header">
+    <button class="close" data-dismiss="modal">&times;</button>
+    <h3><%= 'Ingrese la tarjeta a usar' %></h3>
+  </div>
+  <div class="modal-body">
+    <%= text_field_tag :rfid, '', class: 'js-rfid-checker', focus: true, data: { href: use_rfid_customer_path(0) }, autocomplete: 'off' %>
+    <span class="alert alert-error error-msg" style="display: none;">La cagaste</span>
+  </div>
+</div>
+
+<div class="modal fade" id="customer_assign_rfid">
+ <div class="modal-header">
+    <button class="close" data-dismiss="modal">&times;</button>
+    <h3><%= 'Ingrese la tarjeta a asignar y usar' %></h3>
+  </div>
+  <div class="modal-body">
+    <%= text_field_tag :rfid, '', class: 'js-rfid-assigner', focus: true, data: { href: assign_rfid_customer_path(0) }, autocomplete: 'off' %> <br />
+    <span class="alert alert-error error-msg" style="display: none;">La cagaste</span>
+  </div>
 </div>
