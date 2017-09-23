@@ -52,7 +52,7 @@ module Prints::Customers
   end
 
   def need_credit_password?
-    return if customer_id.blank? || order.present? || persisted?
+    return if customer_id.blank? || order.present? || persisted? || customer.free_credit.zero?
 
     if customer_rfid.present?
       errors.add(:base, 'Tarjeta invalida') if customer.free_credit > 0 && customer_rfid != customer.rfid
