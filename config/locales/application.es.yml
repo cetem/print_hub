@@ -688,7 +688,8 @@ es:
       total: 'Totales:'
     shifts:
       shifts_cop:
-        shift_text: "- llego %{delay} tarde al turno de %{start}"
+        lazy_user_text: "- %{user} hizo pocas horas esta semana"
+        delayed_shift_text: "- llego %{delay} tarde al turno de %{start}"
         notification_body: |-
             Milicobani en acción...
             %{body}

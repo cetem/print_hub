@@ -4,28 +4,16 @@ namespace :tasks do
     init_logger
 
     @logger.info 'Starting'
-    shifts = Shift.delayed_shifts
-
-    if shifts.any?
-      @logger.info "Notifying for #{shifts.size} delayed"
-      shifts_text = shifts.map do |user, delays|
-
-        delay_text = delays.map do |s|
-          I18n.t(
-            'view.shifts.shifts_cop.shift_text',
-            delay: helper.distance_of_time_in_words_to_now(s[:delay].seconds.ago),
-            start: I18n.l(s[:start])
-          )
-        end
-        ["#{user}:", delay_text.sort]
-      end.flatten.join("\n")
-
-      send_notification(
-        I18n.t('view.shifts.shifts_cop.notification_body', body: shifts_text)
+    @body = []
+    delay_shifts
+    low_worked_hours if Time.now.saturday?
+    send_notification(
+      I18n.t(
+        'view.shifts.shifts_cop.notification_body',
+        body: @body.join("\n")
       )
-    else
-      @logger.info "Nothing to notify"
-    end
+    ) if @body.any?
+    @logger.info 'Done'
   end
 
   private
@@ -56,5 +44,40 @@ namespace :tasks do
 
     def helper
       @_helper ||= Class.new{include ActionView::Helpers::DateHelper }.new
+    end
+
+    def low_worked_hours
+      shifts = Shift.finished.between(1.week.ago, Time.now)
+      if shifts.empty?
+        @logger.info "Any lazy worker to notify"
+        return
+      end
+
+      @body += shifts.users_with_less_than_7_hours.map do |user|
+        I18n.t(
+          'view.shifts.shifts_cop.lazy_user_text',
+          user: user
+        )
+      end
+    end
+
+    def delay_shifts
+      shifts = Shift.delayed_shifts
+      if shifts.empty?
+        @logger.info "No delayed shifts to notify"
+        return
+      end
+
+      @logger.info "notifying for #{shifts.size} delayed"
+      @body += shifts.map do |user, delays|
+        delay_text = delays.map do |s|
+          I18n.t(
+            'view.shifts.shifts_cop.delayed_shift_text',
+            delay: helper.distance_of_time_in_words_to_now(s[:delay].seconds.ago),
+            start: I18n.l(s[:start])
+          )
+        end
+        ["#{user}:", delay_text.sort]
+      end.flatten
     end
 end
