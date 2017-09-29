@@ -234,8 +234,8 @@ class Shift < ActiveRecord::Base
   def self.users_with_less_than_7_hours
     ids = all.finished.group_by(&:user_id).map do |user_id, _scope|
       hours = (_scope.map {|s| s.finish - s.start}.sum / 3600.0)
-      user_id if hours < 8.hours.to_i
-    end
+      user_id if hours < 8.0
+    end.compact
 
     User.where(id: ids)
   end
