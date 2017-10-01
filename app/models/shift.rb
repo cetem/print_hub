@@ -232,15 +232,15 @@ class Shift < ActiveRecord::Base
   end
 
   def self.users_with_less_than_7_hours
-    working_user_ids = []
+    actives_ids = User.actives.with_shifts_control.pluck(:id)
     ids = all.finished.group_by(&:user_id).map do |user_id, _scope|
-      working_user_ids << user_id
+      actives_ids.delete(user_id)
       hours = (_scope.map {|s| s.finish - s.start}.sum / 3600.0)
       user_id if hours < 8.0
     end.compact
 
     actives_ids = User.actives.with_shifts_control.pluck(:id)
-    reportable_ids = (actives_ids - working_user_ids) | ids
+    reportable_ids = (actives_ids | ids)
 
     User.where(id: reportable_ids.uniq)
   end
