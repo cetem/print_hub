@@ -6,7 +6,7 @@ namespace :tasks do
     @logger.info 'Starting'
     @body = []
     delay_shifts
-    low_worked_hours if Time.now.saturday?
+    low_worked_hours if ENV['lazies'] || Time.now.saturday?
     send_notification(
       I18n.t(
         'view.shifts.shifts_cop.notification_body',

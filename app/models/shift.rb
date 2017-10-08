@@ -239,7 +239,6 @@ class Shift < ActiveRecord::Base
       user_id if hours < 8.0
     end.compact
 
-    actives_ids = User.actives.with_shifts_control.pluck(:id)
     reportable_ids = (actives_ids | ids)
 
     User.where(id: reportable_ids.uniq)
