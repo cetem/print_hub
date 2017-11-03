@@ -51,9 +51,7 @@
     freeCredit = parseFloat($('#customer_free_credit').val()) || 0.0
     [payWithCash, payWithBonus, totalPrice] = [0.0, 0.0, 0.0]
 
-    payLater = document.querySelector('#print_pay_later')
-
-    if (payLater && !payLater.checked) && document.querySelector('#print_jobs_container')
+    if document.querySelector('#print_jobs_container')
       _.each Jobs.getPrintableJobs(), (printJob)->
         job = Jobs.assignDefaultOrGetJob(printJob)
         totalPrice += if job then job.price else 0.0
@@ -68,6 +66,11 @@
       else
         payWithCash = totalPrice - freeCredit
         payWithBonus = freeCredit
+
+    # fast fix
+    payLater = document.querySelector('#print_pay_later')
+    if payLater && payLater.checked
+      [payWithCash, payWithBonus, totalPrice] = [0.0, 0.0, 0.0]
 
     $(Print.cashPrefix + '_amount').val(payWithCash.toFixed(3))
     $(Print.cashPrefix + '_paid').val(payWithCash.toFixed(3))
@@ -110,7 +113,9 @@
     $('#print_customer_id').val('')
     $('#customer_free_credit').val('')
     $('#link_to_customer_credit_detail').hide()
-    document.querySelector('#print_pay_later').checked = false
+    payLater = document.querySelector('#print_pay_later')
+    if payLater
+      payLater.checked = false
     Print.extras.rfid = undefined
 
     Print.updateTotalPrice()
@@ -190,7 +195,8 @@ new Rule
        customerDetailsLink = $('#link_to_customer_credit_detail')
 
        $('#customer_free_credit').val(item.free_credit)
-       $('#print_pay_later').parents('div.field').show()
+       if document.querySelector('#print_pay_later')
+         $('#print_pay_later').parents('div.field').show()
 
        customerDetailsLink.attr(
          'href', customerDetailsLink.attr('href').replace(/\d+/, item.id)
@@ -266,7 +272,8 @@ new Rule
      element = $(this).data('item')
      checked = element.kind == '<%= Customer::KINDS[:reliable] %>'
 
-     document.querySelector('#print_pay_later').checked = checked
+     if document.querySelector('#print_pay_later')
+       document.querySelector('#print_pay_later').checked = checked
 
    # Elimina el cliente del trabajo de impresión
    @map.removeCustomer ||= ->
@@ -417,7 +424,8 @@ new Rule
    Jobs.listenRangeChanges()
 
    if /^\s*$/.test($('#print_customer_id').val())
-     $('#print_pay_later').parents('div.field').hide()
+     if document.querySelector('#print_pay_later')
+       $('#print_pay_later').parents('div.field').hide()
 
  unload: ->
    $(document).off 'item.removed', @map.removeItem
