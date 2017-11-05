@@ -142,13 +142,13 @@ class ActionDispatch::IntegrationTest
     )
   end
 
-  _running_local = ENV['local']
+  _running_local = ENV['local'] || ENV['TRAVIS']
   Capybara.javascript_driver = _running_local ? :selenium : :selenium_remote_firefox #:selenium #: :chrome
   Capybara.current_driver = Capybara.javascript_driver
   Capybara.server_port = '54163'
   Capybara.default_max_wait_time = 1
 
-  if _running_local
+  if ENV['local'] # no travis
     Selenium::WebDriver::Firefox::Binary.path = '/opt/firefox42/firefox'
   else
     APP_CONFIG['local_server_ip'] = SELENIUM_APP_HOST

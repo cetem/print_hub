@@ -93,6 +93,10 @@ class User < ApplicationModel
     !not_shifted
   end
 
+  def auditor?
+    not_shifted?
+  end
+
   def self.full_text(query_terms)
     options = text_query(query_terms, 'username', 'name', 'last_name')
     conditions = [options[:query]]

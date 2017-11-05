@@ -463,6 +463,9 @@ class PrintTest < ActiveSupport::TestCase
 
   # Prueba la creación de una impresión que evita imprimir =)
   test 'create with pay later' do
+    customer = customers(:student_without_bonus)
+    customer.group_id = CustomersGroup.last.id
+    customer.save
     assert_difference ['Print.count',
                        'Cups.all_jobs(@printer).keys.sort.last'] do
       assert_difference 'PrintJob.count', 2 do
@@ -543,13 +546,15 @@ class PrintTest < ActiveSupport::TestCase
     @print.customer = nil
     @print.pay_later!
     assert @print.invalid?
-    assert_equal 3, @print.errors.count
+    assert_equal 4, @print.errors.count
     assert_equal [error_message_from_model(@print, :printer, :must_be_blank)],
                  @print.errors[:printer]
     assert_equal [error_message_from_model(@print, :base, :must_have_one_item)],
                  @print.errors[:base]
     assert_equal [error_message_from_model(@print, :customer_id, :blank)],
                  @print.errors[:customer_id]
+    assert_equal [error_message_from_model(@print, :pay_later, :invalid)],
+                 @print.errors[:pay_later]
   end
 
   # Prueba que las validaciones del modelo se cumplan como es esperado

@@ -8,11 +8,7 @@ module Prints::Customers
     before_create :update_customer_credit, if: -> (p) { p.customer.present? }
     before_validation :assign_surplus_to_customer, if: ->(p) { p.customer.present? }
 
-    validates_each :customer_id do |record, attr, value|
-      record.errors.add attr, :blank if value.blank? && record.pay_later?
-    end
-
-    validate :need_credit_password?
+    validate :need_credit_password?, :pay_later_validations
 
     belongs_to :customer, autosave: true
   end
@@ -76,5 +72,12 @@ module Prints::Customers
         payment.paid = payment.amount.to_f
       end
     end
+  end
+
+  def pay_later_validations
+    return unless self.pay_later?
+
+    self.errors.add :customer_id, :blank if self.customer_id.blank? || self.customer.blank?
+    self.errors.add :pay_later, :invalid if self.customer.try(:group_id).blank?
   end
 end

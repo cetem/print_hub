@@ -262,6 +262,8 @@ class PrintsTest < ActionDispatch::IntegrationTest
     login
 
     customer = customers(:student)
+    customer.group_id = CustomersGroup.last.id
+    customer.save
 
     assert_page_has_no_errors!
     assert_equal prints_path, current_path
@@ -306,6 +308,8 @@ class PrintsTest < ActionDispatch::IntegrationTest
     login
 
     customer = customers(:student)
+    customer.group_id = CustomersGroup.last.id
+    customer.save
     customer.prints.each(&:pay_print)
 
     assert_page_has_no_errors!

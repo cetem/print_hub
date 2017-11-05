@@ -2,7 +2,6 @@ class DocumentsUploader < CarrierWave::Uploader::Base
   include ::CarrierWave::Backgrounder::Delay
   include CarrierWave::PdfThumb
 
-
   storage :file
   after :remove, :delete_empty_upstream_dirs
 

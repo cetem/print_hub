@@ -89,6 +89,8 @@ class OrdersTest < ActionDispatch::IntegrationTest
     assert_equal orders_path, current_path
 
     customer = customers(:student)
+    customer.group_id = CustomersGroup.last.id
+    customer.save
     debt = customer.to_pay_amounts[:total_price]
 
     order = orders(:from_yesterday)

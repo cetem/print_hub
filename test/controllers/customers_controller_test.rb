@@ -61,7 +61,29 @@ class CustomersControllerTest < ActionController::TestCase
     assert_template 'customers/new_public'
   end
 
+ test 'should create simple customer' do
+    UserSession.create(@operator)
+
+    assert_difference ['Customer.unscoped.count'] do
+      assert_difference 'PaperTrail::Version.count' do
+        post :create, customer: {
+          name: 'Jar Jar',
+          lastname: 'Binks',
+          identification: '111',
+          email: 'jar_jar@printhub.com',
+          password: 'jarjar123',
+          password_confirmation: 'jarjar123'
+        }
+      end
+    end
+
+    assert_redirected_to customer_url(assigns(:customer))
+    # Prueba básica para "asegurar" el funcionamiento del versionado
+    assert_equal @operator.id, PaperTrail::Version.last.whodunnit
+  end
+
   test 'should create customer' do
+    User.where(id: @operator.id).update_all(not_shifted: true)
     UserSession.create(@operator)
 
     assert_difference ['Customer.unscoped.count', 'Bonus.count'] do
@@ -159,6 +181,7 @@ class CustomersControllerTest < ActionController::TestCase
   end
 
   test 'should update customer' do
+    User.where(id: @operator.id).update_all(not_shifted: true)
     UserSession.create(@operator)
 
     assert_no_difference 'Customer.count' do
@@ -170,6 +193,29 @@ class CustomersControllerTest < ActionController::TestCase
           free_monthly_bonus: '0.0',
           bonus_without_expiration: '0',
           bonuses_attributes: {
+            '1' => {
+              amount: '100.0',
+              valid_until: '' # Por siempre
+            }
+          }
+        }
+      end
+    end
+
+    assert_redirected_to customer_url(assigns(:customer))
+    assert_equal 'Updated name', @customer.reload.name
+  end
+
+  test 'should update customer deposits' do
+    UserSession.create(@operator)
+
+    assert_no_difference 'Customer.count' do
+      assert_difference 'Deposit.count' do
+        put :update, id: @customer.to_param, customer: {
+          name: 'Updated name',
+          lastname: 'Updated lastname',
+          identification: '111x',
+          deposits_attributes: {
             '1' => {
               amount: '100.0',
               valid_until: '' # Por siempre

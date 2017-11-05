@@ -145,7 +145,9 @@ class CustomersController < ApplicationController
     @customer = current_customer
 
     respond_to do |format|
-      if @customer.update_attributes(public_customer_params)
+      if @customer.update_attributes(
+        params.require(:customer).permit(*public_customer_params)
+      )
         format.html { redirect_to(edit_profile_customer_url(@customer), notice: t('view.customers.profile_correctly_updated')) }
         format.json  { head :ok }
       else
@@ -235,39 +237,44 @@ class CustomersController < ApplicationController
 
   # Atributos permitidos
   def customer_params
-    if current_user
-      current_user.admin? ? customer_params_as_admin : common_customer_params
-    else
-      public_customer_params
-    end
+    attrs = case
+              when current_user.nil? || current_customer
+                public_customer_params
+              when current_user.auditor?
+                customer_params_as_auditor
+              when current_user.admin?
+                customer_params_as_admin
+              else
+                common_customer_params
+            end
+    params.require(:customer).permit(*attrs)
+  end
+
+  def customer_params_as_auditor
+    [
+      :bonus_without_expiration,
+      { bonuses_attributes: [:amount, :remaining, :valid_until, :customer_id, :_destroy, :id] }
+    ] + customer_params_as_admin
   end
 
   def customer_params_as_admin
-    credit_attrs = [
-      :amount, :remaining, :valid_until, :customer_id, :_destroy, :id
-    ]
-
-    params.require(:customer).permit(
-      :name, :lastname, :identification, :email, :password, :rfid,
-      :password_confirmation, :lock_version, :free_monthly_bonus,
-      :bonus_without_expiration, :enable, :kind, :group_id,
-      bonuses_attributes: credit_attrs, deposits_attributes: credit_attrs
-    )
+    [:kind, :group_id] + common_customer_params
   end
 
   def common_customer_params
-    params.require(:customer).permit(
+    [
       :name, :lastname, :identification, :email, :password, :rfid,
-      :password_confirmation, :lock_version, :enable, deposits_attributes: [
+      :password_confirmation, :lock_version, :enable,
+      {deposits_attributes: [
         :amount, :remaining, :valid_until, :customer_id, :_destroy, :id
-      ]
-    )
+      ]}
+    ]
   end
 
   def public_customer_params
-    params.require(:customer).permit(
+    [
       :name, :lastname, :identification, :email, :password,
       :password_confirmation, :lock_version
-    )
+    ]
   end
 end
