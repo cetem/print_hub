@@ -5,6 +5,7 @@ class User < ApplicationModel
   acts_as_authentic do |c|
     c.maintain_sessions = false
     c.crypto_provider = Authlogic::CryptoProviders::Sha512
+    # c.validates_length_of_password_field_options({minimum: 4})
   end
 
   # Scopes

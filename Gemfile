@@ -1,9 +1,9 @@
 source 'https://rubygems.org'
 
-gem 'rails', '4.2.9'
+gem 'rails', '~> 4.2'
 
 gem 'pg'
-gem 'authlogic'
+gem 'authlogic', '3.4.6'
 gem 'jc-validates_timeliness'
 gem 'awesome_nested_set'
 gem 'will_paginate'
@@ -61,7 +61,7 @@ end
 group :test do
   # Integration test
   gem 'capybara', require: false
-  gem 'selenium-webdriver'
+  gem 'selenium-webdriver', '2.53.3'
   gem 'capybara-screenshot'
   gem 'chromedriver-helper'
   gem 'poltergeist'

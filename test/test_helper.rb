@@ -146,7 +146,7 @@ class ActionDispatch::IntegrationTest
   Capybara.javascript_driver = _running_local ? :selenium : :selenium_remote_firefox #:selenium #: :chrome
   Capybara.current_driver = Capybara.javascript_driver
   Capybara.server_port = '54163'
-  Capybara.default_max_wait_time = 1
+  Capybara.default_max_wait_time = 3
 
   if ENV['local'] # no travis
     Selenium::WebDriver::Firefox::Binary.path = '/opt/firefox42/firefox'
@@ -155,8 +155,8 @@ class ActionDispatch::IntegrationTest
   end
 
   setup do
-    Capybara.server_host = _running_local ? 'localhost' : SELENIUM_APP_HOST
-    Capybara.app_host = "http://#{Capybara.server_host}:#{Capybara.server_port}"
+    # Capybara.server_host = _running_local ? 'localhost' : SELENIUM_APP_HOST
+    # Capybara.app_host = "http://#{Capybara.server_host}:#{Capybara.server_port}"
     Capybara.reset!    # Forget the (simulated) browser state
     Capybara.page.driver.browser.manage.window.maximize
   end

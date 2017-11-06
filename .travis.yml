@@ -10,9 +10,9 @@ before_install:
   - sudo apt-get install -qq -y imagemagick libmagickwand-dev nodejs
   - "/sbin/start-stop-daemon --start --quiet --pidfile /tmp/custom_xvfb_99.pid --make-pidfile --background --exec /usr/bin/Xvfb -- :99 -ac -screen 0 1280x1024x16"
 before_script:
+  - 'export DISPLAY=:99.0'
   - 'cp config/app_config.example.yml config/app_config.yml'
   - 'cp config/secrets.example.yml config/secrets.yml'
   - 'psql -c "create database print_hub_test;" -U postgres'
   - 'psql -c "create database abaco_test;" -U postgres'
   - 'bundle exec rake db:migrate'
-  - 'export DISPLAY=:99.0'
