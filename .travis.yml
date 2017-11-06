@@ -4,6 +4,7 @@ rvm:
   - 2.1.2
 addons:
   postgresql: 9.3
+  firefox: "42.0"
 before_install:
   - sudo apt-get update -qq
   - sudo apt-get install -qq -y cups cups-pdf cups-bsd libcups2-dev
