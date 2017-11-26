@@ -4,6 +4,9 @@ class PrintsTest < ActionDispatch::IntegrationTest
   setup do
     @ac_field = 'auto-document-print_job_print_print_jobs_attributes_'
     @pdf_printer = Cups.show_destinations.detect { |p| p =~ /pdf/i }
+    if ENV['TRAVIS']
+      puts Cups.show_destinations
+    end
   end
 
   test 'should add a document with +' do
