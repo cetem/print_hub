@@ -7,7 +7,7 @@ require 'sidekiq/testing'
 require 'database_cleaner'
 require 'minitest/reporters'
 require 'capybara-screenshot/minitest'
-# require 'capybara/poltergeist'
+require 'capybara/poltergeist'
 
 Minitest::Reporters.use! Minitest::Reporters::ProgressReporter.new
 
@@ -128,7 +128,6 @@ class ActionDispatch::IntegrationTest
   # Stop ActiveRecord from wrapping tests in transactions
   self.use_transactional_fixtures = false
 
-
   # Vagrant config
   SELENIUM_SERVER = "192.168.33.10"
   SELENIUM_APP_HOST = "192.168.33.1"
@@ -142,31 +141,38 @@ class ActionDispatch::IntegrationTest
     )
   end
 
-  _running_local = ENV['local'] || ENV['TRAVIS']
-  Capybara.javascript_driver = _running_local ? :selenium : :selenium_remote_firefox #:selenium #: :chrome
+  _running_remote = ENV['remote']
+  _running_phantom = ENV['phantom'] || ENV['TRAVIS']
+  Capybara.javascript_driver = case
+                                 when _running_remote then  :selenium_remote_firefox
+                                 when _running_phantom then :poltergeist
+                                 else                       :selenium
+                               end
   Capybara.current_driver = Capybara.javascript_driver
   Capybara.server_port = '54163'
   Capybara.default_max_wait_time = 3
 
-  if ENV['local'] # no travis
-    Selenium::WebDriver::Firefox::Binary.path = '/opt/firefox42/firefox'
-  else
+  if _running_remote
     APP_CONFIG['local_server_ip'] = SELENIUM_APP_HOST
+  elsif !_running_phantom
+    Selenium::WebDriver::Firefox::Binary.path = '/opt/firefox42/firefox'
   end
 
   setup do
-    # Capybara.server_host = _running_local ? 'localhost' : SELENIUM_APP_HOST
-    # Capybara.app_host = "http://#{Capybara.server_host}:#{Capybara.server_port}"
+    Capybara.server_host = _running_remote ? SELENIUM_APP_HOST : 'localhost'
+    Capybara.app_host = "http://#{Capybara.server_host}:#{Capybara.server_port}"
     Capybara.reset!    # Forget the (simulated) browser state
-    Capybara.page.driver.browser.manage.window.maximize
+    Capybara.page.driver.browser.manage.window.maximize unless _running_phantom
   end
 
   teardown do
-    errors = Capybara.page.driver.browser.manage.logs.get(:browser)
+    unless _running_phantom
+      errors = Capybara.page.driver.browser.manage.logs.get(:browser)
 
-    if errors
-      parsed_errors = errors.map { |e| e if e.level == 'SEVERE' && message.present? }.compact
-      raise JSException.new(parsed_errors) if parsed_errors.size > 0
+      if errors
+        parsed_errors = errors.map { |e| e if e.level == 'SEVERE' && message.present? }.compact
+        raise JSException.new(parsed_errors) if parsed_errors.size > 0
+      end
     end
 
     DatabaseCleaner.clean       # Truncate the database

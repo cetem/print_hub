@@ -62,9 +62,9 @@ group :test do
   # Integration test
   gem 'capybara', require: false
   gem 'selenium-webdriver', '2.53.3'
-  gem 'capybara-screenshot'
-  gem 'chromedriver-helper'
-  gem 'poltergeist'
+  gem 'capybara-screenshot', require: false
+  gem 'chromedriver-helper', require: false
+  gem 'poltergeist', require: false
   gem 'database_cleaner', require: false # For Capybara
 
   gem 'minitest-reporters'
