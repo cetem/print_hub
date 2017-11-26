@@ -1,5 +1,7 @@
 # Cantidad de líneas por página
 APP_LINES_PER_PAGE = 16
+# Cantidad de líneas por página
+AUTOCOMPLETE_LIMIT = 50
 # Umbral crédito / precio para determinar si se imprime o no un pedido
 CREDIT_THRESHOLD = APP_CONFIG['credit_threshold'] || 1
 # Adaptador de base de datos

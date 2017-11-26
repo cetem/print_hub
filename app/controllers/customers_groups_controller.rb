@@ -92,14 +92,10 @@ class CustomersGroupsController < ApplicationController
   end
 
   def autocomplete_for_name
-    query = params[:q].sanitized_for_text_query
-    query_terms = query.split(/\s+/).reject(&:blank?)
-    group = CustomersGroup.all
-    group = group.full_text(query_terms) unless query_terms.empty?
-    group = group.limit(10)
+    groups = full_text_search_for(CustomersGroup.all, params[:q])
 
     respond_to do |format|
-      format.json { render json: group }
+      format.json { render json: groups }
     end
   end
 

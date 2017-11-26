@@ -1,5 +1,5 @@
 class ApplicationController < ActionController::Base
-  helper_method :current_user_session, :current_user, :current_customer
+  helper_method :current_user_session, :current_user, :current_customer, :full_text_search_for
 
   protect_from_forgery with: :null_session
 
@@ -216,5 +216,13 @@ class ApplicationController < ActionController::Base
       },
       errors: obj.errors.messages
     )
+  end
+
+  def full_text_search_for(klass_scope, q)
+    query = q.sanitized_for_text_query
+    query_terms = query.split(/\s+/).reject(&:blank?)
+    _scope = klass_scope
+    _scope = _scope.full_text(query_terms) unless query_terms.empty?
+    _scope.limit(AUTOCOMPLETE_LIMIT)
   end
 end

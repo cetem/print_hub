@@ -144,11 +144,7 @@ class DocumentsController < ApplicationController
 
   # GET /documents/autocomplete_for_tag_name
   def autocomplete_for_tag_name
-    query = params[:q].sanitized_for_text_query
-    query_terms = query.split(/\s+/).reject(&:blank?)
-    tags = Tag.all.order(:id)
-    tags = tags.full_text(query_terms) unless query_terms.empty?
-    tags = tags.limit(10)
+    tags = full_text_search_for(Tag.all.order(:id), params[:q])
 
     respond_to do |format|
       format.json { render json: tags }

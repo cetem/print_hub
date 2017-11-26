@@ -9,6 +9,7 @@
 //= require jquery_ujs
 //= require jquery-customs/jquery-ui-timepicker-addon
 //= require jquery-customs/jquery.ui.datepicker-es
+//= require jquery-customs/jquery.ui.autocomplete.scroll
 //= require twitter/bootstrap
 //= require inspector
 //= require underscore

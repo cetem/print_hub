@@ -101,11 +101,7 @@ class UsersController < ApplicationController
 
   # GET /users/autocomplete_for_user_name
   def autocomplete_for_user_name
-    query = params[:q].sanitized_for_text_query
-    query_terms = query.split(/\s+/).reject(&:blank?)
-    users = User.actives
-    users = users.full_text(query_terms) unless query_terms.empty?
-    users = users.limit(10)
+    users = full_text_search_for(User.actives, params[:q])
 
     respond_to do |format|
       format.json { render json: users }

@@ -15,7 +15,6 @@ ActiveRecord::Schema.define(version: 20170907213428) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
-  enable_extension "unaccent"
 
   create_table "article_lines", force: :cascade do |t|
     t.integer  "print_id"
@@ -31,51 +30,51 @@ ActiveRecord::Schema.define(version: 20170907213428) do
   add_index "article_lines", ["print_id"], name: "index_article_lines_on_print_id", using: :btree
 
   create_table "articles", force: :cascade do |t|
-    t.string   "name",               limit: 255,                                         null: false
-    t.decimal  "price",                          precision: 15, scale: 3,                null: false
+    t.integer  "code",                                                       null: false
+    t.string   "name",                                                       null: false
+    t.decimal  "price",              precision: 15, scale: 3,                null: false
     t.text     "description"
-    t.integer  "lock_version",                                            default: 0
+    t.integer  "lock_version",                                default: 0
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "code",                                                                   null: false
-    t.integer  "stock",                                                   default: 0
-    t.integer  "notification_stock",                                      default: 0
-    t.boolean  "enabled",                                                 default: true
+    t.integer  "stock",                                       default: 0
+    t.integer  "notification_stock",                          default: 0
+    t.boolean  "enabled",                                     default: true
   end
 
   add_index "articles", ["code"], name: "index_articles_on_code", unique: true, using: :btree
 
   create_table "credits", force: :cascade do |t|
-    t.decimal  "amount",                  precision: 15, scale: 3,                   null: false
-    t.decimal  "remaining",               precision: 15, scale: 3,                   null: false
+    t.decimal  "amount",      precision: 15, scale: 3,                   null: false
+    t.decimal  "remaining",   precision: 15, scale: 3,                   null: false
     t.date     "valid_until"
     t.integer  "customer_id"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "type",        limit: 255,                          default: "Bonus", null: false
+    t.string   "type",                                 default: "Bonus", null: false
   end
 
-  add_index "credits", ["created_at"], name: "index_bonuses_on_created_at", using: :btree
-  add_index "credits", ["customer_id"], name: "index_bonuses_on_customer_id", using: :btree
+  add_index "credits", ["created_at"], name: "index_credits_on_created_at", using: :btree
+  add_index "credits", ["customer_id"], name: "index_credits_on_customer_id", using: :btree
   add_index "credits", ["type"], name: "index_credits_on_type", using: :btree
-  add_index "credits", ["valid_until"], name: "index_bonuses_on_valid_until", using: :btree
+  add_index "credits", ["valid_until"], name: "index_credits_on_valid_until", using: :btree
 
   create_table "customers", force: :cascade do |t|
-    t.string   "name",                     limit: 255,                                          null: false
-    t.string   "lastname",                 limit: 255
-    t.string   "identification",           limit: 255,                                          null: false
-    t.decimal  "free_monthly_bonus",                   precision: 15, scale: 3
-    t.integer  "lock_version",                                                  default: 0
+    t.string   "name",                                                                        null: false
+    t.string   "lastname"
+    t.string   "identification",                                                              null: false
+    t.decimal  "free_monthly_bonus",                 precision: 15, scale: 3
+    t.integer  "lock_version",                                                default: 0
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.boolean  "bonus_without_expiration",                                      default: false, null: false
-    t.string   "email",                    limit: 255
-    t.string   "crypted_password",         limit: 255
-    t.string   "password_salt",            limit: 255
-    t.string   "persistence_token",        limit: 255
-    t.string   "perishable_token",         limit: 255
-    t.boolean  "enable",                                                        default: true
-    t.string   "kind",                     limit: 1,                            default: "n",   null: false
+    t.boolean  "bonus_without_expiration",                                    default: false, null: false
+    t.string   "email"
+    t.string   "crypted_password"
+    t.string   "password_salt"
+    t.string   "persistence_token"
+    t.string   "perishable_token"
+    t.boolean  "enable",                                                      default: true
+    t.string   "kind",                     limit: 1,                          default: "n",   null: false
     t.integer  "group_id"
     t.string   "rfid"
   end
@@ -86,7 +85,7 @@ ActiveRecord::Schema.define(version: 20170907213428) do
   add_index "customers", ["perishable_token"], name: "index_customers_on_perishable_token", using: :btree
 
   create_table "customers_groups", force: :cascade do |t|
-    t.string   "name",       limit: 255, null: false
+    t.string   "name",       null: false
     t.datetime "created_at"
     t.datetime "updated_at"
   end
@@ -98,28 +97,28 @@ ActiveRecord::Schema.define(version: 20170907213428) do
     t.integer "tag_id",      null: false
   end
 
-  add_index "document_tag_relations", ["document_id", "tag_id"], name: "index_documents_tags_on_document_id_and_tag_id", unique: true, using: :btree
+  add_index "document_tag_relations", ["document_id", "tag_id"], name: "index_document_tag_relations_on_document_id_and_tag_id", unique: true, using: :btree
 
   create_table "documents", force: :cascade do |t|
-    t.integer  "code",                                          null: false
-    t.string   "name",              limit: 255,                 null: false
+    t.integer  "code",                              null: false
+    t.string   "name",                              null: false
     t.text     "description"
-    t.integer  "pages",                                         null: false
-    t.integer  "lock_version",                  default: 0
-    t.string   "file_file_name",    limit: 255
-    t.string   "file_content_type", limit: 255
+    t.integer  "pages",                             null: false
+    t.integer  "lock_version",      default: 0
+    t.string   "file_file_name"
+    t.string   "file_content_type"
     t.integer  "file_file_size"
     t.datetime "file_updated_at"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.text     "tag_path"
-    t.string   "media",             limit: 255
-    t.boolean  "enable",                        default: true,  null: false
-    t.string   "file_fingerprint",  limit: 255
-    t.boolean  "private",                       default: false
-    t.integer  "stock",                         default: 0,     null: false
+    t.string   "media"
+    t.boolean  "enable",            default: true,  null: false
+    t.string   "file_fingerprint"
+    t.boolean  "private",           default: false
+    t.integer  "stock",             default: 0,     null: false
     t.string   "original_file"
-    t.boolean  "is_public",                     default: false
+    t.boolean  "is_public",         default: false
   end
 
   add_index "documents", ["code"], name: "index_documents_on_code", using: :btree
@@ -127,8 +126,8 @@ ActiveRecord::Schema.define(version: 20170907213428) do
   add_index "documents", ["private"], name: "index_documents_on_private", using: :btree
 
   create_table "feedbacks", force: :cascade do |t|
-    t.string   "item",        limit: 255,                 null: false
-    t.boolean  "positive",                default: false, null: false
+    t.string   "item",                        null: false
+    t.boolean  "positive",    default: false, null: false
     t.text     "comments"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -140,14 +139,14 @@ ActiveRecord::Schema.define(version: 20170907213428) do
   add_index "feedbacks", ["positive"], name: "index_feedbacks_on_positive", using: :btree
 
   create_table "file_lines", force: :cascade do |t|
-    t.string   "file",              limit: 255,                          null: false
-    t.integer  "pages",                                                  null: false
-    t.integer  "copies",                                                 null: false
-    t.decimal  "price_per_copy",                precision: 15, scale: 3, null: false
+    t.string   "file",                                       null: false
+    t.integer  "pages",                                      null: false
+    t.integer  "copies",                                     null: false
+    t.decimal  "price_per_copy",    precision: 15, scale: 3, null: false
     t.integer  "order_id"
-    t.datetime "created_at",                                             null: false
-    t.datetime "updated_at",                                             null: false
-    t.integer  "print_job_type_id",                                      null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.integer  "print_job_type_id",                          null: false
     t.integer  "print_id"
   end
 
@@ -186,15 +185,15 @@ ActiveRecord::Schema.define(version: 20170907213428) do
   add_index "orders", ["status"], name: "index_orders_on_status", using: :btree
 
   create_table "payments", force: :cascade do |t|
-    t.decimal  "amount",                   precision: 15, scale: 3,                 null: false
-    t.decimal  "paid",                     precision: 15, scale: 3,                 null: false
-    t.string   "paid_with",    limit: 1,                                            null: false
+    t.decimal  "amount",                 precision: 15, scale: 3,                 null: false
+    t.decimal  "paid",                   precision: 15, scale: 3,                 null: false
+    t.string   "paid_with",    limit: 1,                                          null: false
     t.integer  "payable_id"
-    t.string   "payable_type", limit: 255
-    t.integer  "lock_version",                                      default: 0
+    t.string   "payable_type"
+    t.integer  "lock_version",                                    default: 0
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.boolean  "revoked",                                           default: false, null: false
+    t.boolean  "revoked",                                         default: false, null: false
   end
 
   add_index "payments", ["created_at"], name: "index_payments_on_created_at", using: :btree
@@ -203,33 +202,33 @@ ActiveRecord::Schema.define(version: 20170907213428) do
   add_index "payments", ["revoked"], name: "index_payments_on_revoked", using: :btree
 
   create_table "print_job_types", force: :cascade do |t|
-    t.string   "name",         limit: 255,                 null: false
-    t.string   "price",        limit: 255,                 null: false
-    t.boolean  "two_sided",                default: false
-    t.boolean  "default",                  default: false
-    t.integer  "lock_version",             default: 0
-    t.datetime "created_at",                               null: false
-    t.datetime "updated_at",                               null: false
-    t.string   "media",        limit: 255
+    t.string   "name",                         null: false
+    t.string   "price",                        null: false
+    t.boolean  "two_sided",    default: false
+    t.boolean  "default",      default: false
+    t.integer  "lock_version", default: 0
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.string   "media"
   end
 
   add_index "print_job_types", ["name"], name: "index_print_job_types_on_name", unique: true, using: :btree
 
   create_table "print_jobs", force: :cascade do |t|
-    t.string   "job_id",            limit: 255
-    t.integer  "copies",                                                             null: false
-    t.decimal  "price_per_copy",                precision: 15, scale: 3,             null: false
-    t.string   "range",             limit: 255
+    t.string   "job_id"
+    t.integer  "copies",                                                 null: false
+    t.decimal  "price_per_copy",    precision: 15, scale: 3,             null: false
+    t.string   "range"
     t.integer  "document_id"
     t.integer  "print_id"
-    t.integer  "lock_version",                                           default: 0
+    t.integer  "lock_version",                               default: 0
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer  "pages",                                                              null: false
-    t.integer  "printed_pages",                                                      null: false
-    t.integer  "printed_copies",                                                     null: false
+    t.integer  "pages",                                                  null: false
+    t.integer  "printed_pages",                                          null: false
+    t.integer  "printed_copies",                                         null: false
     t.integer  "file_line_id"
-    t.integer  "print_job_type_id",                                                  null: false
+    t.integer  "print_job_type_id",                                      null: false
     t.integer  "time_remained"
   end
 
@@ -239,16 +238,16 @@ ActiveRecord::Schema.define(version: 20170907213428) do
   add_index "print_jobs", ["print_job_type_id"], name: "index_print_jobs_on_print_job_type_id", using: :btree
 
   create_table "prints", force: :cascade do |t|
-    t.string   "printer",      limit: 255,                 null: false
+    t.string   "printer",                                null: false
     t.integer  "user_id"
     t.integer  "customer_id"
-    t.integer  "lock_version",             default: 0
+    t.integer  "lock_version",           default: 0
     t.datetime "created_at"
     t.datetime "updated_at"
     t.datetime "scheduled_at"
     t.integer  "order_id"
-    t.boolean  "revoked",                  default: false, null: false
-    t.string   "status",       limit: 1,   default: "P",   null: false
+    t.boolean  "revoked",                default: false, null: false
+    t.string   "status",       limit: 1, default: "P",   null: false
     t.text     "comment"
   end
 
@@ -262,7 +261,7 @@ ActiveRecord::Schema.define(version: 20170907213428) do
   add_index "prints", ["user_id"], name: "index_prints_on_user_id", using: :btree
 
   create_table "sessions", force: :cascade do |t|
-    t.string   "session_id", limit: 255, null: false
+    t.string   "session_id", null: false
     t.text     "data"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -295,8 +294,8 @@ ActiveRecord::Schema.define(version: 20170907213428) do
     t.text     "description"
     t.integer  "lock_version", default: 0,     null: false
     t.integer  "user_id",                      null: false
-    t.datetime "created_at",                   null: false
-    t.datetime "updated_at",                   null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.boolean  "paid",         default: false
     t.boolean  "as_admin"
   end
@@ -307,52 +306,52 @@ ActiveRecord::Schema.define(version: 20170907213428) do
   add_index "shifts", ["user_id"], name: "index_shifts_on_user_id", using: :btree
 
   create_table "tags", force: :cascade do |t|
-    t.string   "name",            limit: 255,                 null: false
+    t.string   "name",                            null: false
     t.integer  "parent_id"
-    t.integer  "lock_version",                default: 0
+    t.integer  "lock_version",    default: 0
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.boolean  "private",                     default: false
+    t.boolean  "private",         default: false
     t.integer  "lft"
     t.integer  "rgt"
     t.integer  "depth"
-    t.integer  "documents_count",             default: 0
-    t.integer  "children_count",              default: 0
+    t.integer  "documents_count", default: 0
+    t.integer  "children_count",  default: 0
   end
 
   add_index "tags", ["parent_id"], name: "index_tags_on_parent_id", using: :btree
   add_index "tags", ["private"], name: "index_tags_on_private", using: :btree
 
   create_table "users", force: :cascade do |t|
-    t.string   "name",                limit: 255,                 null: false
-    t.string   "last_name",           limit: 255,                 null: false
-    t.string   "language",            limit: 255,                 null: false
-    t.string   "email",               limit: 255,                 null: false
-    t.string   "username",            limit: 255,                 null: false
-    t.string   "crypted_password",    limit: 255,                 null: false
-    t.string   "password_salt",       limit: 255,                 null: false
-    t.string   "persistence_token",   limit: 255,                 null: false
-    t.boolean  "admin",                           default: false, null: false
+    t.string   "name",                                null: false
+    t.string   "last_name",                           null: false
+    t.string   "language",                            null: false
+    t.string   "email",                               null: false
+    t.string   "username",                            null: false
+    t.string   "crypted_password",                    null: false
+    t.string   "password_salt",                       null: false
+    t.string   "persistence_token",                   null: false
+    t.boolean  "admin",               default: false, null: false
     t.boolean  "enable"
-    t.integer  "lock_version",                    default: 0
+    t.integer  "lock_version",        default: 0
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string   "default_printer",     limit: 255
-    t.string   "avatar_file_name",    limit: 255
-    t.string   "avatar_content_type", limit: 255
+    t.string   "default_printer"
+    t.string   "avatar_file_name"
+    t.string   "avatar_content_type"
     t.integer  "avatar_file_size"
     t.datetime "avatar_updated_at"
     t.integer  "lines_per_page"
-    t.boolean  "not_shifted",                     default: false
+    t.boolean  "not_shifted",         default: false
   end
 
   add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree
   add_index "users", ["username"], name: "index_users_on_username", unique: true, using: :btree
 
   create_table "versions", force: :cascade do |t|
-    t.string   "item_type",      limit: 255, null: false
-    t.integer  "item_id",                    null: false
-    t.string   "event",          limit: 255, null: false
+    t.string   "item_type",      null: false
+    t.integer  "item_id",        null: false
+    t.string   "event",          null: false
     t.integer  "whodunnit"
     t.text     "object"
     t.datetime "created_at"
@@ -373,15 +372,15 @@ ActiveRecord::Schema.define(version: 20170907213428) do
 
   add_index "withdraws", ["user_id"], name: "index_withdraws_on_user_id", using: :btree
 
-  add_foreign_key "article_lines", "articles", name: "article_lines_article_id_fk", on_delete: :restrict
-  add_foreign_key "article_lines", "prints", name: "article_lines_print_id_fk", on_delete: :restrict
-  add_foreign_key "credits", "customers", name: "credits_customer_id_fk", on_delete: :restrict
-  add_foreign_key "order_lines", "documents", name: "order_lines_document_id_fk", on_delete: :restrict
-  add_foreign_key "order_lines", "orders", name: "order_lines_order_id_fk", on_delete: :restrict
-  add_foreign_key "orders", "customers", name: "orders_customer_id_fk", on_delete: :restrict
-  add_foreign_key "print_jobs", "documents", name: "print_jobs_document_id_fk", on_delete: :restrict
-  add_foreign_key "print_jobs", "prints", name: "print_jobs_print_id_fk", on_delete: :restrict
-  add_foreign_key "prints", "customers", name: "prints_customer_id_fk", on_delete: :restrict
-  add_foreign_key "prints", "orders", name: "prints_order_id_fk", on_delete: :restrict
-  add_foreign_key "prints", "users", name: "prints_user_id_fk", on_delete: :restrict
+  add_foreign_key "article_lines", "articles"
+  add_foreign_key "article_lines", "prints"
+  add_foreign_key "credits", "customers"
+  add_foreign_key "order_lines", "documents"
+  add_foreign_key "order_lines", "orders"
+  add_foreign_key "orders", "customers"
+  add_foreign_key "print_jobs", "documents"
+  add_foreign_key "print_jobs", "prints"
+  add_foreign_key "prints", "customers"
+  add_foreign_key "prints", "orders"
+  add_foreign_key "prints", "users"
 end

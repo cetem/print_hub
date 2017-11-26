@@ -144,24 +144,16 @@ class PrintsController < ApplicationController
 
   # GET /prints/autocomplete_for_document_name
   def autocomplete_for_document_name
-    query = params[:q].sanitized_for_text_query
-    @query_terms = query.split(/\s+/).reject(&:blank?)
-    @docs = Document.all
-    @docs = @docs.full_text(@query_terms) unless @query_terms.empty?
-    @docs = @docs.limit(10)
+    docs = full_text_search_for(Document.all, params[:q])
 
     respond_to do |format|
-      format.json { render json: @docs }
+      format.json { render json: docs }
     end
   end
 
   # GET /prints/autocomplete_for_article_name
   def autocomplete_for_article_name
-    query = params[:q].sanitized_for_text_query
-    query_terms = query.split(/\s+/).reject(&:blank?)
-    articles = Article.enabled
-    articles = articles.full_text(query_terms) unless query_terms.empty?
-    articles = articles.limit(10)
+    articles = full_text_search_for(Article.enabled, params[:q])
 
     respond_to do |format|
       format.json { render json: articles }
@@ -170,11 +162,7 @@ class PrintsController < ApplicationController
 
   # GET /prints/autocomplete_for_customer_name
   def autocomplete_for_customer_name
-    query = params[:q].sanitized_for_text_query
-    query_terms = query.split(/\s+/).reject(&:blank?)
-    customers = Customer.all
-    customers = customers.full_text(query_terms) unless query_terms.empty?
-    customers = customers.limit(10)
+    customers = full_text_search_for(Customer.all, params[:q])
 
     respond_to do |format|
       format.json { render json: customers }

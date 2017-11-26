@@ -7,6 +7,7 @@ jQuery ($)->
     input = $(this)
 
     input.autocomplete
+      maxShowItems: 5
       source: (request, response)->
         $.ajax
           url: input.data('autocompleteUrl')
