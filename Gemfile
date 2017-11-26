@@ -56,6 +56,7 @@ group :development do
   gem 'capistrano-bundler'
   gem 'capistrano-rails'
   gem 'capistrano-chruby'
+  gem 'parallel_tests'
 end
 
 group :test do
@@ -69,4 +70,6 @@ group :test do
 
   gem 'minitest-reporters'
   gem 'test_after_commit'
+
+  gem 'parallel_tests'
 end

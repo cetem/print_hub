@@ -218,6 +218,9 @@ GEM
       activerecord (>= 3.0, < 6.0)
       activesupport (>= 3.0, < 6.0)
       request_store (~> 1.1)
+    parallel (1.12.0)
+    parallel_tests (2.19.0)
+      parallel
     pdf-reader (1.4.0)
       Ascii85 (~> 1.0.0)
       afm (~> 0.2.1)
@@ -381,6 +384,7 @@ DEPENDENCIES
   minitest-reporters
   newrelic_rpm
   paper_trail
+  parallel_tests
   pdf-reader
   pg
   poltergeist

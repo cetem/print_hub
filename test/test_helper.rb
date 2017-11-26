@@ -164,7 +164,7 @@ class ActionDispatch::IntegrationTest
       })
   end
   Capybara.current_driver = Capybara.javascript_driver
-  Capybara.server_port = '54163'
+  Capybara.server_port = '5416' + (ENV['TEST_ENV_NUMBER'] || 9).to_s
   Capybara.default_max_wait_time = 3
 
   if _running_remote
@@ -212,8 +212,23 @@ class ActionDispatch::IntegrationTest
   end
 
   def login(*args)
-    options = args.extract_options!
+    # options = args.extract_options!
+    # options[:user_id] ||= args.shift # if args.first.kind_of?(Symbol)
+    # # options[:user_id] ||= users(:operator).id
+    # options[:expected_path] ||= args.shift if args.first.is_a?(String)
+    # options[:expected_path] ||= prints_path
 
+    # user = options[:user_id].present? ? User.find(options[:user_id]) : users(:operator)
+    # # UserSession.create(user)
+    # page.driver.set_cookie(
+    #   'user_credentials',
+    #   "#{user.persistence_token}::#{user.id}"
+    # )
+    # byebug
+
+    # visit root_path
+
+    options = args.extract_options!
     options[:user_id] ||= args.shift # if args.first.kind_of?(Symbol)
     options[:user_id] ||= users(:operator).id
     options[:expected_path] ||= args.shift if args.first.is_a?(String)
@@ -223,9 +238,9 @@ class ActionDispatch::IntegrationTest
 
     User.find(options[:user_id]).tap do |user|
       fill_in I18n.t('authlogic.attributes.user_session.username'),
-              with: user.email
+        with: user.email
       fill_in I18n.t('authlogic.attributes.user_session.password'),
-              with: "#{user.username}123"
+        with: "#{user.username}123"
     end
 
     click_button I18n.t('view.user_sessions.login')

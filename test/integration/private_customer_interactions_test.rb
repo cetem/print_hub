@@ -3,7 +3,7 @@ require 'test_helper'
 class PrivateCustomerInteractionsTest < ActionDispatch::IntegrationTest
   setup do
     subdomain = APP_CONFIG['subdomains']['customers']
-    Capybara.app_host = "http://#{subdomain}.lvh.me:54163"
+    Capybara.app_host = "http://#{subdomain}.lvh.me:#{Capybara.server_port}"
   end
 
   test 'should search with no results and show contextual help' do
@@ -195,7 +195,7 @@ class PrivateCustomerInteractionsTest < ActionDispatch::IntegrationTest
     find("a[href='#{tag_link}']").click
 
     assert_page_has_no_errors!
-    path_with_params = current_url.match /#{Capybara.app_host}(\S+)/
+    path_with_params = current_url.match(/#{Capybara.app_host}(\S+)/)
     assert_equal catalog_path(tag_id: tag.id), path_with_params[1]
 
     within 'table tbody' do
@@ -210,12 +210,12 @@ class PrivateCustomerInteractionsTest < ActionDispatch::IntegrationTest
       assert page.has_no_css?('a.add_from_order')
     end
 
-    within '.nav-collapse' do
-      click_link I18n.t('view.catalog.new_order')
+    # within '.nav-collapse' do
+    click_link I18n.t('view.catalog.new_order')
 
-      assert_page_has_no_errors!
-      assert_equal new_order_path, current_path
-    end
+    assert_page_has_no_errors!
+    assert_equal new_order_path, current_path
+    # end
 
     page.all 'div.order_line', count: tag.reload.documents_count
   end
@@ -239,6 +239,7 @@ class PrivateCustomerInteractionsTest < ActionDispatch::IntegrationTest
 
     click_button I18n.t('view.customer_sessions.login')
 
+    sleep 1
     assert_page_has_no_errors!
     assert_equal options[:expected_path], current_path
   end

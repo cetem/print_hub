@@ -37,6 +37,10 @@ class UserSessionsController < ApplicationController
 
     current_user_session.destroy
 
+    if Rails.env.test?
+      (Capybara.page.driver.remove_cookie('user_credentials') rescue nil)
+    end
+
     respond_to do |format|
       format.html { redirect_to(new_user_session_url, notice: t('view.user_sessions.correctly_destroyed')) }
       format.json { head :ok }

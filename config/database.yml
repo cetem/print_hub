@@ -15,7 +15,7 @@ test:
   pool: 5
   username: <%= ENV['TRAVIS'] ? 'postgres' : 'print_hub' %>
   password: <%= ENV['TRAVIS'] ? '' : 'print_hub' %>
-  database: print_hub_test
+  database: print_hub_test<%= ENV['TEST_ENV_NUMBER'] %>
 
 production:
   <<: *defaults
