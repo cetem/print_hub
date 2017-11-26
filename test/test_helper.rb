@@ -128,6 +128,14 @@ class ActionDispatch::IntegrationTest
   # Stop ActiveRecord from wrapping tests in transactions
   self.use_transactional_fixtures = false
 
+  def self._running_remote
+    ENV['remote']
+  end
+
+  def self._running_local
+    ENV['local']
+  end
+
   # Vagrant config
   SELENIUM_SERVER = "192.168.33.10"
   SELENIUM_APP_HOST = "192.168.33.1"
@@ -141,32 +149,43 @@ class ActionDispatch::IntegrationTest
     )
   end
 
-  _running_remote = ENV['remote']
-  _running_phantom = ENV['phantom'] || ENV['TRAVIS']
   Capybara.javascript_driver = case
-                                 when _running_remote then  :selenium_remote_firefox
-                                 when _running_phantom then :poltergeist
-                                 else                       :selenium
+                                 when _running_remote then :selenium_remote_firefox
+                                 when _running_local  then :selenium
+                                 else                      :poltergeist
                                end
+
+  Capybara.register_driver :poltergeist do |app|
+      Capybara::Poltergeist::Driver.new(app, {
+        # debug: true,
+        inspector: true,
+        js_errors: true,
+        window_size: [1600, 1200]
+      })
+  end
   Capybara.current_driver = Capybara.javascript_driver
   Capybara.server_port = '54163'
   Capybara.default_max_wait_time = 3
 
   if _running_remote
     APP_CONFIG['local_server_ip'] = SELENIUM_APP_HOST
-  elsif !_running_phantom
+  elsif _running_local
     Selenium::WebDriver::Firefox::Binary.path = '/opt/firefox42/firefox'
   end
 
   setup do
-    Capybara.server_host = _running_remote ? SELENIUM_APP_HOST : 'localhost'
+    Capybara.server_host = self.class._running_remote ? SELENIUM_APP_HOST : 'localhost'
     Capybara.app_host = "http://#{Capybara.server_host}:#{Capybara.server_port}"
     Capybara.reset!    # Forget the (simulated) browser state
-    Capybara.page.driver.browser.manage.window.maximize unless _running_phantom
+    if self.class._running_local
+      Capybara.page.driver.browser.manage.window.maximize
+    else
+      Capybara.page.driver.resize(1600, 1200)
+    end
   end
 
   teardown do
-    unless _running_phantom
+    if self.class._running_local
       errors = Capybara.page.driver.browser.manage.logs.get(:browser)
 
       if errors
@@ -221,5 +240,25 @@ class ActionDispatch::IntegrationTest
 
     parsed_errors = errors.map { |e| e if e.level == 'SEVERE' && message.present? }.compact
     raise JSException.new(parsed_errors) if parsed_errors
+  end
+
+  def wait_for_ajax
+    Timeout.timeout(Capybara.default_max_wait_time) do
+      loop until finished_all_ajax_requests?
+    end
+  end
+
+  def finished_all_ajax_requests?
+    request_count = page.evaluate_script("$.active").to_i
+    request_count && request_count.zero?
+  rescue Timeout::Error
+  end
+
+  def fill_autocomplete_for(field, string)
+    find(:css, "input[id^='#{field}']").native.send_keys(*string.each_char.to_a)
+    wait_for_ajax
+    sleep 1
+    assert page.has_xpath?("//ul[contains(@class, 'ui-autocomplete')]", visible: true)
+    find(:css, "input[id^='#{field}']").native.send_keys :down, :tab
   end
 end

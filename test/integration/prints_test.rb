@@ -70,10 +70,7 @@ class PrintsTest < ActionDispatch::IntegrationTest
     )
 
     within '.print_job' do
-      find(:css, "input[id^='#{@ac_field}']").set('Math Book')
-      sleep 1
-      assert page.has_xpath?("//li[@class='ui-menu-item']", visible: true)
-      find(:css, "input[id^='#{@ac_field}']").native.send_keys :arrow_down, :tab
+      fill_autocomplete_for(@ac_field, 'Math Book')
 
       assert_equal find('select[name$="[print_job_type_id]"]').value,
                    print_job_types(:color).id.to_s
@@ -111,28 +108,30 @@ class PrintsTest < ActionDispatch::IntegrationTest
     within 'form.new_print' do
       select '', from: 'print_printer'
       fill_in 'print_scheduled_at', with: ''
-      assert page.has_css?('div.datetime_picker')
+    end
 
-      within 'div.datetime_picker' do
-        assert page.has_xpath?(
-          "//div[@class='ui-timepicker-div']"
-        )
-        within :xpath, "//div[@class='ui-timepicker-div']" do
-          first(
-            :css, '.ui_tpicker_hour .ui-slider-handle'
-          ).native.send_keys :end
-          first(
-            :css, '.ui_tpicker_minute .ui-slider-handle'
-          ).native.send_keys :end
-        end
-      end
+    assert page.has_xpath?(
+      "//div[@class='ui-timepicker-div']"
+    )
+    within :xpath, "//div[@class='ui-timepicker-div']" do
+      first(
+        :css, '.ui_tpicker_hour .ui-slider-handle'
+      ).native.send_keys :end
+      first(
+        :css, '.ui_tpicker_minute .ui-slider-handle'
+      ).native.send_keys :end
+    end
+
+    assert page.has_xpath?(
+      "//div[@class='ui-datepicker-buttonpane ui-widget-content']"
+    )
+    within :xpath, "//div[@class='ui-datepicker-buttonpane ui-widget-content']" do
+      find(:xpath, "//button[@class='ui-datepicker-close ui-state-default ui-priority-primary ui-corner-all']").click
+      sleep 1
     end
 
     within '.print_job' do
-      find(:css, "input[id^='#{@ac_field}']").set('Math')
-      sleep 1
-      assert page.has_xpath?("//li[@class='ui-menu-item']", visible: true)
-      find(:css, "input[id^='#{@ac_field}']").native.send_keys :arrow_down, :tab
+      fill_autocomplete_for(@ac_field, 'Math')
     end
 
     assert_difference 'Print.count' do
@@ -164,10 +163,7 @@ class PrintsTest < ActionDispatch::IntegrationTest
     end
 
     within '.print_job' do
-      find(:css, "input[id^='#{@ac_field}']").set('Math')
-      sleep 1
-      assert page.has_xpath?("//li[@class='ui-menu-item']", visible: true)
-      find(:css, "input[id^='#{@ac_field}']").native.send_keys :arrow_down, :tab
+      fill_autocomplete_for(@ac_field, 'Math')
     end
 
     print_job_price = first(
@@ -179,10 +175,7 @@ class PrintsTest < ActionDispatch::IntegrationTest
       click_link I18n.t('view.prints.article_lines')
 
       within '#articles_container' do
-        find(:css, "input[id^='#{art_id}']").set('ringed')
-        sleep 1
-        assert page.has_xpath?("//li[@class='ui-menu-item']", visible: true)
-        find(:css, "input[id^='#{art_id}']").native.send_keys :arrow_down, :tab
+        fill_autocomplete_for(art_id, 'ringed')
       end
     end
 
@@ -230,10 +223,7 @@ class PrintsTest < ActionDispatch::IntegrationTest
     )
 
     within '.print_job' do |_ac|
-      find(:css, "input[id^='#{@ac_field}']").set('Math')
-      sleep 1
-      assert page.has_xpath?("//li[@class='ui-menu-item']", visible: true)
-      find(:css, "input[id^='#{@ac_field}']").native.send_keys :arrow_down, :tab
+      fill_autocomplete_for(@ac_field, 'Math')
     end
 
     assert_difference 'Print.count' do
@@ -279,19 +269,12 @@ class PrintsTest < ActionDispatch::IntegrationTest
     within 'form.new_print' do
       select @pdf_printer, from: 'print_printer'
 
-      fill_in 'print_auto_customer_name', with: customer.identification
-      sleep 1
-      assert page.has_xpath?("//li[@class='ui-menu-item']", visible: true)
-      find('#print_auto_customer_name').native.send_keys :arrow_down, :tab
-
+      fill_autocomplete_for('print_auto_customer_name', customer.identification)
       fill_in 'print_credit_password', with: 'student123'
     end
 
     within '.print_job' do |_ac|
-      find(:css, "input[id^='#{@ac_field}']").set('Math')
-      sleep 1
-      assert page.has_xpath?("//li[@class='ui-menu-item']", visible: true)
-      find(:css, "input[id^='#{@ac_field}']").native.send_keys :arrow_down, :tab
+      fill_autocomplete_for(@ac_field, 'Math')
     end
 
     assert_difference ['Print.count', 'customer.prints.count'] do
@@ -328,21 +311,14 @@ class PrintsTest < ActionDispatch::IntegrationTest
 
       assert customer.reliable?
 
-      fill_in 'print_auto_customer_name', with: customer.identification
-      sleep 1
-      assert page.has_xpath?("//li[@class='ui-menu-item']", visible: true)
-      find('#print_auto_customer_name').native.send_keys :arrow_down, :tab
-
+      fill_autocomplete_for 'print_auto_customer_name', customer.identification
       fill_in 'print_credit_password', with: 'student123'
     end
 
     assert find('#print_pay_later').checked?
 
-    within '.print_job' do |_ac|
-      find(:css, "input[id^='#{@ac_field}']").set('Math')
-      sleep 1
-      assert page.has_xpath?("//li[@class='ui-menu-item']", visible: true)
-      find(:css, "input[id^='#{@ac_field}']").native.send_keys :arrow_down, :tab
+    within '.print_job' do
+      fill_autocomplete_for(@ac_field, 'Math')
     end
 
     assert_difference(

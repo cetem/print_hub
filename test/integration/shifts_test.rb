@@ -23,6 +23,8 @@ class ShiftsTest < ActionDispatch::IntegrationTest
 
       within 'div#ui-datepicker-div' do
         first(:css, '.ui-datepicker-current').click
+        first(:css, '.ui-datepicker-close').click
+        sleep 1
       end
 
       assert_difference 'Shift.stale.count', -1 do

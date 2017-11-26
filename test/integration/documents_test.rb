@@ -18,19 +18,16 @@ class DocumentsTest < ActionDispatch::IntegrationTest
       select('A4', from: Document.human_attribute_name('media'))
       fill_in Document.human_attribute_name('description'),
               with: 'Testing upload a pdf'
-      file = File.join(Rails.root, 'test', 'fixtures', 'files', 'test.pdf')
-      attach_file(Document.human_attribute_name('file'), file)
-      fill_in 'autocomplete_tag_tag_NEW_RECORD', with: draft_tag.name
-      sleep 2
-      assert page.has_xpath?("//li[@class='ui-menu-item']", visible: true)
-      find('#autocomplete_tag_tag_NEW_RECORD').native.send_keys :arrow_down, :tab
+      attach_file(
+        Document.human_attribute_name('file'),
+        File.join(Rails.root, 'test', 'fixtures', 'files', 'test.pdf')
+      )
+      fill_autocomplete_for('autocomplete_tag_tag_NEW_RECORD', draft_tag.name)
 
-      assert_difference 'Document.count' do
-        assert_difference 'draft_tag.reload.documents_count' do
-          click_button I18n.t(
-            'helpers.submit.create', model: Document.model_name.human
-          )
-        end
+      assert_difference ['Document.count','draft_tag.reload.documents_count'] do
+        click_button I18n.t(
+          'helpers.submit.create', model: Document.model_name.human
+        )
       end
     end
 
