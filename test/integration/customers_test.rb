@@ -186,7 +186,7 @@ class CustomersTest < ActionDispatch::IntegrationTest
 
     sleep 1 # Capybara read the current_url before the url change
     href = href.match(/\?date\=(\S+)/)[1]
-    current_page = current_url.match(/\:54163(\/\S+)/)[1]
+    current_page = current_url.match(/\:#{Capybara.server_port}(\/\S+)/)[1]
     assert_page_has_no_errors!
     assert_equal customer_path(id, date: href), current_page
 
@@ -236,7 +236,7 @@ class CustomersTest < ActionDispatch::IntegrationTest
     end
 
     assert_page_has_no_errors!
-    current_page = current_url.match(/\:54163(\S+)/)[1]
+    current_page = current_url.match(/\:#{Capybara.server_port}(\S+)/)[1]
     assert_equal customers_path(status: 'with_debt'), current_page
   end
 end

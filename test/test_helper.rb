@@ -86,11 +86,13 @@ class ActiveSupport::TestCase
   end
 
   def job_count(print_jobs)
-    print_jobs.map(&:copies).sum
+    print_jobs.map(&:copies).compact.sum
   end
 
   def drop_all_prints
-    Thread.new { `lpstat -Wnot-completed -o | grep -i "virtual" | awk '{print $1}' | xargs cancel &>1`}
+    pdf_printer = Cups.show_destinations.detect { |p| p =~ /pdf/i }
+    return unless pdf_printer
+    Thread.new { `lpstat -Wnot-completed -o | grep -i "#{pdf_printer}" | awk '{print $1}' | xargs cancel &>1`}
   end
 end
 
