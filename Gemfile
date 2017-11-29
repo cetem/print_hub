@@ -22,7 +22,7 @@ gem 'pdf-reader'
 gem 'barby'
 gem 'rqrcode'
 gem 'chunky_png'
-gem 'google_drive', '1.0.6'
+gem 'google_drive' #, '1.0.6'
 
 # Production-Task Gems
 gem 'unicorn'
