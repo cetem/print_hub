@@ -2,6 +2,10 @@ module CustomCups
   extend self
   @@_printers_file = {}
 
+  def printer_name_for(value)
+    show_destinations[value] || value
+  end
+
   def show_destinations
     printers_file.split("\n").inject({}) do |memo, item|
       if item.start_with?('#')
