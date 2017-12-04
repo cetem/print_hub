@@ -86,7 +86,7 @@
               </tr>
             </thead>
             <tbody>
-              <% @shift_closure.withdraws.each do |withdraw| %>
+              <% @shift_closure.withdraws.order(:created).each do |withdraw| %>
                 <tr>
                   <td><%= number_to_currency withdraw.amount %></td>
                   <td><%= l(withdraw.collected_at) %></td>

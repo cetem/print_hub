@@ -4,6 +4,7 @@ class PrintsTest < ActionDispatch::IntegrationTest
   setup do
     @ac_field = 'auto-document-print_job_print_print_jobs_attributes_'
     @pdf_printer = Cups.show_destinations.detect { |p| p =~ /pdf/i }
+    @pdf_printer_name = CustomCups.show_destinations.detect { |k, v| k =~ /pdf/i }.last
     if ENV['TRAVIS']
       puts Cups.show_destinations
     end
@@ -65,7 +66,7 @@ class PrintsTest < ActionDispatch::IntegrationTest
     assert page.has_css?('form.new_print')
 
     within 'form.new_print' do
-      select @pdf_printer, from: 'print_printer'
+      select @pdf_printer_name, from: 'print_printer'
     end
 
     documents(:math_book).update_attributes(
@@ -162,7 +163,7 @@ class PrintsTest < ActionDispatch::IntegrationTest
     assert page.has_css?('form.new_print')
 
     within 'form.new_print' do
-      select @pdf_printer, from: 'print_printer'
+      select @pdf_printer_name, from: 'print_printer'
     end
 
     within '.print_job' do
@@ -213,7 +214,7 @@ class PrintsTest < ActionDispatch::IntegrationTest
     last_cancelled_job_id = Cups.all_jobs(@pdf_printer).sort.last.first
 
     within 'form' do
-      select @pdf_printer, from: 'print_printer'
+      select @pdf_printer_name, from: 'print_printer'
     end
 
     object_id = first(:css, 'input.price-modifier')[:name].match(/(\d+)/)[1]
@@ -270,7 +271,7 @@ class PrintsTest < ActionDispatch::IntegrationTest
     assert page.has_css?('form.new_print')
 
     within 'form.new_print' do
-      select @pdf_printer, from: 'print_printer'
+      select @pdf_printer_name, from: 'print_printer'
 
       fill_autocomplete_for('print_auto_customer_name', customer.identification)
       fill_in 'print_credit_password', with: 'student123'
@@ -310,7 +311,7 @@ class PrintsTest < ActionDispatch::IntegrationTest
     assert page.has_css?('form.new_print')
 
     within 'form.new_print' do
-      select @pdf_printer, from: 'print_printer'
+      select @pdf_printer_name, from: 'print_printer'
 
       assert customer.reliable?
 
@@ -351,7 +352,7 @@ class PrintsTest < ActionDispatch::IntegrationTest
     assert page.has_css?('form.new_print')
 
     within 'form.new_print' do
-      select @pdf_printer, from: 'print_printer'
+      select @pdf_printer_name, from: 'print_printer'
       assert page.has_css?('.file_line_item', count: 0)
     end
 
