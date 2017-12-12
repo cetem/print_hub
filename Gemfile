@@ -11,7 +11,6 @@ gem 'paper_trail'
 gem 'RedCloth'
 gem 'cups'
 gem 'simple_form'
-gem 'mailgunner'
 
 # Files Processors
 gem 'carrierwave'
