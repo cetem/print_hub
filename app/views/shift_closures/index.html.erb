@@ -21,7 +21,7 @@
         <td><%= shift_closure.user %></td>
         <td><%= number_to_currency shift_closure.total_withdraws %></td>
         <td><%= link_to_show shift_closure %></td>
-        <td><%= link_to_edit edit_shift_closure_path(shift_closure) if shift_closure.finish_at.blank? || current_user.not_shifted? %></td>
+        <td><%= link_to_edit edit_shift_closure_path(shift_closure) if can_edit_shift_closure?(shift_closure) %></td>
         <td><%= link_to_destroy shift_closure if current_user.not_shifted? %></td>
       </tr>
     <% end %>
