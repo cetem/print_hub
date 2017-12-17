@@ -4,7 +4,7 @@
 # whenever --set environment=development --update-crontab print_hub
 # Para eliminarla
 # whenever -c print_hub
-env :PATH, '"/home/deployer/.gem/ruby/2.1.3/bin:/opt/rubies/ruby-2.1.3/lib/ruby/gems/2.1.0/bin:/opt/rubies/ruby-2.1.3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games"'
+env :PATH, '"/home/deployer/.gem/ruby/2.4.3/bin:/opt/rubies/ruby-2.4.3/lib/ruby/gems/2.4.0/bin:/opt/rubies/ruby-2.4.3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games"'
 
 every :month, at: 'beginning of the month at 04:01' do
   runner 'Customer.create_monthly_bonuses'

@@ -22,7 +22,8 @@ Install a virtual pdf printer via /system/printers or http://localhost:631/
 
 == (The MIT License)
 
-Copyright (c) 2008-2015 Cirope S.A. - Néstor Coppi - C.E.T.E.M.
+Copyright (c) 2008-2015 Cirope S.A.
+Copyright (c) 2015-2018 Néstor Coppi - C.E.T.E.M.
 
 Permission is hereby granted, free of charge, to any person obtaining
 a copy of this software and associated documentation files (the
