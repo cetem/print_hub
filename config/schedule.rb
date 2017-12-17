@@ -5,7 +5,7 @@
 # Para eliminarla
 # whenever -c print_hub
 # env :PATH, '"/home/deployer/.gem/ruby/2.4.3/bin:/opt/rubies/ruby-2.4.3/lib/ruby/gems/2.4.0/bin:/opt/rubies/ruby-2.4.3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games"'
-chruby_version = 'ruby-2.4.3'
+chruby_version = '2.4.3'
 chruby_bin = '/usr/local/bin/chruby-exec'
 chruby_cmd = "#{chruby_bin} #{chruby_version} --"
 job_type :rake,    "cd :path && #{chruby_cmd} :environment_variable=:environment bundle exec rake :task --silent :output"
