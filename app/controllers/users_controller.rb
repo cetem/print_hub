@@ -85,7 +85,7 @@ class UsersController < ApplicationController
     @user = User.find(params[:id])
 
     respond_to do |format|
-      if @user.update_attributes(user_params)
+      if @user.update(user_params)
         format.html { redirect_to(users_url, notice: t('view.users.correctly_updated')) }
         format.json { head :ok }
       else

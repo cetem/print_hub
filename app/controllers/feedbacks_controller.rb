@@ -1,5 +1,6 @@
 class FeedbacksController < ApplicationController
-  layout ->(controller) { controller.request.xhr? ? false : 'application' }
+  layout false
+  #->(controller) { controller.request.xhr? ? false : 'application' }
 
   # POST /feedbacks/item/score
   def create
@@ -17,7 +18,7 @@ class FeedbacksController < ApplicationController
     @feedback = Feedback.negative.find(params[:id])
 
     respond_to do |format|
-      if @feedback.update_attributes(update_feedback_params)
+      if @feedback.update(update_feedback_params)
         format.html { render 'negative_comment' }
       end
     end

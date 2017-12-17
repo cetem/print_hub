@@ -34,7 +34,7 @@ class PrintJobType < ActiveRecord::Base
     current_default = PrintJobType.default
 
     if default && current_default && (current_default.id != try(:id))
-      current_default.update_attributes(default: false)
+      current_default.update(default: false)
     end
   end
 

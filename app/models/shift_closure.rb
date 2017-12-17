@@ -23,7 +23,7 @@ class ShiftClosure < ActiveRecord::Base
 
 
   belongs_to :user
-  belongs_to :helper_user, class_name: User, foreign_key: :helper_user_id
+  belongs_to :helper_user, class_name: 'User', foreign_key: :helper_user_id, optional: true
   has_many :withdraws
   has_many :upfronts
 

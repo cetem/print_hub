@@ -10,7 +10,7 @@ module Prints::Customers
 
     validate :need_credit_password?, :pay_later_validations
 
-    belongs_to :customer, autosave: true
+    belongs_to :customer, autosave: true, optional: true
   end
 
   def update_customer_credit

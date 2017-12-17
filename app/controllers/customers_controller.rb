@@ -94,7 +94,7 @@ class CustomersController < ApplicationController
     @customer = Customer.find(params[:id])
 
     respond_to do |format|
-      if @customer.update_attributes(customer_params)
+      if @customer.update(customer_params)
         format.html { redirect_to(customer_url(@customer), notice: t('view.customers.correctly_updated')) }
         format.json  { head :ok }
       else
@@ -145,7 +145,7 @@ class CustomersController < ApplicationController
     @customer = current_customer
 
     respond_to do |format|
-      if @customer.update_attributes(
+      if @customer.update(
         params.require(:customer).permit(*public_customer_params)
       )
         format.html { redirect_to(edit_profile_customer_url(@customer), notice: t('view.customers.profile_correctly_updated')) }

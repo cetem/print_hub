@@ -1,8 +1,8 @@
 class CustomersGroupsController < ApplicationController
-  before_filter :require_admin_user, except: :autocomplete_for_name
-  before_filter :require_user, only: :autocomplete_for_name
-  before_filter :require_not_shifted, only: :pay_between
-  before_filter :load_group, only: [:show, :edit, :update, :destroy, :settlement, :pay_between]
+  before_action :require_admin_user, except: :autocomplete_for_name
+  before_action :require_user, only: :autocomplete_for_name
+  before_action :require_not_shifted, only: :pay_between
+  before_action :load_group, only: [:show, :edit, :update, :destroy, :settlement, :pay_between]
 
   # GET /customers_groups
   # GET /customers_groups.json

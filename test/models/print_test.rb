@@ -1,3 +1,5 @@
+require 'test_helper'
+
 # Clase para probar el modelo "Print"
 class PrintTest < ActiveSupport::TestCase
   # Función para inicializar las variables utilizadas en las pruebas
@@ -330,9 +332,7 @@ class PrintTest < ActiveSupport::TestCase
   end
 
   test 'create with free credit and cash' do
-    file_line = FileLine.create(
-      file: process_with_action_dispatch('test.pdf', 'application/pdf')
-    )
+    file_line = FileLine.create( file: pdf_test_file)
 
     assert_difference ['Print.count', 'ArticleLine.count'] do
       assert_difference 'Cups.all_jobs(@printer).keys.sort.last', 110 do
@@ -472,7 +472,7 @@ class PrintTest < ActiveSupport::TestCase
         assert_no_difference 'Payment.count' do
           @print = Print.create(
             printer: @printer,
-            user_id: nil,
+            user_id: @operator.id,
             customer_id: customers(:student_without_bonus).id,
             scheduled_at: '',
             avoid_printing: false,

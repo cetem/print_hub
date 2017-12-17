@@ -26,7 +26,7 @@ class Payment < ApplicationModel
   validate :paid_between_zero_and_amount
 
   # Relaciones
-  belongs_to :payable, polymorphic: true
+  belongs_to :payable, polymorphic: true, optional: true
 
   def initialize(attributes = nil)
     super(attributes)

@@ -13,7 +13,7 @@ class UsersControllerTest < ActionController::TestCase
     get :index
     assert_response :success
     assert_not_nil assigns(:users)
-    assert_select '#unexpected_error', false
+    # assert_select '#unexpected_error', false
     assert_template 'users/index'
   end
 
@@ -21,25 +21,27 @@ class UsersControllerTest < ActionController::TestCase
     get :new
     assert_response :success
     assert_not_nil assigns(:user)
-    assert_select '#unexpected_error', false
+    # assert_select '#unexpected_error', false
     assert_template 'users/new'
   end
 
   test 'should create user' do
     assert_difference ['User.count', 'PaperTrail::Version.count'] do
-      post :create, user: {
-        name: 'New name',
-        last_name: 'New last name',
-        email: 'new_user@printhub.com',
-        default_printer: '',
-        lines_per_page: '12',
-        language: LANGUAGES.first.to_s,
-        username: 'new_user',
-        password: 'new_password',
-        password_confirmation: 'new_password',
-        admin: '1',
-        enable: '1',
-        avatar: fixture_file_upload('/files/test.gif', 'image/gif')
+      post :create, params: {
+        user: {
+          name: 'New name',
+          last_name: 'New last name',
+          email: 'new_user@printhub.com',
+          default_printer: '',
+          lines_per_page: '12',
+          language: LANGUAGES.first.to_s,
+          username: 'new_user',
+          password: 'new_password',
+          password_confirmation: 'new_password',
+          admin: '1',
+          enable: '1',
+          avatar: fixture_file_upload('/files/test.gif', 'image/gif')
+        }
       }
     end
 
@@ -49,23 +51,23 @@ class UsersControllerTest < ActionController::TestCase
   end
 
   test 'should show user' do
-    get :show, id: @operator.to_param
+    get :show, params: { id: @operator.to_param }
     assert_response :success
     assert_not_nil assigns(:user)
-    assert_select '#unexpected_error', false
+    # assert_select '#unexpected_error', false
     assert_template 'users/show'
   end
 
   test 'should get edit' do
-    get :edit, id: @operator.to_param
+    get :edit, params: { id: @operator.to_param }
     assert_response :success
     assert_not_nil assigns(:user)
-    assert_select '#unexpected_error', false
+    # assert_select '#unexpected_error', false
     assert_template 'users/edit'
   end
 
   test 'should update user' do
-    put :update, id: @operator.to_param, user: {
+    put :update, params: { id: @operator.to_param, user: {
       name: 'Updated name',
       last_name: 'Updated last name',
       email: 'updated_user@printhub.com',
@@ -76,13 +78,13 @@ class UsersControllerTest < ActionController::TestCase
       password_confirmation: 'updated_password',
       admin: '1',
       enable: '1'
-    }
+    } }
     assert_redirected_to users_path
     assert_equal 'Updated name', @operator.reload.name
   end
 
   test 'should get autocomplete user list' do
-    get :autocomplete_for_user_name, format: :json, q: 'operator'
+    get :autocomplete_for_user_name, params: { q: 'operator' }, format: :json
     assert_response :success
 
     users = ActiveSupport::JSON.decode(@response.body)
@@ -90,14 +92,14 @@ class UsersControllerTest < ActionController::TestCase
     assert_equal 1, users.size
     assert users.all? { |u| (u['label'] + u['informal']).match /operator/i }
 
-    get :autocomplete_for_user_name, format: :json, q: 'invalid_operator'
+    get :autocomplete_for_user_name, params: { q: 'invalid_operator' }, format: :json
     assert_response :success
 
     customers = ActiveSupport::JSON.decode(@response.body)
 
     assert customers.empty?
 
-    get :autocomplete_for_user_name, format: :json, q: 'disabled operator'
+    get :autocomplete_for_user_name, params: { q: 'disabled operator' }, format: :json
     assert_response :success
 
     customers = ActiveSupport::JSON.decode(@response.body)
@@ -114,8 +116,12 @@ class UsersControllerTest < ActionController::TestCase
     assert pending_shifts.size > 0
 
     assert_difference 'pending_shifts.count', -pending_shifts.count do
-      put :pay_shifts_between, format: :json,
-                               id: user.to_param, start: start.to_s(:db), finish: finish.to_s(:db)
+      put :pay_shifts_between, params: {
+                                 id: user.to_param,
+                                 start: start.to_s(:db),
+                                 finish: finish.to_s(:db)
+                               },
+                               format: :json
       assert_response :success
     end
   end
@@ -137,8 +143,11 @@ class UsersControllerTest < ActionController::TestCase
     to = 1.day.from_now.to_date
     users_shifts = User.pay_pending_shifts_for_active_users_between(from, to).first
 
-    get :pay_pending_shifts_for_active_users_between, format: :json,
-                                                      start: from.to_s(:db), finish: to.to_s(:db)
+    get :pay_pending_shifts_for_active_users_between, params: {
+                                                        start: from.to_s(:db),
+                                                        finish: to.to_s(:db)
+                                                      },
+                                                      format: :json
 
     assert_response :success
 

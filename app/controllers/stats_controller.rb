@@ -55,6 +55,7 @@ class StatsController < ApplicationController
   private
 
   def load_date_range
+    #@from_date, @to_date = *make_datetime_range(params.require(:interval).permit(:from, :to))
     @from_date, @to_date = *make_datetime_range(params[:interval])
   end
 end

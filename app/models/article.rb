@@ -38,7 +38,10 @@ class Article < ApplicationModel
   end
 
   def can_be_destroyed?
-    article_lines.empty?
+    if article_lines.any?
+      self.errors.add(:base, :cannot_be_destroyed)
+      throw :abort
+    end
   end
 
   def self.full_text(query_terms)

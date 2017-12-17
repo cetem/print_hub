@@ -12,8 +12,8 @@ class FileLine < ActiveRecord::Base
                              allow_nil: true, allow_blank: true
   validate :file_presence, on: :create
 
-  belongs_to :order
-  belongs_to :print
+  belongs_to :order, optional: true
+  belongs_to :print, optional: true
   belongs_to :print_job_type
   has_many :print_jobs
 
@@ -26,7 +26,7 @@ class FileLine < ActiveRecord::Base
   end
 
   def extract_page_count
-    if self.file_changed?
+    if self.will_save_change_to_file?
       PDF::Reader.new(file.current_path).tap do |pdf|
         self.pages = pdf.page_count
       end

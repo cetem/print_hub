@@ -84,7 +84,7 @@ class ArticlesController < ApplicationController
     @article = Article.find(params[:id])
 
     respond_to do |format|
-      if @article.update_attributes(article_params)
+      if @article.update(article_params)
         format.html { redirect_to(articles_url, notice: t('view.articles.correctly_updated')) }
         format.json  { head :ok }
       else

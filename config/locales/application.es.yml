@@ -197,6 +197,9 @@ es:
         amount: "Monto"
         collected_at: "Armado a las"
     errors:
+      required: 'es requerido'
+      cannot_be_destroyed: "No se puede eliminar"
+      cannot_be_modified: "No se puede modificar"
       models:
         customer:
           attributes:

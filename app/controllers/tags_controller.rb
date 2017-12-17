@@ -74,7 +74,7 @@ class TagsController < ApplicationController
     @tag = Tag.find(params[:id])
 
     respond_to do |format|
-      if @tag.update_attributes(tag_params)
+      if @tag.update(tag_params)
         format.html { redirect_to(tags_url(parent: @tag.parent), notice: t('view.tags.correctly_updated')) }
         format.json  { head :ok }
       else

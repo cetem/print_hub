@@ -12,5 +12,5 @@ if defined?(Unicorn)
   use Unicorn::WorkerKiller::Oom, oom_min, oom_max, 5, true
 end
 
-require ::File.expand_path('../config/environment',  __FILE__)
+require_relative 'config/environment'
 run Rails.application

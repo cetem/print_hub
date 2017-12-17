@@ -108,7 +108,7 @@ class OrderTest < ActiveSupport::TestCase
   # Prueba de actualización de un pedido
   test 'update' do
     assert_no_difference 'Order.count' do
-      assert @order.update_attributes(
+      assert @order.update(
         scheduled_at: 5.days.from_now.at_midnight,
         notes: 'Updated notes'
       ), @order.errors.full_messages.join('; ')
@@ -124,7 +124,7 @@ class OrderTest < ActiveSupport::TestCase
     @order.completed!
     assert @order.save
 
-    assert !@order.update_attributes(
+    assert !@order.update(
       scheduled_at: 5.days.from_now.at_midnight
     )
 

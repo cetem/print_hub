@@ -52,9 +52,9 @@ class PrintJob < ApplicationModel
   validates :range, page_range: true
 
   # Relaciones
-  belongs_to :print, inverse_of: :print_jobs
-  belongs_to :document, autosave: true
-  belongs_to :file_line, inverse_of: :print_jobs
+  belongs_to :print, inverse_of: :print_jobs, optional: true
+  belongs_to :document, autosave: true, optional: true
+  belongs_to :file_line, inverse_of: :print_jobs, optional: true
   belongs_to :print_job_type
 
   delegate :printer, to: :print

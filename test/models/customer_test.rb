@@ -102,7 +102,7 @@ class CustomerTest < ActiveSupport::TestCase
   # Prueba de actualización de un cliente
   test 'update' do
     assert_no_difference ['Customer.count', 'Bonus.count'] do
-      assert @customer.update_attributes(
+      assert @customer.update(
         name: 'Updated name'
       ), @customer.errors.full_messages.join('; ')
     end
@@ -386,7 +386,7 @@ class CustomerTest < ActiveSupport::TestCase
     assert_difference('Bonus.count') { @customer.save }
     assert_nil @customer.reload.bonuses.detect { |b| b.valid_until.blank? }
 
-    assert @customer.update_attributes(bonus_without_expiration: true)
+    assert @customer.update(bonus_without_expiration: true)
 
     new_bonus = @customer.build_monthly_bonus
 

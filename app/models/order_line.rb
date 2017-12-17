@@ -10,7 +10,7 @@ class OrderLine < ApplicationModel
 
   # Relaciones
   belongs_to :document
-  belongs_to :order
+  belongs_to :order, optional: true
   belongs_to :print_job_type
   delegate :pages, to: :document
 

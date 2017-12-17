@@ -121,13 +121,12 @@ class Document < ApplicationModel
   end
 
   def can_be_destroyed?
-    if print_jobs.empty?
-      true
-    else
-      errors.add :base,
-                 I18n.t('view.documents.has_related_print_jobs')
-
-      false
+    if print_jobs.any?
+      self.errors.add(
+        :base,
+        I18n.t('view.documents.has_related_print_jobs'),
+      )
+      throw :abort
     end
   end
 
@@ -146,8 +145,7 @@ class Document < ApplicationModel
   def extract_page_count
     PDF::Reader.new(file.path).tap do |pdf|
       self.pages = pdf.page_count
-    end if file_file_name_changed?
-
+    end if will_save_change_to_file_file_name?
   rescue PDF::Reader::MalformedPDFError
     false
   end
@@ -254,7 +252,7 @@ class Document < ApplicationModel
   end
 
   def update_file_attributes
-    if file.present? && file_file_name_changed?
+    if file.present? && will_save_change_to_file_file_name?
       self.file_content_type = file.file.content_type
       self.file_file_size = file.file.size
       self.file_updated_at = Time.zone.now
@@ -262,7 +260,7 @@ class Document < ApplicationModel
   end
 
   def recreate_versions
-    if file_file_name_changed?
+    if will_save_change_to_file_file_name?
       begin
         file.recreate_versions! unless @versions_ready
       rescue => e

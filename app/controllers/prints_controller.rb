@@ -96,7 +96,7 @@ class PrintsController < ApplicationController
     end
 
     respond_to do |format|
-      if @print.update_attributes(print_params)
+      if @print.update(print_params)
         format.html { redirect_to(@print, notice: t('view.prints.correctly_updated')) }
         format.json  { head :ok }
       else

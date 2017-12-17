@@ -31,7 +31,7 @@ class ArticleTest < ActiveSupport::TestCase
   # Prueba de actualización de un articleo
   test 'update' do
     assert_no_difference 'Article.count' do
-      assert @article.update_attributes(name: 'Updated name'),
+      assert @article.update(name: 'Updated name'),
              @article.errors.full_messages.join('; ')
     end
 

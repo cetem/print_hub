@@ -1,20 +1,21 @@
-ENV['RAILS_ENV'] ||= 'test'
 require File.expand_path('../../config/environment', __FILE__)
 require 'rails/test_help'
 require 'authlogic/test_case'
-require 'capybara/rails'
 require 'sidekiq/testing'
 require 'database_cleaner'
-require 'minitest/reporters'
+# require 'minitest/reporters'
+require 'capybara/rails'
+require 'capybara/minitest'
 require 'capybara-screenshot/minitest'
 require 'capybara/poltergeist'
 
-Minitest::Reporters.use! Minitest::Reporters::ProgressReporter.new
+# Minitest::Reporters.use! Minitest::Reporters::ProgressReporter.new
 
 class ActiveSupport::TestCase
   ActiveRecord::Migration.maintain_test_schema!
   set_fixture_class versions: PaperTrail::Version
-  self.use_transactional_fixtures = true
+  # self.use_transactional_fixtures = true
+  # Minitest::Reporters.use! Minitest::Reporters::ProgressReporter.new
 
   fixtures :all
 
@@ -32,12 +33,12 @@ class ActiveSupport::TestCase
     User.all.each { |user| link_file user.avatar.path, 'test.gif' }
   end
 
-  def pdf_test_file
-    process_with_action_dispatch('test.pdf', 'application/pdf')
+  def pdf_test_file(file='test.pdf')
+    process_for_upload(file, 'application/pdf')
   end
 
   def avatar_test_file
-    process_with_action_dispatch('test.gif', 'image/gif')
+    process_for_upload('test.gif', 'image/gif')
   end
 
   def new_generic_operator(atributes = {})
@@ -64,15 +65,11 @@ class ActiveSupport::TestCase
 
   private
 
-  def process_with_action_dispatch(filename, content_type)
-    ActionDispatch::Http::UploadedFile.new({
-                                             filename: filename,
-                                             content_type: content_type,
-                                             tempfile:
-      File.open( # Need File.open for path-method
-        Rails.root.join('test', 'fixtures', 'files', filename)
-      )
-                                           })
+  def process_for_upload(filename, content_type)
+    Rack::Test::UploadedFile.new(
+      Rails.root.join('test', 'fixtures', 'files', filename),
+      content_type
+    )
   end
 
   def link_file(destiny_file, link_from)
@@ -121,6 +118,7 @@ end
 class ActionDispatch::IntegrationTest
   # Make the Capybara DSL available in all integration tests
   include Capybara::DSL
+  include Capybara::Minitest::Assertions
   include Capybara::Screenshot::MiniTestPlugin
 
   # Transactional fixtures do not work with Selenium tests, because Capybara
@@ -128,7 +126,7 @@ class ActionDispatch::IntegrationTest
   # from. We hence use DatabaseCleaner to truncate our test database.
   DatabaseCleaner.strategy = :truncation
   # Stop ActiveRecord from wrapping tests in transactions
-  self.use_transactional_fixtures = false
+  # self.use_transactional_fixtures = false
 
   def self._running_remote
     ENV['remote']
@@ -151,12 +149,6 @@ class ActionDispatch::IntegrationTest
     )
   end
 
-  Capybara.javascript_driver = case
-                                 when _running_remote then :selenium_remote_firefox
-                                 when _running_local  then :selenium
-                                 else                      :poltergeist
-                               end
-
   Capybara.register_driver :poltergeist do |app|
       Capybara::Poltergeist::Driver.new(app, {
         # debug: true,
@@ -165,6 +157,14 @@ class ActionDispatch::IntegrationTest
         window_size: [1600, 1200]
       })
   end
+
+  Capybara.javascript_driver = case
+                                 when _running_remote then :selenium_remote_firefox
+                                 when _running_local  then :selenium
+                                 else                      :poltergeist
+                               end
+
+
   Capybara.current_driver = Capybara.javascript_driver
   Capybara.server_port = '5416' + (ENV['TEST_ENV_NUMBER'] || 9).to_s
   Capybara.default_max_wait_time = 3

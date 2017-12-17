@@ -12,7 +12,7 @@ class Upfront < ActiveRecord::Base
   default_scope { where(kind: KIND[:upfront]) }
 
   belongs_to :user
-  belongs_to :operator, foreign_key: :operator_id, class_name: User
+  belongs_to :operator, foreign_key: :operator_id, class_name: 'User'
 
   before_save :set_abaco_defaults
 

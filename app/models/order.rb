@@ -34,7 +34,7 @@ class Order < ApplicationModel
   validate :must_have_one_item
 
   # Relaciones
-  belongs_to :customer
+  belongs_to :customer, optional: true
   has_one :print
   has_many :order_lines, inverse_of: :order, dependent: :destroy
   has_many :file_lines, inverse_of: :order, dependent: :destroy
@@ -62,11 +62,15 @@ class Order < ApplicationModel
   end
 
   def avoid_destruction
-    false
+    self.errors.add(:base, :cannot_be_destroyed)
+    throw :abort
   end
 
   def can_be_modified?
-    self.pending? || status_was == STATUS[:pending]
+    unless self.pending? || status_was == STATUS[:pending]
+      self.errors.add(:base, :cannot_be_modified)
+      throw :abort
+    end
   end
 
   def reject_file_lines_attributes?(attributes)

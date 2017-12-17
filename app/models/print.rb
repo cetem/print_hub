@@ -55,7 +55,7 @@ class Print < ApplicationModel
 
   # Relaciones
   belongs_to :user
-  belongs_to :order, autosave: true
+  belongs_to :order, autosave: true, optional: true
   has_many :payments, as: :payable
   has_many :print_jobs, inverse_of: :print
   has_many :article_lines
@@ -119,7 +119,10 @@ class Print < ApplicationModel
   end
 
   def can_be_destroyed?
-    article_lines.empty? && print_jobs.empty? && payments.empty?
+    if article_lines.any? || print_jobs.any? || payments.any?
+      self.errors.add :base, :cannot_be_destroyed
+      throw :abort
+    end
   end
 
   def payment(type)

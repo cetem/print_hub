@@ -5,6 +5,8 @@ class Customer < ApplicationModel
     c.maintain_sessions = false
     c.validates_uniqueness_of_email_field_options = { case_sensitive: false }
     c.validates_length_of_email_field_options = { maximum: 255 }
+    c.merge_validates_length_of_password_field_options({ minimum: 4 })
+
     c.crypto_provider = Authlogic::CryptoProviders::Sha512
   end
 
@@ -51,7 +53,7 @@ class Customer < ApplicationModel
   has_many :deposits, inverse_of: :customer, dependent: :destroy,
                       autosave: true
   has_many :print_jobs, through: :prints
-  belongs_to :group, class_name: CustomersGroup
+  belongs_to :group, class_name: 'CustomersGroup', optional: true
 
   accepts_nested_attributes_for :bonuses, allow_destroy: true,
                                           reject_if: :reject_credits
@@ -128,7 +130,10 @@ class Customer < ApplicationModel
   end
 
   def has_no_orders?
-    orders.empty?
+    if orders.any?
+      self.errors.add(:base, :cannot_be_destroyed)
+      throw :abort
+    end
   end
 
   def free_credit
@@ -270,7 +275,7 @@ class Customer < ApplicationModel
   end
 
   def verify_email
-    if self.email_changed? && self.errors[:email].empty?
+    if self.will_save_change_to_email? && self.errors[:email].empty?
       begin
         if self.email.present?
           valid, suggest = MailerValidator.check(self.email)

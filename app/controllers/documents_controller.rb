@@ -92,7 +92,7 @@ class DocumentsController < ApplicationController
     params[:document][:tag_ids] ||= []
 
     respond_to do |format|
-      if @document.update_attributes(document_params)
+      if @document.update(document_params)
         format.html { redirect_to(documents_url, notice: t('view.documents.correctly_updated')) }
         format.json  { head :ok }
       else

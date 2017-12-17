@@ -38,7 +38,7 @@ class FileLineTest < ActiveSupport::TestCase
   # Prueba de actualización de un ítem de una orden
   test 'update' do
     assert_no_difference 'FileLine.count' do
-      assert @file_line.update_attributes(pages: 20),
+      assert @file_line.update(pages: 20),
              @file_line.errors.full_messages.join('; ')
     end
 

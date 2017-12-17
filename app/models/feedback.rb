@@ -3,7 +3,7 @@ class Feedback < ApplicationModel
   before_destroy :avoid_destruction
   after_commit :notify_customer, :notify_interesteds
 
-  belongs_to :customer
+  belongs_to :customer, optional: true
 
   # Atributos "solo lectura"
   attr_readonly :positive, :item
@@ -13,7 +13,8 @@ class Feedback < ApplicationModel
   scope :negative, -> { where(positive: false) }
 
   def avoid_destruction
-    false
+    self.errors.add :base, :cannot_be_destroyed
+    throw :abort
   end
 
   def negative?

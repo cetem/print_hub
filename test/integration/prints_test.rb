@@ -69,7 +69,7 @@ class PrintsTest < ActionDispatch::IntegrationTest
       select @pdf_printer_name, from: 'print_printer'
     end
 
-    documents(:math_book).update_attributes(
+    documents(:math_book).update(
       media: PrintJobType::MEDIA_TYPES[:legal]
     )
 

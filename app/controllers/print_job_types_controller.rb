@@ -69,7 +69,7 @@ class PrintJobTypesController < ApplicationController
     @print_job_type = PrintJobType.find(params[:id])
 
     respond_to do |format|
-      if @print_job_type.update_attributes(print_job_type_params)
+      if @print_job_type.update(print_job_type_params)
         format.html { redirect_to @print_job_type, notice: t('view.print_job_types.correctly_updated') }
         format.json { head :ok }
       else

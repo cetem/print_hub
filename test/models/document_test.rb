@@ -28,25 +28,19 @@ class DocumentTest < ActiveSupport::TestCase
     remove_all_upload_files!
     assert_difference 'Document.count' do
       # assert_difference 'Sidekiq::Queue.new("carrierwave").size' do
-        file = Rack::Test::UploadedFile.new(
-          File.join(Rails.root, 'test', 'fixtures', 'files', 'test.pdf'),
-          'application/pdf'
-        )
-        second_file = Rack::Test::UploadedFile.new(
-          File.join(Rails.root, 'test', 'fixtures', 'files', 'multipage_test.pdf'),
-          'application/pdf'
-        )
 
-        @document = Document.new(code: '00001234',
-                                 name: 'New name',
-                                 stock: 1,
-                                 pages: 5,
-                                 media: PrintJobType::MEDIA_TYPES.values.first,
-                                 description: 'New description',
-                                 enable: true,
-                                 tag_ids: [tags(:books).id, tags(:notes).id],
-                                 file: file,
-                                 original_file: second_file)
+        @document = Document.new(
+          code: '00001234',
+          name: 'New name',
+          stock: 1,
+          pages: 5,
+          media: PrintJobType::MEDIA_TYPES.values.first,
+          description: 'New description',
+          enable: true,
+          tag_ids: [tags(:books).id, tags(:notes).id],
+          file: pdf_test_file,
+          original_file: pdf_test_file('multipage_test.pdf')
+        )
 
         assert @document.save
       # end
@@ -83,10 +77,7 @@ class DocumentTest < ActiveSupport::TestCase
                                description: 'New description',
                                tag_ids: [tags(:books).id, tags(:notes).id])
 
-      @document.file = Rack::Test::UploadedFile.new(
-        File.join(Rails.root, 'test', 'fixtures', 'files', 'multipage_test.pdf'),
-        'application/pdf'
-      )
+      @document.file = pdf_test_file('multipage_test.pdf')
       assert @document.save
     end
 
@@ -116,10 +107,7 @@ class DocumentTest < ActiveSupport::TestCase
   end
 
   test 'can update with different pdfs' do
-    file = Rack::Test::UploadedFile.new(
-      File.join(Rails.root, 'test', 'fixtures', 'files', 'multipage_test.pdf'),
-      'application/pdf'
-    )
+    file = pdf_test_file('multipage_test.pdf')
 
     # Asegurar la "limpieza" del directorio
     remove_all_upload_files!
@@ -136,13 +124,8 @@ class DocumentTest < ActiveSupport::TestCase
     # assert_equal 7, thumbs_dir.entries.reject(&:directory?).size # async
     assert_equal 1, thumbs_dir.entries.reject(&:directory?).size
 
-    file = Rack::Test::UploadedFile.new(
-      File.join(Rails.root, 'test', 'fixtures', 'files', 'test.pdf'),
-      'application/pdf'
-    )
-
     assert_no_difference 'Document.count' do
-      assert @document.update(file: file),
+      assert @document.update(file: pdf_test_file),
              @document.errors.full_messages.join('; ')
     end
 

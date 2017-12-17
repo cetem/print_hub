@@ -64,7 +64,7 @@ class Shift < ActiveRecord::Base
   end
 
   def pay!
-    update_attributes(paid: true)
+    update(paid: true)
 
     if errors.messages.any?
       Bugsnag.notify(

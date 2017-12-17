@@ -77,7 +77,7 @@ class ShiftsController < ApplicationController
     @shift = shifts_scope.find(params[:id])
 
     respond_to do |format|
-      if @shift.update_attributes(shift_params)
+      if @shift.update(shift_params)
         session[:has_an_open_shift] = current_user.has_stale_shift?
 
         format.html { redirect_to shifts_url, notice: t('view.shifts.correctly_updated') }

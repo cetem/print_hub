@@ -1,5 +1,5 @@
 class CatalogController < ApplicationController
-  before_filter :require_customer, :load_documents_to_order, :load_tag, :load_parent
+  before_action :require_customer, :load_documents_to_order, :load_tag, :load_parent
   helper_method :sort_column, :sort_direction
 
   layout ->(controller) { controller.request.xhr? ? false : 'application' }

@@ -78,6 +78,7 @@ class PublicCustomerInteractionsTest < ActionDispatch::IntegrationTest
         click_link 'Si'
 
         assert page.has_content?(I18n.t('view.feedbacks.positive_return'))
+        sleep 0.5
       end
 
       assert_equal 'new_customer',
