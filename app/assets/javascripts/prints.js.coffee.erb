@@ -391,6 +391,7 @@ new Rule
      e.currentTarget.form.submit()
 
 
+
    $(document).on 'item.removed', @map.removeItem
    $(document).on 'autocomplete:update', 'input.autocomplete-field',
       @map.pagesAndPriceAfterAutocomplete
@@ -449,3 +450,77 @@ new Rule
    $(document).off 'keydown', @map.setShortCuts
    $(document).off 'keydown', '.js-rfid-checker', @map.useRfid
    $(document).off 'keydown', '.js-rfid-assigner', @map.assignRfid
+
+
+new Rule
+  condition: -> $('body.action-show').length
+  load: ->
+    @map.customerCanBeAssigned ||= (e, customerId) ->
+      showMessages = (info)->
+        if info.error
+          Helper.show(
+            $('.js-assign-customer-error').html(info.error).parent('div.alert')
+          )
+          Helper.hide($('.js-zero-balance'))
+          Helper.hide($('.js-associate-to-customer-link'))
+          Helper.hide($('.js-associate-to-customer-success'))
+        else
+          $('.js-assign-customer-to-pay').html(info.to_pay).parent('span')
+          Helper.show(
+            $('.js-assign-customer-from-credit').html(info.from_credit).parent('div.alert')
+          )
+          if info.from_credit_amount && parseFloat(info.from_credit_amount) > 0.00
+            Helper.hide($('.js-zero-balance'))
+            Helper.show($('.js-associate-to-customer-link'))
+          else
+            Helper.show($('.js-zero-balance'))
+            Helper.hide($('.js-associate-to-customer-link'))
+
+
+      $.ajax
+        url: e.currentTarget.dataset.url,
+        dataType: 'json',
+        method: 'GET',
+        data: {
+          customer_id: customerId
+        },
+        success: (resp)->
+          $('.js-associate-to-customer-link')[0].dataset.customer_id = customerId
+          showMessages(resp)
+        fail: (resp)->
+          showMessages(resp)
+        error: (resp)->
+          showMessages(resp)
+
+    @map.assignCustomerToPrint ||= (e) ->
+      e.preventDefault()
+      e.stopPropagation()
+
+      showError = (error) ->
+        Helper.show(
+          $('.js-assign-customer-error').html(error).parent('div.alert')
+        )
+
+      $.ajax
+        url: e.currentTarget.href,
+        dataType: 'json',
+        method: 'PUT',
+        data: {
+          customer_id: e.currentTarget.dataset.customer_id
+        },
+        success: (resp)->
+          if resp.success
+            window.location.href = window.location.href
+          else
+            showError(resp.error)
+        fail: (resp)->
+          showError(resp.error)
+        error: (resp)->
+          showError(resp.error)
+
+    $(document).on 'autocomplete:updated', '#assign_customer_id', @map.customerCanBeAssigned
+    $(document).on 'click', '.js-associate-to-customer-link', @map.assignCustomerToPrint
+
+  unload: ->
+    $(document).off 'autocomplete:updated', '#assign_customer_id', @map.customerCanBeAssigned
+    $(document).off 'click', '.js-associate-to-customer-link', @map.assignCustomerToPrint

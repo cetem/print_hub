@@ -30,7 +30,9 @@ jQuery ($)->
 
         input.val(selected.value)
         input.data('item', selected.item)
-        $(input.data('autocompleteIdTarget')).val(selected.item.id)
+        target = $(input.data('autocompleteIdTarget'))
+        target.val(selected.item.id)
+        target.trigger('autocomplete:updated', selected.item.id)
 
         input.trigger 'autocomplete:update', input
 

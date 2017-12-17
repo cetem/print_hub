@@ -94,9 +94,14 @@
 
 <div class="form-actions">
   <% if current_user %>
-    <%= link_to t('view.prints.new'), new_print_path, class: 'btn btn-primary' %>
+    <%= link_to t('view.prints.new'), new_print_path, class: 'btn btn-primary' %> |
+    <% if @print.customer_id.blank? %>
+      <%= link_to t('view.prints.associate_customer'),
+        '#', data: { target: '#associate_customer', toggle: 'modal' }, class: 'btn' %> |
+    <% end %>
     <%= link_to t('view.prints.change_comment'),
       '#', data: { target: '#comment', toggle: 'modal' } %>
+
     <div class="pull-right">
       <% if @print.pending_payment? %>
         <%= link_to t('label.edit'), edit_print_path(@print) %> |
@@ -120,5 +125,36 @@
       <%= f.input :comment, label: false, input_html: { rows: 5, class: 'span5' } %>
       <%= f.button :submit, class: 'btn btn-primary' %>
     <% end %>
+  </div>
+</div>
+
+<div class="modal fade" id="associate_customer">
+ <div class="modal-header">
+    <button class="close" data-dismiss="modal">&times;</button>
+    <h3><%= t('view.prints.associate_customer') %></h3>
+  </div>
+  <div class="modal-body">
+    <div class="row-fluid">
+      <%= text_field_tag :auto_customer_name, nil, class: 'autocomplete-field span11',
+        data: {
+        'autocomplete-id-target' => '#assign_customer_id',
+        'autocomplete-url' => autocomplete_for_customer_name_prints_path(format: :json)
+      } %>
+      <%= hidden_field_tag :assign_customer_id, nil, class: 'autocomplete-id', data: { url: can_be_associate_to_customer_print_path(@print) } %>
+      <br />
+      <div class="alert alert-error hide">
+         <span class="js-assign-customer-error"></span>
+      </div>
+
+      <div class="alert alert-info hide js-assign-customer-success">
+         - <span class="js-assign-customer-from-credit"></span> <br />
+         - <span class="js-assign-customer-to-pay"></span>
+       </div>
+
+       <%= link_to t('view.prints.associate_customer'), associate_to_customer_print_path(@print), class: 'btn btn-primary js-associate-to-customer-link hide' %>
+      <div class="alert alert-error hide js-zero-balance">
+        <%= t('view.prints.customer_without_credit') %>
+      </div>
+    </div>
   </div>
 </div>

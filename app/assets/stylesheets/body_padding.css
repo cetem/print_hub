@@ -2,3 +2,8 @@ body {
   /* 40px to make the container go all the way to the bottom of the navbar */
   padding-top: 40px;
 }
+
+.ui-autocomplete {
+  /* modal fix */
+  z-index: 2147483647 !important;
+}

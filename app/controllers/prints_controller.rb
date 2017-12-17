@@ -1,7 +1,7 @@
 class PrintsController < ApplicationController
   before_action :require_customer_or_user, except: [:revoke, :related_by_customer]
   before_action :require_admin_user, only: [:revoke, :related_by_customer]
-  before_action :load_customer
+  before_action :load_customer, except: [:can_be_associate_to_customer, :associate_to_customer]
 
   layout ->(controller) { controller.request.xhr? ? false : 'application' }
 
@@ -195,6 +195,75 @@ class PrintsController < ApplicationController
     redirect_to print, notice: notice
   end
 
+  def can_be_associate_to_customer
+    print = prints_scope.find(params[:id])
+
+    if print.customer.present?
+      render_json({ error: t('view.prints.customer_already_assigned') }); return
+    end
+
+    customer = Customer.find(params[:customer_id])
+
+    free_credit = customer.free_credit
+    total_price = print.price
+    info = { from_credit: 0.0, to_pay: total_price }
+
+    if free_credit >= total_price
+      info[:from_credit] = total_price
+      info[:to_pay] = 0.0
+    elsif free_credit > 0
+      info[:from_credit] = free_credit
+      info[:to_pay] = total_price - free_credit
+    end
+
+    render_json({
+      from_credit: t(
+        'view.prints.using_customer_credit_in_assign',
+        value: helpers.number_to_currency(info[:from_credit])
+      ),
+      to_pay: t(
+        'view.prints.to_pay_in_assign',
+        value: helpers.number_to_currency(info[:to_pay])
+      ),
+      to_pay_amount: info[:to_pay].round(2),
+      from_credit_amount: info[:from_credit].round(2)
+    })
+  end
+
+  def associate_to_customer
+    print = prints_scope.find(params[:id])
+
+    if print.customer.present?
+      render_json({ error: t('view.prints.customer_already_assigned') }); return
+    end
+
+    customer = Customer.find(params[:customer_id])
+    free_credit = customer.free_credit
+    total_price = print.price
+
+    amount = if free_credit >= total_price
+               total_price
+             elsif free_credit > 0
+               free_credit
+             end
+
+    if amount && customer.use_credit(amount, nil, avoid_password_check: true)
+      # customer_id is attr_readonly
+      Print.transaction do
+        Print.where(id: print.id).update_all(customer_id: customer.id)
+        cash_amount = total_price - amount
+        print.payments.update_all(paid: cash_amount, amount: cash_amount)
+        print.payments.create!(paid: amount, amount: amount, paid_with: Payment::PAID_WITH[:credit])
+      end
+
+      render_json({ success: t('view.prints.customer_assigned') })
+    else
+      render_json({ error: t('view.prints.cant_assign_customer') })
+    end
+  rescue
+    render_json({ error: t('view.prints.cant_assign_customer') })
+  end
+
   private
 
   def comment_param
@@ -245,5 +314,17 @@ class PrintsController < ApplicationController
     file = params.require(:file_line).permit(file: [])[:file]
     file = file.first if file.is_a? Array
     { file: file }
+  end
+
+  def render_json(msg)
+    respond_to do |format|
+      format.json { render json: msg.to_json }
+    end
+  end
+
+  def helpers
+    @helper ||= Class.new do
+      include ActionView::Helpers::NumberHelper
+    end.new
   end
 end

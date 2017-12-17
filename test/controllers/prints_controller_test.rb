@@ -778,9 +778,69 @@ class PrintsControllerTest < ActionController::TestCase
     assert_equal 'The force be with you', @print.reload.comment
   end
 
+  test 'check and assign customer to print' do
+    # customer_id is attr_readonly
+    Print.where(id: @print.id).update_all(customer_id: nil)
+    @print.reload
+    @print.article_lines.destroy_all
+    @print.print_jobs.update_all(pages: 1, copies: 15_000)  # each job $1.500
+    @print.payments.update_all(amount: 3000, paid: 3000)
+    @print.save!
+
+    customer = customers(:student)
+
+    assert_equal 3000.0, @print.price
+
+    get :can_be_associate_to_customer, format: :json, id: @print.id, status: 'all', customer_id: customer.id
+
+    assert_response :success
+    resp = ActiveSupport::JSON.decode(@response.body)
+    assert_nil resp['error']
+    assert_equal(
+      I18n.t(
+        'view.prints.using_customer_credit_in_assign',
+        value: helpers.number_to_currency(1000.0)
+      ),
+      resp['from_credit']
+    )
+    assert_equal(
+      I18n.t(
+        'view.prints.to_pay_in_assign',
+        value: helpers.number_to_currency(2000.0)
+      ),
+      resp['to_pay']
+    )
+
+
+    assert_equal 1, @print.payments.size
+    cash_payment = @print.payments.first
+    assert cash_payment.cash?
+    assert_equal 3000.0, cash_payment.amount.to_f
+    assert_equal 3000.0, cash_payment.paid.to_f
+
+    put :associate_to_customer, format: :json, id: @print.id, status: 'all', customer_id: customer.id
+    resp = ActiveSupport::JSON.decode(@response.body)
+    assert_equal customer.id, @print.reload.customer_id
+    assert_equal 0.0, customer.free_credit.to_f
+
+    assert_equal 2, @print.payments.size
+    cash_payment = @print.payments.only_cash.first
+    credit_payment = @print.payments.only_credit.first
+    assert_equal 2000.0, cash_payment.amount.to_f
+    assert_equal 2000.0, cash_payment.paid.to_f
+    assert_equal 1000.0, credit_payment.amount.to_f
+    assert_equal 1000.0, credit_payment.paid.to_f
+  end
+
   def get_prints_with_customer(opts = {})
     opts[:customer] ||= customers(:teacher)
 
     Print.where(customer_id: opts[:customer]).order(created_at: :asc)
+  end
+
+  def helpers
+    @helper ||= Class.new do
+      include ActionView::Helpers::NumberHelper
+    end.new
   end
 end

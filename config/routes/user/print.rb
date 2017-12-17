@@ -6,6 +6,8 @@ scope ':status', defaults: { status: 'all' },
       patch :cancel_job
       delete :revoke
       get :related_by_customer
+      get :can_be_associate_to_customer
+      put :associate_to_customer
     end
 
     collection do
