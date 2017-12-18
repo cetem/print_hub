@@ -95,7 +95,8 @@
 <div class="form-actions">
   <% if current_user %>
     <%= link_to t('view.prints.new'), new_print_path, class: 'btn btn-primary' %> |
-    <% if @print.customer_id.blank? %>
+    <% # tmp %>
+    <% if false && @print.customer_id.blank? %>
       <%= link_to t('view.prints.associate_customer'),
         '#', data: { target: '#associate_customer', toggle: 'modal' }, class: 'btn' %> |
     <% end %>
