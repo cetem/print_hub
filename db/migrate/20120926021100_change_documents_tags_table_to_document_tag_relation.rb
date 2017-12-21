@@ -1,4 +1,4 @@
-class ChangeDocumentsTagsTableToDocumentTagRelation < ActiveRecord::Migration
+class ChangeDocumentsTagsTableToDocumentTagRelation < ActiveRecord::Migration[4.2]
   def up
     rename_table :documents_tags, :document_tag_relations
 

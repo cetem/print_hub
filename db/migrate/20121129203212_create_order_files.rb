@@ -1,4 +1,4 @@
-class CreateOrderFiles < ActiveRecord::Migration
+class CreateOrderFiles < ActiveRecord::Migration[4.2]
   def change
     create_table :order_files do |t|
       t.string :file, null: false

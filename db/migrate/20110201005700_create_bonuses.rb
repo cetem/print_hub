@@ -1,4 +1,4 @@
-class CreateBonuses < ActiveRecord::Migration
+class CreateBonuses < ActiveRecord::Migration[4.2]
   def self.up
     create_table :bonuses do |t|
       t.decimal :amount, null: false, precision: 15, scale: 2

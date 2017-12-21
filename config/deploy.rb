@@ -1,8 +1,9 @@
 set :application, 'print_hub'
 set :user, 'deployer'
 set :repo_url, 'https://github.com/cetem/print_hub.git'
+# set :branch, 'rails_4.2'
 
-set :scm, :git
+# set :scm, :git
 set :deploy_to, '/var/rails/print_hub'
 set :deploy_via, :remote_cache
 
@@ -17,14 +18,14 @@ set :keep_releases, 2
 namespace :deploy do
   after :finished, 'deploy:cleanup'
   after :finished, :restart
-  before 'sidekiq:restart', 'chruby:release'
-  after :finished, 'sidekiq:restart'
+  # before 'sidekiq:restart', 'chruby:release'
+  # after :finished, 'sidekiq:restart'
 
   desc 'Restart application'
   task :restart do
-    on roles(:app) do
-      execute :service, :unicorn, :upgrade
-    end
+    # on roles(:app) do
+    #   execute :service, :unicorn, :upgrade
+    # end
   end
 
   desc 'Temp Clear'

@@ -1,4 +1,4 @@
-class DropLockVersionFromBonuses < ActiveRecord::Migration
+class DropLockVersionFromBonuses < ActiveRecord::Migration[4.2]
   def self.up
     remove_column :bonuses, :lock_version
   end

@@ -1,4 +1,4 @@
-class AddIndexesToCustomers < ActiveRecord::Migration
+class AddIndexesToCustomers < ActiveRecord::Migration[4.2]
   def self.up
     if DB_ADAPTER == 'PostgreSQL'
       # Índice para utilizar búsqueda full text (por el momento sólo en español)

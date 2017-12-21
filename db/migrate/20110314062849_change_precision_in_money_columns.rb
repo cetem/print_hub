@@ -1,4 +1,4 @@
-class ChangePrecisionInMoneyColumns < ActiveRecord::Migration
+class ChangePrecisionInMoneyColumns < ActiveRecord::Migration[4.2]
   def self.up
     change_column :customers, :free_monthly_bonus, :decimal,
                   precision: 15, scale: 3

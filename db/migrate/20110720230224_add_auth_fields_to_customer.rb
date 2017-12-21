@@ -1,4 +1,4 @@
-class AddAuthFieldsToCustomer < ActiveRecord::Migration
+class AddAuthFieldsToCustomer < ActiveRecord::Migration[4.2]
   def change
     add_column :customers, :email, :string
     add_column :customers, :crypted_password, :string

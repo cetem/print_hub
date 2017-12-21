@@ -1,4 +1,4 @@
-class AddIndexesToBonuses < ActiveRecord::Migration
+class AddIndexesToBonuses < ActiveRecord::Migration[4.2]
   def self.up
     add_index :bonuses, :created_at
     add_index :bonuses, :valid_until

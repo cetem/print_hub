@@ -1,4 +1,4 @@
-class AddDocumentsCountToTag < ActiveRecord::Migration
+class AddDocumentsCountToTag < ActiveRecord::Migration[4.2]
   def self.up
     add_column :tags, :documents_count, :integer, default: 0
 

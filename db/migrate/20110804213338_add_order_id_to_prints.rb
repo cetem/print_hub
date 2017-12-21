@@ -1,4 +1,4 @@
-class AddOrderIdToPrints < ActiveRecord::Migration
+class AddOrderIdToPrints < ActiveRecord::Migration[4.2]
   def change
     add_column :prints, :order_id, :integer
 

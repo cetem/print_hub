@@ -1,4 +1,4 @@
-class AddMediaToDocuments < ActiveRecord::Migration
+class AddMediaToDocuments < ActiveRecord::Migration[4.2]
   def self.up
     add_column :documents, :media, :string
 

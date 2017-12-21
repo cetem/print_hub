@@ -1,4 +1,4 @@
-class AddCorrelationIdToPaperTrail < ActiveRecord::Migration
+class AddCorrelationIdToPaperTrail < ActiveRecord::Migration[4.2]
   def change
     add_column :versions, :correlation_id, :string
 

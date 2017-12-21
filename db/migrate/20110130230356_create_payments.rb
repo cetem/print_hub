@@ -1,4 +1,4 @@
-class CreatePayments < ActiveRecord::Migration
+class CreatePayments < ActiveRecord::Migration[4.2]
   def self.up
     create_table :payments do |t|
       t.decimal :amount, null: false, precision: 15, scale: 2

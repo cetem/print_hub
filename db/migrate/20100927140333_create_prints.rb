@@ -1,4 +1,4 @@
-class CreatePrints < ActiveRecord::Migration
+class CreatePrints < ActiveRecord::Migration[4.2]
   def self.up
     create_table :prints do |t|
       t.string :printer, null: false

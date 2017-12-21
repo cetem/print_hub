@@ -1,4 +1,4 @@
-class RemoveCustomerBonusesPassword < ActiveRecord::Migration
+class RemoveCustomerBonusesPassword < ActiveRecord::Migration[4.2]
   def up
     remove_column :customers, :bonuses_password
   end

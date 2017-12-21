@@ -1,4 +1,4 @@
-class AddTagPathToDocuments < ActiveRecord::Migration
+class AddTagPathToDocuments < ActiveRecord::Migration[4.2]
   def self.up
     add_column :documents, :tag_path, :text
 

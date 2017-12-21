@@ -1,4 +1,4 @@
-class AddEnableToDocuments < ActiveRecord::Migration
+class AddEnableToDocuments < ActiveRecord::Migration[4.2]
   def self.up
     add_column :documents, :enable, :boolean, default: true, null: false
 
