@@ -377,7 +377,11 @@ class PrintJobTest < ActiveSupport::TestCase
   test 'not print if there is stock available' do
     @print_job.document.stock = @print_job.copies
 
-    assert_no_difference 'Cups.all_jobs(@printer).keys.sort.last' do
+    if ENV['TRAVIS']
+      p "All jobs"
+      p Cups.all_jobs(@printer).keys
+    end
+    assert_no_difference '(Cups.all_jobs(@printer).keys.sort || [1]).last' do
       assert_difference '@print_job.document.stock', -@print_job.copies do
         @print_job.send_to_print(@printer)
       end
