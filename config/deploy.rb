@@ -18,14 +18,14 @@ set :keep_releases, 2
 namespace :deploy do
   after :finished, 'deploy:cleanup'
   after :finished, :restart
-  # before 'sidekiq:restart', 'chruby:release'
-  # after :finished, 'sidekiq:restart'
+  before 'sidekiq:restart', 'chruby:release'
+  after :finished, 'sidekiq:restart'
 
   desc 'Restart application'
   task :restart do
-    # on roles(:app) do
-    #   execute :service, :unicorn, :upgrade
-    # end
+    on roles(:app) do
+      # execute :service, :unicorn, :upgrade
+    end
   end
 
   desc 'Temp Clear'

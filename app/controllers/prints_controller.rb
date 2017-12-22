@@ -203,6 +203,9 @@ class PrintsController < ApplicationController
     end
 
     customer = Customer.find(params[:customer_id])
+    unless customer.valid_password?(params[:password])
+      render_json({ error: t('view.prints.invalid_password') }); return
+    end
 
     free_credit = customer.free_credit
     total_price = print.price
@@ -238,6 +241,10 @@ class PrintsController < ApplicationController
     end
 
     customer = Customer.find(params[:customer_id])
+    unless customer.valid_password?(params[:password])
+      render_json({ error: t('view.prints.invalid_password') }); return
+    end
+
     free_credit = customer.free_credit
     total_price = print.price
 
@@ -247,7 +254,7 @@ class PrintsController < ApplicationController
                free_credit
              end
 
-    if amount && customer.use_credit(amount, nil, avoid_password_check: true)
+    if amount && customer.use_credit(amount, params[:password])
       # customer_id is attr_readonly
       Print.transaction do
         Print.where(id: print.id).update_all(customer_id: customer.id)

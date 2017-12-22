@@ -785,7 +785,11 @@ class PrintsControllerTest < ActionController::TestCase
 
     assert_equal 3000.0, @print.price
 
-    get :can_be_associate_to_customer, params: { id: @print.id, status: 'all', customer_id: customer.id }, format: :json
+    get :can_be_associate_to_customer, params: {
+      id: @print.id, status: 'all',
+      customer_id: customer.id, password: 'student123',
+      format: :json
+    }
 
     assert_response :success
     resp = ActiveSupport::JSON.decode(@response.body)
@@ -812,7 +816,12 @@ class PrintsControllerTest < ActionController::TestCase
     assert_equal 3000.0, cash_payment.amount.to_f
     assert_equal 3000.0, cash_payment.paid.to_f
 
-    put :associate_to_customer, params: { id: @print.id, status: 'all', customer_id: customer.id }, format: :json
+    put :associate_to_customer, params: {
+      id: @print.id, status: 'all',
+      customer_id: customer.id, password: 'student123',
+      format: :json
+    }
+
     resp = ActiveSupport::JSON.decode(@response.body)
     assert_equal customer.id, @print.reload.customer_id
     assert_equal 0.0, customer.free_credit.to_f

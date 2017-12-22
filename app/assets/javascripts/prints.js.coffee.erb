@@ -455,7 +455,10 @@ new Rule
 new Rule
   condition: -> $('body.action-show').length
   load: ->
-    @map.customerCanBeAssigned ||= (e, customerId) ->
+    @map.customerCanBeAssigned ||= (e) ->
+      e.preventDefault()
+      e.stopPropagation()
+
       showMessages = (info)->
         if info.error
           Helper.show(
@@ -465,27 +468,32 @@ new Rule
           Helper.hide($('.js-associate-to-customer-link'))
           Helper.hide($('.js-associate-to-customer-success'))
         else
+          Helper.hide($('.js-assign-customer-error').html(info.error).parent('div.alert'))
           $('.js-assign-customer-to-pay').html(info.to_pay).parent('span')
           Helper.show(
             $('.js-assign-customer-from-credit').html(info.from_credit).parent('div.alert')
           )
           if info.from_credit_amount && parseFloat(info.from_credit_amount) > 0.00
             Helper.hide($('.js-zero-balance'))
+            Helper.hide($('.js-check-customer-can-be-assigned'))
             Helper.show($('.js-associate-to-customer-link'))
           else
+            Helper.show($('.js-check-customer-can-be-assigned'))
             Helper.show($('.js-zero-balance'))
             Helper.hide($('.js-associate-to-customer-link'))
 
 
+      customerId = document.querySelector('.js-associate-customer_id-field').value
+
       $.ajax
-        url: e.currentTarget.dataset.url,
+        url: e.currentTarget.href,
         dataType: 'json',
         method: 'GET',
         data: {
-          customer_id: customerId
+          customer_id: customerId,
+          password: document.querySelector('.js-associate-password-field').value
         },
         success: (resp)->
-          $('.js-associate-to-customer-link')[0].dataset.customer_id = customerId
           showMessages(resp)
         fail: (resp)->
           showMessages(resp)
@@ -506,7 +514,8 @@ new Rule
         dataType: 'json',
         method: 'PUT',
         data: {
-          customer_id: e.currentTarget.dataset.customer_id
+          customer_id: document.querySelector('.js-associate-customer_id-field').value
+          password: document.querySelector('.js-associate-password-field').value
         },
         success: (resp)->
           if resp.success
@@ -518,9 +527,9 @@ new Rule
         error: (resp)->
           showError(resp.error)
 
-    $(document).on 'autocomplete:updated', '#assign_customer_id', @map.customerCanBeAssigned
+    $(document).on 'click', '.js-check-customer-can-be-assigned', @map.customerCanBeAssigned
     $(document).on 'click', '.js-associate-to-customer-link', @map.assignCustomerToPrint
 
   unload: ->
-    $(document).off 'autocomplete:updated', '#assign_customer_id', @map.customerCanBeAssigned
+    $(document).off 'click', '.js-check-customer-can-be-assigned', @map.customerCanBeAssigned
     $(document).off 'click', '.js-associate-to-customer-link', @map.assignCustomerToPrint

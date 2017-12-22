@@ -21,7 +21,7 @@ jQuery ($)->
               content.append $('<span class="title"></span>').text(item.label)
 
               if item.informal
-                content.append $('<small></small>').text(item.informal)
+                content.append $('<span class="text-muted"></span>').text(item.informal)
 
               { label: content.html(), value: item.label, item: item }
       type: 'get'
@@ -40,6 +40,7 @@ jQuery ($)->
       open: -> $('.ui-menu').css('width', input.width())
 
     input.data('ui-autocomplete')._renderItem = (ul, item)->
+      ul.addClass('typeahead dropdown-menu')
       $('<li></li>').data('item.autocomplete', item).append(
         $('<a></a>').html(item.label)
       ).appendTo(ul)

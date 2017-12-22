@@ -96,14 +96,6 @@ html.public, body.public {
   margin: 0px 20px;
 }
 
-.ui-autocomplete {
-  small {
-    display: block;
-    font-size: .75em;
-    color: #999999;
-  }
-}
-
 .ui-datepicker-trigger {
   display: none;
 }
@@ -111,4 +103,26 @@ html.public, body.public {
 .disabled {
   color: #bebebe;
   font-style: italic;
+}
+
+.ui-autocomplete {
+  .ui-state-active {
+    white-space: normal !important;
+    box-shadow: none !important;
+    font-weight: normal !important;
+  }
+
+  .ui-state-focus {
+    span {
+      white-space: normal;
+    }
+  }
+
+  span.text-muted {
+    display: block;
+    font-size: .75em;
+    color: #999;
+  }
+
+  z-index: 2147483647 !important;
 }

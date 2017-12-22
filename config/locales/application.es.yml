@@ -617,11 +617,13 @@ es:
 
            0.18; >= 200 @ 0.17; >= 500 @ 0.165
     prints:
+      invalid_password: "Contraseña incorrecta"
       customer_already_assigned: "Impresión ya tiene cliente"
       using_customer_credit_in_assign: "Se van a usar %{value} de crédito"
       to_pay_in_assign: "Se tienen que pagar %{value} en efectivo"
       customer_without_credit: "Cliente sin crédito"
       associate_customer: "Asociar cliente"
+      check_for_customer_association: "Comprobar cliente"
       customer_assigned: "Cliente asociado"
       cant_assign_customer: "No se pudo asociar el cliente"
       add_article_line: "Agregar artículo"
