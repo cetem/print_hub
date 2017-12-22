@@ -125,7 +125,7 @@ class PrintJob < ApplicationModel
   end
 
   def price
-    PriceCalculator.final_job_price(
+    ::PriceCalculator.final_job_price(
       (print.try(:pages_per_type) || {}).merge(
         price_per_copy: job_price_per_copy,
         type: self.print_job_type,
@@ -136,7 +136,7 @@ class PrintJob < ApplicationModel
   end
 
   def job_price_per_copy
-    PriceCalculator.price_per_copy(self)
+    ::PriceCalculator.price_per_copy(self)
   end
 
   def print_total_pages

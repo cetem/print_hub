@@ -34,7 +34,7 @@ class OrderLineTest < ActiveSupport::TestCase
     end
 
     # El precio por copia no se puede alterar
-    price = PriceChooser.choose(
+    price = ::PriceChooser.choose(
       type: print_job_types(:color).id,
       copies: documents(:math_book).pages * 2
     )

@@ -58,7 +58,7 @@ module OrdersHelper
 
   def default_price_per_copy_for_pages(pages)
     if pages.present? && pages.to_i > 0
-      PriceChooser.choose(
+      ::PriceChooser.choose(
         type: PrintJobType.default.try(:id),
         copies: pages.to_i
       )

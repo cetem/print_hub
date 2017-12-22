@@ -25,7 +25,7 @@ class OrderLine < ApplicationModel
   end
 
   def price
-    PriceCalculator.final_job_price(
+    ::PriceCalculator.final_job_price(
       (order.try(:pages_per_type) || {}).merge(
         price_per_copy: job_price_per_copy,
         type: self.print_job_type,
@@ -40,7 +40,7 @@ class OrderLine < ApplicationModel
   end
 
   def job_price_per_copy
-    PriceChooser.choose(
+    ::PriceChooser.choose(
       type: print_job_type_id,
       copies: order.try(:total_pages_by_type, self.print_job_type)
     )

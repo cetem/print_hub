@@ -310,7 +310,7 @@ class CustomerTest < ActiveSupport::TestCase
 
     @customer.print_jobs.pay_later.group_by(&:print_job_type).each do |type, prints|
       prints.each do |pr|
-        price = PriceChooser.choose(type: type.id, copies: pr.printed_pages)
+        price = ::PriceChooser.choose(type: type.id, copies: pr.printed_pages)
         total_count += pr.printed_pages
         total_price += price * pr.printed_pages
       end

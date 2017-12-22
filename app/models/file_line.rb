@@ -60,7 +60,7 @@ class FileLine < ActiveRecord::Base
   end
 
   def job_price_per_copy
-    PriceChooser.choose(
+    ::PriceChooser.choose(
       type: self.print_job_type_id,
       copies: order.try(:total_pages_by_type, self.print_job_type)
     )

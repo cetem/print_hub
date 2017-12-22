@@ -30,7 +30,7 @@ class FileLineTest < ActiveSupport::TestCase
     end
 
     # El precio por copia no se puede alterar
-    price = PriceChooser.choose(type: print_job_types(:color).id, copies: 2)
+    price = ::PriceChooser.choose(type: print_job_types(:color).id, copies: 2)
     assert_equal '%.2f' % price,
                  '%.2f' % @file_line.reload.price_per_copy
   end

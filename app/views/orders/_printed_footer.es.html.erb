@@ -52,7 +52,7 @@
   </div>
 
   <div id="prices" class="alert alert-info" style="display: none;">
-    <% PriceChooser.humanize.each do |setting, values| %>
+    <% ::PriceChooser.humanize.each do |setting, values| %>
       <p>
         <%= setting %>:
         <%= raw values.map { |v| textilize_without_paragraph v }.to_sentence %>
