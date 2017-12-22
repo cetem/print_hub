@@ -367,7 +367,7 @@ class PrintJobTest < ActiveSupport::TestCase
   end
 
   test 'print' do
-    assert_difference 'Cups.all_jobs(@printer).keys.sort.last', job_count([@print_job]) do
+    assert_difference '::CustomCups.last_job_id(@printer)', job_count([@print_job]) do
       @print_job.send_to_print(@printer)
     end
 
@@ -377,11 +377,7 @@ class PrintJobTest < ActiveSupport::TestCase
   test 'not print if there is stock available' do
     @print_job.document.stock = @print_job.copies
 
-    if ENV['TRAVIS']
-      p "All jobs"
-      p Cups.all_jobs(@printer).keys
-    end
-    assert_no_difference '(Cups.all_jobs(@printer).keys.sort || [1]).last' do
+    assert_no_difference '::CustomCups.last_job_id(@printer)' do
       assert_difference '@print_job.document.stock', -@print_job.copies do
         @print_job.send_to_print(@printer)
       end
@@ -393,7 +389,7 @@ class PrintJobTest < ActiveSupport::TestCase
   test 'print if the stock is not enough' do
     @print_job.document.stock = @print_job.copies - 1
 
-    assert_difference 'Cups.all_jobs(@printer).keys.sort.last' do
+    assert_difference '::CustomCups.last_job_id(@printer)' do
       @print_job.send_to_print(@printer)
     end
 
@@ -405,7 +401,7 @@ class PrintJobTest < ActiveSupport::TestCase
     @print_job.document.stock = @print_job.copies
     @print_job.range = '1,2'
 
-    assert_difference 'Cups.all_jobs(@printer).keys.sort.last', job_count([@print_job]) do
+    assert_difference '::CustomCups.last_job_id(@printer)', job_count([@print_job]) do
       assert_no_difference '@print_job.document.stock' do
         @print_job.send_to_print(@printer)
       end
@@ -419,7 +415,7 @@ class PrintJobTest < ActiveSupport::TestCase
     @print_job.copies = 1
     @print_job.job_hold_until = 'indefinite'
 
-    assert_difference 'Cups.all_jobs(@printer).keys.sort.last', job_count([@print_job]) do
+    assert_difference '::CustomCups.last_job_id(@printer)', job_count([@print_job]) do
       @print_job.send_to_print(@printer)
     end
 

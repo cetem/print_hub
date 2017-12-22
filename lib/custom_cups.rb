@@ -28,4 +28,17 @@ module CustomCups
     @@_printers_file[:time] = Time.zone.now.to_i
     @@_printers_file[:file] = `cat /etc/printcap`
   end
+
+  def last_job_id(printer)
+    all_jobs(printer).last || 1
+  end
+
+  def all_jobs(printer)
+    keys = ::Cups.all_jobs(printer).keys
+    if ENV['TRAVIS']
+      p "All jobs"
+      p keys
+    end
+    keys.sort
+  end
 end

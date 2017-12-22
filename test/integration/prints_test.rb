@@ -211,7 +211,7 @@ class PrintsTest < ActionDispatch::IntegrationTest
     assert_equal new_print_path, current_path
     assert page.has_css?('form')
 
-    last_cancelled_job_id = Cups.all_jobs(@pdf_printer).sort.last.first
+    last_cancelled_job_id = ::CustomCups.last_job_id(@pdf_printer)
 
     within 'form' do
       select @pdf_printer_name, from: 'print_printer'
@@ -247,7 +247,7 @@ class PrintsTest < ActionDispatch::IntegrationTest
     assert_page_has_no_errors!
     assert page.has_content? I18n.t('view.prints.job_canceled')
 
-    new_last_cancelled_job_id = Cups.all_jobs(@pdf_printer).sort.last.first
+    new_last_cancelled_job_id = ::CustomCups.last_job_id(@pdf_printer)
 
     assert_equal last_cancelled_job_id, new_last_cancelled_job_id - 1
   end
