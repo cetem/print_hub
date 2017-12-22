@@ -1,4 +1,3 @@
-require 'gdrive'
 namespace :tasks do
   desc 'Export shift closures to gdrive'
   task export_shift_closures: :environment do |_task, args|
@@ -9,7 +8,7 @@ namespace :tasks do
            end
     start_date = date.beginning_of_month
     finish_date = date.end_of_month
-    GDrive.upload_spreadsheet(
+    ::GDrive.upload_spreadsheet(
       I18n.t('view.shift_closures.dailies_for_year', year: date.year),
       ShiftClosure.between(start_date, finish_date).to_csv,
       { month: date.month }

@@ -1,5 +1,4 @@
 class PrintJob < ApplicationModel
-  require 'price_calculator'
   has_paper_trail
 
   # Scopes

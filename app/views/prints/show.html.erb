@@ -1,7 +1,7 @@
 <div class="readonly-data">
   <p>
     <b><%= Print.human_attribute_name 'printer' %></b>:
-    <%= CustomCups.printer_name_for(@print.printer) %>
+    <%= ::CustomCups.printer_name_for(@print.printer) %>
   </p>
 
   <p>

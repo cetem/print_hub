@@ -173,9 +173,8 @@ class CustomersGroup < ApplicationModel
   end
 
   def self.upload_settlements(start, finish=nil)
-    require 'gdrive'
     finish ||= start.end_of_month
-    GDrive.upload_spreadsheet(
+    ::GDrive.upload_spreadsheet(
       I18n.t('view.customers_groups.spreadsheet_file_name',
         start: I18n.l(start.to_date, format: :related_month).camelize,
         finish: I18n.l(finish.to_date, format: :related_month).camelize,

@@ -278,7 +278,7 @@ class Customer < ApplicationModel
     if self.will_save_change_to_email? && self.errors[:email].empty?
       begin
         if self.email.present?
-          valid, suggest = MailerValidator.check(self.email)
+          valid, suggest = ::MailerValidator.check(self.email)
           return true if valid && suggest.blank?
 
           msg = if suggest.present?

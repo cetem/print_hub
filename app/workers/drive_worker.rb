@@ -3,8 +3,6 @@ class DriveWorker
   PAID_SHIFTS = 'paid_shifts'
   SHIFTS = 'shifts'
 
-  require 'gdrive'
-
   include Sidekiq::Worker
   sidekiq_options queue: :low
 
@@ -14,7 +12,7 @@ class DriveWorker
       when SHIFTS
         start = params['start']
         finish = params['finish']
-        GDrive.upload_spreadsheet(
+        ::GDrive.upload_spreadsheet(
           I18n.t(
             'view.shifts.exported_shifts',
             range: [I18n.l(start.to_date), I18n.l(finish.to_date)].join(' => ')
@@ -34,7 +32,7 @@ class DriveWorker
           I18n.t('view.shifts.paid_at', time: I18n.l(Time.zone.now))  # obs
         )
 
-        GDrive.upload_spreadsheet(
+        ::GDrive.upload_spreadsheet(
           I18n.t(
             'view.shifts.paid_shifts',
             range: [I18n.l(start.to_date), I18n.l(finish.to_date)].join(' => ')

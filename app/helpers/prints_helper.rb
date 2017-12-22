@@ -3,7 +3,7 @@ module PrintsHelper
     selected_printer = form.object.printer || current_user.default_printer
     printers_collection = []
 
-    CustomCups.show_destinations.sort_by {|k,v| v}.each do |k, v|
+    ::CustomCups.show_destinations.sort_by {|k,v| v}.each do |k, v|
       unless k.match(PRIVATE_PRINTERS_REGEXP) && !current_user.admin?
         printers_collection << [v, k]
       end

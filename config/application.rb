@@ -12,7 +12,7 @@ module PrintHubApp
 
     config.i18n.default_locale = :es
 
-    config.autoload_paths += %W(#{config.root}/lib)
-    config.autoload_paths += %W(#{config.root}/app/workers)
+    config.eager_load_paths += %W(#{config.root}/lib)
+    config.eager_load_paths += %W(#{config.root}/app/workers)
   end
 end

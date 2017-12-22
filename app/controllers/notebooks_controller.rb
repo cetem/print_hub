@@ -16,7 +16,7 @@ class NotebooksController < ApplicationController
 
     `cp #{tmp_file_path} #{escaped_file_path}`
 
-    ConvertToNotebookWorker.perform_async(file_path)
+    ::ConvertToNotebookWorker.perform_async(file_path)
 
     render nothing: true
   rescue => e

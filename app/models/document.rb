@@ -194,7 +194,7 @@ class Document < ApplicationModel
       png_path = File.join(TMP_BARCODE_IMAGES, name)
       barcode_file_paths[name] = png_path
 
-      CustomThreads.wait_for(threads)
+      ::CustomThreads.wait_for(threads)
       threads << Thread.new { File.open(png_path, 'wb') { |f| f << barcode.to_png(xdim: 30, ydim: 30) } }
     end
 
@@ -203,7 +203,7 @@ class Document < ApplicationModel
     threads = []
     barcode_file_paths.each do |file_name, file_path|
       title = file_name.gsub('.png', '').gsub("#{timestamp}-", '')
-      CustomThreads.wait_for(threads, 2)
+      ::CustomThreads.wait_for(threads, 2)
       threads << Thread.new { system("montage #{file_path} -title #{title} -pointsize 400 -geometry 2000x2000+20+20 #{file_path}") }
     end
 

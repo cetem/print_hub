@@ -1,5 +1,4 @@
 module PriceCalculator
-  require 'price_chooser'
   extend self
 
   def final_job_price(options = {})

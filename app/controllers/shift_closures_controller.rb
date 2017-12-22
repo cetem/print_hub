@@ -52,7 +52,7 @@ class ShiftClosuresController < ApplicationController
     printer_name = params[:printer_name]
 
     _response = {}
-    counter = PrintersApi.get_counter_for(printer_name)
+    counter = ::PrintersApi.get_counter_for(printer_name)
     _response['counter'] = counter if counter
 
     respond_to do |format|
