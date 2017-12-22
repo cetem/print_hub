@@ -18,7 +18,7 @@ module MailerValidator
   #   "score"=>0.8}
   def self.check(email)
     return [false, nil] if email.blank?
-    return [true, nil]  if Rails.env.test?
+    return [true, nil]  if Rails.env.test? || API_KEY.blank?
 
     request = Net::HTTP::Get.new MAIL_URI + "?access_key=#{API_KEY}&email=#{email}"
     response = Net::HTTP.start(MAIL_URI.host, MAIL_URI.port, use_ssl: MAIL_URI.scheme == 'https') do |http|
@@ -26,6 +26,9 @@ module MailerValidator
     end
 
     body = (JSON.parse(response.body) rescue {})
+
+    Rails.logger.info('MailerValidator: ')
+    Rails.logger.info(body)
 
     [(response.code == '200') && body['smtp_check'], body['did_you_mean']]
   end

@@ -12,6 +12,6 @@ module StatsHelper
   end
 
   def include_stats_js
-    content_for(:head_extra) { javascript_include_tag 'graphs' }
+    content_for(:js_extra) { javascript_include_tag 'graphs' }
   end
 end
