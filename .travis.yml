@@ -1,7 +1,6 @@
 language: ruby
 cache: bundler
 rvm:
-  - 2.3.4
   - 2.4.3
 git:
   depth: 1
@@ -26,4 +25,4 @@ before_script:
   - 'psql -c "create database print_hub_test;" -U postgres'
   - 'psql -c "create database abaco_test;" -U postgres'
   - 'bundle exec rails db:migrate'
-script: "bundle exec rails test"
+script: "bundle exec rails test:models; bundle exec rails test:controllers; bundle exec rails test:integration"
