@@ -158,6 +158,22 @@ class ActionDispatch::IntegrationTest
       })
   end
 
+  if ENV['TRAVIS']
+    require 'jsonclient'
+    require 'base64'
+
+    Capybara::Screenshot.after_save_screenshot do |path|
+      auth = { 'Authorization' => 'Bearer ' + "424871e2662f85351c735361fa763d7276b25518"}
+      body = {image: Base64.encode64(File.read(path))}
+      rsp = JSONClient.new.post('https://api.imgur.com/3/image', body, auth).body
+      puts "\n======== IMG ========"
+      puts "\n"
+      puts rsp['data']['link']
+      puts "\n"
+      puts "\n"
+    end
+  end
+
   Capybara.javascript_driver = case
                                  when _running_remote then :selenium_remote_firefox
                                  when _running_local  then :selenium
