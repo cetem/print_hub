@@ -5,6 +5,6 @@ first:
   cashbox_amount: <%= rand(100.0) %>
   failed_copies: <%= rand(100) %>
   user: operator
+  printers_stats: <%= { ::CustomCups.pdf_printer => 321 }.to_json %>
   helper_user_id:
-  printers_stats: '<%= { printer_1: 321 }.to_json %>'
   comments: really quite

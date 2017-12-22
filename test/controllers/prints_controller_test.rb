@@ -3,7 +3,7 @@ require 'test_helper'
 class PrintsControllerTest < ActionController::TestCase
   setup do
     @print = prints(:math_print)
-    @printer = Cups.show_destinations.find { |p| p =~ /pdf/i }
+    @printer = ::CustomCups.pdf_printer
     @operator = users(:operator)
 
     UserSession.create(@operator)

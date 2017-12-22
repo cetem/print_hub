@@ -6,7 +6,7 @@ class PrintJobTest < ActiveSupport::TestCase
   def setup
     @print_job = print_jobs(:math_job_1)
 
-    @printer = Cups.show_destinations.find { |p| p =~ /pdf/i }
+    @printer = ::CustomCups.pdf_printer
 
     fail "Can't find a PDF printer to run tests with." unless @printer
 
@@ -451,7 +451,7 @@ class PrintJobTest < ActiveSupport::TestCase
     print_job.send_to_print(@printer)
 
     # Necesario para esperar que Cups lo "agregue" a la lista de completos
-    sleep 1
+    sleep(ENV['TRAVIS'] ? 3 : 1)
 
     assert print_job.completed?
   end

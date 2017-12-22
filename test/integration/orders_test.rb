@@ -46,7 +46,7 @@ class OrdersTest < ActionDispatch::IntegrationTest
 
     within 'form' do
       select(
-        ::CustomCups.show_destinations.detect { |k, v| k =~ /pdf/i }.last, from: 'print_printer'
+        ::CustomCups.pdf_printer_name, from: 'print_printer'
       )
       assert_difference 'Print.count' do
         click_button I18n.t('view.prints.print_title')
@@ -114,9 +114,7 @@ class OrdersTest < ActionDispatch::IntegrationTest
     assert_equal new_print_path, current_path
 
     within 'form' do
-      select(
-        ::CustomCups.show_destinations.detect { |k, v| k =~ /pdf/i }.last, from: 'print_printer'
-      )
+      select(::CustomCups.pdf_printer, from: 'print_printer')
 
       assert find('#print_pay_later').checked?
       assert find('#payment_C_amount').value.to_f == 0.0

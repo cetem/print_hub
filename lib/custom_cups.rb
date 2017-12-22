@@ -2,6 +2,18 @@ module CustomCups
   extend self
   @@_printers_file = {}
 
+  def pdf_printer
+    @_printer ||= pdf.first
+  end
+
+  def pdf_printer_name
+    @_printer_name ||= pdf.last
+  end
+
+  def pdf
+    @_pdf ||= show_destinations.detect { |k, v| k =~ /pdf/i }
+  end
+
   def printer_name_for(value)
     show_destinations[value] || value
   end

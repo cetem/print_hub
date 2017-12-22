@@ -5,7 +5,7 @@ class PrintTest < ActiveSupport::TestCase
   # Función para inicializar las variables utilizadas en las pruebas
   def setup
     @print = prints(:math_print)
-    @printer = Cups.show_destinations.detect { |p| p =~ /pdf/i }
+    @printer = ::CustomCups.pdf_printer
 
     fail "Can't find a PDF printer to run tests with." unless @printer
     @operator = users(:operator)

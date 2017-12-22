@@ -87,7 +87,7 @@ class ActiveSupport::TestCase
   end
 
   def drop_all_prints
-    pdf_printer = Cups.show_destinations.detect { |p| p =~ /pdf/i }
+    pdf_printer = ::CustomCups.pdf_printer
     return unless pdf_printer
     Thread.new { `lpstat -Wnot-completed -o | grep -i "#{pdf_printer}" | awk '{print $1}' | xargs cancel &>1`}
   end

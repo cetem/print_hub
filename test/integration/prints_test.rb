@@ -3,11 +3,8 @@ require 'test_helper'
 class PrintsTest < ActionDispatch::IntegrationTest
   setup do
     @ac_field = 'auto-document-print_job_print_print_jobs_attributes_'
-    @pdf_printer = Cups.show_destinations.detect { |p| p =~ /pdf/i }
-    @pdf_printer_name = ::CustomCups.show_destinations.detect { |k, v| k =~ /pdf/i }.last
-    if ENV['TRAVIS']
-      puts Cups.show_destinations
-    end
+    @pdf_printer = ::CustomCups.pdf_printer
+    @pdf_printer_name = ::CustomCups.pdf_printer_name
   end
 
   test 'should add a document with +' do
