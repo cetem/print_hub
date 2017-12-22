@@ -67,7 +67,7 @@
           <tbody>
             <% @shift_closure.printers_stats.each do |printer, counter| %>
               <tr>
-                <td><%= printer %></td>
+                <td><%= ::CustomCups.printer_name_for(printer) %></td>
                 <td><%= number_to_delimited(counter) %></td>
               </tr>
             <% end %>

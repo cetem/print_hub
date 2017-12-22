@@ -1,7 +1,7 @@
 <% @shift_closure.printers_with_counters.each do |printer, counter| %>
   <tr>
     <td>
-      <%= f.label printer, printer %>
+      <%= f.label printer, ::CustomCups.printer_name_for(printer) %>
     </td>
     <td>
       <%= f.input printer, as: :string, label: false,
