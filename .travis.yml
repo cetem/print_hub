@@ -15,14 +15,10 @@ addons:
       - libmagickwand-dev
       - imagemagick
       - nodejs
-# before_install:
-#   - sudo apt-get update -qq
-#   - sudo apt-get install -qq -y cups cups-pdf cups-bsd libcups2-dev
-#   - sudo apt-get install -qq -y imagemagick libmagickwand-dev nodejs
 before_script:
   - 'cp config/app_config.example.yml config/app_config.yml'
   - 'cp config/secrets.example.yml config/secrets.yml'
   - 'psql -c "create database print_hub_test;" -U postgres'
   - 'psql -c "create database abaco_test;" -U postgres'
   - 'bundle exec rails db:migrate'
-script: "bundle exec rails test:models; bundle exec rails test:controllers; bundle exec rails test:integration"
+script: "bundle exec rails test:models && bundle exec rails test:controllers && bundle exec rails test:integration"

@@ -48,8 +48,7 @@ module CustomCups
   def all_jobs(printer)
     keys = ::Cups.all_jobs(printer).keys
     if ENV['TRAVIS']
-      p "All jobs"
-      p keys
+      #p "All jobs: #{keys}"
     end
     keys.sort
   end
