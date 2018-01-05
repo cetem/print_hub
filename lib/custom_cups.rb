@@ -46,6 +46,7 @@ module CustomCups
   end
 
   def all_jobs(printer)
+    sleep 1 if ENV['TRAVIS']
     keys = ::Cups.all_jobs(printer).keys
     if ENV['TRAVIS']
       #p "All jobs: #{keys}"
