@@ -1,9 +1,7 @@
 class ApplicationController < ActionController::Base
   helper_method :current_user_session, :current_user, :current_customer, :full_text_search_for
 
-  skip_before_action :verify_authenticity_token, if: :milonga
-
-  protect_from_forgery with: :null_session
+  protect_from_forgery with: :null_session, unless: :milonga
 
   before_action :set_js_format_in_iframe_request, :set_paper_trail_whodunnit
   before_bugsnag_notify :add_user_info_to_bugsnag
