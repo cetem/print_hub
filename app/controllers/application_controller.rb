@@ -1,6 +1,8 @@
 class ApplicationController < ActionController::Base
   helper_method :current_user_session, :current_user, :current_customer, :full_text_search_for
 
+  skip_before_action :verify_authenticity_token, if: :milonga
+
   protect_from_forgery with: :null_session
 
   before_action :set_js_format_in_iframe_request, :set_paper_trail_whodunnit
@@ -224,5 +226,11 @@ class ApplicationController < ActionController::Base
     _scope = klass_scope
     _scope = _scope.full_text(query_terms) unless query_terms.empty?
     _scope.limit(AUTOCOMPLETE_LIMIT)
+  end
+
+  def milonga
+    Rails.logger.info('Headers:')
+    Rails.logger.info(request.headers)
+    false
   end
 end
