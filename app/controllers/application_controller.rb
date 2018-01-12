@@ -1,7 +1,7 @@
 class ApplicationController < ActionController::Base
   helper_method :current_user_session, :current_user, :current_customer, :full_text_search_for
 
-  protect_from_forgery with: :null_session, unless: :milonga
+  protect_from_forgery with: :null_session, unless: :trusted_sites
 
   before_action :set_js_format_in_iframe_request, :set_paper_trail_whodunnit
   before_bugsnag_notify :add_user_info_to_bugsnag
@@ -226,9 +226,9 @@ class ApplicationController < ActionController::Base
     _scope.limit(AUTOCOMPLETE_LIMIT)
   end
 
-  def milonga
-    Rails.logger.info('Headers:')
-    Rails.logger.info(request.headers)
-    false
+  def trusted_sites
+    (SECRETS[:trusted_sites] || {}).each do |site, custom_header|
+      return true if request.headers[custom_header] == site
+    end
   end
 end

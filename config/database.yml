@@ -4,15 +4,15 @@ defaults: &defaults
   pool: 5
   username: print_hub
   password: print_hub
+  host: localhost
+  port: 5432
 
 development:
   <<: *defaults
   database: print_hub_development
 
 test:
-  adapter: postgresql
-  encoding: utf8
-  pool: 5
+  <<: *defaults
   username: <%= ENV['TRAVIS'] ? 'postgres' : 'print_hub' %>
   password: <%= ENV['TRAVIS'] ? '' : 'print_hub' %>
   database: print_hub_test<%= ENV['TEST_ENV_NUMBER'] %>
@@ -27,9 +27,7 @@ staging:
 
 #Abaco conn
 abaco_defaults: &abaco_defaults
-  adapter: postgresql
-  encoding: utf8
-  pool: 5
+  <<: *defaults
   username: abaco
   password: abaco
 
