@@ -1,6 +1,6 @@
 module PrintJobTypesHelper
   def print_job_types_select_combo(form, name = nil)
-    collection = PrintJobType.all.map { |pjt| [pjt.name, pjt.id] }
+    collection = PrintJobType.enabled.map { |pjt| [pjt.name, pjt.id] }
     custom_name = name ? { name: "#{name}[print_job_type_id]" } : {}
 
     form.input :print_job_type_id,
@@ -55,5 +55,12 @@ module PrintJobTypesHelper
 
   def show_print_job_type_media_text(media)
     t("view.print_job_types.media_type.#{PrintJobType::MEDIA_TYPES.invert[media]}")
+  end
+
+  def print_job_type_state_color(pjt)
+    case
+      when pjt.default then 'success'
+      when pjt.disabled then 'error'
+    end
   end
 end

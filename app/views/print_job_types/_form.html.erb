@@ -8,11 +8,14 @@
     <%= f.input :price, label: false,
       input_html: { placeholder: '0.20; >= 500 @ 0.18; >= 1000 @ 0.16' } %>
     <div class="row-fluid">
-      <div class='span3'>
+      <div class='span2'>
         <%= f.input :two_sided, input_html: { class: '' } %>
       </div>
-      <div class='span3'>
+      <div class='span2'>
         <%= f.input :default, input_html: { class: '' } %>
+      </div>
+      <div class='span2'>
+        <%= f.input :enabled, input_html: { class: '' } %>
       </div>
     </div>
   </div>

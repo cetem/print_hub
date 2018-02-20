@@ -50,7 +50,23 @@ class PrintJobTypesControllerTest < ActionController::TestCase
   end
 
   test 'should destroy print_job_type' do
+    print_job_type = PrintJobType.create!(
+      media: PrintJobType::MEDIA_TYPES[:a4],
+      name: 'TO BE DELETED',
+      price: 0.88,
+      two_sided: true
+    )
     assert_difference('PrintJobType.count', -1) do
+      delete :destroy, params: { id: print_job_type }
+    end
+
+    assert_redirected_to print_job_types_url
+  end
+
+
+  test 'should not destroy print_job_type with print_jobs' do
+    assert @print_job_type.print_jobs.any?
+    assert_no_difference('PrintJobType.count') do
       delete :destroy, params: { id: @print_job_type }
     end
 

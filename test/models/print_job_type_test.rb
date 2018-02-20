@@ -37,9 +37,21 @@ class PrintJobTypeTest < ActiveSupport::TestCase
   end
 
   test 'destroy' do
-    print_job_type = PrintJobType.find(print_job_types(:color).id)
+    print_job_type = PrintJobType.create(
+        media: PrintJobType::MEDIA_TYPES.values.sample,
+        name: 'TO BE DESTROYED',
+        price: 1.00,
+        two_sided: true
+      )
 
     assert_difference('PrintJobType.count', -1) { print_job_type.destroy }
+  end
+
+  test 'not destroy print_job_type with print_jobs' do
+    print_job_type = PrintJobType.find(print_job_types(:color).id)
+    assert print_job_type.print_jobs.any?
+
+    assert_no_difference('PrintJobType.count') { print_job_type.destroy }
   end
 
   test 'validates blank attributes' do

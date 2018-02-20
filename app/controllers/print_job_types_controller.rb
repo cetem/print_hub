@@ -86,6 +86,7 @@ class PrintJobTypesController < ApplicationController
   def destroy
     @print_job_type = PrintJobType.find(params[:id])
     @print_job_type.destroy
+    flash.alert = @print_job_type.errors.full_messages.join("\n") if @print_job_type.errors.any?
 
     respond_to do |format|
       format.html { redirect_to print_job_types_url }
@@ -97,7 +98,7 @@ class PrintJobTypesController < ApplicationController
 
   def print_job_type_params
     params.require(:print_job_type).permit(
-      :name, :price, :two_sided, :default, :media
+      :name, :price, :two_sided, :default, :media, :enabled
     )
   end
 end

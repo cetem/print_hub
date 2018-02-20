@@ -11,7 +11,7 @@
 
   <tbody>
     <% @print_job_types.each do |print_job_type| %>
-      <tr class="<%= 'success' if print_job_type.default %>">
+      <tr class="<%= print_job_type_state_color print_job_type %>">
         <td><%= content_tag(
           :span, '&#x2714;'.html_safe, class: 'iconic'
         ) if print_job_type.default %></td>
@@ -20,7 +20,7 @@
         <td><%= print_job_type.two_sided ? t('label.yes') : t('label.no') %></td>
         <td><%= link_to_show print_job_type %></td>
         <td><%= link_to_edit edit_print_job_type_path(print_job_type) %></td>
-        <td><%= link_to_destroy print_job_type %></td>
+        <td><%= link_to_destroy print_job_type unless print_job_type.any_job? %></td>
       </tr>
     <% end %>
   </tbody>

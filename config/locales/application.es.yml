@@ -146,6 +146,7 @@ es:
         name: "Nombre"
         price: "Precio"
         two_sided: "Doble faz"
+        enabled: "Habilitado"
       shift:
         as_admin: "Encargado?"
         description: "Descripción"
@@ -213,6 +214,10 @@ es:
           attributes:
             base:
               must_have_one_item: "El pedido debe tener al menos un ítem"
+        print_job_type:
+          attributes:
+            default:
+              cant_be_disabled_default: "Un tipo desactivado no puede estar por defecto"
         print:
           attributes:
             base:
@@ -611,6 +616,7 @@ es:
         one_abbr: "Simple"
         two: "Doble faz"
         two_abbr: "Doble"
+      has_related_print_jobs: "El tipo de impresión no puede ser eliminado, tiene impresiones relacionadas"
       stale_object_error: "La configuración no pudo ser actualizada, intente nuevamente."
       syntax_explanation: |-
           Precio-Global ; >= Cant-Hojas @ Precio; >= Cant-Hojas2 @ Precio2
