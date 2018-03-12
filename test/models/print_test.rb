@@ -243,6 +243,76 @@ class PrintTest < ActiveSupport::TestCase
     assert_equal 0, @print.print_jobs.first.printed_copies
   end
 
+  test 'create with free credit and paying more in cash' do
+    UserSession.create(users(:operator))
+    @customer = customers(:student)
+    Bonus.all.delete_all
+    Deposit.all.delete_all
+    @customer.deposits.create(amount: 1000, remaining: 1000)
+
+    assert_equal '1000.0', @customer.reload.free_credit.to_s
+
+    counts = ['Print.count', 'Payment.count', '@customer.deposits.count',
+              '::CustomCups.last_job_id(@printer)', 'ArticleLine.count']
+
+    assert_difference counts do
+      assert_difference 'PrintJob.count', 2 do
+        @print = Print.create(printer: @printer,
+                              user_id: @operator.id,
+                              customer_id: @customer.id,
+                              scheduled_at: '',
+                              credit_password: 'student123',
+                              print_jobs_attributes: {
+                                '1' => {
+                                  copies: 1,
+                                  price_per_copy: 0.10,
+                                  print_job_type_id: print_job_types((:a4)).id,
+                                  document_id: documents(:math_book).id
+                                },
+                                '2' => {
+                                  copies: 10,
+                                  price_per_copy: 0.10,
+                                  print_job_type_id: print_job_types(:a4).id,
+                                  file_line_id: file_lines(:from_yesterday_cv_file).id
+                                }
+                                # 360 páginas = $36.00
+                              },
+                              article_lines_attributes: {
+                                '1' => {
+                                  article_id: articles(:binding).id,
+                                  units: 1,
+                                  # No importa el precio, se establece desde el artículo
+                                  unit_price: 12.0
+                                }
+                              },
+                              payments_attributes: {
+                                '1' => {
+                                  amount: 0,
+                                  paid: 123,
+                                },
+                                '2' => {
+                                  amount: 37.79,
+                                  paid: 37.79,
+                                  paid_with: Payment::PAID_WITH[:credit]
+                                }
+                              })
+      end
+    end
+
+
+    assert_equal 1, @print.reload.payments.size
+
+    payment = @print.payments.first
+    deposit = @customer.reload.deposits.last
+
+    assert payment.credit?
+    assert_equal '37.79', payment.amount.to_s
+    assert_equal '37.79', payment.paid.to_s
+    assert_equal '1085.21', @customer.reload.free_credit.to_s
+    assert_equal '123.0', deposit.amount.to_s
+    assert_equal '123.0', deposit.remaining.to_s
+  end
+
   test 'create with free credit' do
     UserSession.create(users(:operator))
     counts = ['Print.count', 'Payment.count',

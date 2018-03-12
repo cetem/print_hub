@@ -65,7 +65,12 @@ module Prints::Customers
 
   def assign_surplus_to_customer
     payments.each do |payment|
-      next if payment.destroyed?
+      # payments with amount <= are destroyed
+      if payment.destroyed?
+        # Si ponemos en "Monto abonado" un monto se lo cargamos como debito
+        customer.deposits.new(amount: payment.paid.to_f) if payment.paid.to_f > 0.0
+        next
+      end
 
       if (diff = payment.paid.to_f - payment.amount.to_f) > 0
         customer.deposits.new(amount: diff)
