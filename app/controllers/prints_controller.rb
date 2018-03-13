@@ -144,7 +144,7 @@ class PrintsController < ApplicationController
 
   # GET /prints/autocomplete_for_document_name
   def autocomplete_for_document_name
-    docs = full_text_search_for(Document.all, params[:q])
+    docs = full_text_search_for(Document.enabled, params[:q])
 
     respond_to do |format|
       format.json { render json: docs }
@@ -162,7 +162,7 @@ class PrintsController < ApplicationController
 
   # GET /prints/autocomplete_for_customer_name
   def autocomplete_for_customer_name
-    customers = full_text_search_for(Customer.all, params[:q])
+    customers = full_text_search_for(Customer.active, params[:q])
 
     respond_to do |format|
       format.json { render json: customers }

@@ -290,6 +290,7 @@ class Customer < ApplicationModel
           self.errors.add(:email, *msg)
         end
       rescue
+        true
       end
     end
   end

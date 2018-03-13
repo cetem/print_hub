@@ -30,6 +30,15 @@ module MailerValidator
     Rails.logger.info('MailerValidator: ')
     Rails.logger.info(body)
 
+    if body['success'] == false
+      Bugsnag.notify(
+        RuntimeError.new('Error en MailerValidator'),
+        body: body
+      )
+
+      return true
+    end
+
     [(response.code == '200') && body['smtp_check'], body['did_you_mean']]
   end
 end

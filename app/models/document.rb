@@ -11,6 +11,7 @@ class Document < ApplicationModel
   }
   scope :publicly_visible, -> { where(private: false) }
   scope :disable, -> { where(enable: false) }
+  scope :enabled, -> { where(enable: true) }
 
   # Atributos no persistentes
   attr_accessor :auto_tag_name
