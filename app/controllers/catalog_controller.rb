@@ -99,7 +99,7 @@ class CatalogController < ApplicationController
   end
 
   def document_scope
-    @tag ? @tag.documents.publicly_visible : Document.publicly_visible
+    (@tag ? @tag.documents : Document).enabled.publicly_visible
   end
 
   def load_parent
