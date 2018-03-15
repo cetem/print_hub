@@ -33,7 +33,9 @@ module MailerValidator
     if body['success'] == false
       Bugsnag.notify(
         RuntimeError.new('Error en MailerValidator'),
-        body: body
+        user: {
+          body: body
+        }
       )
 
       return true
