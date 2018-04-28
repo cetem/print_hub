@@ -279,7 +279,13 @@ class Customer < ApplicationModel
       begin
         if self.email.present?
           valid, suggest = ::MailerValidator.check(self.email)
-          return true if valid && suggest.blank?
+          # si el email es .com.ar te sugiere .com, y deberia dejartelo pasar
+          if valid && (
+              suggest.blank? ||
+              self.email.to_s.include?(suggest.to_s)
+          )
+            return true
+          end
 
           msg = if suggest.present?
                   [:invalid_with_msg, { suggest: suggest }]

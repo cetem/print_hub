@@ -1,5 +1,4 @@
 module MailerValidator
-
   MAIL_URI = URI.parse('https://apilayer.net/api/check')
   API_KEY = Rails.application.secrets[:mailboxlayer_api_key]
 
@@ -20,7 +19,13 @@ module MailerValidator
     return [false, nil] if email.blank?
     return [true, nil]  if Rails.env.test? || API_KEY.blank?
 
-    request = Net::HTTP::Get.new MAIL_URI + "?access_key=#{API_KEY}&email=#{email}"
+    api_key = if API_KEY.is_a?(Array)
+                API_KEY.sample
+              else
+                API_KEY
+              end
+
+    request = Net::HTTP::Get.new MAIL_URI + "?access_key=#{api_key}&email=#{email}"
     response = Net::HTTP.start(MAIL_URI.host, MAIL_URI.port, use_ssl: MAIL_URI.scheme == 'https') do |http|
       http.request(request)
     end
