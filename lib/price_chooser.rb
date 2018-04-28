@@ -35,7 +35,7 @@ class PriceChooser
   end
 
   def self.humanize
-    PrintJobType.all.map do |print_job_type|
+    PrintJobType.enabled.map do |print_job_type|
       type_price = new(print_job_type.price)
       rules = type_price.parse.map do |cond, price|
         if cond.match(/[><=]+\s*\.?\d+/)

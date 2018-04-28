@@ -60,7 +60,7 @@ class PrintJobType < ActiveRecord::Base
   end
 
   def one_sided_for
-    PrintJobType.one_sided.where(media: media).first if two_sided
+    PrintJobType.enabled.one_sided.where(media: media).first if two_sided
   end
 
   def any_job?

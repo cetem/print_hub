@@ -13,7 +13,7 @@ module PrintJobTypesHelper
 
   def print_job_types_with_price_for_data
     type_with_price = {}
-    PrintJobType.all.each do |pjt|
+    PrintJobType.enabled.each do |pjt|
       type_with_price.merge!(pjt.id => pjt.price)
     end
 
@@ -23,7 +23,7 @@ module PrintJobTypesHelper
   def print_job_types_for_data_pages
     types = {}
 
-    PrintJobType.all.each { |pjt| types.merge!(pjt.id => 0) }
+    PrintJobType.enabled.each { |pjt| types.merge!(pjt.id => 0) }
 
     types.to_json
   end
@@ -31,8 +31,8 @@ module PrintJobTypesHelper
   def one_sided_print_job_types_for_data
     two_sided = {}
 
-    PrintJobType.two_sided.each do |ts|
-      one_sided = PrintJobType.one_sided.where(media: ts.media).first
+    PrintJobType.enabled.two_sided.each do |ts|
+      one_sided = PrintJobType.enabled.one_sided.where(media: ts.media).first
       two_sided[ts.id] = one_sided.id if one_sided
     end
 

@@ -3,15 +3,11 @@
     totalPrice = 0.0
     credit = parseFloat($('#user').data('credit')) || 0
 
-    #Order.updateTotalPages()
+    total_price = 0.0
+    _.each Jobs.getPrintableJobs(), (order)->
+      job = Jobs.assignDefaultOrGetJob(order)
+      totalPrice += if job then job.price else 0.0
 
-    $('.order_line:not(.exclude-from-total)').each ->
-      totalPrice += parseFloat($(this).data('price')) || 0
-
-    #if totalPrice > 0 && (credit >= (totalPrice * Order.threshold))
-    #  $('#not_printed').hide()
-    #  $('#printed').show()
-    #else if totalPrice > 0
     # TODO: DEFINE WHATEVER WE WANT (temporal fix)
     $('#printed').hide()
     $('.js-scheduled-at').hide()
@@ -25,37 +21,38 @@
     #Order.updateTotalPages()
     Jobs.reCalcPages(orderLine[0])
 
-    orderLinesContainer = $('div[data-jobs-container]')
-    mediaType = orderLine.find(
-      'select[name$="[print_job_type_id]"] :selected'
-    ).val()
 
-    copies = parseInt(orderLine.find('input[name$="[copies]"]').val())
-    pages = parseInt(orderLine.find('input[name$="[pages]"]').val())
-    evenPages = pages - (pages % 2)
-    rest = (pages % 2)
+    # orderLinesContainer = $('.jobs-container')
+    # mediaType = orderLine.find(
+    #   'select[name$="[print_job_type_id]"] :selected'
+    # ).val()
 
-    pricePerCopy = orderLine.data('price-per-copy')
-    oneSidedType = orderLinesContainer.data('odd-pages-types')[mediaType] || mediaType
-    oneSidedSettings = orderLinesContainer.data('prices-list')[oneSidedType]
-    mediaPages = orderLinesContainer.data('pages-list')[mediaType]
+    # copies = parseInt(orderLine.find('input[name$="[copies]"]').val())
+    # pages = parseInt(orderLine.find('input[name$="[pages]"]').val())
+    # evenPages = pages - (pages % 2)
+    # rest = (pages % 2)
 
-    oneSidedPages = if rest then mediaPages || rest else 0
-    pricePerOneSidedCopy = PriceChooser.choose(
-      oneSidedSettings, parseInt(oneSidedPages)
-    )
-    jobPrice = parseFloat(
-      copies * (pricePerCopy * evenPages + pricePerOneSidedCopy) || 0
-    ).toFixed(3)
+    # pricePerCopy = orderLine.data('price-per-copy')
+    # oneSidedType = orderLinesContainer.data('odd-pages-types')[mediaType] || mediaType
+    # oneSidedSettings = orderLinesContainer.data('prices-list')[oneSidedType]
+    # mediaPages = orderLinesContainer.data('pages-list')[mediaType]
 
-    money = orderLine.find('span.money')
-    orderLine.data('price', jobPrice)
-    money.html(money.html().replace(/(\d+.)+\d+/, jobPrice))
+    # oneSidedPages = if rest then mediaPages || rest else 0
+    # pricePerOneSidedCopy = PriceChooser.choose(
+    #   oneSidedSettings, parseInt(oneSidedPages)
+    # )
+    # jobPrice = parseFloat(
+    #   copies * (pricePerCopy * evenPages + pricePerOneSidedCopy) || 0
+    # ).toFixed(3)
+
+    # money = orderLine.find('span.money')
+    # orderLine.data('price', jobPrice)
+    # money.html(money.html().replace(/(\d+.)+\d+/, jobPrice))
 
     Order.updateTotalPrice()
 
   updateTotalPages: ->
-    jobsContainer = $('[data-jobs-container]')
+    jobsContainer = $('.jobs-container')
     totalTypePages = jobsContainer.data('pages-list')
 
     # Reset the counts
