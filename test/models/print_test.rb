@@ -719,8 +719,13 @@ class PrintTest < ActiveSupport::TestCase
 
   test 'revoke' do
     UserSession.create(@operator)
+    @article = articles(:binding)
 
-    assert_no_difference('Bonus.count') { assert @print.revoke! }
+    assert_difference '@article.reload.stock', 2 do
+      assert_no_difference 'Bonus.count' do
+        assert @print.revoke!
+      end
+    end
 
     assert @print.reload.revoked
     assert @print.payments.reload.all?(&:revoked)

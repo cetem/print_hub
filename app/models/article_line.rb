@@ -36,4 +36,9 @@ class ArticleLine < ApplicationModel
     article.stock = 0 if article.stock < 0
     article.save
   end
+
+  def refund!
+    article.stock += units
+    article.save
+  end
 end

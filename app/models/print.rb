@@ -159,15 +159,23 @@ class Print < ApplicationModel
   end
 
   def revoke!
-    if UserSession.find.try(:record).try(:admin)
-      self.revoked = true
-      payments.each { |p| p.revoked = true }
+    return unless UserSession.find.try(:record).try(:admin)
 
-      if customer && payments.any?(&:credit?)
-        customer.add_bonus payments.select(&:credit?).to_a.sum(&:paid)
+    Print.transaction do
+      begin
+        self.revoked = true
+        payments.each { |p| p.revoked = true }
+
+        if customer && payments.any?(&:credit?)
+          customer.add_bonus payments.select(&:credit?).to_a.sum(&:paid)
+        end
+
+        article_lines.map(&:refund!)
+
+        save validate: false
+      rescue
+        raise ActiveRecord::Rollback
       end
-
-      save validate: false
     end
   end
 
