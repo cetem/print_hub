@@ -243,7 +243,6 @@ class ActionDispatch::IntegrationTest
     #   'user_credentials',
     #   "#{user.persistence_token}::#{user.id}"
     # )
-    # byebug
 
     # visit root_path
 

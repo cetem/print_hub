@@ -362,7 +362,7 @@ class PrintsTest < ActionDispatch::IntegrationTest
       within 'form.file_line' do
         attach_file(
           'file_line_file',
-          File.join(Rails.root, 'test', 'fixtures', 'files', 'test.pdf')
+          Rails.root.join('test', 'fixtures', 'files', 'test.pdf')
         )
       end
 

@@ -1,4 +1,6 @@
 class OrderLine < ApplicationModel
+  include Lines::Price
+
   has_paper_trail
 
   # Restricciones
@@ -24,26 +26,8 @@ class OrderLine < ApplicationModel
     self.price_per_copy = job_price_per_copy
   end
 
-  def price
-    ::PriceCalculator.final_job_price(
-      (order.try(:pages_per_type) || {}).merge(
-        price_per_copy: job_price_per_copy,
-        type: self.print_job_type,
-        pages: pages,
-        copies: self.copies || 0
-      )
-    )
-  end
-
-  def total_pages
-    (pages || 0) * (self.copies || 0)
-  end
-
-  def job_price_per_copy
-    ::PriceChooser.choose(
-      type: print_job_type_id,
-      copies: order.try(:total_pages_by_type, self.print_job_type)
-    )
+  def usable_parent
+    order
   end
 
   def recalculate_price_per_copy

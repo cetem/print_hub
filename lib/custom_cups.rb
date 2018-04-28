@@ -3,15 +3,15 @@ module CustomCups
   @@_printers_file = {}
 
   def pdf_printer
-    @_printer ||= pdf.first
+    @printer ||= pdf.first
   end
 
   def pdf_printer_name
-    @_printer_name ||= pdf.last
+    @printer_name ||= pdf.last
   end
 
   def pdf
-    @_pdf ||= show_destinations.detect { |k, v| k =~ /pdf/i }
+    @pdf ||= show_destinations.detect { |k, _v| k =~ /pdf/i }
   end
 
   def printer_name_for(value)
@@ -26,7 +26,7 @@ module CustomCups
         memo
       else
         _item, id, name = *item.match(/^(.+)\|(.+):rm/)
-        memo.merge!({ id => name })
+        memo.merge!(id => name)
       end
     end
   end
@@ -48,9 +48,9 @@ module CustomCups
   def all_jobs(printer)
     sleep 1 if ENV['TRAVIS']
     keys = ::Cups.all_jobs(printer).keys
-    if ENV['TRAVIS']
-      #p "All jobs: #{keys}"
-    end
+    # if ENV['TRAVIS']
+    #   p "All jobs: #{keys}"
+    # end
     keys.sort
   end
 end

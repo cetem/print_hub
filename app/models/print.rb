@@ -215,7 +215,10 @@ class Print < ApplicationModel
 
     has_nothing_to_print = has_no_document && has_no_file_line
 
-    has_nothing_to_print && attributes['pages'].blank?
+    has_nothing_to_print && (
+      attributes['pages'].blank? ||
+      attributes['pages'].to_i.zero?
+    )
   end
 
   def must_have_one_item

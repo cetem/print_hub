@@ -1,4 +1,6 @@
 class FileLine < ActiveRecord::Base
+  include Lines::Price
+
   has_paper_trail
   mount_uploader :file, CustomersFilesUploader
 
@@ -51,19 +53,8 @@ class FileLine < ActiveRecord::Base
     errors.add :file, :blank if file.blank? || file_cache.blank?
   end
 
-  def price
-    total_pages * job_price_per_copy
-  end
-
-  def total_pages
-    (pages || 0) * (self.copies || 0)
-  end
-
-  def job_price_per_copy
-    ::PriceChooser.choose(
-      type: self.print_job_type_id,
-      copies: order.try(:total_pages_by_type, self.print_job_type)
-    )
+  def usable_parent
+    print || order
   end
 
   def delete_file

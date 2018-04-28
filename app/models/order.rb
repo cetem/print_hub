@@ -120,8 +120,8 @@ class Order < ApplicationModel
   end
 
   def total_pages_by_type(type)
-    order_items.inject(0) do |t, oi|
-      t + (oi.print_job_type == type ? (oi.pages || 0) : 0)
+    order_items.sum do |oi|
+      oi.print_job_type == type ? (oi.pages || 0) : 0
     end
   end
 

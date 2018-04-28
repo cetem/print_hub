@@ -112,9 +112,10 @@ class OrdersTest < ActionDispatch::IntegrationTest
 
     assert_page_has_no_errors!
     assert_equal new_print_path, current_path
+    sleep(0.2)
 
-    within 'form' do
-      select(::CustomCups.pdf_printer, from: 'print_printer')
+    within 'form.new_print' do
+      select(::CustomCups.pdf_printer_name, from: 'print_printer', visible: false)
 
       assert find('#print_pay_later').checked?
       assert find('#payment_C_amount').value.to_f == 0.0
