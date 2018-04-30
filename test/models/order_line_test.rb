@@ -126,13 +126,15 @@ class OrderLineTest < ActiveSupport::TestCase
 
     @order_line.copies = 1
     @order_line.document.pages = 1
-    assert @order_line.valid?
-    assert_equal '0.10', '%.2f' % @order_line.price
+    @order_line.document.save! # relation is with other scope
+    assert @order_line.save #valid?
+    assert_equal '0.10', '%.2f' % @order_line.reload.price
 
-    @order_line.reload
     @order_line.copies = 1
+    @order_line.document.pages = 12
+    @order_line.document.save!
     @order_line.print_job_type = print_job_types(:color)
-    assert @order_line.valid?
-    assert_equal '4.20', '%.2f' % @order_line.price # 12 * 0.35
+    assert @order_line.save
+    assert_equal '4.20', '%.2f' % @order_line.reload.price # 12 * 0.35
   end
 end

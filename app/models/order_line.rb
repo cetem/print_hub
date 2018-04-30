@@ -12,9 +12,11 @@ class OrderLine < ApplicationModel
 
   # Relaciones
   belongs_to :document
+  belongs_to :document_with_disabled, -> { unscope(where: :enable) },
+    foreign_key: 'document_id', class_name: 'Document'
   belongs_to :order, optional: true
   belongs_to :print_job_type
-  delegate :pages, to: :document
+  delegate :pages, to: :document_with_disabled
 
   before_save :recalculate_price_per_copy
 
