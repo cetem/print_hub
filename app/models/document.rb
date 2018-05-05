@@ -226,23 +226,6 @@ class Document < ApplicationModel
     )
   end
 
-  def self.copies_for_stock_between(dates)
-    from, to = dates.sort
-
-    print_jobs = PrintJob.arel_table
-    mega_scope = PrintJob.where(created_at: from..to)
-      .select(
-        print_jobs[:copies].sum.as('total_copies'), print_jobs[:document_id]
-      )
-      .having('(SUM(print_jobs.copies) > 20)').order('total_copies DESC')
-      .group(:document_id)
-
-    mega_scope.map do |summary|
-      if summary.try(:document)
-        [summary.document.to_s, summary.total_copies]
-      end
-    end.compact
-  end
 
   private
 

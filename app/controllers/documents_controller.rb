@@ -164,7 +164,7 @@ class DocumentsController < ApplicationController
   def copies_between_for
     if params[:interval]
       @from_date, @to_date = make_datetime_range(interval_params)
-      @documents = Document.copies_for_stock_between([@from_date, @to_date])
+      @stub_print_jobs = PrintJob.copies_for_stock_between([@from_date, @to_date])
     end
   end
 

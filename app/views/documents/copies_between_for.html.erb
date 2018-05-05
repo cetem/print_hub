@@ -1,7 +1,7 @@
 <div class="readonly-data">
   <%= render 'shared/date_filter', from_date: @from_date, to_date: @to_date %>
 
-  <% if @documents.try(:any?) %>
+  <% if @stub_print_jobs.try(:any?) %>
     <h3><%= t( 'view.documents.copies_stats') %></h3>
 
     <table class="table table-bordered table-striped">
@@ -12,10 +12,10 @@
         </tr>
       </thead>
       <tbody>
-        <% @documents.each do |name, copies| %>
-          <tr>
-            <td><%= name %></td>
-            <td><%= copies %></td>
+        <% @stub_print_jobs.each do |pj| %>
+          <tr class="<%= 'error' unless pj.document.enable %>">
+            <td><%= pj.document %></td>
+            <td><%= pj.total_copies %></td>
           </tr>
         <% end %>
       </tbody>

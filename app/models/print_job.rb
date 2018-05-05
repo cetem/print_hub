@@ -54,7 +54,8 @@ class PrintJob < ApplicationModel
 
   # Relaciones
   belongs_to :print, inverse_of: :print_jobs, optional: true
-  belongs_to :document, autosave: true, optional: true
+  belongs_to :document, -> { unscope(where: :enable) },
+    autosave: true, optional: true
   belongs_to :file_line, inverse_of: :print_jobs, optional: true
   belongs_to :print_job_type
 
@@ -202,5 +203,20 @@ class PrintJob < ApplicationModel
 
   def self.created_at_month(date)
     with_print_between(date.beginning_of_month, date.end_of_month.end_of_day)
+  end
+
+  def self.copies_for_stock_between(dates)
+    from, to = dates.sort
+
+    print_jobs = PrintJob.arel_table
+    mega_scope = PrintJob.includes(:document).where(created_at: from..to)
+      .where.not(document_id: nil)
+      .select(
+        print_jobs[:copies].sum.as('total_copies'), print_jobs[:document_id],
+        print_jobs[:pages], print_jobs[:copies]  # calculos....
+      )
+      .having('(SUM(print_jobs.copies) > 20)')
+      .group(:document_id, :pages, :copies)
+      .order('total_copies DESC')
   end
 end
