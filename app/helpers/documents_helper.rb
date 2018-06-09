@@ -82,4 +82,8 @@ module DocumentsHelper
   def document_file_identifier(document)
     document.file.identifier || document.file_identifier if document.file?
   end
+
+  def document_original_file_identifier(document)
+    document.original_file.identifier || document.original_file_identifier if document.original_file?
+  end
 end
