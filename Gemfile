@@ -62,6 +62,10 @@ group :development do
   gem 'capistrano-rails'
   gem 'capistrano-chruby'
   gem 'parallel_tests'
+
+  # Support for ed25519 ssh keys
+  gem 'ed25519'
+  gem 'bcrypt_pbkdf'
 end
 
 group :test do
