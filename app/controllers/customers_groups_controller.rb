@@ -104,9 +104,9 @@ class CustomersGroupsController < ApplicationController
   end
 
   def global_settlement
-    start, finish = parsed_start_and_finish
+    start, finish = parsed_start_and_finish(:export_interval)
 
-    DriveWorker.perform_async(DriveWorker::CUSTOMERS_GROUPS, { start: start, finish: finish })
+    DriveWorker.perform_async(DriveWorker::CUSTOMERS_GROUPS, start: start, finish: finish)
 
     redirect_to customers_groups_path,
                 notice: t('view.customers_groups.spreadsheet_uploading')
@@ -120,10 +120,23 @@ class CustomersGroupsController < ApplicationController
     redirect_to @customers_group
   end
 
+  def global_pay_between
+    if params[:interval]&.fetch(:from, nil).present? &&
+       params[:interval]&.fetch(:to, nil).present?
+
+      start, finish = parsed_start_and_finish
+      threads = []
+
+      CustomersGroup.all.pay_between(start, finish)
+    end
+
+    redirect_to customers_groups_path, notice: t('view.customers_groups.all_paid')
+  end
+
   private
 
-  def parsed_start_and_finish
-    interval      = params.require(:interval).permit(:from, :to)
+  def parsed_start_and_finish(name = :interval)
+    interval      = params.require(name).permit(:from, :to)
     start, finish = *make_datetime_range(interval)
     [start.beginning_of_day, finish.end_of_day]
   end

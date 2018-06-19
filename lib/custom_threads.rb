@@ -4,10 +4,15 @@ module CustomThreads
 
     loop do
       begin
+        # puts "vueltita..."
         running = threads.map { |t| wait_statuses.include?(t.status) }.count(true)
+
+        # puts running
+        # p threads.map { |t| puts t.status }
 
         break if running < count
       rescue => e
+        puts e
         Bugsnag.notify(e)
         break
       end

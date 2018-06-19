@@ -5,10 +5,10 @@ es:
       article:
         code: "Código"
         description: "Descripción"
+        enabled: "Habilitado"
         name: "Nombre"
         notification_stock: "Notificar al llegar al sgte stock"
         price: "Precio"
-        enabled: "Habilitado"
       article_line:
         article_id: "Artículo"
         unit_price: "Precio unitario"
@@ -143,17 +143,17 @@ es:
         range: "Rango"
       print_job_type:
         default: "Por defecto"
+        enabled: "Habilitado"
         name: "Nombre"
         price: "Precio"
         two_sided: "Doble faz"
-        enabled: "Habilitado"
       shift:
         as_admin: "Encargado?"
         description: "Descripción"
         finish: "Fin"
+        paid: "Pagado"
         start: "Inicio"
         user_id: "Usuario"
-        paid: "Pagado"
       shift_closure:
         administration_copies: "Copias CETEM"
         cashbox_amount: "Efectivo en caja"
@@ -198,7 +198,6 @@ es:
         amount: "Monto"
         collected_at: "Armado a las"
     errors:
-      required: 'es requerido'
       cannot_be_destroyed: "No se puede eliminar"
       cannot_be_modified: "No se puede modificar"
       models:
@@ -214,10 +213,6 @@ es:
           attributes:
             base:
               must_have_one_item: "El pedido debe tener al menos un ítem"
-        print_job_type:
-          attributes:
-            default:
-              cant_be_disabled_default: "Un tipo desactivado no puede estar por defecto"
         print:
           attributes:
             base:
@@ -235,6 +230,11 @@ es:
             range:
               overlapped: "no debe estar solapado"
               too_long: "excede la cantidad de páginas del documento (%{count})"
+        print_job_type:
+          attributes:
+            default:
+              cant_be_disabled_default: "Un tipo desactivado no puede estar por defecto"
+      required: "es requerido"
     models:
       article: "Artículo"
       article_line: "Línea de artículo"
@@ -264,15 +264,16 @@ es:
     worked_hours: "Horas trabajadas"
   customer_menu:
     catalog: "Documentos"
+    credits: "Créditos"
     orders: "Pedidos"
     profile: "Mis datos"
-    credits: "Créditos"
   document_mailer:
     barcodes_pdf:
       body: "Los códigos que solicitaste ya están listos. Gracias por tu paciencia"
       subject: "Los códigos QRs que pediste ya están listos."
   errors:
     apologies_for_the_inconvenience: "Disculpe las molestias"
+    empty_results: "Sin resultados"
     header_message: "Se ha encontrado un problema"
     hide_details: "Ocultar detalles"
     messages:
@@ -280,7 +281,6 @@ es:
     recreate_versions_error: "Ha sucedido un error al procesar las miniaturas %{e}"
     show_details: "Ver detalles"
     title: "Error"
-    empty_results: "Sin resultados"
     unpermitted_action: "Acción no permitida"
   label:
     and: "y"
@@ -288,6 +288,7 @@ es:
     cancel: "Cancelar"
     close: "Cerrar"
     delete: "Eliminar"
+    disabled: "Deactivados"
     download: "Descargar"
     edit: "Modificar"
     hide: "Ocultar"
@@ -299,9 +300,11 @@ es:
     search: "Buscar"
     show: "Ver"
     "yes": "Si"
-    disabled: "Deactivados"
   lang:
     es: "Español"
+  mailer:
+    layout:
+      please_not_reply: "Por favor no responda este email, si tiene algún problema acérquese y lo ayudaremos. Gracias."
   menu:
     actions:
       hide: "Ocultar"
@@ -313,7 +316,7 @@ es:
     customers: "Clientes"
     customers_groups: "Grupos de Clientes"
     documents: "Documentos"
-    notebooks: 'Libretas'
+    notebooks: "Libretas"
     orders: "Pedidos"
     payments: "Pagos"
     print_job_types: "Tipos de impresión"
@@ -324,6 +327,7 @@ es:
     tags: "Etiquetas"
     users: "Usuarios"
   messages:
+    confirmation: '¿Está seguro?'
     ajax_in_progress_warning: |-
         Algunos pedidos todavía se están procesando
         Si abandona esta página puede dejar operaciones inconclusas
@@ -341,17 +345,14 @@ es:
       subject: "Recibimos Feedback!"
     forgot_password:
       subject: "Restablecer contraseña"
+    old_order_cancelled:
+      subject: "Orden antigua cancelada"
     reactivation:
       subject: "Re-activar cuenta"
     signup:
       subject: "Registro"
     thanks_for_feedback:
       subject: "Muchas gracias por el feedback"
-    old_order_cancelled:
-      subject: "Orden antigua cancelada"
-  mailer:
-    layout:
-      please_not_reply: "Por favor no responda este email, si tiene algún problema acérquese y lo ayudaremos. Gracias."
   view:
     articles:
       correctly_created: "Artículo agregado correctamente."
@@ -359,6 +360,7 @@ es:
       edit_title: "Modificar artículo"
       index_title: "Listado de artículos"
       new_title: "Nuevo artículo"
+      no_stock: "Sin stock"
       notification_body: |-
           Deberíamos ir pensando en comprar:
           %{body}
@@ -367,7 +369,6 @@ es:
       only_notify_when_its_greater_than: "Solo notifica si es mayor a 0"
       show_title: "Detalle de artículo"
       stale_object_error: "El artículo no pudo ser actualizado, intente nuevamente."
-      no_stock: "Sin stock"
     bonuses:
       bonuses_with_customer: "Bonificaciones de %{customer}"
       index_title: "Listado de bonificaciones"
@@ -412,6 +413,8 @@ es:
       correctly_created: "Cliente agregado correctamente."
       correctly_registered: "Te has registrado correctamente, te enviamos un correo."
       correctly_updated: "Cliente actualizado correctamente."
+      created_by: "Agregado por"
+      credits: "Créditos"
       current_bonuses:
         one: "Bonificación vigente"
         other: "Bonificaciones vigentes"
@@ -419,7 +422,10 @@ es:
         one: "Depósito vigente"
         other: "Depósitos vigentes"
       edit_title: "Modificar cliente"
+      event: "Evento"
       forgot_password: "Olvidé mi contraseña"
+      historical: "Histórico"
+      historical_credit: "Historial"
       index_title: "Listado de clientes"
       kinds:
         normal: "Normal"
@@ -462,24 +468,13 @@ es:
         with_debt: "Con deuda"
       total_free_credit: "Credito total disponible: "
       update_profile: "Actualizar datos"
+      updated_by: "Actualizado por"
       without_bonuses: "Sin bonificaciones"
       without_deposits: "Sin depósitos"
       without_non_payments: "Sin impresiones impagas"
       without_prints: "Sin impresiones"
-      created_by: "Agregado por"
-      credits: "Créditos"
-      historical_credit: "Historial"
-      updated_by: 'Actualizado por'
-      event: 'Evento'
-      historical: "Histórico"
-    versions:
-      updated_by: "Modificó"
-      event: 'Evento'
-      events:
-        update: 'Actualización'
-        create: 'Creación'
-        destroy: 'Borrado'
     customers_groups:
+      all_paid: "Todos los grupos han sido pagados."
       copies: "Copias"
       date: "Fecha"
       debt: "Deuda"
@@ -487,13 +482,13 @@ es:
       global_settlement: "Liquidación Global"
       library: "Anillados $"
       pages: "Paginas"
+      pay: "Pagar!"
       settlement: "Liquidación"
       simple: "Hoja Simple"
       spreadsheet_file_name: "Liquidación Convenio %{start}-%{finish} [%{year}]"
       spreadsheet_uploading: "Subiendo Spreadsheet..."
       subtotal_copies: "Subtotal (copias)"
       total: "Total $"
-      pay: "Pagar!"
       total_debt: "Total adeudado"
     documents:
       add_tag: "Agregar etiqueta"
@@ -603,6 +598,7 @@ es:
         less_than_or_equal_to: "si la cantidad de copias %{type} es menor que o igual a *%{count}* el precio es *%{price}*"
       correctly_updated: "Configuración actualizada correctamente."
       edit_title: "Modificar configuración"
+      has_related_print_jobs: "El tipo de impresión no puede ser eliminado, tiene impresiones relacionadas"
       index_title: "Listado de configuraciones"
       media_type:
         a3: "A3"
@@ -616,29 +612,22 @@ es:
         one_abbr: "Simple"
         two: "Doble faz"
         two_abbr: "Doble"
-      has_related_print_jobs: "El tipo de impresión no puede ser eliminado, tiene impresiones relacionadas"
       stale_object_error: "La configuración no pudo ser actualizada, intente nuevamente."
       syntax_explanation: |-
           Precio-Global ; >= Cant-Hojas @ Precio; >= Cant-Hojas2 @ Precio2
 
            0.18; >= 200 @ 0.17; >= 500 @ 0.165
     prints:
-      invalid_password: "Contraseña incorrecta"
-      customer_already_assigned: "Impresión ya tiene cliente"
-      using_customer_credit_in_assign: "Se van a usar %{value} de crédito"
-      to_pay_in_assign: "Se tienen que pagar %{value} en efectivo"
-      customer_without_credit: "Cliente sin crédito"
-      associate_customer: "Asociar cliente"
-      check_for_customer_association: "Comprobar cliente"
-      customer_assigned: "Cliente asociado"
-      cant_assign_customer: "No se pudo asociar el cliente"
       add_article_line: "Agregar artículo"
       add_article_line_title: "Agregar artículo (CTRL + ALT + A)"
       add_print_job: "Agregar trabajo de impresión"
       add_print_job_title: "Agregar trabajo de impresión (CTRL + ALT + I)"
       article_lines: "Artículos"
+      associate_customer: "Asociar cliente"
       cancel_job: "Cancelar trabajo"
+      cant_assign_customer: "No se pudo asociar el cliente"
       change_comment: "Cambiar comentario"
+      check_for_customer_association: "Comprobar cliente"
       comment: "Comentario"
       comment_changed: "Comentario actualizado."
       comment_not_changed: "No se pudo actualizar."
@@ -646,6 +635,8 @@ es:
       correctly_revoked: "Impresión revocada correctamente"
       correctly_updated: "Impresión actualizada correctamente."
       current_deposits_note: "Monto actual, este monto no se guarda al momento de la impresión."
+      customer_already_assigned: "Impresión ya tiene cliente"
+      customer_assigned: "Cliente asociado"
       customer_credit_detail:
         link: "Ver crédito"
         title: "Ver detalles del crédito vigente"
@@ -653,6 +644,7 @@ es:
       customer_links:
         next: "*Próxima* impresión del cliente &raquo;"
         prev: "&laquo; Impresión *anterior* del cliente"
+      customer_without_credit: "Cliente sin crédito"
       disabled_cancel_job: "Cancelando ..."
       document_details: "Ver detalles del documento"
       document_stock: |-
@@ -660,6 +652,7 @@ es:
           ! cantidad de copias a imprimir
       edit_title: "Modificar impresión"
       index_title: "Listado de impresiones"
+      invalid_password: "Contraseña incorrecta"
       job_canceled: "Cancelado"
       job_not_canceled: "No se pudo cancelar"
       new: "Nueva"
@@ -683,8 +676,10 @@ es:
         paid: "Pagado"
         pay_later: "En cuenta corriente"
         pending_payment: "Con pago pendiente"
+      to_pay_in_assign: "Se tienen que pagar %{value} en efectivo"
       unlink_customer: "Desasociar cliente"
       upload_file: "Subir archivo"
+      using_customer_credit_in_assign: "Se van a usar %{value} de crédito"
     shift_closures:
       add_upfront: "Agregar Adelanto"
       add_upfront_title: "Agregar nuevo Adelanto"
@@ -695,24 +690,17 @@ es:
       correctly_created: "Cierre agregado correctamente."
       correctly_updated: "Cierre actualizado correctamente."
       created_by_operator: "Creado por encargado/a %{name}"
+      dailies_for_year: "Cajas diarias %{year}"
       edit_comment: "Editar comentario"
+      edited_by: "Editado por"
       invalid_printer_counter: "Contador incorrecto para %{printer} debe ser mayor a %{counter}"
       one_still_open: "No se puede crear, ya hay otro abierto."
-      title: "Cierre de turno"
-      without_withdraws: "Sin retiros"
-      edited_by: 'Editado por'
-      dailies_for_year: 'Cajas diarias %{year}'
-      printer_start: "%{printer}_inicial"
       printer_end: "%{printer}_final"
-      total: 'Totales:'
+      printer_start: "%{printer}_inicial"
+      title: "Cierre de turno"
+      total: "Totales:"
+      without_withdraws: "Sin retiros"
     shifts:
-      shifts_cop:
-        lazy_user_text: "- %{user} hizo pocas horas esta semana"
-        delayed_shift_text: "- llego %{delay} tarde al turno de %{start}"
-        notification_body: |-
-            Milicobani en acción...
-            %{body}
-             Saludos desde el server.
       close_session:
         as_operator: "Cerrar como Operario"
         body:
@@ -725,14 +713,21 @@ es:
       edit_title: "Modificar turno"
       export_shifts: "Exportar turnos a GDrive."
       exported_shifts: "Turnos entre %{range}"
-      paid_shifts: "Turnos pagos [%{range}]"
       exporting_shifts: "Exportando turnos a GDrive."
       index_title: "Listado de turnos"
       new_title: "Nuevo turno"
+      paid_at: "Pagado en %{time}"
+      paid_shifts: "Turnos pagos [%{range}]"
       pay_error: "Ha ocurrido un error, no se pudieron pagar los turnos..."
+      shifts_cop:
+        delayed_shift_text: "- llego %{delay} tarde al turno de %{start}"
+        lazy_user_text: "- %{user} hizo pocas horas esta semana"
+        notification_body: |-
+            Milicobani en acción...
+            %{body}
+             Saludos desde el server.
       show_title: "Detalle de turno"
       stale_object_error: "El turno no pudo ser actualizado, intente nuevamente."
-      paid_at: "Pagado en %{time}"
     stats:
       download_csv: "Descargar en CSV"
       empty_result: "Sin resultados para el rango de fechas seleccionado"
@@ -775,3 +770,10 @@ es:
       index_title: "Listado de usuarios"
       new_title: "Nuevo usuario"
       non_existent_avatar: "Imagen inexistente"
+    versions:
+      event: "Evento"
+      events:
+        create: "Creación"
+        destroy: "Borrado"
+        update: "Actualización"
+      updated_by: "Modificó"

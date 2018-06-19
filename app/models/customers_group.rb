@@ -168,6 +168,25 @@ class CustomersGroup < ApplicationModel
     end
   end
 
+  def self.pay_between(start, finish)
+    Print.transaction do
+      begin
+        customer_ids = Customer.where(group_id: ids)
+        Print.pay_later.where(
+          customer_id: customer_ids, created_at: start..finish
+        ).preload(
+          :article_lines,
+          :customer,
+          :payments,
+          print_jobs: :print_job_type
+        ).find_each(&:pay_print)
+      rescue
+        raise ActiveRecord::Rollback
+      end
+    end
+  end
+
+
   def total_debt
     self.customers.map {|c| c.prints_with_debt.to_a.sum(&:price)}.sum
   end
