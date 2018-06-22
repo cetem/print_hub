@@ -63,7 +63,7 @@ class PrintJob < ApplicationModel
 
   def initialize(attributes = nil)
     super(attributes)
-    self.file_line_id ||= attributes['id'] if attributes
+    # self.file_line_id ||= attributes['id'] if attributes
 
     self.copies ||= 1
     self.print_job_type ||= PrintJobType.default
@@ -187,6 +187,11 @@ class PrintJob < ApplicationModel
 
   def completed?
     job_id.present? && `lpstat -W completed | grep "^#{job_id} "`.present?
+  end
+
+  def recalc_price
+    self.print_job_type ||= PrintJobType.default
+    self.price_per_copy = self.job_price_per_copy # recalc price
   end
 
   def self.printer_stats_between(from, to)

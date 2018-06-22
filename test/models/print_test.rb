@@ -865,6 +865,46 @@ class PrintTest < ActiveSupport::TestCase
     assert_equal(0.02, customer.free_credit.to_f)
   end
 
+  test 'clone from other print' do
+    original_print = prints(:math_print)
+    copied_print = Print.new(copy_from: original_print.id)
+
+    [:printer, :customer_id, :scheduled_at].each do |attr|
+      assert_equal copied_print.send(attr), original_print.send(attr), attr
+    end
+
+    # New print shouldn't be printed =)
+    assert_not_equal original_print.status, copied_print.status
+
+    assert original_print.print_jobs.size.positive?
+    assert_equal original_print.print_jobs.size, copied_print.print_jobs.size
+
+    opjs = original_print.print_jobs.sort_by(&:document_id)
+    cpjs = copied_print.print_jobs.sort_by(&:document_id)
+    original_print.print_jobs.size.times do |i|
+      msg = [opjs[i], cpjs[i]]
+      assert_equal(opjs[i].copies, cpjs[i].copies, msg)
+      assert_equal(opjs[i].document_id, cpjs[i].document_id, msg)
+      assert_equal(opjs[i].print_job_type_id, cpjs[i].print_job_type_id, msg)
+      assert_equal(opjs[i].document_id, cpjs[i].document_id, msg)
+      assert_equal(opjs[i].range, cpjs[i].range, msg)
+      assert_equal(opjs[i].file_line_id, cpjs[i].file_line_id, msg)
+    end
+
+    assert original_print.article_lines.size.positive?
+    assert_equal original_print.article_lines.size, copied_print.article_lines.size
+
+    oals = original_print.article_lines.sort_by(&:article_id)
+    cals = copied_print.article_lines.sort_by(&:article_id)
+    original_print.article_lines.size.times do |i|
+      msg = [oals[i], cals[i]]
+      assert_equal(oals[i].article_id, cals[i].article_id, msg)
+      assert_equal(oals[i].units, cals[i].units, msg)
+    end
+  end
+
+  private
+
   def build_new_print_from(print)
     new_print = Print.create(
       print.attributes.except('id', 'customer_id')

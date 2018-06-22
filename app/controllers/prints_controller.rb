@@ -9,8 +9,11 @@ class PrintsController < ApplicationController
   # GET /prints.json
   def index
     @title = t('view.prints.index_title')
-    order = params[:status] == 'scheduled' ? 'scheduled_at ASC' :
-      'created_at DESC'
+    order = if params[:status] == 'scheduled'
+              { scheduled_at: :asc }
+            else
+              { created_at: :desc }
+            end
 
     @prints = prints_scope.order(order).paginate(
       page: params[:page], per_page: lines_per_page
@@ -45,7 +48,8 @@ class PrintsController < ApplicationController
 
     @print = current_user.prints.build(
       order_id: params[:order_id],
-      include_documents: session[:documents_for_printing]
+      include_documents: session[:documents_for_printing],
+      copy_from: params[:copy_from]
     )
 
     respond_to do |format|
@@ -130,9 +134,9 @@ class PrintsController < ApplicationController
     file_line = FileLine.create(file_line_params)
 
     respond_to do |format|
-      if file_line && file_line.persisted?
+      if file_line&.persisted?
         @print = Print.new
-        @print.print_jobs.build(file_line.attributes.slice('id'))
+        @print.print_jobs.build(file_line_id: file_line.id)
         format.html { render partial: 'file_print_job' }
         format.js
       else
