@@ -289,14 +289,14 @@ class Print < ApplicationModel
     self.scheduled_at = p.scheduled_at
 
     p.print_jobs.order(id: :asc).each do |pj|
-      case
-      when pj.document
-        next unless pj.document.file&.file&.exists?
-      when pj.file_line
-        next unless pj.file_line.file&.file&.exists?
-      # else
-      #   next # shadow prints
-      end
+      no_file = case
+                when pj.document
+                  next unless pj.document.file&.file&.exists?
+                when pj.file_line
+                  next unless pj.file_line.file&.file&.exists?
+                else
+                  true
+                end
 
       new_attrs = {
         copies:            pj.copies,
@@ -304,6 +304,8 @@ class Print < ApplicationModel
         print_job_type_id: pj.print_job_type_id,
         range:             pj.range
       }
+
+      new_attrs[:pages] = pj.pages if no_file
 
       if pj.file_line&.file&.file&.exists?
         new_attrs[:file_line_id] = FileLine.create(file: pj.file_line.file).id
