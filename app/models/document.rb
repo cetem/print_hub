@@ -1,5 +1,9 @@
 class Document < ApplicationModel
-  has_paper_trail
+  has_paper_trail except: [
+    :lock_version, :file, :original_file, :file_content_type,
+    :file_file_name, :file_file_size, :file_updated_at, :file_fingerprint,
+    :tag_path
+  ]
   mount_uploader :file, DocumentsUploader, mount_on: :file_file_name
   process_in_background :file
   mount_uploader :original_file, SimpleDocumentsUploader

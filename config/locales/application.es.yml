@@ -356,6 +356,7 @@ es:
       subject: "Muchas gracias por el feedback"
   view:
     articles:
+      stock_changes: "Cambios grandes de stock"
       correctly_created: "Artículo agregado correctamente."
       correctly_updated: "Artículo actualizado correctamente."
       edit_title: "Modificar artículo"

@@ -1,5 +1,5 @@
 class Article < ApplicationModel
-  has_paper_trail
+  has_paper_trail except: [:lock_version]
 
   # Alias de atributos
   alias_attribute :unit_price, :price
@@ -74,5 +74,25 @@ class Article < ApplicationModel
       article: self.to_s,
       stock: self.stock
     )
+  end
+
+  def reverse_versions_for_stock
+    stock_versions = []
+
+    versions.where(
+      created_at: 2.months.ago..Time.now
+    ).where(
+      "object_changes::json->'stock' is not null"
+    ).reorder(
+      created_at: :desc
+    ).select(
+      :id, :created_at, :object_changes
+    ).map do |v|
+      diff = v.object_changes['stock'].reduce(:-).abs
+      stock_versions << v if diff > 10
+      break if stock_versions.size >= 15
+    end
+
+    stock_versions
   end
 end

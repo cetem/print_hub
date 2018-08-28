@@ -58,6 +58,7 @@ class ArticlesController < ApplicationController
   def edit
     @title = t('view.articles.edit_title')
     @article = Article.find(params[:id])
+    @versions = @article.reverse_versions_for_stock
   end
 
   # POST /articles
@@ -88,6 +89,7 @@ class ArticlesController < ApplicationController
         format.html { redirect_to(articles_url, notice: t('view.articles.correctly_updated')) }
         format.json  { head :ok }
       else
+        @versions = @article.reverse_versions_for_stock
         format.html { render action: 'edit' }
         format.json  { render json: @article.errors, status: :unprocessable_entity }
       end
