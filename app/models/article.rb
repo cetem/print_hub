@@ -81,13 +81,14 @@ class Article < ApplicationModel
 
     versions.where(
       created_at: 2.months.ago..Time.now
-    ).where(
-      "object_changes::json->'stock' is not null"
+    # ).where(
+    #   "object_changes::json->'stock' is not null"
     ).reorder(
       created_at: :desc
     ).select(
       :id, :created_at, :object_changes
     ).map do |v|
+      next if v.object_changes['stock'].blank?
       diff = v.object_changes['stock'].reduce(:-).abs
       stock_versions << v if diff > 10
       break if stock_versions.size >= 15
