@@ -14,9 +14,9 @@ chruby_cmd = "#{chruby_bin} #{chruby_version} --"
 set :job_template, nil
 set :output, 'log/whenever.log'
 job_type :command, ':task :output'
-job_type :rake,    "cd :path && #{chruby_cmd} :environment_variable=:environment bundle exec rake :task"
-job_type :runner,  "cd :path && #{chruby_cmd} bin/rails runner -e :environment ':task'"
-job_type :script,  "cd :path && #{chruby_cmd} :environment_variable=:environment bundle exec script/:task"
+job_type :rake,    "cd :path && #{chruby_cmd} :environment_variable=:environment bundle exec rake :task :output"
+job_type :runner,  "cd :path && #{chruby_cmd} bin/rails runner -e :environment ':task' :output"
+job_type :script,  "cd :path && #{chruby_cmd} :environment_variable=:environment bundle exec script/:task :output"
 
 every :month, at: 'beginning of the month at 04:01' do
   runner 'Customer.create_monthly_bonuses'
