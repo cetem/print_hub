@@ -1,6 +1,8 @@
 namespace :tasks do
   desc 'Export shift closures to gdrive'
-  task export_shift_closures: :environment do |_task, args|
+  task export_shift_closures: :environment do
+    require 'gdrive'
+
     date = if (date_to_export = ENV['date_to_export'])
              Time.zone.parse(date_to_export)
            else
