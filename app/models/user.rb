@@ -1,5 +1,5 @@
 class User < ApplicationModel
-  has_paper_trail
+  has_paper_trail except: [:persistence_token, :updated_at, :lock_version]
   mount_uploader :avatar, AvatarUploader, mount_on: :avatar_file_name
 
   acts_as_authentic do |c|

@@ -2,6 +2,7 @@ class UserSessionsController < ApplicationController
   before_action :require_no_user, only: [:new, :create]
   before_action :require_user, only: :destroy
 
+
   # GET /user_sessions/new
   # GET /user_sessions/new.json
   def new
@@ -37,6 +38,8 @@ class UserSessionsController < ApplicationController
       current_user_session.close_shift!
     end
 
+    record = current_user_session.record
+    record.reset_persistence_token # ensure the session is over
     current_user_session.destroy
 
     if Rails.env.test?
