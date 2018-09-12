@@ -14,5 +14,7 @@ module PrintHubApp
 
     config.eager_load_paths += %W(#{config.root}/lib)
     config.eager_load_paths += %W(#{config.root}/app/workers)
+
+    config.action_dispatch.trusted_proxies = /\A127\.0\.0\.1\z/
   end
 end
