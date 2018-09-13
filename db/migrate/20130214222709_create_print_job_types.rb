@@ -1,4 +1,4 @@
-class CreatePrintJobTypes < ActiveRecord::Migration
+class CreatePrintJobTypes < ActiveRecord::Migration[4.2]
   def change
     create_table :print_job_types do |t|
       t.string :name, null: false

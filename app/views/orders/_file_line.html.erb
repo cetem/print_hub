@@ -1,6 +1,5 @@
 <% file_line ||= build_order_file_line_form %>
-<% id = "file_line_file_line_lines_attributes_#{file_line.object_id}_" %>
-<% #TODO arreglar id como se debe %>
+<% id = dynamic_object_id('file_line', file_line) %>
 <% name = dynamic_object_name(file_line) %>
 <div class="js-printable-job order_line file_line_item" id="<%= "#{id}" %>"
   data-price="<%= file_line.object.price %>"
@@ -8,6 +7,9 @@
   data-price-per-copy="<%= file_line.object.price_per_copy %>">
   <div class="row-fluid">
     <div class="span4">
+      <%= file_line.input :id, as: :hidden, label: false,
+        input_html: { value: file_line.object.try(:id),
+        name: "#{name}[id]", id: "#{id}id" } %>
       <%= file_line.object.file_name %>
       <%= file_line.input :file_cache, as: :hidden, label: false,
         input_html: { value: file_line.object.file_cache,

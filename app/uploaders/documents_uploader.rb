@@ -1,4 +1,5 @@
 class DocumentsUploader < CarrierWave::Uploader::Base
+  include ::CarrierWave::Backgrounder::Delay
   include CarrierWave::PdfThumb
 
   storage :file

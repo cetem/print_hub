@@ -1,4 +1,4 @@
-class RenameBonusesToCredit < ActiveRecord::Migration
+class RenameBonusesToCredit < ActiveRecord::Migration[4.2]
   def up
     remove_foreign_key :bonuses, column: :customer_id
 

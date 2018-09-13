@@ -9,7 +9,27 @@
         <%= f.label :notification_stock %>
         <small>(<%= t('view.articles.only_notify_when_its_greater_than') %>)</small>
         <%= f.input :notification_stock, label: false %>
+        <%= f.input :enabled, as: :boolean %>
         <%= f.input :description, input_html: { rows: 4 } %>
+      </div>
+      <div class="span6">
+        <% if @versions %>
+          <h4><%= t('view.articles.stock_changes') %></h4>
+          <table class="table">
+            <thead>
+              <th><%= Article.human_attribute_name :updated_at %></th>
+              <th><%= Article.human_attribute_name :stock %></th>
+            </thead>
+            <tbody>
+              <% @versions.each do |v| %>
+                <tr>
+                  <td><%= l(v.created_at) %></td>
+                  <td><%= v.object_changes['stock'].join(' => ') %></td>
+                </tr>
+              <% end %>
+            </tbody>
+          </table>
+        <% end %>
       </div>
     </div>
   </div>

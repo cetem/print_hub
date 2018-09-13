@@ -1,4 +1,4 @@
-class AddChildrenCountToTag < ActiveRecord::Migration
+class AddChildrenCountToTag < ActiveRecord::Migration[4.2]
   def self.up
     add_column :tags, :children_count, :integer, default: 0
 

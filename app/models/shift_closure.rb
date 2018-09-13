@@ -23,7 +23,7 @@ class ShiftClosure < ActiveRecord::Base
 
 
   belongs_to :user
-  belongs_to :helper_user, class_name: User, foreign_key: :helper_user_id
+  belongs_to :helper_user, class_name: 'User', foreign_key: :helper_user_id, optional: true
   has_many :withdraws
   has_many :upfronts
 
@@ -51,7 +51,7 @@ class ShiftClosure < ActiveRecord::Base
   end
 
   def printers
-    Cups.show_destinations.sort
+    ::CustomCups.show_destinations.keys.sort
   end
 
   def printers_with_counters
@@ -62,11 +62,9 @@ class ShiftClosure < ActiveRecord::Base
   end
 
   def counter_for_printer(printer_name)
-    counter = if (_last = ShiftClosure.last).present?
-                _last.printers_stats[printer_name]
-              end
-
-    counter || 0
+    if (_last = ShiftClosure.last).present?
+      _last.printers_stats[printer_name]
+    end || 0
   end
 
   def printers_counters_greater_than_last
@@ -98,10 +96,10 @@ class ShiftClosure < ActiveRecord::Base
     end
   end
 
-  def calc_system_amount
+  def calc_system_amount(partial=false)
     self.system_amount = Print.between(
-      self.start_at, self.finish_at
-    ).to_a.sum(&:price) if self.system_amount.zero?
+      self.start_at, (self.finish_at || Time.now)
+    ).to_a.sum(&:price) if self.system_amount.zero? || partial
   end
 
   def start_before

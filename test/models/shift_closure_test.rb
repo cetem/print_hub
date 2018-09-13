@@ -67,12 +67,11 @@ class ShiftClosureTest < ActiveSupport::TestCase
   end
 
   test 'validate printer counter greater than last' do
-    virtual_pdf_printer = 'Virtual_PDF_Printer'
-    @shift_closure.printers_stats[virtual_pdf_printer] = 123
-    @shift_closure.save!
+    virtual_pdf_printer = ::CustomCups.pdf_printer
+    old_counter = @shift_closure.printers_stats[virtual_pdf_printer].to_i
 
     new_shift_closure = ShiftClosure.new(@shift_closure.dup.attributes)
-    new_shift_closure.printers_stats[virtual_pdf_printer] = 122
+    new_shift_closure.printers_stats[virtual_pdf_printer] = (old_counter - 1)
     assert new_shift_closure.invalid?
     assert_equal 1, new_shift_closure.errors.count
     assert_equal(
@@ -80,7 +79,7 @@ class ShiftClosureTest < ActiveSupport::TestCase
         I18n.t(
           'view.shift_closures.invalid_printer_counter',
           printer: virtual_pdf_printer,
-          counter: 123
+          counter: old_counter
         )
       ],
       new_shift_closure.errors[:base]

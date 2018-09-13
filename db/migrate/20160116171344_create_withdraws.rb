@@ -1,4 +1,4 @@
-class CreateWithdraws < ActiveRecord::Migration
+class CreateWithdraws < ActiveRecord::Migration[4.2]
   def change
     create_table :withdraws do |t|
       t.integer :shift_closure_id, null: false

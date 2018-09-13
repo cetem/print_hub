@@ -1,5 +1,5 @@
 class Article < ApplicationModel
-  has_paper_trail
+  has_paper_trail except: [:lock_version]
 
   # Alias de atributos
   alias_attribute :unit_price, :price
@@ -7,7 +7,9 @@ class Article < ApplicationModel
   # Callbacks
   before_destroy :can_be_destroyed?
 
-  scope :to_notify, -> { where('notification_stock > 0 AND notification_stock >= stock' ) }
+  scope :enabled, -> { where(enabled: true) }
+  scope :disabled, -> { where(enabled: false) }
+  scope :to_notify, -> { enabled.where('notification_stock > 0 AND notification_stock >= stock' ) }
 
   # Restricciones
   validates :name, :code, presence: true
@@ -28,7 +30,7 @@ class Article < ApplicationModel
 
   def as_json(options = nil)
     default_options = {
-      only: [:id],
+      only: [:id, :stock],
       methods: [:label, :unit_price]
     }
 
@@ -36,7 +38,10 @@ class Article < ApplicationModel
   end
 
   def can_be_destroyed?
-    article_lines.empty?
+    if article_lines.any?
+      self.errors.add(:base, :cannot_be_destroyed)
+      throw :abort
+    end
   end
 
   def self.full_text(query_terms)
@@ -69,5 +74,26 @@ class Article < ApplicationModel
       article: self.to_s,
       stock: self.stock
     )
+  end
+
+  def reverse_versions_for_stock
+    stock_versions = []
+
+    versions.where(
+      created_at: 2.months.ago..Time.now
+    # ).where(
+    #   "object_changes::json->'stock' is not null"
+    ).reorder(
+      created_at: :desc
+    ).select(
+      :id, :created_at, :object_changes
+    ).map do |v|
+      next if v.object_changes['stock'].blank?
+      diff = v.object_changes['stock'].reduce(:-).abs
+      stock_versions << v if diff > 10
+      break if stock_versions.size >= 15
+    end
+
+    stock_versions
   end
 end

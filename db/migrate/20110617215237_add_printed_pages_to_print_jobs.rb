@@ -1,4 +1,4 @@
-class AddPrintedPagesToPrintJobs < ActiveRecord::Migration
+class AddPrintedPagesToPrintJobs < ActiveRecord::Migration[4.2]
   def self.up
     add_column :print_jobs, :printed_pages, :integer
 

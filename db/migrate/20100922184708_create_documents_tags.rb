@@ -1,4 +1,4 @@
-class CreateDocumentsTags < ActiveRecord::Migration
+class CreateDocumentsTags < ActiveRecord::Migration[4.2]
   def self.up
     create_table :documents_tags, id: false do |t|
       t.integer :document_id, null: false

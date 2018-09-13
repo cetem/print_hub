@@ -26,7 +26,7 @@
         <hr />
         <p class="alert alert-info"> <%= t('view.documents.original_file_description') %> </p>
 
-        <%= f.input :original_file %>
+        <%= f.input :original_file, hint: document_original_file_identifier(f.object) %>
         <%= f.input :original_file_cache, as: :hidden %>
       </div>
     </div>

@@ -1,4 +1,6 @@
 @Print =
+  extras: {},
+
   articles: {},
 
   assignDefaultOrGetArticle: (article)->
@@ -49,9 +51,7 @@
     freeCredit = parseFloat($('#customer_free_credit').val()) || 0.0
     [payWithCash, payWithBonus, totalPrice] = [0.0, 0.0, 0.0]
 
-    payLater = document.querySelector('#print_pay_later')
-
-    if payLater && !payLater.checked
+    if document.querySelector('#print_jobs_container')
       _.each Jobs.getPrintableJobs(), (printJob)->
         job = Jobs.assignDefaultOrGetJob(printJob)
         totalPrice += if job then job.price else 0.0
@@ -66,6 +66,11 @@
       else
         payWithCash = totalPrice - freeCredit
         payWithBonus = freeCredit
+
+    # fast fix
+    payLater = document.querySelector('#print_pay_later')
+    if payLater && payLater.checked
+      [payWithCash, payWithBonus, totalPrice] = [0.0, 0.0, 0.0]
 
     $(Print.cashPrefix + '_amount').val(payWithCash.toFixed(3))
     $(Print.cashPrefix + '_paid').val(payWithCash.toFixed(3))
@@ -97,17 +102,36 @@
     Print.updateTotalPrice()
 
   clearCustomer: ->
+    $('.js-rfid-checker').val('')
+    $('.js-rfid-assiger').val('')
+    $('.js-rfid-button').hide()
+    $('.js-rfid-msg').hide()
+    $('.error-msg').hide()
+    $('#print_customer_rfid').val('')
+    $('#print_credit_password').show().val('')
     $('#print_auto_customer_name').val('')
     $('#print_customer_id').val('')
     $('#customer_free_credit').val('')
     $('#link_to_customer_credit_detail').hide()
-    document.querySelector('#print_pay_later').checked = false
+    payLater = document.querySelector('#print_pay_later')
+    if payLater
+      payLater.checked = false
+    Print.extras.rfid = undefined
 
     Print.updateTotalPrice()
 
   excludeElementFromTotal: (element) ->
     element.classList.add('exclude-from-total')
 
+  assignRfid: (value) ->
+    $('.modal.in').find('.close').click()
+    $('#print_customer_rfid').val(value)
+    $('.js-rfid-msg.success').show()
+    $('.js-rfid-button').hide()
+    $('#print_credit_password').hide()
+
+  showInputError: (input) ->
+    $(input).closest('div').find('.error-msg').show()
 
 new Rule
   condition: -> $('form.new_print').length
@@ -162,27 +186,94 @@ new Rule
        articleLine = $(this).parents('.article_line:first')
 
        articleLine.find('input[name$="[unit_price]"]').val(unitPrice)
+       action = if item.stock == 0 then 'show' else 'hide'
+       Helper[action](articleLine.find('span.overselling-stock'))
 
        Print.updateArticleLinePrice(articleLine[0])
-     else if item.free_credit
+     else if _.has(item, 'free_credit')
+       Jobs.customer_id = item.id
        customerDetailsLink = $('#link_to_customer_credit_detail')
 
        $('#customer_free_credit').val(item.free_credit)
-       $('#print_pay_later').parents('div.field').show()
+       if document.querySelector('#print_pay_later')
+         $('#print_pay_later').parents('div.field').show()
 
        customerDetailsLink.attr(
          'href', customerDetailsLink.attr('href').replace(/\d+/, item.id)
        ).show()
 
+       if item.free_credit > 0
+         if item.rfid
+           Print.extras.rfid = item.rfid
+           $('#link_to_add_rfid').hide()
+           $('#link_to_pay_with_rfid').show()
+         else
+           $('#link_to_pay_with_rfid').hide()
+           $('#link_to_add_rfid').show()
+
      Jobs.reCalcEverything()
      Print.updateTotalPrice()
+
+
+   @map.useRfid ||= (e)->
+     key = e.which
+     target = e.currentTarget
+     value = target.value
+
+     if key == 13 && value && value.length > 3
+       if target.value == Print.extras.rfid
+         Print.assignRfid(target.value)
+         return
+
+       url = target.dataset['href'].replace(/0/, Jobs.customer_id)
+
+       $.ajax
+         url: url,
+         dataType: 'json',
+         method: 'PUT',
+         data: {
+           rfid: value
+         },
+         success: (resp)->
+           if resp.can_use
+             Print.assignRfid(value)
+           else
+             Print.showInputError(target)
+         fail: (a,b,c)->
+           Print.showInputError(target)
+         error: (a,b,c)->
+           Print.showInputError(target)
+
+   @map.assignRfid ||= (e)->
+     key = e.which
+     target = e.currentTarget
+     value = target.value
+
+     if key == 13 && value && value.length > 3
+       url = target.dataset['href'].replace(/0/, Jobs.customer_id)
+
+       $.ajax
+         url: url,
+         dataType: 'json',
+         method: 'POST',
+         data: {
+           rfid: value
+         },
+         success: (resp)->
+           Print.assignRfid(value)
+         fail: (a,b,c)->
+           Print.showInputError(target)
+         error: (a,b,c)->
+           Print.showInputError(target)
+
 
    # Si el cliente es 'confiable' autoselecciona Cuenta corriente
    @map.autoSelectCustomerKind ||= ->
      element = $(this).data('item')
      checked = element.kind == '<%= Customer::KINDS[:reliable] %>'
 
-     document.querySelector('#print_pay_later').checked = checked
+     if document.querySelector('#print_pay_later')
+       document.querySelector('#print_pay_later').checked = checked
 
    # Elimina el cliente del trabajo de impresión
    @map.removeCustomer ||= ->
@@ -300,6 +391,7 @@ new Rule
      e.currentTarget.form.submit()
 
 
+
    $(document).on 'item.removed', @map.removeItem
    $(document).on 'autocomplete:update', 'input.autocomplete-field',
       @map.pagesAndPriceAfterAutocomplete
@@ -324,6 +416,8 @@ new Rule
    $(document).on 'click', 'a[data-action="clear-customer"]', @map.clearCustomer
    $(document).on 'keydown', @map.setShortCuts
    #$(document).on 'click', '.js-submit-print', @map.beforeSubmit
+   $(document).on 'keydown', '.js-rfid-checker', @map.useRfid
+   $(document).on 'keydown', '.js-rfid-assigner', @map.assignRfid
 
 
    Jobs.loadPricesData()
@@ -331,7 +425,8 @@ new Rule
    Jobs.listenRangeChanges()
 
    if /^\s*$/.test($('#print_customer_id').val())
-     $('#print_pay_later').parents('div.field').hide()
+     if document.querySelector('#print_pay_later')
+       $('#print_pay_later').parents('div.field').hide()
 
  unload: ->
    $(document).off 'item.removed', @map.removeItem
@@ -353,3 +448,88 @@ new Rule
    $(document).off 'click', '#link_to_customer_credit_detail', @map.showCustomerCredit
    $(document).off 'click', 'a[data-action="clear-customer"]', @map.clearCustomer
    $(document).off 'keydown', @map.setShortCuts
+   $(document).off 'keydown', '.js-rfid-checker', @map.useRfid
+   $(document).off 'keydown', '.js-rfid-assigner', @map.assignRfid
+
+
+new Rule
+  condition: -> $('body.action-show').length
+  load: ->
+    @map.customerCanBeAssigned ||= (e) ->
+      e.preventDefault()
+      e.stopPropagation()
+
+      showMessages = (info)->
+        if info.error
+          Helper.show(
+            $('.js-assign-customer-error').html(info.error).parent('div.alert')
+          )
+          Helper.hide($('.js-zero-balance'))
+          Helper.hide($('.js-associate-to-customer-link'))
+          Helper.hide($('.js-associate-to-customer-success'))
+        else
+          Helper.hide($('.js-assign-customer-error').html(info.error).parent('div.alert'))
+          $('.js-assign-customer-to-pay').html(info.to_pay).parent('span')
+          Helper.show(
+            $('.js-assign-customer-from-credit').html(info.from_credit).parent('div.alert')
+          )
+          if info.from_credit_amount && parseFloat(info.from_credit_amount) > 0.00
+            Helper.hide($('.js-zero-balance'))
+            Helper.hide($('.js-check-customer-can-be-assigned'))
+            Helper.show($('.js-associate-to-customer-link'))
+          else
+            Helper.show($('.js-check-customer-can-be-assigned'))
+            Helper.show($('.js-zero-balance'))
+            Helper.hide($('.js-associate-to-customer-link'))
+
+
+      customerId = document.querySelector('.js-associate-customer_id-field').value
+
+      $.ajax
+        url: e.currentTarget.href,
+        dataType: 'json',
+        method: 'GET',
+        data: {
+          customer_id: customerId,
+          password: document.querySelector('.js-associate-password-field').value
+        },
+        success: (resp)->
+          showMessages(resp)
+        fail: (resp)->
+          showMessages(resp)
+        error: (resp)->
+          showMessages(resp)
+
+    @map.assignCustomerToPrint ||= (e) ->
+      e.preventDefault()
+      e.stopPropagation()
+
+      showError = (error) ->
+        Helper.show(
+          $('.js-assign-customer-error').html(error).parent('div.alert')
+        )
+
+      $.ajax
+        url: e.currentTarget.href,
+        dataType: 'json',
+        method: 'PUT',
+        data: {
+          customer_id: document.querySelector('.js-associate-customer_id-field').value
+          password: document.querySelector('.js-associate-password-field').value
+        },
+        success: (resp)->
+          if resp.success
+            window.location.href = window.location.href
+          else
+            showError(resp.error)
+        fail: (resp)->
+          showError(resp.error)
+        error: (resp)->
+          showError(resp.error)
+
+    $(document).on 'click', '.js-check-customer-can-be-assigned', @map.customerCanBeAssigned
+    $(document).on 'click', '.js-associate-to-customer-link', @map.assignCustomerToPrint
+
+  unload: ->
+    $(document).off 'click', '.js-check-customer-can-be-assigned', @map.customerCanBeAssigned
+    $(document).off 'click', '.js-associate-to-customer-link', @map.assignCustomerToPrint

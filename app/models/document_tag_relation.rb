@@ -1,6 +1,6 @@
 class DocumentTagRelation < ApplicationModel
   has_paper_trail
 
-  belongs_to :tag
-  belongs_to :document
+  belongs_to :tag, optional: true
+  belongs_to :document, optional: true
 end

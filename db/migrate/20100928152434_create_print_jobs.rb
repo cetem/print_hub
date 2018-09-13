@@ -1,4 +1,4 @@
-class CreatePrintJobs < ActiveRecord::Migration
+class CreatePrintJobs < ActiveRecord::Migration[4.2]
   def self.up
     create_table :print_jobs do |t|
       t.integer :job_id

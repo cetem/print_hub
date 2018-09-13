@@ -17,7 +17,7 @@ class UsersTest < ActionDispatch::IntegrationTest
       select(I18n.t('lang.es'), from: 'user_language')
       fill_in User.human_attribute_name('email'), with: 'mace@galactic.com'
       select(
-        Cups.show_destinations.detect { |p| p =~ /pdf/i },
+        ::CustomCups.pdf_printer,
         from: 'user_default_printer'
       )
       fill_in User.human_attribute_name('username'), with: 'MaceWindu'

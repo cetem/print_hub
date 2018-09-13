@@ -1,4 +1,6 @@
 class FileLine < ActiveRecord::Base
+  include Lines::Price
+
   has_paper_trail
   mount_uploader :file, CustomersFilesUploader
 
@@ -12,8 +14,8 @@ class FileLine < ActiveRecord::Base
                              allow_nil: true, allow_blank: true
   validate :file_presence, on: :create
 
-  belongs_to :order
-  belongs_to :print
+  belongs_to :order, optional: true
+  belongs_to :print, optional: true
   belongs_to :print_job_type
   has_many :print_jobs
 
@@ -26,7 +28,7 @@ class FileLine < ActiveRecord::Base
   end
 
   def extract_page_count
-    if self.file_changed?
+    if self.will_save_change_to_file?
       PDF::Reader.new(file.current_path).tap do |pdf|
         self.pages = pdf.page_count
       end
@@ -51,18 +53,13 @@ class FileLine < ActiveRecord::Base
     errors.add :file, :blank if file.blank? || file_cache.blank?
   end
 
-  def price
-    total_pages * job_price_per_copy
+  def usable_parent
+    print || order
   end
 
-  def total_pages
-    (pages || 0) * (self.copies || 0)
-  end
-
-  def job_price_per_copy
-    PriceChooser.choose(
-      type: self.print_job_type_id,
-      copies: order.try(:total_pages_by_type, self.print_job_type)
-    )
+  def delete_file
+    self.remove_file!
+  rescue
+    nil
   end
 end

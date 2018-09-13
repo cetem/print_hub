@@ -1,0 +1,6 @@
+<td><%= h.user %></td>
+<td><%= l h.start, format: :minimal %></td>
+<td><%= l(h.finish, format: :minimal) if h.finish %></td>
+<td><%= l(h.updated_at, format: :minimal) %></td>
+<td><%= translate_boolean h.paid %></td>
+<td><%= t('view.versions.events.' + h.event) %></td>

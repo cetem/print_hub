@@ -23,6 +23,24 @@ class ShiftsController < ApplicationController
     @title = t('view.shifts.show_title')
     @shift = shifts_scope.find(params[:id])
 
+    historical = @shift.versions.to_a
+    @historical = []
+
+    if historical.any?
+      historical.each_with_index do |h, i|
+        next if i.zero?
+        old = h.reify.attributes.slice('start', 'finish', 'paid')
+        previous = historical[i-1]
+        old[:user] = User.where(id: previous.whodunnit).try(:first) || '---'
+        old[:updated_at] = previous.created_at
+        old[:event] = previous.event
+        @historical << OpenStruct.new(old)
+      end
+      @last = OpenStruct.new(@shift.attributes)
+      @last.user = User.where(id: historical.last.whodunnit).try(:first) || '---'
+      @last.event = historical.size == 1 ? 'create' : 'update'
+    end
+
     respond_to do |format|
       format.html # show.html.erb
       format.json { render json: @shift }
@@ -59,7 +77,7 @@ class ShiftsController < ApplicationController
     @shift = shifts_scope.find(params[:id])
 
     respond_to do |format|
-      if @shift.update_attributes(shift_params)
+      if @shift.update(shift_params)
         session[:has_an_open_shift] = current_user.has_stale_shift?
 
         format.html { redirect_to shifts_url, notice: t('view.shifts.correctly_updated') }
@@ -102,7 +120,7 @@ class ShiftsController < ApplicationController
       @start        = start.beginning_of_day
       @finish       = finish.end_of_day
 
-      DriveWorker.perform_async(DriveWorker::SHIFTS, @start, @finish)
+      DriveWorker.perform_async(DriveWorker::SHIFTS, { start: @start, finish: @finish })
       flash.notice = t('view.shifts.exporting_shifts')
     end
   end
@@ -117,7 +135,6 @@ class ShiftsController < ApplicationController
       end
     end
   end
-
 
   private
 

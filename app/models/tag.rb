@@ -50,20 +50,20 @@ class Tag < ApplicationModel
   end
 
   def update_related_documents
-    documents.each { |d| d.update_tag_path self } if self.name_changed?
+    documents.each { |d| d.update_tag_path self } if self.will_save_change_to_name?
 
-    documents.each { |d| d.update_privacy self } if self.private_changed?
+    documents.each { |d| d.update_privacy self } if self.will_save_change_to_private?
 
     true
   end
 
   def update_documents_count
-    update_attributes(documents_count: reload.documents.count)
+    update(documents_count: reload.documents.count)
   end
 
   def update_children_count
     if parent_id
-      parent.update_attributes!(children_count: parent.children.count)
+      parent.update!(children_count: parent.children.count)
     end
   end
 

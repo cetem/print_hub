@@ -1,0 +1,48 @@
+<div class="readonly-data">
+  <h2><%= t('view.customers.credits') %></h2>
+
+
+  <table class="table table-striped">
+    <thead>
+      <th><%= Deposit.human_attribute_name 'amount' %></th>
+      <th><%= Deposit.human_attribute_name 'remaining' %></th>
+      <th><%= Deposit.human_attribute_name 'created_at' %></th>
+      <th><%= Deposit.human_attribute_name 'valid_until' %></th>
+      <th><%= t('view.customers.created_by') %></th>
+      <th><%= t('view.customers.historical') %></th>
+    </thead>
+    <tbody>
+      <% @credits.each do |h| %>
+        <tr>
+          <td><%= number_to_currency h.amount %></td>
+          <td><%= number_to_currency h.remaining %></td>
+          <td><%= l h.created_at %></td>
+          <td><%= h.valid_until ? l(h.valid_until) : '---' %></td>
+          <td><%= h.creator %></td>
+          <td><%= link_to_remote_modal(
+            historical_credit_customer_path(current_customer.id, h.id),
+            '#historical'
+          )  %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+
+  <%= pagination_links(@credits) %>
+</div>
+
+<div class="form-actions">
+
+</div>
+
+<div class="modal fade hide remote-modal" id="historical" tabindex="-1" role="dialog" aria-hidden="true">
+  <div class="modal-header">
+    <button type="button" class="close" data-dismiss="modal">&times;</button>
+    <h3><%= t('view.customers.historical_credit') %></h3>
+  </div>
+  <div class="modal-body">
+  </div>
+  <div class="modal-footer">
+    <button class="btn" data-dismiss="modal" aria-hidden="true"><%= t('label.close') %></button>
+  </div>
+</div>

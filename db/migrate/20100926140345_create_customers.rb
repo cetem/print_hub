@@ -1,4 +1,4 @@
-class CreateCustomers < ActiveRecord::Migration
+class CreateCustomers < ActiveRecord::Migration[4.2]
   def self.up
     create_table :customers do |t|
       t.string :name, null: false

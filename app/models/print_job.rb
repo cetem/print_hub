@@ -1,4 +1,5 @@
 class PrintJob < ApplicationModel
+  include Lines::Price
   has_paper_trail
 
   # Scopes
@@ -52,16 +53,17 @@ class PrintJob < ApplicationModel
   validates :range, page_range: true
 
   # Relaciones
-  belongs_to :print, inverse_of: :print_jobs
-  belongs_to :document, autosave: true
-  belongs_to :file_line, inverse_of: :print_jobs
+  belongs_to :print, inverse_of: :print_jobs, optional: true
+  belongs_to :document, -> { unscope(where: :enable) },
+    autosave: true, optional: true
+  belongs_to :file_line, inverse_of: :print_jobs, optional: true
   belongs_to :print_job_type
 
   delegate :printer, to: :print
 
   def initialize(attributes = nil)
     super(attributes)
-    self.file_line_id ||= attributes['id'] if attributes
+    # self.file_line_id ||= attributes['id'] if attributes
 
     self.copies ||= 1
     self.print_job_type ||= PrintJobType.default
@@ -121,25 +123,6 @@ class PrintJob < ApplicationModel
     end
 
     pages
-  end
-
-  def price
-    PriceCalculator.final_job_price(
-      (print.try(:pages_per_type) || {}).merge(
-        price_per_copy: job_price_per_copy,
-        type: self.print_job_type,
-        pages: range_pages,
-        copies: self.copies || 0
-      )
-    )
-  end
-
-  def job_price_per_copy
-    PriceCalculator.price_per_copy(self)
-  end
-
-  def print_total_pages
-    print.try(:total_pages_by_type, self.print_job_type) || 0
   end
 
   def full_document?
@@ -206,6 +189,11 @@ class PrintJob < ApplicationModel
     job_id.present? && `lpstat -W completed | grep "^#{job_id} "`.present?
   end
 
+  def recalc_price
+    self.print_job_type ||= PrintJobType.default
+    self.price_per_copy = self.job_price_per_copy # recalc price
+  end
+
   def self.printer_stats_between(from, to)
     with_print_between(from, to).not_revoked.group_by(&:printer).map do |printer, pjs|
       [printer, pjs.map(&:printed_pages).compact.sum]
@@ -220,5 +208,20 @@ class PrintJob < ApplicationModel
 
   def self.created_at_month(date)
     with_print_between(date.beginning_of_month, date.end_of_month.end_of_day)
+  end
+
+  def self.copies_for_stock_between(dates)
+    from, to = dates.sort
+
+    print_jobs = PrintJob.arel_table
+    mega_scope = PrintJob.includes(:document).where(created_at: from..to)
+      .where.not(document_id: nil)
+      .select(
+        print_jobs[:copies].sum.as('total_copies'), print_jobs[:document_id],
+        print_jobs[:pages], print_jobs[:copies]  # calculos....
+      )
+      .having('(SUM(print_jobs.copies) > 20)')
+      .group(:document_id, :pages, :copies)
+      .order('total_copies DESC')
   end
 end

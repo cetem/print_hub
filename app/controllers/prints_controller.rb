@@ -1,7 +1,7 @@
 class PrintsController < ApplicationController
   before_action :require_customer_or_user, except: [:revoke, :related_by_customer]
   before_action :require_admin_user, only: [:revoke, :related_by_customer]
-  before_action :load_customer
+  before_action :load_customer, except: [:can_be_associate_to_customer, :associate_to_customer]
 
   layout ->(controller) { controller.request.xhr? ? false : 'application' }
 
@@ -9,8 +9,11 @@ class PrintsController < ApplicationController
   # GET /prints.json
   def index
     @title = t('view.prints.index_title')
-    order = params[:status] == 'scheduled' ? 'scheduled_at ASC' :
-      'created_at DESC'
+    order = if params[:status] == 'scheduled'
+              { scheduled_at: :asc }
+            else
+              { created_at: :desc }
+            end
 
     @prints = prints_scope.order(order).paginate(
       page: params[:page], per_page: lines_per_page
@@ -45,7 +48,8 @@ class PrintsController < ApplicationController
 
     @print = current_user.prints.build(
       order_id: params[:order_id],
-      include_documents: session[:documents_for_printing]
+      include_documents: session[:documents_for_printing],
+      copy_from: params[:copy_from]
     )
 
     respond_to do |format|
@@ -96,7 +100,7 @@ class PrintsController < ApplicationController
     end
 
     respond_to do |format|
-      if @print.update_attributes(print_params)
+      if @print.update(print_params)
         format.html { redirect_to(@print, notice: t('view.prints.correctly_updated')) }
         format.json  { head :ok }
       else
@@ -130,9 +134,9 @@ class PrintsController < ApplicationController
     file_line = FileLine.create(file_line_params)
 
     respond_to do |format|
-      if file_line && file_line.persisted?
+      if file_line&.persisted?
         @print = Print.new
-        @print.print_jobs.build(file_line.attributes.slice('id'))
+        @print.print_jobs.build(file_line_id: file_line.id)
         format.html { render partial: 'file_print_job' }
         format.js
       else
@@ -144,24 +148,16 @@ class PrintsController < ApplicationController
 
   # GET /prints/autocomplete_for_document_name
   def autocomplete_for_document_name
-    query = params[:q].sanitized_for_text_query
-    @query_terms = query.split(/\s+/).reject(&:blank?)
-    @docs = Document.all
-    @docs = @docs.full_text(@query_terms) unless @query_terms.empty?
-    @docs = @docs.limit(10)
+    docs = full_text_search_for(Document.enabled, params[:q])
 
     respond_to do |format|
-      format.json { render json: @docs }
+      format.json { render json: docs }
     end
   end
 
   # GET /prints/autocomplete_for_article_name
   def autocomplete_for_article_name
-    query = params[:q].sanitized_for_text_query
-    query_terms = query.split(/\s+/).reject(&:blank?)
-    articles = Article.all
-    articles = articles.full_text(query_terms) unless query_terms.empty?
-    articles = articles.limit(10)
+    articles = full_text_search_for(Article.enabled, params[:q])
 
     respond_to do |format|
       format.json { render json: articles }
@@ -170,11 +166,7 @@ class PrintsController < ApplicationController
 
   # GET /prints/autocomplete_for_customer_name
   def autocomplete_for_customer_name
-    query = params[:q].sanitized_for_text_query
-    query_terms = query.split(/\s+/).reject(&:blank?)
-    customers = Customer.all
-    customers = customers.full_text(query_terms) unless query_terms.empty?
-    customers = customers.limit(10)
+    customers = full_text_search_for(Customer.active, params[:q])
 
     respond_to do |format|
       format.json { render json: customers }
@@ -198,13 +190,89 @@ class PrintsController < ApplicationController
   def change_comment
     print = Print.find(params[:id])
 
-    notice = if print.update_columns(comment_param)
+    notice = if print.update_columns(comment_param.to_h)
                t('view.prints.comment_changed')
              else
                t('view.prints.comment_not_changed')
              end
 
     redirect_to print, notice: notice
+  end
+
+  def can_be_associate_to_customer
+    print = prints_scope.find(params[:id])
+
+    if print.customer.present?
+      render_json({ error: t('view.prints.customer_already_assigned') }); return
+    end
+
+    customer = Customer.find(params[:customer_id])
+    unless customer.valid_password?(params[:password])
+      render_json({ error: t('view.prints.invalid_password') }); return
+    end
+
+    free_credit = customer.free_credit
+    total_price = print.price
+    info = { from_credit: 0.0, to_pay: total_price }
+
+    if free_credit >= total_price
+      info[:from_credit] = total_price
+      info[:to_pay] = 0.0
+    elsif free_credit > 0
+      info[:from_credit] = free_credit
+      info[:to_pay] = total_price - free_credit
+    end
+
+    render_json({
+      from_credit: t(
+        'view.prints.using_customer_credit_in_assign',
+        value: helpers.number_to_currency(info[:from_credit])
+      ),
+      to_pay: t(
+        'view.prints.to_pay_in_assign',
+        value: helpers.number_to_currency(info[:to_pay])
+      ),
+      to_pay_amount: info[:to_pay].round(2),
+      from_credit_amount: info[:from_credit].round(2)
+    })
+  end
+
+  def associate_to_customer
+    print = prints_scope.find(params[:id])
+
+    if print.customer.present?
+      render_json({ error: t('view.prints.customer_already_assigned') }); return
+    end
+
+    customer = Customer.find(params[:customer_id])
+    unless customer.valid_password?(params[:password])
+      render_json({ error: t('view.prints.invalid_password') }); return
+    end
+
+    free_credit = customer.free_credit
+    total_price = print.price
+
+    amount = if free_credit >= total_price
+               total_price
+             elsif free_credit > 0
+               free_credit
+             end
+
+    if amount && customer.use_credit(amount, params[:password])
+      # customer_id is attr_readonly
+      Print.transaction do
+        Print.where(id: print.id).update_all(customer_id: customer.id)
+        cash_amount = total_price - amount
+        print.payments.update_all(paid: cash_amount, amount: cash_amount)
+        print.payments.create!(paid: amount, amount: amount, paid_with: Payment::PAID_WITH[:credit])
+      end
+
+      render_json({ success: t('view.prints.customer_assigned') })
+    else
+      render_json({ error: t('view.prints.cant_assign_customer') })
+    end
+  rescue
+    render_json({ error: t('view.prints.cant_assign_customer') })
   end
 
   private
@@ -242,7 +310,7 @@ class PrintsController < ApplicationController
     params.require(:print).permit(
       :printer, :scheduled_at, :customer_id, :order_id, :auto_customer_name,
       :avoid_printing, :include_documents, :credit_password, :pay_later,
-      :lock_version, :comment, print_jobs_attributes: [
+      :lock_version, :customer_rfid, :comment, print_jobs_attributes: [
         :document_id, :copies, :pages, :range, :print_id, :auto_document_name,
         :job_hold_until, :file_line_id, :print_job_type_id, *shared_attrs
       ], article_lines_attributes: [
@@ -257,5 +325,17 @@ class PrintsController < ApplicationController
     file = params.require(:file_line).permit(file: [])[:file]
     file = file.first if file.is_a? Array
     { file: file }
+  end
+
+  def render_json(msg)
+    respond_to do |format|
+      format.json { render json: msg.to_json }
+    end
+  end
+
+  def helpers
+    @helper ||= Class.new do
+      include ActionView::Helpers::NumberHelper
+    end.new
   end
 end

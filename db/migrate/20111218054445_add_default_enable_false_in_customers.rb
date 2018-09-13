@@ -1,4 +1,4 @@
-class AddDefaultEnableFalseInCustomers < ActiveRecord::Migration
+class AddDefaultEnableFalseInCustomers < ActiveRecord::Migration[4.2]
   def up
     change_column :customers, :enable, :boolean, default: false
   end

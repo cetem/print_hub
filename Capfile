@@ -7,4 +7,4 @@ require 'capistrano/rails/migrations'
 require 'whenever/capistrano'
 
 # Loads custom tasks from `lib/capistrano/tasks' if you have any defined.
-Dir.glob('lib/capistrano/tasks/*.rb').each { |t| import t }
+Dir.glob('lib/capistrano/tasks/*.rake').each { |t| import t }

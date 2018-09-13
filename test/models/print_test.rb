@@ -1,9 +1,11 @@
+require 'test_helper'
+
 # Clase para probar el modelo "Print"
 class PrintTest < ActiveSupport::TestCase
   # Función para inicializar las variables utilizadas en las pruebas
   def setup
     @print = prints(:math_print)
-    @printer = Cups.show_destinations.detect { |p| p =~ /pdf/i }
+    @printer = ::CustomCups.pdf_printer
 
     fail "Can't find a PDF printer to run tests with." unless @printer
     @operator = users(:operator)
@@ -26,7 +28,7 @@ class PrintTest < ActiveSupport::TestCase
   # Prueba la creación de una impresión
   test 'create' do
     counts = ['Print.count', 'Payment.count', 'ArticleLine.count',
-              'Cups.all_jobs(@printer).keys.sort.last']
+              '::CustomCups.last_job_id(@printer)']
 
     assert_difference counts do
       assert_difference 'PrintJob.count', 2 do
@@ -117,7 +119,7 @@ class PrintTest < ActiveSupport::TestCase
   # Prueba la creación de una impresión programada
   test 'create scheduled' do
     assert_difference ['Print.count', 'PrintJob.count', 'Payment.count'] do
-      assert_no_difference 'Cups.all_jobs(@printer).keys.sort.last' do
+      assert_no_difference '::CustomCups.last_job_id(@printer)' do
         @print = Print.create(printer: '',
                               user_id: @operator.id,
                               scheduled_at: 2.hours.from_now,
@@ -155,7 +157,7 @@ class PrintTest < ActiveSupport::TestCase
   # Prueba la creación de una impresión que evita imprimir =)
   test 'create with avoid printing' do
     assert_difference ['Print.count', 'PrintJob.count', 'Payment.count'] do
-      assert_no_difference 'Cups.all_jobs(@printer).keys.sort.last' do
+      assert_no_difference '::CustomCups.last_job_id(@printer)' do
         @print = Print.create(printer: @printer,
                               user_id: @operator.id,
                               scheduled_at: '',
@@ -197,7 +199,7 @@ class PrintTest < ActiveSupport::TestCase
 
     assert_difference ['Print.count', 'Payment.count'] do
       assert_difference 'PrintJob.count', 2 do
-        assert_no_difference 'Cups.all_jobs(@printer).keys.sort.last' do
+        assert_no_difference '::CustomCups.last_job_id(@printer)' do
           @print = Print.create(printer: @printer,
                                 user_id: @operator.id,
                                 scheduled_at: '',
@@ -241,10 +243,80 @@ class PrintTest < ActiveSupport::TestCase
     assert_equal 0, @print.print_jobs.first.printed_copies
   end
 
+  test 'create with free credit and paying more in cash' do
+    UserSession.create(users(:operator))
+    @customer = customers(:student)
+    Bonus.all.delete_all
+    Deposit.all.delete_all
+    @customer.deposits.create(amount: 1000, remaining: 1000)
+
+    assert_equal '1000.0', @customer.reload.free_credit.to_s
+
+    counts = ['Print.count', 'Payment.count', '@customer.deposits.count',
+              '::CustomCups.last_job_id(@printer)', 'ArticleLine.count']
+
+    assert_difference counts do
+      assert_difference 'PrintJob.count', 2 do
+        @print = Print.create(printer: @printer,
+                              user_id: @operator.id,
+                              customer_id: @customer.id,
+                              scheduled_at: '',
+                              credit_password: 'student123',
+                              print_jobs_attributes: {
+                                '1' => {
+                                  copies: 1,
+                                  price_per_copy: 0.10,
+                                  print_job_type_id: print_job_types((:a4)).id,
+                                  document_id: documents(:math_book).id
+                                },
+                                '2' => {
+                                  copies: 10,
+                                  price_per_copy: 0.10,
+                                  print_job_type_id: print_job_types(:a4).id,
+                                  file_line_id: file_lines(:from_yesterday_cv_file).id
+                                }
+                                # 360 páginas = $36.00
+                              },
+                              article_lines_attributes: {
+                                '1' => {
+                                  article_id: articles(:binding).id,
+                                  units: 1,
+                                  # No importa el precio, se establece desde el artículo
+                                  unit_price: 12.0
+                                }
+                              },
+                              payments_attributes: {
+                                '1' => {
+                                  amount: 0,
+                                  paid: 123,
+                                },
+                                '2' => {
+                                  amount: 37.79,
+                                  paid: 37.79,
+                                  paid_with: Payment::PAID_WITH[:credit]
+                                }
+                              })
+      end
+    end
+
+
+    assert_equal 1, @print.reload.payments.size
+
+    payment = @print.payments.first
+    deposit = @customer.reload.deposits.last
+
+    assert payment.credit?
+    assert_equal '37.79', payment.amount.to_s
+    assert_equal '37.79', payment.paid.to_s
+    assert_equal '1085.21', @customer.reload.free_credit.to_s
+    assert_equal '123.0', deposit.amount.to_s
+    assert_equal '123.0', deposit.remaining.to_s
+  end
+
   test 'create with free credit' do
     UserSession.create(users(:operator))
     counts = ['Print.count', 'Payment.count',
-              'Cups.all_jobs(@printer).keys.sort.last', 'ArticleLine.count']
+              '::CustomCups.last_job_id(@printer)', 'ArticleLine.count']
 
     assert_difference counts do
       assert_difference 'PrintJob.count', 2 do
@@ -298,7 +370,7 @@ class PrintTest < ActiveSupport::TestCase
 
   test 'create with free credit and wrong password' do
     counts = ['Print.count', 'PrintJob.count', 'Payment.count',
-              'Cups.all_jobs(@printer).keys.sort.last', 'ArticleLine.count']
+              '::CustomCups.last_job_id(@printer)', 'ArticleLine.count']
 
     assert_no_difference counts do
       @print = Print.create(printer: @printer,
@@ -330,12 +402,10 @@ class PrintTest < ActiveSupport::TestCase
   end
 
   test 'create with free credit and cash' do
-    file_line = FileLine.create(
-      file: process_with_action_dispatch('test.pdf', 'application/pdf')
-    )
+    file_line = FileLine.create( file: pdf_test_file)
 
     assert_difference ['Print.count', 'ArticleLine.count'] do
-      assert_difference 'Cups.all_jobs(@printer).keys.sort.last', 110 do
+      assert_difference '::CustomCups.last_job_id(@printer)', 110 do
         assert_difference ['PrintJob.count', 'Payment.count'], 2 do
           @print = Print.create(printer: @printer,
                                 user_id: @operator.id,
@@ -396,7 +466,7 @@ class PrintTest < ActiveSupport::TestCase
   # Prueba la creación de una impresión con documentos incluidos
   test 'create with included documents' do
     assert_difference ['Print.count', 'PrintJob.count', 'Payment.count'] do
-      assert_no_difference 'Cups.all_jobs(@printer).keys.sort.last' do
+      assert_no_difference '::CustomCups.last_job_id(@printer)' do
         @print = Print.create(printer: @printer,
                               user_id: @operator.id,
                               scheduled_at: '',
@@ -430,7 +500,7 @@ class PrintTest < ActiveSupport::TestCase
 
     assert_difference ['Print.count', 'Payment.count'] do
       assert_difference 'PrintJob.count', 3 do
-        assert_no_difference 'Cups.all_jobs(@printer).keys.sort.last' do
+        assert_no_difference '::CustomCups.last_job_id(@printer)' do
           @print = Print.create(printer: @printer,
                                 user_id: @operator.id,
                                 scheduled_at: '',
@@ -463,13 +533,16 @@ class PrintTest < ActiveSupport::TestCase
 
   # Prueba la creación de una impresión que evita imprimir =)
   test 'create with pay later' do
+    customer = customers(:student_without_bonus)
+    customer.group_id = CustomersGroup.last.id
+    customer.save
     assert_difference ['Print.count',
-                       'Cups.all_jobs(@printer).keys.sort.last'] do
+                       '::CustomCups.last_job_id(@printer)'] do
       assert_difference 'PrintJob.count', 2 do
         assert_no_difference 'Payment.count' do
           @print = Print.create(
             printer: @printer,
-            user_id: nil,
+            user_id: @operator.id,
             customer_id: customers(:student_without_bonus).id,
             scheduled_at: '',
             avoid_printing: false,
@@ -508,7 +581,7 @@ class PrintTest < ActiveSupport::TestCase
 
   # Prueba de actualización de una impresión
   test 'can not update' do
-    counts = ['Print.count', 'Cups.all_jobs(@printer).keys.sort.last']
+    counts = ['Print.count', '::CustomCups.last_job_id(@printer)']
 
     assert_not_equal customers(:teacher).id, @print.customer_id
 
@@ -543,13 +616,15 @@ class PrintTest < ActiveSupport::TestCase
     @print.customer = nil
     @print.pay_later!
     assert @print.invalid?
-    assert_equal 3, @print.errors.count
+    assert_equal 4, @print.errors.count
     assert_equal [error_message_from_model(@print, :printer, :must_be_blank)],
                  @print.errors[:printer]
     assert_equal [error_message_from_model(@print, :base, :must_have_one_item)],
                  @print.errors[:base]
     assert_equal [error_message_from_model(@print, :customer_id, :blank)],
                  @print.errors[:customer_id]
+    assert_equal [error_message_from_model(@print, :pay_later, :invalid)],
+                 @print.errors[:pay_later]
   end
 
   # Prueba que las validaciones del modelo se cumplan como es esperado
@@ -644,8 +719,13 @@ class PrintTest < ActiveSupport::TestCase
 
   test 'revoke' do
     UserSession.create(@operator)
+    @article = articles(:binding)
 
-    assert_no_difference('Bonus.count') { assert @print.revoke! }
+    assert_difference '@article.reload.stock', 2 do
+      assert_no_difference 'Bonus.count' do
+        assert @print.revoke!
+      end
+    end
 
     assert @print.reload.revoked
     assert @print.payments.reload.all?(&:revoked)
@@ -708,7 +788,7 @@ class PrintTest < ActiveSupport::TestCase
   end
 
   test 'print all jobs' do
-    cups_count = 'Cups.all_jobs(@printer).keys.sort.last'
+    cups_count = '::CustomCups.last_job_id(@printer)'
     new_print = build_new_print_from(@print)
 
     assert_difference cups_count, job_count(@print.print_jobs) do
@@ -717,7 +797,7 @@ class PrintTest < ActiveSupport::TestCase
   end
 
   test 'print no jobs' do
-    cups_count = 'Cups.all_jobs(@printer).keys.sort.last'
+    cups_count = '::CustomCups.last_job_id(@printer)'
 
     assert_no_difference cups_count do
       @print.print_all_jobs
@@ -784,6 +864,46 @@ class PrintTest < ActiveSupport::TestCase
 
     assert_equal(0.02, customer.free_credit.to_f)
   end
+
+  test 'clone from other print' do
+    original_print = prints(:math_print)
+    copied_print = Print.new(copy_from: original_print.id)
+
+    [:printer, :customer_id, :scheduled_at].each do |attr|
+      assert_equal copied_print.send(attr), original_print.send(attr), attr
+    end
+
+    # New print shouldn't be printed =)
+    assert_not_equal original_print.status, copied_print.status
+
+    assert original_print.print_jobs.size.positive?
+    assert_equal original_print.print_jobs.size, copied_print.print_jobs.size
+
+    opjs = original_print.print_jobs.sort_by(&:document_id)
+    cpjs = copied_print.print_jobs.sort_by(&:document_id)
+    original_print.print_jobs.size.times do |i|
+      msg = [opjs[i], cpjs[i]]
+      assert_equal(opjs[i].copies, cpjs[i].copies, msg)
+      assert_equal(opjs[i].document_id, cpjs[i].document_id, msg)
+      assert_equal(opjs[i].print_job_type_id, cpjs[i].print_job_type_id, msg)
+      assert_equal(opjs[i].document_id, cpjs[i].document_id, msg)
+      assert_equal(opjs[i].range, cpjs[i].range, msg)
+      assert_equal(opjs[i].file_line_id, cpjs[i].file_line_id, msg)
+    end
+
+    assert original_print.article_lines.size.positive?
+    assert_equal original_print.article_lines.size, copied_print.article_lines.size
+
+    oals = original_print.article_lines.sort_by(&:article_id)
+    cals = copied_print.article_lines.sort_by(&:article_id)
+    original_print.article_lines.size.times do |i|
+      msg = [oals[i], cals[i]]
+      assert_equal(oals[i].article_id, cals[i].article_id, msg)
+      assert_equal(oals[i].units, cals[i].units, msg)
+    end
+  end
+
+  private
 
   def build_new_print_from(print)
     new_print = Print.create(

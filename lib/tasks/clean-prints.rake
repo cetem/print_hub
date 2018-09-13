@@ -1,6 +1,7 @@
 namespace :tasks do
   desc 'Cleaning not completed prints'
   task clean_prints: :environment do
+    init_logger
     begin
       jobs = `lpstat -Wnot-completed -o | awk '{print $1}'`
 
@@ -9,7 +10,7 @@ namespace :tasks do
 
         msg = `cancel #{id}`
 
-        msg.present? ? logger.error(msg) : logger.info("#{id} cancelled")
+        msg.present? ? @logger.error(msg) : @logger.info("#{id} cancelled")
       end
     rescue => ex
       log_error(ex)
@@ -17,16 +18,15 @@ namespace :tasks do
   end
 
   private
-    def logger
-      return @_clean_prints_logger if @_clean_prints_logger
-      @_clean_prints_logger = TasksLogger
-      @_clean_prints_logger.progname = 'Clean_prints'
-      @_clean_prints_logger
+    def init_logger
+      @logger = TasksLogger
+      @logger.progname = 'Clean_prints'
+      @logger
     end
 
     def log_error(ex)
       error = "#{ex.class}: #{ex.message}\n"
       ex.backtrace.each { |l| error << "#{l}\n" }
-      logger.error(error)
+      @logger.error(error)
     end
 end

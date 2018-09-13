@@ -29,7 +29,7 @@ class Print < ApplicationModel
 
   # Atributos no persistentes
   attr_accessor :auto_customer_name, :avoid_printing, :include_documents,
-                :credit_password, :pay_later
+                :credit_password, :pay_later, :customer_rfid, :copy_from
 
   # Restricciones
   validates :printer, presence: true, if: ->(p) do
@@ -55,7 +55,7 @@ class Print < ApplicationModel
 
   # Relaciones
   belongs_to :user
-  belongs_to :order, autosave: true
+  belongs_to :order, autosave: true, optional: true
   has_many :payments, as: :payable
   has_many :print_jobs, inverse_of: :print
   has_many :article_lines
@@ -76,31 +76,16 @@ class Print < ApplicationModel
     self.status ||= STATUS[:pending_payment]
     self.pay_later! if [1, '1', true].include?(pay_later)
 
-    keys = %w(copies range print_job_type_id)
-
-    if order && print_jobs.empty?
-      self.customer = order.customer
-
-      order.file_lines.order(:created_at).each do |file_line|
-        print_jobs.build(file_line.attributes.slice(*['id', keys].flatten))
-      end
-
-      order.order_lines.order(:created_at).each do |order_line|
-        print_jobs.build(
-          order_line.attributes.slice(*['document_id', keys].flatten)
-        )
-      end
-    elsif include_documents.present?
-      include_documents.each do |document_id|
-        print_jobs.build(document_id: document_id)
-      end
+    case
+    when order && print_jobs.empty?
+      build_from_order
+    when include_documents.present?
+      build_from_included_documents
+    when copy_from.present?
+      build_from_other_print
     end
 
-    print_jobs.each do |pj|
-      pj.print_job_type ||= PrintJobType.default
-
-      pj.price_per_copy = pj.job_price_per_copy
-    end
+    print_jobs.each(&:recalc_price)
 
     if self.pay_later?
       payments.each { |p| p.amount = p.paid = 0 }
@@ -119,7 +104,10 @@ class Print < ApplicationModel
   end
 
   def can_be_destroyed?
-    article_lines.empty? && print_jobs.empty? && payments.empty?
+    if article_lines.any? || print_jobs.any? || payments.any?
+      self.errors.add :base, :cannot_be_destroyed
+      throw :abort
+    end
   end
 
   def payment(type)
@@ -156,15 +144,23 @@ class Print < ApplicationModel
   end
 
   def revoke!
-    if UserSession.find.try(:record).try(:admin)
-      self.revoked = true
-      payments.each { |p| p.revoked = true }
+    return unless UserSession.find.try(:record).try(:admin)
 
-      if customer && payments.any?(&:credit?)
-        customer.add_bonus payments.select(&:credit?).to_a.sum(&:paid)
+    Print.transaction do
+      begin
+        self.revoked = true
+        payments.each { |p| p.revoked = true }
+
+        if customer && payments.any?(&:credit?)
+          customer.add_bonus payments.select(&:credit?).to_a.sum(&:paid)
+        end
+
+        article_lines.map(&:refund!)
+
+        save validate: false
+      rescue
+        raise ActiveRecord::Rollback
       end
-
-      save validate: false
     end
   end
 
@@ -204,7 +200,10 @@ class Print < ApplicationModel
 
     has_nothing_to_print = has_no_document && has_no_file_line
 
-    has_nothing_to_print && attributes['pages'].blank?
+    has_nothing_to_print && (
+      attributes['pages'].blank? ||
+      attributes['pages'].to_i.zero?
+    )
   end
 
   def must_have_one_item
@@ -246,5 +245,80 @@ class Print < ApplicationModel
 
   def self.stats_between(from, to)
     between(from, to).not_revoked.group_by(&:user_id)
+  end
+
+  def build_from_order
+    keys = %w[copies range print_job_type_id]
+
+    self.customer = order.customer
+
+    order.file_lines.order(:created_at).each do |file_line|
+      print_jobs.build(
+        file_line.attributes.slice(*keys).merge(
+          file_line_id: file_line.id
+        )
+      )
+    end
+
+    order.order_lines.order(:created_at).each do |order_line|
+      print_jobs.build(
+        order_line.attributes.slice(*['document_id', keys].flatten)
+      )
+    end
+  end
+
+  def build_from_included_documents
+    include_documents.each do |document_id|
+      print_jobs.build(document_id: document_id)
+    end
+  end
+
+  def build_from_other_print
+    p = Print.find(copy_from)
+
+    if p.pay_later?
+      self.pay_later!
+
+      # Force to create payments
+      payment(:cash)
+      payment(:credit)
+    end
+
+    self.printer      = p.printer
+    self.customer_id  = p.customer_id
+    self.scheduled_at = p.scheduled_at
+
+    p.print_jobs.order(id: :asc).each do |pj|
+      no_file = case
+                when pj.document
+                  next unless pj.document.file&.file&.exists?
+                when pj.file_line
+                  next unless pj.file_line.file&.file&.exists?
+                else
+                  true
+                end
+
+      new_attrs = {
+        copies:            pj.copies,
+        document_id:       pj.document_id,
+        print_job_type_id: pj.print_job_type_id,
+        range:             pj.range
+      }
+
+      new_attrs[:pages] = pj.pages if no_file
+
+      if pj.file_line&.file&.file&.exists?
+        new_attrs[:file_line_id] = FileLine.create(file: pj.file_line.file).id
+      end
+
+      self.print_jobs.build(new_attrs)
+    end
+
+    p.article_lines.order(id: :asc).each do |al|
+      self.article_lines.build(
+        article_id: al.article_id,
+        units:      al.units
+      )
+    end
   end
 end

@@ -7,7 +7,9 @@ jQuery ($)->
     input = $(this)
 
     input.autocomplete
+      maxShowItems: 5
       source: (request, response)->
+
         $.ajax
           url: input.data('autocompleteUrl')
           dataType: 'json'
@@ -19,7 +21,7 @@ jQuery ($)->
               content.append $('<span class="title"></span>').text(item.label)
 
               if item.informal
-                content.append $('<small></small>').text(item.informal)
+                content.append $('<span class="text-muted"></span>').text(item.informal)
 
               { label: content.html(), value: item.label, item: item }
       type: 'get'
@@ -28,7 +30,9 @@ jQuery ($)->
 
         input.val(selected.value)
         input.data('item', selected.item)
-        $(input.data('autocompleteIdTarget')).val(selected.item.id)
+        target = $(input.data('autocompleteIdTarget'))
+        target.val(selected.item.id)
+        target.trigger('autocomplete:updated', selected.item.id)
 
         input.trigger 'autocomplete:update', input
 
@@ -36,6 +40,7 @@ jQuery ($)->
       open: -> $('.ui-menu').css('width', input.width())
 
     input.data('ui-autocomplete')._renderItem = (ul, item)->
+      ul.addClass('typeahead dropdown-menu')
       $('<li></li>').data('item.autocomplete', item).append(
         $('<a></a>').html(item.label)
       ).appendTo(ul)

@@ -1,0 +1,20 @@
+  <table class="table table-striped">
+    <thead>
+      <th><%= Deposit.human_attribute_name 'amount' %></th>
+      <th><%= Deposit.human_attribute_name 'remaining' %></th>
+      <th><%= Deposit.human_attribute_name 'updated_at' %></th>
+      <th><%= t('view.customers.updated_by') %></th>
+      <th><%= t('view.customers.event') %></th>
+    </thead>
+    <tbody>
+      <% @historical.each do |h| %>
+        <tr>
+          <%= render partial: "versioned_credit", locals: { h: h } %>
+        </tr>
+      <% end %>
+      <tr class="info">
+        <%= render partial: "versioned_credit", locals: { h: @last } %>
+      </tr>
+    </tbody>
+  </table>
+</div>

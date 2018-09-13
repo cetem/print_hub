@@ -5,6 +5,8 @@ class Customer < ApplicationModel
     c.maintain_sessions = false
     c.validates_uniqueness_of_email_field_options = { case_sensitive: false }
     c.validates_length_of_email_field_options = { maximum: 255 }
+    c.merge_validates_length_of_password_field_options({ minimum: 4 })
+
     c.crypto_provider = Authlogic::CryptoProviders::Sha512
   end
 
@@ -40,7 +42,7 @@ class Customer < ApplicationModel
   validates :free_monthly_bonus, allow_nil: true, allow_blank: true,
                                  numericality: { greater_than_or_equal_to: 0 }
   validates :kind, inclusion: { in: KINDS.values }
-  validate :email_against_mailgun
+  validate :verify_email
 
   # Relaciones
   has_many :orders, inverse_of: :customer, dependent: :destroy
@@ -51,7 +53,7 @@ class Customer < ApplicationModel
   has_many :deposits, inverse_of: :customer, dependent: :destroy,
                       autosave: true
   has_many :print_jobs, through: :prints
-  belongs_to :group, class_name: CustomersGroup
+  belongs_to :group, class_name: 'CustomersGroup', optional: true
 
   accepts_nested_attributes_for :bonuses, allow_destroy: true,
                                           reject_if: :reject_credits
@@ -72,7 +74,7 @@ class Customer < ApplicationModel
 
   def as_json(options = nil)
     default_options = {
-      only: [:id],
+      only: [:id, :rfid],
       methods: [:label, :informal, :free_credit, :kind]
     }
 
@@ -123,8 +125,15 @@ class Customer < ApplicationModel
     Notifications.delay.forgot_password(self.email)
   end
 
+  def deliver_old_order_cancelled!(order_id)
+    Notifications.delay.old_order_cancelled(self.email, order_id)
+  end
+
   def has_no_orders?
-    orders.empty?
+    if orders.any?
+      self.errors.add(:base, :cannot_be_destroyed)
+      throw :abort
+    end
   end
 
   def free_credit
@@ -265,24 +274,34 @@ class Customer < ApplicationModel
     end
   end
 
-  def email_against_mailgun
-    if self.email_changed? && self.errors[:email].empty?
+  def verify_email
+    if self.will_save_change_to_email? && self.errors[:email].empty?
       begin
-        if $mailgun && self.email.present?
-          verification = $mailgun.validate_address(self.email)
+        if self.email.present?
+          valid, suggest = ::MailerValidator.check(self.email)
+          # si el email es .com.ar te sugiere .com, y deberia dejartelo pasar
+          if valid
+            return true if suggest.blank?
 
-          unless verification['is_valid']
-            msg = if (suggest = verification['did_you_mean']).present?
-                    [:invalid_with_msg, { suggest: suggest }]
-                  else
-                    [:invalid]
-                  end
-
-            self.errors.add(:email, *msg)
+            only_nickname = self.email.to_s.split(/\+|@/).first.to_s
+            return true if only_nickname.present? && suggest.start_with?(only_nickname)
           end
+
+          msg = if suggest.present?
+                  [:invalid_with_msg, { suggest: suggest }]
+                else
+                  [:invalid]
+                end
+
+          self.errors.add(:email, *msg)
         end
       rescue
+        true
       end
     end
+  end
+
+  def prints_with_debt
+    self.prints.pay_later
   end
 end

@@ -1,4 +1,4 @@
-class CreateArticleLines < ActiveRecord::Migration
+class CreateArticleLines < ActiveRecord::Migration[4.2]
   def self.up
     create_table :article_lines do |t|
       t.references :print, null: false

@@ -8,11 +8,11 @@
       <%#   </p> %>
       <%# </div> %>
 
-      <div id="not_printed" class="alert alert-warning" <%= raw 'style="display: none"' if @order.print_out %>>
-        <p>
-          Presioná <strong>Guardar Pedido</strong> y <strong>acercate</strong>
-          personalmente hasta el centro de copiado para imprimir los documentos
-        </p>
+      <div id="not_printed" class="alert alert-info" <%= raw 'style="display: none"' if @order.print_out %> role="alert">
+        <h3>
+          Presioná `Crear Pedido` y acercate
+          personalmente hasta el centro de copiado para imprimir los documentos.
+        </h3>
       </div>
     <% else %>
       <%# <div id="printed" class="alert alert-success" <%= raw 'style="display: none"' unless @order.print_out %1>> %>
@@ -23,11 +23,11 @@
       <%# </div> %>
 
       <div id="not_printed" class="alert alert-warning" <%= raw 'style="display: none"' if @order.print_out %>>
-        <p>
+        <h3>
           Para imprimir los documentos <strong>acercate</strong> personalmente
           hasta el centro de copiado y consultá por el pedido
-          <strong><%= @order.id %></strong>
-        </p>
+          <strong>==>>> <%= @order.id %></strong>
+        </h3>
       </div>
     <% end %>
   <% end %>
@@ -52,7 +52,7 @@
   </div>
 
   <div id="prices" class="alert alert-info" style="display: none;">
-    <% PriceChooser.humanize.each do |setting, values| %>
+    <% ::PriceChooser.humanize.each do |setting, values| %>
       <p>
         <%= setting %>:
         <%= raw values.map { |v| textilize_without_paragraph v }.to_sentence %>

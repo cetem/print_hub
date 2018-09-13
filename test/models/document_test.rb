@@ -27,27 +27,23 @@ class DocumentTest < ActiveSupport::TestCase
     # Asegurar la "limpieza" del directorio
     remove_all_upload_files!
     assert_difference 'Document.count' do
-      file = Rack::Test::UploadedFile.new(
-        File.join(Rails.root, 'test', 'fixtures', 'files', 'test.pdf'),
-        'application/pdf'
-      )
-      second_file = Rack::Test::UploadedFile.new(
-        File.join(Rails.root, 'test', 'fixtures', 'files', 'multipage_test.pdf'),
-        'application/pdf'
-      )
+      # assert_difference 'Sidekiq::Queue.new("carrierwave").size' do
 
-      @document = Document.new(code: '00001234',
-                               name: 'New name',
-                               stock: 1,
-                               pages: 5,
-                               media: PrintJobType::MEDIA_TYPES.values.first,
-                               description: 'New description',
-                               enable: true,
-                               tag_ids: [tags(:books).id, tags(:notes).id],
-                               file: file,
-                               original_file: second_file)
+        @document = Document.new(
+          code: '00001234',
+          name: 'New name',
+          stock: 1,
+          pages: 5,
+          media: PrintJobType::MEDIA_TYPES.values.first,
+          description: 'New description',
+          enable: true,
+          tag_ids: [tags(:books).id, tags(:notes).id],
+          file: pdf_test_file,
+          original_file: pdf_test_file('multipage_test.pdf')
+        )
 
-      assert @document.save
+        assert @document.save
+      # end
     end
 
     assert_equal 2, @document.tags.count
@@ -55,10 +51,12 @@ class DocumentTest < ActiveSupport::TestCase
 
     thumbs_dir = Pathname.new(@document.file.path).dirname
     # PDF imprimible y original + 2 miniaturas
-    assert_equal 4, thumbs_dir.entries.reject(&:directory?).size
+    # assert_equal 4, thumbs_dir.entries.reject(&:directory?).size # async job
+    # assert_equal 1, thumbs_dir.entries.reject(&:directory?).size # async job
+    assert_equal 2, thumbs_dir.entries.reject(&:directory?).size # original and new
     # Asegurar que las 2 miniaturas son imágenes y no están vacías
-    assert_equal 2,
-                 thumbs_dir.entries.count { |f| f.extname == '.png' && !f.zero? }
+    # assert_equal 2,
+    #              thumbs_dir.entries.count { |f| f.extname == '.png' && !f.zero? }
 
     assert_equal 'multipage_test.pdf', @document.original_file.filename
     # Asegurar la "limpieza" del directorio
@@ -79,10 +77,7 @@ class DocumentTest < ActiveSupport::TestCase
                                description: 'New description',
                                tag_ids: [tags(:books).id, tags(:notes).id])
 
-      @document.file = Rack::Test::UploadedFile.new(
-        File.join(Rails.root, 'test', 'fixtures', 'files', 'multipage_test.pdf'),
-        'application/pdf'
-      )
+      @document.file = pdf_test_file('multipage_test.pdf')
       assert @document.save
     end
 
@@ -91,10 +86,11 @@ class DocumentTest < ActiveSupport::TestCase
 
     thumbs_dir = Pathname.new(@document.file.path).dirname
     # PDF original y 6 miniaturas
-    assert_equal 7, thumbs_dir.entries.reject(&:directory?).size
+    # assert_equal 7, thumbs_dir.entries.reject(&:directory?).size
+    assert_equal 1, thumbs_dir.entries.reject(&:directory?).size
     # Asegurar que las 6 miniaturas son imágenes y no están vacías
-    assert_equal 6,
-                 thumbs_dir.entries.count { |f| f.extname == '.png' && !f.zero? }
+    # assert_equal 6,
+                 # thumbs_dir.entries.count { |f| f.extname == '.png' && !f.zero? } # async
 
     # Asegurar la "limpieza" del directorio
     remove_all_upload_files!
@@ -111,10 +107,7 @@ class DocumentTest < ActiveSupport::TestCase
   end
 
   test 'can update with different pdfs' do
-    file = Rack::Test::UploadedFile.new(
-      File.join(Rails.root, 'test', 'fixtures', 'files', 'multipage_test.pdf'),
-      'application/pdf'
-    )
+    file = pdf_test_file('multipage_test.pdf')
 
     # Asegurar la "limpieza" del directorio
     remove_all_upload_files!
@@ -128,21 +121,17 @@ class DocumentTest < ActiveSupport::TestCase
     thumbs_dir = Pathname.new(@document.file.path).dirname
 
     # PDF original y 6 miniaturas
-    assert_equal 7, thumbs_dir.entries.reject(&:directory?).size
-
-    file = Rack::Test::UploadedFile.new(
-      File.join(Rails.root, 'test', 'fixtures', 'files', 'test.pdf'),
-      'application/pdf'
-    )
+    # assert_equal 7, thumbs_dir.entries.reject(&:directory?).size # async
+    assert_equal 1, thumbs_dir.entries.reject(&:directory?).size
 
     assert_no_difference 'Document.count' do
-      assert @document.update(file: file),
+      assert @document.update(file: pdf_test_file),
              @document.errors.full_messages.join('; ')
     end
 
     assert_equal 1, @document.reload.pages
     # PDF original y 2 miniaturas
-    assert_equal 3, thumbs_dir.entries.reject(&:directory?).size
+    # assert_equal 3, thumbs_dir.entries.reject(&:directory?).size
 
     # Asegurar la "limpieza" del directorio
     remove_all_upload_files!

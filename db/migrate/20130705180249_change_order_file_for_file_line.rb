@@ -1,4 +1,4 @@
-class ChangeOrderFileForFileLine < ActiveRecord::Migration
+class ChangeOrderFileForFileLine < ActiveRecord::Migration[4.2]
   def change
     remove_index :order_files, :order_id
     remove_index :order_files, :print_job_type_id

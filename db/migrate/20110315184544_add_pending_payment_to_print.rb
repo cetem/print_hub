@@ -1,4 +1,4 @@
-class AddPendingPaymentToPrint < ActiveRecord::Migration
+class AddPendingPaymentToPrint < ActiveRecord::Migration[4.2]
   def self.up
     add_column :prints, :pending_payment, :boolean, null: false,
                                                     default: true

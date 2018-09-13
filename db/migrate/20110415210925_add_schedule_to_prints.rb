@@ -1,4 +1,4 @@
-class AddScheduleToPrints < ActiveRecord::Migration
+class AddScheduleToPrints < ActiveRecord::Migration[4.2]
   def self.up
     add_column :prints, :scheduled_at, :datetime
 

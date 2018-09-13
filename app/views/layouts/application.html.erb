@@ -18,7 +18,7 @@
       <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
     <%= favicon_link_tag %>
-    <%= favicon_link_tag(nil, rel: 'apple-touch-icon') %>
+    <%= favicon_link_tag('', rel: 'apple-touch-icon') %>
     <%= csrf_meta_tag %>
     <%= yield :head_extra %>
   </head>

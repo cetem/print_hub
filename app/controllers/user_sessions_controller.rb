@@ -2,6 +2,7 @@ class UserSessionsController < ApplicationController
   before_action :require_no_user, only: [:new, :create]
   before_action :require_user, only: :destroy
 
+
   # GET /user_sessions/new
   # GET /user_sessions/new.json
   def new
@@ -11,7 +12,9 @@ class UserSessionsController < ApplicationController
 
   def create
     @title = t 'view.user_sessions.new_title'
-    @user_session = UserSession.new(params[:user_session])
+    @user_session = UserSession.new(
+      params.require(:user_session).permit(:username, :password)
+    )
 
     respond_to do |format|
       if @user_session.save
@@ -35,7 +38,13 @@ class UserSessionsController < ApplicationController
       current_user_session.close_shift!
     end
 
+    record = current_user_session.record
+    record.reset_persistence_token # ensure the session is over
     current_user_session.destroy
+
+    if Rails.env.test?
+      (Capybara.page.driver.remove_cookie('user_credentials') rescue nil)
+    end
 
     respond_to do |format|
       format.html { redirect_to(new_user_session_url, notice: t('view.user_sessions.correctly_destroyed')) }

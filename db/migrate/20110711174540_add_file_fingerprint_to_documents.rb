@@ -1,4 +1,4 @@
-class AddFileFingerprintToDocuments < ActiveRecord::Migration
+class AddFileFingerprintToDocuments < ActiveRecord::Migration[4.2]
   def self.up
     add_column :documents, :file_fingerprint, :string
   end

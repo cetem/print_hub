@@ -23,14 +23,20 @@
         <dd><%= @document.description %>&nbsp;</dd>
 
         <dt><%= Document.human_attribute_name 'file' %>:</dt>
-        <dd><%= link_to(
-          t('label.download'), @document.file.url
-        ) if @document.file? %>&nbsp;</dd>
+        <dd>
+          <% if @document.file? %>
+            <%= link_to(t('label.download'), @document.file.url) %> &nbsp;
+            (<%= document_file_identifier(@document) %>)
+          <% end %>
+        </dd>
 
         <dt><%= Document.human_attribute_name 'original_file' %>:</dt>
-        <dd><%= link_to(
-          t('label.download'), @document.original_file.url
-        ) if @document.original_file? %>&nbsp;</dd>
+        <dd>
+          <% if @document.original_file? %>
+            <%= link_to(t('label.download'), @document.original_file.url) %> &nbsp;
+            (<%= document_original_file_identifier(@document) %>)
+          <% end %>
+        </dd>
 
         <dt><%= Document.human_attribute_name 'is_public' %>:</dt>
         <dd>

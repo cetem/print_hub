@@ -1,9 +1,9 @@
-class AddTagPathToDocuments < ActiveRecord::Migration
+class AddTagPathToDocuments < ActiveRecord::Migration[4.2]
   def self.up
     add_column :documents, :tag_path, :text
 
     Document.unscoped.all.each do |d|
-      d.update_attributes!(tag_path: d.tags.map(&:to_s).join(' ## '))
+      d.update!(tag_path: d.tags.map(&:to_s).join(' ## '))
     end
 
     if DB_ADAPTER == 'PostgreSQL'

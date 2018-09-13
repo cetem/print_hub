@@ -1,4 +1,4 @@
-class AddAdminToShifts < ActiveRecord::Migration
+class AddAdminToShifts < ActiveRecord::Migration[4.2]
   def change
     add_column :shifts, :as_admin, :boolean, default: nil
 

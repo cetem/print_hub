@@ -1,5 +1,5 @@
 class CustomersController < ApplicationController
-  customer_actions = [:edit_profile, :update_profile]
+  customer_actions = [:edit_profile, :update_profile, :credits, :historical_credit]
   before_action :require_user, except: [
     :new, :create, :pay_off_debt, :pay_month_debt, customer_actions
   ].flatten
@@ -94,7 +94,7 @@ class CustomersController < ApplicationController
     @customer = Customer.find(params[:id])
 
     respond_to do |format|
-      if @customer.update_attributes(customer_params)
+      if @customer.update(customer_params)
         format.html { redirect_to(customer_url(@customer), notice: t('view.customers.correctly_updated')) }
         format.json  { head :ok }
       else
@@ -145,7 +145,9 @@ class CustomersController < ApplicationController
     @customer = current_customer
 
     respond_to do |format|
-      if @customer.update_attributes(public_customer_params)
+      if @customer.update(
+        params.require(:customer).permit(*public_customer_params)
+      )
         format.html { redirect_to(edit_profile_customer_url(@customer), notice: t('view.customers.profile_correctly_updated')) }
         format.json  { head :ok }
       else
@@ -175,43 +177,104 @@ class CustomersController < ApplicationController
     render partial: 'month_paid'
   end
 
+  def credits
+    @credits = current_customer.credits.paginate(
+      page: params[:page], per_page: lines_per_page
+    )
+
+    respond_to do |format|
+      format.html # index.html.erb
+      format.json  { render json: @credits }
+    end
+  end
+
+  def historical_credit
+    @credit = current_customer.credits.find(params[:id])
+    historical = @credit.versions.to_a
+    @historical = []
+
+    historical.each_with_index do |h, i|
+      next if i.zero?
+      old = h.reify.attributes.slice('amount', 'remaining')
+      previous = historical[i-1]
+      old[:user] = User.find(previous.whodunnit)
+      old[:updated_at] = previous.created_at
+      old[:event] = previous.event
+      @historical << OpenStruct.new(old)
+    end
+    @last = OpenStruct.new(@credit.attributes)
+    @last.user = User.find(historical.last.whodunnit)
+    @last.event = @last.amount == @last.remaining ? 'create' : 'update'
+
+    respond_to do |format|
+      format.html # index.html.erb
+    end
+  end
+
+  def use_rfid
+    @customer = Customer.find(params[:id])
+
+    respond_to do |format|
+      format.json  { render json: {
+        can_use: @customer.rfid == params[:rfid]
+      } }
+    end
+  end
+
+  def assign_rfid
+    @customer = Customer.find(params[:id])
+
+    success = (params[:rfid] && @customer.update(rfid: params[:rfid]))
+
+    respond_to do |format|
+      format.json {
+        render json: {}, status: (success ? :ok : :unprocessable_entity )
+      }
+    end
+  end
+
   private
 
   # Atributos permitidos
   def customer_params
-    if current_user
-      current_user.admin? ? customer_params_as_admin : common_customer_params
-    else
-      public_customer_params
-    end
+    attrs = case
+              when current_user.nil? || current_customer
+                public_customer_params
+              when current_user.auditor?
+                customer_params_as_auditor
+              when current_user.admin?
+                customer_params_as_admin
+              else
+                common_customer_params
+            end
+    params.require(:customer).permit(*attrs)
+  end
+
+  def customer_params_as_auditor
+    [
+      :bonus_without_expiration,
+      { bonuses_attributes: [:amount, :remaining, :valid_until, :customer_id, :_destroy, :id] }
+    ] + customer_params_as_admin
   end
 
   def customer_params_as_admin
-    credit_attrs = [
-      :amount, :remaining, :valid_until, :customer_id, :_destroy, :id
-    ]
-
-    params.require(:customer).permit(
-      :name, :lastname, :identification, :email, :password,
-      :password_confirmation, :lock_version, :free_monthly_bonus,
-      :bonus_without_expiration, :enable, :kind, :group_id,
-      bonuses_attributes: credit_attrs, deposits_attributes: credit_attrs
-    )
+    [:kind, :group_id] + common_customer_params
   end
 
   def common_customer_params
-    params.require(:customer).permit(
-      :name, :lastname, :identification, :email, :password,
-      :password_confirmation, :lock_version, :enable, deposits_attributes: [
+    [
+      :name, :lastname, :identification, :email, :password, :rfid,
+      :password_confirmation, :lock_version, :enable,
+      {deposits_attributes: [
         :amount, :remaining, :valid_until, :customer_id, :_destroy, :id
-      ]
-    )
+      ]}
+    ]
   end
 
   def public_customer_params
-    params.require(:customer).permit(
+    [
       :name, :lastname, :identification, :email, :password,
       :password_confirmation, :lock_version
-    )
+    ]
   end
 end

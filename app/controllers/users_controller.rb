@@ -85,7 +85,7 @@ class UsersController < ApplicationController
     @user = User.find(params[:id])
 
     respond_to do |format|
-      if @user.update_attributes(user_params)
+      if @user.update(user_params)
         format.html { redirect_to(users_url, notice: t('view.users.correctly_updated')) }
         format.json { head :ok }
       else
@@ -101,11 +101,7 @@ class UsersController < ApplicationController
 
   # GET /users/autocomplete_for_user_name
   def autocomplete_for_user_name
-    query = params[:q].sanitized_for_text_query
-    query_terms = query.split(/\s+/).reject(&:blank?)
-    users = User.actives
-    users = users.full_text(query_terms) unless query_terms.empty?
-    users = users.limit(10)
+    users = full_text_search_for(User.actives, params[:q])
 
     respond_to do |format|
       format.json { render json: users }
@@ -117,10 +113,10 @@ class UsersController < ApplicationController
     start, finish = make_datetime_range(
       from: params[:start], to: params[:finish]
     )
-    payed = User.find(params[:id]).pay_shifts_between(start, finish)
+    paid = User.find(params[:id]).pay_shifts_between(start, finish)
 
     respond_to do |format|
-      format.json { head (payed ? :ok : :conflict) }
+      format.json { render json: paid }
     end
   end
 
@@ -140,13 +136,31 @@ class UsersController < ApplicationController
     users_data = []
 
     if start.present? && finish.present?
-      users_data = User.pay_pending_shifts_for_active_users_between(start, finish)
+      users_data = User.pay_pending_shifts_for_active_users_between(
+        start, finish
+      )
     end
 
     respond_to do |format|
       format.json { render json: users_data }
     end
   end
+
+  def shifts_between
+    start, finish = make_datetime_range(
+      from: params[:start], to: params[:finish]
+    )
+    users_data = []
+
+    if start.present? && finish.present?
+      users_data = User.shifts_between(start, finish)
+    end
+
+    respond_to do |format|
+      format.json { render json: users_data }
+    end
+  end
+
 
   private
 

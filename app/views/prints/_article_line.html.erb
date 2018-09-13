@@ -28,8 +28,8 @@
   </div>
   <div class="span5">
     <span class="label money"><%= number_to_currency f.object.price %></span>
+    <span class="overselling-stock badge badge-important hide"><%= t('view.articles.no_stock') %></span>
     <%= link_to_remove_nested_item(f) unless disabled %>
-    <%= f.input :lock_version, as: :hidden %>
   </div>
 </div>
 <% if is_dynamic %>

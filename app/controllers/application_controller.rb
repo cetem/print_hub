@@ -1,7 +1,7 @@
 class ApplicationController < ActionController::Base
-  helper_method :current_user_session, :current_user, :current_customer
+  helper_method :current_user_session, :current_user, :current_customer, :full_text_search_for
 
-  protect_from_forgery with: :null_session
+  protect_from_forgery with: :null_session, unless: :trusted_sites
 
   before_action :set_js_format_in_iframe_request, :set_paper_trail_whodunnit
   before_bugsnag_notify :add_user_info_to_bugsnag
@@ -33,6 +33,10 @@ class ApplicationController < ActionController::Base
 
       logger.error(error)
     end
+  end
+
+  def info_for_paper_trail
+    { correlation_id: request.uuid }
   end
 
   private
@@ -72,6 +76,12 @@ class ApplicationController < ActionController::Base
       false
     else
       true
+    end
+  end
+
+  def require_not_shifted
+    unless current_user.not_shifted?
+      redirect_to :back, notice: t('errors.unpermitted_action')
     end
   end
 
@@ -190,5 +200,19 @@ class ApplicationController < ActionController::Base
       },
       errors: obj.errors.messages
     )
+  end
+
+  def full_text_search_for(klass_scope, q)
+    query = q.sanitized_for_text_query
+    query_terms = query.split(/\s+/).reject(&:blank?)
+    _scope = klass_scope
+    _scope = _scope.full_text(query_terms) unless query_terms.empty?
+    _scope.limit(AUTOCOMPLETE_LIMIT)
+  end
+
+  def trusted_sites
+    (SECRETS[:trusted_sites] || {}).each do |site, custom_header|
+      return true if request.headers[custom_header] == site
+    end
   end
 end

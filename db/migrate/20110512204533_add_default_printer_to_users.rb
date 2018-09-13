@@ -1,4 +1,4 @@
-class AddDefaultPrinterToUsers < ActiveRecord::Migration
+class AddDefaultPrinterToUsers < ActiveRecord::Migration[4.2]
   def self.up
     add_column :users, :default_printer, :string
   end

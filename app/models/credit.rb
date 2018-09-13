@@ -47,4 +47,11 @@ class Credit < ApplicationModel
       self.errors.add :remaining, :less_than_or_equal_to, count: a
     end
   end
+
+  def creator
+    v = self.versions.first
+    (v && v.whodunnit.present?) ? User.find(v.whodunnit) : ''
+  rescue
+    ''
+  end
 end

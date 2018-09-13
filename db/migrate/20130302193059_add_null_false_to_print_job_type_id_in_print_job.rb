@@ -1,4 +1,4 @@
-class AddNullFalseToPrintJobTypeIdInPrintJob < ActiveRecord::Migration
+class AddNullFalseToPrintJobTypeIdInPrintJob < ActiveRecord::Migration[4.2]
   def change
     change_column :print_jobs, :print_job_type_id, :integer, null: false
     change_column :order_files, :print_job_type_id, :integer, null: false

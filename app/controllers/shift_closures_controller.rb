@@ -2,6 +2,8 @@ class ShiftClosuresController < ApplicationController
   before_action :set_shift_closure, only: [:show, :edit, :update, :destroy, :update_comment]
   before_action :check_if_not_finished, only: [:edit, :update]
 
+  helper_method :can_edit_shift_closure?
+
   # GET /shift_closures
   def index
     @shift_closures = ShiftClosure.order(id: :desc).paginate(page: params[:page])
@@ -50,7 +52,7 @@ class ShiftClosuresController < ApplicationController
     printer_name = params[:printer_name]
 
     _response = {}
-    counter = PrintersApi.get_counter_for(printer_name)
+    counter = ::PrintersApi.get_counter_for(printer_name)
     _response['counter'] = counter if counter
 
     respond_to do |format|
@@ -86,9 +88,17 @@ class ShiftClosuresController < ApplicationController
     end
 
     def check_if_not_finished
-      if !current_user.not_shifted? && @shift_closure.finish_at.present?
+      unless can_edit_shift_closure?(@shift_closure)
         redirect_to shift_closure_path(@shift_closure.id),
           alert: t('view.shift_closures.cannot_edit_when_finished')
       end
+    end
+
+    def can_edit_shift_closure?(shift_closure)
+      (
+        shift_closure.finish_at.blank? ||
+        shift_closure.finish_at >= 10.minutes.ago ||
+        current_user.not_shifted?
+      )
     end
 end

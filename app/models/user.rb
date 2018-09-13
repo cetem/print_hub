@@ -1,10 +1,11 @@
 class User < ApplicationModel
-  has_paper_trail
+  has_paper_trail except: [:persistence_token, :updated_at, :lock_version]
   mount_uploader :avatar, AvatarUploader, mount_on: :avatar_file_name
 
   acts_as_authentic do |c|
     c.maintain_sessions = false
     c.crypto_provider = Authlogic::CryptoProviders::Sha512
+    c.merge_validates_length_of_password_field_options({ minimum: 4 })
   end
 
   # Scopes
@@ -93,6 +94,10 @@ class User < ApplicationModel
     !not_shifted
   end
 
+  def auditor?
+    not_shifted?
+  end
+
   def self.full_text(query_terms)
     options = text_query(query_terms, 'username', 'name', 'last_name')
     conditions = [options[:query]]
@@ -103,9 +108,10 @@ class User < ApplicationModel
   end
 
   def pay_shifts_between(start, finish)
-    User.transaction do
-      _shifts = shifts.pay_pending_between(start, finish)
+    _shifts = shifts.pay_pending_between(start, finish)
+    json = _shifts.as_json
 
+    User.transaction do
       unless _shifts.all?(&:pay!)
         Bugsnag.notify(
           RuntimeError.new(
@@ -124,8 +130,17 @@ class User < ApplicationModel
 
         fail ActiveRecord::Rollback
       end
+      # DriveWorker.perform_async(
+      #   DriveWorker::PAID_SHIFTS,
+      #   {
+      #     start: start,
+      #     finish: finish,
+      #     ids: ids,
+      #     label: shifts.first.user.to_s
+      #   }
+      # )
 
-      true
+      json
     end
   end
 
@@ -146,8 +161,29 @@ class User < ApplicationModel
 
   def self.pay_pending_shifts_for_active_users_between(start, finish)
     actives.with_shifts_control.order_by_name.map do |u|
-      as_operator_shifts = u.shifts.as_operator_between(start, finish)
-      as_admin_shifts = u.shifts.as_admin_between(start, finish)
+      pay_pending_shifts = u.shifts.pay_pending
+      as_operator_shifts = pay_pending_shifts.as_operator_between(start, finish)
+      as_admin_shifts = pay_pending_shifts.as_admin_between(start, finish)
+
+      if as_operator_shifts || as_admin_shifts
+        {
+          user: {
+            id: u.id,
+            label: u.label
+          },
+          shifts: {
+            operator: as_operator_shifts,
+            admin: as_admin_shifts
+          }
+        }
+      end
+    end.compact
+  end
+
+  def self.shifts_between(start, finish)
+    with_shifts_control.order_by_name.map do |u|
+      as_operator_shifts = u.shifts.finished.as_operator_between(start, finish)
+      as_admin_shifts = u.shifts.finished.as_admin_between(start, finish)
 
       if as_operator_shifts || as_admin_shifts
         {

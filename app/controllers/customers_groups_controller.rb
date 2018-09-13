@@ -1,7 +1,8 @@
 class CustomersGroupsController < ApplicationController
-  before_filter :require_admin_user, except: :autocomplete_for_name
-  before_filter :require_user, only: :autocomplete_for_name
-  before_filter :load_group, only: [:show, :edit, :update, :destroy, :settlement]
+  before_action :require_admin_user, except: :autocomplete_for_name
+  before_action :require_user, only: :autocomplete_for_name
+  before_action :require_not_shifted, only: :pay_between
+  before_action :load_group, only: [:show, :edit, :update, :destroy, :settlement, :pay_between]
 
   # GET /customers_groups
   # GET /customers_groups.json
@@ -91,14 +92,10 @@ class CustomersGroupsController < ApplicationController
   end
 
   def autocomplete_for_name
-    query = params[:q].sanitized_for_text_query
-    query_terms = query.split(/\s+/).reject(&:blank?)
-    group = CustomersGroup.all
-    group = group.full_text(query_terms) unless query_terms.empty?
-    group = group.limit(10)
+    groups = full_text_search_for(CustomersGroup.all, params[:q])
 
     respond_to do |format|
-      format.json { render json: group }
+      format.json { render json: groups }
     end
   end
 
@@ -107,26 +104,42 @@ class CustomersGroupsController < ApplicationController
   end
 
   def global_settlement
-    require 'gdrive' # VillageCines
+    start, finish = parsed_start_and_finish(:export_interval)
 
-    interval      = params.require(:interval).permit(:from, :to)
-    start, finish = *make_datetime_range(interval)
-    start         = start.beginning_of_day
-    finish        = finish.end_of_day
-
-    GDrive.upload_spreadsheet(
-      t('view.customers_groups.spreadsheet_file_name',
-        start: l(start.to_date, format: :related_month).camelize,
-        finish: l(finish.to_date, format: :related_month).camelize
-       ),
-      CustomersGroup.settlement_as_csv(start, finish)
-    )
+    DriveWorker.perform_async(DriveWorker::CUSTOMERS_GROUPS, start: start, finish: finish)
 
     redirect_to customers_groups_path,
-                notice: t('view.customers_groups.spreadsheat_uploaded')
+                notice: t('view.customers_groups.spreadsheet_uploading')
+  end
+
+  def pay_between
+    start, finish = parsed_start_and_finish
+
+    @customers_group.pay_between(start, finish)
+
+    redirect_to @customers_group
+  end
+
+  def global_pay_between
+    if params[:interval]&.fetch(:from, nil).present? &&
+       params[:interval]&.fetch(:to, nil).present?
+
+      start, finish = parsed_start_and_finish
+      threads = []
+
+      CustomersGroup.all.pay_between(start, finish)
+    end
+
+    redirect_to customers_groups_path, notice: t('view.customers_groups.all_paid')
   end
 
   private
+
+  def parsed_start_and_finish(name = :interval)
+    interval      = params.require(name).permit(:from, :to)
+    start, finish = *make_datetime_range(interval)
+    [start.beginning_of_day, finish.end_of_day]
+  end
 
   def customers_group_params
     params.require(:customers_group).permit(:id, :name)

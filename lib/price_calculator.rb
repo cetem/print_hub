@@ -1,5 +1,7 @@
-class PriceCalculator
-  def self.final_job_price(options = {})
+module PriceCalculator
+  extend self
+
+  def final_job_price(options = {})
     rest = options[:pages] % 2
     even_pages = (options[:pages] - rest)
 
@@ -7,7 +9,7 @@ class PriceCalculator
       one_sided_type = options[:type].one_sided_for
       copies = options[one_sided_type.try(:id)] || 1
 
-      one_sided_price = PriceChooser.new(
+      one_sided_price = ::PriceChooser.new(
         one_sided_type.try(:price) || options[:type].price, copies
       ).price
     end
@@ -23,16 +25,16 @@ class PriceCalculator
     options[:copies] * partial_price
   end
 
-  def self.price_per_copy(pj)
-    total_pages = pj.print_total_pages
-    one_sided = pj.print_job_type.one_sided_for
+  def price_per_copy(line)
+    total_pages = line.print_total_pages
+    one_sided = line.print_job_type.one_sided_for
 
-    if total_pages == 1 && pj.print_job_type.two_sided && one_sided
-      PriceChooser.new(
-        one_sided.price, pj.print.try(:total_pages_by_type, one_sided)
+    if total_pages == 1 && line.print_job_type.two_sided && one_sided
+      ::PriceChooser.new(
+        one_sided.price, line.usable_parent.try(:total_pages_by_type, one_sided)
       ).price
     else
-      PriceChooser.new(pj.print_job_type.price, pj.print_total_pages).price
+      ::PriceChooser.new(line.print_job_type.price, line.print_total_pages).price
     end
   end
 end

@@ -37,7 +37,7 @@ class PasswordResetsController < ApplicationController
     )
 
     respond_to do |format|
-      if @customer.try(:update_attributes, customer_params)
+      if @customer.try(:update, customer_params)
         format.html { redirect_to(new_customer_session_url, notice: t('view.password_resets.correctly_updated')) }
         format.json  { head :ok }
       else

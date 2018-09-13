@@ -19,7 +19,9 @@
 
   <tbody>
     <% @documents.each do |document| %>
-      <tr class="<%= document.private ? 'private' : 'public' %>">
+      <% classes = [document.enable? ? '' : 'disabled'] %>
+      <% classes << document.private ? 'private' : 'public' %>
+      <tr class="<%= classes.join(' ') %>">
         <td> <%= document.code %> </td>
         <td>
           <%= image_tag('/cc.png', size: '20') if document.is_public? %>
@@ -27,7 +29,7 @@
         </td>
         <td><%= document.stock %></td>
         <td><%= document.pages %></td>
-        <td><%= document_link_for_use_in_next_print document %></td>
+        <td><%= document_link_for_use_in_next_print document if document.enable? %></td>
         <td><%= link_to_show document %></td>
         <td><%= link_to_edit edit_document_path(document) %></td>
         <td><%= link_to_destroy document %></td>

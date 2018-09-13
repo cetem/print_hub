@@ -1,4 +1,4 @@
-class CreateShiftClosures < ActiveRecord::Migration
+class CreateShiftClosures < ActiveRecord::Migration[4.2]
   def change
     create_table :shift_closures do |t|
       t.datetime :start_at, null: false

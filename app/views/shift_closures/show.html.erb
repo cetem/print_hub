@@ -17,7 +17,11 @@
       </p>
       <p>
         <b><%= ShiftClosure.human_attribute_name 'system_amount' %></b>:
-        <%= number_to_currency @shift_closure.system_amount %>
+        <% if @shift_closure.system_amount.zero? && current_user.not_shifted %>
+          <%= number_to_currency @shift_closure.calc_system_amount(partial=true) %> (parcial)
+        <% else %>
+          <%= number_to_currency @shift_closure.system_amount %>
+        <% end %>
       </p>
       <p>
         <b><%= ShiftClosure.human_attribute_name 'total_amount' %></b>:
@@ -63,7 +67,7 @@
           <tbody>
             <% @shift_closure.printers_stats.each do |printer, counter| %>
               <tr>
-                <td><%= printer %></td>
+                <td><%= ::CustomCups.printer_name_for(printer) %></td>
                 <td><%= number_to_delimited(counter) %></td>
               </tr>
             <% end %>
@@ -82,7 +86,7 @@
               </tr>
             </thead>
             <tbody>
-              <% @shift_closure.withdraws.each do |withdraw| %>
+              <% @shift_closure.withdraws.order(:collected_at).each do |withdraw| %>
                 <tr>
                   <td><%= number_to_currency withdraw.amount %></td>
                   <td><%= l(withdraw.collected_at) %></td>
@@ -147,7 +151,8 @@
   <% if @shift_closure.finish_at.present? %>
     <%= link_to t('view.shift_closures.edit_comment'),
       '#', data: { target: '#comment', toggle: 'modal' } %> |
-  <% else %>
+  <% end %>
+  <% if @shift_closure.finish_at.blank? || current_user.not_shifted? %>
     <%= link_to t('label.edit'), edit_shift_closure_path(@shift_closure) %> |
   <% end %>
   <%= link_to t('label.list'), shift_closures_path %>

@@ -7,7 +7,7 @@ class ActionDispatch::Routing::Mapper
 end
 
 Rails.application.routes.draw do
-  constraints(CustomerSubdomain) do
+  constraints(::CustomerSubdomain) do
     draw :customer, :catalog
     draw :customer, :customer
     draw :customer, :customer_session
@@ -18,12 +18,12 @@ Rails.application.routes.draw do
     draw :customer, :print
   end
 
-  constraints(UserSubdomain) do
+  constraints(::UserSubdomain) do
     require 'sidekiq/web'
 
     Sidekiq::Web.set :session_secret, Rails.application.secrets[:secret_token]
     Sidekiq::Web.set :sessions, Rails.application.config.session_options
-    mount Sidekiq::Web => '/sidekiq', constraints: AdminConstraint.new
+    mount Sidekiq::Web => '/sidekiq', constraints: ::AdminConstraint.new
 
     draw :user, :article
     draw :user, :bonus

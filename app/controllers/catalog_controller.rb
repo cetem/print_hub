@@ -1,5 +1,5 @@
 class CatalogController < ApplicationController
-  before_filter :require_customer, :load_documents_to_order, :load_tag, :load_parent
+  before_action :require_customer, :load_documents_to_order, :load_tag, :load_parent
   helper_method :sort_column, :sort_direction
 
   layout ->(controller) { controller.request.xhr? ? false : 'application' }
@@ -99,7 +99,7 @@ class CatalogController < ApplicationController
   end
 
   def document_scope
-    @tag ? @tag.documents.publicly_visible : Document.publicly_visible
+    (@tag ? @tag.documents : Document).enabled.publicly_visible
   end
 
   def load_parent

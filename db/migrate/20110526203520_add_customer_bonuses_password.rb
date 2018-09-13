@@ -1,4 +1,4 @@
-class AddCustomerBonusesPassword < ActiveRecord::Migration
+class AddCustomerBonusesPassword < ActiveRecord::Migration[4.2]
   def self.up
     add_column :customers, :bonuses_password, :string
   end

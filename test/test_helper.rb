@@ -2,19 +2,21 @@ ENV['RAILS_ENV'] ||= 'test'
 require File.expand_path('../../config/environment', __FILE__)
 require 'rails/test_help'
 require 'authlogic/test_case'
-require 'capybara/rails'
 require 'sidekiq/testing'
 require 'database_cleaner'
-require 'minitest/reporters'
+# require 'minitest/reporters'
+require 'capybara/rails'
+require 'capybara/minitest'
 require 'capybara-screenshot/minitest'
-# require 'capybara/poltergeist'
+require 'capybara/poltergeist'
 
-Minitest::Reporters.use! Minitest::Reporters::ProgressReporter.new
+# Minitest::Reporters.use! Minitest::Reporters::ProgressReporter.new
 
 class ActiveSupport::TestCase
   ActiveRecord::Migration.maintain_test_schema!
   set_fixture_class versions: PaperTrail::Version
-  self.use_transactional_fixtures = true
+  # self.use_transactional_fixtures = true
+  # Minitest::Reporters.use! Minitest::Reporters::ProgressReporter.new
 
   fixtures :all
 
@@ -32,12 +34,12 @@ class ActiveSupport::TestCase
     User.all.each { |user| link_file user.avatar.path, 'test.gif' }
   end
 
-  def pdf_test_file
-    process_with_action_dispatch('test.pdf', 'application/pdf')
+  def pdf_test_file(file='test.pdf')
+    process_for_upload(file, 'application/pdf')
   end
 
   def avatar_test_file
-    process_with_action_dispatch('test.gif', 'image/gif')
+    process_for_upload('test.gif', 'image/gif')
   end
 
   def new_generic_operator(atributes = {})
@@ -64,15 +66,11 @@ class ActiveSupport::TestCase
 
   private
 
-  def process_with_action_dispatch(filename, content_type)
-    ActionDispatch::Http::UploadedFile.new({
-                                             filename: filename,
-                                             content_type: content_type,
-                                             tempfile:
-      File.open( # Need File.open for path-method
-        Rails.root.join('test', 'fixtures', 'files', filename)
-      )
-                                           })
+  def process_for_upload(filename, content_type)
+    Rack::Test::UploadedFile.new(
+      Rails.root.join('test', 'fixtures', 'files', filename),
+      content_type
+    )
   end
 
   def link_file(destiny_file, link_from)
@@ -86,11 +84,13 @@ class ActiveSupport::TestCase
   end
 
   def job_count(print_jobs)
-    print_jobs.map(&:copies).sum
+    print_jobs.map(&:copies).compact.sum
   end
 
   def drop_all_prints
-    `lpstat -Wnot-completed -o | grep -i "virtual" | awk '{print $1}' | xargs cancel`
+    pdf_printer = ::CustomCups.pdf_printer
+    return unless pdf_printer
+    Thread.new { `lpstat -Wnot-completed -o | grep -i "#{pdf_printer}" | awk '{print $1}' | xargs cancel 2>&1` }
   end
 end
 
@@ -119,6 +119,7 @@ end
 class ActionDispatch::IntegrationTest
   # Make the Capybara DSL available in all integration tests
   include Capybara::DSL
+  include Capybara::Minitest::Assertions
   include Capybara::Screenshot::MiniTestPlugin
 
   # Transactional fixtures do not work with Selenium tests, because Capybara
@@ -126,8 +127,15 @@ class ActionDispatch::IntegrationTest
   # from. We hence use DatabaseCleaner to truncate our test database.
   DatabaseCleaner.strategy = :truncation
   # Stop ActiveRecord from wrapping tests in transactions
-  self.use_transactional_fixtures = false
+  # self.use_transactional_fixtures = false
 
+  def self._running_remote
+    ENV['remote']
+  end
+
+  def self._running_local
+    ENV['local']
+  end
 
   # Vagrant config
   SELENIUM_SERVER = "192.168.33.10"
@@ -142,29 +150,67 @@ class ActionDispatch::IntegrationTest
     )
   end
 
-  _running_local = ENV['local']
-  Capybara.javascript_driver = _running_local ? :selenium : :selenium_remote_firefox #:selenium #: :chrome
-  Capybara.current_driver = Capybara.javascript_driver
-  Capybara.server_port = '54163'
-  Capybara.server_host = _running_local ? 'localhost' : '192.168.33.1'
-  Capybara.app_host = "http://#{SELENIUM_APP_HOST}:#{Capybara.server_port}"
-  Capybara.default_max_wait_time = 1
+  Capybara.register_driver :poltergeist do |app|
+      Capybara::Poltergeist::Driver.new(app, {
+        # debug: true,
+        inspector: true,
+        js_errors: true,
+        window_size: [1600, 1200]
+      })
+  end
 
-  if _running_local
+  if ENV['TRAVIS']
+    require 'jsonclient'
+    require 'base64'
+
+    Capybara::Screenshot.after_save_screenshot do |path|
+      auth = { 'Authorization' => 'Bearer ' + "424871e2662f85351c735361fa763d7276b25518"}
+      body = {image: Base64.encode64(File.read(path))}
+      rsp = JSONClient.new.post('https://api.imgur.com/3/image', body, auth).body
+      puts "\n======== IMG ========"
+      puts "\n"
+      puts rsp['data']['link']
+      puts "\n"
+      puts "\n"
+    end
+  end
+
+  Capybara.javascript_driver = case
+                                 when _running_remote then :selenium_remote_firefox
+                                 when _running_local  then :selenium
+                                 else                      :poltergeist
+                               end
+
+
+  Capybara.current_driver = Capybara.javascript_driver
+  Capybara.server_port = '5416' + (ENV['TEST_ENV_NUMBER'] || 9).to_s
+  Capybara.default_max_wait_time = 3
+
+  if _running_remote
+    APP_CONFIG['local_server_ip'] = SELENIUM_APP_HOST
+  elsif _running_local
     Selenium::WebDriver::Firefox::Binary.path = '/opt/firefox42/firefox'
   end
 
   setup do
+    Capybara.server_host = self.class._running_remote ? SELENIUM_APP_HOST : 'localhost'
+    Capybara.app_host = "http://#{Capybara.server_host}:#{Capybara.server_port}"
     Capybara.reset!    # Forget the (simulated) browser state
-    Capybara.page.driver.browser.manage.window.maximize
+    if self.class._running_local
+      Capybara.page.driver.browser.manage.window.maximize
+    else
+      Capybara.page.driver.resize(1600, 1200)
+    end
   end
 
   teardown do
-    errors = Capybara.page.driver.browser.manage.logs.get(:browser)
+    if self.class._running_local
+      errors = Capybara.page.driver.browser.manage.logs.get(:browser)
 
-    if errors
-      parsed_errors = errors.map { |e| e if e.level == 'SEVERE' && message.present? }.compact
-      raise JSException.new(parsed_errors) if parsed_errors.size > 0
+      if errors
+        parsed_errors = errors.map { |e| e if e.level == 'SEVERE' && message.present? }.compact
+        raise JSException.new(parsed_errors) if parsed_errors.size > 0
+      end
     end
 
     DatabaseCleaner.clean       # Truncate the database
@@ -185,8 +231,22 @@ class ActionDispatch::IntegrationTest
   end
 
   def login(*args)
-    options = args.extract_options!
+    # options = args.extract_options!
+    # options[:user_id] ||= args.shift # if args.first.kind_of?(Symbol)
+    # # options[:user_id] ||= users(:operator).id
+    # options[:expected_path] ||= args.shift if args.first.is_a?(String)
+    # options[:expected_path] ||= prints_path
 
+    # user = options[:user_id].present? ? User.find(options[:user_id]) : users(:operator)
+    # # UserSession.create(user)
+    # page.driver.set_cookie(
+    #   'user_credentials',
+    #   "#{user.persistence_token}::#{user.id}"
+    # )
+
+    # visit root_path
+
+    options = args.extract_options!
     options[:user_id] ||= args.shift # if args.first.kind_of?(Symbol)
     options[:user_id] ||= users(:operator).id
     options[:expected_path] ||= args.shift if args.first.is_a?(String)
@@ -196,9 +256,9 @@ class ActionDispatch::IntegrationTest
 
     User.find(options[:user_id]).tap do |user|
       fill_in I18n.t('authlogic.attributes.user_session.username'),
-              with: user.email
+        with: user.email
       fill_in I18n.t('authlogic.attributes.user_session.password'),
-              with: "#{user.username}123"
+        with: "#{user.username}123"
     end
 
     click_button I18n.t('view.user_sessions.login')
@@ -213,5 +273,25 @@ class ActionDispatch::IntegrationTest
 
     parsed_errors = errors.map { |e| e if e.level == 'SEVERE' && message.present? }.compact
     raise JSException.new(parsed_errors) if parsed_errors
+  end
+
+  def wait_for_ajax
+    Timeout.timeout(Capybara.default_max_wait_time) do
+      loop until finished_all_ajax_requests?
+    end
+  end
+
+  def finished_all_ajax_requests?
+    request_count = page.evaluate_script("$.active").to_i
+    request_count && request_count.zero?
+  rescue Timeout::Error
+  end
+
+  def fill_autocomplete_for(field, string)
+    find(:css, "input[id^='#{field}']").native.send_keys(*string.each_char.to_a)
+    wait_for_ajax
+    sleep 1
+    assert page.has_xpath?("//ul[contains(@class, 'ui-autocomplete')]", visible: true)
+    find(:css, "input[id^='#{field}']").native.send_keys :down, :tab
   end
 end

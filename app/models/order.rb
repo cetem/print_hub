@@ -34,7 +34,7 @@ class Order < ApplicationModel
   validate :must_have_one_item
 
   # Relaciones
-  belongs_to :customer
+  belongs_to :customer, optional: true
   has_one :print
   has_many :order_lines, inverse_of: :order, dependent: :destroy
   has_many :file_lines, inverse_of: :order, dependent: :destroy
@@ -62,15 +62,19 @@ class Order < ApplicationModel
   end
 
   def avoid_destruction
-    false
+    self.errors.add(:base, :cannot_be_destroyed)
+    throw :abort
   end
 
   def can_be_modified?
-    self.pending? || status_was == STATUS[:pending]
+    unless self.pending? || status_was == STATUS[:pending]
+      self.errors.add(:base, :cannot_be_modified)
+      throw :abort
+    end
   end
 
   def reject_file_lines_attributes?(attributes)
-    (attributes['file'].blank? && attributes['file_cache'].blank?) ||
+    (attributes['id'].blank? && attributes['file'].blank? && attributes['file_cache'].blank?) ||
       attributes['copies'].to_i <= 0
   end
 
@@ -116,8 +120,8 @@ class Order < ApplicationModel
   end
 
   def total_pages_by_type(type)
-    order_items.inject(0) do |t, oi|
-      t + (oi.print_job_type == type ? (oi.pages || 0) : 0)
+    order_items.sum do |oi|
+      oi.print_job_type == type ? (oi.pages || 0) : 0
     end
   end
 
@@ -145,5 +149,15 @@ class Order < ApplicationModel
     includes(:customer).where(
       conditions.map { |c| "(#{c})" }.join(' OR '), parameters
     ).order(options[:order]).references(:customer)
+  end
+
+  def cancel!
+    self.delete_files!
+    self.update_column(:status, STATUS[:cancelled])
+    self.customer.deliver_old_order_cancelled!(self.id)
+  end
+
+  def delete_files!
+    self.file_lines.map(&:remove_file!)
   end
 end

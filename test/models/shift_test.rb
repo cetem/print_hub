@@ -55,11 +55,13 @@ class ShiftTest < ActiveSupport::TestCase
     @shift.start = '  '
     @shift.user_id = nil
     assert @shift.invalid?
-    assert_equal 2, @shift.errors.count
+    assert_equal 3, @shift.errors.count
     assert_equal [error_message_from_model(@shift, :start, :blank)],
                  @shift.errors[:start]
     assert_equal [error_message_from_model(@shift, :user_id, :blank)],
                  @shift.errors[:user_id]
+    assert_equal [error_message_from_model(@shift, :user, :required)],
+                 @shift.errors[:user]
   end
 
   # Prueba que las validaciones del modelo se cumplan como es esperado

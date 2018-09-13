@@ -92,7 +92,7 @@ class DocumentsController < ApplicationController
     params[:document][:tag_ids] ||= []
 
     respond_to do |format|
-      if @document.update_attributes(document_params)
+      if @document.update(document_params)
         format.html { redirect_to(documents_url, notice: t('view.documents.correctly_updated')) }
         format.json  { head :ok }
       else
@@ -144,11 +144,7 @@ class DocumentsController < ApplicationController
 
   # GET /documents/autocomplete_for_tag_name
   def autocomplete_for_tag_name
-    query = params[:q].sanitized_for_text_query
-    query_terms = query.split(/\s+/).reject(&:blank?)
-    tags = Tag.all.order(:id)
-    tags = tags.full_text(query_terms) unless query_terms.empty?
-    tags = tags.limit(10)
+    tags = full_text_search_for(Tag.all.order(:id), params[:q])
 
     respond_to do |format|
       format.json { render json: tags }
@@ -168,7 +164,7 @@ class DocumentsController < ApplicationController
   def copies_between_for
     if params[:interval]
       @from_date, @to_date = make_datetime_range(interval_params)
-      @documents = Document.copies_for_stock_between([@from_date, @to_date])
+      @stub_print_jobs = PrintJob.copies_for_stock_between([@from_date, @to_date])
     end
   end
 

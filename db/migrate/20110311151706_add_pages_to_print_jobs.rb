@@ -1,8 +1,8 @@
-class AddPagesToPrintJobs < ActiveRecord::Migration
+class AddPagesToPrintJobs < ActiveRecord::Migration[4.2]
   def self.up
     add_column :print_jobs, :pages, :integer
 
-    PrintJob.unscoped.all.each { |pj| pj.update_attributes!(pages: pj.document.pages) }
+    PrintJob.unscoped.all.each { |pj| pj.update!(pages: pj.document.pages) }
 
     change_column :print_jobs, :pages, :integer, null: false
   end

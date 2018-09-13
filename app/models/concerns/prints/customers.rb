@@ -8,25 +8,28 @@ module Prints::Customers
     before_create :update_customer_credit, if: -> (p) { p.customer.present? }
     before_validation :assign_surplus_to_customer, if: ->(p) { p.customer.present? }
 
-    validates_each :customer_id do |record, attr, value|
-      record.errors.add attr, :blank if value.blank? && record.pay_later?
-    end
+    validate :need_credit_password?, :pay_later_validations
 
-    validate :need_credit_password?
-
-    belongs_to :customer, autosave: true
+    belongs_to :customer, autosave: true, optional: true
   end
 
   def update_customer_credit
     if (credit = payments.detect(&:credit?)) && credit.amount > 0
+      avoid_pass_check = order.present? || (
+        customer_rfid.present? && customer.rfid == customer_rfid
+      )
       remaining = customer.use_credit(
         credit.amount,
         credit_password,
-        avoid_password_check: order.present?
+        avoid_password_check: avoid_pass_check
       )
 
       if remaining == false
-        errors.add :credit_password, :invalid
+        if customer_rfid.present?
+          errors.add :base, 'Tarjeta invalida'
+        else
+          errors.add :credit_password, :invalid
+        end
 
         false
       elsif remaining > 0
@@ -45,26 +48,41 @@ module Prints::Customers
   end
 
   def need_credit_password?
-    return unless customer_id
-    return if order.present? || persisted?
+    return if customer_id.blank? || order.present? || persisted? || (customer.free_credit.zero? && !self.pay_later?)
 
-    _error = if credit_password.blank? && customer.free_credit > 0
-                 :blank
-             elsif credit_password && !customer.valid_password?(credit_password)
-                 :invalid
-             end
+    if customer_rfid.present?
+      errors.add(:base, 'Tarjeta invalida') if customer.free_credit > 0 && customer_rfid != customer.rfid
+    else
+      _error = if credit_password.blank? && customer.free_credit > 0
+                   :blank
+               elsif credit_password && !customer.valid_password?(credit_password)
+                   :invalid
+               end
 
-    errors.add(:credit_password, _error) if _error
+      errors.add(:credit_password, _error) if _error
+    end
   end
 
   def assign_surplus_to_customer
     payments.each do |payment|
-      return if payment.destroyed?
+      # payments with amount <= are destroyed
+      if payment.destroyed?
+        # Si ponemos en "Monto abonado" un monto se lo cargamos como debito
+        customer.deposits.new(amount: payment.paid.to_f) if payment.paid.to_f > 0.0
+        next
+      end
 
       if (diff = payment.paid.to_f - payment.amount.to_f) > 0
         customer.deposits.new(amount: diff)
         payment.paid = payment.amount.to_f
       end
     end
+  end
+
+  def pay_later_validations
+    return unless self.pay_later?
+
+    self.errors.add :customer_id, :blank if self.customer_id.blank? || self.customer.blank?
+    self.errors.add :pay_later, :invalid if self.customer.try(:group_id).blank?
   end
 end

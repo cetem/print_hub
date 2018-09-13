@@ -3,17 +3,14 @@
     totalPrice = 0.0
     credit = parseFloat($('#user').data('credit')) || 0
 
-    #Order.updateTotalPages()
+    total_price = 0.0
+    _.each Jobs.getPrintableJobs(), (order)->
+      job = Jobs.assignDefaultOrGetJob(order)
+      totalPrice += if job then job.price else 0.0
 
-    $('.order_line:not(.exclude-from-total)').each ->
-      totalPrice += parseFloat($(this).data('price')) || 0
-
-    #if totalPrice > 0 && (credit >= (totalPrice * Order.threshold))
-    #  $('#not_printed').hide()
-    #  $('#printed').show()
-    #else if totalPrice > 0
     # TODO: DEFINE WHATEVER WE WANT (temporal fix)
     $('#printed').hide()
+    $('.js-scheduled-at').hide()
     $('#not_printed').show()
 
     money = $('#total span.money')
@@ -24,37 +21,38 @@
     #Order.updateTotalPages()
     Jobs.reCalcPages(orderLine[0])
 
-    orderLinesContainer = $('div[data-jobs-container]')
-    mediaType = orderLine.find(
-      'select[name$="[print_job_type_id]"] :selected'
-    ).val()
 
-    copies = parseInt(orderLine.find('input[name$="[copies]"]').val())
-    pages = parseInt(orderLine.find('input[name$="[pages]"]').val())
-    evenPages = pages - (pages % 2)
-    rest = (pages % 2)
+    # orderLinesContainer = $('.jobs-container')
+    # mediaType = orderLine.find(
+    #   'select[name$="[print_job_type_id]"] :selected'
+    # ).val()
 
-    pricePerCopy = orderLine.data('price-per-copy')
-    oneSidedType = orderLinesContainer.data('odd-pages-types')[mediaType] || mediaType
-    oneSidedSettings = orderLinesContainer.data('prices-list')[oneSidedType]
-    mediaPages = orderLinesContainer.data('pages-list')[mediaType]
+    # copies = parseInt(orderLine.find('input[name$="[copies]"]').val())
+    # pages = parseInt(orderLine.find('input[name$="[pages]"]').val())
+    # evenPages = pages - (pages % 2)
+    # rest = (pages % 2)
 
-    oneSidedPages = if rest then mediaPages || rest else 0
-    pricePerOneSidedCopy = PriceChooser.choose(
-      oneSidedSettings, parseInt(oneSidedPages)
-    )
-    jobPrice = parseFloat(
-      copies * (pricePerCopy * evenPages + pricePerOneSidedCopy) || 0
-    ).toFixed(3)
+    # pricePerCopy = orderLine.data('price-per-copy')
+    # oneSidedType = orderLinesContainer.data('odd-pages-types')[mediaType] || mediaType
+    # oneSidedSettings = orderLinesContainer.data('prices-list')[oneSidedType]
+    # mediaPages = orderLinesContainer.data('pages-list')[mediaType]
 
-    money = orderLine.find('span.money')
-    orderLine.data('price', jobPrice)
-    money.html(money.html().replace(/(\d+.)+\d+/, jobPrice))
+    # oneSidedPages = if rest then mediaPages || rest else 0
+    # pricePerOneSidedCopy = PriceChooser.choose(
+    #   oneSidedSettings, parseInt(oneSidedPages)
+    # )
+    # jobPrice = parseFloat(
+    #   copies * (pricePerCopy * evenPages + pricePerOneSidedCopy) || 0
+    # ).toFixed(3)
+
+    # money = orderLine.find('span.money')
+    # orderLine.data('price', jobPrice)
+    # money.html(money.html().replace(/(\d+.)+\d+/, jobPrice))
 
     Order.updateTotalPrice()
 
   updateTotalPages: ->
-    jobsContainer = $('[data-jobs-container]')
+    jobsContainer = $('.jobs-container')
     totalTypePages = jobsContainer.data('pages-list')
 
     # Reset the counts
@@ -115,12 +113,6 @@ new Rule
         element.classList.add('exclude-from-total')
         Order.updateTotalPrice()
 
-    # Al hacer click en botón imprimir -> Imprimir =)
-    @map.print ||= (event)->
-      window.print()
-
-      event.preventDefault()
-      event.stopPropagation()
 
     # TODO Rectificar ya que no funciona el beforeunload para uploads
     @map.skipFileWarning ||= (e)->
@@ -132,7 +124,6 @@ new Rule
     $(document).on 'item.removed', @map.removeItem
     $(document).on 'change keyup', '.price-modifier, .page-modifier, .file_line_item',
       Order.updateAllOrderLines
-    $(document).on 'click', 'a[data-action="print"]', @map.print
 
   unload: ->
     #$(document).off 'click', '.skip-file-warning', @map.skipFileWarning
@@ -140,5 +131,4 @@ new Rule
     $(document).off 'item.removed', @map.removeItem
     $(document).off 'change keyup', '.price-modifier, .page-modifier, .file_line',
       Order.updateAllOrderLines
-    $(document).off 'click', 'a[data-action="print"]', @map.print
 

@@ -39,7 +39,7 @@ class Shift < ActiveRecord::Base
 
   def as_json(options = nil)
     default_options = {
-      only: [:id, :user_id, :start, :finish, :paid, :created_at]
+      only: [:id, :user_id, :start, :finish, :as_admin, :paid, :created_at]
     }
 
     super(default_options.merge(options || {}))
@@ -64,7 +64,7 @@ class Shift < ActiveRecord::Base
   end
 
   def pay!
-    update_attributes(paid: true)
+    update(paid: true)
 
     if errors.messages.any?
       Bugsnag.notify(
@@ -80,11 +80,11 @@ class Shift < ActiveRecord::Base
   end
 
   def self.as_operator_between(start, finish)
-    as_operator.pay_pending_between(start, finish).to_stats_format
+    as_operator.between(start, finish).to_stats_format
   end
 
   def self.as_admin_between(start, finish)
-    as_admin.pay_pending_between(start, finish).to_stats_format
+    as_admin.between(start, finish).to_stats_format
   end
 
   def self.to_stats_format
@@ -112,13 +112,16 @@ class Shift < ActiveRecord::Base
     }
   end
 
-  def self.to_csv
+  def self.to_csv(detailled=false, observation=nil)
     title = [
       human_attribute_name('id'),
       human_attribute_name('start'),
       human_attribute_name('finish'),
       human_attribute_name('as_admin')
     ]
+    if detailled
+      title << human_attribute_name('worked_hours')
+    end
     _yes = I18n.t('label.yes')
     _no = I18n.t('label.no')
     csv = []
@@ -127,15 +130,24 @@ class Shift < ActiveRecord::Base
       csv << [User.find(user_id).to_s]
       csv << title
       _scope.each do |shift|
-        csv << [
+        row = [
           shift.id,
           I18n.l(shift.start),
           shift.finish ? I18n.l(shift.finish) : '----',
           shift.as_admin? ? _yes : _no
         ]
+        if detailled && shift.finish
+          row << ((shift.finish - shift.start) / 3600.0).round(2)
+        end
+
+        csv << row
       end
 
       csv << []
+      if observation
+        csv << [observation]
+        csv << []
+      end
     end
     csv
   end
@@ -189,5 +201,46 @@ class Shift < ActiveRecord::Base
     operator = (as_operator.between(start, finish).to_a.sum { |s| s.finish - s.start } / 3600.0).round(2)
 
     { admin: admin, operator: operator }
+  end
+
+  def self.delayed_shifts
+    hours = [
+    # [hour, minutes]
+      [ 8, 0 ],
+      [11, 30],
+      [15, 0 ],
+      [19, 0 ]
+    ]
+    min = 20.minutes
+    max = 1.hour
+
+    shifts_to_report = {}
+    Shift.between(1.day.ago, Time.now).each do |shift|
+      hours.each do |hour, minutes|
+        expected = shift.start.change(hour: hour, min: minutes)
+        d = (shift.start - expected).to_i
+        if (d > min && d < max)
+          shifts_to_report[shift.user.to_s] ||= []
+          shifts_to_report[shift.user.to_s] << {
+            delay: d.to_i,
+            start: expected
+          }
+        end
+      end
+    end
+    shifts_to_report
+  end
+
+  def self.users_with_less_than_7_hours
+    actives_ids = User.actives.with_shifts_control.pluck(:id)
+    ids = all.finished.group_by(&:user_id).map do |user_id, _scope|
+      actives_ids.delete(user_id)
+      hours = (_scope.map {|s| s.finish - s.start}.sum / 3600.0)
+      user_id if hours < 8.0
+    end.compact
+
+    reportable_ids = (actives_ids | ids)
+
+    User.where(id: reportable_ids.uniq)
   end
 end

@@ -6,7 +6,7 @@ class ArticlesController < ApplicationController
   def index
     @title = t('view.articles.index_title')
     @searchable = true
-    @articles = Article.all
+    @articles = params[:disabled] ? Article.disabled : Article.enabled
 
     if params[:q].present?
       query = params[:q].sanitized_for_text_query
@@ -58,6 +58,7 @@ class ArticlesController < ApplicationController
   def edit
     @title = t('view.articles.edit_title')
     @article = Article.find(params[:id])
+    @versions = @article.reverse_versions_for_stock
   end
 
   # POST /articles
@@ -84,10 +85,11 @@ class ArticlesController < ApplicationController
     @article = Article.find(params[:id])
 
     respond_to do |format|
-      if @article.update_attributes(article_params)
+      if @article.update(article_params)
         format.html { redirect_to(articles_url, notice: t('view.articles.correctly_updated')) }
         format.json  { head :ok }
       else
+        @versions = @article.reverse_versions_for_stock
         format.html { render action: 'edit' }
         format.json  { render json: @article.errors, status: :unprocessable_entity }
       end
@@ -116,7 +118,7 @@ class ArticlesController < ApplicationController
   def article_params
     params.require(:article).permit(
       :name, :code, :price, :description, :lock_version, :stock,
-      :notification_stock
+      :notification_stock, :enabled
     )
   end
 end

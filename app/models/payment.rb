@@ -12,6 +12,8 @@ class Payment < ApplicationModel
     where('created_at BETWEEN :start AND :end', start: _start, end: _end)
   }
   scope :not_revoked, -> { where(revoked: false) }
+  scope :only_cash, -> { where(paid_with: PAID_WITH[:cash]) }
+  scope :only_credit, -> { where(paid_with: PAID_WITH[:credit]) }
 
   # Restricciones de los atributos
   attr_readonly :id, :amount
@@ -24,7 +26,7 @@ class Payment < ApplicationModel
   validate :paid_between_zero_and_amount
 
   # Relaciones
-  belongs_to :payable, polymorphic: true
+  belongs_to :payable, polymorphic: true, optional: true
 
   def initialize(attributes = nil)
     super(attributes)

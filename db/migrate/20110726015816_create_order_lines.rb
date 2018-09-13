@@ -1,4 +1,4 @@
-class CreateOrderLines < ActiveRecord::Migration
+class CreateOrderLines < ActiveRecord::Migration[4.2]
   def change
     create_table :order_lines do |t|
       t.references :document

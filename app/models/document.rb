@@ -1,6 +1,11 @@
 class Document < ApplicationModel
-  has_paper_trail
+  has_paper_trail except: [
+    :lock_version, :file, :original_file, :file_content_type,
+    :file_file_name, :file_file_size, :file_updated_at, :file_fingerprint,
+    :tag_path
+  ]
   mount_uploader :file, DocumentsUploader, mount_on: :file_file_name
+  process_in_background :file
   mount_uploader :original_file, SimpleDocumentsUploader
 
   # Scopes
@@ -10,6 +15,7 @@ class Document < ApplicationModel
   }
   scope :publicly_visible, -> { where(private: false) }
   scope :disable, -> { where(enable: false) }
+  scope :enabled, -> { where(enable: true) }
 
   # Atributos no persistentes
   attr_accessor :auto_tag_name
@@ -120,13 +126,12 @@ class Document < ApplicationModel
   end
 
   def can_be_destroyed?
-    if print_jobs.empty?
-      true
-    else
-      errors.add :base,
-                 I18n.t('view.documents.has_related_print_jobs')
-
-      false
+    if print_jobs.any?
+      self.errors.add(
+        :base,
+        I18n.t('view.documents.has_related_print_jobs'),
+      )
+      throw :abort
     end
   end
 
@@ -145,8 +150,7 @@ class Document < ApplicationModel
   def extract_page_count
     PDF::Reader.new(file.path).tap do |pdf|
       self.pages = pdf.page_count
-    end if file_file_name_changed?
-
+    end if will_save_change_to_file_file_name?
   rescue PDF::Reader::MalformedPDFError
     false
   end
@@ -195,7 +199,7 @@ class Document < ApplicationModel
       png_path = File.join(TMP_BARCODE_IMAGES, name)
       barcode_file_paths[name] = png_path
 
-      CustomThreads.wait_for(threads)
+      ::CustomThreads.wait_for(threads)
       threads << Thread.new { File.open(png_path, 'wb') { |f| f << barcode.to_png(xdim: 30, ydim: 30) } }
     end
 
@@ -204,7 +208,7 @@ class Document < ApplicationModel
     threads = []
     barcode_file_paths.each do |file_name, file_path|
       title = file_name.gsub('.png', '').gsub("#{timestamp}-", '')
-      CustomThreads.wait_for(threads, 2)
+      ::CustomThreads.wait_for(threads, 2)
       threads << Thread.new { system("montage #{file_path} -title #{title} -pointsize 400 -geometry 2000x2000+20+20 #{file_path}") }
     end
 
@@ -226,23 +230,6 @@ class Document < ApplicationModel
     )
   end
 
-  def self.copies_for_stock_between(dates)
-    from, to = dates.sort
-
-    print_jobs = PrintJob.arel_table
-    mega_scope = PrintJob.where(created_at: from..to)
-      .select(
-        print_jobs[:copies].sum.as('total_copies'), print_jobs[:document_id]
-      )
-      .having('(SUM(print_jobs.copies) > 20)').order('total_copies DESC')
-      .group(:document_id)
-
-    mega_scope.map do |summary|
-      if summary.try(:document)
-        [summary.document.to_s, summary.total_copies]
-      end
-    end.compact
-  end
 
   private
 
@@ -253,7 +240,7 @@ class Document < ApplicationModel
   end
 
   def update_file_attributes
-    if file.present? && file_file_name_changed?
+    if file.present? && will_save_change_to_file_file_name?
       self.file_content_type = file.file.content_type
       self.file_file_size = file.file.size
       self.file_updated_at = Time.zone.now
@@ -261,7 +248,7 @@ class Document < ApplicationModel
   end
 
   def recreate_versions
-    if file_file_name_changed?
+    if will_save_change_to_file_file_name?
       begin
         file.recreate_versions! unless @versions_ready
       rescue => e

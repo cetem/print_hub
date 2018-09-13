@@ -16,7 +16,14 @@
     </tbody>
   </table>
 
+  <p>
+    <strong><%= t('view.customers_groups.total_debt') %></strong>:
+    <%= number_to_currency @customers_group.total_debt %>
+  </p>
+
   <%= pagination_links(@customers) %>
+
+  <%= render "pay_customer_group" %>
 </div>
 
 <div class="form-actions">

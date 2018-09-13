@@ -28,6 +28,11 @@
     <%= t(@customer.bonus_without_expiration ? :yes : :no, scope: :label) %>
   </p>
 
+  <p>
+    <b><%= Customer.human_attribute_name 'rfid' %>:</b>
+    <%= @customer.rfid %>
+  </p>
+
   <% if @customer.current_bonuses.any? %>
     <%= render "bonuses", customer: @customer %>
   <% end %>

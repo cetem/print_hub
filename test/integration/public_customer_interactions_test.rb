@@ -3,7 +3,7 @@ require 'test_helper'
 class PublicCustomerInteractionsTest < ActionDispatch::IntegrationTest
   setup do
     subdomain = APP_CONFIG['subdomains']['customers']
-    Capybara.app_host = "http://#{subdomain}.lvh.me:54163"
+    Capybara.app_host = "http://#{subdomain}.lvh.me:#{Capybara.server_port}"
   end
 
   test 'should register a new customer and should login' do
@@ -78,6 +78,7 @@ class PublicCustomerInteractionsTest < ActionDispatch::IntegrationTest
         click_link 'Si'
 
         assert page.has_content?(I18n.t('view.feedbacks.positive_return'))
+        sleep 0.5
       end
 
       assert_equal 'new_customer',

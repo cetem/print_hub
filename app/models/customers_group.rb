@@ -28,21 +28,25 @@ class CustomersGroup < ApplicationModel
   end
 
   def self.settlement_as_csv(start = 1.year.ago, finish = Time.zone.now)
-    _group = []
+    _group = [
+      # A    B    C    D    E    F    G
+      [nil, nil, nil, nil, nil, 0.6, 0.5]
+    ]
 
-    all.each do |cg|
-      _group += cg.settlement_as_csv(start, finish)
+    all.map do |cg|
+      csv = cg.settlement_as_csv(start, finish)
+      _group += csv if csv
     end
 
     _group
   end
 
   def settlement_as_csv(start = 1.year.ago, finish = Time.zone.now)
-    double_t    = I18n.t('view.customers_groups.double')
-    simple_t    = I18n.t('view.customers_groups.simple')
-    library_t   = I18n.t('view.customers_groups.library')
-    total_t     = I18n.t('view.customers_groups.total')
-    range       = start..finish
+    double_t  = I18n.t('view.customers_groups.double')
+    simple_t  = I18n.t('view.customers_groups.simple')
+    library_t = I18n.t('view.customers_groups.library')
+    total_t   = I18n.t('view.customers_groups.total')
+    range     = start..finish
 
     csv = []
     csv << []
@@ -74,12 +78,18 @@ class CustomersGroup < ApplicationModel
         totals[:two_sides] += copies[:two]
         totals[:library] += library
 
-        csv << [c.to_s, copies[:one], copies[:two], library]
+        csv << [c.to_s, copies[:one], copies[:two], library, "=#{copies[:one]}*F1+#{copies[:two]}*G1+#{library}"]
       end
     end
 
-    csv << [nil, totals[:one_side], totals[:two_sides], totals[:library]] if customers.count > 1
-    csv
+    if csv.size > 3  # one empty line + headers + at least 1 detail
+      csv << [
+        nil, totals[:one_side], totals[:two_sides], totals[:library],
+        "=#{totals[:one_side]}*F1+#{totals[:two_sides]}*G1+#{totals[:library]}"
+      ]
+
+    end
+    csv if csv.size > 2
   end
 
   def detailed_settlement_as_csv(start = 1.year.ago, finish = Time.zone.now)
@@ -146,5 +156,51 @@ class CustomersGroup < ApplicationModel
 
       csv << [nil, totals[:simple], totals[:double], totals[:library]] if customers.count > 1
     end
+  end
+
+  def pay_between(start, finish)
+    Print.transaction do
+      begin
+        Print.where(customer_id: self.customer_ids, created_at: start..finish).each(&:pay_print)
+      rescue
+        raise ActiveRecord::Rollback
+      end
+    end
+  end
+
+  def self.pay_between(start, finish)
+    Print.transaction do
+      begin
+        customer_ids = Customer.where(group_id: ids)
+        Print.pay_later.where(
+          customer_id: customer_ids, created_at: start..finish
+        ).preload(
+          :article_lines,
+          :customer,
+          :payments,
+          print_jobs: :print_job_type
+        ).find_each(&:pay_print)
+      rescue
+        raise ActiveRecord::Rollback
+      end
+    end
+  end
+
+
+  def total_debt
+    self.customers.map {|c| c.prints_with_debt.to_a.sum(&:price)}.sum
+  end
+
+  def self.upload_settlements(start, finish=nil)
+    finish ||= start.end_of_month
+    ::GDrive.upload_spreadsheet(
+      I18n.t('view.customers_groups.spreadsheet_file_name',
+        start: I18n.l(start.to_date, format: :related_month).camelize,
+        finish: I18n.l(finish.to_date, format: :related_month).camelize,
+        year:  start.year
+       ),
+      CustomersGroup.settlement_as_csv(start, finish),
+      month:  (start.month == finish.month) ? start.month : nil
+    )
   end
 end

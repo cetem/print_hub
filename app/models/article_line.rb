@@ -17,8 +17,8 @@ class ArticleLine < ApplicationModel
   after_create :discount_stock
 
   # Relaciones
-  belongs_to :print
-  belongs_to :article
+  belongs_to :print, optional: true
+  belongs_to :article, optional: true
 
   def initialize(attributes = nil)
     super(attributes)
@@ -34,6 +34,11 @@ class ArticleLine < ApplicationModel
   def discount_stock
     article.stock -= units
     article.stock = 0 if article.stock < 0
+    article.save
+  end
+
+  def refund!
+    article.stock += units
     article.save
   end
 end
