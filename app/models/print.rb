@@ -72,8 +72,9 @@ class Print < ApplicationModel
   def initialize(attributes = nil)
     super(attributes)
 
-    self.user   = UserSession.find.try(:user) || user rescue user
+    self.user     = Current.user || user rescue user
     self.status ||= STATUS[:pending_payment]
+
     self.pay_later! if [1, '1', true].include?(pay_later)
 
     case
@@ -144,7 +145,7 @@ class Print < ApplicationModel
   end
 
   def revoke!
-    return unless UserSession.find.try(:record).try(:admin)
+    return unless Current.user.try(:admin)
 
     Print.transaction do
       begin

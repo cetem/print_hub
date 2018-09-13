@@ -3,7 +3,7 @@ class ApplicationController < ActionController::Base
 
   protect_from_forgery with: :null_session, unless: :trusted_sites
 
-  before_action :set_js_format_in_iframe_request, :set_paper_trail_whodunnit
+  before_action :set_js_format_in_iframe_request, :set_paper_trail_whodunnit, :assign_currents
   before_bugsnag_notify :add_user_info_to_bugsnag
   after_action -> { expires_now if current_user || current_customer }
 
@@ -214,5 +214,10 @@ class ApplicationController < ActionController::Base
     (SECRETS[:trusted_sites] || {}).each do |site, custom_header|
       return true if request.headers[custom_header] == site
     end
+  end
+
+  def assign_currents
+    Current.user     = current_user
+    Current.customer = current_customer
   end
 end
