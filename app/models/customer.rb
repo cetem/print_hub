@@ -1,5 +1,5 @@
 class Customer < ApplicationModel
-  has_paper_trail ignore: [:perishable_token]
+  has_paper_trail
 
   # acts_as_authentic do |c|
   #   c.maintain_sessions = false

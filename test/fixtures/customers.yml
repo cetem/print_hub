@@ -5,8 +5,7 @@ student:
   email: student@printhub.com
   enable: true
   password_salt: <%= salt = hex_token %>
-  crypted_password: <%= encrypt('student123', salt) %>
-  perishable_token: <%= friendly_token %>
+  encrypted_password: <%= encrypt('student123', salt) %>
   free_monthly_bonus: 100.00
   bonus_without_expiration: false
   kind: <%= Customer::KINDS[:reliable] %>
@@ -18,8 +17,7 @@ teacher:
   email: teacher@printhub.com
   enable: true
   password_salt: <%= salt = hex_token %>
-  crypted_password: <%= encrypt('teacher123', salt) %>
-  perishable_token: <%= friendly_token %>
+  encrypted_password: <%= encrypt('teacher123', salt) %>
   free_monthly_bonus: 10.00
   bonus_without_expiration: false
   kind: <%= Customer::KINDS[:normal] %>
@@ -31,8 +29,7 @@ student_without_bonus:
   email: student_without_bonus@printhub.com
   enable: true
   password_salt: <%= salt = hex_token %>
-  crypted_password: <%= encrypt('student_without_bonus123', salt) %>
-  perishable_token: <%= friendly_token %>
+  encrypted_password: <%= encrypt('student_without_bonus123', salt) %>
   free_monthly_bonus: 0.00
   bonus_without_expiration: false
   kind: <%= Customer::KINDS[:normal] %>
