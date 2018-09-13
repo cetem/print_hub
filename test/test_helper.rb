@@ -164,6 +164,7 @@ class ActionDispatch::IntegrationTest
     )
   end
 
+      # (Capybara.page.driver.remove_cookie('user_credentials') rescue nil)
   Capybara.register_driver :poltergeist do |app|
       Capybara::Poltergeist::Driver.new(app, {
         # debug: true,

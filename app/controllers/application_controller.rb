@@ -220,4 +220,37 @@ class ApplicationController < ActionController::Base
     Current.user     = current_user
     Current.customer = current_customer
   end
+
+  # Devise SignIn callback
+  def after_sign_in_path_for(resource_or_scope)
+        session[:has_an_open_shift] = current_user.has_stale_shift?
+     current_user
+    if @user_session.record.has_stale_shift?
+      [
+        edit_shift_url(@user_session.record.stale_shift),
+        notice: t('view.shifts.edit_stale')
+      ]
+    else
+      [prints_url, notice: t('view.user_sessions.correctly_created')]
+    end
+
+  end
+
+  # Devise SignOut callback
+  def after_sign_out_path_for(resource_or_scope)
+    if resource_or_scope == :user
+      new_user_session_path
+    elsif resource_or_scope == :admin
+      new_admin_session_path
+    else
+      root_path
+    end
+    if params[:close_shift]
+      if params[:as_operator]
+        current_user.last_open_shift_as_operator!
+      end
+
+      current_user_session.close_shift!
+    end
+  end
 end

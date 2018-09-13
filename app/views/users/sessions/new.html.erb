@@ -1,0 +1,22 @@
+<div class="row">
+  <div class="public-form-container span4 offset4">
+    <div id="login">
+      <%= simple_form_for(resource, as: resource_name, url: session_path(resource_name), defaults: { required: false }) do |f| %>
+        <div class="form-inputs">
+          <%= f.input :username, input_html: { autocomplete: 'off', autofocus: true, class: 'span3' } %>
+          <%= f.input :password, input_html: { class: 'span3' } %>
+        </div>
+        <div class="form-actions">
+         <%= f.button :submit, t('view.user_sessions.login'), class: 'btn btn-primary' %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>
+
+<% if resource.errors.any? %>
+  <footer class="alert alert-error fade in" data-dismiss="alert" data-close-after="30000">
+    <a class="close">&times;</a>
+    <strong><%= resource.errors.full_messages.join('; ') %></strong>
+  </footer>
+<% end %>
