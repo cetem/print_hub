@@ -118,6 +118,8 @@ GEM
       railties (>= 4.1.0, < 6.0)
       responders
       warden (~> 1.2.3)
+    devise-encryptable (0.2.0)
+      devise (>= 2.1.0)
     ed25519 (1.2.4)
     erubi (1.7.0)
     eventmachine (1.2.5)
@@ -384,6 +386,7 @@ DEPENDENCIES
   cups
   database_cleaner
   devise
+  devise-encryptable
   ed25519
   google_drive
   interactive_editor

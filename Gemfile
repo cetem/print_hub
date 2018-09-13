@@ -9,6 +9,7 @@ gem 'rails', '~> 5.1'
 
 gem 'pg'
 gem 'devise'
+gem 'devise-encryptable'
 gem 'jc-validates_timeliness'
 gem 'awesome_nested_set'
 gem 'will_paginate'

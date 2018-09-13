@@ -1,7 +1,7 @@
 ENV['RAILS_ENV'] ||= 'test'
 require File.expand_path('../../config/environment', __FILE__)
 require 'rails/test_help'
-require 'authlogic/test_case'
+# require 'authlogic/test_case'
 require 'sidekiq/testing'
 require 'database_cleaner'
 # require 'minitest/reporters'
@@ -12,11 +12,31 @@ require 'capybara/poltergeist'
 
 # Minitest::Reporters.use! Minitest::Reporters::ProgressReporter.new
 
+module FixturesExAuthlogicHelpers
+  def hex_token
+    SecureRandom.hex(64)
+  end
+
+  def friendly_token
+    SecureRandom.urlsafe_base64(15)
+  end
+
+  def encrypt(text, salt)
+    Devise::Encryptable::Encryptors::AuthlogicSha512.digest(
+      text, Devise.stretches, salt, nil
+    )
+  end
+end
+
+ActiveRecord::FixtureSet.context_class.send :include, FixturesExAuthlogicHelpers
+
 class ActiveSupport::TestCase
   ActiveRecord::Migration.maintain_test_schema!
   set_fixture_class versions: PaperTrail::Version
   # self.use_transactional_fixtures = true
   # Minitest::Reporters.use! Minitest::Reporters::ProgressReporter.new
+
+  # Fixtures Ex-Authlogic generators
 
   fixtures :all
 
@@ -95,13 +115,7 @@ class ActiveSupport::TestCase
 end
 
 class ActionController::TestCase
-  include Authlogic::TestCase
-  setup :activate_authlogic
-end
-
-class ActiveSupport::TestCase
-  include Authlogic::TestCase
-  setup :activate_authlogic
+  include Devise::TestHelpers
 end
 
 class JSException < Exception

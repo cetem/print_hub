@@ -39,7 +39,7 @@ class UserSessionsController < ApplicationController
     end
 
     record = current_user_session.record
-    record.reset_persistence_token # ensure the session is over
+    # record.reset_persistence_token # ensure the session is over
     current_user_session.destroy
 
     if Rails.env.test?

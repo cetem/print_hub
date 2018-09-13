@@ -1,4 +1,4 @@
-class AuthlogicUsersToDevise < ActiveRecord::Migration
+class AuthlogicUsersToDevise < ActiveRecord::Migration[5.1]
   def up
     add_column :users, :confirmation_token, :string, limit: 255
     add_column :users, :confirmed_at, :timestamp
@@ -23,8 +23,9 @@ class AuthlogicUsersToDevise < ActiveRecord::Migration
     add_index :users, :reset_password_token, unique: true
     add_index :users, :unlock_token, unique: true
   end
+
   def down
-        remove_column :users, :confirmation_token
+    remove_column :users, :confirmation_token
     remove_column :users, :confirmed_at
     remove_column :users, :confirmation_sent_at
     remove_column :users, :unconfirmed_email

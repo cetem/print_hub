@@ -1,12 +1,12 @@
 class User < ApplicationModel
-  has_paper_trail except: [:persistence_token, :updated_at, :lock_version]
+  has_paper_trail except: [:updated_at, :lock_version]
   mount_uploader :avatar, AvatarUploader, mount_on: :avatar_file_name
 
-  acts_as_authentic do |c|
-    c.maintain_sessions = false
-    c.crypto_provider = Authlogic::CryptoProviders::Sha512
-    c.merge_validates_length_of_password_field_options({ minimum: 4 })
-  end
+  # acts_as_authentic do |c|
+  #   c.maintain_sessions = false
+  #   c.crypto_provider = Authlogic::CryptoProviders::Sha512
+  #   c.merge_validates_length_of_password_field_options({ minimum: 4 })
+  # end
 
   # Scopes
   scope :actives, -> { where(enable: true) }

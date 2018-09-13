@@ -1,4 +1,4 @@
-class AuthlogicCustomerToDevise < ActiveRecord::Migration
+class AuthlogicCustomerToDevise < ActiveRecord::Migration[5.1]
   def up
     add_column :customers, :confirmation_token, :string, limit: 255
     add_column :customers, :confirmed_at, :timestamp
