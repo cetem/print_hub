@@ -2,6 +2,9 @@ class User < ApplicationModel
   has_paper_trail except: [:updated_at, :lock_version]
   mount_uploader :avatar, AvatarUploader, mount_on: :avatar_file_name
 
+  devise :database_authenticatable, :recoverable, :trackable, :validatable, :encryptable
+
+
   # acts_as_authentic do |c|
   #   c.maintain_sessions = false
   #   c.crypto_provider = Authlogic::CryptoProviders::Sha512

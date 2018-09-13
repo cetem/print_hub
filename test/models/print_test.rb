@@ -2,6 +2,7 @@ require 'test_helper'
 
 # Clase para probar el modelo "Print"
 class PrintTest < ActiveSupport::TestCase
+
   # Función para inicializar las variables utilizadas en las pruebas
   def setup
     @print = prints(:math_print)
@@ -244,7 +245,7 @@ class PrintTest < ActiveSupport::TestCase
   end
 
   test 'create with free credit and paying more in cash' do
-    UserSession.create(users(:operator))
+    # sign_in(users(:operator))
     @customer = customers(:student)
     Bonus.all.delete_all
     Deposit.all.delete_all
@@ -314,7 +315,7 @@ class PrintTest < ActiveSupport::TestCase
   end
 
   test 'create with free credit' do
-    UserSession.create(users(:operator))
+    sign_in(users(:operator))
     counts = ['Print.count', 'Payment.count',
               '::CustomCups.last_job_id(@printer)', 'ArticleLine.count']
 
@@ -718,7 +719,7 @@ class PrintTest < ActiveSupport::TestCase
   end
 
   test 'revoke' do
-    UserSession.create(@operator)
+    sign_in(@operator)
     @article = articles(:binding)
 
     assert_difference '@article.reload.stock', 2 do
@@ -733,7 +734,7 @@ class PrintTest < ActiveSupport::TestCase
 
   test 'can not revoke if is not admin' do
     @operator.update(admin: false)
-    UserSession.create(users(:operator))
+    sign_in(users(:operator))
 
     assert_no_difference('Bonus.count') { assert_nil @print.revoke! }
 
@@ -741,7 +742,7 @@ class PrintTest < ActiveSupport::TestCase
   end
 
   test 'revoke a print paid with credit returns the value to the customer' do
-    UserSession.create(@operator)
+    sign_in(@operator)
     print = prints(:math_print_with_credit)
     initial_bonus = print.customer.bonuses.to_a.sum(&:remaining)
     payments_amount = print.payments.select(&:credit?).to_a.sum(&:paid)

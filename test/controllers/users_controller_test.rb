@@ -4,7 +4,7 @@ class UsersControllerTest < ActionController::TestCase
   setup do
     @operator = users(:operator)
 
-    UserSession.create(@operator)
+    sign_in(@operator)
 
     prepare_avatar_files
   end

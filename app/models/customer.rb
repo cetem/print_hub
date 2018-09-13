@@ -1,6 +1,8 @@
 class Customer < ApplicationModel
   has_paper_trail
 
+  devise :database_authenticatable, :recoverable, :trackable, :validatable, :encryptable
+
   # acts_as_authentic do |c|
   #   c.maintain_sessions = false
   #   c.validates_uniqueness_of_email_field_options = { case_sensitive: false }

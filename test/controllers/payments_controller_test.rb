@@ -2,7 +2,7 @@ require 'test_helper'
 
 class PaymentsControllerTest < ActionController::TestCase
   def setup
-    UserSession.create(users(:operator))
+    sign_in(users(:operator))
   end
 
   test 'should get index' do

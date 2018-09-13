@@ -7,7 +7,7 @@ class CustomersControllerTest < ActionController::TestCase
   end
 
   test 'should get index' do
-    UserSession.create(@operator)
+    sign_in(@operator)
 
     get :index
     assert_response :success
@@ -17,7 +17,7 @@ class CustomersControllerTest < ActionController::TestCase
   end
 
   test 'should get filtered index' do
-    UserSession.create(@operator)
+    sign_in(@operator)
 
     get :index, params: { q: 'Anakin|Darth' }
     assert_response :success
@@ -30,7 +30,7 @@ class CustomersControllerTest < ActionController::TestCase
   end
 
   test 'should get index with debt customers' do
-    UserSession.create(@operator)
+    sign_in(@operator)
 
     get :index, params: { status: 'with_debt' }
     assert_response :success
@@ -42,7 +42,7 @@ class CustomersControllerTest < ActionController::TestCase
   end
 
   test 'should get new' do
-    UserSession.create(@operator)
+    sign_in(@operator)
 
     get :new
     assert_response :success
@@ -62,7 +62,7 @@ class CustomersControllerTest < ActionController::TestCase
   end
 
  test 'should create simple customer' do
-    UserSession.create(@operator)
+    sign_in(@operator)
 
     assert_difference ['Customer.unscoped.count'] do
       assert_difference 'PaperTrail::Version.count' do
@@ -86,7 +86,7 @@ class CustomersControllerTest < ActionController::TestCase
 
   test 'should create customer' do
     User.where(id: @operator.id).update_all(not_shifted: true)
-    UserSession.create(@operator)
+    sign_in(@operator)
 
     assert_difference ['Customer.unscoped.count', 'Bonus.count'] do
       assert_difference 'PaperTrail::Version.count', 2 do
@@ -169,7 +169,7 @@ class CustomersControllerTest < ActionController::TestCase
   end
 
   test 'should show customer' do
-    UserSession.create(@operator)
+    sign_in(@operator)
 
     get :show, params: { id: @customer.to_param }
     assert_response :success
@@ -179,7 +179,7 @@ class CustomersControllerTest < ActionController::TestCase
   end
 
   test 'should get edit' do
-    UserSession.create(@operator)
+    sign_in(@operator)
 
     get :edit, params: { id: @customer.to_param }
     assert_response :success
@@ -190,7 +190,7 @@ class CustomersControllerTest < ActionController::TestCase
 
   test 'should update customer' do
     User.where(id: @operator.id).update_all(not_shifted: true)
-    UserSession.create(@operator)
+    sign_in(@operator)
 
     assert_no_difference 'Customer.count' do
       assert_difference 'Bonus.count' do
@@ -215,7 +215,7 @@ class CustomersControllerTest < ActionController::TestCase
   end
 
   test 'should update customer deposits' do
-    UserSession.create(@operator)
+    sign_in(@operator)
 
     assert_no_difference 'Customer.count' do
       assert_difference 'Deposit.count' do
@@ -238,7 +238,7 @@ class CustomersControllerTest < ActionController::TestCase
   end
 
   test 'should destroy customer' do
-    UserSession.create(@operator)
+    sign_in(@operator)
 
     assert_difference('Customer.count', -1) do
       delete :destroy, params: { id: Customer.find(customers(:teacher).id).to_param }
@@ -248,7 +248,7 @@ class CustomersControllerTest < ActionController::TestCase
   end
 
   test 'should get credit detail' do
-    UserSession.create(@operator)
+    sign_in(@operator)
 
     get :credit_detail, params: { id: @customer.to_param }, xhr: true
 
@@ -323,7 +323,7 @@ class CustomersControllerTest < ActionController::TestCase
   end
 
   test 'should pay off customer debt' do
-    UserSession.create(@operator)
+    sign_in(@operator)
 
     put :pay_off_debt, params: { id: @customer.to_param }, xhr: true
 
@@ -334,7 +334,7 @@ class CustomersControllerTest < ActionController::TestCase
   end
 
   test 'should pay off a customer month debt' do
-    UserSession.create(@operator)
+    sign_in(@operator)
 
     month = @customer.months_to_pay.last
 
@@ -347,7 +347,7 @@ class CustomersControllerTest < ActionController::TestCase
   end
 
   test 'should be able to use customer rfid' do
-    UserSession.create(@operator)
+    sign_in(@operator)
     @customer.update(rfid: '123123')
 
     put :use_rfid, params: { id: @customer.to_param, rfid: '123123' }, xhr: true
@@ -359,7 +359,7 @@ class CustomersControllerTest < ActionController::TestCase
   end
 
   test 'should not be able to use customer rfid' do
-    UserSession.create(@operator)
+    sign_in(@operator)
     @customer.update(rfid: '123123')
 
     put :use_rfid, params: { id: @customer.to_param, rfid: '111111' }, xhr: true
@@ -370,7 +370,7 @@ class CustomersControllerTest < ActionController::TestCase
   end
 
   test 'should assign customer rfid' do
-    UserSession.create(@operator)
+    sign_in(@operator)
     assert_nil @customer.rfid
 
     post :assign_rfid, params: { id: @customer.to_param, rfid: '123123' }, xhr: true

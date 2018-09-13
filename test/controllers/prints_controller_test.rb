@@ -6,7 +6,7 @@ class PrintsControllerTest < ActionController::TestCase
     @printer = ::CustomCups.pdf_printer
     @operator = users(:operator)
 
-    UserSession.create(@operator)
+    sign_in(@operator)
 
     fail "Can't find a PDF printer to run tests with." unless @printer
 

@@ -5,7 +5,7 @@ class ArticlesControllerTest < ActionController::TestCase
     @article = articles(:binding)
     @operator = users(:operator)
 
-    UserSession.create(@operator)
+    sign_in(@operator)
   end
 
   test 'should get index' do

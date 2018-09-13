@@ -2,6 +2,7 @@ require 'test_helper'
 
 # Clase para probar el modelo "User"
 class UserTest < ActiveSupport::TestCase
+
   # Función para inicializar las variables utilizadas en las pruebas
   def setup
     @operator = users(:operator)

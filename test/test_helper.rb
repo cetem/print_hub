@@ -115,7 +115,7 @@ class ActiveSupport::TestCase
 end
 
 class ActionController::TestCase
-  include Devise::TestHelpers
+  include Devise::Test::ControllerHelpers
 end
 
 class JSException < Exception
@@ -252,7 +252,7 @@ class ActionDispatch::IntegrationTest
     # options[:expected_path] ||= prints_path
 
     # user = options[:user_id].present? ? User.find(options[:user_id]) : users(:operator)
-    # # UserSession.create(user)
+    # # sign_in(user)
     # page.driver.set_cookie(
     #   'user_credentials',
     #   "#{user.persistence_token}::#{user.id}"
