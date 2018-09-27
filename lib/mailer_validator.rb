@@ -46,7 +46,7 @@ module MailerValidator
       return true
     end
 
-    [(response.code == '200') && body['smtp_check'], body['did_you_mean']]
+    [(response.code == '200') && body['format_valid'] && body['mx_found'], body['did_you_mean']]
   end
 end
 
