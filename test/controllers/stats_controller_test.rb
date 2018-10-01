@@ -3,7 +3,7 @@ require 'test_helper'
 class StatsControllerTest < ActionController::TestCase
   def setup
     @controller = StatsController.new
-    UserSession.create(users(:operator))
+    sign_in(users(:operator))
   end
 
   test 'should get printers stats' do

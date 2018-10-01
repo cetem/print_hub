@@ -2,6 +2,7 @@ require 'test_helper'
 
 # Clase para probar el modelo "User"
 class UserTest < ActiveSupport::TestCase
+
   # Función para inicializar las variables utilizadas en las pruebas
   def setup
     @operator = users(:operator)
@@ -17,7 +18,7 @@ class UserTest < ActiveSupport::TestCase
     assert_equal users(:operator).default_printer, @operator.default_printer
     assert_equal users(:operator).lines_per_page, @operator.lines_per_page
     assert_equal users(:operator).username, @operator.username
-    assert_equal users(:operator).crypted_password, @operator.crypted_password
+    assert_equal users(:operator).encrypted_password, @operator.encrypted_password
     assert_equal users(:operator).admin, @operator.admin
     assert_equal users(:operator).enable, @operator.enable
   end

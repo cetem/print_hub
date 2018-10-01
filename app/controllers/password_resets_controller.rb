@@ -24,17 +24,17 @@ class PasswordResetsController < ApplicationController
   # GET /password_resets/token/edit
   def edit
     @title = t('view.password_resets.edit_title')
-    @customer = Customer.find_using_perishable_token(
-      params[:token], TOKEN_VALIDITY
-    )
+    # @customer = Customer.find_using_perishable_token(
+    #   params[:token], TOKEN_VALIDITY
+    # )
   end
 
   # PUT /password_resets/token
   def update
     @title = t('view.password_resets.edit_title')
-    @customer = Customer.find_using_perishable_token(
-      params[:token], TOKEN_VALIDITY
-    )
+    # @customer = Customer.find_using_perishable_token(
+    #   params[:token], TOKEN_VALIDITY
+    # )
 
     respond_to do |format|
       if @customer.try(:update, customer_params)

@@ -114,7 +114,7 @@ class UserSessionsControllerTest < ActionController::TestCase
     @operator.close_pending_shifts!
 
     assert_difference '@operator.shifts.count' do
-      UserSession.create(@operator)
+      sign_in(@operator)
     end
 
     assert_not_nil UserSession.find
@@ -132,7 +132,7 @@ class UserSessionsControllerTest < ActionController::TestCase
     @operator.close_pending_shifts!
 
     assert_difference '@operator.shifts.count' do
-      UserSession.create(@operator)
+      sign_in(@operator)
     end
 
     assert_not_nil UserSession.find
@@ -151,7 +151,7 @@ class UserSessionsControllerTest < ActionController::TestCase
   test 'should exit whitout close the shift' do
     @operator.close_pending_shifts!
 
-    UserSession.create(@operator)
+    sign_in(@operator)
 
     assert_equal 1, @operator.shifts.pending.size
 

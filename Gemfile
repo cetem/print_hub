@@ -8,7 +8,8 @@ end
 gem 'rails', '~> 5.1'
 
 gem 'pg'
-gem 'authlogic', '~> 3'
+gem 'devise'
+gem 'devise-encryptable'
 gem 'jc-validates_timeliness'
 gem 'awesome_nested_set'
 gem 'will_paginate'
@@ -18,8 +19,8 @@ gem 'cups'
 gem 'simple_form'
 
 # Files Processors
-gem 'carrierwave'
-gem 'carrierwave_backgrounder'
+gem 'carrierwave', '~> 0.11.2'
+gem 'carrierwave_backgrounder', '~> 0.4.2'
 gem 'mini_magick', '3.8.1'
 gem 'rghost' #Could make it happen only with carrierwave
 gem 'pdf-reader'

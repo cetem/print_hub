@@ -66,19 +66,30 @@ ActiveRecord::Schema.define(version: 20180828004548) do
     t.datetime "updated_at"
     t.boolean "bonus_without_expiration", default: false, null: false
     t.string "email"
-    t.string "crypted_password"
+    t.string "encrypted_password"
     t.string "password_salt"
-    t.string "persistence_token"
-    t.string "perishable_token"
     t.boolean "enable", default: true
     t.string "kind", limit: 1, default: "n", null: false
     t.integer "group_id"
+    t.string "confirmation_token", limit: 255
+    t.datetime "confirmed_at"
+    t.datetime "confirmation_sent_at"
+    t.string "unconfirmed_email"
+    t.string "reset_password_token", limit: 255
+    t.datetime "reset_password_sent_at"
+    t.string "remember_token", limit: 255
+    t.datetime "remember_created_at"
+    t.string "unlock_token", limit: 255
+    t.datetime "locked_at"
+    t.integer "sign_in_count"
     t.string "rfid"
     t.index "to_tsvector('spanish'::regconfig, (((((COALESCE(identification, ''::character varying))::text || ' '::text) || (COALESCE(name, ''::character varying))::text) || ' '::text) || (COALESCE(lastname, ''::character varying))::text))", name: "index_customers_on_identification_name_and_lastname_ts", using: :gin
+    t.index ["confirmation_token"], name: "index_customers_on_confirmation_token", unique: true
     t.index ["email"], name: "index_customers_on_email", unique: true
     t.index ["enable"], name: "index_customers_on_enable"
     t.index ["identification"], name: "index_customers_on_identification", unique: true
-    t.index ["perishable_token"], name: "index_customers_on_perishable_token"
+    t.index ["reset_password_token"], name: "index_customers_on_reset_password_token", unique: true
+    t.index ["unlock_token"], name: "index_customers_on_unlock_token", unique: true
   end
 
   create_table "customers_groups", id: :serial, force: :cascade do |t|
@@ -314,9 +325,8 @@ ActiveRecord::Schema.define(version: 20180828004548) do
     t.string "language", null: false
     t.string "email", null: false
     t.string "username", null: false
-    t.string "crypted_password", null: false
+    t.string "encrypted_password", null: false
     t.string "password_salt", null: false
-    t.string "persistence_token", null: false
     t.boolean "admin", default: false, null: false
     t.boolean "enable"
     t.integer "lock_version", default: 0
@@ -329,7 +339,21 @@ ActiveRecord::Schema.define(version: 20180828004548) do
     t.datetime "avatar_updated_at"
     t.integer "lines_per_page"
     t.boolean "not_shifted", default: false
+    t.string "confirmation_token", limit: 255
+    t.datetime "confirmed_at"
+    t.datetime "confirmation_sent_at"
+    t.string "unconfirmed_email"
+    t.string "reset_password_token", limit: 255
+    t.datetime "reset_password_sent_at"
+    t.string "remember_token", limit: 255
+    t.datetime "remember_created_at"
+    t.string "unlock_token", limit: 255
+    t.datetime "locked_at"
+    t.integer "sign_in_count"
+    t.index ["confirmation_token"], name: "index_users_on_confirmation_token", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true
+    t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
+    t.index ["unlock_token"], name: "index_users_on_unlock_token", unique: true
     t.index ["username"], name: "index_users_on_username", unique: true
   end
 

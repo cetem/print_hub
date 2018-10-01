@@ -1,14 +1,16 @@
 class Customer < ApplicationModel
-  has_paper_trail ignore: [:perishable_token]
+  has_paper_trail
 
-  acts_as_authentic do |c|
-    c.maintain_sessions = false
-    c.validates_uniqueness_of_email_field_options = { case_sensitive: false }
-    c.validates_length_of_email_field_options = { maximum: 255 }
-    c.merge_validates_length_of_password_field_options({ minimum: 4 })
+  devise :database_authenticatable, :recoverable, :trackable, :validatable, :encryptable
 
-    c.crypto_provider = Authlogic::CryptoProviders::Sha512
-  end
+  # acts_as_authentic do |c|
+  #   c.maintain_sessions = false
+  #   c.validates_uniqueness_of_email_field_options = { case_sensitive: false }
+  #   c.validates_length_of_email_field_options = { maximum: 255 }
+  #   c.merge_validates_length_of_password_field_options({ minimum: 4 })
+
+  #   c.crypto_provider = Authlogic::CryptoProviders::Sha512
+  # end
 
   KINDS = {
     normal: 'n',

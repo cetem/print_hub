@@ -10,7 +10,7 @@ class OrdersControllerTest < ActionController::TestCase
   test 'should get user index' do
     @request.host = 'localhost'
 
-    UserSession.create(@operator)
+    sign_in(@operator)
 
     get :index, params: { type: 'all' }
     assert_response :success
@@ -25,7 +25,7 @@ class OrdersControllerTest < ActionController::TestCase
   test 'should get user for print index' do
     @request.host = 'localhost'
 
-    UserSession.create(@operator)
+    sign_in(@operator)
 
     get :index, params: { type: 'print' }
     assert_response :success
@@ -38,7 +38,7 @@ class OrdersControllerTest < ActionController::TestCase
   test 'should get user filtered index' do
     @request.host = 'localhost'
 
-    UserSession.create(@operator)
+    sign_in(@operator)
 
     get :index, params: { type: 'all', q: 'darth' }
     assert_response :success
@@ -114,7 +114,7 @@ class OrdersControllerTest < ActionController::TestCase
   test 'should show user order' do
     @request.host = 'localhost'
 
-    UserSession.create(@operator)
+    sign_in(@operator)
 
     get :show, params: { type: 'all', id: @order.to_param }
     assert_response :success
@@ -168,7 +168,7 @@ class OrdersControllerTest < ActionController::TestCase
   test 'should cancel order as user' do
     @request.host = 'localhost'
 
-    UserSession.create(@operator)
+    sign_in(@operator)
 
     assert_no_difference 'Order.count' do
       delete :destroy, params: { id: @order.to_param, type: 'all' }

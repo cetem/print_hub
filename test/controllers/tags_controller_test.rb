@@ -3,7 +3,7 @@ require 'test_helper'
 class TagsControllerTest < ActionController::TestCase
   setup do
     @tag = tags(:books)
-    UserSession.create(users(:operator))
+    sign_in(users(:operator))
   end
 
   test 'should get index' do

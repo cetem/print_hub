@@ -28,7 +28,7 @@ class ApplicationControllerTest < ActionController::TestCase
   test 'current user session' do
     assert_nil @controller.send(:current_user_session)
 
-    UserSession.create(@operator)
+    sign_in(@operator)
 
     assert_not_nil @controller.send(:current_user_session)
   end
@@ -36,7 +36,7 @@ class ApplicationControllerTest < ActionController::TestCase
   test 'current user' do
     assert_nil @controller.send(:current_user)
 
-    UserSession.create(@operator)
+    sign_in(@operator)
 
     assert_not_nil @controller.send(:current_user)
     assert_equal @operator.id, @controller.send(:current_user).id
@@ -74,7 +74,7 @@ class ApplicationControllerTest < ActionController::TestCase
     assert_equal I18n.t('messages.must_be_logged_in'),
                  @controller.send(:flash)[:notice]
 
-    UserSession.create(@operator)
+    sign_in(@operator)
 
     assert_not_equal false, @controller.send(:require_user)
   end
@@ -82,7 +82,7 @@ class ApplicationControllerTest < ActionController::TestCase
   test 'require no user' do
     assert @controller.send(:require_no_user)
 
-    UserSession.create(@operator)
+    sign_in(@operator)
 
     assert !@controller.send(:require_no_user)
     assert_redirected_to prints_url
@@ -96,7 +96,7 @@ class ApplicationControllerTest < ActionController::TestCase
     assert_equal I18n.t('messages.must_be_logged_in'),
                  @controller.send(:flash)[:notice]
 
-    UserSession.create(@operator)
+    sign_in(@operator)
 
     assert_not_equal false, @controller.send(:require_customer_or_user)
   end
@@ -107,7 +107,7 @@ class ApplicationControllerTest < ActionController::TestCase
     assert_not_nil @controller.send(:check_logged_in)
     assert_redirected_to root_url
 
-    UserSession.create(@operator)
+    sign_in(@operator)
 
     assert_nil @controller.send(:check_logged_in)
     assert_not_nil @controller.send(:current_user)
@@ -145,7 +145,7 @@ class ApplicationControllerTest < ActionController::TestCase
     assert_equal I18n.t('messages.must_be_logged_in'),
                  @controller.send(:flash)[:notice]
 
-    UserSession.create(@operator)
+    sign_in(@operator)
     assert_not_equal false, @controller.send(:require_no_customer_or_user)
   end
 
@@ -163,14 +163,14 @@ class ApplicationControllerTest < ActionController::TestCase
   test 'require no customer or admin with user' do
     @operator.update(admin: false)
 
-    UserSession.create(@operator)
+    sign_in(@operator)
 
     assert @controller.send(:require_no_customer_or_user)
     assert_response :success
   end
 
   test 'require admin user with admin user' do
-    UserSession.create(@operator)
+    sign_in(@operator)
 
     assert_not_equal false, @controller.send(:require_admin_user)
   end
@@ -178,7 +178,7 @@ class ApplicationControllerTest < ActionController::TestCase
   test 'require admin with a non admin user' do
     @operator.update(admin: false)
 
-    UserSession.create(@operator)
+    sign_in(@operator)
 
     assert_equal false, @controller.send(:require_admin_user)
     assert_redirected_to prints_url
@@ -209,7 +209,7 @@ class ApplicationControllerTest < ActionController::TestCase
     @operator.update(admin: false, not_shifted: false)
     @operator.close_pending_shifts!
 
-    UserSession.create(@operator)
+    sign_in(@operator)
 
     @controller.send(:session)[:has_an_open_shift] = true
 
@@ -230,7 +230,7 @@ class ApplicationControllerTest < ActionController::TestCase
     @operator.update(not_shifted: true)
 
     assert_no_difference 'Shift.count' do
-      UserSession.create(@operator)
+      sign_in(@operator)
 
       @controller.send(:session)[:has_an_open_shift] = true
       assert_nil @controller.send(:run_shift_tasks)

@@ -5,7 +5,7 @@ class DocumentsControllerTest < ActionController::TestCase
     @document = documents(:math_book)
     @operator = users(:operator)
 
-    UserSession.create(@operator)
+    sign_in(@operator)
 
     prepare_document_files
   end

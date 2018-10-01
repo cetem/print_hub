@@ -10,7 +10,7 @@ class FilesControllerTest < ActionController::TestCase
   end
 
   test 'should download avatar' do
-    UserSession.create(@operator)
+    sign_in(@operator)
 
     get :download, params: { path: drop_private_dir(@operator.avatar.path) }
     assert_response :success
@@ -21,7 +21,7 @@ class FilesControllerTest < ActionController::TestCase
   end
 
   test 'should download document' do
-    UserSession.create(@operator)
+    sign_in(@operator)
 
     get :download, params: { path: drop_private_dir(@document.file.path) }
     assert_response :success
@@ -32,7 +32,7 @@ class FilesControllerTest < ActionController::TestCase
   end
 
   test 'should not download document' do
-    UserSession.create(@operator)
+    sign_in(@operator)
 
     file = @document.file.path
 
@@ -45,7 +45,7 @@ class FilesControllerTest < ActionController::TestCase
   end
 
   test 'should download barcode' do
-    UserSession.create(@operator)
+    sign_in(@operator)
 
     get :download_barcode, params: { code: @document.code }
     assert_response :success
@@ -54,7 +54,7 @@ class FilesControllerTest < ActionController::TestCase
   end
 
   test 'should download barcode of new document' do
-    UserSession.create(@operator)
+    sign_in(@operator)
 
     get :download_barcode, params: { code: '159321' }
     assert_response :success
@@ -84,7 +84,7 @@ class FilesControllerTest < ActionController::TestCase
   end
 
   test 'should not download avatar' do
-    UserSession.create(@operator)
+    sign_in(@operator)
 
     file = @operator.avatar.path
 

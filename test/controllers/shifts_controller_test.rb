@@ -4,7 +4,7 @@ class ShiftsControllerTest < ActionController::TestCase
   setup do
     @shift = shifts(:current_shift)
 
-    UserSession.create(users(:operator))
+    sign_in(users(:operator))
   end
 
   test 'should get index' do

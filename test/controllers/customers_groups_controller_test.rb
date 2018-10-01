@@ -3,7 +3,7 @@ require 'test_helper'
 class CustomersGroupsControllerTest < ActionController::TestCase
   setup do
     @customers_group = customers_groups(:graduate)
-    UserSession.create users(:operator)
+    sign_in users(:operator)
   end
 
   test 'should get index' do

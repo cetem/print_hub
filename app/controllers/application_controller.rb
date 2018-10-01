@@ -3,7 +3,7 @@ class ApplicationController < ActionController::Base
 
   protect_from_forgery with: :null_session, unless: :trusted_sites
 
-  before_action :set_js_format_in_iframe_request, :set_paper_trail_whodunnit
+  before_action :set_js_format_in_iframe_request, :set_paper_trail_whodunnit, :assign_currents
   before_bugsnag_notify :add_user_info_to_bugsnag
   after_action -> { expires_now if current_user || current_customer }
 
@@ -49,22 +49,6 @@ class ApplicationController < ActionController::Base
         id: _current.id
       }
     end
-  end
-
-  def current_customer_session
-    @current_customer_session ||= CustomerSession.find
-  end
-
-  def current_customer
-    @current_customer ||= current_customer_session && current_customer_session.record
-  end
-
-  def current_user_session
-    @current_user_session ||= UserSession.find
-  end
-
-  def current_user
-    @current_user ||= current_user_session && current_user_session.record
   end
 
   def user_for_paper_trail
@@ -229,6 +213,44 @@ class ApplicationController < ActionController::Base
   def trusted_sites
     (SECRETS[:trusted_sites] || {}).each do |site, custom_header|
       return true if request.headers[custom_header] == site
+    end
+  end
+
+  def assign_currents
+    Current.user     = current_user
+    Current.customer = current_customer
+  end
+
+  # Devise SignIn callback
+  def after_sign_in_path_for(resource_or_scope)
+        session[:has_an_open_shift] = current_user.has_stale_shift?
+     current_user
+    if @user_session.record.has_stale_shift?
+      [
+        edit_shift_url(@user_session.record.stale_shift),
+        notice: t('view.shifts.edit_stale')
+      ]
+    else
+      [prints_url, notice: t('view.user_sessions.correctly_created')]
+    end
+
+  end
+
+  # Devise SignOut callback
+  def after_sign_out_path_for(resource_or_scope)
+    if resource_or_scope == :user
+      new_user_session_path
+    elsif resource_or_scope == :admin
+      new_admin_session_path
+    else
+      root_path
+    end
+    if params[:close_shift]
+      if params[:as_operator]
+        current_user.last_open_shift_as_operator!
+      end
+
+      current_user_session.close_shift!
     end
   end
 end
