@@ -42,14 +42,11 @@ module CustomCups
   end
 
   def last_job_id(printer)
-    sleep 1  if ENV['TRAVIS']
-    a = all_jobs(printer)
-    puts a if ENV['TRAVIS']
-    a.last || 1
+    all_jobs(printer).last || 0
   end
 
   def all_jobs(printer)
-    sleep 1 if ENV['TRAVIS']
+    sleep 5 if ENV['TRAVIS']
     keys = ::Cups.all_jobs(printer).keys
     # if ENV['TRAVIS']
     #   p "All jobs: #{keys}"
