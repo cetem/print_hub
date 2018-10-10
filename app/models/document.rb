@@ -7,6 +7,7 @@ class Document < ApplicationModel
   mount_uploader :file, DocumentsUploader, mount_on: :file_file_name
   process_in_background :file
   mount_uploader :original_file, SimpleDocumentsUploader
+  process_in_background :original_file
 
   # Scopes
   default_scope -> { where(enable: true) }
@@ -31,7 +32,7 @@ class Document < ApplicationModel
 
   # Restricciones
   validates :name, :code, :pages, :media, :file, presence: true
-  validates :code, uniqueness: true, if: :enable, allow_nil: true,
+  validates :code, uniqueness: { scope: [:enable] }, if: :enable, allow_nil: true,
                    allow_blank: true
   validates :name, :media, length: { maximum: 255 }, allow_nil: true,
                            allow_blank: true
@@ -250,7 +251,7 @@ class Document < ApplicationModel
   def recreate_versions
     if will_save_change_to_file_file_name?
       begin
-        file.recreate_versions! unless @versions_ready
+        DocumentRecreationJob.perform_later(id) unless @versions_ready
       rescue => e
         puts I18n.t('errors.recreate_versions_error')
       end
