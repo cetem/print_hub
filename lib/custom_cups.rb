@@ -42,6 +42,7 @@ module CustomCups
   end
 
   def last_job_id(printer)
+    sleep 1 if ENV['TRAVIS']
     all_jobs(printer).last || 1
   end
 
