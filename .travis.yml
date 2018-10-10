@@ -2,6 +2,7 @@ language: ruby
 cache: bundler
 rvm:
   - 2.4.3
+  - 2.5.1
 git:
   depth: 1
 addons:

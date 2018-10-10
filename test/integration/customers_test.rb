@@ -145,6 +145,7 @@ class CustomersTest < ActionDispatch::IntegrationTest
     assert_difference 'all(:xpath, deposit).size', -1 do
       first(:css, '[data-event=removeItem]').click
       sleep 0.5 # Sino, sigue siendo el mismo nº de antes
+      sleep 2 if ENV['TRAVIS']
     end
   end
 
