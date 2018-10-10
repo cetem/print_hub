@@ -31,8 +31,8 @@ class ShiftTest < ActiveSupport::TestCase
 
   # Prueba actualizar final de un turno
   test 'update' do
-    start = 10.minute.ago.to_datetime
-    finish = 1.minute.ago.to_datetime
+    start = 10.hours.ago.to_datetime
+    finish = 1.hour.ago.to_datetime
     old_start = @shift.start.to_i
 
     assert_no_difference 'Shift.count' do
