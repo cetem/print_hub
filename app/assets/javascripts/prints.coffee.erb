@@ -323,13 +323,6 @@ new Rule
 
      Jobs.reCalcPages(printJob)
 
-   # Actualiza el stock a imprimir
-   @map.updateStock ||= ->
-     element = $(this)
-     printJob = element.parents('.print_job')
-
-     Print.updateStock(printJob)
-
    # Actualiza el precio de linea modificada
    @map.updateLinePrice ||= ->
      $element = $(this)
@@ -406,7 +399,6 @@ new Rule
    $(document).on 'autocomplete:update', 'input[name$="[auto_article_name]"]',
      Print.updateArticlesCount
    $(document).on 'change keyup', '.js-job-pages', @map.printJobWithoutDocument
-   $(document).on 'keyup', '.js-job-copies', @map.updateStock
    $(document).on 'change keyup ph.price_modification',
      '.price-modifier', @map.updateLinePrice
    $(document).on 'change', 'input[name$="[pay_later]"]', @map.resetPayments
@@ -441,7 +433,6 @@ new Rule
    $(document).off 'autocomplete:update', 'input[name$="[auto_article_name]"]',
      Print.updateArticlesCount
    $(document).off 'change keyup', 'input[name$="[pages]"]', @map.printJobWithoutDocument
-   $(document).off 'keyup', '.js-job-copies', @map.updateStock
    $(document).off 'change keyup', '.price-modifier', @map.updateLinePrice
    $(document).off 'change', 'input[name$="[pay_later]"]', @map.resetPayments
    $(document).off 'ajax:success', 'a.details-link', @map.showDocumentDetails

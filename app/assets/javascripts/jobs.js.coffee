@@ -109,6 +109,8 @@
     jobStorage.oddPages = copies * oddPages
     jobStorage.evenPages = copies * evenPages
 
+    Print.updateStock(job)
+
   updateGlobalCopies: ->
     pagesList = {}
     _.each Jobs.jobs, (jobStorage)->

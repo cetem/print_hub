@@ -301,7 +301,7 @@
     <h3><%= 'Ingrese la tarjeta a asignar y usar' %></h3>
   </div>
   <div class="modal-body">
-    <%= text_field_tag :rfid, '', class: 'js-rfid-assigner', focus: true, data: { href: assign_rfid_customer_path(0) }, autocomplete: 'off' %> <br />
+    <%= text_field_tag :rfid, '', id: 'modal_rfid', class: 'js-rfid-assigner', focus: true, data: { href: assign_rfid_customer_path(0) }, autocomplete: 'off' %> <br />
     <span class="alert alert-error error-msg" style="display: none;">Tarjeta invalida</span>
   </div>
 </div>
