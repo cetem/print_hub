@@ -24,8 +24,7 @@ namespace :deploy do
   desc 'Restart application'
   task :restart do
     on roles(:app) do
-      execute "kill -USR2 $(ps aux |grep unicorn |grep master |awk '{print $2}' )"
-      # execute :service, :unicorn, :upgrade
+      execute :systemctl, :restart, 'unicorn@print_hub.service'
     end
   end
 

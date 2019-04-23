@@ -3,7 +3,7 @@ namespace :sidekiq do
   task :stop do
     on roles(:sidekiqers) do
       within current_path do
-        execute :service, :sidekiq, :stop
+        execute :systemctl, :stop, 'sidekiq@print_hub.service'
       end
     end
   end
@@ -12,7 +12,7 @@ namespace :sidekiq do
   task :start do
     on roles(:sidekiqers) do
       within current_path do
-        execute :service, :sidekiq, :start
+        execute :systemctl, :start, 'sidekiq@print_hub.service'
       end
     end
   end
@@ -21,7 +21,7 @@ namespace :sidekiq do
   task :restart do
     on roles(:sidekiqers) do
       within current_path do
-        execute :service, :sidekiq, :restart
+        execute :systemctl, :restart, 'sidekiq@print_hub.service'
       end
     end
   end
