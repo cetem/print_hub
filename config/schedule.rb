@@ -26,7 +26,7 @@ every :month, at: 'beginning of the month at 06:01' do
   rake 'tasks:export_shift_closures'
 end
 
-every 1.day, at: '03:00' do
+every 1.day, at: '05:00' do
   rake 'tasks:clean_prints'
 end
 
@@ -43,6 +43,6 @@ end
 #   rake 'tasks:notify_low_stock'
 # end
 
-every 1.day, at: '23:01' do
-  rake 'tasks:shifts_cop'
-end
+# every 1.day, at: '23:01' do
+#   rake 'tasks:shifts_cop'
+# end
