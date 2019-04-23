@@ -1,0 +1,29 @@
+<div class="form-input">
+
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th><%= Print.human_attribute_name :printer %></th>
+      <th><%= User.model_name.human %></th>
+      <th><%= t('view.print_queues.state')  %></th>
+      <th><%= User.human_attribute_name :created_at %></th>
+      <th colspan="4"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @jobs.each do |job| %>
+      <tr>
+        <td><%= job.printer %></td>
+        <td><%= @users[job.user] || job.user %></td>
+        <td><%= t(job.state, scope: [:view, :print_queues, :states]) %> </td>
+        <td><%= l job.created_at %> </td>
+        <td><%= link_to_cancel_cups_job(job.id) if job.state != :cancelled %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+</div>
+
+<div class="form-actions">
+</div>

@@ -3,9 +3,7 @@ namespace :tasks do
   task clean_prints: :environment do
     init_logger
     begin
-      jobs = `lpstat -Wnot-completed -o | awk '{print $1}'`
-
-      jobs.split("\n").each do |j|
+      CustomCups.incomplete_job_identifiers.split("\n").each do |j|
         id = j.match(/(\d+)$/)[1]
 
         msg = `cancel #{id}`

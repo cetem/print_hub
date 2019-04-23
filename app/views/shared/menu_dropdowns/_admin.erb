@@ -1,6 +1,7 @@
 <% controllers = [
   'users', 'customers', 'bonuses', 'articles', 'payments', 'shifts',
-  'print_job_types', 'customers_groups', 'shift_closures', 'notebooks'
+  'print_job_types', 'customers_groups', 'shift_closures', 'notebooks',
+  'print_queues'
 ] %>
 <li class="dropdown<%= ' active' if controllers.include?(controller_name) %>">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown">

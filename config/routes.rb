@@ -36,6 +36,7 @@ Rails.application.routes.draw do
     draw :user, :payment
     draw :user, :print
     draw :user, :print_job_types
+    draw :user, :print_queues
     draw :user, :shift
     draw :user, :shift_closures
     draw :user, :stat
