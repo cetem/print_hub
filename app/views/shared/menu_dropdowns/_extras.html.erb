@@ -5,7 +5,7 @@
     ] if current_user.admin?
 %>
 <li class="dropdown<%= ' active' if controllers.include?(controller_name) %>">
-  <a href="#" class="dropdown-toggle iconic extra-menu" data-toggle="dropdown">
+  <a href="#" class="dropdown-toggle iconic" data-toggle="dropdown">
     &#x2699;
     <b class="caret"></b>
   </a>
@@ -19,6 +19,6 @@
     <% end %>
 
     <%= content_tag(:li, link_to(t('menu.stats'), printer_stats_path),
-      class: ('active' if controller_name == 'stats')) %>
+      class: ('active' if controller_name == 'stats')) if current_user.admin? %>
   </ul>
 </li>

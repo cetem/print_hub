@@ -1,5 +1,6 @@
 class ArticlesController < ApplicationController
-  before_action :require_admin_user
+  before_action :require_user, except: :destroy
+  before_action :require_admin_user, only: :destroy
 
   # GET /articles
   # GET /articles.json

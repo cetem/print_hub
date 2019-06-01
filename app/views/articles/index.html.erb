@@ -18,7 +18,7 @@
         <td><%= article.stock %></td>
         <td><%= link_to_show article %></td>
         <td><%= link_to_edit edit_article_path(article) %></td>
-        <td><%= link_to_destroy article %></td>
+        <td><%= link_to_destroy article if current_user.admin? %></td>
       </tr>
     <% end %>
   </tbody>

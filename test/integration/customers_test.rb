@@ -9,7 +9,7 @@ class CustomersTest < ActionDispatch::IntegrationTest
 
     within '.nav-collapse' do
       first(:css, '.extra-menu').click
-
+      sleep 1
       within '.dropdown-menu' do
         click_link I18n.t('menu.customers')
       end
@@ -57,6 +57,7 @@ class CustomersTest < ActionDispatch::IntegrationTest
 
     within '.nav-collapse' do
       first(:css, '.extra-menu').click
+      sleep 1
       within '.dropdown-menu' do
         click_link I18n.t('menu.customers')
       end

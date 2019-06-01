@@ -129,6 +129,7 @@ class PrivateCustomerInteractionsTest < ActionDispatch::IntegrationTest
       original_price = first(:css, '.order_line .money').text.match(/\d+\.\d+/)[0].to_f
 
       assert_equal 2, page.all('.order_line').size
+      sleep 1
       first(:css, 'a[data-event="removeItem"]').click
       sleep 1 # Remove effect
 
