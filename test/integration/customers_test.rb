@@ -8,7 +8,8 @@ class CustomersTest < ActionDispatch::IntegrationTest
     assert_equal prints_path, current_path
 
     within '.nav-collapse' do
-      click_link I18n.t('menu.admin')
+      first(:css, '.extra-menu').click
+
       within '.dropdown-menu' do
         click_link I18n.t('menu.customers')
       end
@@ -55,7 +56,7 @@ class CustomersTest < ActionDispatch::IntegrationTest
     assert_equal prints_path, current_path
 
     within '.nav-collapse' do
-      click_link I18n.t('menu.admin')
+      first(:css, '.extra-menu').click
       within '.dropdown-menu' do
         click_link I18n.t('menu.customers')
       end

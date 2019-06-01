@@ -1,15 +1,16 @@
-<% controllers = [
-  'users', 'customers', 'bonuses', 'articles', 'payments', 'shifts',
-  'print_job_types', 'customers_groups', 'shift_closures', 'notebooks',
-  'print_queues'
-] %>
+<%
+    controllers = %w[customers articles shifts print_queues]
+    controllers += %w[
+      users bonuses payments print_job_types customers_groups shift_closures notebooks
+    ] if current_user.admin?
+%>
 <li class="dropdown<%= ' active' if controllers.include?(controller_name) %>">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-    <%= t('menu.admin') %>
+  <a href="#" class="dropdown-toggle iconic extra-menu" data-toggle="dropdown">
+    &#x2699;
     <b class="caret"></b>
   </a>
   <ul class="dropdown-menu">
-    <% controllers.each do |name| %>
+    <% controllers.sort.each do |name| %>
       <%= content_tag(
         :li,
         link_to(t('menu.' + name), [name.to_sym]),

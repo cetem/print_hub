@@ -9,7 +9,7 @@
 
       <div class="nav-collapse">
         <ul class="nav">
-          <%= render partial: 'shared/menu_dropdowns/admin'  if current_user.admin %>
+          <%= render partial: 'shared/menu_dropdowns/extras' %>
           <%= content_tag(
             :li, link_to(t('menu.customers'), customers_path),
             class: ('active' if controller_name == 'customers')
