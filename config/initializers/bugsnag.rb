@@ -2,7 +2,10 @@ if (key = Rails.application.secrets.bugsnag_api_key)
   Bugsnag.configure do |config|
     config.api_key = key
     config.notify_release_stages = %w(production staging)
-    config.ignore_classes = []
+    config.ignore_classes = [
+      SignalException, Interrupt, # Ctrol C
+      PDF::Reader::MalformedPDFError, PDF::Reader::EncryptedPDFError
+    ]
 
     begin
       revision = if Rails.env.production?

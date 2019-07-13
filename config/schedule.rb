@@ -43,6 +43,6 @@ every 1.day, at: '23:31' do
   rake 'tasks:notify_low_stock'
 end
 
-every 1.day, at: '23:01' do
-  rake 'tasks:shifts_cop'
-end
+# every 1.day, at: '23:01' do
+#   rake 'tasks:shifts_cop'
+# end

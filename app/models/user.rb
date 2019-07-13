@@ -43,7 +43,7 @@ class User < ApplicationModel
 
   def as_json(options = nil)
     default_options = {
-      only: [:id],
+      only: [:id, :abaco_id],
       methods: [:label, :informal, :admin]
     }
 
@@ -159,6 +159,7 @@ class User < ApplicationModel
     @_image_dimensions[style_name] || {}
   end
 
+  # Abaco action
   def self.pay_pending_shifts_for_active_users_between(start, finish)
     actives.with_shifts_control.order_by_name.map do |u|
       pay_pending_shifts = u.shifts.pay_pending
@@ -168,12 +169,13 @@ class User < ApplicationModel
       if as_operator_shifts || as_admin_shifts
         {
           user: {
-            id: u.id,
-            label: u.label
+            id:       u.id,
+            abaco_id: u.abaco_id,
+            label:    u.label
           },
           shifts: {
             operator: as_operator_shifts,
-            admin: as_admin_shifts
+            admin:    as_admin_shifts
           }
         }
       end

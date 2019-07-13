@@ -17,7 +17,8 @@
       }.merge(input_html) %>
     <%= f.input :operator_id, as: :hidden,
       input_html: { class: 'autocomplete-id', id: "auto_operator_name_#{id}" } %>
-    <%= f.input :user_id, as: :hidden,
-      input_html: { value: f.object.operator_id || current_user.id } %>
+    <% if f.object.new_record? %>
+      <%= f.input :user_id, as: :hidden, input_html: { value: current_user.id } %>
+    <% end %>
   </td>
 </tr>

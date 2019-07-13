@@ -1,4 +1,6 @@
 class UsersController < ApplicationController
+  include Users::Scope
+
   before_action :require_admin_user, except: :show
   before_action :require_user, only: :show
 
@@ -35,7 +37,7 @@ class UsersController < ApplicationController
   # GET /users/1.json
   def show
     @title = t 'view.users.show_title'
-    @user = current_user.admin ? User.find(params[:id]) : current_user
+    @user = user_scope
 
     respond_to do |format|
       format.html # show.html.erb
@@ -58,7 +60,7 @@ class UsersController < ApplicationController
   # GET /users/1/edit
   def edit
     @title = t 'view.users.edit_title'
-    @user = User.find(params[:id])
+    @user = user_scope
   end
 
   # POST /users
@@ -82,7 +84,7 @@ class UsersController < ApplicationController
   # PUT /users/1.json
   def update
     @title = t 'view.users.edit_title'
-    @user = User.find(params[:id])
+    @user = user_scope
 
     respond_to do |format|
       if @user.update(user_params)
@@ -108,18 +110,20 @@ class UsersController < ApplicationController
     end
   end
 
+  # ABACO Action
   # PUT /users/1/pay_shifts_between
   def pay_shifts_between
     start, finish = make_datetime_range(
       from: params[:start], to: params[:finish]
     )
-    paid = User.find(params[:id]).pay_shifts_between(start, finish)
+    paid = user_scope.pay_shifts_between(start, finish)
 
     respond_to do |format|
       format.json { render json: paid }
     end
   end
 
+  # ABACO Action
   # GET /users/current_workers.json
   def current_workers
     users = User.actives.with_shifts_control.order(:admin, :last_name)
@@ -129,6 +133,7 @@ class UsersController < ApplicationController
     end
   end
 
+  # ABACO Action
   def pay_pending_shifts_for_active_users_between
     start, finish = make_datetime_range(
       from: params[:start], to: params[:finish]
@@ -146,6 +151,7 @@ class UsersController < ApplicationController
     end
   end
 
+  # ABACO Action
   def shifts_between
     start, finish = make_datetime_range(
       from: params[:start], to: params[:finish]
@@ -160,7 +166,6 @@ class UsersController < ApplicationController
       format.json { render json: users_data }
     end
   end
-
 
   private
 
