@@ -1,0 +1,29 @@
+[Unit]
+Description=Sidekiq worker %I
+AssertPathExists=/var/rails/%i/current
+RequiresMountsFor=/var/rails/%i/current
+PartOf=sidekiq.service
+ReloadPropagatedFrom=sidekiq.service
+Before=sidekiq.service
+After=syslog.target network.target
+
+[Service]
+Type=simple
+WorkingDirectory=/var/rails/%i/current
+ExecStart=/usr/local/bin/chruby-exec 2.4.3 -- RAILS_ENV=production bundle exec sidekiq -e production -C config/sidekiq.yml
+TimeoutStartSec=0
+TimeoutStopSec=1h
+PIDFile=/var/rails/%i/current/tmp/sidekiq-%i.pid
+User=deployer
+Group=deployer
+UMask=0002
+OOMScoreAdjust=-900
+Environment=MALLOC_ARENA_MAX=2
+RestartSec=1
+Restart=on-failure
+StandardOutput=syslog
+StandardError=syslog
+SyslogIdentifier=sidekiq@%i
+
+[Install]
+WantedBy=multi-user.target
