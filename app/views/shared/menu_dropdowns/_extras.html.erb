@@ -1,16 +1,19 @@
 <%
-    controllers = %w[customers articles shifts print_queues]
-    controllers += %w[
+    controllers_with_menu = %w[customers articles shifts print_queues]
+    controllers_with_menu += %w[
       users bonuses payments print_job_types customers_groups shift_closures notebooks
     ] if current_user.admin?
+    dropdown_controllers = controllers_with_menu + %w[
+      reports
+    ]
 %>
-<li class="dropdown<%= ' active' if controllers.include?(controller_name) %>">
+<li class="dropdown<%= ' active' if dropdown_controllers.include?(controller_name) %>">
   <a href="#" class="dropdown-toggle iconic" data-toggle="dropdown">
     &#x2699;
     <b class="caret"></b>
   </a>
   <ul class="dropdown-menu">
-    <% controllers.sort.each do |name| %>
+    <% controllers_with_menu.sort.each do |name| %>
       <%= content_tag(
         :li,
         link_to(t('menu.' + name), [name.to_sym]),
@@ -20,5 +23,16 @@
 
     <%= content_tag(:li, link_to(t('menu.stats'), printer_stats_path),
       class: ('active' if controller_name == 'stats')) if current_user.admin? %>
+
+
+    <%= content_tag(:li, class: "dropdown-submenu #{'active' if controller_name == 'reports'}") do %>
+      <%= link_to t('menu.reports'), '#' %>
+      <%= content_tag(:ul, class: 'dropdown-menu') do %>
+        <%= content_tag(
+          :li,
+          link_to(t('menu.printed_documents_report'), printed_documents_report_path)
+        ) %>
+      <% end %>
+    <% end %>
   </ul>
 </li>

@@ -210,18 +210,21 @@ class PrintJob < ApplicationModel
     with_print_between(date.beginning_of_month, date.end_of_month.end_of_day)
   end
 
-  def self.copies_for_stock_between(dates)
+  def self.documents_copies_between(dates)
     from, to = dates.sort
 
-    print_jobs = PrintJob.arel_table
-    mega_scope = PrintJob.includes(:document).where(created_at: from..to)
-      .where.not(document_id: nil)
+    mega_scope = PrintJob.joins(:document).where(created_at: from..to)
       .select(
-        print_jobs[:copies].sum.as('total_copies'), print_jobs[:document_id],
-        print_jobs[:pages], print_jobs[:copies]  # calculos....
+        "CONCAT('[', documents.code, '] ', documents.name) as document",
+        'SUM(print_jobs.copies) as total_copies'
       )
+      .group("CONCAT('[', documents.code, '] ', documents.name)")
       .having('(SUM(print_jobs.copies) > 20)')
-      .group(:document_id, :pages, :copies)
       .order('total_copies DESC')
+      .to_sql
+
+    PrintJob.connection.execute(mega_scope).map do |row|
+      OpenStruct.new(row)
+    end
   end
 end

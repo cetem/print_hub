@@ -323,6 +323,8 @@ es:
     print_job_types: "Tipos de impresión"
     print_queues: 'Colas de impresión'
     prints: "Impresiones"
+    reports: 'Reportes'
+    printed_documents_report: "Documentos impresos"
     shift_closures: "Cierres de caja"
     shifts: "Turnos"
     stats: "Estadísticas"

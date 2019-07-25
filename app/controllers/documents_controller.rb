@@ -161,13 +161,6 @@ class DocumentsController < ApplicationController
     end
   end
 
-  def copies_between_for
-    if params[:interval]
-      @from_date, @to_date = make_datetime_range(interval_params)
-      @stub_print_jobs = PrintJob.copies_for_stock_between([@from_date, @to_date])
-    end
-  end
-
   private
 
   def load_documents_for_printing
@@ -197,9 +190,5 @@ class DocumentsController < ApplicationController
 
   def barcodes_params
     params.require(:barcodes).permit(:from, :to, :email)
-  end
-
-  def interval_params
-    params.require(:interval).permit(:from, :to)
   end
 end

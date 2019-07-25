@@ -13,7 +13,7 @@
       </thead>
       <tbody>
         <% @stub_print_jobs.each do |pj| %>
-          <tr class="<%= 'error' unless pj.document.enable %>">
+          <tr>
             <td><%= pj.document %></td>
             <td><%= pj.total_copies %></td>
           </tr>
