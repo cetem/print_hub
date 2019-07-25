@@ -41,4 +41,24 @@ class ArticleLine < ApplicationModel
     article.stock += units
     article.save
   end
+
+  def self.sold_articles_between(dates)
+    from, to = dates.sort
+
+    revoked_print_ids = Print.where(created_at: from..to).revoked.ids
+
+    mega_scope = joins(:article).where(created_at: from..to)
+      .where.not(print_id: revoked_print_ids)
+      .select(
+        "CONCAT('[', #{Article.table_name}.code, '] ', #{Article.table_name}.name) AS article",
+        "SUM(#{table_name}.units) as total_units"
+      )
+      .group("CONCAT('[', #{Article.table_name}.code, '] ', #{Article.table_name}.name)")
+      .order('total_units DESC')
+      .to_sql
+
+    connection.execute(mega_scope).map do |row|
+      OpenStruct.new(row)
+    end
+  end
 end

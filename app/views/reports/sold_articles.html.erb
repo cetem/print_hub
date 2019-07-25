@@ -1,0 +1,27 @@
+<div class="readonly-data">
+  <%= render 'shared/date_filter', from_date: @from_date, to_date: @to_date %>
+
+  <% if @stub_article_lines.try(:any?) %>
+    <h3><%= t( 'view.articles.sold_stats') %></h3>
+
+    <table class="table table-bordered table-striped">
+      <thead>
+        <tr>
+          <th><%= Article.human_attribute_name 'name' %></th>
+          <th><%= ArticleLine.human_attribute_name 'units' %></th>
+        </tr>
+      </thead>
+      <tbody>
+        <% @stub_article_lines.each do |al| %>
+          <tr>
+            <td><%= al.article %></td>
+            <td><%= al.total_units %></td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  <% end %>
+</div>
+
+<div class="form-actions">
+</div>

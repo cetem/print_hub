@@ -19,6 +19,7 @@ class Print < ApplicationModel
   scope :pending, -> { where(status: STATUS[:pending_payment]) }
   scope :pay_later, -> { where(status: STATUS[:pay_later]) }
   scope :not_revoked, -> { where(revoked: false) }
+  scope :revoked, -> { where(revoked: true) }
   scope :between, -> (_start, _end) { where(created_at: _start.._end) }
   scope :scheduled, -> {
     where(

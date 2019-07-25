@@ -213,7 +213,10 @@ class PrintJob < ApplicationModel
   def self.documents_copies_between(dates)
     from, to = dates.sort
 
+    revoked_print_ids = Print.where(created_at: from..to).revoked.ids
+
     mega_scope = PrintJob.joins(:document).where(created_at: from..to)
+      .where.not(print_id: revoked_print_ids)
       .select(
         "CONCAT('[', documents.code, '] ', documents.name) as document",
         'SUM(print_jobs.copies) as total_copies'

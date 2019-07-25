@@ -8,6 +8,13 @@ class ReportsController < ApplicationController
     end
   end
 
+  def sold_articles
+    if params[:interval]
+      @from_date, @to_date = make_datetime_range(interval_params)
+      @stub_article_lines = ArticleLine.sold_articles_between([@from_date, @to_date])
+    end
+  end
+
   private
 
   def interval_params
