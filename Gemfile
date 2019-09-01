@@ -21,8 +21,8 @@ gem 'simple_form'
 # Files Processors
 gem 'carrierwave'
 gem 'carrierwave_backgrounder', '0.4.2'
-gem 'mini_magick', '3.8.1'
-gem 'rghost' #Could make it happen only with carrierwave
+gem 'mini_magick'
+gem 'rghost' # Could make it happen only with carrierwave
 gem 'pdf-reader'
 gem 'barby'
 gem 'rqrcode'
@@ -42,7 +42,7 @@ gem 'bugsnag'
 
 # Old assets group / Styles & js
 gem 'sass-rails'
-gem 'coffee-rails', '~> 5.0'
+gem 'coffee-rails'
 gem 'uglifier'
 gem 'jquery-rails'
 gem 'jquery-ui-rails'
