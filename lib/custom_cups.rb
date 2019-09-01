@@ -74,7 +74,7 @@ module CustomCups
           printer:    printer,
           user:       user,
           state:      data[:state],
-          created_at: Time.parse(raw_time)
+          created_at: (Time.parse(raw_time) rescue nil)
         )
       end
     end

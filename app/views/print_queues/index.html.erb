@@ -17,7 +17,7 @@
         <td><%= CustomCups.printer_name_for(job.printer) %></td>
         <td><%= @users[job.user] || job.user %></td>
         <td><%= t(job.state, scope: [:view, :print_queues, :states]) %> </td>
-        <td><%= l job.created_at %> </td>
+        <td><%= l job.created_at if job.created_at%> </td>
         <td><%= link_to_cancel_cups_job(job.id) if job.state != :cancelled %></td>
       </tr>
     <% end %>
