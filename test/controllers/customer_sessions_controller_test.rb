@@ -14,6 +14,24 @@ class CustomerSessionsControllerTest < ActionController::TestCase
     assert_template 'customer_sessions/new'
   end
 
+  test 'should update old password and create customer session' do
+    old_password = Authlogic::CryptoProviders::Sha512.encrypt('student123' + @customer.password_salt)
+    assert_not_equal old_password, @customer.crypted_password
+
+    @customer.update_column(:crypted_password, old_password)
+
+    post :create, params: {
+      customer_session: {
+        email:    @customer.email,
+        password: 'student123'
+      }
+    }
+
+    assert customer_session = CustomerSession.find
+    assert_equal @customer, customer_session.record
+    assert_not_equal old_password, @customer.reload.crypted_password
+  end
+
   test 'should create customer session' do
     post :create, params: {
       customer_session: {

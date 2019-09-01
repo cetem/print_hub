@@ -1,26 +1,7 @@
 class Customer < ApplicationModel
+  include Customers::Sessions
+
   has_paper_trail ignore: [:perishable_token]
-
-  acts_as_authentic do |c|
-    c.log_in_after_create = false
-    c.log_in_after_password_change = false
-    # c.validates_uniqueness_of_email_field_options = { case_sensitive: false }
-    # c.validates_length_of_email_field_options = { maximum: 255 }
-    # c.merge_validates_length_of_password_field_options({ minimum: 4 })
-
-    c.crypto_provider = Authlogic::CryptoProviders::Sha512
-    # c.crypto_provider = Authlogic::CryptoProviders::BCrypt
-    # c.transition_from_crypto_providers = [Authlogic::CryptoProviders::Sha512]
-  end
-
-  attr_accessor :password_confirmation
-  validates :email,
-    format: {
-      with:    EMAIL_REGEX,
-      message: proc { I18n.t('authlogic.error_messages.email_invalid') }
-    },
-    uniqueness: { case_sensitive: false, if: :will_save_change_to_email? },
-    length: { in: 8..255, if: ->(c) { c.email.present? } }
 
   KINDS = {
     normal: 'n',

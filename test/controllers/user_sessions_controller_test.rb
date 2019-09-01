@@ -13,6 +13,28 @@ class UserSessionsControllerTest < ActionController::TestCase
     assert_template 'user_sessions/new'
   end
 
+  test 'should update old password and create user session' do
+    @operator.close_pending_shifts!
+
+    old_password = Authlogic::CryptoProviders::Sha512.encrypt('operator123' + @operator.password_salt)
+    assert_not_equal old_password, @operator.crypted_password
+
+    @operator.update_column(:crypted_password, old_password)
+
+    assert_difference '@operator.shifts.count' do
+      post :create, params: {
+        user_session: {
+          username: @operator.username,
+          password: "#{@operator.username}123"
+        }
+      }
+    end
+
+    assert user_session = UserSession.find
+    assert_equal @operator, user_session.user
+    assert_not_equal old_password, @operator.reload.crypted_password
+  end
+
   test 'should create user session' do
     @operator.close_pending_shifts!
 
@@ -159,6 +181,7 @@ class UserSessionsControllerTest < ActionController::TestCase
 
     assert_equal 1, @operator.reload.shifts.pending.size
     assert_nil @operator.shifts.pending.last.finish
+
 
     assert_nil UserSession.find
     assert_redirected_to new_user_session_url

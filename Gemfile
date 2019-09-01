@@ -20,21 +20,20 @@ gem 'simple_form'
 
 # Files Processors
 gem 'carrierwave'
-gem 'carrierwave_backgrounder'
+gem 'carrierwave_backgrounder', '0.4.2'
 gem 'mini_magick', '3.8.1'
 gem 'rghost' #Could make it happen only with carrierwave
 gem 'pdf-reader'
 gem 'barby'
 gem 'rqrcode'
 gem 'chunky_png'
-gem 'google_drive' #, '1.0.6'
+gem 'google_drive', '~> 2.1.0'
 
 # Production-Task Gems
 gem 'unicorn'
 gem 'unicorn-worker-killer'
 gem 'whenever', require: false
 gem 'sidekiq'
-gem 'sinatra', require: nil
 gem 'redis-namespace'
 
 # Code stats/notifier
@@ -43,7 +42,7 @@ gem 'bugsnag'
 
 # Old assets group / Styles & js
 gem 'sass-rails'
-gem 'coffee-rails', '~> 4.2'
+gem 'coffee-rails', '~> 5.0'
 gem 'uglifier'
 gem 'jquery-rails'
 gem 'jquery-ui-rails'
@@ -62,7 +61,6 @@ group :development do
   gem 'capistrano-bundler'
   gem 'capistrano-rails'
   gem 'capistrano-chruby'
-  gem 'parallel_tests'
 
   # Support for ed25519 ssh keys
   gem 'ed25519'
@@ -78,6 +76,5 @@ group :test do
   gem 'poltergeist', require: false
   gem 'database_cleaner', require: false # For Capybara
 
-  gem 'parallel_tests'
   gem 'rails-controller-testing'
 end

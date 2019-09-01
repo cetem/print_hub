@@ -137,6 +137,8 @@ class ActionDispatch::IntegrationTest
     ENV['local']
   end
 
+  Capybara.server = :webrick
+
   # Vagrant config
   SELENIUM_SERVER = "192.168.33.10"
   SELENIUM_APP_HOST = "192.168.33.1"
