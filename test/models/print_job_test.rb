@@ -397,6 +397,36 @@ class PrintJobTest < ActiveSupport::TestCase
     assert_equal 1, @print_job.printed_copies
   end
 
+  test 'back to original document stock after revoke' do
+    original_stock = 10
+    @print_job.document.update_column(:stock, original_stock)
+
+    assert_no_difference '::CustomCups.last_job_id(@printer)' do
+      @print_job.send_to_print(@printer)
+    end
+
+    assert_equal 7, @print_job.document.stock
+    assert_equal 0, @print_job.printed_copies
+
+    assert @print_job.refund!
+
+    assert_equal original_stock, @print_job.document.reload.stock
+
+    original_stock = 2
+    @print_job.document.update_column(:stock, original_stock)
+
+    assert_difference '::CustomCups.last_job_id(@printer)' do
+      @print_job.send_to_print(@printer)
+    end
+
+    assert_equal 0, @print_job.document.stock
+    assert_equal 1, @print_job.printed_copies
+
+    assert @print_job.refund!
+
+    assert_equal original_stock, @print_job.document.reload.stock
+  end
+
   test 'print if there is stock but the range is set' do
     @print_job.document.stock = @print_job.copies
     @print_job.range = '1,2'

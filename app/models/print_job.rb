@@ -194,6 +194,18 @@ class PrintJob < ApplicationModel
     self.price_per_copy = self.job_price_per_copy # recalc price
   end
 
+  def refund!
+    return if document_id.blank? || range.present?
+
+    stock_copies = if (stock = copies - printed_copies).positive?
+                     document.versions.where(
+                       correlation_id: versions.last&.correlation_id
+                     ).last&.object_changes&.fetch('stock', []).to_a.reduce(:-) || stock
+                   end
+
+    document.update!(stock: document.stock + stock_copies) if stock_copies
+  end
+
   def self.printer_stats_between(from, to)
     with_print_between(from, to).not_revoked.group_by(&:printer).map do |printer, pjs|
       [printer, pjs.map(&:printed_pages).compact.sum]

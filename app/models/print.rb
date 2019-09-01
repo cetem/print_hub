@@ -156,7 +156,8 @@ class Print < ApplicationModel
           customer.add_bonus payments.select(&:credit?).to_a.sum(&:paid)
         end
 
-        article_lines.map(&:refund!)
+        print_jobs.each(&:refund!)
+        article_lines.each(&:refund!)
 
         save validate: false
       rescue
