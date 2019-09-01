@@ -123,9 +123,9 @@ class UserTest < ActiveSupport::TestCase
     assert_equal [error_message_from_model(@operator, :username, :too_short,
                                            count: 3)], @operator.errors[:username]
     assert_equal [error_message_from_model(@operator, :password, :too_short,
-                                           count: 4)], @operator.errors[:password]
+                                           count: 8)], @operator.errors[:password]
     assert_equal [error_message_from_model(@operator, :password_confirmation,
-                                           :too_short, count: 4)], @operator.errors[:password_confirmation]
+                                           :too_short, count: 8)], @operator.errors[:password_confirmation]
 
     @operator.reload
 

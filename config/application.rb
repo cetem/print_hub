@@ -10,8 +10,6 @@ module PrintHubApp
 
     config.time_zone = ENV['TRAVIS'] ? 'UTC' : 'Buenos Aires'
 
-    config.i18n.default_locale = :es
-
     config.eager_load_paths += %W(#{config.root}/lib)
     config.eager_load_paths += %W(#{config.root}/app/workers)
 

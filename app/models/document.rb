@@ -169,8 +169,8 @@ class Document < ApplicationModel
     end
 
     where(
-      conditions.map { |c| "(#{c})" }.join(' OR '), parameters
-    ).order(options[:order])
+      Arel.sql(conditions.map { |c| "(#{c})" }.join(' OR ')), parameters
+    ).order(Arel.sql(options[:order]))
   end
 
   def identifier

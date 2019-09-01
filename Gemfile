@@ -5,10 +5,11 @@ git_source(:github) do |repo_name|
   "https://github.com/#{repo_name}.git"
 end
 
-gem 'rails', '~> 5.1.6'
+gem 'rails', '~> 5.2.3'
 
 gem 'pg'
-gem 'authlogic', '~> 3'
+gem 'authlogic', '~> 5.0.2'
+gem 'bcrypt'
 gem 'jc-validates_timeliness'
 gem 'awesome_nested_set'
 gem 'will_paginate'

@@ -12,7 +12,7 @@ class CustomerSessionsController < ApplicationController
   def create
     @title = t('view.customer_sessions.new_title')
     @customer_session = CustomerSession.new(
-      params.require(:customer_session).permit(:email, :password)
+      params.require(:customer_session).permit(:email, :password).to_h
     )
 
     respond_to do |format|

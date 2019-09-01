@@ -23,8 +23,8 @@ class CustomersGroup < ApplicationModel
     conditions = [options[:query]]
 
     where(
-      conditions.map { |c| "(#{c})" }.join(' OR '), options[:parameters]
-    ).order(options[:order])
+      Arel.sql(conditions.map { |c| "(#{c})" }.join(' OR ')), options[:parameters]
+    ).order(Arel.sql(options[:order]))
   end
 
   def self.settlement_as_csv(start = 1.year.ago, finish = Time.zone.now)

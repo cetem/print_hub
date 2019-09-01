@@ -10,11 +10,11 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20181218214149) do
+ActiveRecord::Schema.define(version: 2018_12_18_214149) do
 
   # These are extensions that must be enabled in order to support this database
-  enable_extension "plpgsql"
   enable_extension "pgcrypto"
+  enable_extension "plpgsql"
 
   create_table "article_lines", id: :serial, force: :cascade do |t|
     t.integer "print_id"
@@ -29,13 +29,13 @@ ActiveRecord::Schema.define(version: 20181218214149) do
   end
 
   create_table "articles", id: :serial, force: :cascade do |t|
-    t.string "name", limit: 255, null: false
+    t.integer "code", null: false
+    t.string "name", null: false
     t.decimal "price", precision: 15, scale: 3, null: false
     t.text "description"
     t.integer "lock_version", default: 0
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.integer "code", null: false
     t.integer "stock", default: 0
     t.integer "notification_stock", default: 0
     t.boolean "enabled", default: true
@@ -43,34 +43,34 @@ ActiveRecord::Schema.define(version: 20181218214149) do
     t.index ["code"], name: "index_articles_on_code", unique: true
   end
 
-  create_table "credits", id: :integer, default: -> { "nextval('bonuses_id_seq'::regclass)" }, force: :cascade do |t|
+  create_table "credits", id: :serial, force: :cascade do |t|
     t.decimal "amount", precision: 15, scale: 3, null: false
     t.decimal "remaining", precision: 15, scale: 3, null: false
     t.date "valid_until"
     t.integer "customer_id"
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string "type", limit: 255, default: "Bonus", null: false
-    t.index ["created_at"], name: "index_bonuses_on_created_at"
-    t.index ["customer_id"], name: "index_bonuses_on_customer_id"
+    t.string "type", default: "Bonus", null: false
+    t.index ["created_at"], name: "index_credits_on_created_at"
+    t.index ["customer_id"], name: "index_credits_on_customer_id"
     t.index ["type"], name: "index_credits_on_type"
-    t.index ["valid_until"], name: "index_bonuses_on_valid_until"
+    t.index ["valid_until"], name: "index_credits_on_valid_until"
   end
 
   create_table "customers", id: :serial, force: :cascade do |t|
-    t.string "name", limit: 255, null: false
-    t.string "lastname", limit: 255
-    t.string "identification", limit: 255, null: false
+    t.string "name", null: false
+    t.string "lastname"
+    t.string "identification", null: false
     t.decimal "free_monthly_bonus", precision: 15, scale: 3
     t.integer "lock_version", default: 0
     t.datetime "created_at"
     t.datetime "updated_at"
     t.boolean "bonus_without_expiration", default: false, null: false
-    t.string "email", limit: 255
-    t.string "crypted_password", limit: 255
-    t.string "password_salt", limit: 255
-    t.string "persistence_token", limit: 255
-    t.string "perishable_token", limit: 255
+    t.string "email"
+    t.string "crypted_password"
+    t.string "password_salt"
+    t.string "persistence_token"
+    t.string "perishable_token"
     t.boolean "enable", default: true
     t.string "kind", limit: 1, default: "n", null: false
     t.integer "group_id"
@@ -83,7 +83,7 @@ ActiveRecord::Schema.define(version: 20181218214149) do
   end
 
   create_table "customers_groups", id: :serial, force: :cascade do |t|
-    t.string "name", limit: 255, null: false
+    t.string "name", null: false
     t.datetime "created_at"
     t.datetime "updated_at"
     t.index ["name"], name: "index_customers_groups_on_name", unique: true
@@ -92,25 +92,25 @@ ActiveRecord::Schema.define(version: 20181218214149) do
   create_table "document_tag_relations", id: :serial, force: :cascade do |t|
     t.integer "document_id", null: false
     t.integer "tag_id", null: false
-    t.index ["document_id", "tag_id"], name: "index_documents_tags_on_document_id_and_tag_id", unique: true
+    t.index ["document_id", "tag_id"], name: "index_document_tag_relations_on_document_id_and_tag_id", unique: true
   end
 
   create_table "documents", id: :serial, force: :cascade do |t|
     t.integer "code", null: false
-    t.string "name", limit: 255, null: false
+    t.string "name", null: false
     t.text "description"
     t.integer "pages", null: false
     t.integer "lock_version", default: 0
-    t.string "file_file_name", limit: 255
-    t.string "file_content_type", limit: 255
+    t.string "file_file_name"
+    t.string "file_content_type"
     t.integer "file_file_size"
     t.datetime "file_updated_at"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.text "tag_path"
-    t.string "media", limit: 255
+    t.string "media"
     t.boolean "enable", default: true, null: false
-    t.string "file_fingerprint", limit: 255
+    t.string "file_fingerprint"
     t.boolean "private", default: false
     t.integer "stock", default: 0, null: false
     t.string "original_file"
@@ -123,7 +123,7 @@ ActiveRecord::Schema.define(version: 20181218214149) do
   end
 
   create_table "feedbacks", id: :serial, force: :cascade do |t|
-    t.string "item", limit: 255, null: false
+    t.string "item", null: false
     t.boolean "positive", default: false, null: false
     t.text "comments"
     t.datetime "created_at"
@@ -135,13 +135,13 @@ ActiveRecord::Schema.define(version: 20181218214149) do
   end
 
   create_table "file_lines", id: :serial, force: :cascade do |t|
-    t.string "file", limit: 255, null: false
+    t.string "file", null: false
     t.integer "pages", null: false
     t.integer "copies", null: false
     t.decimal "price_per_copy", precision: 15, scale: 3, null: false
     t.integer "order_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.integer "print_job_type_id", null: false
     t.integer "print_id"
     t.index ["order_id"], name: "index_file_lines_on_order_id"
@@ -181,8 +181,8 @@ ActiveRecord::Schema.define(version: 20181218214149) do
     t.decimal "amount", precision: 15, scale: 3, null: false
     t.decimal "paid", precision: 15, scale: 3, null: false
     t.string "paid_with", limit: 1, null: false
+    t.string "payable_type"
     t.integer "payable_id"
-    t.string "payable_type", limit: 255
     t.integer "lock_version", default: 0
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -194,23 +194,23 @@ ActiveRecord::Schema.define(version: 20181218214149) do
   end
 
   create_table "print_job_types", id: :serial, force: :cascade do |t|
-    t.string "name", limit: 255, null: false
-    t.string "price", limit: 255, null: false
+    t.string "name", null: false
+    t.string "price", null: false
     t.boolean "two_sided", default: false
     t.boolean "default", default: false
     t.integer "lock_version", default: 0
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-    t.string "media", limit: 255
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.string "media"
     t.boolean "enabled", default: true
     t.index ["name"], name: "index_print_job_types_on_name", unique: true
   end
 
   create_table "print_jobs", id: :serial, force: :cascade do |t|
-    t.string "job_id", limit: 255
+    t.string "job_id"
     t.integer "copies", null: false
     t.decimal "price_per_copy", precision: 15, scale: 3, null: false
-    t.string "range", limit: 255
+    t.string "range"
     t.integer "document_id"
     t.integer "print_id"
     t.integer "lock_version", default: 0
@@ -229,7 +229,7 @@ ActiveRecord::Schema.define(version: 20181218214149) do
   end
 
   create_table "prints", id: :serial, force: :cascade do |t|
-    t.string "printer", limit: 255, null: false
+    t.string "printer", null: false
     t.integer "user_id"
     t.integer "customer_id"
     t.integer "lock_version", default: 0
@@ -251,7 +251,7 @@ ActiveRecord::Schema.define(version: 20181218214149) do
   end
 
   create_table "sessions", id: :serial, force: :cascade do |t|
-    t.string "session_id", limit: 255, null: false
+    t.string "session_id", null: false
     t.text "data"
     t.datetime "created_at"
     t.datetime "updated_at"
@@ -282,8 +282,8 @@ ActiveRecord::Schema.define(version: 20181218214149) do
     t.text "description"
     t.integer "lock_version", default: 0, null: false
     t.integer "user_id", null: false
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.boolean "paid", default: false
     t.boolean "as_admin"
     t.index ["created_at"], name: "index_shifts_on_created_at"
@@ -293,7 +293,7 @@ ActiveRecord::Schema.define(version: 20181218214149) do
   end
 
   create_table "tags", id: :serial, force: :cascade do |t|
-    t.string "name", limit: 255, null: false
+    t.string "name", null: false
     t.integer "parent_id"
     t.integer "lock_version", default: 0
     t.datetime "created_at"
@@ -310,22 +310,22 @@ ActiveRecord::Schema.define(version: 20181218214149) do
   end
 
   create_table "users", id: :serial, force: :cascade do |t|
-    t.string "name", limit: 255, null: false
-    t.string "last_name", limit: 255, null: false
-    t.string "language", limit: 255, null: false
-    t.string "email", limit: 255, null: false
-    t.string "username", limit: 255, null: false
-    t.string "crypted_password", limit: 255, null: false
-    t.string "password_salt", limit: 255, null: false
-    t.string "persistence_token", limit: 255, null: false
+    t.string "name", null: false
+    t.string "last_name", null: false
+    t.string "language", null: false
+    t.string "email", null: false
+    t.string "username", null: false
+    t.string "crypted_password", null: false
+    t.string "password_salt", null: false
+    t.string "persistence_token", null: false
     t.boolean "admin", default: false, null: false
     t.boolean "enable"
     t.integer "lock_version", default: 0
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.string "default_printer", limit: 255
-    t.string "avatar_file_name", limit: 255
-    t.string "avatar_content_type", limit: 255
+    t.string "default_printer"
+    t.string "avatar_file_name"
+    t.string "avatar_content_type"
     t.integer "avatar_file_size"
     t.datetime "avatar_updated_at"
     t.integer "lines_per_page"
@@ -336,9 +336,9 @@ ActiveRecord::Schema.define(version: 20181218214149) do
   end
 
   create_table "versions", id: :serial, force: :cascade do |t|
-    t.string "item_type", limit: 255, null: false
+    t.string "item_type", null: false
     t.integer "item_id", null: false
-    t.string "event", limit: 255, null: false
+    t.string "event", null: false
     t.integer "whodunnit"
     t.text "object"
     t.datetime "created_at"
@@ -358,15 +358,15 @@ ActiveRecord::Schema.define(version: 20181218214149) do
     t.index ["user_id"], name: "index_withdraws_on_user_id"
   end
 
-  add_foreign_key "article_lines", "articles", name: "article_lines_article_id_fk", on_delete: :restrict
-  add_foreign_key "article_lines", "prints", name: "article_lines_print_id_fk", on_delete: :restrict
-  add_foreign_key "credits", "customers", name: "credits_customer_id_fk", on_delete: :restrict
-  add_foreign_key "order_lines", "documents", name: "order_lines_document_id_fk", on_delete: :restrict
-  add_foreign_key "order_lines", "orders", name: "order_lines_order_id_fk", on_delete: :restrict
-  add_foreign_key "orders", "customers", name: "orders_customer_id_fk", on_delete: :restrict
-  add_foreign_key "print_jobs", "documents", name: "print_jobs_document_id_fk", on_delete: :restrict
-  add_foreign_key "print_jobs", "prints", name: "print_jobs_print_id_fk", on_delete: :restrict
-  add_foreign_key "prints", "customers", name: "prints_customer_id_fk", on_delete: :restrict
-  add_foreign_key "prints", "orders", name: "prints_order_id_fk", on_delete: :restrict
-  add_foreign_key "prints", "users", name: "prints_user_id_fk", on_delete: :restrict
+  add_foreign_key "article_lines", "articles"
+  add_foreign_key "article_lines", "prints"
+  add_foreign_key "credits", "customers"
+  add_foreign_key "order_lines", "documents"
+  add_foreign_key "order_lines", "orders"
+  add_foreign_key "orders", "customers"
+  add_foreign_key "print_jobs", "documents"
+  add_foreign_key "print_jobs", "prints"
+  add_foreign_key "prints", "customers"
+  add_foreign_key "prints", "orders"
+  add_foreign_key "prints", "users"
 end

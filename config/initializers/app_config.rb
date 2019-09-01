@@ -11,3 +11,6 @@ end
 SECRETS = Rails.application.secrets
           .deep_symbolize_keys
           .with_indifferent_access
+
+# Devise regex
+EMAIL_REGEX = /\A[\w+\-\.]+@[a-z\d\-]+(\.[a-z]+)*\.[a-z]+\z/i

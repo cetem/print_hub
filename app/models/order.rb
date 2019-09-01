@@ -147,8 +147,8 @@ class Order < ApplicationModel
     end
 
     includes(:customer).where(
-      conditions.map { |c| "(#{c})" }.join(' OR '), parameters
-    ).order(options[:order]).references(:customer)
+      Arel.sql(conditions.map { |c| "(#{c})" }.join(' OR ')), parameters
+    ).order(Arel.sql(options[:order])).references(:customer)
   end
 
   def cancel!

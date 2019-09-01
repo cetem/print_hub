@@ -13,7 +13,7 @@ class UserSessionsController < ApplicationController
   def create
     @title = t 'view.user_sessions.new_title'
     @user_session = UserSession.new(
-      params.require(:user_session).permit(:username, :password)
+      params.require(:user_session).permit(:username, :password).to_h
     )
 
     respond_to do |format|
