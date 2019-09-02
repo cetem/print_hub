@@ -1,12 +1,13 @@
 language: ruby
+dist: xenial
 cache: bundler
 rvm:
   - 2.4.3
-  - 2.5.1
+  - 2.6.3
 git:
   depth: 1
 addons:
-  postgresql: 9.6
+  postgresql: 10
   apt:
     packages:
       - libcups2-dev
