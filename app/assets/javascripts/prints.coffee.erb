@@ -139,6 +139,7 @@ new Rule
    # Elimina con efecto y recalcula
    @map.removeItem ||= (event, element)->
      if $(element).hasClass('print_job')
+       delete Jobs.jobs[element.id]
        Print.excludeElementFromTotal(element)
 
      else if $(element).hasClass('article_line')
@@ -400,7 +401,7 @@ new Rule
      Print.updateArticlesCount
    $(document).on 'change keyup', '.js-job-pages', @map.printJobWithoutDocument
    $(document).on 'change keyup ph.price_modification',
-     '.price-modifier', @map.updateLinePrice
+     '.price-modifier', Jobs.reCalcEverything #@map.updateLinePrice
    $(document).on 'change', 'input[name$="[pay_later]"]', @map.resetPayments
    $(document).on 'ajax:success', 'a.details-link', @map.showDocumentDetails
    $(document).on 'click', '#link_to_customer_credit_detail',
