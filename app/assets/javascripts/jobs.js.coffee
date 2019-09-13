@@ -15,22 +15,17 @@
     Jobs.oddPagesTypes = Jobs.getDataFromPrintJobs('oddPagesTypes')
 
   assignDefaultOrGetJob: (job)->
-    Jobs.jobs[job.id] ||= {}
-    jobData = Jobs.jobs[job.id]
-    _.defaults(
-      jobData,
-      {
-        copies: 1,
-        oddPages: 0,
-        evenPages: 0,
-        rangePages: 0,
-        pricePerCopy: 0.0,
-        price: 0.0,
-        printJobType: 1,
-        stock: 0
-      }
-    )
-    jobData
+    Jobs.jobs[job.id] ||= _.clone({
+      copies: 1,
+      oddPages: 0,
+      evenPages: 0,
+      rangePages: 0,
+      pricePerCopy: 0.0,
+      price: 0.0,
+      printJobType: 1,
+      stock: 0
+    })
+    Jobs.jobs[job.id]
 
   listenRangeChanges: ->
     $(document).on 'change blur', '.js-page-range', ->
@@ -95,6 +90,12 @@
 
   updateCopiesForJob: (job) ->
     jobStorage = Jobs.assignDefaultOrGetJob(job)
+
+    jobStorage.printJobType = parseInt(
+      job.querySelector('.js-print_job_type-selector').value,
+      10
+    )
+
     copies = parseInt(job.querySelector('.js-job-copies').value || 0, 10)
     rangePages = jobStorage.rangePages
 
@@ -172,7 +173,6 @@
 
     Jobs.updateGlobalCopies()
     Jobs.reCalcPrices()
-    Print.updateTotalPrice()
 
   reCalcPages: (job)->
     oldPageList = _.clone(Jobs.pagesList)

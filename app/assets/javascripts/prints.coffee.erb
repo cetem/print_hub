@@ -213,8 +213,6 @@ new Rule
            $('#link_to_add_rfid').show()
 
      Jobs.reCalcEverything()
-     Print.updateTotalPrice()
-
 
    @map.useRfid ||= (e)->
      key = e.which
@@ -341,7 +339,6 @@ new Rule
          $(e).val('0.000') if parseInt($(e).val()) > 0
      else
        Jobs.reCalcEverything()
-       Print.updateTotalPrice()
 
    # Muestra los detalles del documento
    @map.showDocumentDetails ||= (event, data)->
@@ -384,8 +381,6 @@ new Rule
 
      e.currentTarget.form.submit()
 
-
-
    $(document).on 'item.removed', @map.removeItem
    $(document).on 'autocomplete:update', 'input.autocomplete-field',
       @map.pagesAndPriceAfterAutocomplete
@@ -400,8 +395,7 @@ new Rule
    $(document).on 'autocomplete:update', 'input[name$="[auto_article_name]"]',
      Print.updateArticlesCount
    $(document).on 'change keyup', '.js-job-pages', @map.printJobWithoutDocument
-   $(document).on 'change keyup ph.price_modification',
-     '.price-modifier', Jobs.reCalcEverything #@map.updateLinePrice
+   $(document).on 'change keyup', '.price-modifier', Jobs.reCalcEverything #@map.updateLinePrice
    $(document).on 'change', 'input[name$="[pay_later]"]', @map.resetPayments
    $(document).on 'ajax:success', 'a.details-link', @map.showDocumentDetails
    $(document).on 'click', '#link_to_customer_credit_detail',
