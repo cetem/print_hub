@@ -171,8 +171,9 @@ new Rule
        Helper.show(printJobDetailsLink)
        #printJob.querySelector('.dynamic_details').innerHTML = ''
 
-       if item.print_job_type
-         printJob.querySelector('.js-print_job_type-selector').value = item.print_job_type
+
+       if item.print_job_type_id
+         printJob.querySelector('.js-print_job_type-selector').value = item.print_job_type_id
 
        if stock > 0
          jobStorage.stock = stock

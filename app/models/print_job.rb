@@ -66,7 +66,7 @@ class PrintJob < ApplicationModel
     # self.file_line_id ||= attributes['id'] if attributes
 
     self.copies ||= 1
-    self.print_job_type ||= PrintJobType.default
+    self.print_job_type ||= document&.print_job_type || PrintJobType.default
     self.printed_copies ||= 0
     self.pages = document.pages if document
     self.pages = file_line.pages if file_line

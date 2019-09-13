@@ -154,7 +154,6 @@ class ActionDispatch::IntegrationTest
 
   Capybara.register_driver :poltergeist do |app|
       Capybara::Poltergeist::Driver.new(app, {
-        # debug: true,
         inspector: true,
         js_errors: true,
         window_size: [1600, 1200]
@@ -273,6 +272,7 @@ class ActionDispatch::IntegrationTest
     errors = page.driver.browser.manage.logs.get(:browser)
     return unless errors
 
+    puts errors
     parsed_errors = errors.map { |e| e if e.level == 'SEVERE' && message.present? }.compact
     raise JSException.new(parsed_errors) if parsed_errors
   end
