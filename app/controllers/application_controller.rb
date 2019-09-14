@@ -212,9 +212,9 @@ class ApplicationController < ActionController::Base
       RuntimeError.new('Validation error on ' + obj.class.to_s),
       user: {
         id: current_user.try(:id),
-        name: current_user.try(:to_s) || 'Anom'
-      },
-      errors: obj.errors.messages
+        name: current_user.try(:to_s) || 'Anom',
+        errors: obj.errors.messages
+      }
     )
   end
 
