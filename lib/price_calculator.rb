@@ -20,7 +20,7 @@ module PriceCalculator
                       options[:pages] * options[:price_per_copy]
                     else
                       even_pages * options[:price_per_copy] + one_sided_price
-    end
+                    end
 
     options[:copies] * partial_price
   end
@@ -34,7 +34,10 @@ module PriceCalculator
         one_sided.price, line.usable_parent.try(:total_pages_by_type, one_sided)
       ).price
     else
-      ::PriceChooser.new(line.print_job_type.price, line.print_total_pages).price
+      ::PriceChooser.new(
+        line.print_job_type.price, line.print_total_pages,
+        without_discounts: line.usable_parent.try(:without_discounts)
+      ).price
     end
   end
 end

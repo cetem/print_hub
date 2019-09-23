@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2018_12_18_214149) do
+ActiveRecord::Schema.define(version: 2019_09_23_211946) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -222,6 +222,7 @@ ActiveRecord::Schema.define(version: 2018_12_18_214149) do
     t.integer "file_line_id"
     t.integer "print_job_type_id", null: false
     t.integer "time_remained"
+    t.decimal "total_price", precision: 15, scale: 3
     t.index ["document_id"], name: "index_print_jobs_on_document_id"
     t.index ["job_id"], name: "index_print_jobs_on_job_id"
     t.index ["print_id"], name: "index_print_jobs_on_print_id"

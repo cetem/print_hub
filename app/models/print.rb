@@ -30,7 +30,8 @@ class Print < ApplicationModel
 
   # Atributos no persistentes
   attr_accessor :auto_customer_name, :avoid_printing, :include_documents,
-                :credit_password, :pay_later, :customer_rfid, :copy_from
+                :credit_password, :pay_later, :customer_rfid, :copy_from,
+                :without_discounts
 
   # Restricciones
   validates :printer, presence: true, if: ->(p) do

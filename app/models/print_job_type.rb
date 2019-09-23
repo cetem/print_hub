@@ -66,4 +66,8 @@ class PrintJobType < ActiveRecord::Base
   def any_job?
     print_jobs.any? || file_lines.any? || order_lines.any?
   end
+
+  def parsed_prices
+    PriceChooser.new(price).parse.map { |cond, price| [cond, price.to_f] }.to_h
+  end
 end

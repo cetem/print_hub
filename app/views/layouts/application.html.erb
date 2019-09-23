@@ -42,6 +42,7 @@
     <div class="js-content">
       <%= render 'shared/bugsnag' if render_bugsnag_helpers %>
       <%= javascript_include_tag 'application' %>
+
       <%= content_for :js_extra do %>
         <%= raw "Messages.ajaxInProgressWarning = '#{j t('messages.ajax_in_progress_warning')}';" %>
       <% end %>

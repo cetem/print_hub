@@ -1,11 +1,10 @@
 class PriceChooser
   include ActionView::Helpers::NumberHelper
 
-  attr_accessor :copies
-
-  def initialize(raw_setting, copies = 0)
-    @raw_setting = raw_setting
-    @copies = copies
+  def initialize(raw_setting, copies = 0, **extras)
+    @raw_setting       = raw_setting
+    @copies            = copies
+    @without_discounts = extras[:without_discounts]
   end
 
   def price
@@ -14,16 +13,8 @@ class PriceChooser
     )
   end
 
-  def self.choose(*args)
-    options = args.extract_options!
-    total_copies = options[:copies] || 0
-    price = PrintJobType.find(options[:type]).price
-
-    new(price, total_copies).price
-  end
-
   def parse
-    @raw_setting.split(/\s*;\s*/).map do |rule|
+    parsed_rules = @raw_setting.split(/\s*;\s*/).map do |rule|
       splited_rule = rule.split(/\s*@\s*/)
       condition = splited_rule.length > 1 ? splited_rule.shift : '%{c}'
       price = splited_rule.first
@@ -32,6 +23,20 @@ class PriceChooser
 
       [condition, price]
     end
+
+    if @without_discounts
+      [parsed_rules.sort_by { |_cond, price| price.to_f }.last]
+    else
+      parsed_rules
+    end
+  end
+
+  def self.choose(*args)
+    options = args.extract_options!
+    total_copies = options[:copies] || 0
+    price = PrintJobType.find(options[:type]).price
+
+    new(price, total_copies).price
   end
 
   def self.humanize

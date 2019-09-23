@@ -380,4 +380,49 @@ class PrintsTest < ActionDispatch::IntegrationTest
       )
     end
   end
+
+  test 'should calculate prices with discount' do
+    login
+
+    assert_page_has_no_errors!
+    assert_equal prints_path, current_path
+
+    within '.form-actions' do
+      click_link I18n.t('view.prints.new')
+    end
+
+    assert_page_has_no_errors!
+    assert_equal new_print_path, current_path
+    assert page.has_css?('form.new_print')
+
+    within 'form.new_print' do
+      select @pdf_printer_name, from: 'print_printer'
+    end
+
+    documents(:math_book).update(
+      media: PrintJobType::MEDIA_TYPES[:legal]
+    )
+
+    within '.print_job' do
+      fill_autocomplete_for(@ac_field, 'Math Book')
+
+      assert_equal find('select[name$="[print_job_type_id]"]').value,
+                   print_job_types(:color).id.to_s
+    end
+
+    within 'form.new_print' do
+      click_link I18n.t('view.prints.comment')
+      fill_in 'print_comment', with: 'Nothing importan'
+    end
+
+    assert_difference 'Print.count' do
+      click_button I18n.t('view.prints.print_title')
+    end
+
+    assert_page_has_no_errors!
+    assert page.has_css?(
+      '.alert', text: I18n.t('view.prints.correctly_created')
+    )
+  end
+
 end

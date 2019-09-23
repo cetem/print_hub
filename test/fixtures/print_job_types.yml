@@ -11,3 +11,17 @@ color:
   price: 0.35
   two_sided: false
   default: false
+
+cheap_a3:
+  media: <%= PrintJobType::MEDIA_TYPES[:a3] %>
+  name: A3 cheap
+  price: 1.19; >=300 @ 1.06; >=500 @ 1.00
+  two_sided: true
+  default: false
+
+a3:
+  media: <%= PrintJobType::MEDIA_TYPES[:a3] %>
+  name: A3
+  price: 1.44
+  two_sided: false
+  default: false

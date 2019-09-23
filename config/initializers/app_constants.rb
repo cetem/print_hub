@@ -30,3 +30,5 @@ PRIVATE_PRINTERS_REGEXP = Regexp.new(APP_CONFIG['private_printers'])
 TMP_FILES = Rails.root.join('tmp')
 # UUID Regex
 UUID_REGEX = /\b[0-9a-f]{8}\b-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-\b[0-9a-f]{12}\b/i
+# Decimal column defaults
+DECIMAL_COLUMN_DEFAULTS = { precision: 15, scale: 3 }

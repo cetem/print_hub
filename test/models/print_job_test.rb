@@ -485,4 +485,50 @@ class PrintJobTest < ActiveSupport::TestCase
 
     assert print_job.completed?
   end
+
+  test 'create with discount' do
+    pjt   = print_job_types(:cheap_a3)
+    print = prints(:math_print)
+
+    print.print_jobs.delete_all
+
+    print_job = print.print_jobs.new(
+      copies:            1,
+      pages:             300,
+      print_job_type_id: pjt.id,
+      job_id:            1
+    )
+
+    assert_equal 318.0, print_job.price.to_f.round(2)
+
+    print_job.pages = 299 # 298 two-sided + 1 one-sided
+    assert_equal 356.06, print_job.price.to_f.round(2)
+
+    print_job.pages = 500
+    assert_equal 500.0, print_job.price.to_f.round(2)
+  end
+
+  test 'create without discount' do
+    pjt   = print_job_types(:cheap_a3)
+    print = prints(:math_print)
+
+    print.print_jobs.delete_all
+
+    print.without_discounts = true
+
+    print_job = print.print_jobs.new(
+      copies:            1,
+      pages:             300,
+      print_job_type_id: pjt.id,
+      job_id:            1
+    )
+
+    assert_equal 357.0, print_job.price.to_f.round(2)
+
+    print_job.pages = 299 # 298 two-sided + 1 one-sided
+    assert_equal 356.06, print_job.price.to_f.round(2)
+
+    print_job.pages = 500
+    assert_equal 595.0, print_job.price.to_f.round(2)
+  end
 end

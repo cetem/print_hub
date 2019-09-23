@@ -11,14 +11,18 @@ module Lines::Price
   end
 
   def price
-    ::PriceCalculator.final_job_price(
+    total_price = ::PriceCalculator.final_job_price(
       (usable_parent.try(:pages_per_type) || {}).merge(
         price_per_copy: job_price_per_copy,
-        type: self.print_job_type,
-        pages: self.range_pages,
-        copies: self.copies
+        type:           self.print_job_type,
+        pages:          self.range_pages,
+        copies:         self.copies
       )
     )
+
+    self.total_price = total_price if respond_to?(:total_price=)
+
+    total_price
   end
 
   def job_price_per_copy
