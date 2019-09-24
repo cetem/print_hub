@@ -76,7 +76,9 @@ class Print < ApplicationModel
 
     self.user   = UserSession.find.try(:user) || user rescue user
     self.status ||= STATUS[:pending_payment]
-    self.pay_later! if [1, '1', true].include?(pay_later)
+    self.pay_later! if pay_later.to_boolean
+
+    self.without_discounts = without_discounts.to_boolean
 
     case
     when order && print_jobs.empty?
@@ -118,7 +120,7 @@ class Print < ApplicationModel
   end
 
   def avoid_printing?
-    [true, 1, '1'].include?(avoid_printing)
+    avoid_printing.to_boolean
   end
 
   def print_all_jobs

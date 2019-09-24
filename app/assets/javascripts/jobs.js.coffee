@@ -14,6 +14,9 @@
     Jobs.pricesList = Jobs.getDataFromPrintJobs('pricesList')
     Jobs.oddPagesTypes = Jobs.getDataFromPrintJobs('oddPagesTypes')
 
+  withoutDiscounts: ->
+    $('#print_without_discounts').is(':checked')
+
   assignDefaultOrGetJob: (job)->
     Jobs.jobs[job.id] ||= _.clone({
       copies: 1,
@@ -72,7 +75,8 @@
       jobStorage.printJobType = jobType
       jobStorage.pricePerCopy = PriceChooser.choose(
         Jobs.pricesList[jobType],
-        Jobs.pagesList[jobType] || 1
+        Jobs.pagesList[jobType] || 1,
+        Jobs.withoutDiscounts()
       )
 
   changeMoneyTitleAndBadge: (job)->
@@ -137,7 +141,8 @@
 
     oddPagesPrice = PriceChooser.choose(
       parseFloat(Jobs.pricesList[oddPagesType]),
-      Jobs.pagesList[oddPagesType] || 1
+      Jobs.pagesList[oddPagesType] || 1,
+      Jobs.withoutDiscounts()
     )
 
     jobStorage.price = (
@@ -186,8 +191,8 @@
       printJobPrice = Jobs.pricesList[jobType]
 
       if (
-        PriceChooser.choose(printJobPrice, oldPages).toFixed(3) !=
-          PriceChooser.choose(printJobPrice, pages).toFixed(3)
+        PriceChooser.choose(printJobPrice, oldPages, Jobs.withoutDiscounts()).toFixed(3) !=
+          PriceChooser.choose(printJobPrice, pages, Jobs.withoutDiscounts()).toFixed(3)
       )
         needToReCalcAll = true
         return

@@ -1,6 +1,6 @@
 @PriceChooser =
-  choose: (setting, copies)->
-    rules = PriceChooser.parse(setting + '')
+  choose: (setting, copies, withoutDiscounts)->
+    rules = PriceChooser.parse(setting + '', withoutDiscounts)
     price = 0.0
 
     $.each rules, (i, e)->
@@ -9,12 +9,17 @@
 
     price
 
-  parse: (setting)->
-    $.map setting.split(/\s*;\s*/), (rule)->
+  parse: (setting, withoutDiscounts)->
+    parsedRules = _.map setting.split(/\s*;\s*/), (rule)->
       splitedRule = rule.split(/\s*@\s*/)
       condition = if splitedRule.length > 1 then splitedRule.shift() else '%{c}'
       price = splitedRule[0] || '0'
 
       condition = '%{c} '.concat(condition) if condition.indexOf('%{c}') == -1
 
-      [[condition, price]] # Map "aplana" los arrays WTF!
+      [condition, price]
+
+    if withoutDiscounts
+      [_.last(_.sortBy parsedRules, (rule) -> parseFloat(rule[1]))]
+    else
+      parsedRules

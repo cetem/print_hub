@@ -310,7 +310,8 @@ class PrintsController < ApplicationController
     params.require(:print).permit(
       :printer, :scheduled_at, :customer_id, :order_id, :auto_customer_name,
       :avoid_printing, :include_documents, :credit_password, :pay_later,
-      :lock_version, :customer_rfid, :comment, print_jobs_attributes: [
+      :lock_version, :customer_rfid, :comment, :without_discounts,
+      print_jobs_attributes: [
         :document_id, :copies, :pages, :range, :print_id, :auto_document_name,
         :job_hold_until, :file_line_id, :print_job_type_id, *shared_attrs
       ], article_lines_attributes: [

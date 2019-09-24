@@ -41,10 +41,15 @@
         <%= hidden_field_tag :customer_free_credit,
           @print.customer.try(:free_credit), id: 'customer_free_credit' %>
         <div class="row-fluid">
-          <div class="span6">
+          <div class="span4">
             <%= f.input :avoid_printing, as: :boolean %>
           </div>
-          <div class="span6">
+          <div class="span4">
+            <%= f.input :without_discounts, as: :boolean, input_html: {
+              class: 'price-modifier'
+            } %>
+          </div>
+          <div class="span4">
             <%= f.input :pay_later, as: :boolean, input_html: {
               checked: @print.customer.try(:reliable?) || @print.pay_later?
             } if current_user.admin %>

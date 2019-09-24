@@ -111,6 +111,7 @@ es:
         status: "Estado"
         user: "Usuario"
         user_id: "Usuario"
+        without_discounts: 'Sin descuentos'
       print/article_lines:
         article_id: "Artículo"
         one: "Artículo"

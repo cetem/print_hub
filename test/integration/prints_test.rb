@@ -214,7 +214,7 @@ class PrintsTest < ActionDispatch::IntegrationTest
       select @pdf_printer_name, from: 'print_printer'
     end
 
-    object_id = first(:css, 'input.price-modifier')[:name].match(/(\d+)/)[1]
+    object_id = first(:css, 'input.js-job-copies.price-modifier')[:name].match(/(\d+)/)[1]
 
     retard_input = "<input name=\"print[print_jobs_attributes][#{object_id}][job_hold_until]\" "
     retard_input << 'type="hidden" value="infinite">'
@@ -381,7 +381,7 @@ class PrintsTest < ActionDispatch::IntegrationTest
     end
   end
 
-  test 'should calculate prices with discount' do
+  test 'should create with discount' do
     login
 
     assert_page_has_no_errors!
@@ -400,20 +400,21 @@ class PrintsTest < ActionDispatch::IntegrationTest
     end
 
     documents(:math_book).update(
-      media: PrintJobType::MEDIA_TYPES[:legal]
+      media: PrintJobType::MEDIA_TYPES[:a3]
     )
 
     within '.print_job' do
       fill_autocomplete_for(@ac_field, 'Math Book')
 
       assert_equal find('select[name$="[print_job_type_id]"]').value,
-                   print_job_types(:color).id.to_s
+                   print_job_types(:cheap_a3).id.to_s
     end
 
-    within 'form.new_print' do
-      click_link I18n.t('view.prints.comment')
-      fill_in 'print_comment', with: 'Nothing importan'
-    end
+    print_job_price = first(
+      :css, '#print_jobs_container .money'
+    ).text.gsub('$', '').to_f.round(2)
+
+    assert_equal 371.0, print_job_price
 
     assert_difference 'Print.count' do
       click_button I18n.t('view.prints.print_title')
@@ -425,4 +426,58 @@ class PrintsTest < ActionDispatch::IntegrationTest
     )
   end
 
+  test 'should create without discount' do
+    login
+
+    assert_page_has_no_errors!
+    assert_equal prints_path, current_path
+
+    within '.form-actions' do
+      click_link I18n.t('view.prints.new')
+    end
+
+    assert_page_has_no_errors!
+    assert_equal new_print_path, current_path
+    assert page.has_css?('form.new_print')
+
+    within 'form.new_print' do
+      select @pdf_printer_name, from: 'print_printer'
+    end
+
+    documents(:math_book).update(
+      media: PrintJobType::MEDIA_TYPES[:a3]
+    )
+
+    within '.print_job' do
+      fill_autocomplete_for(@ac_field, 'Math Book')
+
+      assert_equal find('select[name$="[print_job_type_id]"]').value,
+                   print_job_types(:cheap_a3).id.to_s
+    end
+
+    print_job_price = first(
+      :css, '#print_jobs_container .money'
+    ).text.gsub('$', '').to_f.round(2)
+
+    assert_equal 371.0, print_job_price
+
+    first(:css, '#print_without_discounts').click
+
+    assert find('#print_without_discounts').checked?
+
+    print_job_price = first(
+      :css, '#print_jobs_container .money'
+    ).text.gsub('$', '').to_f.round(2)
+
+    assert_equal 416.5, print_job_price
+
+    assert_difference 'Print.count' do
+      click_button I18n.t('view.prints.print_title')
+    end
+
+    assert_page_has_no_errors!
+    assert page.has_css?(
+      '.alert', text: I18n.t('view.prints.correctly_created')
+    )
+  end
 end

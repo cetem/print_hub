@@ -70,7 +70,7 @@ end
 group :test do
   # Integration test
   gem 'capybara', require: false
-  gem 'selenium-webdriver', '2.53.4'
+  gem 'selenium-webdriver'
   gem 'capybara-screenshot', require: false
   gem 'chromedriver-helper', require: false
   gem 'poltergeist', require: false

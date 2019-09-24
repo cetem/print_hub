@@ -1,4 +1,4 @@
-ENV['RAILS_ENV'] ||= 'test'
+ENV['RAILS_ENV'] = 'test'
 require File.expand_path('../../config/environment', __FILE__)
 require 'rails/test_help'
 require 'authlogic/test_case'
@@ -129,29 +129,9 @@ class ActionDispatch::IntegrationTest
   # Stop ActiveRecord from wrapping tests in transactions
   # self.use_transactional_fixtures = false
 
-  def self._running_remote
-    ENV['remote']
-  end
-
-  def self._running_local
-    ENV['local']
-  end
+  RUN_WITH_GUI = ENV['local'] || false
 
   Capybara.server = :webrick
-
-  # Vagrant config
-  SELENIUM_SERVER = "192.168.33.10"
-  SELENIUM_APP_HOST = "192.168.33.1"
-
-  Capybara.register_driver :selenium_remote_firefox do |app|
-    Capybara::Selenium::Driver.new(
-      app,
-      browser: :remote,
-      url: "http://#{SELENIUM_SERVER}:4444/wd/hub",
-      desired_capabilities: :firefox
-    )
-  end
-
   Capybara.register_driver :poltergeist do |app|
       Capybara::Poltergeist::Driver.new(app, {
         inspector: true,
@@ -176,28 +156,18 @@ class ActionDispatch::IntegrationTest
     end
   end
 
-  Capybara.javascript_driver = case
-                                 when _running_remote then :selenium_remote_firefox
-                                 when _running_local  then :selenium
-                                 else                      :poltergeist
-                               end
-
+  Capybara.javascript_driver = RUN_WITH_GUI ? :selenium : :poltergeist
 
   Capybara.current_driver = Capybara.javascript_driver
   Capybara.server_port = '5416' + (ENV['TEST_ENV_NUMBER'] || 9).to_s
   Capybara.default_max_wait_time = 3
 
-  if _running_remote
-    APP_CONFIG['local_server_ip'] = SELENIUM_APP_HOST
-  elsif _running_local
-    Selenium::WebDriver::Firefox::Binary.path = '/opt/firefox42/firefox'
-  end
-
   setup do
-    Capybara.server_host = self.class._running_remote ? SELENIUM_APP_HOST : 'localhost'
+    Capybara.server_host = 'localhost'
     Capybara.app_host = "http://#{Capybara.server_host}:#{Capybara.server_port}"
     Capybara.reset!    # Forget the (simulated) browser state
-    if self.class._running_local
+
+    if RUN_WITH_GUI
       Capybara.page.driver.browser.manage.window.maximize
     else
       Capybara.page.driver.resize(1600, 1200)
@@ -205,15 +175,6 @@ class ActionDispatch::IntegrationTest
   end
 
   teardown do
-    if self.class._running_local
-      errors = Capybara.page.driver.browser.manage.logs.get(:browser)
-
-      if errors
-        parsed_errors = errors.map { |e| e if e.level == 'SEVERE' && message.present? }.compact
-        raise JSException.new(parsed_errors) if parsed_errors.size > 0
-      end
-    end
-
     DatabaseCleaner.clean       # Truncate the database
     Capybara.reset!             # Forget the (simulated) browser state
   end
@@ -269,6 +230,7 @@ class ActionDispatch::IntegrationTest
   end
 
   def log_js_errors
+    # unused
     errors = page.driver.browser.manage.logs.get(:browser)
     return unless errors
 
