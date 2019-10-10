@@ -5,9 +5,9 @@ module PriceCalculator
     rest = options[:pages] % 2
     even_pages = (options[:pages] - rest)
 
-    if !rest.zero? && options[:type].two_sided
+    if rest.positive? && options[:type].two_sided
       one_sided_type = options[:type].one_sided_for
-      copies = options[one_sided_type.try(:id)] || 1
+      copies = options[one_sided_type] || 1
 
       one_sided_price = ::PriceChooser.new(
         one_sided_type.try(:price) || options[:type].price, copies
@@ -31,7 +31,8 @@ module PriceCalculator
 
     if total_pages == 1 && line.print_job_type.two_sided && one_sided
       ::PriceChooser.new(
-        one_sided.price, line.usable_parent.try(:total_pages_by_type, one_sided)
+        one_sided.price,
+        line.usable_parent.try(:total_pages_by_type_id)&.fetch(one_sided.id, 0) || 0
       ).price
     else
       ::PriceChooser.new(

@@ -110,18 +110,25 @@ class Order < ApplicationModel
     self.completed? ? print.price : order_items.map(&:price).sum
   end
 
-  def pages_per_type
-    types = order_items.map(&:print_job_type).uniq
-    total = {}
+  def total_pages_by_type_id
+    order_items.each_with_object({}) do |oi, memo|
+      sum = if oi.print_job_type.two_sided
+              if oi.pages.even?
+                oi.copies * oi.pages
+              else
+                if (one_sided_id = oi.print_job_type.one_sided_for&.id)
+                  memo[one_sided_id] ||= 0
+                  memo[one_sided_id]  += oi.copies
+                end
 
-    types.each { |type| total[type.id] = total_pages_by_type(type) }
+                oi.copies * (oi.pages - 1)
+              end
+            else
+              oi.copies * oi.pages
+            end
 
-    total
-  end
-
-  def total_pages_by_type(type)
-    order_items.sum do |oi|
-      oi.print_job_type == type ? (oi.pages || 0) : 0
+      memo[oi.print_job_type_id] ||= 0
+      memo[oi.print_job_type_id]  += sum
     end
   end
 

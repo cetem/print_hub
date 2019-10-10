@@ -12,7 +12,7 @@ module Lines::Price
 
   def price
     total_price = ::PriceCalculator.final_job_price(
-      (usable_parent.try(:pages_per_type) || {}).merge(
+      (usable_parent.try(:total_pages_by_type_id) || {}).merge(
         price_per_copy: job_price_per_copy,
         type:           self.print_job_type,
         pages:          self.range_pages,
@@ -30,7 +30,7 @@ module Lines::Price
   end
 
   def print_total_pages
-    usable_parent.try(:total_pages_by_type, self.print_job_type) || 0
+    usable_parent.try(:total_pages_by_type_id)&.fetch(self.print_job_type_id, 0) || 0
   end
 
   def total_pages

@@ -66,7 +66,6 @@ class PrintJob < ApplicationModel
     # self.file_line_id ||= attributes['id'] if attributes
 
     self.copies ||= 1
-    self.print_job_type ||= document&.print_job_type || PrintJobType.default
     self.printed_copies ||= 0
     self.pages = document.pages if document
     self.pages = file_line.pages if file_line
@@ -74,6 +73,15 @@ class PrintJob < ApplicationModel
     if file_line
       self.pages = file_line.pages
       self.file_name = file_line.file_name
+    end
+
+    self.print_job_type ||= document&.print_job_type || PrintJobType.default
+
+    if range_pages == 1 &&
+       self.print_job_type.two_sided &&
+       (pjt_one_sided = print_job_type.one_sided_for)
+
+      self.print_job_type = pjt_one_sided
     end
 
     self.price_per_copy = job_price_per_copy

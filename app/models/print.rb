@@ -181,19 +181,26 @@ class Print < ApplicationModel
     (current_print_jobs.to_a + current_article_lines.to_a).sum(&:price)
   end
 
-  def total_pages_by_type(type)
-    current_print_jobs.sum do |pj|
-      (pj.print_job_type == type) ? (pj.copies * pj.range_pages) : 0
+  def total_pages_by_type_id
+    current_print_jobs.each_with_object({}) do |pj, memo|
+      sum = if pj.print_job_type.two_sided
+              if pj.range_pages.even?
+                pj.copies * pj.range_pages
+              else
+                if (one_sided_id = pj.print_job_type.one_sided_for&.id)
+                  memo[one_sided_id] ||= 0
+                  memo[one_sided_id]  += pj.copies
+                end
+
+                pj.copies * (pj.range_pages - 1)
+              end
+            else
+              pj.copies * pj.range_pages
+            end
+
+      memo[pj.print_job_type_id] ||= 0
+      memo[pj.print_job_type_id]  += sum
     end
-  end
-
-  def pages_per_type
-    types = print_jobs.map(&:print_job_type).uniq
-    total = {}
-
-    types.each { |type| total[type.id] = total_pages_by_type(type) }
-
-    total
   end
 
   def reject_print_job_attributes?(attributes)

@@ -192,7 +192,8 @@ class OrderTest < ActiveSupport::TestCase
     total_pages = @order.order_items.inject(0) { |t, oi| t + oi.pages }
 
     assert total_pages > 0
-    assert_equal total_pages, @order.total_pages_by_type(print_job_types(:a4))
+    # Odd pages are rested by one
+    assert_equal total_pages - 1 , @order.total_pages_by_type_id[print_job_types(:a4).id]
   end
 
   test 'status methods' do

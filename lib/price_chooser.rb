@@ -4,7 +4,7 @@ class PriceChooser
   def initialize(raw_setting, copies = 0, **extras)
     @raw_setting       = raw_setting
     @copies            = copies
-    @without_discounts = extras[:without_discounts]
+    @without_discounts = extras[:without_discounts].to_boolean
   end
 
   def price

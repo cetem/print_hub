@@ -784,7 +784,7 @@ class PrintTest < ActiveSupport::TestCase
     end
 
     assert total_pages > 0
-    assert_equal total_pages, @print.total_pages_by_type(print_job_types(:a4))
+    assert_equal total_pages, @print.total_pages_by_type_id[print_job_types(:a4).id]
   end
 
   test 'print all jobs' do
@@ -901,6 +901,41 @@ class PrintTest < ActiveSupport::TestCase
       assert_equal(oals[i].article_id, cals[i].article_id, msg)
       assert_equal(oals[i].units, cals[i].units, msg)
     end
+  end
+
+  test 'weird price scenario' do
+    @print = Print.create!(
+      printer: @printer,
+      user_id: @operator.id,
+      scheduled_at: '',
+      pay_later: false,
+      comment: 'Nothing important',
+      print_jobs_attributes: {
+        '1' => {
+          price_per_copy: 1000,
+          pages:  3,
+          copies: 160,
+          print_job_type_id: print_job_types(:cheap_a3).id
+        },
+        '2' => {
+          price_per_copy: 1000,
+          pages:  1,
+          copies: 24,
+          print_job_type_id: print_job_types(:cheap_a3).id
+        }
+      },
+      # ((24 + 160) * 1.44) + (320 * 1.06)
+      payments_attributes: {
+        '1' => {
+          amount: 604.16,
+          paid:   604.16
+        }
+      }
+    )
+
+    # Force Simple sided
+    second_pj = @print.print_jobs.select { |pj| pj.copies == 24 }.last
+    assert_equal print_job_types(:a3).id, second_pj.print_job_type_id
   end
 
   private
