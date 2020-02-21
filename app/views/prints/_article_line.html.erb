@@ -2,18 +2,28 @@
 <% hide = is_dynamic || f.object.marked_for_destruction? %>
 <div class="article_line row-fluid" id="<%= id %>" data-price="<%= f.object.price %>" <%= raw 'style="display: none;"' if hide %>>
   <div class="span5">
-    <% field_classes = ['autocomplete-field', 'span11'] %>
-    <% field_classes << 'error' unless f.object.errors[:article_id].blank? %>
-    <%= f.input :auto_article_name, label: false,
+    <%
+        field_classes = ['autocomplete-field', 'span11']
+        if f.object.errors[:saleable_id].present? ||
+          f.object.errors[:saleable_type].present? ||
+          f.object.errors[:saleable].present?
+
+          field_classes << 'error'
+        end
+    %>
+    <%= f.input :auto_saleable_name, label: false,
       input_html: { disabled: disabled, id: "auto_article_line_#{id}",
-      class: field_classes.join(' '), value: f.object.article.try(:to_s),
+      class: field_classes.join(' '), value: f.object.saleable.try(:to_s),
       data: {
         'autocomplete-id-target' => "#auto_article_line_id_#{id}",
-        'autocomplete-url' => autocomplete_for_article_name_prints_path(format: :json)
+        'autocomplete-type-target' => "#auto_article_line_type_#{id}",
+        'autocomplete-url' => autocomplete_for_saleable_name_prints_path(format: :json)
       }
     } %>
-    <%= f.input :article_id, as: :hidden,
+    <%= f.input :saleable_id, as: :hidden,
       input_html: { class: 'autocomplete-id', id: "auto_article_line_id_#{id}" } %>
+    <%= f.input :saleable_type, as: :hidden,
+      input_html: { class: 'autocomplete-type', id: "auto_article_line_type_#{id}" } %>
   </div>
   <div class="span1">
     <%= f.input :units, label: false,

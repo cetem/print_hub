@@ -14,7 +14,7 @@ scope ':status', defaults: { status: 'all' },
       post :upload_file
       get :autocomplete_for_customer_name
       get :autocomplete_for_document_name
-      get :autocomplete_for_article_name
+      get :autocomplete_for_saleable_name
     end
   end
 end

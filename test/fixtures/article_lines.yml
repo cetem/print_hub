@@ -1,11 +1,11 @@
 math_binding_line:
-  article: binding
+  saleable: binding (Article)
   print: math_print
   units: 2
   unit_price: 1.79
 
 physics_binding_line:
-  article: binding
+  saleable: binding (Article)
   print: physics_print
   units: 1
   unit_price: 1.79

@@ -56,7 +56,8 @@ class PrintTest < ActiveSupport::TestCase
                               },
                               article_lines_attributes: {
                                 '1' => {
-                                  article_id: articles(:binding).id,
+                                  saleable_type: Article.name,
+                                  saleable_id: articles(:binding).id,
                                   units: 1,
                                   # No importa el precio, se establece desde el artículo
                                   unit_price: 12.0
@@ -92,7 +93,8 @@ class PrintTest < ActiveSupport::TestCase
                             pay_later: false,
                             article_lines_attributes: {
                               '1' => {
-                                article_id: articles(:binding).id,
+                                saleable_type: Article.name,
+                                saleable_id: articles(:binding).id,
                                 units: 1,
                                 # No importa el precio, se establece desde el artículo
                                 unit_price: 12.0
@@ -279,7 +281,8 @@ class PrintTest < ActiveSupport::TestCase
                               },
                               article_lines_attributes: {
                                 '1' => {
-                                  article_id: articles(:binding).id,
+                                  saleable_type: Article.name,
+                                  saleable_id: articles(:binding).id,
                                   units: 1,
                                   # No importa el precio, se establece desde el artículo
                                   unit_price: 12.0
@@ -342,7 +345,8 @@ class PrintTest < ActiveSupport::TestCase
                               },
                               article_lines_attributes: {
                                 '1' => {
-                                  article_id: articles(:binding).id,
+                                  saleable_type: Article.name,
+                                  saleable_id: articles(:binding).id,
                                   units: 1,
                                   # No importa el precio, se establece desde el artículo
                                   unit_price: 12.0
@@ -429,7 +433,8 @@ class PrintTest < ActiveSupport::TestCase
                                 },
                                 article_lines_attributes: {
                                   '1' => {
-                                    article_id: articles(:binding).id,
+                                    saleable_type: Article.name,
+                                  saleable_id: articles(:binding).id,
                                     units: 1,
                                     # No importa el precio, se establece desde el artículo
                                     unit_price: 12.0
@@ -644,14 +649,13 @@ class PrintTest < ActiveSupport::TestCase
     print.printer = nil
     print.scheduled_at = 2.seconds.ago
 
+    errors_msg = error_message_from_model(
+      print, :scheduled_at, :after,
+      restriction: Time.zone.now.strftime('%d/%m/%Y %H:%M:%S')
+    )
     assert print.invalid?
     assert_equal 1, print.errors.count
-    assert_equal [
-      error_message_from_model(
-        print, :scheduled_at, :after,
-        restriction: Time.zone.now.strftime('%d/%m/%Y %H:%M:%S')
-      )
-    ], print.errors[:scheduled_at]
+    assert_equal [errors_msg], print.errors[:scheduled_at]
   end
 
   # Prueba que las validaciones del modelo se cumplan como es esperado
@@ -894,11 +898,11 @@ class PrintTest < ActiveSupport::TestCase
     assert original_print.article_lines.size.positive?
     assert_equal original_print.article_lines.size, copied_print.article_lines.size
 
-    oals = original_print.article_lines.sort_by(&:article_id)
-    cals = copied_print.article_lines.sort_by(&:article_id)
+    oals = original_print.article_lines.sort_by(&:saleable_id)
+    cals = copied_print.article_lines.sort_by(&:saleable_id)
     original_print.article_lines.size.times do |i|
       msg = [oals[i], cals[i]]
-      assert_equal(oals[i].article_id, cals[i].article_id, msg)
+      assert_equal(oals[i].saleable_id, cals[i].saleable_id, msg)
       assert_equal(oals[i].units, cals[i].units, msg)
     end
   end

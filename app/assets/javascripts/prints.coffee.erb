@@ -391,9 +391,9 @@ new Rule
      @map.removeCustomer
    $(document).on 'change', 'input[name$="[auto_document_name]"]',
      @map.resetPrintJobElements
-   $(document).on 'change', 'input[name$="[auto_article_name]"]',
+   $(document).on 'change', 'input[name$="[auto_saleable_name]"]',
      @map.resetArticlesElements
-   $(document).on 'autocomplete:update', 'input[name$="[auto_article_name]"]',
+   $(document).on 'autocomplete:update', 'input[name$="[auto_saleable_name]"]',
      Print.updateArticlesCount
    $(document).on 'change keyup', '.js-job-pages', @map.printJobWithoutDocument
    $(document).on 'change keyup', '.price-modifier', Jobs.reCalcEverything #@map.updateLinePrice
@@ -425,8 +425,8 @@ new Rule
    $(document).off 'change keyup', 'input[name$="[auto_customer_name]"]',
      @map.removeCustomer
    $(document).off 'change', 'input[name$="[auto_document_name]"]', @map.resetPrintJobElements
-   $(document).off 'change', 'input[name$="[auto_article_name]"]', @map.resetArticlesElements
-   $(document).off 'autocomplete:update', 'input[name$="[auto_article_name]"]',
+   $(document).off 'change', 'input[name$="[auto_saleable_name]"]', @map.resetArticlesElements
+   $(document).off 'autocomplete:update', 'input[name$="[auto_saleable_name]"]',
      Print.updateArticlesCount
    $(document).off 'change keyup', 'input[name$="[pages]"]', @map.printJobWithoutDocument
    $(document).off 'change keyup', '.price-modifier', @map.updateLinePrice

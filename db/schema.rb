@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_09_23_211946) do
+ActiveRecord::Schema.define(version: 2020_02_20_220625) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -18,14 +18,15 @@ ActiveRecord::Schema.define(version: 2019_09_23_211946) do
 
   create_table "article_lines", id: :serial, force: :cascade do |t|
     t.integer "print_id"
-    t.integer "article_id", null: false
+    t.integer "saleable_id", null: false
     t.integer "units", null: false
     t.decimal "unit_price", precision: 15, scale: 3, null: false
     t.integer "lock_version", default: 0
     t.datetime "created_at"
     t.datetime "updated_at"
-    t.index ["article_id"], name: "index_article_lines_on_article_id"
+    t.string "saleable_type"
     t.index ["print_id"], name: "index_article_lines_on_print_id"
+    t.index ["saleable_type", "saleable_id"], name: "index_article_lines_on_saleable_type_and_saleable_id"
   end
 
   create_table "articles", id: :serial, force: :cascade do |t|
@@ -359,7 +360,7 @@ ActiveRecord::Schema.define(version: 2019_09_23_211946) do
     t.index ["user_id"], name: "index_withdraws_on_user_id"
   end
 
-  add_foreign_key "article_lines", "articles"
+  add_foreign_key "article_lines", "articles", column: "saleable_id"
   add_foreign_key "article_lines", "prints"
   add_foreign_key "credits", "customers"
   add_foreign_key "order_lines", "documents"

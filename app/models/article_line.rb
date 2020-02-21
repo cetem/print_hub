@@ -2,29 +2,28 @@ class ArticleLine < ApplicationModel
   has_paper_trail
 
   # Atributos no persistentes
-  attr_accessor :auto_article_name
+  attr_accessor :auto_saleable_name
 
   # Atributos de solo lectura
-  attr_readonly :id, :article_id, :units, :unit_price, :print_id
+  attr_readonly :id, :saleable_id, :units, :unit_price, :print_id
 
   # Restricciones
-  validates :article_id, :units, :unit_price, presence: true
+  validates :saleable_id, :units, :unit_price, presence: true
   validates :units, allow_nil: true, allow_blank: true,
                     numericality: { only_integer: true, greater_than: 0, less_than: 2_147_483_648 }
   validates :unit_price, numericality: { greater_than_or_equal_to: 0 },
                          allow_nil: true, allow_blank: true
 
+  after_initialize :assign_defaults
   after_create :discount_stock
 
   # Relaciones
   belongs_to :print, optional: true
-  belongs_to :article, optional: true
+  belongs_to :saleable, polymorphic: true, optional: true
 
-  def initialize(attributes = nil)
-    super(attributes)
-
-    self.units ||= 1
-    self.unit_price = article.price if article
+  def assign_defaults
+    self.units    ||= 1
+    self.unit_price = saleable&.price
   end
 
   def price
@@ -32,24 +31,31 @@ class ArticleLine < ApplicationModel
   end
 
   def discount_stock
-    article.stock -= units
-    article.stock = 0 if article.stock < 0
-    article.save
+    return unless saleable.respond_to?(:stock)
+
+    saleable.stock -= units
+    saleable.stock = 0 if saleable.stock < 0
+    saleable.save
   end
 
   def refund!
-    article.stock += units
-    article.save
+    return unless saleable.respond_to?(:stock)
+
+    saleable.stock += units
+    saleable.save
   end
 
-  def self.sold_articles_between(dates)
+  def self.sold_saleables_between(dates)
     from, to = dates.sort
 
     revoked_print_ids = Print.where(created_at: from..to).revoked.ids
 
-    mega_scope = joins(:article).where(created_at: from..to)
-      .where.not(print_id: revoked_print_ids)
-      .select(
+    mega_scope = joins(:saleable).where(
+      saleable_type: Article.name,
+      created_at:    from..to
+    ).where.not(
+      print_id: revoked_print_ids
+    ).select(
         "CONCAT('[', #{Article.table_name}.code, '] ', #{Article.table_name}.name) AS article",
         "SUM(#{table_name}.units) as total_units"
       )

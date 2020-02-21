@@ -20,7 +20,7 @@ class Article < ApplicationModel
   validates :price, :stock, presence: true,
                             numericality: { greater_than_or_equal_to: 0 }
 
-  has_many :article_lines
+  has_many :article_lines, as: :saleable
 
   def to_s
     "[#{code}] #{name}"
@@ -31,7 +31,7 @@ class Article < ApplicationModel
   def as_json(options = nil)
     default_options = {
       only: [:id, :stock],
-      methods: [:label, :unit_price]
+      methods: [:label, :unit_price, :class_name]
     }
 
     super(default_options.merge(options || {}))

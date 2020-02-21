@@ -10,8 +10,8 @@ class ArticleLineTest < ActiveSupport::TestCase
   # Prueba que se realicen las búsquedas como se espera
   test 'find' do
     assert_kind_of ArticleLine, @article_line
-    assert_equal article_lines(:math_binding_line).article_id,
-                 @article_line.article_id
+    assert_equal article_lines(:math_binding_line).saleable_id,
+                 @article_line.saleable_id
     assert_equal article_lines(:math_binding_line).print_id,
                  @article_line.print_id
     assert_equal article_lines(:math_binding_line).units, @article_line.units
@@ -22,7 +22,8 @@ class ArticleLineTest < ActiveSupport::TestCase
   # Prueba la creación de una línea de artículo
   test 'create' do
     assert_difference 'ArticleLine.count' do
-      @article_line = ArticleLine.create(article_id: articles(:binding).id,
+      @article_line = ArticleLine.create(saleable_type: Article.name,
+                                         saleable_id: articles(:binding).id,
                                          print_id: prints(:math_print).id,
                                          units: 1,
                                          unit_price: articles(:binding).price)
@@ -47,13 +48,13 @@ class ArticleLineTest < ActiveSupport::TestCase
 
   # Prueba que las validaciones del modelo se cumplan como es esperado
   test 'validates blank attributes' do
-    @article_line.article_id = nil
+    @article_line.saleable_id = nil
     @article_line.units = nil
     @article_line.unit_price = '   '
     assert @article_line.invalid?
     assert_equal 3, @article_line.errors.count
-    assert_equal [error_message_from_model(@article_line, :article_id, :blank)],
-                 @article_line.errors[:article_id]
+    assert_equal [error_message_from_model(@article_line, :saleable_id, :blank)],
+                 @article_line.errors[:saleable_id]
     assert_equal [error_message_from_model(@article_line, :units, :blank)],
                  @article_line.errors[:units]
     assert_equal [error_message_from_model(@article_line, :unit_price, :blank)],
@@ -110,7 +111,8 @@ class ArticleLineTest < ActiveSupport::TestCase
     print_id = prints(:math_print).id
 
     article_line = ArticleLine.create(
-      article_id: article.id,
+      saleable_type: Article.name,
+      saleable_id: article.id,
       print_id: print_id,
       units: 122,
       unit_price: article.price
@@ -122,7 +124,8 @@ class ArticleLineTest < ActiveSupport::TestCase
     article.save
 
     article_line = ArticleLine.create(
-      article_id: article.id,
+      saleable_type: Article.name,
+      saleable_id: article.id,
       print_id: print_id,
       units: 123,
       unit_price: article.price

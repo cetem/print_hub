@@ -66,7 +66,7 @@ class Print < ApplicationModel
   accepts_nested_attributes_for :print_jobs, allow_destroy: false,
     reject_if: :reject_print_job_attributes?
   accepts_nested_attributes_for :article_lines, allow_destroy: false,
-    reject_if: ->(attributes) { attributes['article_id'].blank? }
+    reject_if: ->(attrs) { attrs['saleable_id'].blank? && attrs['saleable_type'].blank? }
   accepts_nested_attributes_for :payments, allow_destroy: false
 
   include Prints::Customers
@@ -328,8 +328,8 @@ class Print < ApplicationModel
 
     p.article_lines.order(id: :asc).each do |al|
       self.article_lines.build(
-        article_id: al.article_id,
-        units:      al.units
+        saleable: al.saleable,
+        units:    al.units
       )
     end
   end

@@ -226,6 +226,21 @@ class ApplicationController < ActionController::Base
     _scope.limit(AUTOCOMPLETE_LIMIT)
   end
 
+  def multi_full_text_search_for(q, *klasses_scopes)
+    query = q.sanitized_for_text_query.split(/\s+/).reject(&:blank?)
+
+    ft_scope = klasses_scopes.shift
+    ft_scope = ft_scope.full_text(query) unless query.empty?
+
+    klasses_scopes.each do |klass_scope|
+      ft_scope = ft_scope.merge(
+        query.empty? ? klass_scope : klass_scope.full_text(query)
+      )
+    end
+
+    ft_scope.limit(AUTOCOMPLETE_LIMIT)
+  end
+
   def trusted_sites
     (SECRETS[:trusted_sites] || {}).each do |site, custom_header|
       return true if request.headers[custom_header] == site

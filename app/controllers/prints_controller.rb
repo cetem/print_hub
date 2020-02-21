@@ -155,12 +155,15 @@ class PrintsController < ApplicationController
     end
   end
 
-  # GET /prints/autocomplete_for_article_name
-  def autocomplete_for_article_name
-    articles = full_text_search_for(Article.enabled, params[:q])
+  # GET /prints/autocomplete_for_saleable_name
+  def autocomplete_for_saleable_name
+    saleables = multi_full_text_search_for(
+      params[:q],
+      Article.enabled
+    )
 
     respond_to do |format|
-      format.json { render json: articles }
+      format.json { render json: saleables }
     end
   end
 
@@ -315,7 +318,7 @@ class PrintsController < ApplicationController
         :document_id, :copies, :pages, :range, :print_id, :auto_document_name,
         :job_hold_until, :file_line_id, :print_job_type_id, *shared_attrs
       ], article_lines_attributes: [
-        :print_id, :article_id, :units, :auto_article_name, *shared_attrs
+        :print_id, :saleable_id, :saleable_type, :units, :auto_saleable_name, *shared_attrs
       ], payments_attributes: [
         :amount, :paid, :paid_with, :payable_id, *shared_attrs
       ]

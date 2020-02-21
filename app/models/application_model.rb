@@ -45,4 +45,8 @@ class ApplicationModel < ActiveRecord::Base
 
     args.map { |a| "LOWER(#{a}) LIKE :#{term_name}" }.join(' OR ')
   end
+
+  def class_name
+    self.class.name
+  end
 end

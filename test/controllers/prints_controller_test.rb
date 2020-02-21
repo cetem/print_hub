@@ -177,7 +177,8 @@ class PrintsControllerTest < ActionController::TestCase
           },
           article_lines_attributes: {
             '1' => {
-              article_id: articles(:binding).id.to_s,
+              saleable_type: Article.name,
+              saleable_id: articles(:binding).id.to_s,
               units: '1',
               # No importa el precio, se establece desde el artículo
               unit_price: '12.0'
@@ -230,7 +231,8 @@ class PrintsControllerTest < ActionController::TestCase
           },
           article_lines_attributes: {
             '1' => {
-              article_id: articles(:binding).id.to_s,
+              saleable_type: Article.name,
+              saleable_id: articles(:binding).id.to_s,
               units: '1',
               # No importa el precio, se establece desde el artículo
               unit_price: '12.0'
@@ -367,7 +369,8 @@ class PrintsControllerTest < ActionController::TestCase
         },
         article_lines_attributes: {
           '1' => {
-            article_id: articles(:binding).id.to_s,
+            saleable_type: Article.name,
+            saleable_id: articles(:binding).id.to_s,
             units: '1',
             # No importa el precio, se establece desde el artículo
             unit_price: '12.0'
@@ -415,7 +418,8 @@ class PrintsControllerTest < ActionController::TestCase
         },
         article_lines_attributes: {
           '1' => {
-            article_id: articles(:binding).id.to_s,
+            saleable_type: Article.name,
+            saleable_id: articles(:binding).id.to_s,
             units: '3',
             # No importa el precio, se establece desde el artículo
             unit_price: '12.0'
@@ -648,7 +652,7 @@ class PrintsControllerTest < ActionController::TestCase
   end
 
   test 'should get autocomplete article list' do
-    get :autocomplete_for_article_name, params: { q: '111', status: 'all' }, format: :json
+    get :autocomplete_for_saleable_name, params: { q: '111', status: 'all' }, format: :json
     assert_response :success
 
     articles = ActiveSupport::JSON.decode(@response.body)
@@ -656,7 +660,7 @@ class PrintsControllerTest < ActionController::TestCase
     assert_equal 1, articles.size
     assert articles.all? { |a| a['label'].match /111/i }
 
-    get :autocomplete_for_article_name, params: { q: 'binding', status: 'all' }, format: :json
+    get :autocomplete_for_saleable_name, params: { q: 'binding', status: 'all' }, format: :json
     assert_response :success
 
     articles = ActiveSupport::JSON.decode(@response.body)
@@ -664,7 +668,7 @@ class PrintsControllerTest < ActionController::TestCase
     assert_equal 2, articles.size
     assert articles.all? { |a| a['label'].match /binding/i }
 
-    get :autocomplete_for_article_name, params: { q: '333', status: 'all' }, format: :json
+    get :autocomplete_for_saleable_name, params: { q: '333', status: 'all' }, format: :json
     assert_response :success
 
     articles = ActiveSupport::JSON.decode(@response.body)
@@ -672,7 +676,7 @@ class PrintsControllerTest < ActionController::TestCase
     assert_equal 1, articles.size
     assert articles.all? { |a| a['label'].match /333/i }
 
-    get :autocomplete_for_article_name, params: { q: 'xyz', status: 'all' }, format: :json
+    get :autocomplete_for_saleable_name, params: { q: 'xyz', status: 'all' }, format: :json
     assert_response :success
 
     articles = ActiveSupport::JSON.decode(@response.body)

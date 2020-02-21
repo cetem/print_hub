@@ -10,7 +10,7 @@ es:
         notification_stock: "Notificar al llegar al sgte stock"
         price: "Precio"
       article_line:
-        article_id: "Artículo"
+        saleable: "Artículo de venta"
         unit_price: "Precio unitario"
         units: "Cantidad"
       bonus:
@@ -113,9 +113,9 @@ es:
         user_id: "Usuario"
         without_discounts: 'Sin descuentos'
       print/article_lines:
-        article_id: "Artículo"
-        one: "Artículo"
-        other: "Artículos"
+        saleable: "Artículo de venta"
+        one: "Artículo de venta"
+        other: "Artículos de venta"
         unit_price: "Precio unitario"
         units: "Cantidad"
       print/payments:
