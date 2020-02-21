@@ -45,12 +45,14 @@ class ArticleLine < ApplicationModel
     saleable.save
   end
 
-  def self.sold_saleables_between(dates)
+  def self.sold_articles_between(dates)
     from, to = dates.sort
 
     revoked_print_ids = Print.where(created_at: from..to).revoked.ids
 
-    mega_scope = joins(:saleable).where(
+    mega_scope = joins(
+      "INNER JOIN #{Article.table_name} ON #{ArticleLine.table_name}.saleable_type = '#{Article.name}' AND #{ArticleLine.table_name}.saleable_id = #{Article.table_name}.id"
+    ).where(
       saleable_type: Article.name,
       created_at:    from..to
     ).where.not(
