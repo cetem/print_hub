@@ -207,7 +207,7 @@ GEM
     net-ssh (5.2.0)
     newrelic_rpm (6.5.0.357)
     nio4r (2.5.1)
-    nokogiri (1.10.4)
+    nokogiri (1.10.8)
       mini_portile2 (~> 2.4.0)
     os (1.0.1)
     paper_trail (10.3.1)
