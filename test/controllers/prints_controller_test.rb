@@ -151,46 +151,55 @@ class PrintsControllerTest < ActionController::TestCase
   test 'should create print' do
     document = documents(:math_book)
     counts_array = ['Print.count', 'PrintJob.count', 'Payment.count',
-                    'customer.prints.count', 'ArticleLine.count',
-                    '::CustomCups.last_job_id(@printer)']
+                    'customer.prints.count', '::CustomCups.last_job_id(@printer)']
     customer = customers(:student)
 
     assert_difference counts_array do
-      assert_difference 'PaperTrail::Version.count', 4 do
-        post :create, params: { status: 'all', print: {
-          printer: @printer,
-          customer_id: customer.id,
-          credit_password: 'student123',
-          scheduled_at: '',
-          avoid_printing: '0',
-          print_jobs_attributes: {
-            '1' => {
-              copies: '1',
-              pages: document.pages.to_s,
-              # No importa el precio, se establece desde la configuración
-              price_per_copy: '12.0',
-              range: '',
-              auto_document_name: 'Some name given in autocomplete',
-              print_job_type_id: print_job_types(:a4),
-              document_id: document.id.to_s
+      # Versions => [Print, PJ, AL x2, Stock x2]
+      assert_difference 'ArticleLine.count', 2 do
+        assert_difference 'PaperTrail::Version.count', 6 do
+          post :create, params: { status: 'all', print: {
+            printer: @printer,
+            customer_id: customer.id,
+            credit_password: 'student123',
+            scheduled_at: '',
+            avoid_printing: '0',
+            print_jobs_attributes: {
+              '1' => {
+                copies: '1',
+                pages: document.pages.to_s,
+                # No importa el precio, se establece desde la configuración
+                price_per_copy: '12.0',
+                range: '',
+                auto_document_name: 'Some name given in autocomplete',
+                print_job_type_id: print_job_types(:a4),
+                document_id: document.id.to_s
+              }
+            },
+            article_lines_attributes: {
+              '1' => {
+                saleable_type: Article.name,
+                saleable_id: articles(:binding).id.to_s,
+                units: '1',
+                # No importa el precio, se establece desde el artículo
+                unit_price: '12.0'
+              },
+              '2' => {
+                saleable_type: FailedDocument.name,
+                saleable_id: failed_documents(:failed_math).id.to_s,
+                units: '1',
+                # No importa el precio, se establece desde el artículo
+                unit_price: '5.5'
+              }
+            },
+            payments_attributes: {
+              '1' => {
+                amount: '42.29',
+                paid:   '42.29'
+              }
             }
-          },
-          article_lines_attributes: {
-            '1' => {
-              saleable_type: Article.name,
-              saleable_id: articles(:binding).id.to_s,
-              units: '1',
-              # No importa el precio, se establece desde el artículo
-              unit_price: '12.0'
-            }
-          },
-          payments_attributes: {
-            '1' => {
-              amount: '36.79',
-              paid: '36.79'
-            }
-          }
-        } }
+          } }
+        end
       end
     end
 
@@ -651,37 +660,56 @@ class PrintsControllerTest < ActionController::TestCase
     assert documents.empty?
   end
 
-  test 'should get autocomplete article list' do
+  test 'should get autocomplete saleable list (multi)' do
     get :autocomplete_for_saleable_name, params: { q: '111', status: 'all' }, format: :json
     assert_response :success
 
-    articles = ActiveSupport::JSON.decode(@response.body)
+    saleables = ActiveSupport::JSON.decode(@response.body)
 
-    assert_equal 1, articles.size
-    assert articles.all? { |a| a['label'].match /111/i }
+    assert_equal 1, saleables.size
+    assert saleables.all? { |a| a['label'].match /111/i }
 
     get :autocomplete_for_saleable_name, params: { q: 'binding', status: 'all' }, format: :json
     assert_response :success
 
-    articles = ActiveSupport::JSON.decode(@response.body)
+    saleables = ActiveSupport::JSON.decode(@response.body)
 
-    assert_equal 2, articles.size
-    assert articles.all? { |a| a['label'].match /binding/i }
+    assert_equal 2, saleables.size
+    assert saleables.all? { |a| a['label'].match /binding/i }
 
     get :autocomplete_for_saleable_name, params: { q: '333', status: 'all' }, format: :json
     assert_response :success
 
-    articles = ActiveSupport::JSON.decode(@response.body)
+    saleables = ActiveSupport::JSON.decode(@response.body)
 
-    assert_equal 1, articles.size
-    assert articles.all? { |a| a['label'].match /333/i }
+    assert_equal 1, saleables.size
+    assert saleables.all? { |a| a['label'].match /333/i }
 
     get :autocomplete_for_saleable_name, params: { q: 'xyz', status: 'all' }, format: :json
     assert_response :success
 
-    articles = ActiveSupport::JSON.decode(@response.body)
+    saleables = ActiveSupport::JSON.decode(@response.body)
 
-    assert articles.empty?
+    assert saleables.empty?
+
+    get :autocomplete_for_saleable_name, params: { q: '1', status: 'all' }, format: :json
+    assert_response :success
+
+    saleables = ActiveSupport::JSON.decode(@response.body)
+
+    assert_equal 1, saleables.size
+    assert saleables.all? { |a| a['label'].starts_with? '[F] [1]' }
+
+    (article = articles(:binding)).update_column(:code, 1)
+
+    get :autocomplete_for_saleable_name, params: { q: '1', status: 'all' }, format: :json
+    assert_response :success
+
+    saleables = ActiveSupport::JSON.decode(@response.body)
+
+    assert_equal 2, saleables.size
+    assert saleables.any? { |a| a['label'].starts_with? '[F] [1]' }
+    assert saleables.any? { |a| a['label'].starts_with? article.to_s }
   end
 
   test 'should get autocomplete customer list' do

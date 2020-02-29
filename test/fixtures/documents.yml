@@ -45,7 +45,7 @@ unused_book:
   private: false
   tag_path: 'Basics ## Books'
   file_file_name: unused_book.pdf
-  
+
 book_with_stock:
   code: 5
   name: Book with stock

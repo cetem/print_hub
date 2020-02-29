@@ -1,0 +1,44 @@
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th><%= FailedDocument.human_attribute_name 'name' %></th>
+      <th><%= FailedDocument.human_attribute_name 'unit_price' %></th>
+      <th><%= FailedDocument.human_attribute_name 'stock' %></th>
+      <th><%= FailedDocument.human_attribute_name 'comment' %></th>
+      <th colspan="3"></th>
+    </tr>
+  </thead>
+
+  <tbody>
+    <% @failed_documents.each do |failed_document| %>
+      <tr>
+        <td><%= failed_document.name %></td>
+        <td><%= number_to_currency failed_document.unit_price %></td>
+        <td><%= failed_document.stock %></td>
+        <td><%= link_to_show failed_document %></td>
+        <td><%= link_to_edit edit_failed_document_path(failed_document) %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+<%= pagination_links(@failed_document) %>
+
+<div class="form-actions">
+  <div class="btn-group">
+    <%= link_to t('label.new'), new_failed_document_path,
+      class: 'btn btn-primary' %>
+    <button class="btn btn-primary dropdown-toggle" data-toggle="dropdown">
+      <span class="caret"></span>
+    </button>
+    <ul class="dropdown-menu">
+      <li>
+        <%
+          text_key = params[:unavailable] ? 'with_stock' : 'without_stock'
+          param    = { unavailable: true } unless params[:unavailable]
+        %>
+        <%= link_to t('view.failed_documents.' + text_key), failed_documents_path(param) %>
+      </li>
+    </ul>
+  </div>
+</div>

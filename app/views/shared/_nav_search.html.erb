@@ -3,6 +3,11 @@
     :q, params[:q],
     class: 'search-query span2', placeholder: t('label.search')
   ) %>
+
+  <% request.query_parameters.each do |k, v| %>
+    <%= hidden_field_tag k, v %>
+  <% end %>
+
   <%= submit_tag(
     '&#xe074;'.html_safe,
     class: 'btn btn-mini btn-inverse iconic', title: t('label.search'),

@@ -227,18 +227,17 @@ class ApplicationController < ActionController::Base
   end
 
   def multi_full_text_search_for(q, *klasses_scopes)
-    query = q.sanitized_for_text_query.split(/\s+/).reject(&:blank?)
-
+    query    = q.sanitized_for_text_query.split(/\s+/).reject(&:blank?)
+    results  = []
     ft_scope = klasses_scopes.shift
-    ft_scope = ft_scope.full_text(query) unless query.empty?
+
+    results += ft_scope.full_text(query).limit(10) unless query.empty?
 
     klasses_scopes.each do |klass_scope|
-      ft_scope = ft_scope.merge(
-        query.empty? ? klass_scope : klass_scope.full_text(query)
-      )
+      results += klass_scope.full_text(query).limit(10) unless query.empty?
     end
 
-    ft_scope.limit(AUTOCOMPLETE_LIMIT)
+    results
   end
 
   def trusted_sites

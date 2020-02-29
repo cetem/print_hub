@@ -1,0 +1,1 @@
+resources :failed_documents

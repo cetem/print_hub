@@ -1,0 +1,21 @@
+<div class="readonly-data">
+  <h2><%= @failed_document.name %></h2>
+
+    <p>
+      <b><%= FailedDocument.human_attribute_name 'price' %></b>:
+      <%= number_to_currency @failed_document.unit_price %>
+    </p>
+    <p>
+      <b><%= FailedDocument.human_attribute_name 'stock' %></b>:
+      <%= @failed_document.stock %>
+    </p>
+    <p>
+      <b><%= FailedDocument.human_attribute_name 'comment' %></b>:
+      <%= @failed_document.comment %>
+    </p>
+
+</div>
+<div class="form-actions">
+  <%= link_to t('label.edit'), edit_failed_document_path(@failed_document) %> |
+  <%= link_to t('label.list'), failed_documents_path %>
+</div>

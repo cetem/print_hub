@@ -159,7 +159,8 @@ class PrintsController < ApplicationController
   def autocomplete_for_saleable_name
     saleables = multi_full_text_search_for(
       params[:q],
-      Article.enabled
+      Article.enabled,
+      FailedDocument.available
     )
 
     respond_to do |format|

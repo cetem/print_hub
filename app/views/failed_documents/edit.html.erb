@@ -1,0 +1,6 @@
+<%= content_for :form_actions do %>
+  <%= link_to t('label.show'), @failed_document %> |
+  <%= link_to t('label.list'), failed_documents_path %>
+<% end %>
+
+<%= render 'form' %>

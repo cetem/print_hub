@@ -1,0 +1,23 @@
+<%= simple_form_for @failed_document, defaults: { input_html: { class: 'span11' } } do |f| %>
+  <div class="form-inputs">
+    <div class="row-fluid">
+      <div class="span6">
+        <%= f.input :name, input_html: {
+          class: 'autocomplete-field span11',
+          data: {
+            'autocomplete-url' => autocomplete_for_document_name_prints_path(format: :json)
+          }
+        } %>
+
+        <%= f.input :unit_price %>
+        <%= f.input :stock %>
+        <%= f.input :comment %>
+      </div>
+    </div>
+  </div>
+
+  <div class="form-actions">
+    <div class="pull-right"><%= yield :form_actions %></div>
+    <%= f.button :submit, class: 'btn btn-primary' %>
+  </div>
+<% end %>

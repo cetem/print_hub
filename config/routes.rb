@@ -30,6 +30,7 @@ Rails.application.routes.draw do
     draw :user, :customer
     draw :user, :customers_groups
     draw :user, :document
+    draw :user, :failed_document
     draw :user, :files
     draw :user, :notebooks
     draw :user, :order

@@ -23,7 +23,7 @@ class ArticleLine < ApplicationModel
 
   def assign_defaults
     self.units    ||= 1
-    self.unit_price = saleable&.price
+    self.unit_price = saleable&.unit_price
   end
 
   def price

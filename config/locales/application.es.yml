@@ -68,6 +68,11 @@ es:
         pages: "Páginas"
         private: "Privado"
         stock: "Existencia"
+      failed_document:
+        comment: "Comentario"
+        name: "Nombre"
+        stock: "Stock"
+        unit_price: "Precio"
       feedback:
         comment: "Comentario"
         item: "Artículo"
@@ -111,11 +116,11 @@ es:
         status: "Estado"
         user: "Usuario"
         user_id: "Usuario"
-        without_discounts: 'Sin descuentos'
+        without_discounts: "Sin descuentos"
       print/article_lines:
-        saleable: "Artículo de venta"
         one: "Artículo de venta"
         other: "Artículos de venta"
+        saleable: "Artículo de venta"
         unit_price: "Precio unitario"
         units: "Cantidad"
       print/payments:
@@ -245,6 +250,9 @@ es:
       customers_group: "Grupo de usuarios"
       deposit: "Depósito"
       document: "Documento"
+      failed_document:
+        one: "Documento fallado"
+        other: "Documentos fallados"
       feedback: "Retroalimentación"
       order: "Pedido"
       order_line: "Línea de pedido"
@@ -288,6 +296,7 @@ es:
     back: "Volver"
     cancel: "Cancelar"
     close: "Cerrar"
+    copy: "Copiar"
     delete: "Eliminar"
     disabled: "Deactivados"
     download: "Descargar"
@@ -300,7 +309,6 @@ es:
     others: "Otros"
     search: "Buscar"
     show: "Ver"
-    copy: "Copiar"
     "yes": "Si"
   lang:
     es: "Español"
@@ -318,22 +326,22 @@ es:
     customers: "Clientes"
     customers_groups: "Grupos de Clientes"
     documents: "Documentos"
+    failed_documents: "Documentos fallados"
     notebooks: "Libretas"
     orders: "Pedidos"
     payments: "Pagos"
     print_job_types: "Tipos de impresión"
-    print_queues: 'Colas de impresión'
-    prints: "Impresiones"
-    reports: 'Reportes'
+    print_queues: "Colas de impresión"
     printed_documents_report: "Documentos impresos"
-    sold_articles_report: "Articulos vendidos"
+    prints: "Impresiones"
+    reports: "Reportes"
     shift_closures: "Cierres de caja"
     shifts: "Turnos"
+    sold_articles_report: "Articulos vendidos"
     stats: "Estadísticas"
     tags: "Etiquetas"
     users: "Usuarios"
   messages:
-    confirmation: '¿Está seguro?'
     ajax_in_progress_warning: |-
         Algunos pedidos todavía se están procesando
         Si abandona esta página puede dejar operaciones inconclusas
@@ -361,8 +369,6 @@ es:
       subject: "Muchas gracias por el feedback"
   view:
     articles:
-      sold_stats: "Articulos vendidos"
-      stock_changes: "Cambios grandes de stock"
       correctly_created: "Artículo agregado correctamente."
       correctly_updated: "Artículo actualizado correctamente."
       edit_title: "Modificar artículo"
@@ -376,7 +382,9 @@ es:
       notification_message: "- (%{article}) quedan solo %{stock} unidades"
       only_notify_when_its_greater_than: "Solo notifica si es mayor a 0"
       show_title: "Detalle de artículo"
+      sold_stats: "Articulos vendidos"
       stale_object_error: "El artículo no pudo ser actualizado, intente nuevamente."
+      stock_changes: "Cambios grandes de stock"
     bonuses:
       bonuses_with_customer: "Bonificaciones de %{customer}"
       index_title: "Listado de bonificaciones"
@@ -534,6 +542,11 @@ es:
         title: "Elimina la marca del documento para que NO sea incluido en la próxima impresión"
       show_title: "Detalle de documento"
       stale_object_error: "El documento no pudo ser actualizado, intente nuevamente."
+    failed_documents:
+      with_stock: 'Con stock'
+      without_stock: 'Sin stock'
+      correctly_created: "Documento agregado correctamente."
+      correctly_updated: "Documento actualizado correctamente."
     feedbacks:
       negative: "negativo"
       negative_comment_return: "Gracias por tus sugerencias, trabajaremos para mejorar este artículo."
@@ -625,6 +638,20 @@ es:
           Precio-Global ; >= Cant-Hojas @ Precio; >= Cant-Hojas2 @ Precio2
 
            0.18; >= 200 @ 0.17; >= 500 @ 0.165
+    print_queues:
+      cancel_job: "Cancelar trabajo"
+      disabled_cancel_job: "Cancelando"
+      job_cancelled: "Se cancelo el trabajo"
+      state: "Estado"
+      states:
+        aborted: "Abortado"
+        cancelled: "Cancelado"
+        completed: "Completo"
+        held: "Pausado"
+        pending: "Pendiente"
+        processing: "Procesando"
+        stopped: "Parado"
+        unknown: "Desconocido"
     prints:
       add_article_line: "Agregar artículo"
       add_article_line_title: "Agregar artículo (CTRL + ALT + A)"
@@ -785,17 +812,3 @@ es:
         destroy: "Borrado"
         update: "Actualización"
       updated_by: "Modificó"
-    print_queues:
-      state: 'Estado'
-      cancel_job: 'Cancelar trabajo'
-      disabled_cancel_job: 'Cancelando'
-      job_cancelled: 'Se cancelo el trabajo'
-      states:
-        pending: 'Pendiente'
-        held: 'Pausado'
-        processing: 'Procesando'
-        stopped: 'Parado'
-        cancelled: 'Cancelado'
-        aborted: 'Abortado'
-        completed: 'Completo'
-        unknown: 'Desconocido'

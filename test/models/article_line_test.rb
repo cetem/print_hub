@@ -112,11 +112,12 @@ class ArticleLineTest < ActiveSupport::TestCase
 
     article_line = ArticleLine.create(
       saleable_type: Article.name,
-      saleable_id: article.id,
-      print_id: print_id,
-      units: 122,
-      unit_price: article.price
+      saleable_id:   article.id,
+      print_id:      print_id,
+      units:         122,
+      unit_price:    article.price
     )
+    assert article_line.persisted?, article_line.errors.full_messages
 
     assert_equal 2, article.reload.stock
 
@@ -125,12 +126,27 @@ class ArticleLineTest < ActiveSupport::TestCase
 
     article_line = ArticleLine.create(
       saleable_type: Article.name,
-      saleable_id: article.id,
-      print_id: print_id,
-      units: 123,
-      unit_price: article.price
+      saleable_id:   article.id,
+      print_id:      print_id,
+      units:         123,
+      unit_price:    article.price
     )
+    assert article_line.persisted?, article_line.errors.full_messages
 
     assert_equal 0, article.reload.stock
+
+    failed = failed_documents(:failed_math)
+
+    assert_equal 1, failed.stock
+
+    article_line = ArticleLine.create(
+      saleable:   failed,
+      print_id:   print_id,
+      units:      1,
+      unit_price: article.price
+    )
+    assert article_line.persisted?, article_line.errors.full_messages
+
+    assert_equal 0, failed.reload.stock
   end
 end
