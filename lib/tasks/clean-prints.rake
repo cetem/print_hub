@@ -5,7 +5,7 @@ namespace :tasks do
     begin
       `killall -q -9 /usr/bin/gs` # Kill any looped pdf process
 
-      CustomCups.incomplete_job_identifiers.split("\n").each do |j|
+      CustomCups.incomplete_job_identifiers.split("\n").reject(&:blank?).each do |j|
         id = j.match(/-(\d+)$/).captures.first
 
         msg = ::CustomCups.cancel(id)
