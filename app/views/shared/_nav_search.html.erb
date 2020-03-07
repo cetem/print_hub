@@ -4,7 +4,7 @@
     class: 'search-query span2', placeholder: t('label.search')
   ) %>
 
-  <% request.query_parameters.each do |k, v| %>
+  <% request.query_parameters.except(:q).each do |k, v| %>
     <%= hidden_field_tag k, v %>
   <% end %>
 
