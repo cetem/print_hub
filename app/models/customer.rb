@@ -271,6 +271,7 @@ class Customer < ApplicationModel
     if self.will_save_change_to_email? && self.errors[:email].empty?
       begin
         if self.email.present?
+          self.email.strip!
           valid, suggest = ::MailerValidator.check(self.email)
           # si el email es .com.ar te sugiere .com, y deberia dejartelo pasar
           return true if valid
