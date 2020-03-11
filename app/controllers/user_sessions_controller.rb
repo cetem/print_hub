@@ -12,9 +12,10 @@ class UserSessionsController < ApplicationController
 
   def create
     @title = t 'view.user_sessions.new_title'
-    @user_session = UserSession.new(
-      params.require(:user_session).permit(:username, :password).to_h
-    )
+    attrs = params.require(:user_session).permit(:username, :password).to_h
+    attrs[:username].strip! if attrs[:username].present?
+
+    @user_session = UserSession.new(attrs)
 
     respond_to do |format|
       if @user_session.save
