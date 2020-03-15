@@ -49,7 +49,10 @@ new Rule
     # Subir un archivo
     error_div = document.querySelector('.js-file-upload-error')
     progress_div = document.querySelector('.progress.hide')
+    url = $('.js-uploader-input').data('url') || $('.js-uploader-input').parents('form:first').attr('action')
+
     $('.js-uploader-input').fileupload
+      url:      url
       dataType: 'script'
       add: (e, data) ->
         type = /(pdf)$/i

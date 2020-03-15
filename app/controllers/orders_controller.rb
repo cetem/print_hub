@@ -1,9 +1,13 @@
 class OrdersController < ApplicationController
+  private_order = %i[new_for_customer create_for_customer]
+
   helper_method :order_type
-  [:index, :show, :destroy, :download_file].tap do |actions|
-    before_action :require_customer_or_user, :load_scope, only: actions
-    before_action :require_customer, except: actions
+
+  [:index, :show, :destroy, :download_file, :upload_file].tap do |actions|
+    before_action :require_customer_or_user, only: actions
+    before_action :require_customer, except: (actions + private_order)
   end
+  before_action :require_user, only: private_order
 
   ->(c) { c.request.xhr? ? false : 'application' }
 
@@ -12,7 +16,7 @@ class OrdersController < ApplicationController
   def index
     @title = t 'view.orders.index_title'
     @searchable = current_customer.nil?
-    @orders = @order_scope.order(id: :desc)
+    @orders = order_scope.order(id: :desc)
 
     if params[:q].present? && current_user
       query = params[:q].sanitized_for_text_query
@@ -32,7 +36,7 @@ class OrdersController < ApplicationController
   # GET /orders/1.json
   def show
     @title = t 'view.orders.show_title'
-    @order = @order_scope.find(params[:id])
+    @order = order_scope.find(params[:id])
     @can_print = true
 
     respond_to do |format|
@@ -103,7 +107,7 @@ class OrdersController < ApplicationController
   # DELETE /orders/1
   # DELETE /orders/1.json
   def destroy
-    @order = @order_scope.find(params[:id])
+    @order = order_scope.find(params[:id])
 
     respond_to do |format|
       if @order.cancelled! && @order.save
@@ -139,14 +143,45 @@ class OrdersController < ApplicationController
     end
   end
 
+  def new_for_customer
+    @title = t 'view.orders.new_title'
+    @order = Order.new
+    @order.order_lines.build
+
+    respond_to do |format|
+      format.html # new.html.erb
+      format.json { render json: @order }
+    end
+  end
+
+  def create_for_customer
+    @title = t 'view.orders.new_title'
+    @order = Order.new(order_for_customer_params)
+
+    respond_to do |format|
+      if @order.save
+        format.html { redirect_to @order, notice: t('view.orders.correctly_created') }
+        format.json { render json: @order, status: :created, location: @order }
+      else
+        if @order.order_lines.size.zero? && @order.file_lines.size.zero?
+          @order.order_lines.build
+        end
+
+        format.html { render action: 'new_for_customer' }
+        format.json { render json: @order.errors, status: :unprocessable_entity }
+      end
+    end
+  end
+
+
   private
 
-  def load_scope
-    @order_scope = if current_customer
-                     current_customer.orders
-                   else
-                     order_type == 'print' ? Order.pending.for_print : Order.all
-                   end
+  def order_scope
+    @order_scope ||= if current_customer
+                       current_customer.orders
+                     else
+                       order_type == 'print' ? Order.pending.for_print : Order.all
+                     end
   end
 
   def order_type
@@ -163,6 +198,20 @@ class OrdersController < ApplicationController
       ],
       order_lines_attributes: [
         :document_id, :lock_version, *order_items_shared_attrs
+      ]
+    )
+  end
+
+  def order_for_customer_params
+    order_items_shared_attrs = [:copies, :print_job_type_id, :id]
+
+    params.require(:order).permit(
+      :customer_id, :notes,
+      file_lines_attributes: [
+        :file, :pages, :file_cache, *order_items_shared_attrs
+      ],
+      order_lines_attributes: [
+        :document_id, *order_items_shared_attrs
       ]
     )
   end

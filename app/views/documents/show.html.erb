@@ -35,6 +35,8 @@
           <% if @document.original_file? %>
             <%= link_to(t('label.download'), @document.original_file.url) %> &nbsp;
             (<%= document_original_file_identifier(@document) %>)
+          <% else %>
+              -
           <% end %>
         </dd>
 

@@ -29,7 +29,8 @@
   <%= pagination_links(@orders) %>
 
   <nav class="form-actions">
-    <% unless current_customer %>
+    <% if current_user %>
+      <%= link_to t('view.orders.new_title'), new_for_customer_orders_path, class: 'btn btn-primary' %> |
       <% if order_type == 'print' %>
         <%= link_to(
           textilize_without_paragraph(t('view.orders.show_all')),

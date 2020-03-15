@@ -555,6 +555,7 @@ es:
       positive_return: "Nos alegra haberte ayudado. Gracias por la retroalimentación."
       submit: "Enviar comentario"
     orders:
+      add_order_line: 'Agregar documento'
       cancel: "Cancelar"
       catalog_order_cleared: "Listo, la orden ya no contiene archivos"
       clear_catalog_order: "Vaciar pedido"

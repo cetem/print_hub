@@ -96,6 +96,34 @@ new Rule
     # Actualizar precios
     Order.updateAllOrderLines()
 
+    $(document).on 'autocomplete:update', 'input.autocomplete-field', ->
+      item = $(this).data('item')
+
+      if item.pages
+        pages = item.pages
+        stock = parseInt(item.stock)
+        line = $(this).parents('.js-printable-job:first')[0]
+        lineDetailsLink = line.querySelector('a.details-link')
+        lineStockDetails = line.querySelector('.document_stock')
+
+        jobStorage = Jobs.assignDefaultOrGetJob(line)
+        jobStorage.rangePages = pages
+
+        pagesInput = line.querySelector('input[name$="[pages]"]')
+        pagesInput.value = pages
+        pagesInput.disabled = true
+
+        Util.replaceOwnAttrWithRegEx(lineDetailsLink, 'href', /\d+$/, item.id)
+        Helper.show(lineDetailsLink)
+
+
+        if item.print_job_type_id
+          line.querySelector('.js-print_job_type-selector').value = item.print_job_type_id
+
+        Jobs.reCalcPages(line)
+
+      Jobs.reCalcEverything()
+
     $(document).on 'change keyup',  '.price-modifier', ->
       Util.debounce(
         Jobs.reCalcPages($(this).parents('.order_line:first')[0])

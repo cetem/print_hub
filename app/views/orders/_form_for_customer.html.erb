@@ -1,0 +1,147 @@
+<div id='upload-file'>
+  <%= simple_form_for :file_line, url: upload_file_orders_path, data: { 'form-data' => 'script=true' } do |of| %>
+    <%= of.input :file, as: :file, label: false, input_html: {
+      class: 'js-uploader-input hidden',
+      multiple: true,
+      data: { invisible: true, url: upload_file_orders_path }
+    } %>
+<% end %>
+<div class='hide progress progress-success progress-striped active'>
+  <div class='bar' style='width: 0%;'></div>
+  </div>
+  <div class="alert alert-error hide fade in js-file-upload-error"
+       data-wrong-format="<%= t('messages.only_pdf_permitted') %>"
+       data-broken-pdf="<%= t('messages.broken_pdf') %>">
+  </div>
+</div>
+
+<%= simple_form_for @order, url: create_for_customer_orders_path,
+  defaults: { input_html: { class: 'span11' } } do |f| %>
+  <%= content_for :js_extra do %>
+    <%= raw "var order_line='#{generate_template(f, :order_lines,
+      locals: { dynamic: true })}';" %>
+  <% end %>
+
+  <div class="form-inputs">
+    <%= f.error_notification %>
+    <%= f.error :base, class: 'alert alert-error' %>
+
+    <div class="row-fluid">
+      <div class="span6">
+        <%
+          customer_error = @order.errors[:customer_id] | @order.errors[:customer]
+          @order.errors.add :auto_customer_name, customer_error.first if customer_error.any?
+        %>
+        <%= f.label :customer, for: :order_auto_customer_name %>
+        <% field_classes = ['autocomplete-field', 'span11'] %>
+        <% field_classes << 'error' if customer_error.any? %>
+        <%= f.input :auto_customer_name, label: false, input_html: {
+          value: @order.customer, class: field_classes.join(' '),
+          data: {
+            'autocomplete-id-target' => '#order_customer_id',
+            'autocomplete-url' => autocomplete_for_customer_name_prints_path(format: :json)
+          }
+        } %>
+      <%= f.input :customer_id, as: :hidden, input_html: { class: 'autocomplete-id' } %>
+      </div>
+    </div>
+
+    <h3><%= t 'view.orders.order_lines' %></h3>
+    <br />
+
+    <div class="jobs-container"
+         data-jobs-container="true"
+         data-prices-list="<%= print_job_types_with_price_for_data %>"
+         data-odd-pages-types="<%= one_sided_print_job_types_for_data %>"
+         data-pages-list="<%= print_job_types_for_data_pages %>">
+         <div id="order_lines_headers" class="row-fluid">
+           <div class="span4">
+             <h4><%= OrderLine.human_attribute_name 'document_id' %></h4>
+           </div>
+           <div class="span1">
+             <h4><%= OrderLine.human_attribute_name 'copies' %></h4>
+           </div>
+           <div class="span1">
+             <h4 class="hidden-phone"><%= Document.human_attribute_name 'pages' %></h4>
+           </div>
+           <div class="span2">
+             <h4 class="hidden-phone">
+               <%= OrderLine.human_attribute_name 'print_job_type_id' %>
+             </h4>
+           </div>
+         </div>
+
+         <div id='file_lines'>
+           <%= f.simple_fields_for :file_lines do |of| %>
+             <% if of.object.file.present? || of.object.file_cache.present? %>
+               <%= render 'file_line', file_line: of %>
+             <% end %>
+           <% end %>
+         </div>
+
+         <div id="order_lines">
+           <%= f.simple_fields_for :order_lines do |ol| %>
+             <%= render 'order_line', f: ol, disabled: @order.persisted? %>
+           <% end %>
+         </div>
+         <div class="row-fluid">
+
+         <div class="span2">
+           <%= link_to t('view.orders.add_order_line'), '#',
+             class: 'btn btn-mini',
+             title: t('view.prints.add_print_job_title'),
+             data: {
+               template:  'order_line',
+               container: '#order_lines',
+               event:     'addNestedItem'
+             }
+           %>
+         </div>
+          <div class="span8">
+            <div class='hide progress progress-success progress-striped active'>
+              <div class='bar' style='width: 0%;'></div>
+            </div>
+            <div class="alert alert-error hide fade in js-file-upload-error"
+              data-wrong-format="<%= t('messages.only_pdf_permitted') %>"
+              data-broken-pdf="<%= t('messages.broken_pdf') %>"
+            >
+            </div>
+          </div>
+          <div class="span2 pull-right">
+            <%= link_to '&#xe045;'.html_safe, '#',
+              title: t('view.prints.upload_file'),
+              class: 'btn btn-success iconic js-upload-file' %>
+          </div>
+       </div>
+    </div>
+    <br>
+
+    <div class="pull-right">
+      <%= render 'total', order: @order %>
+    </div>
+
+    <br>
+
+    <div class="row-fluid">
+      <div class="span5">
+        <%= link_to t('view.orders.notes_link'), '#',
+          data: { target: '#notes', action: 'show' } %>
+        <div id="notes" style="display: none;">
+          <%= f.input :notes, input_html: { autofocus: true, rows: 4 } %>
+        </div>
+      </div>
+    </div>
+  </div>
+
+    <br>
+  </div>
+
+  <div class="form-actions">
+    <div class="pull-right"><%= yield :form_actions %></div>
+    <%= f.button :submit, class: 'btn-primary skip-file-warning' %>
+  </div>
+<% end %>
+
+<% content_for :js_extra do %>
+  Messages.fileUploadWarning = '<%= t('messages.file_upload_warning') %>';
+<% end %>

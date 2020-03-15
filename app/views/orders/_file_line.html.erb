@@ -17,14 +17,17 @@
     </div>
     <div class="span1">
       <%= file_line.input :copies, label: false,
-        input_html: { value: 1, maxlength: 5, autocomplete: 'off',
+        input_html: { value: file_line.object.copies || 1,
+                      maxlength: 5, autocomplete: 'off',
         name: "#{name}[copies]", id: "#{id}copies",
         class: 'price-modifier js-job-copies span12' } %>
     </div>
     <div class="span1">
       <%= file_line.input :pages, label: false,
-        input_html: { maxlength: 5, class: 'price-modifier span11 js-job-pages',
-        autocomplete: 'off', disabled: true } %>
+        input_html: {
+        maxlength: 5, class: 'price-modifier span11 js-job-pages',
+        name: "#{name}[pages]",
+        autocomplete: 'off', readonly: true } %>
     </div>
     <div class="span2">
       <%= print_job_types_select_combo(file_line, name) %>

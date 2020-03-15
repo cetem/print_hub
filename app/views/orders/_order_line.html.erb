@@ -1,13 +1,29 @@
-<% id = dynamic_object_id('order_line', f) %>
-<% name = dynamic_object_name(f) %>
+<%
+  id                = dynamic_object_id('order_line', f)
+  dynamic         ||= false
+  disabled        ||= false
+  document_id_attrs = {
+    class: 'autocomplete-id', id: "auto_document_id_#{id}"
+  }
+  document_id_attrs[:name] = "#{dynamic_object_name(f)}[document_id]" if dynamic
+%>
 <div class="js-printable-job order_line" id="<%= id %>"
   data-price="<%= f.object.price %>"
   data-odd-pages=""
   data-price-per-copy="<%= f.object.price_per_copy %>">
   <div class="row-fluid">
     <div class="span4">
-      <%= f.object.document %>
-      <%= f.input :document_id, as: :hidden %>
+      <% field_classes = ['autocomplete-field', 'span12'] %>
+      <% field_classes << 'error' unless f.object.errors[:document_id].blank? %>
+      <%= f.input :auto_document_name, label: false, input_html: {
+        id: "auto-document-#{id}", class: field_classes.join(' '),
+        value: f.object.document.try(:to_s),
+        data: {
+          'autocomplete-id-target' => "#auto_document_id_#{id}",
+          'autocomplete-url' => autocomplete_for_document_name_prints_path(format: :json)
+        }
+      } %>
+      <%= f.input :document_id, as: :hidden, input_html: document_id_attrs %>
     </div>
     <div class="span1">
       <%= f.input :copies, label: false,
@@ -29,7 +45,8 @@
         <%= number_to_currency f.object.price %>
       </span>
       <%= link_to_remove_nested_item(f) unless disabled %>
-      <%= link_to '&#xe054;'.html_safe, show_catalog_path(f.object.document),
+      <%= link_to '&#xe054;'.html_safe,
+        (current_user ? (f.object.document || document_path(0)) : show_catalog_path(f.object.document)),
         class: 'iconic details-link hidden-phone',
         data: { remote: true },
         title: t('view.prints.document_details'),

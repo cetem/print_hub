@@ -31,6 +31,7 @@ class Order < ApplicationModel
   validates_datetime :scheduled_at, allow_nil: true, allow_blank: true
   validates_datetime :scheduled_at, allow_nil: true, allow_blank: true,
                                     after: -> { 12.hours.from_now }, on: :create
+
   validate :must_have_one_item
 
   # Relaciones
@@ -40,9 +41,9 @@ class Order < ApplicationModel
   has_many :file_lines, inverse_of: :order, dependent: :destroy
 
   accepts_nested_attributes_for :order_lines, allow_destroy: true,
-                                              reject_if: ->(attributes) { attributes['copies'].to_i <= 0 }
+    reject_if: ->(ol) { ol['copies'].to_i <= 0 || ol['document_id'].blank? }
   accepts_nested_attributes_for :file_lines, allow_destroy: true,
-                                             reject_if: :reject_file_lines_attributes?
+    reject_if: :reject_file_lines_attributes?
 
   def initialize(attributes = nil)
     super(attributes)
@@ -79,7 +80,9 @@ class Order < ApplicationModel
   end
 
   def must_have_one_item
-    errors.add :base, :must_have_one_item if order_items.empty?
+    if order_items.empty? && file_lines.empty?
+      errors.add :base, :must_have_one_item
+    end
   end
 
   def order_items

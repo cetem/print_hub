@@ -16,7 +16,7 @@ class OrderLine < ApplicationModel
     foreign_key: 'document_id', class_name: 'Document'
   belongs_to :order, optional: true
   belongs_to :print_job_type
-  delegate :pages, to: :document_with_disabled
+  # delegate :pages, to: :document_with_disabled, allow_nil: true
 
   before_save :recalculate_price_per_copy
 
@@ -30,6 +30,10 @@ class OrderLine < ApplicationModel
 
   def usable_parent
     order
+  end
+
+  def pages
+    (document_id.present? && document_with_disabled&.pages) || 0
   end
 
   def recalculate_price_per_copy
