@@ -3,14 +3,16 @@ class Order < ApplicationModel
 
   # Constantes
   STATUS = {
-    pending: 'P',
+    pending:   'P',
     completed: 'C',
-    cancelled: 'X'
+    cancelled: 'X',
+    ready:     'R'
   }
 
   # Callbacks
   before_destroy :avoid_destruction
   before_save :can_be_modified?
+  before_update :notify_order_ready, if: :ready?
 
   # Atributos no persistentes
   attr_accessor :include_documents
@@ -169,5 +171,9 @@ class Order < ApplicationModel
 
   def delete_files!
     self.file_lines.map(&:remove_file!)
+  end
+
+  def notify_order_ready
+    Notifications.order_ready(order.id).deliver_later
   end
 end

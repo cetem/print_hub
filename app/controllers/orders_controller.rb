@@ -1,5 +1,5 @@
 class OrdersController < ApplicationController
-  private_order = %i[new_for_customer create_for_customer]
+  private_order = %i[new_for_customer create_for_customer notify_order_ready]
 
   helper_method :order_type
 
@@ -170,6 +170,15 @@ class OrdersController < ApplicationController
         format.html { render action: 'new_for_customer' }
         format.json { render json: @order.errors, status: :unprocessable_entity }
       end
+    end
+  end
+
+  def mark_as_ready
+    @order = Order.find params[:id]
+    @order.ready!
+
+    respond_to do |format|
+      format.js
     end
   end
 

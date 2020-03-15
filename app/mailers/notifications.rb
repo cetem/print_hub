@@ -64,6 +64,13 @@ class Notifications < ActionMailer::Base
     end
   end
 
+  def order_ready(order_id)
+    @order    = Order.find_by(order_id)
+    @customer = @order.customer
+
+    mail to: @customer.email, date: Time.zone.now
+  end
+
 private
 
   def notify_exception(email, mailer_name)

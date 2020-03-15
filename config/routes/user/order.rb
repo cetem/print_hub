@@ -1,5 +1,8 @@
 resources :orders, only: [:index, :show, :destroy] do
-  get :download_file, on: :member
+  member do
+    get :download_file
+    patch :mark_as_ready
+  end
   collection do
     post :upload_file
     get :new_for_customer

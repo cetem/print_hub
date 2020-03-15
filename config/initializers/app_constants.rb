@@ -5,7 +5,7 @@ AUTOCOMPLETE_LIMIT = 50
 # Umbral crédito / precio para determinar si se imprime o no un pedido
 CREDIT_THRESHOLD = APP_CONFIG['credit_threshold'] || 1
 # Adaptador de base de datos
-DB_ADAPTER = ActiveRecord::Base.connection.adapter_name
+DB_ADAPTER = ActiveRecord::Base.connection.adapter_name rescue nil
 # Idiomas disponibles
 LANGUAGES = [:es]
 # Dominio público

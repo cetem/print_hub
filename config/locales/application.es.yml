@@ -360,7 +360,9 @@ es:
     forgot_password:
       subject: "Restablecer contraseña"
     old_order_cancelled:
-      subject: "Orden antigua cancelada"
+      subject: "Pedido antiguo cancelado"
+    order_ready:
+      subject: "Pedido Listo"
     reactivation:
       subject: "Re-activar cuenta"
     signup:
@@ -557,7 +559,7 @@ es:
     orders:
       add_order_line: 'Agregar documento'
       cancel: "Cancelar"
-      catalog_order_cleared: "Listo, la orden ya no contiene archivos"
+      catalog_order_cleared: "Listo, el pedido ya no contiene archivos"
       clear_catalog_order: "Vaciar pedido"
       correctly_cancelled: "Pedido cancelado correctamente."
       correctly_created: "Pedido agregado correctamente."
