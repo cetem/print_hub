@@ -2,8 +2,8 @@ defaults: &defaults
   adapter: postgresql
   encoding: utf8
   pool: 5
-  username: print_hub
-  password: print_hub
+  username: <%= ENV['TRAVIS'] ? 'postgres' : ENV['DB_USER'] || 'print_hub' %>
+  password: <%= ENV['TRAVIS'] ? '' : ENV['DB_PASS'] || 'print_hub' %>
   host: localhost
   port: 5432
 
@@ -13,8 +13,6 @@ development:
 
 test:
   <<: *defaults
-  username: <%= ENV['TRAVIS'] ? 'postgres' : 'print_hub' %>
-  password: <%= ENV['TRAVIS'] ? '' : 'print_hub' %>
   database: print_hub_test<%= ENV['TEST_ENV_NUMBER'] %>
 
 production:

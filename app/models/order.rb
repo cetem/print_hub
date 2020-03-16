@@ -70,10 +70,15 @@ class Order < ApplicationModel
   end
 
   def can_be_modified?
-    unless self.pending? || status_was == STATUS[:pending]
-      self.errors.add(:base, :cannot_be_modified)
-      throw :abort
+    if pending? ||
+       status_changed?(from: nil) ||
+       status_changed?(from: 'P') ||
+       status_changed?(from: 'C', to: 'R')
+      return
     end
+
+    self.errors.add(:base, :cannot_be_modified)
+    throw :abort
   end
 
   def reject_file_lines_attributes?(attributes)
@@ -107,6 +112,7 @@ class Order < ApplicationModel
     when STATUS[:cancelled] then self.pending?
     when STATUS[:completed] then self.pending?
     when STATUS[:pending]   then !self.completed? && !self.cancelled?
+    when STATUS[:ready]     then self.completed?
     else false
     end
   end
@@ -174,6 +180,6 @@ class Order < ApplicationModel
   end
 
   def notify_order_ready
-    Notifications.order_ready(order.id).deliver_later
+    NotificationsMailer.order_ready(id).deliver_later
   end
 end

@@ -59,7 +59,7 @@ class Print < ApplicationModel
   belongs_to :user
   belongs_to :order, autosave: true, optional: true
   has_many :payments, as: :payable
-  has_many :print_jobs, inverse_of: :print
+  has_many :print_jobs, inverse_of: :print, autosave: true
   has_many :article_lines
   has_many :file_lines
 
@@ -274,7 +274,7 @@ class Print < ApplicationModel
 
     order.order_lines.order(:created_at).each do |order_line|
       print_jobs.build(
-        order_line.attributes.slice(*['document_id', keys].flatten)
+        order_line.attributes.slice('document_id', *keys)
       )
     end
   end

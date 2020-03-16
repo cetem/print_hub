@@ -1,0 +1,17 @@
+<tr id="order_<%= order.id %>">
+  <td><%= link_to order.id, order %></td>
+  <td class="hidden-phone"><%= order.customer %></td>
+  <td><%= l order.scheduled_at, format: :minimal if order.scheduled_at %></td>
+  <td><%= order.status_text %></td>
+  <td>
+    <%= link_to_show order %>
+    <% if current_user && order.completed? %>
+      <%= link_to '&#x2709;'.html_safe,
+        mark_as_ready_order_path(order.id),
+        title: 'Pedido listo',
+        class: 'iconic',
+        method: :patch,
+        remote: true, data: { show_tooltip: true } %>
+    <% end %>
+  </td>
+</tr>

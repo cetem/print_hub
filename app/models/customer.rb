@@ -111,15 +111,15 @@ class Customer < ApplicationModel
   end
 
   def send_welcome_email!
-    Notifications.delay.signup(self.email)
+    NotificationsMailer.delay.signup(self.email)
   end
 
   def deliver_password_reset_instructions!
-    Notifications.delay.forgot_password(self.email)
+    NotificationsMailer.delay.forgot_password(self.email)
   end
 
   def deliver_old_order_cancelled!(order_id)
-    Notifications.delay.old_order_cancelled(self.email, order_id)
+    NotificationsMailer.delay.old_order_cancelled(self.email, order_id)
   end
 
   def has_no_orders?

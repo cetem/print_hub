@@ -1,5 +1,5 @@
 class OrdersController < ApplicationController
-  private_order = %i[new_for_customer create_for_customer notify_order_ready]
+  private_order = %i[new_for_customer create_for_customer mark_as_ready]
 
   helper_method :order_type
 
@@ -181,7 +181,6 @@ class OrdersController < ApplicationController
       format.js
     end
   end
-
 
   private
 

@@ -1,4 +1,4 @@
-class Notifications < ActionMailer::Base
+class NotificationsMailer < ActionMailer::Base
   layout 'notifications_mailer'
   default from: "\"#{I18n.t('app_name')}\" <#{APP_CONFIG['smtp']['user_name']}>",
           charset: 'UTF-8'
@@ -65,13 +65,13 @@ class Notifications < ActionMailer::Base
   end
 
   def order_ready(order_id)
-    @order    = Order.find_by(order_id)
+    @order    = Order.find(order_id)
     @customer = @order.customer
 
     mail to: @customer.email, date: Time.zone.now
   end
 
-private
+  private
 
   def notify_exception(email, mailer_name)
     Bugsnag.notify(

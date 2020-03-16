@@ -354,7 +354,7 @@ es:
     must_be_logged_in: "Debe ingresar para poder ver el contenido requerido"
     must_be_logged_out: "Debe salir para poder ver el contenido requerido"
     only_pdf_permitted: 'Solo se permiten subir pdf"s'
-  notifications:
+  notifications_mailer:
     feedback_incoming:
       subject: "Recibimos Feedback!"
     forgot_password:
@@ -580,6 +580,7 @@ es:
         cancelled: "Cancelado"
         completed: "Impreso"
         pending: "Pendiente"
+        ready: "Listo"
       total: "Total"
       type:
         all:

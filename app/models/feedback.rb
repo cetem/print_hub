@@ -22,11 +22,11 @@ class Feedback < ApplicationModel
   end
 
   def notify_customer
-    Notifications.delay.thanks_for_feedback(self.id) if self.customer
+    NotificationsMailer.delay.thanks_for_feedback(self.id) if self.customer
   end
 
   def notify_interesteds
-    Notifications.delay.feedback_incoming(self.id) if self.comments.present?
+    NotificationsMailer.delay.feedback_incoming(self.id) if self.comments.present?
   end
 
   def customer_email

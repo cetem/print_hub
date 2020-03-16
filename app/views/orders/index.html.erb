@@ -14,20 +14,7 @@
     </thead>
 
     <tbody>
-      <% @orders.each do |order| %>
-        <tr>
-          <td><%= link_to order.id, order %></td>
-          <td class="hidden-phone"><%= order.customer %></td>
-          <td><%= l order.scheduled_at, format: :minimal if order.scheduled_at %></td>
-          <td><%= order.status_text %></td>
-          <td>
-            <% if current_user && order.completed? %>
-              <%= link_to 'x', mark_as_ready_order_path(order.id), method: :patch, remote: true %>
-            <% end %>
-            <%= link_to_show order %>
-          </td>
-        </tr>
-      <% end %>
+      <%= render @orders %>
     </tbody>
   </table>
 
