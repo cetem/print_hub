@@ -13,16 +13,20 @@
   data-price-per-copy="<%= f.object.price_per_copy %>">
   <div class="row-fluid">
     <div class="span4">
-      <% field_classes = ['autocomplete-field', 'span12'] %>
-      <% field_classes << 'error' unless f.object.errors[:document_id].blank? %>
-      <%= f.input :auto_document_name, label: false, input_html: {
-        id: "auto-document-#{id}", class: field_classes.join(' '),
-        value: f.object.document.try(:to_s),
-        data: {
-          'autocomplete-id-target' => "#auto_document_id_#{id}",
-          'autocomplete-url' => autocomplete_for_document_name_prints_path(format: :json)
-        }
-      } %>
+      <% if current_customer %>
+        <%= f.object.document %>
+      <% else %>
+        <% field_classes = ['autocomplete-field', 'span12'] %>
+        <% field_classes << 'error' unless f.object.errors[:document_id].blank? %>
+        <%= f.input :auto_document_name, label: false, input_html: {
+          id: "auto-document-#{id}", class: field_classes.join(' '),
+          value: f.object.document.try(:to_s),
+          data: {
+            'autocomplete-id-target' => "#auto_document_id_#{id}",
+            'autocomplete-url' => autocomplete_for_document_name_prints_path(format: :json)
+          }
+        } %>
+      <% end %>
       <%= f.input :document_id, as: :hidden, input_html: document_id_attrs %>
     </div>
     <div class="span1">
