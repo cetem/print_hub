@@ -36,7 +36,7 @@ class PaymentTest < ActiveSupport::TestCase
              @payment.errors.full_messages.join('; ')
     end
 
-    assert_equal BigDecimal.new('38.00'), @payment.reload.paid
+    assert_equal BigDecimal('38.00'), @payment.reload.paid
   end
 
   # Prueba de eliminación de pagos

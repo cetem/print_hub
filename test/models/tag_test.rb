@@ -11,7 +11,7 @@ class TagTest < ActiveSupport::TestCase
   test 'find' do
     assert_kind_of Tag, @tag
     assert_equal tags(:books).name, @tag.name
-    assert_equal tags(:books).parent_id, @tag.parent_id
+    assert tags(:books).parent_id == @tag.parent_id, [tags(:books).parent_id, @tag.parent_id]
   end
 
   # Prueba la creación de una etiqueta

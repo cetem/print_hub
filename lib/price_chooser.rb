@@ -8,7 +8,7 @@ class PriceChooser
   end
 
   def price
-    BigDecimal.new(
+    BigDecimal(
       parse.reverse.find { |cond, _price| eval(cond % { c: @copies }) }[1]
     )
   end

@@ -874,7 +874,7 @@ class PrintTest < ActiveSupport::TestCase
     copied_print = Print.new(copy_from: original_print.id)
 
     [:printer, :customer_id, :scheduled_at].each do |attr|
-      assert_equal copied_print.send(attr), original_print.send(attr), attr
+      assert copied_print.send(attr) == original_print.send(attr), attr
     end
 
     # New print shouldn't be printed =)
@@ -892,7 +892,7 @@ class PrintTest < ActiveSupport::TestCase
       assert_equal(opjs[i].print_job_type_id, cpjs[i].print_job_type_id, msg)
       assert_equal(opjs[i].document_id, cpjs[i].document_id, msg)
       assert_equal(opjs[i].range, cpjs[i].range, msg)
-      assert_equal(opjs[i].file_line_id, cpjs[i].file_line_id, msg)
+      assert opjs[i].file_line_id == cpjs[i].file_line_id, msg
     end
 
     assert original_print.article_lines.size.positive?

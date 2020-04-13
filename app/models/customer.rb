@@ -143,7 +143,7 @@ class Customer < ApplicationModel
 
   def use_credit(amount, password = '', options = {})
     if self.valid_password?(password) || options[:avoid_password_check]
-      to_pay = BigDecimal.new(amount.to_s)
+      to_pay = BigDecimal(amount.to_s)
       available_credits = credits.valids.order(valid_until: :desc).to_a
 
       while to_pay > 0 && available_credits.size > 0

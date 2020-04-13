@@ -11,7 +11,7 @@ class ShiftTest < ActiveSupport::TestCase
   test 'find' do
     assert_kind_of Shift, @shift
     assert_equal shifts(:current_shift).start, @shift.start
-    assert_equal shifts(:current_shift).finish, @shift.finish
+    assert shifts(:current_shift).finish == @shift.finish, [shifts(:current_shift).finish, @shift.finish]
     assert_equal shifts(:current_shift).description, @shift.description
     assert_equal shifts(:current_shift).user_id, @shift.user_id
   end

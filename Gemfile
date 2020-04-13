@@ -5,7 +5,7 @@ git_source(:github) do |repo_name|
   "https://github.com/#{repo_name}.git"
 end
 
-gem 'rails', '~> 5.2.3'
+gem 'rails', '~> 6.0.2'
 
 gem 'pg'
 gem 'authlogic', '~> 5.0.2'
@@ -15,7 +15,7 @@ gem 'awesome_nested_set'
 gem 'will_paginate'
 gem 'paper_trail'
 gem 'RedCloth'
-gem 'cups'
+gem 'cups', github: 'darius-janusauskas/cups'
 gem 'simple_form'
 
 # Files Processors
@@ -70,11 +70,11 @@ end
 group :test do
   # Integration test
   gem 'capybara', require: false
-  gem 'selenium-webdriver'
   gem 'capybara-screenshot', require: false
   gem 'chromedriver-helper', require: false
-  gem 'poltergeist', require: false
   gem 'database_cleaner', require: false # For Capybara
+  gem 'poltergeist', require: false
+  gem 'selenium-webdriver'
 
   gem 'rails-controller-testing'
 end

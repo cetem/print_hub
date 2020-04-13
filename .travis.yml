@@ -1,9 +1,9 @@
 language: ruby
-dist: xenial
+dist: bionic
 cache: bundler
 rvm:
-  - 2.4.3
-  - 2.6.3
+  - 2.6.6
+  - 2.7.1
 git:
   depth: 1
 addons:
@@ -17,10 +17,33 @@ addons:
       - libmagickwand-dev
       - imagemagick
       - nodejs
+services:
+  - postgresql
+stages:
+  - build
+  - test
 before_script:
   - 'cp config/app_config.example.yml config/app_config.yml'
   - 'cp config/secrets.example.yml config/secrets.yml'
-  - 'psql -c "create database print_hub_test;" -U postgres'
   - 'psql -c "create database abaco_test;" -U postgres'
-  - 'bundle exec rails db:migrate'
-script: "bundle exec rails test:models && bundle exec rails test:controllers && bundle exec rails test:integration"
+  - 'bundle exec rails db:create db:migrate'
+install:
+  - 'rm ${BUNDLE_GEMFILE}.lock'
+  - 'eval bundle install --jobs=3 --retry=3 --path=${BUNDLE_PATH:-$PWD/vendor/bundle}'
+
+jobs:
+  include:
+    - stage: build
+      script: docker build -t abaco .
+      install: skip
+      before_script:
+        - 'cp config/app_config.example.yml config/app_config.yml'
+        - 'cp config/secrets.example.yml config/secrets.yml'
+      env:
+      rvm:
+      addons:
+        apt:
+          packages:
+            - docker-ce
+      services:
+        - docker

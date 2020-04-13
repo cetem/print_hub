@@ -15,6 +15,8 @@ require 'capybara/poltergeist'
 class ActiveSupport::TestCase
   ActiveRecord::Migration.maintain_test_schema!
   set_fixture_class versions: PaperTrail::Version
+  parallelize(workers: 1)
+
   # self.use_transactional_fixtures = true
   # Minitest::Reporters.use! Minitest::Reporters::ProgressReporter.new
 
@@ -133,11 +135,11 @@ class ActionDispatch::IntegrationTest
 
   Capybara.server = :webrick
   Capybara.register_driver :poltergeist do |app|
-      Capybara::Poltergeist::Driver.new(app, {
-        inspector: true,
-        js_errors: true,
-        window_size: [1600, 1200]
-      })
+    Capybara::Poltergeist::Driver.new(app, {
+      inspector: true,
+      js_errors: true,
+      window_size: [1600, 1200]
+    })
   end
 
   if ENV['TRAVIS']
