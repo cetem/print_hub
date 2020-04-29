@@ -1,4 +1,4 @@
-module GDrive
+module Gdrive
   extend self
 
   def upload_spreadsheet(title, array, kwargs={})

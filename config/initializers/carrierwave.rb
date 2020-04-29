@@ -1,5 +1,5 @@
-require 'carrierwave_processors/full_filename_postfixed'
-require 'carrierwave_processors/pdf_thumb'
+require 'carrier_wave/uploader/versions'
+require 'carrier_wave/pdf_thumb'
 
 CarrierWave.configure do |config|
   config.root = Rails.root

@@ -10,7 +10,7 @@ namespace :tasks do
            end
     start_date = date.beginning_of_month
     finish_date = date.end_of_month
-    ::GDrive.upload_spreadsheet(
+    ::Gdrive.upload_spreadsheet(
       I18n.t('view.shift_closures.dailies_for_year', year: date.year),
       ShiftClosure.between(start_date, finish_date).to_csv,
       { month: date.month }
