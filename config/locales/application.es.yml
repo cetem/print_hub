@@ -34,6 +34,7 @@ es:
         name: "Nombre"
         password: "Contraseña"
         password_confirmation: "Confirmación"
+        phone: 'Teléfono'
         rfid: "Redbus / Rfid / Ntag"
       customer/bonuses:
         amount: "Monto"
@@ -561,6 +562,7 @@ es:
       cancel: "Cancelar"
       catalog_order_cleared: "Listo, el pedido ya no contiene archivos"
       clear_catalog_order: "Vaciar pedido"
+      contact_phone: "Teléfono de contacto en caso de necesitar aclarar algo o coordinar la entrega."
       correctly_cancelled: "Pedido cancelado correctamente."
       correctly_created: "Pedido agregado correctamente."
       correctly_updated: "Pedido actualizado correctamente."

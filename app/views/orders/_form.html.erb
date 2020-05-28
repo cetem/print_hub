@@ -74,11 +74,13 @@
 
     <div class="row-fluid">
       <div class="span5">
-        <%= link_to t('view.orders.notes_link'), '#',
-          data: { target: '#notes', action: 'show' } %>
-        <div id="notes" style="display: none;">
-          <%= f.input :notes, input_html: { autofocus: true, rows: 4 } %>
-        </div>
+        <%= f.input :notes, label: t('view.orders.notes_link'), input_html: { rows: 4 } %>
+      </div>
+      <div class="span3"></div>
+      <div class="span4">
+        <%= f.input :customer_phone, label: Customer.human_attribute_name(:phone),
+          hint: t('view.orders.contact_phone'),
+          input_html: { value: f.object.customer_phone || current_customer.phone } %>
       </div>
     </div>
   </div>

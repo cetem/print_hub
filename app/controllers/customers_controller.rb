@@ -263,8 +263,8 @@ class CustomersController < ApplicationController
 
   def common_customer_params
     [
-      :name, :lastname, :identification, :email, :password, :rfid,
-      :password_confirmation, :lock_version, :enable,
+      :name, :lastname, :identification, :email, :phone,
+      :password, :rfid, :password_confirmation, :lock_version, :enable,
       {deposits_attributes: [
         :amount, :remaining, :valid_until, :customer_id, :_destroy, :id
       ]}
@@ -273,8 +273,8 @@ class CustomersController < ApplicationController
 
   def public_customer_params
     [
-      :name, :lastname, :identification, :email, :password,
-      :password_confirmation, :lock_version
+      :name, :lastname, :identification, :email, :phone,
+      :password, :password_confirmation, :lock_version
     ]
   end
 end

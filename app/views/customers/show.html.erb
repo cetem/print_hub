@@ -19,6 +19,11 @@
   </p>
 
   <p>
+    <b><%= Customer.human_attribute_name 'phone' %>:</b>
+    <%= @customer.phone %>
+  </p>
+
+  <p>
     <b><%= Customer.human_attribute_name 'free_monthly_bonus' %>:</b>
     <%= number_to_currency(@customer.free_monthly_bonus) %>
   </p>

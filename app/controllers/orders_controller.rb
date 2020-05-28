@@ -200,7 +200,7 @@ class OrdersController < ApplicationController
     order_items_shared_attrs = [:order_id, :copies, :print_job_type_id, :id]
 
     params.require(:order).permit(
-      :scheduled_at, :notes, :lock_version, :include_documents,
+      :scheduled_at, :notes, :lock_version, :include_documents, :customer_phone,
       file_lines_attributes: [
         :file, :pages, :file_cache, *order_items_shared_attrs
       ],

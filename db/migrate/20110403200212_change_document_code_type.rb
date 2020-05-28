@@ -1,10 +1,6 @@
 class ChangeDocumentCodeType < ActiveRecord::Migration[4.2]
   def self.up
-    if DB_ADAPTER == 'PostgreSQL'
-      execute 'ALTER TABLE documents ALTER COLUMN code TYPE integer USING CAST(code AS INTEGER)'
-    else
-      change_column :documents, :code, :integer, null: false
-    end
+    change_column :documents, :code, :integer, null: false, using: 'CAST(code AS INTEGER)'
   end
 
   def self.down

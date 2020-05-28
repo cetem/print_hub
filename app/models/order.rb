@@ -13,9 +13,10 @@ class Order < ApplicationModel
   before_destroy :avoid_destruction
   before_save :can_be_modified?
   before_update :notify_order_ready, if: :ready?
+  before_save :update_customer_phone, if: :customer_phone
 
   # Atributos no persistentes
-  attr_accessor :include_documents
+  attr_accessor :include_documents, :customer_phone
   # Atributos de sólo lectura
   attr_readonly :scheduled_at
 
@@ -181,5 +182,11 @@ class Order < ApplicationModel
 
   def notify_order_ready
     NotificationsMailer.order_ready(id).deliver_later
+  end
+
+  def update_customer_phone
+    if customer_phone.present? && customer.phone != customer_phone.strip
+      customer.update phone: customer_phone.strip
+    end
   end
 end
