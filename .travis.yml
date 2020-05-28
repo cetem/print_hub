@@ -7,7 +7,7 @@ rvm:
 git:
   depth: 1
 addons:
-  postgresql: 10
+  postgresql: 12
   apt:
     packages:
       - libcups2-dev
@@ -17,6 +17,9 @@ addons:
       - libmagickwand-dev
       - imagemagick
       - nodejs
+      - postgresql-12
+      - postgresql-client-12
+      - postgresql-server-dev-12
 services:
   - postgresql
 stages:
@@ -30,6 +33,10 @@ before_script:
 install:
   - 'rm ${BUNDLE_GEMFILE}.lock'
   - 'eval bundle install --jobs=3 --retry=3 --path=${BUNDLE_PATH:-$PWD/vendor/bundle}'
+  - sudo pg_dropcluster --stop 12 main
+  - sudo pg_upgradecluster 11 main
+  - sudo pg_ctlcluster 12 main restart
+  - sudo pg_dropcluster 11 main
 
 jobs:
   include:
