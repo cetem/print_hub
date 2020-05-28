@@ -10,8 +10,7 @@
 
       <div id="not_printed" class="alert alert-info" <%= raw 'style="display: none"' if @order.print_out %> role="alert">
         <h3>
-          Presioná `Crear Pedido` y acercate
-          personalmente hasta el centro de copiado para imprimir los documentos.
+          Presioná `Crear Pedido` y luego nos pondremos en contacto para coordinar la entrega.
         </h3>
       </div>
     <% else %>
@@ -24,9 +23,7 @@
 
       <div id="not_printed" class="alert alert-warning" <%= raw 'style="display: none"' if @order.print_out %>>
         <h3>
-          Para imprimir los documentos <strong>acercate</strong> personalmente
-          hasta el centro de copiado y consultá por el pedido
-          <strong>==>>> <%= @order.id %></strong>
+          Nos pondremos en contacto para coordinar la entrega.
         </h3>
       </div>
     <% end %>
