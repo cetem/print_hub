@@ -27,7 +27,7 @@ gem 'pdf-reader'
 gem 'barby'
 gem 'rqrcode'
 gem 'chunky_png'
-gem 'google_drive', '~> 2.1.0'
+gem 'google_drive', '~> 3.0.7'
 
 # Production-Task Gems
 gem 'unicorn'
@@ -78,3 +78,5 @@ group :test do
 
   gem 'rails-controller-testing'
 end
+
+gem 'mimemagic', '0.3.8'
