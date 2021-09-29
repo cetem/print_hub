@@ -10,7 +10,7 @@ After=syslog.target network.target
 [Service]
 Type=simple
 WorkingDirectory=/var/rails/%i/current
-ExecStart=/usr/local/bin/chruby-exec 2.4.3 -- RAILS_ENV=production bundle exec sidekiq -e production -C config/sidekiq.yml
+ExecStart=/usr/local/bin/chruby-exec 2.6.6 -- RAILS_ENV=production bundle exec sidekiq -e production -C config/sidekiq.yml
 TimeoutStartSec=0
 TimeoutStopSec=1h
 PIDFile=/var/rails/%i/current/tmp/sidekiq-%i.pid

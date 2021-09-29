@@ -61,8 +61,8 @@
           <td><%= link_to_copy new_print_path(copy_from: print.id) %></td>
           <td><%= link_to_show print %></td>
           <td><%= link_to_edit(
-            edit_print_path(print, status: params[:status])
-          ) if current_user &&  print.pending_payment? || print.scheduled? %></td>
+            edit_print_path(print, status: params[:status] || 'all')
+          ) if current_user && print.pending_payment? || print.scheduled? %></td>
           <td>
             <%= link_to(
               '&#x26d4;'.html_safe, revoke_print_path(print),

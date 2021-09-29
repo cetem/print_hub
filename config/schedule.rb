@@ -7,7 +7,7 @@
 # env :PATH, '"/home/deployer/.gem/ruby/2.4.3/bin:/opt/rubies/ruby-2.4.3/lib/ruby/gems/2.4.0/bin:/opt/rubies/ruby-2.4.3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games"'
 env :SHELL, '/bin/bash'
 
-chruby_version = '2.4.3'
+chruby_version = '2.6.6'
 chruby_bin = '/usr/local/bin/chruby-exec'
 chruby_cmd = "#{chruby_bin} #{chruby_version} --"
 
